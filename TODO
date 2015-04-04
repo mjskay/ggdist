@@ -1,0 +1,3 @@
+- write extract_samples_long for other samplers
+- factor prototype back-translation out
+- write examples in docs and README

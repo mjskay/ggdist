@@ -1,0 +1,17 @@
+Package: tidybayes
+Title: Compose/Extract Tidy Data for Bayesian Samplers
+Version: 0.8.1
+Date: 2015-04-03
+Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
+    email = "mjskay@uw.edu"))
+Maintainer: Matthew Kay <mjskay@uw.edu>
+Description: Facilitates composing data for and extracting samples from Bayesian samplers (JAGS, Stan, ...) in a tidy data format.
+Imports:
+    plyr,
+    dplyr,
+    tidyr
+Suggests:
+    testthat
+License: GPL (>= 2)
+BugReports: https://github.com/mjskay/tidybayes/issues/new
+URL: https://github.com/mjskay/tidybayes
