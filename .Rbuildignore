@@ -4,4 +4,5 @@
 ^.*\.md$
 ^.*~$
 ^\.gitignore$
+^\.gitattributes$
 ^\.git$
