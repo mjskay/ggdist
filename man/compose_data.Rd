@@ -10,7 +10,9 @@ compose_data(...,
 }
 \arguments{
   \item{...}{
-Data to be composed into a list suitable for being passed into JAGS, etc.
+Data to be composed into a list suitable for being passed into JAGS, etc. Named arguments will have their name used as
+the \code{name} argument to \code{as.data_list} when translated; unnamed arguments that are not lists or data frames
+will have their bare value (passed through \code{make.names}) used as the \code{name} argument to \code{as.data_list}.
 }
   \item{.n_name}{
 A function that is used to form index variables (a variable whose value is the length of a factor or a data 

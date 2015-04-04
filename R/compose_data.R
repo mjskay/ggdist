@@ -92,12 +92,22 @@ as.data_list.data_list = function(object, name="", ...) {
 ## of as.data_list for the type. See as.data_list.numeric, as.data_list.logical, etc for examples.
 ##
 compose_data = function(..., .n_name=function(name) paste0("n_", name)) {
-    #translate arguments into a data_list
+    #translate argument names / values into a list
     objects = list(...)
     if (is.null(names(objects))) {
-        #when no named arguments are supplied, we must translate NULL into empty string
-        #so that the name argument to as.data_list is still valid
+        #when no named arguments are supplied, translate NULL into empty string
+        #so that the naming code below works
         names(objects) = rep("", length(objects))
     }
-    as.data_list(objects, .n_name)
+    #give a name to any unnamed argument based on its unevaluated value
+    names_from_arg_values = make.names(sapply(as.list(substitute(list(...)))[-1], deparse))
+    unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
+    names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
+    #convert into data list 
+    data = as.data_list(objects, .n_name)
+    #as a hack for now, we strip the "data_list" type in the end for compatibility
+    #with runjags, which incorrectly checks for class(data) == "list" instead of
+    #using is.list
+    class(data) = "list"
+    data
 }
