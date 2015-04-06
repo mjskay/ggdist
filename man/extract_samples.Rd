@@ -12,7 +12,7 @@ extract_samples(model, variable_spec)
 A supported Bayesain model fit / MCMC object. Currently supported models include \code{\link[coda]{mcmc}}. 
 }
   \item{variable_spec}{
-An expression in the form of \code{~ variable_name[index_1, index_2, ...] | wide_index}. See `Details`.
+An expression in the form of \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.
 }
 }
 \details{
