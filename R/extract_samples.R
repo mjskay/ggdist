@@ -42,14 +42,28 @@
 ## 		if data_types$v is a logical, the v column is translated into a logical using as.logical(v)
 ##
 extract_samples = function(model, variable_spec) {
-    #first, extract the samples into a data frame
-    variable_name = as.character(variable_spec[[2]][[2]])
-    index_names = as.character(variable_spec[[2]][-1:-2])
-    samples = extract_samples_long_(model,
-        variable_name, 
-        index_names)
+    extract_samples_(model, lazy(variable_spec))
+}
+extract_samples_ = function(model, variable_spec) {
+    #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
+    spec = lazy_eval(variable_spec, data=list(
+        `[` = function(variable_name, ...) list(
+            as.character(substitute(variable_name)),
+            as.character(substitute(list(...))[-1]),
+            NA),
+        `|` = function(spec, by) c(
+            spec[1:2],
+            as.character(substitute(by))
+            )
+        ))
+    variable_name = spec[[1]]
+    index_names = if (identical(spec[[2]], "")) NULL else spec[[2]]
+    wide_index_name = spec[[3]]
     
-    #convert data back into usable data types
+    #extract the samples into a long data frame
+    samples = extract_samples_long_(model, variable_name, index_names)
+    
+    #convert variable and/or indices back into usable data types
     constructors = attr(model, "constructors")
     if (is.null(constructors)) constructors = list()
     for (column_name in c(variable_name, index_names)) {
@@ -60,14 +74,21 @@ extract_samples = function(model, variable_spec) {
     }
     
     #spread a column into wide format if requested
-    if (is.null(samples$..)) {
-        samples
+    if (!is.na(wide_index_name)) {  
+        #wide index requested by name
+        samples %>%
+            spread_(wide_index_name, variable_name)
     }
-    else {
+    else if (!is.null(samples$..)) {
         #a column named ".." is present, use it to form a wide version of the data
+        #with numbered names based on the variable name
         samples %>%
             mutate(.. = factor(.., labels=variable_name)) %>%
             spread_("..", variable_name)
+    }
+    else {
+        #no wide column => just return long version
+        samples
     }
 }
 
@@ -83,18 +104,26 @@ extract_samples = function(model, variable_spec) {
 ##      column "b":       sample number ".sample" of "b[i,v]" in mcmcChain 
 ##
 extract_samples_long_ = function(model, variable_name, index_names) {
-    ldply(colnames(model), function(colname) {
-        #parse column into variable name and indices
-        colname_parts = strsplit(colname,"\\,|\\]|\\[")[[1]]
-        if (colname_parts[1] == variable_name) {	#this is the variable we want
-            #get the values of the indices 
-            indices = as.list(as.numeric(colname_parts[-1]))
-            names(indices) = index_names
-            #get the values of this variable in each sample
-            values = list(model[,colname])
-            names(values) = variable_name
-            #put it all together
-            data.frame(.sample=1:nrow(model), indices, values)
-        }
-    })
+    if (is.null(index_names)) {
+        #no indices, just return the samples with a sample index added
+        values = list(model[,variable_name])
+        names(values) = variable_name
+        data.frame(.sample=1:nrow(model), values)
+    }
+    else {
+        ldply(colnames(model), function(colname) {
+            #parse column into variable name and indices
+            colname_parts = strsplit(colname,"\\,|\\]|\\[")[[1]]
+            if (colname_parts[1] == variable_name) {	#this is the variable we want
+                #get the values of the indices 
+                indices = as.list(as.numeric(colname_parts[-1]))
+                names(indices) = index_names
+                #get the values of this variable in each sample
+                values = list(model[,colname])
+                names(values) = variable_name
+                #put it all together
+                data.frame(.sample=1:nrow(model), indices, values)
+            }
+        })
+    }
 }

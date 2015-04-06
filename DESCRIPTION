@@ -7,6 +7,7 @@ Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
 Maintainer: Matthew Kay <mjskay@uw.edu>
 Description: Facilitates composing data for and extracting samples from Bayesian samplers (JAGS, Stan, ...) in a tidy data format.
 Imports:
+    lazyeval,
     plyr,
     dplyr,
     tidyr
