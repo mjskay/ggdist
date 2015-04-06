@@ -5,24 +5,21 @@
 Extract samples from an MCMC chain for a variable with the given named indices into a long-format data frame.
 }
 \usage{
-extract_samples(model, variable_spec, prototypes=NULL)
+extract_samples(model, variable_spec)
 }
 \arguments{
   \item{model}{
 A supported Bayesain model fit / MCMC object. Currently supported models include \code{\link[coda]{mcmc}}. 
 }
   \item{variable_spec}{
-A formula in the form of \code{~ variable_name[index_1, index_2, ...]}. See `Details`.
-}
-  \item{prototypes}{
-A list or data.frame providing data prototypes used to convert returned columns back into useful data types. See `Details`. 
+An expression in the form of \code{~ variable_name[index_1, index_2, ...] | wide_index}. See `Details`.
 }
 }
 \details{
 Imagine a variable b[i,v] with i in [1..100] and v in [1..3]. An MCMC sample returned from JAGS 
 (for example) would have columns with names like "b[1,1]", "b[2,1]", etc. 
 
-\code{extract_samples(mcmc_chain, ~ b[i,v])} would return a data frame with:)
+\code{extract_samples(mcmc_chain, b[i,v])} would return a data frame with:)
 \itemize{
     \item column \code{".sample"}: value in \code{[1..nrow(mcmcChain)]}
     \item column \code{"i"}: value in \code{[1..20]}
@@ -30,9 +27,10 @@ Imagine a variable b[i,v] with i in [1..100] and v in [1..3]. An MCMC sample ret
     \item column \code{"b"}: value of \code{"b[i,v]"} for sample number \code{".sample"} in \code{mcmc_chain}.
 }
 
-The shorthand \code{".."} can be used to specify one column that should be put into a wide format. For example:
+The shorthand \code{..} can be used to specify one column that should be put into a wide format and whose
+names will be the base variable name plus the value of the index at \code{..}. For example:
 
-\code{extract_samples(mcmcChain, ~ b[i,..])} would return a data frame with:)
+\code{extract_samples(mcmcChain, b[i,..])} would return a data frame with:)
 \itemize{
     \item column \code{".sample"}: value in \code{[1..nrow(mcmcChain)]}
     \item column \code{"i"}: value in \code{[1..20]}
@@ -41,23 +39,18 @@ The shorthand \code{".."} can be used to specify one column that should be put i
     \item column \code{"b3"}: value of \code{"b[i,3]"} for sample number \code{".sample"} in mcmc_chain 
 }
 
-\code{prototypes} optionally specifies a list or data.frame. Each entry in prototypes with the same name
-as the variable or an index in varible_spec is a used as a prototype for that variable or index ---
-i.e., its type is taken to be the expected type of that variable or index. Those types are used to translate 
-numeric values of variables back into useful values (usually levels of a factor). 
+Finally, an optional clause in the form \code{| wide_index} can also be used to put the data frame into
+a wide format based on wide_index. For example, this:
 
-The most common use of prototypes is to automatically translate indices that correspond to levels of a factor
-in the original data back into levels of that factor. Names in prototypes that are not in 
-found in variable_spec are ignored.
+\code{extract_samples(mcmcChain, b[i,v] | v)}
 
-The usual use of prototypes is to pass in the data frame from which the original data came. 
-Supported types of prototypes are factor, ordered, and logical. For example:
+is equivalent to this:
 
-\itemize{
-    \item if \code{prototypes$v} is a factor, the v column in the returned samples is translated into 
-        a factor using \code{factor(v, labels=levels(prototypes$v), ordered=is.ordered(prototypes$v))}.
-    \item if \code{prototypes$v} is a logical, the v column is translated into a logical using \code{as.logical(v)}.
-}
+\code{extract_samples(mcmcChain, b[i,v]) \%>\% spread(v,b)}
+
+The main difference between using the \code{|} syntax instead of the \code{..} syntax is that the 
+\code{|} syntax respects prototypes applied to indices with \code{\link{apply_prototypes}}, and thus
+can be used to get columns with nicer names. 
 }
 \value{
 A data frame.
@@ -66,7 +59,7 @@ A data frame.
 Matthew Kay
 }
 \seealso{
-\code{\link{compose_data}}.
+\code{\link{apply_prototypes}}, \code{\link{compose_data}}.
 }
 \examples{
 ##TODO

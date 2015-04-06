@@ -1,4 +1,5 @@
 importFrom(plyr, ldply)
+import(lazyeval)
 import(dplyr)
 import(tidyr)
 
