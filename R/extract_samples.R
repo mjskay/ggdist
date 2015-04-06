@@ -41,7 +41,7 @@
 ##
 ## 		if data_types$v is a logical, the v column is translated into a logical using as.logical(v)
 ##
-extract_samples = function(model, variable_spec, prototypes=NULL) {
+extract_samples = function(model, variable_spec) {
     #first, extract the samples into a data frame
     variable_name = as.character(variable_spec[[2]][[2]])
     index_names = as.character(variable_spec[[2]][-1:-2])
@@ -50,17 +50,12 @@ extract_samples = function(model, variable_spec, prototypes=NULL) {
         index_names)
     
     #convert data back into usable data types
+    constructors = attr(model, "constructors")
+    if (is.null(constructors)) constructors = list()
     for (column_name in c(variable_name, index_names)) {
-        if (column_name %in% names(prototypes)) {
-            #we have a data type for this index, convert it
-            prototype = prototypes[[column_name]]
-            if (is.factor(prototype)) {
-                samples[[column_name]] = factor(samples[[column_name]], 
-                    labels=levels(prototype), ordered=is.ordered(prototype))
-            }
-            else if (is.logical(prototype)) {
-                samples[[column_name]] = as.logical(samples[[column_name]])
-            }
+        if (column_name %in% names(constructors)) {
+            #we have a data type constructor for this index, convert it
+            samples[[column_name]] = constructors[[column_name]](samples[[column_name]])
         }
     }
     
