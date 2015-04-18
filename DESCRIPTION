@@ -6,6 +6,8 @@ Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
     email = "mjskay@uw.edu"))
 Maintainer: Matthew Kay <mjskay@uw.edu>
 Description: Facilitates composing data for and extracting samples from Bayesian samplers (JAGS, Stan, ...) in a tidy data format.
+Depends:
+    R (>= 2.10)
 Imports:
     lazyeval,
     plyr,
