@@ -29,9 +29,9 @@ _Matthew Kay, University of Washington <mjskay@uw.edu>_
 You can install the latest development version from GitHub with these R
 commands:
 
-```R
-> install.packages("devtools")
-> devtools::install_github("mjskay/tidybayes")
+```r
+install.packages("devtools")
+devtools::install_github("mjskay/tidybayes")
 ```
 
 ## Examples
