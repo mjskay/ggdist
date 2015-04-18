@@ -3,7 +3,7 @@ import(lazyeval)
 import(dplyr)
 import(tidyr)
 
-export(data_list, as.data_list, compose_data, extract_samples)
+export(data_list, as.data_list, compose_data, extract_samples, apply_prototypes)
 
 S3method(c, data_list)    
 S3method(print, data_list)
