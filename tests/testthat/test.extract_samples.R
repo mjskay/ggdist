@@ -149,3 +149,27 @@ test_that("extract_samples works on a parameter with one named index and one wid
         expect_equal(extract_samples(RankCorr, b[i,..]), ref)
     })
 
+test_that("extract_samples does not allow extraction of two variables simultaneously with a wide index", {
+        data(RankCorr, package="tidybayes")
+
+        error_message = "Cannot extract samples of multiple variables in wide format."
+        expect_error(extract_samples(RankCorr, cbind(tau, typical_mu)[..]), error_message)
+        expect_error(extract_samples(RankCorr, cbind(tau, typical_mu)[i] | i), error_message)
+    })
+
+test_that("extract_samples correctly extracts multiple variables simultaneously", {
+        i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
+        data(RankCorr, package="tidybayes")
+        RankCorr = apply_prototypes(RankCorr, 
+            list(i = factor(i_labels)))
+        
+        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu)[i]), 
+            extract_samples(RankCorr, tau[i]) %>%
+                left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
+        )
+        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]), 
+            extract_samples(RankCorr, tau[i]) %>%
+                left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
+                left_join(extract_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
+        )
+    })
