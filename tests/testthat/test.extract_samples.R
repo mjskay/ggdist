@@ -173,3 +173,15 @@ test_that("extract_samples correctly extracts multiple variables simultaneously"
                 left_join(extract_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
         )
     })
+
+test_that("extract_samples correctly extracts multiple variables simultaneously when those variables have no indices", {
+        data(RankCorr, package="tidybayes")
+        dimnames(RankCorr)[[2]][[1]] <- "tr2"
+
+        expect_equal(extract_samples(RankCorr, cbind(typical_r)[]), 
+            extract_samples(RankCorr, typical_r[]))
+        expect_equal(extract_samples(RankCorr, cbind(tr2, typical_r)[]), 
+            extract_samples(RankCorr, tr2[]) %>%
+                left_join(extract_samples(RankCorr, typical_r[]), by=c(".sample"))
+        )
+    })

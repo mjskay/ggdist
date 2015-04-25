@@ -4,19 +4,6 @@
 ###############################################################################
 
 
-#helper function to parse variable names (as an expression where
-#they are separated by "+") into a list
-parse_variable_names = function(quoted_variable_names) UseMethod("parse_variable_names")
-parse_variable_names.default = function(quoted_variable_names) as.character(quoted_variable_names)
-parse_variable_names.call = function(quoted_variable_names) {
-    unlist(lapply(quoted_variable_names[-1], #drop the function call name (params only)
-            parse_variable_names))
-}
-`parse_variable_names.(` = function(quoted_variable_names) {
-    parse_variable_names(quoted_variable_names[[2]])
-}
-
-
 ## Extract a sample from an MCMC chain for a variable with the given named indices into a long-format data frame.
 ## For example, imagine a variable b[i,v] with i in [1..100] and v in [1..3]. An MCMC sample returned from JAGS 
 ## (for example) would have columns with names like "b[1,1]", "b[2,1]", etc. 
@@ -60,10 +47,20 @@ extract_samples = function(model, variable_spec) {
 extract_samples_ = function(model, variable_spec) {
     #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
     spec = lazy_eval(variable_spec, data=list(
-        `[` = function(variable_names, ...) list(
-            parse_variable_names(substitute(variable_names)),
-            as.character(substitute(list(...))[-1]),
-            NA),
+        `[` = function(variable_names, ...) {
+            #helper function to translate variable names into a list
+            translate_variable_names = function(quoted_variable_names) { 
+                switch(class(quoted_variable_names),
+                    name = as.character(quoted_variable_names),
+                    call = unlist(lapply(quoted_variable_names[-1], translate_variable_names)),
+                    `(` = translate_variable_names(quoted_variable_names[[2]])
+                )
+            }
+            list(
+                translate_variable_names(substitute(variable_names)),
+                as.character(substitute(list(...))[-1]),
+                NA)
+        },
         `|` = function(spec, by) c(
             spec[1:2],
             as.character(substitute(by))
@@ -126,9 +123,9 @@ extract_samples_ = function(model, variable_spec) {
 extract_samples_long_ = function(model, variable_names, index_names) {
     if (is.null(index_names)) {
         #no indices, just return the samples with a sample index added
-        values = list(model[,variable_names])
-        names(values) = variable_names
-        data.frame(.sample=1:nrow(model), values)
+        model %>% as.data.frame() %>%
+            mutate(.sample = 1:nrow(.)) %>%
+            select_(.dots = c(".sample", variable_names))
     }
     else {
         all_samples = NULL
