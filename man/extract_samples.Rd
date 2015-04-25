@@ -9,7 +9,7 @@ extract_samples(model, variable_spec)
 }
 \arguments{
   \item{model}{
-A supported Bayesain model fit / MCMC object. Currently supported models include \code{\link[coda]{mcmc}}. 
+A supported Bayesian model fit / MCMC object. Currently supported models include \code{\link[coda]{mcmc}}. 
 }
   \item{variable_spec}{
 An expression in the form of \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.
@@ -39,7 +39,7 @@ names will be the base variable name plus the value of the index at \code{..}. F
     \item column \code{"b3"}: value of \code{"b[i,3]"} for sample number \code{".sample"} in mcmc_chain 
 }
 
-Finally, an optional clause in the form \code{| wide_index} can also be used to put the data frame into
+An optional clause in the form \code{| wide_index} can also be used to put the data frame into
 a wide format based on wide_index. For example, this:
 
 \code{extract_samples(mcmcChain, b[i,v] | v)}
@@ -50,7 +50,20 @@ is equivalent to this:
 
 The main difference between using the \code{|} syntax instead of the \code{..} syntax is that the 
 \code{|} syntax respects prototypes applied to indices with \code{\link{apply_prototypes}}, and thus
-can be used to get columns with nicer names. 
+can be used to get columns with nicer names.
+
+Finally, any expression containing multiple variable names can be used in place of the variable
+indexed over in order to extract multiple variables at the same time (so long as they share 
+exactly the same subscripts). For example, if we have a variable a[i,v] with the same subscripts
+as b[i,v], we could do this:
+
+\code{extract_samples(mcmcChain, cbind(a, b)[i,v])}
+
+Which is equivalent to this:
+
+\code{extract_samples(mcmcChain, a[i,v]) \%>\% left_join(extract_samples(mcmcChain, b[i,v]))}
+
+ 
 }
 \value{
 A data frame.
