@@ -120,7 +120,8 @@ extract_samples_ = function(model, variable_spec) {
 ##		column "v":		  values in [1..3]
 ##      column "b":       sample number ".sample" of "b[i,v]" in mcmcChain 
 ##
-extract_samples_long_ = function(model, variable_names, index_names) {
+extract_samples_long_ = function(model, variable_names, index_names) UseMethod("extract_samples_long_")
+extract_samples_long_.default = function(model, variable_names, index_names) {
     if (is.null(index_names)) {
         #no indices, just return the samples with a sample index added
         model %>% as.data.frame() %>%
@@ -149,4 +150,7 @@ extract_samples_long_ = function(model, variable_names, index_names) {
         }
         all_samples
     }
+}
+extract_samples_long_.stanfit = function(model, ...) {
+    extract_samples_long_(as.matrix(model), ...)
 }
