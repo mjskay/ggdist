@@ -6,6 +6,7 @@
 library(testthat)
 library(tidybayes)
 
+context("prototype constructors")
 
 test_that("factor prototypes convert correctly", {
         constructor = tidybayes:::as.constructor.factor(factor(c("a", "b", "c")))
