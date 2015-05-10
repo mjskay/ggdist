@@ -154,3 +154,12 @@ extract_samples_long_.default = function(model, variable_names, index_names) {
 extract_samples_long_.stanfit = function(model, ...) {
     extract_samples_long_(as.matrix(model), ...)
 }
+extract_samples_long_.mcmc = function(model, ...) {
+    extract_samples_long_(as.matrix(model), ...)
+}
+extract_samples_long_.mcmc.list = function(model, ...) {
+    extract_samples_long_(as.matrix(model), ...)
+}
+extract_samples_long_.runjags = function(model, ...) {
+    extract_samples_long_(coda::as.mcmc.list(model), ...)
+}
