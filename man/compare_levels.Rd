@@ -46,9 +46,6 @@ The included \code{comparison} types are:
     \item \code{default}: use \code{ordered} if \code{is.ordered(by)} and \code{pairwise} otherwise. 
 }
 
-Note that levels as returned by \code{comparison} are passed in the opposite order into \code{fun}, this
-is because the most common (and default) function is to subtract the values of \code{variable}, which
-when making comparisons tends to mean we want to pass the second level in first. 
 }
 \value{
 A \code{data.frame} with the same columns as \code{samples}, except that the \code{by} column contains a symbolic

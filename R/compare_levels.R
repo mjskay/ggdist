@@ -7,16 +7,18 @@
 comparison_types = within(list(), {
     ordered = function(x) {
         l = levels(x)
-        lapply(1:(length(l) - 1), function(i) c(l[[i]], l[[i + 1]]))
+        lapply(2:length(l), function(i) c(l[[i]], l[[i - 1]]))
     }
     
     control = function(x) {
         l = levels(x)
-        lapply(l[-1], function(j) c(l[[1]], j))
+        lapply(l[-1], function(j) c(j, l[[1]]))
     }
     
     pairwise = function(x) {
-        combn(levels(x), 2, simplify=FALSE)
+        #reverse combn so that the control level (first level) is second for
+        #consistency with control() and ordered()
+        lapply(combn(levels(x), 2, simplify=FALSE), rev)
     }
     
     default = function(x) {
@@ -59,8 +61,8 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default) {
     #make comparisons
     ldply(comparison_levels, function (levels.) {
             comparison = data.frame(
-                by = paste(levels.[[2]], fun_name, levels.[[1]]),
-                variable = fun(samples_wide[[levels.[[2]]]], samples_wide[[levels.[[1]]]])
+                by = paste(levels.[[1]], fun_name, levels.[[2]]),
+                variable = fun(samples_wide[[levels.[[1]]]], samples_wide[[levels.[[2]]]])
             )
             names(comparison) = c(by, variable)
             cbind(samples_wide_no_levels, comparison)
