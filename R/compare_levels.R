@@ -62,10 +62,20 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default) {
     
     #make comparisons
     ldply(comparison_levels, function (levels.) {
-            comparison = data.frame(
-                by = paste(levels.[[1]], fun_name, levels.[[2]]),
-                variable = fun(samples_wide[[levels.[[1]]]], samples_wide[[levels.[[2]]]])
-            )
+            comparison = if (is.language(levels.)) {
+                #user-supplied quoted expressions are evaluated within the data frame
+                data.frame(
+                    by = deparse(levels.),
+                    variable = eval(levels., samples_wide)
+                )
+            }
+            else {
+                #otherwise, levels should be pairs of strings representing levels
+                data.frame(
+                    by = paste(levels.[[1]], fun_name, levels.[[2]]),
+                    variable = fun(samples_wide[[levels.[[1]]]], samples_wide[[levels.[[2]]]])
+                )
+            }
             names(comparison) = c(by, variable)
             cbind(samples_wide_no_levels, comparison)
         })

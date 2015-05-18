@@ -11,7 +11,7 @@ library(tidybayes)
 
 context("extract_samples")
 
-test_that("extract_samples on a simple parameter with no indices", {
+test_that("extract_samples works on a simple parameter with no indices", {
         data(RankCorr, package="tidybayes")
         
         ref = data.frame(
