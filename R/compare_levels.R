@@ -54,9 +54,11 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default) {
 
     #get list of pairs of levels to compare
     comparison = substitute(comparison)
-    if (is.character(comparison)) as.name(comparison) else comparison
-    comparison_levels = eval(bquote(.(comparison)(samples[[by]])), 
-        comparison_types)
+    if (is.character(comparison)) comparison = as.name(comparison)
+    comparison_function = eval(comparison, comparison_types)
+    comparison_levels = 
+        if (is.list(comparison_function)) comparison_function
+        else comparison_function(samples[[by]]) 
     
     #make comparisons
     ldply(comparison_levels, function (levels.) {

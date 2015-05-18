@@ -24,9 +24,11 @@ Binary function to use for comparison. For each pair of levels of \code{by} we a
 compute the result of this function.
 }
   \item{comparison}{
-User-specified function that takes a \code{factor} and returns a list of pairs of names of levels to
-compare (as strings), or one of: \code{ordered}, \code{control}, \code{pairwise}, or \code{default} (may
-also be given as strings, e.g. \code{"ordered"}). See `Details`.
+One of (a) the comparison types \code{ordered}, \code{control}, \code{pairwise}, or \code{default} (may
+also be given as strings, e.g. \code{"ordered"}), see `Details`; (b) a user-specified function that takes a 
+\code{factor} and returns a list of pairs of names of levels to compare (as strings); or (c) a list of 
+pairs of names of levels to compare (as strings), e.g.: \code{list(c("a", "b"), c("b", "c"))}, which
+would compare level \code{"a"} against \code{"b"} and level \code{"b"} against \code{"c"}. 
 }
 }
 \details{
