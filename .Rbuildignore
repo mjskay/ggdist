@@ -6,3 +6,4 @@
 ^\.gitignore$
 ^\.gitattributes$
 ^\.git$
+^\.travis\.yml$

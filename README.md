@@ -1,5 +1,7 @@
 # tidybayes: R Package for composing data for and extracting samples from Bayesian samplers in a tidy data format 
 
+[![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
+
 _Matthew Kay, University of Washington <mjskay@uw.edu>_
 
 When using MCMC / Bayesian samplers like JAGS or Stan in R, we often have

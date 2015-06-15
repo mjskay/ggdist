@@ -1,0 +1,7 @@
+language: r
+
+#sudo is needed for R on travis-CI. See http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: required
+
+# Be strict when checking our package
+warnings_are_errors: true
