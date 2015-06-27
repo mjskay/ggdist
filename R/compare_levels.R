@@ -40,6 +40,10 @@ compare_levels = function(samples, variable, by, fun=`-`, comparison=default) {
 }
 
 compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default) {
+    #drop unused levels from by factor
+    samples[[by]] = factor(samples[[by]])
+
+    #get wide version of samples that we can use to generate comparisons easily
     samples_wide = spread_(samples, by, variable) 
     
     # determine a pretty function name
