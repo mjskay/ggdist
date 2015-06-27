@@ -14,6 +14,7 @@ context("compare_levels")
 ff_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
 
 get_samples = function() {
+    #observations of tau grouped by the factor ff (with levels ff_labels)
     data(RankCorr, package="tidybayes")
     ldply(1:18, function(i) {
             data.frame(
@@ -125,4 +126,18 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
             }) %>% select(-one_of(ff_labels))
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=.(a + b, exp(c - f))), ref)
+    })
+
+test_that("comparisons of subsets of levels of factors are supported", {
+        samples = get_samples() %>%
+            filter(ff %in% c("a","d","g"))
+                    
+        samples_wide = spread(samples, ff, tau)
+        ref = ldply(combn(levels(factor(samples$ff)), 2, simplify=FALSE), function(levels.) {
+                samples_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
+                samples_wide$tau = samples_wide[[levels.[[2]]]] - samples_wide[[levels.[[1]]]]  
+                samples_wide
+            }) %>% select(-one_of(ff_labels))
+        
+        expect_equal(compare_levels(samples, tau, by=ff, comparison=pairwise), ref)
     })
