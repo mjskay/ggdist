@@ -6,7 +6,7 @@ Given a posterior sample from a Bayesian sampler in long format (e.g. as returne
 the value of a variable in that sample across different paired combinations of levels of a factor.
 }
 \usage{
-compare_levels(samples, variable, by, fun=`-`, comparison=default)
+compare_levels(samples, variable, by, fun=`-`, comparison=default, indices=".sample")
 }
 \arguments{
   \item{samples}{
@@ -34,6 +34,14 @@ would compare level \code{"a"} against \code{"b"} and level \code{"b"} against \
 the unevaluated expression syntax ignores the \code{fun} argument, can include any other functions
 desired (e.g. variable transformations), and can even include more than two levels or other columns in
 \code{samples}.
+}
+  \item{indices}{
+Character vector of column names in \code{samples} that should be treated as indices when making the comparison
+(i.e. values of \code{variable} within each level of \code{by} will be compared at each unique combination of 
+levels of \code{indices}). Columns in \code{indices} not found in \code{samples} are ignored. The default is
+\code{".sample"}, which is the same name used for the sample index variable returned by \code{\link{extract_samples}};
+thus if you are using \code{compare_levels} with \code{extract_samples} you generally should not need to change
+this value. 
 }
 }
 \details{

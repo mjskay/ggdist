@@ -30,18 +30,23 @@ comparison_types = within(list(), {
 
 ## Given samples (long-format data frame resulting from extract_samples)
 ## generate comparisons of variable by levels of by by applying fun
-compare_levels = function(samples, variable, by, fun=`-`, comparison=default) {
+compare_levels = function(samples, variable, by, fun=`-`, comparison=default, indices=".sample") {
     eval(bquote(compare_levels_(samples, 
                 .(deparse(substitute(variable))), 
                 .(deparse(substitute(by))), 
                 .(substitute(fun)),
-                .(substitute(comparison))
+                .(substitute(comparison),
+                .(indices))
     )))
 }
 
-compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default) {
-    #drop unused levels from by factor
+compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, indices=".sample") {
+    #drop unused levels from "by" column
     samples[[by]] = factor(samples[[by]])
+    
+    #drop all unused columns before changing to wide format
+    indices = intersect(indices, names(samples)) #don't include index columns that aren't in samples
+    samples = samples[,union(indices, c(variable, by))]
 
     #get wide version of samples that we can use to generate comparisons easily
     samples_wide = spread_(samples, by, variable) 
