@@ -141,3 +141,15 @@ test_that("comparisons of subsets of levels of factors are supported", {
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=pairwise), ref)
     })
+
+test_that("extraneous columns are dropped before comparison", {
+        samples = get_samples()
+        
+        samples_extra = samples %>%
+            mutate(sd=1/sqrt(tau))  #use something that won't act as a clean index
+        
+        expect_equal(
+            compare_levels(samples, tau, by=ff, comparison=pairwise), 
+            compare_levels(samples_extra, tau, by=ff, comparison=pairwise)
+            )
+    })
