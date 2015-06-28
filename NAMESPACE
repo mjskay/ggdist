@@ -2,17 +2,20 @@ importFrom(plyr, ldply)
 import(lazyeval)
 import(dplyr)
 import(tidyr)
+import(ggplot2)
 
 export(
-    data_list, 
-    as.data_list, 
-    compose_data, 
-    extract_samples, 
+    data_list,
+    as.data_list,
+    compose_data,
+    extract_samples,
     apply_prototypes,
-    compare_levels
+    compare_levels,
+    geom_raindrop,
+    ggraindrop
     )
 
-S3method(c, data_list)    
+S3method(c, data_list)
 S3method(print, data_list)
 S3method(as.data_list, default)
 S3method(as.data_list, numeric)

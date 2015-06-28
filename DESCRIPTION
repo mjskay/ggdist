@@ -12,7 +12,8 @@ Imports:
     lazyeval,
     plyr,
     dplyr,
-    tidyr
+    tidyr,
+    ggplot2
 Suggests:
     testthat,
     rstan,
