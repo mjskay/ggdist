@@ -11,6 +11,7 @@ Depends:
 Imports:
     lazyeval,
     plyr,
+    reshape2,
     dplyr,
     tidyr,
     ggplot2,

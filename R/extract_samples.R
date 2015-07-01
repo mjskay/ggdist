@@ -129,20 +129,24 @@ extract_samples_long_.default = function(model, variable_names, index_names) {
             select_(.dots = c(".sample", variable_names))
     }
     else {
-        #determine the full names of the variables to extract
+        #determine what variable to extract
         variable_regex = paste0("^(", paste(variable_names, collapse="|"), ")\\[")
         variable_names_index = stri_detect_regex(dimnames(model)[[2]], variable_regex)
 
+        #rename columns to drop trailing "]" to eliminate extraneous last column
+        #when we do separate(), below
+        dimnames(model)[[2]] = stri_sub(dimnames(model)[[2]], to=-2)
+
         #subset and convert to data frame
-        as.data.frame(model[,variable_names_index]) %>%
-            #first, make long format
-            mutate(.sample=1:nrow(model)) %>%
-            gather(.variable, .value, -.sample) %>%
-            #drop trailing "]" to eliminate extraneous last column from separate()
-            mutate(.variable = stri_sub(.variable, to=-2)) %>%
+        model[,variable_names_index] %>%
+            #make long format with a sample index
+            melt(varnames=c(".sample",".variable"), value.name=".value",
+                as.is=TRUE  #don't convert strings to factors here since we're just going to apply separate to them
+            ) %>%
             #next, split indices in variable names into columns
             separate(.variable, c(".variable", index_names), sep="(\\,|\\[|\\])", 
-                    convert=TRUE) %>%  #converts indices to numerics
+                convert=TRUE #converts indices to numerics
+            ) %>%
             #now, make the value of each variable a column
             spread(.variable, .value)
     }
