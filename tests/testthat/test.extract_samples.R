@@ -33,7 +33,7 @@ test_that("extract_samples works on a parameter with one unnamed index", {
                     )
             })
         
-        expect_equal(extract_samples(RankCorr, tau[i]), ref)
+        expect_equal(extract_samples(RankCorr, tau[i]) %>% arrange(i), ref)
     })
 
 test_that("extract_samples works on a parameter with one named index", {
@@ -49,7 +49,7 @@ test_that("extract_samples works on a parameter with one named index", {
                 )
             })
         
-        expect_equal(extract_samples(RankCorr, tau[i]), ref)
+        expect_equal(extract_samples(RankCorr, tau[i]) %>% arrange(i), ref)
     })
 
 test_that("extract_samples works on a parameter with one anonymous wide index", {
@@ -101,7 +101,7 @@ test_that("extract_samples works on a parameter with two named indices", {
                 })
             })
         
-        expect_equal(extract_samples(RankCorr, b[i,j]), ref)
+        expect_equal(extract_samples(RankCorr, b[i,j]) %>% arrange(j,i), ref)
     })
 
 
@@ -125,7 +125,7 @@ test_that("extract_samples works on a parameter with two named indices, one that
             }) %>%
             spread(j, b)
         
-        expect_equal(extract_samples(RankCorr, b[i,j] | j), ref)
+        expect_equal(extract_samples(RankCorr, b[i,j] | j) %>% arrange(.sample), ref)
     })
 
 test_that("extract_samples works on a parameter with one named index and one wide anonymous index", {
@@ -147,7 +147,7 @@ test_that("extract_samples works on a parameter with one named index and one wid
             }) %>%
             spread(j, b)
         
-        expect_equal(extract_samples(RankCorr, b[i,..]), ref)
+        expect_equal(extract_samples(RankCorr, b[i,..]) %>% arrange(.sample), ref)
     })
 
 test_that("extract_samples does not allow extraction of two variables simultaneously with a wide index", {
@@ -164,11 +164,11 @@ test_that("extract_samples correctly extracts multiple variables simultaneously"
         RankCorr = apply_prototypes(RankCorr, 
             list(i = factor(i_labels)))
         
-        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu)[i]), 
+        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu)[i]) %>% arrange(i), 
             extract_samples(RankCorr, tau[i]) %>%
                 left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
         )
-        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]), 
+        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]) %>% arrange(i), 
             extract_samples(RankCorr, tau[i]) %>%
                 left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
                 left_join(extract_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
