@@ -129,26 +129,22 @@ extract_samples_long_.default = function(model, variable_names, index_names) {
             select_(.dots = c(".sample", variable_names))
     }
     else {
-        all_samples = NULL
-        for (variable_name in variable_names) { #TODO: this is ugly and could be more efficient
-            variable_samples = ldply(colnames(model), function(colname) {
-                #parse column into variable name and indices
-                colname_parts = strsplit(colname,"\\,|\\]|\\[")[[1]]
-                if (colname_parts[1] == variable_name) {	#this is the variable we want
-                    #get the values of the indices 
-                    indices = as.list(as.numeric(colname_parts[-1]))
-                    names(indices) = index_names
-                    #get the values of this variable in each sample
-                    values = list(model[,colname])
-                    names(values) = variable_name
-                    #put it all together
-                    data.frame(.sample=1:nrow(model), indices, values)
-                }
-            })
-            all_samples = if (is.null(all_samples)) variable_samples
-                else left_join(all_samples, variable_samples, by=intersect(names(all_samples), names(variable_samples))) 
-        }
-        all_samples
+        #determine the full names of the variables to extract
+        variable_regex = paste0("^(", paste(variable_names, collapse="|"), ")\\[")
+        variable_names_index = stri_detect_regex(dimnames(model)[[2]], variable_regex)
+
+        #subset and convert to data frame
+        as.data.frame(model[,variable_names_index]) %>%
+            #first, make long format
+            mutate(.sample=1:nrow(model)) %>%
+            gather(.variable, .value, -.sample) %>%
+            #drop trailing "]" to eliminate extraneous last column from separate()
+            mutate(.variable = stri_sub(.variable, to=-2)) %>%
+            #next, split indices in variable names into columns
+            separate(.variable, c(".variable", index_names), sep="(\\,|\\[|\\])", 
+                    convert=TRUE) %>%  #converts indices to numerics
+            #now, make the value of each variable a column
+            spread(.variable, .value)
     }
 }
 extract_samples_long_.stanfit = function(model, ...) {

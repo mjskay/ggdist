@@ -13,7 +13,8 @@ Imports:
     plyr,
     dplyr,
     tidyr,
-    ggplot2
+    ggplot2,
+    stringi
 Suggests:
     testthat,
     rstan,

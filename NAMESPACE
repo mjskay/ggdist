@@ -3,6 +3,7 @@ import(lazyeval)
 import(dplyr)
 import(tidyr)
 import(ggplot2)
+import(stringi)
 
 export(
     data_list,

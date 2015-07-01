@@ -164,11 +164,11 @@ test_that("extract_samples correctly extracts multiple variables simultaneously"
         RankCorr = apply_prototypes(RankCorr, 
             list(i = factor(i_labels)))
         
-        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu)[i]) %>% arrange(i), 
+        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu)[i]), 
             extract_samples(RankCorr, tau[i]) %>%
                 left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
         )
-        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]) %>% arrange(i), 
+        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]), 
             extract_samples(RankCorr, tau[i]) %>%
                 left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
                 left_join(extract_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
