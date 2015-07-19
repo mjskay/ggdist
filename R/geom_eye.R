@@ -1,9 +1,9 @@
-# geom_raindrop and ggraindrop for raindrop plots with intervals
+# geom_eye and ggeye for eye plots with intervals
 # 
 # Author: mjskay
 ###############################################################################
 
-geom_raindrop = function(
+geom_eye = function(
     mapping = NULL, data = NULL,    #shared properties 
     stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin_args = list(), #violin
     interval_function="median_hilow", fun.data=interval_function, color = NULL, colour = color, interval_args = list(geom = "pointrange", position = "identity"), #stat_summary   
@@ -32,6 +32,6 @@ geom_raindrop = function(
     list(violin, interval)
 }
 
-ggraindrop = function(data=NULL, ...) {
-    ggplot(data=data, ...) + geom_raindrop() + coord_flip()
+ggeye = function(data=NULL, ...) {
+    ggplot(data=data, ...) + geom_eye() + coord_flip()
 }
