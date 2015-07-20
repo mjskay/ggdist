@@ -6,7 +6,8 @@ Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
     email = "mjskay@uw.edu"))
 Maintainer: Matthew Kay <mjskay@uw.edu>
 Description: Facilitates composing data for and extracting samples from Bayesian samplers (JAGS, Stan, ...) in a tidy data format.
-    Also provides some miscellaneous functions helpful for running Bayesian models, such as helpful ggplot2 plotting functions.
+    Also provides some miscellaneous functions helpful for running Bayesian models, such as a ggplot2 function for easy eye plots
+    of posteriors (aka raindrop plots or violin plots).
 Depends:
     R (>= 2.10)
 Imports:
