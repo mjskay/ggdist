@@ -13,8 +13,9 @@ export(
     extract_samples,
     apply_prototypes,
     compare_levels,
-    geom_raindrop,
-    ggraindrop
+    geom_eye,
+    ggeye,
+    mode_hdi
     )
 
 S3method(c, data_list)

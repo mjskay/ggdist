@@ -1,0 +1,92 @@
+\name{geom_eye}
+\alias{geom_eye}
+\title{Eye plots (aka raindrop plots, aka violin plots) of densities with point estimates and intervals for ggplot2}
+\description{
+Generates a combination geom_violin and geom_pointrange (from stat_summary) representing the y density,
+point estimates, and credible interval. Useful for representing posterior estimates from Bayesian samplers; in that
+context this is variously called an eye plot, a raindrop plot, or a violin plot (though violin plot is 
+also applied to plots of data, hence its use is not preferred here).
+}
+\usage{
+geom_eye(
+    mapping = NULL, data = NULL,
+    
+    #arguments passed to geom_violin to create the density
+    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area",
+    fill = NULL,
+    violin_args = list(), ...,
+    
+    #arguments passed to stat_summary to create the interval
+    interval_function = "median_hilow", fun.data = interval_function, 
+    color = NULL, colour = color,
+    interval_args = list(geom = "pointrange", position = "identity")
+)
+}
+\arguments{
+  \item{mapping}{
+The aesthetic mapping, usually constructed with \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the layer level if you are overriding the plot defaults.
+}
+  \item{data}{
+A layer specific dataset - only needed if you want to override the plot defaults.
+}
+  \item{stat}{
+Passed to \code{\link{geom_violin}}. The statistical transformation to use on the data for this layer.
+}
+  \item{position}{
+Passed to \code{\link{geom_violin}}. The position adjustment to use for overlapping points on this layer.
+}
+  \item{trim}{
+Passed to \code{\link{geom_violin}}. If \code{TRUE} (default), trim the tails of the violins to the range of the data. If \code{FALSE}, don't trim the tails.
+}
+  \item{scale}{
+Passed to \code{\link{geom_violin}}. If "area" (default), all violins have the same area (before trimming the tails). 
+If "count", areas are scaled proportionally to the number of observations. If "width", all violins have the same maximum width.
+}
+  \item{fill}{
+Passed to \code{\link{geom_violin}}. Fill color of the violin.
+}
+  \item{violin_args}{
+Other arguments passed to \code{\link{geom_violin}}.
+}
+  \item{interval_function}{
+The function used to construct point estimates and credible intervals from the data. Should be a function that takes
+a vector of data as input and returns a data frame with columns \code{y}, \code{ymin}, and \code{ymax}, representing
+the point estimate, lower bound of the credible interval, and upper bound of the credible interval. Some typical functions to consider here
+are \code{\link{mean_cl_normal}} (mean with student-t interval), \code{\link{median_hilow}} (median with quantile interval), and 
+\code{\link{mode_hdi}} (mode with highest density interval). Alias for \code{fun.data}.
+}
+  \item{fun.data}{
+Passed to \code{\link{stat_summary}}. See \code{interval_function} above.
+}
+  \item{color}{
+Passed to \code{\link{stat_summary}}. Color of the point estimate and credible interval. Alias for \code{colour}.
+}
+  \item{colour}{
+Passed to \code{\link{stat_summary}}. Color of the point estimate and credible interval. Alias for \code{color}.
+}
+  \item{interval_args}{
+Other arguments passed to \code{\link{stat_summary}}.
+}
+  \item{...}{
+Other arguments passed to \code{\link{geom_violin}}.
+}
+}
+\details{
+An eye plot is a compact visual summary of the distribution of some samples, used (under various names and with subtle variations) to visualize 
+posterior distributions in Bayesian inference. This instantiation is a combination of a violin plot, point estimate, and credible
+interval. \code{geom_eye()} is equivalent to \code{geom_violin() + stat_summary()} with some reasonable defaults, including 
+color choices and the use of median with 95\% quantile intervals.
+}
+\author{
+Matthew Kay
+}
+\seealso{
+See \code{\link{ggeye}} for a shortcut combining a call to \code{\link{ggplot}} with \code{geom_eye}. See \code{\link{geom_violin}} and
+\code{\link{stat_summary}} for the geoms this function is based on.
+}
+\examples{
+##TODO
+
+
+}
+\keyword{manip}

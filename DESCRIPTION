@@ -21,7 +21,8 @@ Suggests:
     testthat,
     rstan,
     runjags,
-    coda
+    coda,
+    modeest
 License: GPL (>= 2)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: https://github.com/mjskay/tidybayes

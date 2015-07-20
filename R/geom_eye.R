@@ -5,9 +5,8 @@
 
 geom_eye = function(
     mapping = NULL, data = NULL,    #shared properties 
-    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin_args = list(), #violin
-    interval_function="median_hilow", fun.data=interval_function, color = NULL, colour = color, interval_args = list(geom = "pointrange", position = "identity"), #stat_summary   
-    ... #violin
+    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin_args = list(), ..., #violin
+    interval_function="median_hilow", fun.data=interval_function, color = NULL, colour = color, interval_args = list(geom = "pointrange", position = "identity") #stat_summary   
 ) {
 
     #build violin plot
@@ -32,6 +31,17 @@ geom_eye = function(
     list(violin, interval)
 }
 
-ggeye = function(data=NULL, ...) {
-    ggplot(data=data, ...) + geom_eye() + coord_flip()
+ggeye = function(data=NULL, mapping=NULL, ...) {
+    ggplot(data=data, mapping=mapping) + geom_eye(...) + coord_flip()
+}
+
+#function for use with stat_summary that returns the mode and
+#highest density interval of the data
+mode_hdi = function(x, ...) {
+    interval = coda::HPDinterval(coda::mcmc(x), ...)
+    data.frame(
+        ymin = interval[,"lower"],
+        ymax = interval[,"upper"],
+        y = modeest::parzen(x, ...)
+    ) 
 }
