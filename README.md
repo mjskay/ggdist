@@ -30,7 +30,16 @@ format for other R functions. `tidybayes` aims to simplify these two common
   the sampler.
   
 `tidybayes` also provides some additional functionality for data manipulation
-tasks common to many models:
+and visualization tasks common to many models:
+
+* __Visualizing posterior estimates__, which when many estimates are involved
+  can be done succinctly using eye plots (aka raindrop plots or violin
+  plots). Eye plots are a compact representation of posterior densities that 
+  combines with credible intervals and point estimates with a symmetric visualization 
+  of density, making for straightforward and compact comparison of many data points. 
+  The `geom_eye` function provides a convenient way to generate eye plots using 
+  `ggplot2`, and `ggeye` offers a shortcut combining `ggplot`, `geom_eye`, and
+  `coord_flip`. 
 
 * __Comparing a variable across levels of a factor__, which often means first
   generating pairs of levels of a factor (according to some desired set of 
