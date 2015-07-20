@@ -4,7 +4,7 @@
 ###############################################################################
 
 # Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in global.variables.R
+# Names used broadly should be put in global_variables.R
 globalVariables(c("default"))
 
 
