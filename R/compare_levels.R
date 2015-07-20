@@ -3,6 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in global.variables.R
+globalVariables(c("default"))
+
+
 #COMPARISON TYPES
 comparison_types = within(list(), {
     ordered = function(x) {

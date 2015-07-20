@@ -3,6 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in global.variables.R
+globalVariables(c("..", ".variable", ".value"))
+
 
 ## Extract a sample from an MCMC chain for a variable with the given named indices into a long-format data frame.
 ## For example, imagine a variable b[i,v] with i in [1..100] and v in [1..3]. An MCMC sample returned from JAGS 
