@@ -4,9 +4,17 @@
 ###############################################################################
 
 geom_eye = function(
-    mapping = NULL, data = NULL,    #shared properties 
-    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin_args = list(), ..., #violin
-    interval_function="median_hilow", fun.data=interval_function, color = NULL, colour = color, interval_args = list(geom = "pointrange", position = "identity") #stat_summary   
+    #shared properties
+    mapping = NULL, data = NULL,
+    
+    #violin properties
+    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, 
+    violin_args = list(), ...,
+    
+    #stat_summary properties
+    interval_function="median_hilow", fun.data=interval_function, 
+    color = NULL, colour = color, size = NULL, 
+    interval_args = list(geom = "pointrange", position = "identity")
 ) {
 
     #build violin plot
@@ -22,6 +30,7 @@ geom_eye = function(
     interval_args =
         list(mapping=mapping, data=data, fun.data=fun.data, fill=NA) %>%
         {if (!is.null(colour)) modifyList(., list(colour=colour)) else .} %>%
+        {if (!is.null(size)) modifyList(., list(size=size)) else .} %>%
         modifyList(interval_args)
     interval = do.call(stat_summary, interval_args)
     

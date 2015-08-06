@@ -18,7 +18,7 @@ geom_eye(
     
     #arguments passed to stat_summary to create the interval
     interval_function = "median_hilow", fun.data = interval_function, 
-    color = NULL, colour = color,
+    color = NULL, colour = color, size = NULL,
     interval_args = list(geom = "pointrange", position = "identity")
 )
 }
@@ -48,6 +48,9 @@ Passed to \code{\link{geom_violin}}. Fill color of the violin.
   \item{violin_args}{
 Other arguments passed to \code{\link{geom_violin}}.
 }
+  \item{...}{
+Other arguments passed to \code{\link{geom_violin}}.
+}
   \item{interval_function}{
 The function used to construct point estimates and credible intervals from the data. Should be a function that takes
 a vector of data as input and returns a data frame with columns \code{y}, \code{ymin}, and \code{ymax}, representing
@@ -64,11 +67,11 @@ Passed to \code{\link{stat_summary}}. Color of the point estimate and credible i
   \item{colour}{
 Passed to \code{\link{stat_summary}}. Color of the point estimate and credible interval. Alias for \code{color}.
 }
+  \item{size}{
+Passed to \code{\link{stat_summary}}. Line weight of the point estimate and credible interval.
+}
   \item{interval_args}{
 Other arguments passed to \code{\link{stat_summary}}.
-}
-  \item{...}{
-Other arguments passed to \code{\link{geom_violin}}.
 }
 }
 \details{
