@@ -128,5 +128,6 @@ extract_samples_long_.mcmc.list = function(model, ...) {
     extract_samples_long_(as.matrix(model), ...)
 }
 extract_samples_long_.runjags = function(model, ...) {
+    requireNamespace("runjags")
     extract_samples_long_(coda::as.mcmc.list(model), ...)
 }
