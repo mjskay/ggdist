@@ -10,12 +10,19 @@ export(
     data_list,
     as.data_list,
     compose_data,
-    extract_samples,
+
     apply_prototypes,
+    extract_samples,
     compare_levels,
+
     geom_eye,
     ggeye,
-    mode_hdi
+    mode_hdi,
+
+    predict_curve,
+    predict_curve_density,
+    density_bins,
+    histogram_bins
     )
 
 S3method(c, data_list)

@@ -1,0 +1,46 @@
+\name{denisty_bins}
+\alias{density_bins}
+\alias{histogram_bins}
+\title{Density bins as data frames suitable for use with predict_curve}
+\description{
+Generates a data frame of bins representing the kernel density (or histogram) of a vector, suitable for use in generating predictive distributions using predict_curve.
+}
+\usage{
+density_bins(x, ...)
+histogram_bins(x, ...)
+}
+\arguments{
+  \item{x}{
+A numeric vector
+}
+  \item{...}{
+Additional arguments passed to \code{\link{density}} or \code{\link{hist}}. 
+}
+}
+\details{
+These functions are simple wrappers to \code{\link{density}} and \code{\link{hist}} that compute density estimates and
+return their results in a consistent format: a data frame of bins suitable for use with \code{\link{predict_curve}}.
+
+\code{density_bins} computes a kernel density estimate using \code{\link{density}}.
+
+\code{histogram_bins} computes a density histogram using \code{\link{hist}}.
+}
+\value{
+A data frame representing bins and their densities with the following columns:
+\item{mid}{Bin midpoint}
+\item{lower}{Lower endpoint of each bin}
+\item{upper}{Upper endpoint of each bin}
+\item{density}{Density estimate of the bin}
+}
+\author{
+Matthew Kay
+}
+\seealso{
+See \code{\link{predict_curve}} and the shortcut \code{\link{predict_curve_density}}.
+}
+\examples{
+##TODO
+
+
+}
+\keyword{manip}

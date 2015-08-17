@@ -39,7 +39,11 @@ and visualization tasks common to many models:
   of density, making for straightforward and compact comparison of many data points. 
   The `geom_eye` function provides a convenient way to generate eye plots using 
   `ggplot2`, and `ggeye` offers a shortcut combining `ggplot`, `geom_eye`, and
-  `coord_flip`. 
+  `coord_flip`.
+  
+  Posterior fit lines (with densities around the fit) can also be visualized
+  using a combination of `predict_curve` and `predict_curve_density` plus
+  `geom_rect`. More succinct shortcuts for this are coming.
 
 * __Comparing a variable across levels of a factor__, which often means first
   generating pairs of levels of a factor (according to some desired set of 
