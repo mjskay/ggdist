@@ -28,8 +28,10 @@ as.data_list.default = function(object, name="", ...) {
     warning(deparse(name), " has unsupported type ", deparse(class(object)), " and was dropped.")
     data_list()
 }
-as.data_list.numeric = function(object, name="", ...) {
-    data = data_list(object)
+as.data_list.numeric = function(object, name="", 
+        scalar_as_array=FALSE,  #treat single scalar values as array of length 1 
+        ...) {
+    data = data_list(if (scalar_as_array) as.array(object) else object)
     if (name == "") {	#name unspecified, warn
         warning("No name provided for value ", deparse(object, nlines=1))
     }
@@ -57,7 +59,10 @@ as.data_list.list = function(object, name="", ...) {
 }
 as.data_list.data.frame = function(object, name="", .n_name=function(name) paste0("n_", name), ...) {
     #first, translate all variables in the data frame
-    data = as.data_list.list(object, name, .n_name, ...)
+    data = as.data_list.list(object, name, .n_name, 
+        scalar_as_array = TRUE,     #when converting from a data frame with only one row, convert 
+                                    #single scalars to arrays of length 1
+        ...)
     #then add "n" column and return final list
     n_name = if (name == "") "n" else .n_name(name)
     data[[n_name]] = nrow(object)
