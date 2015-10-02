@@ -1,7 +1,29 @@
 language: r
 
-#sudo is needed for R on travis-CI. See http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+# sudo is needed for R on travis-CI. See http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: required
 
 # Be strict when checking our package
 warnings_are_errors: true
+
+# install binary packages to speed up testing
+r_binary_packages:
+ - lazyeval
+ - plyr
+ - reshape2
+ - dplyr
+ - tidyr
+ - ggplot2
+ - stringi
+ - testthat
+ - rstan
+ - runjags
+ - coda
+ - modeest
+
+# workaround for "cyclic dependency check" error
+# see https://github.com/travis-ci/travis-ci/issues/4125
+env:
+  global:
+    - NOT_CRAN=true
+before_install: echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
