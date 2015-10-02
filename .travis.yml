@@ -16,7 +16,6 @@ r_binary_packages:
  - ggplot2
  - stringi
  - testthat
- - rstan
  - runjags
  - coda
  - modeest
