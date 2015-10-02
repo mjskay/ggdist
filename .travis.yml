@@ -27,6 +27,12 @@ r_binary_packages:
 r_packages:
  - rstan
 
+# rstan build settings
+# see https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started#configuration
+before_install:
+ - echo "CXXFLAGS=-O3" >> ~/.R/Makevars
+ - echo "CXXFLAGS+=-flto -ffat-lto-objects" >> ~/.R/Makevars
+
 # workaround for "cyclic dependency check" error
 # see https://github.com/travis-ci/travis-ci/issues/4125
 env:
