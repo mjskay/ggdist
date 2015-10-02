@@ -6,25 +6,21 @@ sudo: required
 # Be strict when checking our package
 warnings_are_errors: true
 
-# install binary packages to speed up testing
 # list suggested packages here to since they
 # aren't installed automatically
-r_binary_packages:
- - testthat
- - runjags
-
-# rstan (under suggests) must be installed
-# manually, but isn't in the binaries
 r_packages:
  - rstan
  - coda
  - modeest
+ - testthat
+ - runjags
 
 # workaround for "cyclic dependency check" error
 # see https://github.com/travis-ci/travis-ci/issues/4125
 env:
   global:
-    - NOT_CRAN=true
-    #needed to build rstan
-    - CXXFLAGS=-O3 -flto -ffat-lto-objects
-before_install: echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
+    - NOT_CRAN=true CXXFLAGS="-O2 -flto -ffat-lto-objects" CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
+before_install: 
+ - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
+ - mkdir -p ~/.R
+ - echo 'CXXFLAGS="-O2 -flto -ffat-lto-objects"' > ~/.R/Makevars
