@@ -7,6 +7,8 @@ sudo: required
 warnings_are_errors: true
 
 # install binary packages to speed up testing
+# list suggested packages here to since they
+# aren't installed automatically
 r_binary_packages:
  - lazyeval
  - plyr
@@ -19,6 +21,11 @@ r_binary_packages:
  - runjags
  - coda
  - modeest
+
+# rstan (under suggests) must be installed
+# manually, but isn't in the binaries
+r_packages:
+ - rstan
 
 # workaround for "cyclic dependency check" error
 # see https://github.com/travis-ci/travis-ci/issues/4125
