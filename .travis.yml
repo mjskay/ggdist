@@ -19,8 +19,11 @@ r_packages:
 # see https://github.com/travis-ci/travis-ci/issues/4125
 env:
   global:
-    - NOT_CRAN=true CXXFLAGS="-O2 -flto -ffat-lto-objects" CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
+    - NOT_CRAN=true "CXXFLAGS=-O2 -flto -ffat-lto-objects" CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 before_install: 
  - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
  - mkdir -p ~/.R
- - echo 'CXXFLAGS="-O2 -flto -ffat-lto-objects"' > ~/.R/Makevars
+ - echo 'CXXFLAGS=-O2 -flto -ffat-lto-objects' > ~/.R/Makevars
+ - echo 'CPP=clang' >> ~/.R/Makevars
+ - echo 'CXX=clang++' >> ~/.R/Makevars
+ 
