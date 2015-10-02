@@ -10,28 +10,15 @@ warnings_are_errors: true
 # list suggested packages here to since they
 # aren't installed automatically
 r_binary_packages:
- - lazyeval
- - plyr
- - reshape2
- - dplyr
- - tidyr
- - ggplot2
- - stringi
  - testthat
  - runjags
- - coda
- - modeest
 
 # rstan (under suggests) must be installed
 # manually, but isn't in the binaries
 r_packages:
  - rstan
-
-# rstan build settings
-# see https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started#configuration
-before_install:
- - echo "CXXFLAGS=-O3" >> ~/.R/Makevars
- - echo "CXXFLAGS+=-flto -ffat-lto-objects" >> ~/.R/Makevars
+ - coda
+ - modeest
 
 # workaround for "cyclic dependency check" error
 # see https://github.com/travis-ci/travis-ci/issues/4125
