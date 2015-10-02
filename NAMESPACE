@@ -1,8 +1,8 @@
 importFrom(plyr, ldply)
+importFrom(tidyr, spread, spread_, separate)
 import(reshape2)
 import(lazyeval)
 import(dplyr)
-import(tidyr)
 import(ggplot2)
 import(stringi)
 

@@ -16,7 +16,7 @@ data type not already supported (see `Details`).
 \usage{
 as.data_list(object, name="", ...)
 \method{as.data_list}{default}(object, name="", ...)
-\method{as.data_list}{numeric}(object, name="", ...)
+\method{as.data_list}{numeric}(object, name="", scalar_as_array=FALSE, ...)
 \method{as.data_list}{logical}(object, name="", ...)
 \method{as.data_list}{factor}(object, name="", 
     .n_name=function(name) paste0("n_", name), ...)
@@ -30,6 +30,11 @@ The object to convert (see `Details`).
 }
   \item{name}{
 The name of the element in the returned list corresponding to this object.
+}
+  \item{scalar_as_array}{
+If \code{TRUE}, returns single scalars as an 1-dimensional array with one element. This
+is used by \code{as.data_list.data.frame} to ensure that columns from a data frame with
+only one row are still returned as arrays instead of scalars. 
 }
   \item{.n_name}{
 A function that is used to form index variables (a variable whose value is the length of a factor or a data 
