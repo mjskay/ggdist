@@ -25,4 +25,6 @@ r_packages:
 env:
   global:
     - NOT_CRAN=true
+    #needed to build rstan
+    - CXXFLAGS=-O3 -flto -ffat-lto-objects
 before_install: echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
