@@ -12,9 +12,16 @@ export(
     compose_data,
 
     apply_prototypes,
-    extract_samples,
+    tidy_samples,
     compare_levels,
 
+    tidy_link,
+    tidy_sim,
+    
+    seq_range,
+    
+    mean_qi,
+    
     geom_eye,
     ggeye,
     mode_hdi,

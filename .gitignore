@@ -1,3 +1,7 @@
 *~
 .project
 .settings
+.Rhistory
+.RData
+.Rproj*
+tidybayes.Rproj

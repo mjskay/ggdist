@@ -1,4 +1,4 @@
-# Tests for extract_samples
+# Tests for tidy_samples
 # 
 # Author: mjskay
 ###############################################################################
@@ -9,20 +9,20 @@ library(dplyr)
 library(tidyr)
 library(tidybayes)
 
-context("extract_samples")
+context("tidy_samples")
 
-test_that("extract_samples works on a simple parameter with no indices", {
+test_that("tidy_samples works on a simple parameter with no indices", {
         data(RankCorr, package="tidybayes")
         
         ref = data.frame(
             .sample = 1:nrow(RankCorr),
             typical_r = RankCorr[,"typical_r"]
             )
-        expect_equal(extract_samples(RankCorr, typical_r[]), ref)
+        expect_equal(tidy_samples(RankCorr, typical_r[]), ref)
     })
 
 
-test_that("extract_samples works on a parameter with one unnamed index", {
+test_that("tidy_samples works on a parameter with one unnamed index", {
         data(RankCorr, package="tidybayes")
         
         ref = ldply(1:18, function(i) {
@@ -33,10 +33,10 @@ test_that("extract_samples works on a parameter with one unnamed index", {
                     )
             })
         
-        expect_equal(extract_samples(RankCorr, tau[i]) %>% arrange(i), ref)
+        expect_equal(tidy_samples(RankCorr, tau[i]) %>% arrange(i), ref)
     })
 
-test_that("extract_samples works on a parameter with one named index", {
+test_that("tidy_samples works on a parameter with one named index", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
         RankCorr = apply_prototypes(RankCorr, list(i=factor(i_labels)))
@@ -49,10 +49,10 @@ test_that("extract_samples works on a parameter with one named index", {
                 )
             })
         
-        expect_equal(extract_samples(RankCorr, tau[i]) %>% arrange(i), ref)
+        expect_equal(tidy_samples(RankCorr, tau[i]) %>% arrange(i), ref)
     })
 
-test_that("extract_samples works on a parameter with one anonymous wide index", {
+test_that("tidy_samples works on a parameter with one anonymous wide index", {
         data(RankCorr, package="tidybayes")
         
         ref = data.frame(.sample = 1:nrow(RankCorr)) 
@@ -62,11 +62,11 @@ test_that("extract_samples works on a parameter with one anonymous wide index", 
             ref = cbind(ref, refcol)
         }
         
-        expect_equal(extract_samples(RankCorr, tau[..]), ref)
+        expect_equal(tidy_samples(RankCorr, tau[..]), ref)
     })
 
 
-test_that("extract_samples works on a parameter with one named wide index", {
+test_that("tidy_samples works on a parameter with one named wide index", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
         RankCorr = apply_prototypes(RankCorr, list(i=factor(i_labels)))
@@ -78,11 +78,11 @@ test_that("extract_samples works on a parameter with one named wide index", {
             ref = cbind(ref, refcol)
         }
         
-        expect_equal(extract_samples(RankCorr, tau[i] | i), ref)
+        expect_equal(tidy_samples(RankCorr, tau[i] | i), ref)
     })
 
 
-test_that("extract_samples works on a parameter with two named indices", {
+test_that("tidy_samples works on a parameter with two named indices", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         j_labels = c("A","B","C","D")
         data(RankCorr, package="tidybayes")
@@ -101,11 +101,11 @@ test_that("extract_samples works on a parameter with two named indices", {
                 })
             })
         
-        expect_equal(extract_samples(RankCorr, b[i,j]) %>% arrange(j,i), ref)
+        expect_equal(tidy_samples(RankCorr, b[i,j]) %>% arrange(j,i), ref)
     })
 
 
-test_that("extract_samples works on a parameter with two named indices, one that is wide", {
+test_that("tidy_samples works on a parameter with two named indices, one that is wide", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         j_labels = c("A","B","C","D")
         data(RankCorr, package="tidybayes")
@@ -125,10 +125,10 @@ test_that("extract_samples works on a parameter with two named indices, one that
             }) %>%
             spread(j, b)
         
-        expect_equal(extract_samples(RankCorr, b[i,j] | j) %>% arrange(.sample), ref)
+        expect_equal(tidy_samples(RankCorr, b[i,j] | j) %>% arrange(.sample), ref)
     })
 
-test_that("extract_samples works on a parameter with one named index and one wide anonymous index", {
+test_that("tidy_samples works on a parameter with one named index and one wide anonymous index", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
         RankCorr = apply_prototypes(RankCorr, 
@@ -147,42 +147,42 @@ test_that("extract_samples works on a parameter with one named index and one wid
             }) %>%
             spread(j, b)
         
-        expect_equal(extract_samples(RankCorr, b[i,..]) %>% arrange(.sample), ref)
+        expect_equal(tidy_samples(RankCorr, b[i,..]) %>% arrange(.sample), ref)
     })
 
-test_that("extract_samples does not allow extraction of two variables simultaneously with a wide index", {
+test_that("tidy_samples does not allow extraction of two variables simultaneously with a wide index", {
         data(RankCorr, package="tidybayes")
 
         error_message = "Cannot extract samples of multiple variables in wide format."
-        expect_error(extract_samples(RankCorr, cbind(tau, typical_mu)[..]), error_message)
-        expect_error(extract_samples(RankCorr, cbind(tau, typical_mu)[i] | i), error_message)
+        expect_error(tidy_samples(RankCorr, cbind(tau, typical_mu)[..]), error_message)
+        expect_error(tidy_samples(RankCorr, cbind(tau, typical_mu)[i] | i), error_message)
     })
 
-test_that("extract_samples correctly extracts multiple variables simultaneously", {
+test_that("tidy_samples correctly extracts multiple variables simultaneously", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
         RankCorr = apply_prototypes(RankCorr, 
             list(i = factor(i_labels)))
         
-        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu)[i]), 
-            extract_samples(RankCorr, tau[i]) %>%
-                left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
+        expect_equal(tidy_samples(RankCorr, cbind(tau, typical_mu)[i]), 
+            tidy_samples(RankCorr, tau[i]) %>%
+                left_join(tidy_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
         )
-        expect_equal(extract_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]), 
-            extract_samples(RankCorr, tau[i]) %>%
-                left_join(extract_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
-                left_join(extract_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
+        expect_equal(tidy_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]), 
+            tidy_samples(RankCorr, tau[i]) %>%
+                left_join(tidy_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
+                left_join(tidy_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
         )
     })
 
-test_that("extract_samples correctly extracts multiple variables simultaneously when those variables have no indices", {
+test_that("tidy_samples correctly extracts multiple variables simultaneously when those variables have no indices", {
         data(RankCorr, package="tidybayes")
         dimnames(RankCorr)[[2]][[1]] <- "tr2"
 
-        expect_equal(extract_samples(RankCorr, cbind(typical_r)[]), 
-            extract_samples(RankCorr, typical_r[]))
-        expect_equal(extract_samples(RankCorr, cbind(tr2, typical_r)[]), 
-            extract_samples(RankCorr, tr2[]) %>%
-                left_join(extract_samples(RankCorr, typical_r[]), by=c(".sample"))
+        expect_equal(tidy_samples(RankCorr, cbind(typical_r)[]), 
+            tidy_samples(RankCorr, typical_r[]))
+        expect_equal(tidy_samples(RankCorr, cbind(tr2, typical_r)[]), 
+            tidy_samples(RankCorr, tr2[]) %>%
+                left_join(tidy_samples(RankCorr, typical_r[]), by=c(".sample"))
         )
     })

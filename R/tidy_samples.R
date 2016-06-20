@@ -1,4 +1,4 @@
-# extract_samples
+# tidy_samples (used to be "extract_samples")
 # 
 # Author: mjskay
 ###############################################################################
@@ -8,10 +8,16 @@
 globalVariables(c("..", ".variable", ".value"))
 
 
-extract_samples = function(model, variable_spec) {
-    extract_samples_(model, lazy(variable_spec))
+
+extract_samples = function(...) {
+    .Deprecated("tidy_samples")
+    tidy_samples(...)
 }
-extract_samples_ = function(model, variable_spec) {
+
+tidy_samples = function(model, variable_spec) {
+    tidy_samples_(model, lazy(variable_spec))
+}
+tidy_samples_ = function(model, variable_spec) {
     #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
     spec = lazy_eval(variable_spec, data=list(
         `[` = function(variable_names, ...) {
@@ -38,7 +44,7 @@ extract_samples_ = function(model, variable_spec) {
     wide_index_name = spec[[3]]
     
     #extract the samples into a long data frame
-    samples = extract_samples_long_(model, variable_names, index_names)
+    samples = tidy_samples_long_(model, variable_names, index_names)
     
     #convert variable and/or indices back into usable data types
     constructors = attr(model, "constructors")
@@ -81,14 +87,14 @@ extract_samples_ = function(model, variable_spec) {
 ## For example, imagine a variable b[i,v] with i in [1..100] and v in [1..3]. An MCMC sample returned from JAGS 
 ## (for example) would have columns with names like "b[1,1]", "b[2,1]", etc. 
 ##
-## extract_samples_long_(mcmcChain, "b", c("i", "v")) would return a data frame with:
+## tidy_samples_long_(mcmcChain, "b", c("i", "v")) would return a data frame with:
 ##		column ".sample": values in [1..nrow(mcmcChain)]
 ## 		column "i":		  values in [1..100]
 ##		column "v":		  values in [1..3]
 ##      column "b":       sample number ".sample" of "b[i,v]" in mcmcChain 
 ##
-extract_samples_long_ = function(model, variable_names, index_names) UseMethod("extract_samples_long_")
-extract_samples_long_.default = function(model, variable_names, index_names) {
+tidy_samples_long_ = function(model, variable_names, index_names) UseMethod("tidy_samples_long_")
+tidy_samples_long_.default = function(model, variable_names, index_names) {
     if (is.null(index_names)) {
         #no indices, just return the samples with a sample index added
         model %>% as.data.frame() %>%
@@ -118,16 +124,19 @@ extract_samples_long_.default = function(model, variable_names, index_names) {
             spread(.variable, .value)
     }
 }
-extract_samples_long_.stanfit = function(model, ...) {
-    extract_samples_long_(as.matrix(model), ...)
+tidy_samples_long_.stanfit = function(model, ...) {
+    tidy_samples_long_(as.matrix(model), ...)
 }
-extract_samples_long_.mcmc = function(model, ...) {
-    extract_samples_long_(as.matrix(model), ...)
+tidy_samples_long_.mcmc = function(model, ...) {
+    tidy_samples_long_(as.matrix(model), ...)
 }
-extract_samples_long_.mcmc.list = function(model, ...) {
-    extract_samples_long_(as.matrix(model), ...)
+tidy_samples_long_.mcmc.list = function(model, ...) {
+    tidy_samples_long_(as.matrix(model), ...)
 }
-extract_samples_long_.runjags = function(model, ...) {
+tidy_samples_long_.runjags = function(model, ...) {
     requireNamespace("runjags")
-    extract_samples_long_(coda::as.mcmc.list(model), ...)
+    tidy_samples_long_(coda::as.mcmc.list(model), ...)
+}
+tidy_samples_long_.map2stan = function(model, ...) {
+    tidy_samples_long_(model@stanfit, ...)
 }
