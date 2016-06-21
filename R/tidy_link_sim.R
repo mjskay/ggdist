@@ -23,6 +23,12 @@ tidy_link_sim_ = function(fun, data, fit, name, ...) {
     #to a data.frame on the way in
     l = fun(fit, as.data.frame(data), ...)
     
+    if (is.list(l)) {
+        #if there are multiple link definitions in the model, link() will return
+        #a list of matrices (indexed by the link parameter name) instead of a single matrix
+        l = l[name]
+    }
+    
     #tidy it up: make it long format with a ".sample" column
     tidy_l = data.frame(
         .sample = 1:nrow(l),
