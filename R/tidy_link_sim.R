@@ -3,12 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-#return the parameter name for the first link in the given model (or
-#the only one, if there is only one)
-first_link_name = function(fit) UseMethod("first_link_name", fit)
-first_link_name.map = function(fit) fit@links[[1]][[1]]
-first_link_name.map2stan = function(fit) fit@formula_parsed$lm[[1]]$parameter
-
 tidy_link = function(data, fit, ...) {
     tidy_link_sim_(link, data, fit, 
         #if there is only a single link in the model, link() will

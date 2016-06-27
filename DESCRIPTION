@@ -17,7 +17,8 @@ Imports:
     dplyr,
     tidyr,
     ggplot2,
-    stringi
+    stringi,
+    lsmeans
 Suggests:
     testthat,
     rstan,
