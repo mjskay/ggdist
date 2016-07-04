@@ -23,13 +23,15 @@ tidy_link_sim_ = function(fun, data, fit,
     ...) {
     
     if (missing(data)) {
-        data = as.data.frame(fit@data)
+        data = fit@data
     }
     
-    # get link/sim results as a matrix or list of matrices
-    # those functions don't always play well with tbl_dfs, so convert `data`
+    # some of the  functions below don't always play well with tbl_dfs, so convert `data`
     # to a data.frame on the way in
-    responses = fun(fit, as.data.frame(data), ...)
+    data = as.data.frame(data)
+    
+    # get link/sim results as a matrix or list of matrices
+    responses = fun(fit, data, ...)
     
     if (!is.list(responses)) {
         #if there is only one link definition in the model, or if we are using sim(), 
