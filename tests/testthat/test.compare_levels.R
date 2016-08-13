@@ -137,7 +137,7 @@ test_that("comparisons of subsets of levels of factors are supported", {
                 samples_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
                 samples_wide$tau = samples_wide[[levels.[[2]]]] - samples_wide[[levels.[[1]]]]  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% select(-one_of(c("a","d","g")))
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=pairwise), ref)
     })
