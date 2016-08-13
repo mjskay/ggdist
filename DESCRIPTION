@@ -18,7 +18,8 @@ Imports:
     tidyr,
     ggplot2,
     stringi,
-    lsmeans
+    lsmeans,
+    Hmisc
 Suggests:
     testthat,
     rstan,

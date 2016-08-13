@@ -8,28 +8,27 @@ geom_eye = function(
     mapping = NULL, data = NULL,
     
     #violin properties
-    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, 
+    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = "skyblue", 
     violin_args = list(), ...,
     
     #stat_summary properties
     interval_function="median_hilow", fun.data=interval_function, 
-    color = NULL, colour = color, size = NULL, 
+    color = NULL, size = NULL, 
     interval_args = list(geom = "pointrange", position = "identity")
 ) {
 
     #build violin plot
     violin_args = 
-        list(mapping=mapping, data=data, stat=stat, position=position, trim=trim, scale=scale, colour=NA, ...) %>%
+        list(mapping=mapping, data=data, stat=stat, position=position, trim=trim, scale=scale, color=NA, 
+            fill=fill, size=0.5, alpha=1.0, linetype = "solid", ...) %>%
         {if (!is.null(fill)) modifyList(., list(fill=fill)) else .} %>%
         modifyList(violin_args)
     violin = do.call(geom_violin, violin_args)
-    #custom defaults (I don't like the white background or outline on the violin)
-    violin$geom$default_aes = function(.) aes(weight=1, colour=NA, fill="skyblue", size=0.5, alpha=1.0, linetype = "solid")
 
     #build interval annotations
     interval_args =
         list(mapping=mapping, data=data, fun.data=fun.data, fill=NA) %>%
-        {if (!is.null(colour)) modifyList(., list(colour=colour)) else .} %>%
+        {if (!is.null(color)) modifyList(., list(color=color)) else .} %>%
         {if (!is.null(size)) modifyList(., list(size=size)) else .} %>%
         modifyList(interval_args)
     interval = do.call(stat_summary, interval_args)
