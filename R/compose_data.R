@@ -3,6 +3,8 @@
 # Author: mjskay
 ###############################################################################
 
+# naming function
+n_prefix = function(prefix) function(name) if(name == "") prefix else paste0(prefix, "_", name)
 
 #basic data list
 data_list = function(...) {
@@ -41,8 +43,8 @@ as.data_list.numeric = function(object, name="",
 as.data_list.logical = function(object, name="", ...) {
     as.data_list(as.numeric(object), name, ...)
 }
-as.data_list.factor = function(object, name="", .n_name=function(name) paste0("n_", name), ...) {
-    data = as.data_list(as.numeric(object), name, .n_name=.n_name, ...)
+as.data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
+    data = as.data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
     if (any(table(object) == 0)) {
         warning("Some levels of factor ", deparse(name), " are unused. This may cause issues if you are using it as an index in a model.")
     }
@@ -57,14 +59,16 @@ as.data_list.list = function(object, name="", ...) {
     }
     data
 }
-as.data_list.data.frame = function(object, name="", .n_name=function(name) paste0("n_", name), ...) {
+as.data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...) {
     #first, translate all variables in the data frame
-    data = as.data_list.list(object, name, .n_name, 
+    data = as.data_list.list(object, 
+        name = name,
+        .n_name = .n_name, 
         scalar_as_array = TRUE,     #when converting from a data frame with only one row, convert 
                                     #single scalars to arrays of length 1
         ...)
     #then add "n" column and return final list
-    n_name = if (name == "") "n" else .n_name(name)
+    n_name = .n_name(name)
     data[[n_name]] = nrow(object)
     data
 }
@@ -96,7 +100,7 @@ as.data_list.data_list = function(object, name="", ...) {
 ## If you wish to add support for additional types not described above, provide an implementation
 ## of as.data_list for the type. See as.data_list.numeric, as.data_list.logical, etc for examples.
 ##
-compose_data = function(..., .n_name=function(name) paste0("n_", name)) {
+compose_data = function(..., .n_name = n_prefix("n")) {
     #translate argument names / values into a list
     objects = list(...)
     if (is.null(names(objects))) {
@@ -109,7 +113,7 @@ compose_data = function(..., .n_name=function(name) paste0("n_", name)) {
     unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
     names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
     #convert into data list 
-    data = as.data_list(objects, .n_name)
+    data = as.data_list(objects, .n_name = .n_name)
     #as a hack for now, we strip the "data_list" type in the end for compatibility
     #with runjags, which incorrectly checks for class(data) == "list" instead of
     #using is.list

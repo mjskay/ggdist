@@ -11,6 +11,7 @@ export(
     data_list,
     as.data_list,
     compose_data,
+    n_prefix,
 
     apply_prototypes,
     tidy_samples,
