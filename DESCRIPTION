@@ -19,7 +19,8 @@ Imports:
     ggplot2,
     stringi,
     lsmeans,
-    Hmisc
+    Hmisc,
+    LaplacesDemon
 Suggests:
     testthat,
     rstan,

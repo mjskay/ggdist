@@ -1,6 +1,7 @@
 importFrom(plyr, ldply)
 importFrom(tidyr, spread, spread_, separate)
 importFrom(lsmeans, recover.data)
+importFrom(LaplacesDemon, Mode)
 import(reshape2)
 import(lazyeval)
 import(dplyr)
@@ -22,7 +23,10 @@ export(
     
     seq_range,
     
+    estimate_interval,
     mean_qi,
+    mode_qi,
+    qi,
     
     geom_eye,
     ggeye,
