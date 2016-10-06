@@ -1,0 +1,117 @@
+---
+title: "Flat worm plots"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Flat Worm Plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+This vignette covers some variaties of worm plots, and in particular introduces flatworm plots, a regression diagnostic plot used to assess residual fit---like a QQ plot, but modified to maximize the ability of humans to perceive deviations from model fit.
+
+# Setup
+
+## Libraries and imports
+
+## Required libraries
+
+If you are missing any of the packages below, use `install.packages("packagename")` to install them.
+The `import::` syntax requires the `import` package to be installed, and provides a simple way to 
+import specific functions from a package without polluting your entire namespace (unlike `library()`)
+
+```{r setup, results="hide", message=FALSE}
+library(dplyr)
+library(magrittr)   #pipe syntax (%>%, %<>%, etc)
+library(ggplot2)
+library(gamlss)
+import::from(gamlss.dist, dTF, qTF, pTF, rTF)   #the TF functions are a scaled and shifted t distribution
+```
+
+# Test of kurtosis
+
+## Data
+
+Let's generate some data with varying levels of kurtosis
+
+```{r}
+k = 100
+d = data_frame(
+    mu = 0,
+    sigma = 1,
+    nu = seq(1,50,by=1)
+) %>%
+    group_by(mu, sigma, nu) %>%
+    do(data_frame(
+        x = rTF(k, .$mu, .$sigma, .$nu)
+    ))
+```
+
+And a normal model:
+
+```{r}
+dn = data_frame(
+    x = rnorm(k, 0, 1)
+)
+mn = lm(x ~ 1, data = dn)
+```
+
+Now let's fit the models:
+
+```{r}
+m = d %>%
+    group_by(nu) %>%
+    do(model = lm(x ~ 1, data=.))
+```
+
+
+```{r}
+flatworm(m$model[[10]], ylim=6)
++ geom_vline(xintercept = c(-2,2))
+flatworm(mn, cubic=T)
+wp(resid = rstandard(m$model[[10]]))
+wp(resid = rstandard(mn))
+```
+
+# Test of skew
+
+Let's generate some data with varying levels of skew
+
+```{r}
+k = 1000
+d = data_frame(
+    mu = 0,
+    sigma = 1,
+    skew = seq(-100,100,by=10)
+) %>%
+    group_by(mu, sigma, skew) %>%
+    do(data_frame(
+        x = rST1(k, .$mu, .$sigma, .$skew, Inf)
+    ))
+```
+
+And a normal model:
+
+```{r}
+dn = data_frame(
+    x = rnorm(k, 0, 1)
+)
+mn = lm(x ~ 1, data = dn)
+```
+
+Now let's fit the models:
+
+```{r}
+m = d %>%
+    group_by(skew) %>%
+    do(model = lm(x ~ 1, data=.))
+```
+
+```{r}
+flatworm(m$model[[0 + 11]], ylim=6, lines=FALSE, loess=TRUE, points=FALSE) + geom_vline(xintercept = c(-2,2))
+wp(resid = rstandard(m$model[[-5 + 11]]))
+```
+
