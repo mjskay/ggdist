@@ -4,8 +4,8 @@
 ###############################################################################
 
 library(testthat)
-library(plyr)
-library(dplyr)
+import::from(plyr, ldply, llply, .)
+import::from(dplyr, `%>%`)
 library(tidyr)
 library(tidybayes)
 
@@ -125,7 +125,7 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
                 samples_wide
             }) %>% select(-one_of(ff_labels))
         
-        expect_equal(compare_levels(samples, tau, by=ff, comparison=.(a + b, exp(c - f))), ref)
+        expect_equal(compare_levels(samples, tau, by=ff, comparison=plyr::.(a + b, exp(c - f))), ref)
     })
 
 test_that("comparisons of subsets of levels of factors are supported", {

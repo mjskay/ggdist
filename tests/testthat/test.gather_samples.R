@@ -4,8 +4,8 @@
 ###############################################################################
 
 library(testthat)
-import::from(plyr, ldply)
-library(dplyr)
+import::from(plyr, ldply, .)
+import::from(dplyr, `%>%`)
 library(tidyr)
 library(tidybayes)
 

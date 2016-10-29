@@ -23,6 +23,7 @@ Imports:
     Hmisc,
     LaplacesDemon,
     coda,
+    import,
     magrittr
 Suggests:
     testthat,
