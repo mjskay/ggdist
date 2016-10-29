@@ -1,4 +1,4 @@
-# Tests for extract_samples
+# Tests for compare_levels
 # 
 # Author: mjskay
 ###############################################################################

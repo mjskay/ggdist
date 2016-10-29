@@ -33,7 +33,7 @@ comparison_types = within(list(), {
 })
 
 
-## Given samples (long-format data frame resulting from extract_samples)
+## Given samples (long-format data frame resulting from gather_samples)
 ## generate comparisons of variable by levels of by by applying fun
 compare_levels = function(samples, variable, by, fun=`-`, comparison=default, indices=".sample") {
     eval(bquote(compare_levels_(samples, 
