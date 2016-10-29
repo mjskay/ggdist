@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 
-_Matthew Kay, University of Washington <mjskay@uw.edu>_
+_Matthew Kay, University of Michigan <mjskay@umich.edu>_
 
 [Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
 data frames (one observation per row) are particularly convenient for use
@@ -77,7 +77,7 @@ TBD.
 ## Problems
 
 Should you encounter any issues with this package, contact Matthew Kay
-(<mjskay@uw.edu>). If you have found a bug, please file it [here]
+(<mjskay@umich.edu>). If you have found a bug, please file it [here]
 (https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce
 the issue.
 

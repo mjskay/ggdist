@@ -3,8 +3,8 @@ Title: Compose/Extract Tidy Data for Bayesian Samplers
 Version: 0.9.0.000001
 Date: 2015-10-28
 Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
-    email = "mjskay@uw.edu"))
-Maintainer: Matthew Kay <mjskay@uw.edu>
+    email = "mjskay@umich.edu"))
+Maintainer: Matthew Kay <mjskay@umich.edu>
 Description: Facilitates composing data for and extracting samples from
     Bayesian samplers (JAGS, Stan, ...) in a tidy data format. Also provides some
     miscellaneous functions helpful for running Bayesian models, such as a ggplot2
