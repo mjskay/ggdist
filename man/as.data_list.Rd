@@ -12,6 +12,23 @@
 \title{Convert data into a data_list}
 \usage{
 as.data_list(object, name = "", ...)
+
+\method{as.data_list}{default}(object, name = "", ...)
+
+\method{as.data_list}{numeric}(object, name = "", scalar_as_array = FALSE,
+  ...)
+
+\method{as.data_list}{logical}(object, name = "", ...)
+
+\method{as.data_list}{factor}(object, name = "", .n_name = n_prefix("n"),
+  ...)
+
+\method{as.data_list}{list}(object, name = "", ...)
+
+\method{as.data_list}{data.frame}(object, name = "",
+  .n_name = n_prefix("n"), ...)
+
+\method{as.data_list}{data_list}(object, name = "", ...)
 }
 \arguments{
 \item{object}{The object to convert (see `Details`).}
@@ -62,6 +79,9 @@ If you wish to add support for additional types not described above, provide
 an implementation of \code{\link{as.data_list}} for the type. See the
 implementations of \code{as.data_list.numeric}, \code{as.data_list.logical},
 etc for examples.
+
+as.data_list.logical as.data_list.factor as.data_list.list
+as.data_list.data.frame as.data_list.data_list
 }
 \examples{
 

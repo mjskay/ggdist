@@ -5,7 +5,7 @@
 
 # Names that should be suppressed from global variable check by codetools
 # Names used broadly should be put in _global_variables.R
-globalVariables(c("expected_p","expected_z",".cuts",".worm_y"))
+globalVariables(c("expected_p","expected_z",".cuts",".worm_y","worm"))
 
 
 #' @import dplyr

@@ -32,7 +32,6 @@
 #' convenient parameter for adjusting the number of bins per point on the
 #' curve.
 #' 
-#' @aliases predict_curve predict_curve_density
 #' @param data A \code{\link{data.frame}}, \code{\link{tbl_df}} or
 #' \code{link{grouped_df}} representing posteriors from a Bayesian model as
 #' might be obtained through \code{\link{extract_samples}}. Grouped data frames
@@ -119,6 +118,7 @@ predict_curve = function(data, formula, summary = median, ...) {
     ))
 }
 
+#' @rdname predict_curve
 #' @export
 predict_curve_density = function(data, formula, summary = function(...) density_bins(..., n = n), n = 50, ...) {
     predict_curve(data, formula, summary = summary, ...)

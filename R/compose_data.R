@@ -76,7 +76,6 @@ print.data_list = function(x, ...) {
 #' implementations of \code{as.data_list.numeric}, \code{as.data_list.logical},
 #' etc for examples.
 #' 
-#' @aliases as.data_list as.data_list.default as.data_list.numeric
 #' as.data_list.logical as.data_list.factor as.data_list.list
 #' as.data_list.data.frame as.data_list.data_list
 #' @param object The object to convert (see `Details`).
@@ -105,11 +104,13 @@ print.data_list = function(x, ...) {
 #' 
 #' @export
 as.data_list = function(object, name="", ...) UseMethod("as.data_list")
+#' @rdname as.data_list
 #' @export
 as.data_list.default = function(object, name="", ...) {
     warning(deparse(name), " has unsupported type ", deparse(class(object)), " and was dropped.")
     data_list()
 }
+#' @rdname as.data_list
 #' @export
 as.data_list.numeric = function(object, name="", 
         scalar_as_array=FALSE,  #treat single scalar values as array of length 1 
@@ -121,10 +122,12 @@ as.data_list.numeric = function(object, name="",
     names(data) = name
     data
 }
+#' @rdname as.data_list
 #' @export
 as.data_list.logical = function(object, name="", ...) {
     as.data_list(as.numeric(object), name, ...)
 }
+#' @rdname as.data_list
 #' @export
 as.data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
     data = as.data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
@@ -134,6 +137,7 @@ as.data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
     data[[.n_name(name)]] = length(levels(object))
     data
 }
+#' @rdname as.data_list
 #' @export
 as.data_list.list = function(object, name="", ...) {
     #go through list and translate variables
@@ -143,6 +147,7 @@ as.data_list.list = function(object, name="", ...) {
     }
     data
 }
+#' @rdname as.data_list
 #' @export
 as.data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...) {
     #first, translate all variables in the data frame
@@ -157,6 +162,7 @@ as.data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...
     data[[n_name]] = nrow(object)
     data
 }
+#' @rdname as.data_list
 #' @export
 as.data_list.data_list = function(object, name="", ...) {
     object

@@ -3,9 +3,21 @@
 # Author: mjskay
 ###############################################################################
 
+check_for_rethinking = function(name) {
+    if (!requireNamespace("pkg", quietly = TRUE)) {
+        stop(paste0(
+            'The `rethinking` package is needed for `', name, '` function to work.\n',
+            'Install it via devtools::install_github("rmcelreath/rethinking")\n',
+            'For more information see https://github.com/rmcelreath/rethinking'
+        ), call. = FALSE)
+    }
+}
+
 #' @export
 tidy_link = function(data, fit, ...) {
-    tidy_link_sim_(link, data, fit, 
+    check_for_rethinking("tidy_link")
+    
+    tidy_link_sim_(rethinking::link, data, fit, 
         #if there is only a single link in the model, link() will
         #return a matrix instead of a list of matrices, so we must give the name
         #of the link variable here so that tidy_link_sim_ can include the name
@@ -16,6 +28,8 @@ tidy_link = function(data, fit, ...) {
 
 #' @export
 tidy_sim = function(data, fit, name = NULL, ...) {
+    check_for_rethinking("tidy_sim")
+    
     name = substitute(name)
     if (is.null(name)) {
         name = paste0(deparse(first_y_expr(fit)), ".predicted")
@@ -23,7 +37,7 @@ tidy_sim = function(data, fit, name = NULL, ...) {
     else {
         name = deparse(name)
     }
-    tidy_link_sim_(sim, data, fit, single_response_name = name, ...)
+    tidy_link_sim_(rethinking::sim, data, fit, single_response_name = name, ...)
 }
 
 #' @import dplyr

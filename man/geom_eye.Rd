@@ -54,15 +54,12 @@ Alias for \code{fun.data}.}
 \code{interval_function} above.}
 
 \item{color}{Passed to \code{\link{stat_summary}}. Color of the point
-estimate and credible interval. Alias for \code{colour}.}
+estimate and credible interval.}
 
 \item{size}{Passed to \code{\link{stat_summary}}. Line weight of the point
 estimate and credible interval.}
 
 \item{interval_args}{Other arguments passed to \code{\link{stat_summary}}.}
-
-\item{colour}{Passed to \code{\link{stat_summary}}. Color of the point
-estimate and credible interval. Alias for \code{color}.}
 }
 \description{
 Generates a combination geom_violin and geom_pointrange (from stat_summary)

@@ -112,6 +112,7 @@ compare_levels = function(samples, variable, by, fun=`-`, comparison=default, in
 
 #' @importFrom plyr ldply
 #' @importFrom tidyr spread_
+#' @importFrom dplyr one_of
 compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, indices=".sample") {
     #drop unused levels from "by" column
     samples[[by]] = factor(samples[[by]])

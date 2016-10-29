@@ -54,9 +54,7 @@
 #' @param fun.data Passed to \code{\link{stat_summary}}. See
 #' \code{interval_function} above.
 #' @param color Passed to \code{\link{stat_summary}}. Color of the point
-#' estimate and credible interval. Alias for \code{colour}.
-#' @param colour Passed to \code{\link{stat_summary}}. Color of the point
-#' estimate and credible interval. Alias for \code{color}.
+#' estimate and credible interval.
 #' @param size Passed to \code{\link{stat_summary}}. Line weight of the point
 #' estimate and credible interval.
 #' @param interval_args Other arguments passed to \code{\link{stat_summary}}.

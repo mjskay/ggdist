@@ -6,4 +6,4 @@
 ###############################################################################
 
 # names used in dlpyr functions
-globalVariables(c(".", "one_of"))
+globalVariables(c(".", ".sample"))
