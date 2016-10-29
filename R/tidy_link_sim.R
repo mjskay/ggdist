@@ -3,6 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
+#' @export
 tidy_link = function(data, fit, ...) {
     tidy_link_sim_(link, data, fit, 
         #if there is only a single link in the model, link() will
@@ -13,6 +14,7 @@ tidy_link = function(data, fit, ...) {
         ...)
 }
 
+#' @export
 tidy_sim = function(data, fit, name = NULL, ...) {
     name = substitute(name)
     if (is.null(name)) {
@@ -24,6 +26,7 @@ tidy_sim = function(data, fit, name = NULL, ...) {
     tidy_link_sim_(sim, data, fit, single_response_name = name, ...)
 }
 
+#' @import dplyr
 tidy_link_sim_ = function(fun, data, fit, 
     single_response_name, #name used when only one response is returned
     ...) {

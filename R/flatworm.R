@@ -3,7 +3,19 @@
 # Author: mjskay
 ###############################################################################
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c("expected_p","expected_z",".cuts",".worm_y"))
+
+
+#' @import dplyr
+#' @import ggplot2
+#' @importFrom lsmeans recover.data
+#' @importFrom magrittr %<>%
+#' @importFrom stats dnorm pnorm lm predict quantile rstandard
+#' @export
 flatworm = function(object, ...) UseMethod("flatworm", object)
+#' @export
 flatworm.lm = function(object, cols = NULL, ...) {
     .cols = substitute(cols)
 
@@ -26,6 +38,7 @@ flatworm.lm = function(object, cols = NULL, ...) {
 
     eval(bquote(flatworm(data, residual_z, cols = .(.cols), ...)))
 }
+#' @export
 flatworm.map = function(object, cols = NULL, y = NULL, ...) {
     .cols = substitute(cols)
     .y = substitute(y)
@@ -43,10 +56,13 @@ flatworm.map = function(object, cols = NULL, y = NULL, ...) {
             flatworm(residual_z, cols = .(.cols), ...)
     ))
 }
+#' @export
 flatworm.map2stan = flatworm.map
+#' @export
 flatworm.data.frame = function(object, residual_z, cols = NULL, 
     ylim = 6, points = TRUE, lines = FALSE,
-    loess = TRUE, cubic = FALSE, z_cubic = FALSE
+    loess = TRUE, cubic = FALSE, z_cubic = FALSE,
+    ...
 ) {
     data = object
     .residual_z = substitute(residual_z)

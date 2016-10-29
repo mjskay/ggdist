@@ -4,7 +4,7 @@
 ###############################################################################
 
 library(testthat)
-library(plyr)
+import::from(plyr, ldply)
 library(dplyr)
 library(tidyr)
 library(tidybayes)

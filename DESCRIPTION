@@ -5,9 +5,10 @@ Date: 2015-10-28
 Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
     email = "mjskay@uw.edu"))
 Maintainer: Matthew Kay <mjskay@uw.edu>
-Description: Facilitates composing data for and extracting samples from Bayesian samplers (JAGS, Stan, ...) in a tidy data format.
-    Also provides some miscellaneous functions helpful for running Bayesian models, such as a ggplot2 function for easy eye plots
-    of posteriors (aka raindrop plots or violin plots).
+Description: Facilitates composing data for and extracting samples from
+    Bayesian samplers (JAGS, Stan, ...) in a tidy data format. Also provides some
+    miscellaneous functions helpful for running Bayesian models, such as a ggplot2
+    function for easy eye plots of posteriors (aka raindrop plots or violin plots).
 Depends:
     R (>= 2.10)
 Imports:
@@ -20,13 +21,14 @@ Imports:
     stringi,
     lsmeans,
     Hmisc,
-    LaplacesDemon
+    LaplacesDemon,
+    coda,
+    magrittr
 Suggests:
     testthat,
     rstan,
-    runjags,
-    coda,
-    modeest
+    runjags
 License: GPL (>= 2)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: https://github.com/mjskay/tidybayes
+RoxygenNote: 5.0.1
