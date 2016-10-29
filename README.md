@@ -4,27 +4,34 @@
 
 _Matthew Kay, University of Washington <mjskay@uw.edu>_
 
-When using MCMC / Bayesian samplers like JAGS or Stan in R, we often have
-to compose our data in a form the sampler understands, and then after
-running the model, translate the resulting sample into a more usuable
-format for other R functions. `tidybayes` aims to simplify these two common 
-(often tedious) operations:
+[Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+data frames (one observation per row) are particularly convenient for use
+in a variety of R data manipulation and visualization packages. However,
+when using MCMC / Bayesian samplers like JAGS or Stan in R, we often have
+to translate this data into a form the sampler understands, and then after
+running the model, translate the resulting sample into a more tidy
+format for use with other R functions.  `tidybayes` aims to simplify these 
+two common (often tedious) operations:
 
 * __Composing data__ for use with the sampler. This often means translating
   data from a `data.frame` into a `list` , making sure `factors` are encoded as
   numerical data, adding variables to store the length of indices, etc. This
-  package helps automate these operations using the `compose_data` function,
+  package helps automate these operations using the `compose_data` function, which
   automatically handles data types like `numeric` , `logical` , `factor` , and `ordinal`, 
   and allows easy extensions for converting other datatypes into a format the
   sampler understands by providing your own implementation of the generic `as.data_list`.
 
-* __Extracting samples__ from the sampler. This often means translating
-  columns of samples indexed by names like `"b[1,1]"` , `"b[1,2]"` , etc. into a
-  more usable format. We provide a straightforward way to convert samples of a
+* __Gathering samples__ from the sampler. This often means extracting indices
+  from parameters with names like `"b[1,1]"` , `"b[1,2]"` into separate columns
+  of a data frame, like `i = c(1,1,..)` and `j = c(1,2,...)`. More tediously,
+  sometimes these indices actually correspond to levels of a factor in the original
+  data; e.g. `"x[1]"` might correspond to a value of `x` for the first level of
+  some factor. We provide a straightforward way to convert samples of a
   variable with indices into a long-format ("[tidy]
   (http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)") data
   frame, with automatic back-conversion of common data types (factors, logicals)
-  using the `extract_samples` function. In most cases this kind of long-format
+  using the `gather_samples` function, including automatic recovery of factor levels
+  corresponding to variable indices. In most cases this kind of long-format
   data is much easier to use with other data-manipulation and plotting packages
   (e.g., `dplyr` , `tidyr` , `ggplot2` ) than the format provided by default from
   the sampler.
@@ -49,7 +56,7 @@ and visualization tasks common to many models:
   generating pairs of levels of a factor (according to some desired set of 
   comparisons) and then computing a function over the value of the comparison
   variable for those pairs of levels. Assuming your data is in the long-format
-  returned by `extract_samples` (i.e. the `..` and `|` syntax for that 
+  returned by `gather_samples` (i.e. the `..` and `|` syntax for that 
   function was not used), the `compare_levels` function allows comparison
   across levels to be made easily.
 
