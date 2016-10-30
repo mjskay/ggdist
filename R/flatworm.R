@@ -13,6 +13,7 @@ globalVariables(c("expected_p","expected_z",".cuts",".worm_y","worm"))
 #' @importFrom lsmeans recover.data
 #' @importFrom magrittr %<>%
 #' @importFrom stats dnorm pnorm lm predict quantile rstandard
+#' @importFrom modelr seq_range
 #' @export
 flatworm = function(object, ...) UseMethod("flatworm", object)
 #' @export
@@ -127,7 +128,7 @@ flatworm.data.frame = function(object, residual_z, cols = NULL,
         }
         predictions = 
             expand.grid(
-                expected_z = seq_range(data$expected_z, length.out = 100),
+                expected_z = seq_range(data$expected_z, n = 100),
                 .cuts = unique(data$.cuts)
             ) %>%
             group_by(.cuts) %>%

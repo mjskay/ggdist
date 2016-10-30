@@ -1,0 +1,86 @@
+# [point]_[interval] functions for use with tidy data
+# 
+# Author: mjskay
+###############################################################################
+
+
+#' Point and interval estimates for tidy sample data
+#' 
+#' Translates samples in a (possibly grouped) data frame into a point and
+#' interval estimate (or set of point and interval estimates, if there are
+#' multiple groups in a grouped data frame).
+#' 
+#' \code{mean_qi}, \code{mode_qi}, etc are short forms for 
+#' \code{point_interval(..., point = mean, interval = qi)}, etc.
+#' 
+#' \code{qi} yields the quantile interval (also known as the percentile interval or
+#' equi-tailed interval).
+#' 
+#' \code{hdi} yields the highest-density interval (also known as the highest posterior
+#' density interval).
+#' 
+#' @param data Data frame (or grouped data frame as returned by \code{\link{group_by}})
+#' that contains samples to summarize.
+#' @param ... Bare column names or expressions that, when evaluated in the context of
+#' \code{data}, represent samples to summarise.
+#' @param prob Probability to use for generating intervals
+#' @param point Point estimate function, which takes a vector and returns a single
+#' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
+#' @param interval Interval estimate function, which takes a vector and a probability
+#' (\code{prob}) and returns a two-element vector representing the lower and upper
+#' bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}
+#' @param x vector to summarise (for interval functions: \code{qi} and \code{hdi})
+#' @author Matthew Kay
+#' @examples
+#' 
+#' ##TODO
+#' 
+#' @export
+point_interval = function(data, ..., prob=.95, point = mean, interval = qi) {
+    #this gets a list of unevaluated parameters passed in using `...`
+    .names = as.list(substitute(list(...)))[-1L]
+
+    do(data, with(., Reduce(cbind, lapply(.names, function(.name) {
+        interval = interval(eval(.name), prob)
+        result = data.frame(
+            point(eval(.name)),
+            interval[[1]],
+            interval[[2]],
+            prob
+        )
+        names(result) = c(
+            deparse(.name),
+            paste0(deparse(.name), ".lower"),
+            paste0(deparse(.name), ".upper"),
+            paste0(deparse(.name), ".prob")
+        )
+        result
+    }))))
+}
+
+#' @export
+#' @rdname point_interval
+mean_qi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = mean, interval = qi)
+
+#' @importFrom LaplacesDemon Mode
+#' @export
+#' @rdname point_interval
+mode_qi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = Mode, interval = qi)
+
+#' @importFrom stats quantile
+#' @export
+#' @rdname point_interval
+qi = function(x, prob = .95) {
+    lower_prob = (1 - prob)/2
+    upper_prob = (1 + prob)/2
+    unname(quantile(x, c(lower_prob, upper_prob)))
+}
+
+#' @importFrom coda HPDinterval as.mcmc
+#' @export
+#' @rdname point_interval
+hdi = function(x, prob = .95) {
+    as.vector(HPDinterval(as.mcmc(x), prob = prob))
+}

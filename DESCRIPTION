@@ -24,6 +24,7 @@ Imports:
     LaplacesDemon,
     coda,
     import,
+    modelr,
     magrittr
 Suggests:
     testthat,
