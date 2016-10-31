@@ -4,3 +4,5 @@
 - make gather_samples accept multiple specifications and bare variables (e.g. b instead of b[])
 - replace ldply with map_df
 - replcae left joins with inner joins where necessary
+- replace hacked-together NSE with lazyeval
+- make sure all args on NSE functions start with "."

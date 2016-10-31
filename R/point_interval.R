@@ -52,33 +52,34 @@
 #' 
 #' ##TODO
 #' 
-#' @importFrom purrr map_df
+#' @importFrom purrr map_df map2
 #' @importFrom dplyr do
+#' @importFrom lazyeval lazy_dots auto_name
 #' @export
 point_interval = function(data, ..., prob=.95, point = mean, interval = qi) UseMethod("point_interval")
 #' @rdname point_interval
 #' @export
 point_interval.default = function(data, ..., prob=.95, point = mean, interval = qi) {
-    #this gets a list of unevaluated parameters passed in using `...`
-    .names = as.list(substitute(list(...)))[-1L]
+    col_exprs = auto_name(lazy_dots(...))
 
     map_df(prob, function(p) {
-        do(data, with(., Reduce(cbind, lapply(.names, function(.name) {
-            interval = interval(eval(.name), prob = p)
+        do(data, Reduce(cbind, map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
+            col_samples = lazy_eval(col_expr, .)
+            interval = interval(col_samples, prob = p)
             result = data.frame(
-                point(eval(.name)),
+                point(col_samples),
                 interval[[1]],
                 interval[[2]],
                 p
             )
             names(result) = c(
-                deparse(.name),
-                paste0(deparse(.name), ".lower"),
-                paste0(deparse(.name), ".upper"),
-                paste0(deparse(.name), ".prob")
+                col_name,
+                paste0(col_name, ".lower"),
+                paste0(col_name, ".upper"),
+                paste0(col_name, ".prob")
             )
             result
-        }))))
+        })))
     })
 }
 #' @rdname point_interval
