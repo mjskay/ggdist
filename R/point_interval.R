@@ -10,6 +10,21 @@
 #' interval estimate (or set of point and interval estimates, if there are
 #' multiple groups in a grouped data frame).
 #' 
+#' If \code{data} is a data frame, then \code{...} is a list of bare names of
+#' columns (or expressions derived from columns) of \code{data}, on which
+#' the point and interval estimates are derived. For a column named \code{x},
+#' the resulting data frame will have columns \code{x} (the point estimate),
+#' \code{x.lower} (the lower end of the interval), \code{x.upper} (the upper
+#' end of the interval), and \code{x.prob} (the value of \code{prob}).
+#' 
+#' If \code{data} is a vector, \code{...} is ignored and the result is a
+#' data frame with one row and three columns: \code{y} (the point estimate),
+#' \code{ymin} (the lower end of the interval), and \code{ymax} (the
+#' upper end of the interval). This behavior allows \code{point_interval}
+#' and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
+#' to be easily used to plot intervals in ggplot using methods like 
+#' \code{\link{geom_eye}}, \code{\link{ggeye}}, or \code{\link{stat_summary}}.
+#' 
 #' \code{mean_qi}, \code{mode_qi}, etc are short forms for 
 #' \code{point_interval(..., point = mean, interval = qi)}, etc.
 #' 
@@ -36,7 +51,10 @@
 #' ##TODO
 #' 
 #' @export
-point_interval = function(data, ..., prob=.95, point = mean, interval = qi) {
+point_interval = function(data, ..., prob=.95, point = mean, interval = qi) UseMethod("point_interval")
+#' @rdname point_interval
+#' @export
+point_interval.default = function(data, ..., prob=.95, point = mean, interval = qi) {
     #this gets a list of unevaluated parameters passed in using `...`
     .names = as.list(substitute(list(...)))[-1L]
 
@@ -57,17 +75,16 @@ point_interval = function(data, ..., prob=.95, point = mean, interval = qi) {
         result
     }))))
 }
-
-#' @export
 #' @rdname point_interval
-mean_qi = function(data, ..., prob=.95) 
-    point_interval(data, ..., prob = prob, point = mean, interval = qi)
-
-#' @importFrom LaplacesDemon Mode
 #' @export
-#' @rdname point_interval
-mode_qi = function(data, ..., prob=.95) 
-    point_interval(data, ..., prob = prob, point = Mode, interval = qi)
+point_interval.numeric = function(data, ..., prob=.95, point = mean, interval = qi) {
+    interval = interval(data)
+    data.frame(
+        y = point(data),
+        ymin = interval[[1]],
+        ymax = interval[[2]]
+    ) 
+}
 
 #' @importFrom stats quantile
 #' @export
@@ -84,3 +101,35 @@ qi = function(x, prob = .95) {
 hdi = function(x, prob = .95) {
     as.vector(HPDinterval(as.mcmc(x), prob = prob))
 }
+
+#' @export
+#' @rdname point_interval
+mean_qi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = mean, interval = qi)
+
+#' @export
+#' @rdname point_interval
+median_qi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = median, interval = qi)
+
+#' @importFrom LaplacesDemon Mode
+#' @export
+#' @rdname point_interval
+mode_qi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = Mode, interval = qi)
+
+#' @export
+#' @rdname point_interval
+mean_hdi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = mean, interval = hdi)
+
+#' @export
+#' @rdname point_interval
+median_hdi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = median, interval = hdi)
+
+#' @importFrom LaplacesDemon Mode
+#' @export
+#' @rdname point_interval
+mode_hdi = function(data, ..., prob=.95) 
+    point_interval(data, ..., prob = prob, point = Mode, interval = hdi)

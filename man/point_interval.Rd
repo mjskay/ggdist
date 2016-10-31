@@ -2,21 +2,41 @@
 % Please edit documentation in R/point_interval.R
 \name{point_interval}
 \alias{hdi}
+\alias{mean_hdi}
 \alias{mean_qi}
+\alias{median_hdi}
+\alias{median_qi}
+\alias{mode_hdi}
 \alias{mode_qi}
 \alias{point_interval}
+\alias{point_interval.default}
+\alias{point_interval.numeric}
 \alias{qi}
 \title{Point and interval estimates for tidy sample data}
 \usage{
 point_interval(data, ..., prob = 0.95, point = mean, interval = qi)
 
-mean_qi(data, ..., prob = 0.95)
+\method{point_interval}{default}(data, ..., prob = 0.95, point = mean,
+  interval = qi)
 
-mode_qi(data, ..., prob = 0.95)
+\method{point_interval}{numeric}(data, ..., prob = 0.95, point = mean,
+  interval = qi)
 
 qi(x, prob = 0.95)
 
 hdi(x, prob = 0.95)
+
+mean_qi(data, ..., prob = 0.95)
+
+median_qi(data, ..., prob = 0.95)
+
+mode_qi(data, ..., prob = 0.95)
+
+mean_hdi(data, ..., prob = 0.95)
+
+median_hdi(data, ..., prob = 0.95)
+
+mode_hdi(data, ..., prob = 0.95)
 }
 \arguments{
 \item{data}{Data frame (or grouped data frame as returned by \code{\link{group_by}})
@@ -42,6 +62,21 @@ interval estimate (or set of point and interval estimates, if there are
 multiple groups in a grouped data frame).
 }
 \details{
+If \code{data} is a data frame, then \code{...} is a list of bare names of
+columns (or expressions derived from columns) of \code{data}, on which
+the point and interval estimates are derived. For a column named \code{x},
+the resulting data frame will have columns \code{x} (the point estimate),
+\code{x.lower} (the lower end of the interval), \code{x.upper} (the upper
+end of the interval), and \code{x.prob} (the value of \code{prob}).
+
+If \code{data} is a vector, \code{...} is ignored and the result is a
+data frame with one row and three columns: \code{y} (the point estimate),
+\code{ymin} (the lower end of the interval), and \code{ymax} (the
+upper end of the interval). This behavior allows \code{point_interval}
+and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
+to be easily used to plot intervals in ggplot using methods like 
+\code{\link{geom_eye}}, \code{\link{ggeye}}, or \code{\link{stat_summary}}.
+
 \code{mean_qi}, \code{mode_qi}, etc are short forms for 
 \code{point_interval(..., point = mean, interval = qi)}, etc.
 

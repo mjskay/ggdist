@@ -7,9 +7,10 @@ estimates and intervals for ggplot2}
 \usage{
 geom_eye(mapping = NULL, data = NULL, stat = "ydensity",
   position = "dodge", trim = TRUE, scale = "area", fill = "skyblue",
-  violin_args = list(), ..., interval_function = "median_hilow",
-  fun.data = interval_function, color = NULL, size = NULL,
-  interval_args = list(geom = "pointrange", position = "identity"))
+  violin_args = list(), ..., point_interval = median_qi,
+  fun.data = point_interval, interval_function = NULL, color = NULL,
+  size = NULL, interval_args = list(geom = "pointrange", position =
+  "identity"))
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -40,18 +41,21 @@ violins have the same maximum width.}
 
 \item{...}{Other arguments passed to \code{\link{geom_violin}}.}
 
-\item{interval_function}{The function used to construct point estimates and
+\item{point_interval}{The function used to construct point estimates and
 credible intervals from the data. Should be a function that takes a vector
 of data as input and returns a data frame with columns \code{y},
 \code{ymin}, and \code{ymax}, representing the point estimate, lower bound
-of the credible interval, and upper bound of the credible interval. Some
-typical functions to consider here are \code{\link{mean_cl_normal}} (mean
-with student-t interval), \code{\link{median_hilow}} (median with quantile
+of the credible interval, and upper bound of the credible interval. See
+\code{\link{point_interval}} for examples; some
+typical functions to consider here are \code{\link{mean_qi}} (mean
+with quantile interval), \code{\link{median_qi}} (median with quantile
 interval), and \code{\link{mode_hdi}} (mode with highest density interval).
 Alias for \code{fun.data}.}
 
 \item{fun.data}{Passed to \code{\link{stat_summary}}. See
-\code{interval_function} above.}
+\code{point_interval} above.}
+
+\item{interval_function}{Deprecated. Use \code{point_interval} above.}
 
 \item{color}{Passed to \code{\link{stat_summary}}. Color of the point
 estimate and credible interval.}

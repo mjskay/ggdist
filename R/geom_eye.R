@@ -42,17 +42,19 @@
 #' @param fill Passed to \code{\link{geom_violin}}. Fill color of the violin.
 #' @param violin_args Other arguments passed to \code{\link{geom_violin}}.
 #' @param ...  Other arguments passed to \code{\link{geom_violin}}.
-#' @param interval_function The function used to construct point estimates and
+#' @param point_interval The function used to construct point estimates and
 #' credible intervals from the data. Should be a function that takes a vector
 #' of data as input and returns a data frame with columns \code{y},
 #' \code{ymin}, and \code{ymax}, representing the point estimate, lower bound
-#' of the credible interval, and upper bound of the credible interval. Some
-#' typical functions to consider here are \code{\link{mean_cl_normal}} (mean
-#' with student-t interval), \code{\link{median_hilow}} (median with quantile
+#' of the credible interval, and upper bound of the credible interval. See
+#' \code{\link{point_interval}} for examples; some
+#' typical functions to consider here are \code{\link{mean_qi}} (mean
+#' with quantile interval), \code{\link{median_qi}} (median with quantile
 #' interval), and \code{\link{mode_hdi}} (mode with highest density interval).
 #' Alias for \code{fun.data}.
 #' @param fun.data Passed to \code{\link{stat_summary}}. See
-#' \code{interval_function} above.
+#' \code{point_interval} above.
+#' @param interval_function Deprecated. Use \code{point_interval} above.
 #' @param color Passed to \code{\link{stat_summary}}. Color of the point
 #' estimate and credible interval.
 #' @param size Passed to \code{\link{stat_summary}}. Line weight of the point
@@ -79,11 +81,17 @@ geom_eye = function(
     violin_args = list(), ...,
     
     #stat_summary properties
-    interval_function="median_hilow", fun.data=interval_function, 
+    point_interval = median_qi, fun.data = point_interval, interval_function = NULL,
     color = NULL, size = NULL, 
     interval_args = list(geom = "pointrange", position = "identity")
 ) {
 
+    if (!is.null(interval_function)) {
+        .Deprecated("point_interval", 
+            msg="The `interval_function` argument to `geom_eye` is deprecated. Use `point_interval` instead.")
+        fun.data = point_interval = interval_function
+    }
+    
     #build violin plot
     violin_args = 
         list(mapping=mapping, data=data, stat=stat, position=position, trim=trim, scale=scale, color=NA, 
@@ -130,47 +138,4 @@ geom_eye = function(
 #' @export
 ggeye = function(data=NULL, mapping=NULL, ...) {
     ggplot(data=data, mapping=mapping) + geom_eye(...) + coord_flip()
-}
-
-#function for use with stat_summary that returns the mode and
-#highest density interval of the data
-
-
-#' Mode and highest-density interval
-#' 
-#' Returns mode and highest-density interval of x, for use with geom_eye or
-#' stat_summary.
-#' 
-#' Uses \code{\link[modeest]{parzen}} and \code{\link[coda]{HPDinterval}} to
-#' generate mode and HDI of \code{x}.
-#' 
-#' \code{mode_hdi} returns its results in a format compatible with
-#' \code{\link{stat_summary}}; it may be used for the \code{fun.data} argument
-#' of that function and the \code{interval_function} argument of
-#' \code{\link{geom_eye}}.
-#' 
-#' @param x A vector of data.
-#' @param ...  Other arguments passed to \code{\link[coda]{HPDinterval}}.
-#' @return A \code{data.frame} with the following columns:
-#' 
-#' \item{y}{ The mode of \code{x}. } \item{ymin}{ The lower bound of the
-#' highest-density interval of \code{x}. } \item{ymax}{ The upper bound of the
-#' highest-density interval of \code{x}. }
-#' @author Matthew Kay
-#' @seealso See \code{\link{geom_eye}} for more information.
-#' @keywords manip
-#' @examples
-#' 
-#' ##TODO
-#' 
-#' @importFrom coda HPDinterval mcmc
-#' @importFrom LaplacesDemon Mode
-#' @export
-mode_hdi = function(x, ...) {
-    interval = HPDinterval(mcmc(x), ...)
-    data.frame(
-        ymin = interval[,"lower"],
-        ymax = interval[,"upper"],
-        y = Mode(x)
-    ) 
 }
