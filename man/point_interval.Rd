@@ -45,7 +45,9 @@ that contains samples to summarize.}
 \item{...}{Bare column names or expressions that, when evaluated in the context of
 \code{data}, represent samples to summarise.}
 
-\item{prob}{Probability to use for generating intervals}
+\item{prob}{vector of probabilities to use for generating intervals. If multiple
+probabilities are provided, multiple rows per group are generated, each with
+a different probabilty interval (and value of the corresponding \code{.prob} columns).}
 
 \item{point}{Point estimate function, which takes a vector and returns a single
 value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.}

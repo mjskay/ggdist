@@ -243,6 +243,11 @@ compose_data = function(..., .n_name = n_prefix("n")) {
 #' \code{\link{compose_data}} by prefixing a character vector to the original
 #' column name.
 #' 
+#' @param prefix Character vector to be prepended to column names by 
+#' \code{\link{compose_data}} to create index columns. Typically something
+#' like \code{"n"} (that is the default used in the \code{.n_name} argument
+#' of \code{\link{compose_data}}).
+#' 
 #' Returns a function. The function returned takes a character vector, \code{name}
 #' and returns \code{paste0(prefix, "_", name)}, unless \code{name} is empty, in 
 #' which case it will return \code{prefix}.
@@ -254,6 +259,8 @@ compose_data = function(..., .n_name = n_prefix("n")) {
 #' \code{n_prefix("n")("")}) equal to the number of rows in \code{df} and an element
 #' named \code{"n_foo"} (the result of \code{n_prefix("n")("foo")}) equal to the
 #' number of levels in \code{df$foo}.
+#' 
+#' @seealso The \code{.n_name} argument of \code{\link{compose_data}}
 #' 
 #' @export
 n_prefix = function(prefix) {

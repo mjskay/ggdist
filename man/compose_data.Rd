@@ -19,7 +19,7 @@ whose value is number of levels in a factor or the length of a data frame in
 (having 3 levels) is passed to \code{compose_data}, the list returned by
 \code{compose_data} will include an element named \code{.n_name("foo")}, which
 by default would be "n_foo", containing the value 3, and a column named "n"
-containing the value 20.}
+containing the value 20. See \code{\link{n_prefix}}.}
 }
 \value{
 An object of class \code{c("data_list", "list")}, where each element
