@@ -3,12 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-# naming function
-#' @export
-n_prefix = function(prefix) function(name) if(name == "") prefix else paste0(prefix, "_", name)
-
-#basic data list
-
 
 #' A data_list for input into a Bayesian sampler
 #' 
@@ -47,8 +41,6 @@ print.data_list = function(x, ...) {
     class(x) = class(x)[-which(class(x) == "data_list")]
     print(x, ...) 
 }
-
-#conversion into data list from basic data types
 
 
 #' Convert data into a data_list
@@ -168,32 +160,6 @@ as.data_list.data_list = function(object, name="", ...) {
     object
 }
 
-## Compose data into a list suitable to be passed into an MCMC sampler (JAGS, BUGS, etc).
-##
-## Translates each argument into list elements using as.data_list, and then concatenates
-## all resulting list elements together.
-## Translates a data.frame into a list suitable for use in an MCMC sampler. Does this as follows:
-##
-## Translates elements as follows:
-##
-## 		- numerics are included as-is
-##		- logicals are translated into numeric using as.numeric
-##		- factors are translated into numeric using as.numeric, and an additional
-##		  column named .n_name(argument_name) is added with the number of levels in the factor.
-##		- lists are translated by translating all elements of the list (recursively)
-##		  and adding them to the result.
-##		- data.frames are translated by translating every column of the data.frame and
-##		  adding them to the result.
-##		  A variable named "n" (or .n_name(argument_name) if the data.frame is passed as
-##		  a named argument argument_name) is also added with the number of rows in the
-##		  data frame.
-##		- all other types are dropped (and a warning given)
-##
-## If you wish to add support for additional types not described above, provide an implementation
-## of as.data_list for the type. See as.data_list.numeric, as.data_list.logical, etc for examples.
-##
-
-
 #' Compose data for input into a Bayesian sampler
 #' 
 #' Compose data into a list suitable to be passed into an MCMC sampler (JAGS,
@@ -238,7 +204,7 @@ as.data_list.data_list = function(object, name="", ...) {
 #' (having 3 levels) is passed to \code{compose_data}, the list returned by
 #' \code{compose_data} will include an element named \code{.n_name("foo")}, which
 #' by default would be "n_foo", containing the value 3, and a column named "n"
-#' containing the value 20.
+#' containing the value 20. See \code{\link{n_prefix}}.
 #' @return An object of class \code{c("data_list", "list")}, where each element
 #' is a translated variable as described above.
 #' @author Matthew Kay
@@ -268,4 +234,28 @@ compose_data = function(..., .n_name = n_prefix("n")) {
     #using is.list
     class(data) = "list"
     data
+}
+
+
+#' Prefix function generator for composing index columns
+#' 
+#' Generates a function for generating names of index columns for factors in
+#' \code{\link{compose_data}} by prefixing a character vector to the original
+#' column name.
+#' 
+#' Returns a function. The function returned takes a character vector, \code{name}
+#' and returns \code{paste0(prefix, "_", name)}, unless \code{name} is empty, in 
+#' which case it will return \code{prefix}.
+#' 
+#' \code{n_prefix("n")} is the default method that \code{\link{compose_data}} uses to 
+#' generate column names for factor indices. Under this method, given a data frame
+#' \code{df} with a factor column \code{"foo"} containing 5 levels, the results of 
+#' \code{compose_data(df)} will include an element named \code{"n"} (the result of 
+#' \code{n_prefix("n")("")}) equal to the number of rows in \code{df} and an element
+#' named \code{"n_foo"} (the result of \code{n_prefix("n")("foo")}) equal to the
+#' number of levels in \code{df$foo}.
+#' 
+#' @export
+n_prefix = function(prefix) {
+    function(name) if(name == "") prefix else paste0(prefix, "_", name)
 }

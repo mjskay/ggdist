@@ -26,6 +26,7 @@ Imports:
     coda,
     import,
     modelr,
+    purrr,
     magrittr
 Suggests:
     testthat,

@@ -38,7 +38,9 @@
 #' that contains samples to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
 #' \code{data}, represent samples to summarise.
-#' @param prob Probability to use for generating intervals
+#' @param prob vector of probabilities to use for generating intervals. If multiple
+#' probabilities are provided, multiple rows per group are generated, each with
+#' a different probabilty interval (and value of the corresponding \code{.prob} columns).
 #' @param point Point estimate function, which takes a vector and returns a single
 #' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
 #' @param interval Interval estimate function, which takes a vector and a probability
@@ -50,6 +52,8 @@
 #' 
 #' ##TODO
 #' 
+#' @importFrom purrr map_df
+#' @importFrom dplyr do
 #' @export
 point_interval = function(data, ..., prob=.95, point = mean, interval = qi) UseMethod("point_interval")
 #' @rdname point_interval
@@ -58,32 +62,37 @@ point_interval.default = function(data, ..., prob=.95, point = mean, interval = 
     #this gets a list of unevaluated parameters passed in using `...`
     .names = as.list(substitute(list(...)))[-1L]
 
-    do(data, with(., Reduce(cbind, lapply(.names, function(.name) {
-        interval = interval(eval(.name), prob)
-        result = data.frame(
-            point(eval(.name)),
-            interval[[1]],
-            interval[[2]],
-            prob
-        )
-        names(result) = c(
-            deparse(.name),
-            paste0(deparse(.name), ".lower"),
-            paste0(deparse(.name), ".upper"),
-            paste0(deparse(.name), ".prob")
-        )
-        result
-    }))))
+    map_df(prob, function(p) {
+        do(data, with(., Reduce(cbind, lapply(.names, function(.name) {
+            interval = interval(eval(.name), prob = p)
+            result = data.frame(
+                point(eval(.name)),
+                interval[[1]],
+                interval[[2]],
+                p
+            )
+            names(result) = c(
+                deparse(.name),
+                paste0(deparse(.name), ".lower"),
+                paste0(deparse(.name), ".upper"),
+                paste0(deparse(.name), ".prob")
+            )
+            result
+        }))))
+    })
 }
 #' @rdname point_interval
 #' @export
 point_interval.numeric = function(data, ..., prob=.95, point = mean, interval = qi) {
-    interval = interval(data)
-    data.frame(
-        y = point(data),
-        ymin = interval[[1]],
-        ymax = interval[[2]]
-    ) 
+    map_df(prob, function(p) {
+        interval = interval(data, prob = p)
+        data.frame(
+            y = point(data),
+            ymin = interval[[1]],
+            ymax = interval[[2]],
+            prob = p
+        ) 
+    })
 }
 
 #' @importFrom stats quantile
