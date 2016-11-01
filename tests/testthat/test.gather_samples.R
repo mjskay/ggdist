@@ -5,7 +5,7 @@
 
 library(testthat)
 import::from(plyr, ldply, .)
-import::from(dplyr, `%>%`)
+import::from(dplyr, `%>%`, inner_join)
 library(tidyr)
 library(tidybayes)
 
@@ -167,12 +167,12 @@ test_that("gather_samples correctly extracts multiple variables simultaneously",
         
         expect_equal(gather_samples(RankCorr, c(tau, typical_mu)[i]), 
             gather_samples(RankCorr, tau[i]) %>%
-                left_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
+                inner_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
         )
         expect_equal(gather_samples(RankCorr, c(tau, typical_mu, u_tau)[i]), 
             gather_samples(RankCorr, tau[i]) %>%
-                left_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
-                left_join(gather_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
+                inner_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
+                inner_join(gather_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
         )
     })
 
@@ -185,7 +185,7 @@ test_that("gather_samples correctly extracts multiple variables simultaneously w
         expect_equal(gather_samples(RankCorr, c(typical_r)), ref1)
 
         ref2 = gather_samples(RankCorr, tr2[]) %>%
-            left_join(gather_samples(RankCorr, typical_r[]), by=c(".sample"))
+            inner_join(gather_samples(RankCorr, typical_r[]), by=c(".sample"))
         expect_equal(gather_samples(RankCorr, c(tr2, typical_r)[]), ref2)
         expect_equal(gather_samples(RankCorr, c(tr2, typical_r)), ref2)
     })
