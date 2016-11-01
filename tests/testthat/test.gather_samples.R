@@ -189,3 +189,13 @@ test_that("gather_samples correctly extracts multiple variables simultaneously w
         expect_equal(gather_samples(RankCorr, c(tr2, typical_r)[]), ref2)
         expect_equal(gather_samples(RankCorr, c(tr2, typical_r)), ref2)
     })
+
+test_that("gather_samples multispec syntax joins results correctly", {
+    data(RankCorr, package="tidybayes")
+
+    ref = gather_samples(RankCorr, typical_r) %>%
+        inner_join(gather_samples(RankCorr, tau[i]), by=c(".sample")) %>%
+        inner_join(gather_samples(RankCorr, b[i,v]), by=c(".sample", "i"))
+
+    expect_equal(gather_samples(RankCorr, typical_r, tau[i], b[i,v]), ref)    
+})

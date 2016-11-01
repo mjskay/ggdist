@@ -148,22 +148,33 @@ parse_variable_spec = function(variable_spec) {
 #' indices with \code{\link{apply_prototypes}}, and thus can be used to get
 #' columns with nicer names.
 #' 
-#' Finally, any expression containing multiple variable names can be used in
-#' place of the variable indexed over in order to extract multiple variables at
-#' the same time (so long as they share exactly the same subscripts). For
-#' example, if we have a variable a[i,v] with the same subscripts as b[i,v], we
-#' could do this:
+#' The \code{c} function can be used to combine multiple variable names that have 
+#' the same indices. For example, if we have a variable a[i,v] with the same 
+#' subscripts as b[i,v], we could do this:
 #' 
-#' \code{gather_samples(mcmcChain, cbind(a, b)[i,v])}
+#' \preformatted{gather_samples(mcmcChain, c(a, b)[i,v])}
 #' 
 #' Which is equivalent to this:
 #' 
-#' \code{gather_samples(mcmcChain, a[i,v]) %>% left_join(gather_samples(mcmcChain,
-#' b[i,v]))}
+#' \preformatted{gather_samples(mcmcChain, a[i,v]) \%>\%
+#'     inner_join(gather_samples(mcmcChain, b[i,v]))}
+#' 
+#' Finally, for variables that do not share the same subscripts (or share
+#' some but not all subscripts), we can supply their specifications separately. 
+#' For example, if we have a variable d[i] with the same i subscript 
+#' as b[i,v], and a variable x with no subscripts, we could do this:
+#' 
+#' \preformatted{gather_samples(mcmcChain, x, d[i], b[i,v])}
+#' 
+#' Which is equivalent to this:
 #'
+#' \preformatted{gather_samples(mcmcChain, x) \%>\%
+#'     inner_join(gather_samples(mcmcChain, d[i])) \%>\%
+#'     inner_join(gather_samples(mcmcChain, b[i,v]))}
+#' 
 #' @param model A supported Bayesian model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}.
-#' @param variable_spec An expression in the form of
+#' @param ... Expressions in the form of
 #' \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.
 #' @return A data frame.
 #' @author Matthew Kay
@@ -174,10 +185,17 @@ parse_variable_spec = function(variable_spec) {
 #' ##TODO
 #' 
 #' @aliases extract_samples tidy_samples
-#' @importFrom lazyeval lazy
+#' @importFrom lazyeval lazy_dots
+#' @importFrom purrr reduce
+#' @importFrom dplyr inner_join
 #' @export
-gather_samples = function(model, variable_spec) {
-    gather_samples_(model, lazy(variable_spec))
+gather_samples = function(model, ...) {
+    reduce(lapply(lazy_dots(...), function(variable_spec) {
+        gather_samples_(model, variable_spec) 
+    }), function(tidysamples1, tidysamples2) {
+        by = intersect(names(tidysamples1), names(tidysamples2))
+        inner_join(tidysamples1, tidysamples2, by=by)
+    })
 }
 #' @import dplyr
 #' @importFrom tidyr spread_

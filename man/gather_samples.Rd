@@ -6,13 +6,13 @@
 \alias{tidy_samples}
 \title{Gather samples from a Bayesian sampler in a tidy data format}
 \usage{
-gather_samples(model, variable_spec)
+gather_samples(model, ...)
 }
 \arguments{
 \item{model}{A supported Bayesian model fit / MCMC object. Currently
 supported models include \code{\link[coda]{mcmc}}.}
 
-\item{variable_spec}{An expression in the form of
+\item{...}{Expressions in the form of
 \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.}
 }
 \value{
@@ -65,18 +65,29 @@ The main difference between using the \code{|} syntax instead of the
 indices with \code{\link{apply_prototypes}}, and thus can be used to get
 columns with nicer names.
 
-Finally, any expression containing multiple variable names can be used in
-place of the variable indexed over in order to extract multiple variables at
-the same time (so long as they share exactly the same subscripts). For
-example, if we have a variable a[i,v] with the same subscripts as b[i,v], we
-could do this:
+The \code{c} function can be used to combine multiple variable names that have 
+the same indices. For example, if we have a variable a[i,v] with the same 
+subscripts as b[i,v], we could do this:
 
-\code{gather_samples(mcmcChain, cbind(a, b)[i,v])}
+\preformatted{gather_samples(mcmcChain, c(a, b)[i,v])}
 
 Which is equivalent to this:
 
-\code{gather_samples(mcmcChain, a[i,v]) %>% left_join(gather_samples(mcmcChain,
-b[i,v]))}
+\preformatted{gather_samples(mcmcChain, a[i,v]) \%>\%
+    inner_join(gather_samples(mcmcChain, b[i,v]))}
+
+Finally, for variables that do not share the same subscripts (or share
+some but not all subscripts), we can supply their specifications separately. 
+For example, if we have a variable d[i] with the same i subscript 
+as b[i,v], and a variable x with no subscripts, we could do this:
+
+\preformatted{gather_samples(mcmcChain, x, d[i], b[i,v])}
+
+Which is equivalent to this:
+
+\preformatted{gather_samples(mcmcChain, x) \%>\%
+    inner_join(gather_samples(mcmcChain, d[i])) \%>\%
+    inner_join(gather_samples(mcmcChain, b[i,v]))}
 }
 \examples{
 
