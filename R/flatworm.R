@@ -8,6 +8,46 @@
 globalVariables(c("expected_p","expected_z",".cuts",".worm_y","worm"))
 
 
+#' Flatworm plot for normalized quantile residuals
+#' 
+#' Generates a flattened version of a detrended normal Q-Q plot (a worm plot)
+#' for regression diagnostics.
+#' 
+#' @param object The object to generate diagnostics from, such as a model (for
+#' \code{flatworm.lm}, \code{flatworm.map}, ...) or a data frame of residuals
+#' (for \code{flatworm.data.frame}).
+#' @param cols Bare (unquoted) name of a column to facet over for generating 
+#' multiple flatworm plots (i.e. small multiples). If cols is numeric, it
+#' will be split into quartiles; if is it a factor, into levels.
+#' @param y \code{map2stan} and \code{map} objects may contain multiple dependent
+#' variables; use \code{y} (as an unquoted expression) to specify the desired
+#' response to calculate residuals from (or \code{NULL} to use the first
+#' link function in the model).
+#' @param residual_z Bare name of the normalized residuals in \code{object}.
+#' @param ylim Limits of the y axis to plot. If a numeric vector of length 2, specifies
+#' min and max. If numeric vector of length 1, specifies abs(min) and max. If
+#' \code{NA} or \code{NULL}, the y limits are determined from the data.
+#' @param points Show residuals as points
+#' @param lines Show residuals as lines
+#' @param loess Show a \code{\link{loess}} fit to detrended residuals.
+#' @param cubic Show a cubic fit to detrended residuals.
+#' @param z_cubic Show a cubic fit to detrended residuals in z-space, translated onto the
+#' SE scale used by flatworm. This is the same fit used by \code{\link[gamlss]{wp}}
+#' displayed on the transformed y scale used by \code{flatworm}.
+#' @param ... Additional arguments passed onto \code{flatworm.data.frame} by
+#' model-specific versions of \code{flatworm}.
+#' 
+#' Flatworm implements a variant of a worm plot (See e.g. \code{\link[gamlss]{wp}}). 
+#' Unlike the traditional worm plot, its x-axis is scaled in units of standard
+#' errors. Thus the arcs that define ~ +-2 SE in a worm plot (the region most
+#' residuals should be within) instead define a band, making it a more straightforward
+#' task to judge whether the residuals are contained within +- 2 SE.
+#' 
+#' Model-specific versions of \code{flatworm} simply extract data and normalized
+#' residuals from a model and then pass them to \code{flatworm.data.frame}.
+#' 
+#' @seealso \code{\link[gamlss]{wp}}
+#' 
 #' @import dplyr
 #' @import ggplot2
 #' @importFrom lsmeans recover.data
@@ -16,6 +56,7 @@ globalVariables(c("expected_p","expected_z",".cuts",".worm_y","worm"))
 #' @importFrom modelr seq_range
 #' @export
 flatworm = function(object, ...) UseMethod("flatworm", object)
+#' @rdname flatworm
 #' @export
 flatworm.lm = function(object, cols = NULL, ...) {
     .cols = substitute(cols)
@@ -39,6 +80,7 @@ flatworm.lm = function(object, cols = NULL, ...) {
 
     eval(bquote(flatworm(data, residual_z, cols = .(.cols), ...)))
 }
+#' @rdname flatworm
 #' @export
 flatworm.map = function(object, cols = NULL, y = NULL, ...) {
     .cols = substitute(cols)
@@ -57,8 +99,10 @@ flatworm.map = function(object, cols = NULL, y = NULL, ...) {
             flatworm(residual_z, cols = .(.cols), ...)
     ))
 }
+#' @rdname flatworm
 #' @export
 flatworm.map2stan = flatworm.map
+#' @rdname flatworm
 #' @export
 flatworm.data.frame = function(object, residual_z, cols = NULL, 
     ylim = 6, points = TRUE, lines = FALSE,
