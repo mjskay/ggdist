@@ -21,6 +21,86 @@ tidy_samples = function(...) {
 }
 
 
+# get all variable names from an expression
+# based on http://adv-r.had.co.nz/dsl.html
+all_names <- function(x) {
+    if (is.atomic(x)) {
+        NULL
+    } else if (is.name(x)) {
+        name = as.character(x)
+        if (name == "") {
+            NULL
+        }
+        else {
+            name
+        }
+    } else if (is.call(x) || is.pairlist(x)) {
+        children <- lapply(x[-1], all_names)
+        unique(unlist(children))
+    } else {
+        stop("Don't know how to handle type ", typeof(x), 
+            call. = FALSE)
+    }
+}
+
+#parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
+#into a list with three elements:
+# 1. A vector of variable names
+# 2. A vector of index names (or NULL if none)
+# 3. The name of the wide index (or NULL if none)
+#' @importFrom stats setNames
+#' @importFrom purrr reduce map2
+parse_variable_spec = function(variable_spec) {
+    names = all_names(variable_spec$expr)
+    #specs for each bare variable name in the spec expression
+    names_spec = 
+        lapply(names, function(name) list(name, NULL, NULL)) %>%
+        setNames(names)
+    
+    spec_env = c(
+        names_spec,
+        list(
+            c = function(...) {
+                reduce(list(...), function(spec1, spec2) map2(spec1, spec2, base::c))
+            },
+            
+            `[` = function(spec, ...) {
+                index_names = as.character(substitute(list(...))[-1])
+                if (identical(index_names, "")) {
+                    index_names = NULL
+                }
+                else if (any(index_names == "")) {
+                    stop("Empty indices (e.g. a[,]) not allowed in variable_spec")
+                }
+                
+                list(
+                    spec[[1]],
+                    c(spec[[2]], index_names),
+                    spec[[3]]
+                )
+            },
+            
+            `|` = function(spec, by) {
+                wide_index_name = by[[1]]
+                if (!is.null(spec[[3]])) {
+                    stop("Left-hand side of `|` cannot contain `|`")
+                }
+                if (length(wide_index_name) != 1) {
+                    stop("Right-hand side of `|` must be exactly one name")
+                }
+                
+                list(
+                    spec[[1]],
+                    spec[[2]],
+                    wide_index_name
+                )
+            }
+        )
+    )
+
+    lazy_eval(variable_spec, spec_env)
+}
+
 #' Gather samples from a Bayesian sampler in a tidy data format
 #' 
 #' Extract samples from an MCMC chain for a variable with the given named
@@ -104,28 +184,9 @@ gather_samples = function(model, variable_spec) {
 #' @importFrom lazyeval lazy_eval
 gather_samples_ = function(model, variable_spec) {
     #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
-    spec = lazy_eval(variable_spec, data=list(
-        `[` = function(variable_names, ...) {
-            #helper function to translate variable names into a list
-            translate_variable_names = function(quoted_variable_names) { 
-                switch(class(quoted_variable_names),
-                    name = as.character(quoted_variable_names),
-                    call = unlist(lapply(quoted_variable_names[-1], translate_variable_names)),
-                    `(` = translate_variable_names(quoted_variable_names[[2]])
-                )
-            }
-            list(
-                translate_variable_names(substitute(variable_names)),
-                as.character(substitute(list(...))[-1]),
-                NA)
-        },
-        `|` = function(spec, by) c(
-            spec[1:2],
-            as.character(substitute(by))
-            )
-        ))
+    spec = parse_variable_spec(variable_spec)
     variable_names = spec[[1]]
-    index_names = if (identical(spec[[2]], "")) NULL else spec[[2]]
+    index_names = spec[[2]]
     wide_index_name = spec[[3]]
     
     #extract the samples into a long data frame
@@ -143,7 +204,7 @@ gather_samples_ = function(model, variable_spec) {
     
     #spread a column into wide format if requested (only if one variable, because
     #we can't spread multiple keys simultaneously for the same value)
-    if (!is.na(wide_index_name)) {
+    if (!is.null(wide_index_name)) {
         #wide index requested by name
         if (length(variable_names) != 1) {
             stop("Cannot extract samples of multiple variables in wide format.")

@@ -19,6 +19,7 @@ test_that("gather_samples works on a simple parameter with no indices", {
             typical_r = RankCorr[,"typical_r"]
             )
         expect_equal(gather_samples(RankCorr, typical_r[]), ref)
+        expect_equal(gather_samples(RankCorr, typical_r), ref)
     })
 
 
@@ -154,8 +155,8 @@ test_that("gather_samples does not allow extraction of two variables simultaneou
         data(RankCorr, package="tidybayes")
 
         error_message = "Cannot extract samples of multiple variables in wide format."
-        expect_error(gather_samples(RankCorr, cbind(tau, typical_mu)[..]), error_message)
-        expect_error(gather_samples(RankCorr, cbind(tau, typical_mu)[i] | i), error_message)
+        expect_error(gather_samples(RankCorr, c(tau, typical_mu)[..]), error_message)
+        expect_error(gather_samples(RankCorr, c(tau, typical_mu)[i] | i), error_message)
     })
 
 test_that("gather_samples correctly extracts multiple variables simultaneously", {
@@ -164,11 +165,11 @@ test_that("gather_samples correctly extracts multiple variables simultaneously",
         RankCorr = apply_prototypes(RankCorr, 
             list(i = factor(i_labels)))
         
-        expect_equal(gather_samples(RankCorr, cbind(tau, typical_mu)[i]), 
+        expect_equal(gather_samples(RankCorr, c(tau, typical_mu)[i]), 
             gather_samples(RankCorr, tau[i]) %>%
                 left_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
         )
-        expect_equal(gather_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]), 
+        expect_equal(gather_samples(RankCorr, c(tau, typical_mu, u_tau)[i]), 
             gather_samples(RankCorr, tau[i]) %>%
                 left_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
                 left_join(gather_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
@@ -179,10 +180,12 @@ test_that("gather_samples correctly extracts multiple variables simultaneously w
         data(RankCorr, package="tidybayes")
         dimnames(RankCorr)[[2]][[1]] <- "tr2"
 
-        expect_equal(gather_samples(RankCorr, cbind(typical_r)[]), 
-            gather_samples(RankCorr, typical_r[]))
-        expect_equal(gather_samples(RankCorr, cbind(tr2, typical_r)[]), 
-            gather_samples(RankCorr, tr2[]) %>%
-                left_join(gather_samples(RankCorr, typical_r[]), by=c(".sample"))
-        )
+        ref1 = gather_samples(RankCorr, typical_r[])
+        expect_equal(gather_samples(RankCorr, c(typical_r)[]), ref1)
+        expect_equal(gather_samples(RankCorr, c(typical_r)), ref1)
+
+        ref2 = gather_samples(RankCorr, tr2[]) %>%
+            left_join(gather_samples(RankCorr, typical_r[]), by=c(".sample"))
+        expect_equal(gather_samples(RankCorr, c(tr2, typical_r)[]), ref2)
+        expect_equal(gather_samples(RankCorr, c(tr2, typical_r)), ref2)
     })
