@@ -53,7 +53,7 @@
 #' ##TODO
 #' 
 #' @importFrom purrr map_df map2
-#' @importFrom dplyr do
+#' @importFrom dplyr do bind_cols
 #' @importFrom lazyeval lazy_dots auto_name
 #' @export
 point_interval = function(data, ..., prob=.95, point = mean, interval = qi) UseMethod("point_interval")
@@ -63,7 +63,7 @@ point_interval.default = function(data, ..., prob=.95, point = mean, interval = 
     col_exprs = auto_name(lazy_dots(...))
 
     map_df(prob, function(p) {
-        do(data, Reduce(cbind, map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
+        do(data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
             col_samples = lazy_eval(col_expr, .)
             interval = interval(col_samples, prob = p)
             result = data.frame(
