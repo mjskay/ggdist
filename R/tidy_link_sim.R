@@ -4,7 +4,7 @@
 ###############################################################################
 
 check_for_rethinking = function(name) {
-    if (!requireNamespace("pkg", quietly = TRUE)) {
+    if (!requireNamespace("rethinking", quietly = TRUE)) {
         stop(paste0(
             'The `rethinking` package is needed for `', name, '` function to work.\n',
             'Install it via devtools::install_github("rmcelreath/rethinking")\n',
