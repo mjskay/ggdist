@@ -21,7 +21,6 @@ Imports:
     ggplot2,
     stringi,
     lsmeans,
-    Hmisc,
     LaplacesDemon,
     coda,
     import,
