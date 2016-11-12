@@ -62,7 +62,7 @@ is equivalent to this:
 
 The main difference between using the \code{|} syntax instead of the
 \code{..} syntax is that the \code{|} syntax respects prototypes applied to
-indices with \code{\link{apply_prototypes}}, and thus can be used to get
+indices with \code{\link{recover_types}}, and thus can be used to get
 columns with nicer names.
 
 The \code{c} function can be used to combine multiple variable names that have 
@@ -98,7 +98,7 @@ Which is equivalent to this:
 Matthew Kay
 }
 \seealso{
-\code{\link{apply_prototypes}}, \code{\link{compose_data}}.
+\code{\link{recover_types}}, \code{\link{compose_data}}.
 }
 \keyword{manip}
 

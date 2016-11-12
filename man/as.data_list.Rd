@@ -2,6 +2,7 @@
 % Please edit documentation in R/compose_data.R
 \name{as.data_list}
 \alias{as.data_list}
+\alias{as.data_list.character}
 \alias{as.data_list.data.frame}
 \alias{as.data_list.data_list}
 \alias{as.data_list.default}
@@ -22,6 +23,8 @@ as.data_list(object, name = "", ...)
 
 \method{as.data_list}{factor}(object, name = "", .n_name = n_prefix("n"),
   ...)
+
+\method{as.data_list}{character}(object, name = "", ...)
 
 \method{as.data_list}{list}(object, name = "", ...)
 
@@ -92,7 +95,7 @@ as.data_list.data.frame as.data_list.data_list
 Matthew Kay
 }
 \seealso{
-\code{\link{compose_data}}, \code{\link{extract_samples}}.
+\code{\link{compose_data}}, \code{\link{gather_samples}}.
 }
 \keyword{manip}
 

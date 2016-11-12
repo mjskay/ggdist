@@ -238,7 +238,7 @@ m %>%
 
 ```{r}
 m %>%
-    apply_prototypes(ABC) %>%
+    recover_types(ABC) %>%
     gather_samples(overall_mean, group_mean[group]) %>%
     # mutate(group_mean = overall_mean + group_offset) %>%
     group_by(group) %>%

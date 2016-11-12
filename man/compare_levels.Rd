@@ -10,7 +10,7 @@ compare_levels(samples, variable, by, fun = `-`, comparison = default,
 }
 \arguments{
 \item{samples}{Long-format \code{data.frame} of samples such as returned by
-\code{\link{extract_samples}}.}
+\code{\link{gather_samples}}.}
 
 \item{variable}{Bare (unquoted) name of a column in samples representing the
 variable to compare across levels.}
@@ -43,8 +43,8 @@ should be treated as indices when making the comparison (i.e. values of
 unique combination of levels of \code{indices}). Columns in \code{indices}
 not found in \code{samples} are ignored. The default is \code{".sample"},
 which is the same name used for the sample index variable returned by
-\code{\link{extract_samples}}; thus if you are using \code{compare_levels}
-with \code{extract_samples} you generally should not need to change this
+\code{\link{gather_samples}}; thus if you are using \code{compare_levels}
+with \code{gather_samples} you generally should not need to change this
 value.}
 }
 \value{
@@ -55,7 +55,7 @@ comparison of pairs of levels of \code{by} in \code{samples}, and
 }
 \description{
 Given a posterior sample from a Bayesian sampler in long format (e.g. as
-returned by extract_samples), compare the value of a variable in that sample
+returned by gather_samples), compare the value of a variable in that sample
 across different paired combinations of levels of a factor.
 }
 \details{
@@ -84,7 +84,7 @@ first apply \code{\link{relevel}} to \code{by} to set the control
 Matthew Kay
 }
 \seealso{
-\code{\link{extract_samples}}.
+\code{\link{gather_samples}}.
 }
 \keyword{manip}
 

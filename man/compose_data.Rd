@@ -66,7 +66,7 @@ the implementations of \code{as.data_list.numeric},
 Matthew Kay
 }
 \seealso{
-\code{\link{as.data_list}}, \code{\link{extract_samples}}.
+\code{\link{as.data_list}}, \code{\link{gather_samples}}.
 }
 \keyword{manip}
 

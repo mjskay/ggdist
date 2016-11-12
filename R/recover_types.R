@@ -13,26 +13,31 @@ as.constructor.character = function(x) as.constructor(as.factor(x))
 as.constructor.logical = function(x) as.logical
 
 
+#' @export
+apply_prototypes = function(...) {
+    .Deprecated("recover_types")
+    recover_types(...)
+}
 
-#' Apply data prototypes to the variables and indices of a Bayesian sample
+#' Decorate a model fit or samples with data types recovered from the input data
 #' 
-#' Decorate the samples returned from a Bayesian sampler with prototypes for
+#' Decorate the samples returned from a Bayesian sampler with types for
 #' variable and index data types. Meant to be used before calling
-#' \code{\link{extract_samples}} so that the values returned by
-#' \code{\link{extract_samples}} are translated back into useful data types.
+#' \code{\link{gather_samples}} so that the values returned by
+#' \code{\link{gather_samples}} are translated back into useful data types.
 #' 
 #' Each argument in \code{...} specifies a list or data.frame. The \code{model}
 #' is decorated with a list of constructors that can convert a numeric column
 #' into the data types in the lists in \code{...}.
 #' 
-#' Then, when \code{\link{extract_samples}} is called on the decorated
+#' Then, when \code{\link{gather_samples}} is called on the decorated
 #' \code{model}, each list entry with the same name as the variable or an index
 #' in varible_spec is a used as a prototype for that variable or index ---
 #' i.e., its type is taken to be the expected type of that variable or index.
 #' Those types are used to translate numeric values of variables back into
 #' useful values (for example, levels of a factor).
 #' 
-#' The most common use of \code{apply_prototypes} is to automatically translate
+#' The most common use of \code{recover_types} is to automatically translate
 #' indices that correspond to levels of a factor in the original data back into
 #' levels of that factor. The simplest way to do this is to pass in the data
 #' frame from which the original data came.
@@ -51,18 +56,19 @@ as.constructor.logical = function(x) as.logical
 #' @param model A supported Bayesain model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}.
 #' @param ...  Lists (or data frames) providing data prototypes used to convert
-#' columns return by \code{\link{extract_samples}} back into useful data types.
+#' columns return by \code{\link{gather_samples}} back into useful data types.
 #' See `Details`.
 #' @return A decorated version of \code{model}.
 #' @author Matthew Kay
-#' @seealso \code{\link{extract_samples}}, \code{\link{compose_data}}.
+#' @aliases apply_prototypes
+#' @seealso \code{\link{gather_samples}}, \code{\link{compose_data}}.
 #' @keywords manip
 #' @examples
 #' 
 #' ##TODO
 #' 
 #' @export
-apply_prototypes = function(model, ...) { 
+recover_types = function(model, ...) { 
     if (!is.list(attr(model, "constructors"))) {
         attr(model, "constructors") = list()
     }

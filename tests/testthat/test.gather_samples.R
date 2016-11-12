@@ -40,7 +40,7 @@ test_that("gather_samples works on a parameter with one unnamed index", {
 test_that("gather_samples works on a parameter with one named index", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
-        RankCorr = apply_prototypes(RankCorr, list(i=factor(i_labels)))
+        RankCorr = recover_types(RankCorr, list(i=factor(i_labels)))
         
         ref = ldply(1:18, function(i) {
                 data.frame(
@@ -70,7 +70,7 @@ test_that("gather_samples works on a parameter with one anonymous wide index", {
 test_that("gather_samples works on a parameter with one named wide index", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
-        RankCorr = apply_prototypes(RankCorr, list(i=factor(i_labels)))
+        RankCorr = recover_types(RankCorr, list(i=factor(i_labels)))
         
         ref = data.frame(.sample = 1:nrow(RankCorr)) 
         for (i in 1:18) {
@@ -87,7 +87,7 @@ test_that("gather_samples works on a parameter with two named indices", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         j_labels = c("A","B","C","D")
         data(RankCorr, package="tidybayes")
-        RankCorr = apply_prototypes(RankCorr, 
+        RankCorr = recover_types(RankCorr, 
             list(i = factor(i_labels), j = factor(j_labels)))
         
 
@@ -110,7 +110,7 @@ test_that("gather_samples works on a parameter with two named indices, one that 
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         j_labels = c("A","B","C","D")
         data(RankCorr, package="tidybayes")
-        RankCorr = apply_prototypes(RankCorr, 
+        RankCorr = recover_types(RankCorr, 
             list(i = factor(i_labels), j = factor(j_labels)))
         
         
@@ -132,7 +132,7 @@ test_that("gather_samples works on a parameter with two named indices, one that 
 test_that("gather_samples works on a parameter with one named index and one wide anonymous index", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
-        RankCorr = apply_prototypes(RankCorr, 
+        RankCorr = recover_types(RankCorr, 
             list(i = factor(i_labels)))
         
         
@@ -162,7 +162,7 @@ test_that("gather_samples does not allow extraction of two variables simultaneou
 test_that("gather_samples correctly extracts multiple variables simultaneously", {
         i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
         data(RankCorr, package="tidybayes")
-        RankCorr = apply_prototypes(RankCorr, 
+        RankCorr = recover_types(RankCorr, 
             list(i = factor(i_labels)))
         
         expect_equal(gather_samples(RankCorr, c(tau, typical_mu)[i]), 

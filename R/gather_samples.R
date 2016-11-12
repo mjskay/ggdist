@@ -145,7 +145,7 @@ parse_variable_spec = function(variable_spec) {
 #' 
 #' The main difference between using the \code{|} syntax instead of the
 #' \code{..} syntax is that the \code{|} syntax respects prototypes applied to
-#' indices with \code{\link{apply_prototypes}}, and thus can be used to get
+#' indices with \code{\link{recover_types}}, and thus can be used to get
 #' columns with nicer names.
 #' 
 #' The \code{c} function can be used to combine multiple variable names that have 
@@ -178,7 +178,7 @@ parse_variable_spec = function(variable_spec) {
 #' \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.
 #' @return A data frame.
 #' @author Matthew Kay
-#' @seealso \code{\link{apply_prototypes}}, \code{\link{compose_data}}.
+#' @seealso \code{\link{recover_types}}, \code{\link{compose_data}}.
 #' @keywords manip
 #' @examples
 #' 

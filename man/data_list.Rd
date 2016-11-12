@@ -29,7 +29,7 @@ input into Bayesian samplers. See the implementations of
 Matthew Kay
 }
 \seealso{
-\code{\link{compose_data}}, \code{\link{extract_samples}}.
+\code{\link{compose_data}}, \code{\link{gather_samples}}.
 }
 \keyword{manip}
 

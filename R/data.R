@@ -12,3 +12,12 @@
 #' @docType data
 #' @keywords datasets internal
 NULL
+
+#' Test data with five groups
+#' 
+#' Test data generated from a hierarchical model with normally-distributed errors and 5 groups (A, B, C, D, and E).
+#' 
+#' @name RankCorr
+#' @docType data
+#' @keywords datasets internal
+NULL

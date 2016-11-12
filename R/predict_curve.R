@@ -9,7 +9,7 @@
 #' 
 #' Generates a prediction curve (or a density for a prediction curve) given an
 #' expression based on columns of a data frame (as might be obtained using
-#' extract_samples) combined with arbitrary other predictors. Obeys groups
+#' gather_samples) combined with arbitrary other predictors. Obeys groups
 #' applied by group_by.
 #' 
 #' The function generates a predictive curve given some posterior samples
@@ -34,7 +34,7 @@
 #' 
 #' @param data A \code{\link{data.frame}}, \code{\link{tbl_df}} or
 #' \code{link{grouped_df}} representing posteriors from a Bayesian model as
-#' might be obtained through \code{\link{extract_samples}}. Grouped data frames
+#' might be obtained through \code{\link{gather_samples}}. Grouped data frames
 #' as returned by \code{\link{group_by}} are supported.
 #' @param formula A formula specifying the prediction curve. The left-hand side
 #' of the formula should be a name respresenting the name of the column that
