@@ -17,7 +17,7 @@ NULL
 #' 
 #' Test data generated from a hierarchical model with normally-distributed errors and 5 groups (A, B, C, D, and E).
 #' 
-#' @name RankCorr
+#' @name ABC
 #' @docType data
 #' @keywords datasets internal
 NULL

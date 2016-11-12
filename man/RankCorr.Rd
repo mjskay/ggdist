@@ -6,8 +6,6 @@
 \title{Thinned posterior sample from a Bayesian analysis used for testing purposes.}
 \description{
 Test data (details of the experiment are irrelevant).
-
-Test data generated from a hierarchical model with normally-distributed errors and 5 groups (A, B, C, D, and E).
 }
 \keyword{datasets}
 \keyword{internal}
