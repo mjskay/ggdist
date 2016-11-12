@@ -131,6 +131,11 @@ as.data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
 }
 #' @rdname as.data_list
 #' @export
+as.data_list.character = function(object, name="", ...) {
+    as.data_list(as.factor(object), name = name, ...)
+}
+#' @rdname as.data_list
+#' @export
 as.data_list.list = function(object, name="", ...) {
     #go through list and translate variables
     data = data_list()

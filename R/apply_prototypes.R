@@ -8,6 +8,8 @@ as.constructor.factor = function(x) {
     function(x) factor(x, levels=1:length(x_levels), labels=x_levels, ordered=x_is_ordered)
 }
 
+as.constructor.character = function(x) as.constructor(as.factor(x))
+
 as.constructor.logical = function(x) as.logical
 
 
