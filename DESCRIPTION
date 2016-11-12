@@ -30,6 +30,7 @@ Imports:
 Suggests:
     testthat,
     rstan,
+    gamlss,
     runjags
 Enhances:
     rethinking
