@@ -6,7 +6,7 @@ sudo: required
 # Be strict when checking our package
 warnings_are_errors: true
 
-# list suggested packages here to since they
+# list suggested packages here too since they
 # aren't installed automatically
 r_binary_packages:
  # won't compile under clang?
