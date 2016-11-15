@@ -147,6 +147,8 @@ m
 
 # Gathering samples from a fit in tidy-format using `gather_samples`
 
+## Automatically recovering types from the input data
+
 The estimated parameters from Stan don't retain any information about how they were generated. For example, the index of the `group_mean` parameter---which estimates the mean of each group, and which we are likely interested in---was derived from the `group` factor in the `ABC` data frame. But Stan doesn't know this (it is just a numeric index to Stan), so the results give us `group_mean[1]`, `group_mean[2]`, etc.
 
 We can recover this missing information using the `recover_types` function. In itself `recover_types` just returns a copy of the model, decorated so that type information is drawn from the data frame (or other objects) that you pass to it. This won't have any useful effect until we call `gather_samples` later. For now, let's decorate the model with its recovered type information from the original data frame:
@@ -193,7 +195,7 @@ m %>%
     mean_qi(group_mean)
 ```
 
-Then plotting these means is straightforward:
+Then plotting these means with group labels is straightforward:
 
 ```{r}
 m %>%
@@ -204,6 +206,36 @@ m %>%
     geom_pointrange()
 ```
 
+## Alternative estimates and intervals: mean, median, mode; qi, hdi
+
+The `point_estimate` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval. `qi` yields a quantile interval (aka equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. Replacing `mean_qi` with `mode_hdi` in the previous example yields mode and HDI instead of mean and quantile interval:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group]) %>%
+    group_by(group) %>%
+    mode_hdi(group_mean) %>%
+    ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper)) +
+    geom_pointrange()
+```
+
+This is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:
+
+```{r}
+sd_samples = m %>% gather_samples(y_sd)
+rbind(
+    sd_samples %>% mode_hdi(y_sd) %>% mutate(type="mode_hdi"),
+    sd_samples %>% mean_qi(y_sd) %>% mutate(type="mean_qi")
+) %>%
+    ggplot(aes(x = y_sd)) +
+    stat_density(aes(y = ..scaled.. * 10), data = sd_samples, fill="gray75") +
+    geom_point(aes(y = type)) +
+    geom_errorbarh(aes(y = type, xmin = y_sd.lower, xmax = y_sd.upper), height=0)
+```
+
+
+## Interval estimates with multiple probability levels
+
 `mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `prob =` argument:
 
 ```{r}
@@ -213,7 +245,7 @@ m %>%
     mean_qi(group_mean, prob = c(.95, .8, .5))
 ```
 
-Again, in tidy format, facilitating plotting. For example, we can assign the inverse of the `group_mean.prob` column to the `size` aesthetic, making thicker lines corresponding to smaller intervals:
+Again, in tidy format, facilitating plotting. For example, assigning the inverse of the `group_mean.prob` column to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
 
 ```{r}
 m %>%
@@ -232,9 +264,93 @@ m %>%
     )
 ```
 
+## Combining variables with different indices in tidy format
 
+`gather_samples` supports gathering variables that have different indicies. It automatically matches up indices with the same name, and duplicates values as necessary to make one row per all combination of levels of all indices. For example, in the above fit we might want to calculate the difference between each group mean and the overall mean. To do that, we can gather samples from the overall mean and all group means:
 
-    
+```{r}
+m %>% 
+    gather_samples(overall_mean, group_mean[group])
+```
+
+Within each sample, `overall_mean` is repeated as necessary to correspond to every index of `group_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `mean_qi`:
+
+```{r}
+m %>%
+    gather_samples(overall_mean, group_mean[group]) %>%
+    mutate(group_offset = group_mean - overall_mean) %>%
+    group_by(group) %>%
+    mean_qi(group_offset)
+```
+
+### Making predictions
+
+We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the group means with the residual standard deviation to generate predictive distributions from the model:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group], y_sd) %>%
+    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    ggplot(aes(x = y_rep)) +
+    stat_density() +
+    facet_grid(group ~ .)
+```
+
+And even summarize these as predictive intervals and compare to the data:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group], y_sd) %>%
+    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    group_by(group) %>%
+    mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
+    ggplot(aes(x = group, y = y_rep)) +
+    geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
+        color = ordered(-y_rep.prob)),
+        size = 4) +
+    geom_point(aes(y = y), data = ABC) +
+    scale_color_brewer()
+```
+
+Altogether:
+
+```{r}
+samples = m %>%
+    gather_samples(group_mean[group], y_sd) %>%
+    group_by(group)
+
+reps = samples %>%
+    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    mean_qi(y_rep, prob = c(.95, .8, .5))
+
+parameters = samples %>%
+    mean_qi(group_mean, prob = c(.95, .66))
+   
+ABC %>%
+    ggplot(aes(x = group, y = y)) +
+    geom_linerange(aes(y = y_rep, ymin = y_rep.lower, ymax = y_rep.upper, 
+        color = ordered(-y_rep.prob)),
+        size = 4, data = reps) +
+    geom_pointrange(aes(y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
+        size = -group_mean.prob),
+        fatten = 1.5, position=position_nudge(x=0.2),
+        data = parameters) +
+    geom_point() +
+    scale_color_brewer() +
+    scale_size_continuous(range = c(0,2))
+```
+
+## Comparing levels of a factor
+
+If we wish compare the values of `group_mean` across groups, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group]) %>%
+    compare_levels(group_mean, by = group) %>%
+    group_by(group) %>%
+    mean_qi(group_mean)
+```
 
 ```{r}
 m %>%
