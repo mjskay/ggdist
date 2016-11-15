@@ -6,4 +6,4 @@
 ###############################################################################
 
 # names used in dlpyr functions
-globalVariables(c(".", ".sample"))
+globalVariables(c("."))

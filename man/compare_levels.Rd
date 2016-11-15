@@ -6,7 +6,7 @@
 sample for different levels of a factor}
 \usage{
 compare_levels(samples, variable, by, fun = `-`, comparison = default,
-  indices = ".sample")
+  indices = c(".chain", ".iteration"))
 }
 \arguments{
 \item{samples}{Long-format \code{data.frame} of samples such as returned by

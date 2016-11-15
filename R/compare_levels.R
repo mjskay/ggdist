@@ -100,7 +100,7 @@ comparison_types = within(list(), {
 #' ##TODO
 #' 
 #' @export
-compare_levels = function(samples, variable, by, fun=`-`, comparison=default, indices=".sample") {
+compare_levels = function(samples, variable, by, fun=`-`, comparison=default, indices=c(".chain",".iteration")) {
     eval(bquote(compare_levels_(samples, 
                 .(deparse(substitute(variable))), 
                 .(deparse(substitute(by))), 
@@ -113,7 +113,7 @@ compare_levels = function(samples, variable, by, fun=`-`, comparison=default, in
 #' @importFrom plyr ldply
 #' @importFrom tidyr spread_
 #' @importFrom dplyr one_of
-compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, indices=".sample") {
+compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, indices=c(".chain",".iteration")) {
     #drop unused levels from "by" column
     samples[[by]] = factor(samples[[by]])
     

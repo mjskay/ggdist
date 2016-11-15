@@ -18,7 +18,8 @@ get_samples = function() {
     data(RankCorr, package="tidybayes")
     ldply(1:18, function(i) {
             data.frame(
-                .sample = 1:nrow(RankCorr),
+                .chain = as.integer(1),
+                .iteration = 1:nrow(RankCorr),
                 ff = ff_labels[i],
                 tau = RankCorr[,paste0("tau[", i, "]")]
             )

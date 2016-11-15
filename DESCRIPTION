@@ -26,6 +26,8 @@ Imports:
     import,
     modelr,
     purrr,
+    tibble,
+    MASS,
     magrittr
 Suggests:
     testthat,

@@ -4,8 +4,9 @@
 ###############################################################################
 
 library(testthat)
-import::from(plyr, ldply, .)
-import::from(dplyr, `%>%`, inner_join)
+import::from(plyr, ldply, .)  #TODO: drop remaining ldplys from this file
+import::from(dplyr, `%>%`, inner_join, data_frame)
+import::from(purrr, map_df)
 library(tidyr)
 library(tidybayes)
 
@@ -14,8 +15,9 @@ context("gather_samples")
 test_that("gather_samples works on a simple parameter with no indices", {
         data(RankCorr, package="tidybayes")
         
-        ref = data.frame(
-            .sample = 1:nrow(RankCorr),
+        ref = data_frame(
+            .chain = as.integer(1),
+            .iteration = 1:nrow(RankCorr),
             typical_r = RankCorr[,"typical_r"]
             )
         expect_equal(gather_samples(RankCorr, typical_r[]), ref)
@@ -26,9 +28,10 @@ test_that("gather_samples works on a simple parameter with no indices", {
 test_that("gather_samples works on a parameter with one unnamed index", {
         data(RankCorr, package="tidybayes")
         
-        ref = ldply(1:18, function(i) {
-                data.frame(
-                    .sample = 1:nrow(RankCorr),
+        ref = map_df(1:18, function(i) {
+                data_frame(
+                    .chain = as.integer(1),
+                    .iteration = 1:nrow(RankCorr),
                     i = i,
                     tau = RankCorr[,paste0("tau[", i, "]")]
                     )
@@ -44,7 +47,8 @@ test_that("gather_samples works on a parameter with one named index", {
         
         ref = ldply(1:18, function(i) {
                 data.frame(
-                    .sample = 1:nrow(RankCorr),
+                    .chain = as.integer(1),
+                    .iteration = 1:nrow(RankCorr),
                     i = i_labels[i],
                     tau = RankCorr[,paste0("tau[", i, "]")]
                 )
@@ -56,7 +60,10 @@ test_that("gather_samples works on a parameter with one named index", {
 test_that("gather_samples works on a parameter with one anonymous wide index", {
         data(RankCorr, package="tidybayes")
         
-        ref = data.frame(.sample = 1:nrow(RankCorr)) 
+        ref = data.frame(
+            .chain = as.integer(1),
+            .iteration = 1:nrow(RankCorr)
+        ) 
         for (i in 1:18) {
             refcol = data.frame(RankCorr[,paste0("tau[", i, "]")])
             names(refcol) = paste0("tau", i)
@@ -72,7 +79,10 @@ test_that("gather_samples works on a parameter with one named wide index", {
         data(RankCorr, package="tidybayes")
         RankCorr = recover_types(RankCorr, list(i=factor(i_labels)))
         
-        ref = data.frame(.sample = 1:nrow(RankCorr)) 
+        ref = data.frame(
+            .chain = as.integer(1),
+            .iteration = 1:nrow(RankCorr)
+        ) 
         for (i in 1:18) {
             refcol = data.frame(RankCorr[,paste0("tau[", i, "]")])
             names(refcol) = i_labels[i]
@@ -94,7 +104,8 @@ test_that("gather_samples works on a parameter with two named indices", {
         ref = ldply(1:4, function(j) {
                 ldply(1:18, function(i) {
                     data.frame(
-                        .sample = 1:nrow(RankCorr),
+                        .chain = as.integer(1),
+                        .iteration = 1:nrow(RankCorr),
                         i = i_labels[i],
                         j = j_labels[j],
                         b = RankCorr[,paste0("b[", i, ",", j, "]")]
@@ -117,7 +128,8 @@ test_that("gather_samples works on a parameter with two named indices, one that 
         ref = ldply(1:4, function(j) {
                 ldply(1:18, function(i) {
                     data.frame(
-                        .sample = 1:nrow(RankCorr),
+                        .chain = as.integer(1),
+                        .iteration = 1:nrow(RankCorr),
                         i = i_labels[i],
                         j = j_labels[j],
                         b = RankCorr[,paste0("b[", i, ",", j, "]")]
@@ -126,7 +138,7 @@ test_that("gather_samples works on a parameter with two named indices, one that 
             }) %>%
             spread(j, b)
         
-        expect_equal(gather_samples(RankCorr, b[i,j] | j) %>% arrange(.sample), ref)
+        expect_equal(gather_samples(RankCorr, b[i,j] | j) %>% arrange(.iteration), ref)
     })
 
 test_that("gather_samples works on a parameter with one named index and one wide anonymous index", {
@@ -139,7 +151,8 @@ test_that("gather_samples works on a parameter with one named index and one wide
         ref = ldply(1:4, function(j) {
                 ldply(1:18, function(i) {
                     data.frame(
-                        .sample = 1:nrow(RankCorr),
+                        .chain = as.integer(1),
+                        .iteration = 1:nrow(RankCorr),
                         i = i_labels[i],
                         j = paste0("b", j),
                         b = RankCorr[,paste0("b[", i, ",", j, "]")]
@@ -148,7 +161,7 @@ test_that("gather_samples works on a parameter with one named index and one wide
             }) %>%
             spread(j, b)
         
-        expect_equal(gather_samples(RankCorr, b[i,..]) %>% arrange(.sample), ref)
+        expect_equal(gather_samples(RankCorr, b[i,..]) %>% arrange(.iteration), ref)
     })
 
 test_that("gather_samples does not allow extraction of two variables simultaneously with a wide index", {
@@ -167,12 +180,12 @@ test_that("gather_samples correctly extracts multiple variables simultaneously",
         
         expect_equal(gather_samples(RankCorr, c(tau, typical_mu)[i]), 
             gather_samples(RankCorr, tau[i]) %>%
-                inner_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i"))
+                inner_join(gather_samples(RankCorr, typical_mu[i]), by=c(".chain",".iteration","i"))
         )
         expect_equal(gather_samples(RankCorr, c(tau, typical_mu, u_tau)[i]), 
             gather_samples(RankCorr, tau[i]) %>%
-                inner_join(gather_samples(RankCorr, typical_mu[i]), by=c(".sample","i")) %>%
-                inner_join(gather_samples(RankCorr, u_tau[i]), by=c(".sample","i"))
+                inner_join(gather_samples(RankCorr, typical_mu[i]), by=c(".chain",".iteration","i")) %>%
+                inner_join(gather_samples(RankCorr, u_tau[i]), by=c(".chain",".iteration","i"))
         )
     })
 
@@ -185,7 +198,7 @@ test_that("gather_samples correctly extracts multiple variables simultaneously w
         expect_equal(gather_samples(RankCorr, c(typical_r)), ref1)
 
         ref2 = gather_samples(RankCorr, tr2[]) %>%
-            inner_join(gather_samples(RankCorr, typical_r[]), by=c(".sample"))
+            inner_join(gather_samples(RankCorr, typical_r[]), by=c(".chain",".iteration"))
         expect_equal(gather_samples(RankCorr, c(tr2, typical_r)[]), ref2)
         expect_equal(gather_samples(RankCorr, c(tr2, typical_r)), ref2)
     })
@@ -194,8 +207,8 @@ test_that("gather_samples multispec syntax joins results correctly", {
     data(RankCorr, package="tidybayes")
 
     ref = gather_samples(RankCorr, typical_r) %>%
-        inner_join(gather_samples(RankCorr, tau[i]), by=c(".sample")) %>%
-        inner_join(gather_samples(RankCorr, b[i,v]), by=c(".sample", "i"))
+        inner_join(gather_samples(RankCorr, tau[i]), by=c(".chain",".iteration")) %>%
+        inner_join(gather_samples(RankCorr, b[i,v]), by=c(".chain",".iteration", "i"))
 
     expect_equal(gather_samples(RankCorr, typical_r, tau[i], b[i,v]), ref)    
 })

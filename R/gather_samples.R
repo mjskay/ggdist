@@ -5,7 +5,7 @@
 
 # Names that should be suppressed from global variable check by codetools
 # Names used broadly should be put in _global_variables.R
-globalVariables(c("..", ".variable", ".value"))
+globalVariables(c(".."))
 
 
 # DEPRECATED NAMES FOR gather_samples
@@ -200,6 +200,7 @@ gather_samples = function(model, ...) {
 #' @import dplyr
 #' @importFrom tidyr spread_
 #' @importFrom lazyeval lazy_eval
+#' @importFrom tibble has_name
 gather_samples_ = function(model, variable_spec) {
     #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
     spec = parse_variable_spec(variable_spec)
@@ -230,7 +231,7 @@ gather_samples_ = function(model, variable_spec) {
         samples %>%
             spread_(wide_index_name, variable_names)
     }
-    else if (!is.null(samples$..)) {
+    else if (has_name(samples, "..")) {
         #a column named ".." is present, use it to form a wide version of the data
         #with numbered names based on the variable name
         if (length(variable_names) != 1) {
@@ -257,55 +258,35 @@ gather_samples_ = function(model, variable_spec) {
 ##		column "v":		  values in [1..3]
 ##      column "b":       sample number ".sample" of "b[i,v]" in mcmcChain 
 ##
-gather_samples_long_ = function(model, variable_names, index_names) UseMethod("gather_samples_long_")
-#' @importFrom tidyr spread separate
-#' @importFrom reshape2 melt
+#' @importFrom tidyr spread_ separate_ gather_
 #' @import stringi
 #' @import dplyr
-gather_samples_long_.default = function(model, variable_names, index_names) {
+gather_samples_long_ = function(model, variable_names, index_names) {
+    samples = as_sample_tibble(model)
     if (is.null(index_names)) {
         #no indices, just return the samples with a sample index added
-        model %>% as.data.frame() %>%
-            mutate(.sample = 1:nrow(.)) %>%
-            select_(.dots = c(".sample", variable_names))
+        samples[,c(".chain", ".iteration", variable_names)]
     }
     else {
-        #determine what variable to extract
+        #determine what variables to extract: find variable names with trailing square brackets
         variable_regex = paste0("^(", paste(variable_names, collapse="|"), ")\\[")
-        variable_names_index = stri_detect_regex(dimnames(model)[[2]], variable_regex)
+        variable_names_index = stri_detect_regex(colnames(samples), variable_regex)
+        variable_names = colnames(samples)[variable_names_index]
 
         #rename columns to drop trailing "]" to eliminate extraneous last column
-        #when we do separate(), below
-        dimnames(model)[[2]] = stri_sub(dimnames(model)[[2]], to=-2)
-
-        #subset and convert to data frame
-        model[,variable_names_index] %>%
-            #make long format with a sample index
-            #TODO: can we use gather here instead?
-            melt(varnames=c(".sample",".variable"), value.name=".value",
-                as.is=TRUE  #don't convert strings to factors here since we're just going to apply separate to them
-            ) %>%
+        #when we do separate(), below. e.g. "x[1,2]" becomes "x[1,2". Do the same
+        #with variable_names so we can select the columns
+        colnames(samples)[c(-1,-2)] = stri_sub(colnames(samples)[c(-1,-2)], to=-2)
+        variable_names = stri_sub(variable_names, to=-2)
+        
+        samples[,c(".chain", ".iteration", variable_names)] %>%
+            #make long format for the variables we want to split
+            gather_(".variable", ".value", variable_names) %>%
             #next, split indices in variable names into columns
-            separate(.variable, c(".variable", index_names), sep="(\\,|\\[|\\])", 
+            separate_(".variable", c(".variable", index_names), sep="(\\,|\\[|\\])",
                 convert=TRUE #converts indices to numerics
             ) %>%
             #now, make the value of each variable a column
-            spread(.variable, .value)
+            spread_(".variable", ".value")
     }
-}
-gather_samples_long_.stanfit = function(model, ...) {
-    gather_samples_long_(as.matrix(model), ...)
-}
-gather_samples_long_.mcmc = function(model, ...) {
-    gather_samples_long_(as.matrix(model), ...)
-}
-gather_samples_long_.mcmc.list = function(model, ...) {
-    gather_samples_long_(as.matrix(model), ...)
-}
-gather_samples_long_.runjags = function(model, ...) {
-    requireNamespace("runjags")
-    gather_samples_long_(coda::as.mcmc.list(model), ...)
-}
-gather_samples_long_.map2stan = function(model, ...) {
-    gather_samples_long_(model@stanfit, ...)
 }

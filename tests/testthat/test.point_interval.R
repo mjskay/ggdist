@@ -18,7 +18,8 @@ get_samples = function() {
     data(RankCorr, package="tidybayes")
     ldply(1:18, function(i) {
             data.frame(
-                .sample = 1:nrow(RankCorr),
+                .chain = 1,
+                .iteration = 1:nrow(RankCorr),
                 ff = ff_labels[i],
                 tau = RankCorr[,paste0("tau[", i, "]")]
             )
@@ -47,7 +48,7 @@ test_that("mean_qi works on a grouped variable", {
 
 test_that("mean_qi works on multiple columns", {
         samples = get_samples() %>%
-            group_by(.sample) %>%
+            group_by(.iteration) %>%
             spread(ff, tau) %>%
             ungroup()
         

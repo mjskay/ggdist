@@ -38,7 +38,8 @@ as_sample_data_frame = as_tibble
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble as_tibble tibble
 #' @importFrom rstan As.mcmc.list
-#' @importFrom coda as.mcmc.list
+#' @importFrom coda as.mcmc.list as.mcmc
+#' @importFrom MASS mvrnorm
 #' @export
 as_sample_tibble = function(model) UseMethod("as_sample_tibble")
 as_sample_tibble.default = function(model) {
@@ -64,10 +65,19 @@ as_sample_tibble.runjags = function(model) {
     as_sample_tibble(as.mcmc.list(model))
 }
 as_sample_tibble.map = function(model) {
-    samples = extract.samples(m2)
+    mu = coef(model)
+    samples = as_tibble(mvrnorm(n = 10000, mu = mu, Sigma = vcov(model)))
     #map models have no chains
     bind_cols(data_frame(.chain=1, .iteration = 1:nrow(samples)), samples)
 }
 as_sample_tibble.map2stan = function(model) {
     as_sample_tibble(model@stanfit)
+}
+as_sample_tibble.matrix = function(model) {
+    if (length(dim(model)) == 2) {
+        # assume matrix indexed by [interations, variables]
+        as_sample_tibble(as.mcmc.list(as.mcmc(model)))
+    } else {
+        stop("Matrix must have only 2 dimensions (first being the sample, second the variable).")
+    }
 }
