@@ -125,3 +125,16 @@ test_that("mean_qi works on multiple probs with groups", {
     expect_equal(result95$tau.lower, ref95$tau.lower)
     expect_equal(result95$tau.upper, ref95$tau.upper)
 })
+
+test_that("mean_qi correctly identifies the desired columns when ... is empty", {
+    testdf = data_frame(
+            .c = 1:1000, 
+            x = c(qnorm(ppoints(500)), qnorm(ppoints(500), 1)),
+            y = c(qnorm(ppoints(500), 2), qnorm(ppoints(500), 3)),
+            g = c(rep("a", 500), rep("b", 500))
+        ) %>%
+        group_by(g)
+    
+    expect_equal(mean_qi(testdf, x, y), mean_qi(testdf))
+})
+

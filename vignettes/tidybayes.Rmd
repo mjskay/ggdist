@@ -49,7 +49,7 @@ which means fitting into the pipe (`%>%`) workflow, respecting grouped data fram
 
 ## Setup
 
-```{r setup, include=FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(  #default code chunk options
     dev = "CairoPNG"      #nicer PNG figures
 )
@@ -57,7 +57,7 @@ knitr::opts_chunk$set(  #default code chunk options
 
 The following libraries are required to run this vignette:
 
-```{r message=FALSE}
+```{r setup, message=FALSE}
 library(magrittr)
 library(dplyr)
 library(forcats)
@@ -208,7 +208,7 @@ m %>%
 
 ## Alternative estimates and intervals: mean, median, mode; qi, hdi
 
-The `point_estimate` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval. `qi` yields a quantile interval (aka equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. Replacing `mean_qi` with `mode_hdi` in the previous example yields mode and HDI instead of mean and quantile interval:
+The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (aka equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Replacing `mean_qi` with `mode_hdi` in the previous example yields mode and HDI instead of mean and quantile interval:
 
 ```{r}
 m %>%

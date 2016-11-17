@@ -52,9 +52,9 @@
 #' 
 #' ##TODO
 #' 
-#' @importFrom purrr map_df map2
+#' @importFrom purrr map_df map map2 discard
 #' @importFrom dplyr do bind_cols
-#' @importFrom lazyeval lazy_dots auto_name
+#' @importFrom lazyeval lazy_dots as.lazy_dots auto_name
 #' @export
 point_interval = function(data, ..., prob=.95, point = mean, interval = qi) UseMethod("point_interval")
 #' @rdname point_interval
@@ -62,6 +62,25 @@ point_interval = function(data, ..., prob=.95, point = mean, interval = qi) UseM
 point_interval.default = function(data, ..., prob=.95, point = mean, interval = qi) {
     col_exprs = auto_name(lazy_dots(...))
 
+    if (length(col_exprs) == 0) {
+        # no column expressions provided => summarise all columns that are not groups and which
+        # do not start with "."
+        col_exprs = names(data) %>%
+            map(as.name) %>% 
+            #don't aggregate groups because we aggregate within these
+            setdiff(groups(data)) %>% 
+            #don't aggregate columns that start with "." because these are special columns (such
+            #as .chain or .iteration)
+            discard(~ stri_startswith_fixed(.x, ".")) %>%
+            as.lazy_dots() %>%
+            auto_name()
+
+        if (length(col_exprs) == 0) {
+            #still nothing to aggregate? not sure what the user wants
+            stop("No columns found to calculate point and interval estimates for.")
+        }
+    }
+    
     map_df(prob, function(p) {
         do(data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
             col_samples = lazy_eval(col_expr, .)
