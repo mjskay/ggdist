@@ -37,8 +37,8 @@ as_sample_data_frame = as_tibble
 #' @importFrom purrr map_df 
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble as_tibble tibble
-#' @importFrom rstan As.mcmc.list
 #' @importFrom coda as.mcmc.list as.mcmc
+#' @importFrom stats coef vcov
 #' @importFrom MASS mvrnorm
 #' @export
 as_sample_tibble = function(model) UseMethod("as_sample_tibble")
@@ -58,10 +58,17 @@ as_sample_tibble.mcmc.list = function(model) {
     )
 }
 as_sample_tibble.stanfit = function(model) {
-    as_sample_tibble(As.mcmc.list(model))
+    if (!requireNamespace("rstan", quietly = TRUE)) {
+        stop('The `rstan` package is needed for `as_sample_tibble` to support `stanfit` objects.'
+            , call. = FALSE)
+    }
+    as_sample_tibble(rstan::As.mcmc.list(model))
 }
 as_sample_tibble.runjags = function(model) {
-    requireNamespace("runjags")
+    if (!requireNamespace("runjags", quietly = TRUE)) {
+        stop('The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects.'
+        , call. = FALSE)
+    }
     as_sample_tibble(as.mcmc.list(model))
 }
 as_sample_tibble.map = function(model) {

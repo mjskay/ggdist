@@ -96,16 +96,18 @@ tidy_link_sim_ = function(fun, data, fit,
         names(responses) = single_response_name
     }
     
-    #tidy it up: make it long format with a ".sample" column and a single column for each response
+    #tidy it up: make it long format with and a single column for each response
+    #TODO: properly recover chain and iteration information here
     cbind(
-        .sample = 1:nrow(responses[[1]]), 
+        .chain = 1, 
+        .iteration = 1:nrow(responses[[1]]), 
         #flatten each response matrix into a single vector; the sample index above
         #will be repeated to fit the length of the flattened vector, thus becomming
         #equivalent to the row index in the original matrix
         as.data.frame(lapply(responses, function(r) as.vector(r)))
     ) %>%
         #add the predictors back in for each sample
-        group_by(.sample) %>%
+        group_by_(".chain", ".iteration") %>%
         do(cbind(., data)) %>%
         #group by the predictors so that functions like mean_qi() "just work" on the
         #resulting data frame

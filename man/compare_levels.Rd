@@ -41,8 +41,8 @@ include more than two levels or other columns in \code{samples}.}
 should be treated as indices when making the comparison (i.e. values of
 \code{variable} within each level of \code{by} will be compared at each
 unique combination of levels of \code{indices}). Columns in \code{indices}
-not found in \code{samples} are ignored. The default is \code{".sample"},
-which is the same name used for the sample index variable returned by
+not found in \code{samples} are ignored. The default is \code{c(".chain",".iteration")},
+which are the same names used for chain/iteration indices variables returned by
 \code{\link{gather_samples}}; thus if you are using \code{compare_levels}
 with \code{gather_samples} you generally should not need to change this
 value.}
