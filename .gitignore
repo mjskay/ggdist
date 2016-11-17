@@ -5,3 +5,4 @@
 .RData
 .Rproj*
 tidybayes.Rproj
+vignettes/ABC.rda
