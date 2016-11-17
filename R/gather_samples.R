@@ -103,75 +103,120 @@ parse_variable_spec = function(variable_spec) {
 
 #' Gather samples from a Bayesian sampler in a tidy data format
 #' 
-#' Extract samples from an MCMC chain for a variable with the given named
+#' Extract samples from a Bayesian/MCMC sampler for a variable with the given named
 #' indices into a long-format data frame.
 #' 
-#' Imagine a variable b[i,v] with i in [1..100] and v in [1..3]. An MCMC sample
-#' returned from JAGS (for example) would have columns with names like
-#' "b[1,1]", "b[2,1]", etc.
+#' Imagine a JAGS or Stan fit named \code{fit}. The model may contain a variable named 
+#' \code{b[i,v]} (in the JAGS or Stan language) with \code{i} in \code{1:100} and \code{v} in \code{1:3}.
+#' However, samples returned from JAGS or Stan in R will not reflect this indexing structure, instead
+#' they will have multiple columns with names like \code{"b[1,1]"}, \code{"b[2,1]"}, etc.
 #' 
-#' \code{gather_samples(mcmc_chain, b[i,v])} would return a data frame with:
+#' \code{gather_samples} provides a straightforward syntax to translate these columns back into
+#' properly-indexed variables in a tidy (long-format) data frame, optionally recovering
+#' index types (e.g. factor levels) as it does so.
+#' 
+#' \code{gather_samples} returns data frames already grouped by all indices used on the variables you specify.
+#' 
+#' For example, \code{gather_samples(fit, b[i,v])} would return a grouped
+#' data frame (grouped by \code{i} and \code{v}), with:
 #' \itemize{
-#'      \item column \code{".sample"}: value in \code{[1..nrow(mcmcChain)]}
-#'      \item column \code{"i"}: value in \code{[1..20]}
-#'      \item column \code{"v"}: value in \code{[1..3]}
-#'      \item column \code{"b"}: value of \code{"b[i,v]"} for sample number
-#'          \code{".sample"} in \code{mcmc_chain}.
+#'      \item column \code{".chain"}: the chain number 
+#'      \item column \code{".iteration"}: the interation number
+#'      \item column \code{"i"}: value in \code{1:20}
+#'      \item column \code{"v"}: value in \code{1:3}
+#'      \item column \code{"b"}: value of \code{"b[i,v]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
 #'  }
+#' 
+#' \code{gather_samples} can use type information applied to the \code{fit}
+#' object by \code{\link{recover_types}} to convert columns back into their
+#' original types. This is particularly helpful if some of the indices in
+#' your model were originally factors. For example, if the \code{v} index
+#' in the original data frame \code{data} was a factor with levels \code{c("a","b","c")},
+#' then we could use \code{recover_types} before \code{gather_samples}:
+#' 
+#' \preformatted{fit \%>\%
+#'     recover_types(data) %\>\%
+#'     gather_samples(fit, b[i,v])
+#'  }
+#'  
+#' Which would return the same data frame as above, except the \code{"v"} column
+#' would be a value in \code{c("a","b","c")} instead of \code{1:3}.
+#' 
+#' For variables that do not share the same subscripts (or share
+#' some but not all subscripts), we can supply their specifications separately. 
+#' For example, if we have a variable d[i] with the same i subscript 
+#' as b[i,v], and a variable x with no subscripts, we could do this:
+#' 
+#' \preformatted{gather_samples(fit, x, d[i], b[i,v])}
+#' 
+#' Which is roughly equivalent to this:
+#'
+#' \preformatted{gather_samples(fit, x) \%>\%
+#'     inner_join(gather_samples(fit, d[i])) \%>\%
+#'     inner_join(gather_samples(fit, b[i,v])) \%>\%
+#'     group_by(i,v)
+#' }
+#' 
+#' The \code{c} function can be used to combine multiple variable names that have 
+#' the same indices. For example, if we have several variables with the same
+#' subscripts \code{i} and \code{v}, we could do this:
+#' 
+#' \preformatted{gather_samples(fit, c(w, x, y, z)[i,v])}
+#' 
+#' Which is roughly equivalent to this:
+#' 
+#' \preformatted{gather_samples(fit, w[i,v], x[i,v], y[i,v], z[i,v])}
+#' 
+#' Besides being more compact, the \code{c}-style syntax is currently also
+#' faster (though that may change).
 #' 
 #' The shorthand \code{..} can be used to specify one column that should be put
 #' into a wide format and whose names will be the base variable name plus the
 #' value of the index at \code{..}. For example:
 #' 
-#' \code{gather_samples(mcmcChain, b[i,..])} would return a data frame with:
+#' \code{gather_samples(fit, b[i,..])} would return a grouped data frame
+#' (grouped by \code{i}), with:
 #' \itemize{
-#'      \item column \code{".sample"}: value in \code{[1..nrow(mcmcChain)]}
-#'      \item column \code{"i"}: value in \code{[1..20]}
-#'      \item column \code{"b1"}: value of \code{"b[i,1]"} for sample number
-#'          \code{".sample"} in mcmc_chain
-#'      \item column \code{"b2"}: value of \code{"b[i,2]"} for sample number
-#'          \code{".sample"} in mcmc_chain
-#'      \item column \code{"b3"}: value of \code{"b[i,3]"} for sample number
-#'          \code{".sample"} in mcmc_chain }
+#'      \item column \code{".chain"}: the chain number 
+#'      \item column \code{".iteration"}: the interation number
+#'      \item column \code{"i"}: value in \code{1:20}
+#'      \item column \code{"b1"}: value of \code{"b[i,1]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
+#'      \item column \code{"b2"}: value of \code{"b[i,2]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
+#'      \item column \code{"b3"}: value of \code{"b[i,3]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
+#'  }
 #' 
 #' An optional clause in the form \code{| wide_index} can also be used to put
-#' the data frame into a wide format based on wide_index. For example, this:
+#' the data frame into a wide format based on \code{wide_index}. For example, this:
 #' 
-#' \code{gather_samples(mcmcChain, b[i,v] | v)}
+#' \preformatted{gather_samples(fit, b[i,v] | v)}
 #' 
-#' is equivalent to this:
+#' is roughly equivalent to this:
 #' 
-#' \code{gather_samples(mcmcChain, b[i,v]) \%>\% spread(v,b)}
+#' \preformatted{gather_samples(fit, b[i,v]) \%>\% spread(v,b)}
 #' 
 #' The main difference between using the \code{|} syntax instead of the
 #' \code{..} syntax is that the \code{|} syntax respects prototypes applied to
 #' indices with \code{\link{recover_types}}, and thus can be used to get
-#' columns with nicer names.
+#' columns with nicer names. For example:
 #' 
-#' The \code{c} function can be used to combine multiple variable names that have 
-#' the same indices. For example, if we have a variable a[i,v] with the same 
-#' subscripts as b[i,v], we could do this:
-#' 
-#' \preformatted{gather_samples(mcmcChain, c(a, b)[i,v])}
-#' 
-#' Which is equivalent to this:
-#' 
-#' \preformatted{gather_samples(mcmcChain, a[i,v]) \%>\%
-#'     inner_join(gather_samples(mcmcChain, b[i,v]))}
-#' 
-#' Finally, for variables that do not share the same subscripts (or share
-#' some but not all subscripts), we can supply their specifications separately. 
-#' For example, if we have a variable d[i] with the same i subscript 
-#' as b[i,v], and a variable x with no subscripts, we could do this:
-#' 
-#' \preformatted{gather_samples(mcmcChain, x, d[i], b[i,v])}
-#' 
-#' Which is equivalent to this:
+#' \code{fit \%>\% recover_types(data) \%>\% gather_samples(fit, b[i,v] | v)} would return a grouped data frame
+#' (grouped by \code{i}), with:
+#' \itemize{
+#'      \item column \code{".chain"}: the chain number 
+#'      \item column \code{".iteration"}: the interation number
+#'      \item column \code{"i"}: value in \code{1:20}
+#'      \item column \code{"a"}: value of \code{"b[i,1]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
+#'      \item column \code{"b"}: value of \code{"b[i,2]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
+#'      \item column \code{"c"}: value of \code{"b[i,3]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
+#'  }
 #'
-#' \preformatted{gather_samples(mcmcChain, x) \%>\%
-#'     inner_join(gather_samples(mcmcChain, d[i])) \%>\%
-#'     inner_join(gather_samples(mcmcChain, b[i,v]))}
-#' 
 #' @param model A supported Bayesian model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}.
 #' @param ... Expressions in the form of
@@ -193,8 +238,13 @@ gather_samples = function(model, ...) {
     reduce(lapply(lazy_dots(...), function(variable_spec) {
         gather_samples_(model, variable_spec) 
     }), function(tidysamples1, tidysamples2) {
-        by = intersect(names(tidysamples1), names(tidysamples2))
-        inner_join(tidysamples1, tidysamples2, by=by)
+        by_ = intersect(names(tidysamples1), names(tidysamples2))
+        groups_ = union(groups(tidysamples1), groups(tidysamples2))
+        tidysamples1 %>%
+            inner_join(tidysamples2, by = by_) %>%
+            #inner_join only keeps the groups of the first data frame, we
+            #want to keep the groups from both
+            group_by_(.dots = groups_)
     })
 }
 #' @import dplyr
@@ -238,6 +288,11 @@ gather_samples_ = function(model, variable_spec) {
             stop("Cannot extract samples of multiple variables in wide format.")
         }
         samples %>%
+            #the ".." column will have been set as a grouping column because it was
+            #specified as an index; therefore before we can modify it we have to
+            #remove it from the grouping columns on this table (mutate does not
+            #allow you to modify grouping columns)
+            group_by_(.dots = groups(.) %>% setdiff("..")) %>%
             mutate(.. = factor(.., labels=variable_names)) %>%
             spread_("..", variable_names)
     }
@@ -287,6 +342,8 @@ gather_samples_long_ = function(model, variable_names, index_names) {
                 convert=TRUE #converts indices to numerics
             ) %>%
             #now, make the value of each variable a column
-            spread_(".variable", ".value")
+            spread_(".variable", ".value") %>%
+            #group by the desired indices so that we return a pre-grouped data frame to the user
+            group_by_(.dots = index_names)
     }
 }

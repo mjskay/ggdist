@@ -204,11 +204,22 @@ test_that("gather_samples correctly extracts multiple variables simultaneously w
     })
 
 test_that("gather_samples multispec syntax joins results correctly", {
-    data(RankCorr, package="tidybayes")
+        data(RankCorr, package="tidybayes")
+    
+        ref = gather_samples(RankCorr, typical_r) %>%
+            inner_join(gather_samples(RankCorr, tau[i]), by=c(".chain",".iteration")) %>%
+            inner_join(gather_samples(RankCorr, b[i,v]), by=c(".chain",".iteration", "i"))
+    
+        expect_equal(gather_samples(RankCorr, typical_r, tau[i], b[i,v]), ref)    
+    })
 
-    ref = gather_samples(RankCorr, typical_r) %>%
-        inner_join(gather_samples(RankCorr, tau[i]), by=c(".chain",".iteration")) %>%
-        inner_join(gather_samples(RankCorr, b[i,v]), by=c(".chain",".iteration", "i"))
-
-    expect_equal(gather_samples(RankCorr, typical_r, tau[i], b[i,v]), ref)    
-})
+test_that("gather_samples multispec with different indices retains grouping information with all indices", {
+        data(RankCorr, package="tidybayes")
+    
+        groups_ = RankCorr %>%
+            gather_samples(typical_r, tau[i], b[i,j]) %>%
+            groups() %>%
+            as.character()
+        
+        expect_equal(groups_, c("i", "j"))
+    })
