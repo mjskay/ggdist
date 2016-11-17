@@ -271,7 +271,7 @@ m %>%
         fatten = 2         # smaller point estimate (otherwise it is very large)
     ) +
     scale_size_continuous(
-        range = c(0, 3),   # default range is c(0, 6) --- makes very thick lines
+        range = c(1, 2.5),   # default range is c(0, 6) --- makes very thick lines
         guide = FALSE      # no need for a legend on size
     )
 ```
@@ -319,7 +319,7 @@ m %>%
         color = ordered(-y_rep.prob)),
         size = 4) +
     geom_point(aes(y = y), data = ABC) +
-    scale_color_brewer()
+    scale_color_brewer(guide = FALSE)
 ```
 
 Altogether:
@@ -342,11 +342,11 @@ ABC %>%
         size = 4, data = reps) +
     geom_pointrange(aes(y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
         size = -group_mean.prob),
-        fatten = 1.5, position=position_nudge(x=0.2),
+        fatten = 1.5, position=position_nudge(x=0.3),
         data = parameters) +
     geom_point() +
-    scale_color_brewer() +
-    scale_size_continuous(range = c(0,2))
+    scale_color_brewer(guide = FALSE) +
+    scale_size_continuous(range = c(1,2), guide = FALSE)
 ```
 
 ## Comparing levels of a factor
