@@ -12,7 +12,8 @@
 \alias{point_interval.default}
 \alias{point_interval.numeric}
 \alias{qi}
-\title{Point and interval estimates for tidy sample data}
+\title{If \code{data} includes groups (see e.g. \code{\link[dplyr]{group_by}}),
+the points and intervals are calculated within the groups.}
 \usage{
 point_interval(data, ..., prob = 0.95, point = mean, interval = qi)
 
@@ -43,7 +44,9 @@ mode_hdi(data, ..., prob = 0.95)
 that contains samples to summarize.}
 
 \item{...}{Bare column names or expressions that, when evaluated in the context of
-\code{data}, represent samples to summarise.}
+\code{data}, represent samples to summarise. If this is empty, then by default all
+columns that are not group columns or start with \code{"."} (e.g. \code{".chain"}
+or \code{".iteration"}) will be summarised.}
 
 \item{prob}{vector of probabilities to use for generating intervals. If multiple
 probabilities are provided, multiple rows per group are generated, each with
@@ -59,18 +62,6 @@ bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}}
 \item{x}{vector to summarise (for interval functions: \code{qi} and \code{hdi})}
 }
 \description{
-Translates samples in a (possibly grouped) data frame into a point and
-interval estimate (or set of point and interval estimates, if there are
-multiple groups in a grouped data frame).
-}
-\details{
-If \code{data} is a data frame, then \code{...} is a list of bare names of
-columns (or expressions derived from columns) of \code{data}, on which
-the point and interval estimates are derived. For a column named \code{x},
-the resulting data frame will have columns \code{x} (the point estimate),
-\code{x.lower} (the lower end of the interval), \code{x.upper} (the upper
-end of the interval), and \code{x.prob} (the value of \code{prob}).
-
 If \code{data} is a vector, \code{...} is ignored and the result is a
 data frame with one row and three columns: \code{y} (the point estimate),
 \code{ymin} (the lower end of the interval), and \code{ymax} (the
@@ -78,7 +69,8 @@ upper end of the interval). This behavior allows \code{point_interval}
 and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
 to be easily used to plot intervals in ggplot using methods like 
 \code{\link{geom_eye}}, \code{\link{ggeye}}, or \code{\link{stat_summary}}.
-
+}
+\details{
 \code{mean_qi}, \code{mode_qi}, etc are short forms for 
 \code{point_interval(..., point = mean, interval = qi)}, etc.
 

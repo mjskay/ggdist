@@ -4,18 +4,21 @@
 ###############################################################################
 
 
-#' Point and interval estimates for tidy sample data
-#' 
-#' Translates samples in a (possibly grouped) data frame into a point and
-#' interval estimate (or set of point and interval estimates, if there are
-#' multiple groups in a grouped data frame).
-#' 
-#' If \code{data} is a data frame, then \code{...} is a list of bare names of
-#' columns (or expressions derived from columns) of \code{data}, on which
-#' the point and interval estimates are derived. For a column named \code{x},
-#' the resulting data frame will have columns \code{x} (the point estimate),
-#' \code{x.lower} (the lower end of the interval), \code{x.upper} (the upper
-#' end of the interval), and \code{x.prob} (the value of \code{prob}).
+# Point and interval estimates for tidy sample data
+# 
+# Translates samples in a (possibly grouped) data frame into a point and
+# interval estimate (or set of point and interval estimates, if there are
+# multiple groups in a grouped data frame).
+# 
+# If \code{data} is a data frame, then \code{...} is a list of bare names of
+# columns (or expressions derived from columns) of \code{data}, on which
+# the point and interval estimates are derived. For a column named \code{x},
+# the resulting data frame will have columns \code{x} (the point estimate),
+# \code{x.lower} (the lower end of the interval), \code{x.upper} (the upper
+# end of the interval), and \code{x.prob} (the value of \code{prob}).
+# 
+#' If \code{data} includes groups (see e.g. \code{\link[dplyr]{group_by}}),
+#' the points and intervals are calculated within the groups.
 #' 
 #' If \code{data} is a vector, \code{...} is ignored and the result is a
 #' data frame with one row and three columns: \code{y} (the point estimate),
@@ -24,7 +27,7 @@
 #' and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
 #' to be easily used to plot intervals in ggplot using methods like 
 #' \code{\link{geom_eye}}, \code{\link{ggeye}}, or \code{\link{stat_summary}}.
-#' 
+#'
 #' \code{mean_qi}, \code{mode_qi}, etc are short forms for 
 #' \code{point_interval(..., point = mean, interval = qi)}, etc.
 #' 
@@ -37,7 +40,9 @@
 #' @param data Data frame (or grouped data frame as returned by \code{\link{group_by}})
 #' that contains samples to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
-#' \code{data}, represent samples to summarise.
+#' \code{data}, represent samples to summarise. If this is empty, then by default all
+#' columns that are not group columns or start with \code{"."} (e.g. \code{".chain"}
+#' or \code{".iteration"}) will be summarised.
 #' @param prob vector of probabilities to use for generating intervals. If multiple
 #' probabilities are provided, multiple rows per group are generated, each with
 #' a different probabilty interval (and value of the corresponding \code{.prob} columns).
