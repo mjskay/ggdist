@@ -164,7 +164,7 @@ m %>%
     gather_samples(overall_mean, y_sd)
 ```
 
-This gives us a tidy data frame, with one column per parameter and one sample per row. If we want the mean and 95% quantile interval, we can use mean_qi:
+This gives us a tidy data frame, with one column per parameter and one sample per row. If we want the mean and 95% quantile interval of the parameters, we can use `mean_qi`:
 
 ```{r}
 m %>%
@@ -172,7 +172,15 @@ m %>%
     mean_qi(overall_mean, y_sd)
 ```
 
-What's more interesting, though, is when we have a parameter with one or more indices, such as `group_mean`. We can extract this variable using gather_samples as well, by giving a variable name to become the index column in the resulting data frame
+We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `overall_mean` and `y_sd` are redundant arguments to `mean_qi` because they are also the only columns `mean_qi` would aggregate when passed an empty list:
+
+```{r}
+m %>%
+    gather_samples(overall_mean, y_sd) %>%
+    mean_qi()
+```
+
+What's more interesting, though, is when we have a parameter with one or more indices, such as `group_mean`. We can extract this variable using gather_samples as well, by giving a variable name to become the index column in the resulting data frame. The syntax for this deliberately echoes how you would access the same variable in a modelling language like Stan or JAGS:
 
 ```{r}
 m %>%
@@ -195,13 +203,20 @@ m %>%
     mean_qi(group_mean)
 ```
 
+We can again simplify the above syntax, for two reasons: (1) `gather_samples` automatically groups its result by all indices you pass to it, and (2) As before, `mean_qi` will automatically select only non-grouping / non-special columns if you pass it an empty list; here that's just `group_mean`. So we can write:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group]) %>%
+    mean_qi()
+```
+
 Then plotting these means with group labels is straightforward:
 
 ```{r}
 m %>%
     gather_samples(group_mean[group]) %>%
-    group_by(group) %>%
-    mean_qi(group_mean) %>%
+    mean_qi() %>%
     ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper)) +
     geom_pointrange()
 ```
@@ -213,8 +228,7 @@ The `point_interval` family of functions follow the naming scheme `[mean|median|
 ```{r}
 m %>%
     gather_samples(group_mean[group]) %>%
-    group_by(group) %>%
-    mode_hdi(group_mean) %>%
+    mode_hdi() %>%
     ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper)) +
     geom_pointrange()
 ```
@@ -241,8 +255,7 @@ rbind(
 ```{r}
 m %>%
     gather_samples(group_mean[group]) %>%
-    group_by(group) %>%
-    mean_qi(group_mean, prob = c(.95, .8, .5))
+    mean_qi(prob = c(.95, .8, .5))
 ```
 
 Again, in tidy format, facilitating plotting. For example, assigning the inverse of the `group_mean.prob` column to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
@@ -250,8 +263,7 @@ Again, in tidy format, facilitating plotting. For example, assigning the inverse
 ```{r}
 m %>%
     gather_samples(group_mean[group]) %>%
-    group_by(group) %>%
-    mean_qi(group_mean, prob = c(.95, .8, .5)) %>%
+    mean_qi(prob = c(.95, .8, .5)) %>%
     ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
         size = -group_mean.prob    # shorter interval => thicker line
     )) +
@@ -279,7 +291,6 @@ Within each sample, `overall_mean` is repeated as necessary to correspond to eve
 m %>%
     gather_samples(overall_mean, group_mean[group]) %>%
     mutate(group_offset = group_mean - overall_mean) %>%
-    group_by(group) %>%
     mean_qi(group_offset)
 ```
 
@@ -302,7 +313,6 @@ And even summarize these as predictive intervals and compare to the data:
 m %>%
     gather_samples(group_mean[group], y_sd) %>%
     mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
-    group_by(group) %>%
     mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
     ggplot(aes(x = group, y = y_rep)) +
     geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
@@ -316,8 +326,7 @@ Altogether:
 
 ```{r}
 samples = m %>%
-    gather_samples(group_mean[group], y_sd) %>%
-    group_by(group)
+    gather_samples(group_mean[group], y_sd)
 
 reps = samples %>%
     mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
@@ -351,18 +360,3 @@ m %>%
     group_by(group) %>%
     mean_qi(group_mean)
 ```
-
-```{r}
-m %>%
-    recover_types(ABC) %>%
-    gather_samples(overall_mean, group_mean[group]) %>%
-    # mutate(group_mean = overall_mean + group_offset) %>%
-    group_by(group) %>%
-    mean_qi(group_mean, prob=c(.50,.95)) %>%
-    ggplot(aes(x = group, y = group_mean, ymin=group_mean.lower, ymax=group_mean.upper, size=-group_mean.prob)) +
-    geom_pointrange(fatten=2, position=position_dodge(width=0.2)) +
-    geom_point(aes(y=y, ymin=y, ymax=y), data=ABC, size=1, color="black") +
-    scale_size_continuous(range = c(1,2))
-```
-
-
