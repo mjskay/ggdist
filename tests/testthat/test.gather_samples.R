@@ -223,3 +223,13 @@ test_that("gather_samples multispec with different indices retains grouping info
         
         expect_equal(groups_, c("i", "j"))
     })
+
+test_that("groups from gather_samples retain factor level names", {
+        i_labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r")
+        data(RankCorr, package="tidybayes")
+        RankCorr = recover_types(RankCorr, list(i=factor(i_labels)))
+        
+        samples = RankCorr %>% gather_samples(tau[i])
+        
+        expect_equivalent(attr(samples, "labels")$i, factor(i_labels))
+    })

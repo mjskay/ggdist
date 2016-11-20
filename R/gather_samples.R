@@ -235,17 +235,24 @@ parse_variable_spec = function(variable_spec) {
 #' @importFrom dplyr inner_join
 #' @export
 gather_samples = function(model, ...) {
-    reduce(lapply(lazy_dots(...), function(variable_spec) {
+    tidysamples = lapply(lazy_dots(...), function(variable_spec) {
         gather_samples_(model, variable_spec) 
-    }), function(tidysamples1, tidysamples2) {
-        by_ = intersect(names(tidysamples1), names(tidysamples2))
-        groups_ = union(groups(tidysamples1), groups(tidysamples2))
-        tidysamples1 %>%
-            inner_join(tidysamples2, by = by_) %>%
-            #inner_join only keeps the groups of the first data frame, we
-            #want to keep the groups from both
-            group_by_(.dots = groups_)
     })
+    
+    #get the groups from all the samples --- when we join them together,
+    #the grouping information is lost (actually, only the groups on the
+    #first data frame in a join is retained), so we'll have to recreate
+    #the full set of groups from all the data frames after we join them
+    groups_ = tidysamples %>%
+        map(groups) %>%
+        reduce(union)
+    
+    tidysamples %>%
+        reduce(function(tidysamples1, tidysamples2) {
+            by_ = intersect(names(tidysamples1), names(tidysamples2))
+            inner_join(tidysamples1, tidysamples2, by = by_)
+        }) %>%
+        group_by_(.dots = groups_)
 }
 #' @import dplyr
 #' @importFrom tidyr spread_
