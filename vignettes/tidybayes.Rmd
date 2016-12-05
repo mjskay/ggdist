@@ -29,23 +29,16 @@ plots or estimates). `tidybayes` automates all of these sorts of tasks.
 
 There are a few core ideas that run through the `tidybayes` API that should (hopefully) make it easy to use:
 
-1. Variable names in models should be descriptive. This means I tend to avoid cryptic (and short) subscripts
-in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to 
-others. For example, a common pattern amongst Stan users (and in the Stan manual) is to variables like `J` to
-refer to the number of elements in a group (e.g., number of participants) and a corresponding index like 
-`j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake 
-of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a
-mnemonic shortform like `p`) for specific elements. 
+1. __Tidy data means no parameter names as values__. In contrast to the `ggmcmc` library (which translates sampler results into a data frame with a `Parameter` and `value` column), the `gather_samples` function in `tidybayes` produces in data frames where the columns are named after parameters and (in some cases) indices of those parameters, as automatically as possible and using a syntax as close to the same way you would refer to those variables in the sampler's language as possible. The goal is for `tidybayes` to do the tedious work of figuring out how to make a data frame look the way you need it to, including turning parameters with indices like `"b[1,2]"` and the like into tidy data for you.
 
-2. Sensible defaults make life easy. Thus, `tidybayes` will generate group size variables like `n_participant`
-automatically given a factor column in a data frame named `participant`. At the same time, this behavior
-can be modified as desired (e.g. if you prefer a different naming scheme for indices).
+2. __Fit into the tidyverse__. `tidybayes` methods fit into a workflow familiar to users of the `tidyverse` (`dplyr`, `tidyr`, `ggplot2`, etc), which means fitting into the pipe (`%>%`) workflow, using and respecting grouped data frames (thus `gather_samples` returns results already grouped by parameter indices, and methods like `mean_qi` calculate estimates and intervals for parameters and groups simultaneously), and not reinventing too much of the wheel if it is already made easy by functions provided by those packages (unless it makes for much clearer code for a common idiom).
 
-3. Tidy data means no parameter names as values. In contrast to the `ggmcmc` library (which translates sampler
-results into a data frame with a `Parameter` and `value` column), The `gather_samples` function in `tidybayes` is designed to result in data frames where the columns are named after parameters of interest and (in some cases) indices of those parameters, as automatically as possible and using a syntax as close to the same way you would refer to those variables in the sampler's language as possible. `tidybayes` does the tedious work of figuring out how to make a data frame look the way you need it to (even if some of your parameters have different indices).
+3. __Focus on composable operations and plotting primitives, not monolithic plots and operations__. Several other packages (notably `bayesplot` and `ggmcmc`) already provide a variety of pre-made methods for plotting Bayesian results, and are a valuable resource. `tidybayes` shies away from duplicating this funcitonality. Instead, it focuses on providing composable operations for generating and manipulating Bayesian samples in a tidy data format, and graphical primitives for `ggplot` that allow you to build custom plots easily. Most simply, where `bayesplot` and `ggmcmc` tend to have functions with many options that return a full ggplot object, `tidybayes` tends towards providing primitives (like `geom`s) that you can compose and combine into custom plots.
 
-4. `tidybayes` methods should fit into a workflow familiar to users of the `tidyverse` (`dplyr`, `ggplot2`, etc), 
-which means fitting into the pipe (`%>%`) workflow, respecting grouped data frames (allowing methods like `mean_qi` to calculate estimates and intervals for many parameters simultaneously), and not reinventing too much of the wheel if it is already made easy by functions provided by those packages (unless it makes for much clearer code for a common idiom).
+4. __Sensible defaults make life easy.__ But options (and the data being tidy in the first place) make it easy to go your own way when you need to.
+
+5. __Variable names in models should be descriptive, not cryptic__. This means I tend to avoid cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to variables like `J` to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like `j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a mnemonic shortform like `p`) for specific elements. 
+
 
 ## Setup
 
@@ -66,20 +59,21 @@ library(ggplot2)
 library(rstan)
 ```
 
-And thse options help Stan run faster:
+These options help Stan run faster:
 
 ```{r}
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 ```
 
+Ggplot options:
+
 ```{r include=FALSE}
-#ggplot options
 theme_set(theme_light())
 ```
 
 
-## Using `compose_data` to prepare data for the sampler
+## Example dataset
 
 ```{r eval=FALSE, include=FALSE}
 # generate the dataset used below
@@ -94,7 +88,7 @@ ABC =
 #save(ABC, file = "data/ABC.Rdata")
 ```
 
-We will load is a simple dataset with 10 observations from 5 groups each:
+To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 groups each:
 
 ```{r}
 data(ABC, package = "tidybayes")
@@ -106,18 +100,19 @@ The data looks like this:
 ABC
 ```
 
-Which is a typical tidy format: one observation per row. A plot:
+This is a typical tidy format data frame: one observation per row. Graphically:
 
 ```{r}
 ABC %>%
-    mutate(group = fct_rev(group)) %>% #order groups from top to bottom on y axis (can omit)
-    ggplot(aes(x = y, y = group)) +
-    # geom_violin(adjust = 3) + 
+    ggplot(aes(x = group, y = y)) +
     geom_point() 
-    # coord_flip()
 ```
 
-A hierarchical model of the above data might estimate an overall mean across the groups (`overall_mean`), the standard deviation of the group means (`group_mean_sd`), the mean within each group (`group_mean[group]`) and the standard deviation of the observations given a group mean (`y_sd`):
+## Using `compose_data` to prepare a data frame for the sampler
+
+Shunting data from a data frame into a format usable in samplers like JAGS or Stan can involve a tedious set of operations, like generating index variables storing the number of operations or the number of levels in a factor. `compose_data` automates these operations.
+
+A hierarchical model of our example data might estimate an overall mean across the groups (`overall_mean`), the standard deviation of the group means (`group_mean_sd`), the mean within each group (`group_mean[group]`) and the standard deviation of the observations given a group mean (`y_sd`):
 
 ```{r, echo = FALSE, results = "asis"}
 cat("<div class='sourceCode'><strong style='float:right;padding:1em;'>ABC.stan</strong>
@@ -126,13 +121,20 @@ writeLines(readLines("ABC.stan"))
 cat("</code></pre></div>")
 ```
 
-This model expects input variables `n` (number of observations), `n_group`, (number of groups), `group` (an array of numbers indicating the group of each observation) and `y` (each observation). While our data frame only has `y` and `group` (as a factor instead of a numeric), `compose_data` can generate a list of the above variables automatically. It recognizes that `group` is a factor and converts it to a numeric, and adds the `n_group` variable automatically with the number of levels in `group`, as well as the `n` column containing the number of observations:
+This model expects these variables as input:
+
+* `n`: number of observations
+* `n_group`: number of groups
+* `group`: a vector of integers indicating the group of each observation
+* `y`: a vector of observations
+
+Our data frame (`ABC`) only has `y` and `group`, and `group` is in the wrong format (it is a factor instead of numeric. However, `compose_data` can generate a list containing the above variables in the correct format automatically. It recognizes that `group` is a factor and converts it to a numeric, adds the `n_group` variable automatically containing the number of levels in `group`, and adds the `n` column containing the number of observations (number of rows in the data frame):
 
 ```{r}
 compose_data(ABC)
 ```
 
-This makes it easy run the model without munging the data yourself:
+This makes it easy to skip right to running the model without munging the data yourself:
 
 ```{r}
 m = stan("ABC.stan", data = compose_data(ABC), control = list(adapt_delta=0.99))
@@ -141,30 +143,61 @@ m = stan("ABC.stan", data = compose_data(ABC), control = list(adapt_delta=0.99))
 The results look like this:
 
 ```{r}
-m
+print(m, pars = c("overall_mean", "group_mean_sd", "group_mean", "y_sd"))
 ```
 
 
-# Gathering samples from a fit in tidy-format using `gather_samples`
+## Gathering samples from a fit in tidy-format using `gather_samples`
 
-## Automatically recovering types from the input data
+### Gathering parameter indices into a separate column in a tidy format data frame
 
-The estimated parameters from Stan don't retain any information about how they were generated. For example, the index of the `group_mean` parameter---which estimates the mean of each group, and which we are likely interested in---was derived from the `group` factor in the `ABC` data frame. But Stan doesn't know this (it is just a numeric index to Stan), so the results give us `group_mean[1]`, `group_mean[2]`, etc.
+Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:
 
-We can recover this missing information using the `recover_types` function. In itself `recover_types` just returns a copy of the model, decorated so that type information is drawn from the data frame (or other objects) that you pass to it. This won't have any useful effect until we call `gather_samples` later. For now, let's decorate the model with its recovered type information from the original data frame:
+```{r}
+str(extract(m))
+```
+
+The `gather_samples` method lets us instead extract samples into a data frame in tidy format, with a `.chain` and `.iteration` column storing the chain and interation for each row, and the remaining columns corresponding to parameters or parameter indices. The `gather_samples` method accepts any number of column specifications, which can include names for parameters and names for parameter indices. For example, we can extract the `group_mean` parameter as a tidy data frame, and put the value of its first (and only) index into the `group` column, using a syntax that directly echoes how we would specify indices of the `group_mean` parameter in the model itself:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group])
+```
+
+### Automatically converting columns and indices back into their original data types
+
+As-is, the resulting parameters don't know anything about where their indices came from. The index of the `group_mean` parameter was originally derived from the `group` factor in the `ABC` data frame. But Stan doesn't know this: it is just a numeric index to Stan, so the `group` column just contains numbers (`1, 2, 3, 4, 5`) instead of the factor levels these numbers correspond to (`"A", "B", "C", "D", "E"`).
+
+We can recover this missing type information by passing the model through `recover_types` before using `gather_samples`. In itself `recover_types` just returns a copy of the model, with some additional attributes that store the type information from the data frame (or other objects) that you pass to it. This doesn't have any useful affect by itself, but `gather_samples` uses this information to convert any column or index back into the data type of the column with the same name in the original data frame. In this example, `gather_samples` recognizes that the `group` column was a factor with five levels (`"A", "B", "C", "D", "E"`) in the original data frame, and automatically converts it back into a factor:
+
+```{r}
+m %>%
+    recover_types(ABC) %>%
+    gather_samples(group_mean[group])
+```
+
+Because we often want to make multiple separate calls to `gather_samples`, it is often convenient to decorate the original model using `recover_types` immediately after it has been fit, so we only have to call it once:
 
 ```{r}
 m %<>% recover_types(ABC)
 ```
 
-Now we can gather samples from the model in a tidy format. In the simplest example, we might gather samples from parameters with no index, such as the overall mean and the standard deivation of responses:
+Now we can omit the `recover_types` call before subsequent calls to `gather_samples`.
+
+## Point estimates and intervals
+
+### With simple parameters
+
+`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
+
+For example, we might gather the samples corresponding to the overall mean and standard deviation of observations:
 
 ```{r}
 m %>%
     gather_samples(overall_mean, y_sd)
 ```
 
-This gives us a tidy data frame, with one column per parameter and one sample per row. If we want the mean and 95% quantile interval of the parameters, we can use `mean_qi`:
+Like with `group_mean[group]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
 
 ```{r}
 m %>%
@@ -172,7 +205,7 @@ m %>%
     mean_qi(overall_mean, y_sd)
 ```
 
-We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `overall_mean` and `y_sd` are redundant arguments to `mean_qi` because they are also the only columns `mean_qi` would aggregate when passed an empty list:
+We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `overall_mean` and `y_sd` are redundant arguments to `mean_qi` because they are also the only columns we gathered from the model. So we can simplify this to:
 
 ```{r}
 m %>%
@@ -180,21 +213,17 @@ m %>%
     mean_qi()
 ```
 
-What's more interesting, though, is when we have a parameter with one or more indices, such as `group_mean`. We can extract this variable using gather_samples as well, by giving a variable name to become the index column in the resulting data frame. The syntax for this deliberately echoes how you would access the same variable in a modelling language like Stan or JAGS:
+### With indexed parameters
+
+When we have a parameter with one or more indices, such as `group_mean`, we can apply `mean_qi` (or other functions in the `point_estimate` family) as we did before:
 
 ```{r}
 m %>%
-    gather_samples(group_mean[i])
+    gather_samples(group_mean[group]) %>%
+    mean_qi()
 ```
 
-This gives one row per sample per index of group_mean. However, it hasn't recovered the original type information! To do that, we have to specify the same name as the index column in the data frame passed to `recover_types` above. Since the index factor was called `group` in the `ABC` data frame, if we pass that to `gather_samples`, it will automatically recognize this and recover the factor levels in the returned data frame:
-
-```{r}
-m %>%
-    gather_samples(group_mean[group])
-```
-
-And because `mean_qi` (and its sister functions like `mode_hdi`, `median_qi`, etc---see `?point_estimate`) all obey data frame groups, we can get estimates and intervals for each group:
+How did `mean_qi` know what to aggregate? Data frames returned by `gather_samples` are automatically grouped by all index variables you pass to it; in this case, that means it groups by `group`. `mean_qi` respects groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `group_mean`. So the above shortened syntax is equivalent to this more verbose call:
 
 ```{r}
 m %>%
@@ -203,15 +232,9 @@ m %>%
     mean_qi(group_mean)
 ```
 
-We can again simplify the above syntax, for two reasons: (1) `gather_samples` automatically groups its result by all indices you pass to it, and (2) As before, `mean_qi` will automatically select only non-grouping / non-special columns if you pass it an empty list; here that's just `group_mean`. So we can write:
+## Plotting point estimates and intervals
 
-```{r}
-m %>%
-    gather_samples(group_mean[group]) %>%
-    mean_qi()
-```
-
-Then plotting these means with group labels is straightforward:
+Plotting means and intervals is straightforward using the "pointrange" geom of `ggplot`, by mapping the corresponding columns onto the `y`, `ymin`, and `ymax` aesthetics used by `geom_pointrange`:
 
 ```{r}
 m %>%
@@ -219,6 +242,132 @@ m %>%
     mean_qi() %>%
     ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper)) +
     geom_pointrange()
+```
+
+
+## Interval estimates with multiple probability levels
+
+`mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `prob =` argument:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group]) %>%
+    mean_qi(prob = c(.95, .8, .5))
+```
+
+The results are in a tidy format: one row per index (`group`) and probability level (`group_mean.prob`). This facilitates plotting. For example, assigning `-group_mean.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group]) %>%
+    mean_qi(prob = c(.95, .8, .5)) %>%
+    ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
+        size = -group_mean.prob    # shorter interval => thicker line
+    )) +
+    geom_pointrange(
+        fatten = 2         # smaller point estimate (otherwise it is very large)
+    ) +
+    scale_size_continuous(
+        range = c(1, 2.5),   # default range is c(0, 6) --- makes very thick lines
+        guide = FALSE      # no need for a legend on size
+    )
+```
+
+## Combining variables with different indices in a single tidy format data frame
+
+`gather_samples` supports gathering variables that have different indices. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the difference between each group mean and the overall mean. To do that, we can gather samples from the overall mean and all group means:
+
+```{r}
+m %>% 
+    gather_samples(overall_mean, group_mean[group])
+```
+
+Within each sample, `overall_mean` is repeated as necessary to correspond to every index of `group_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `mean_qi`:
+
+```{r}
+m %>%
+    gather_samples(overall_mean, group_mean[group]) %>%
+    mutate(group_offset = group_mean - overall_mean) %>%
+    mean_qi(group_offset)
+```
+
+## Making posterior predictions
+
+We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the group means with the residual standard deviation to generate predictive distributions from the model:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group], y_sd) %>%
+    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    ggplot(aes(x = y_rep)) +
+    stat_density() +
+    facet_grid(. ~ group) + 
+    coord_flip()
+```
+
+And even summarize these as predictive intervals and compare to the data:
+
+```{r}
+m %>%
+    gather_samples(group_mean[group], y_sd) %>%
+    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
+    ggplot(aes(x = group, y = y_rep)) +
+    geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
+        color = ordered(-y_rep.prob)),
+        size = 4) +
+    geom_point(aes(y = y), data = ABC) +
+    scale_color_brewer(guide = FALSE)
+```
+
+If this model is well-calibrated, about 95% of the data should be in the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.
+
+Altogether, data, posterior predictions, and estimates of the means:
+
+```{r}
+samples = m %>%
+    gather_samples(group_mean[group], y_sd)
+
+reps = samples %>%
+    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    mean_qi(y_rep, prob = c(.95, .8, .5))
+
+parameters = samples %>%
+    mean_qi(group_mean, prob = c(.95, .66))
+   
+ABC %>%
+    ggplot(aes(x = group)) +
+    geom_linerange(
+        aes(ymin = y_rep.lower, ymax = y_rep.upper, 
+            color = ordered(-y_rep.prob)),
+        size = 4, 
+        data = reps) +
+    geom_pointrange(
+        aes(y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
+            size = -group_mean.prob),
+        fatten = 1.5, position=position_nudge(x=0.3),
+        data = parameters) +
+    geom_point(aes(y = y)) +
+    scale_color_brewer(guide = FALSE) +
+    scale_size_continuous(range = c(1,2), guide = FALSE)
+```
+
+## Comparing levels of a factor
+
+If we wish compare the values of `group_mean` across groups, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:
+
+```{r}
+#N.B. the syntax for compare_levels is experimental and may change
+m %>%
+    gather_samples(group_mean[group]) %>%
+    compare_levels(group_mean, by = group) %>%
+    # group_by(group) %>%
+    # mean_qi() %>%
+    ggplot(aes(x = group, y = group_mean)) +
+    geom_eye(interval_args = list(mapping=aes(size=-..prob..), fatten=2), fun.data= . %>% median_qi(., prob=c(.66,.95)))+
+    # stat_summary(aes(size=-..prob..), fun.data= . %>% median_qi(., prob=c(.95,.80,.66)), geom="pointrange", fatten=2)+
+    scale_size_continuous(range=c(1,2)) +
+    coord_flip()
 ```
 
 ## Alternative estimates and intervals: mean, median, mode; qi, hdi
@@ -247,116 +396,3 @@ rbind(
     geom_errorbarh(aes(y = type, xmin = y_sd.lower, xmax = y_sd.upper), height=0)
 ```
 
-
-## Interval estimates with multiple probability levels
-
-`mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `prob =` argument:
-
-```{r}
-m %>%
-    gather_samples(group_mean[group]) %>%
-    mean_qi(prob = c(.95, .8, .5))
-```
-
-Again, in tidy format, facilitating plotting. For example, assigning the inverse of the `group_mean.prob` column to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
-
-```{r}
-m %>%
-    gather_samples(group_mean[group]) %>%
-    mean_qi(prob = c(.95, .8, .5)) %>%
-    ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
-        size = -group_mean.prob    # shorter interval => thicker line
-    )) +
-    geom_pointrange(
-        fatten = 2         # smaller point estimate (otherwise it is very large)
-    ) +
-    scale_size_continuous(
-        range = c(1, 2.5),   # default range is c(0, 6) --- makes very thick lines
-        guide = FALSE      # no need for a legend on size
-    )
-```
-
-## Combining variables with different indices in tidy format
-
-`gather_samples` supports gathering variables that have different indicies. It automatically matches up indices with the same name, and duplicates values as necessary to make one row per all combination of levels of all indices. For example, in the above fit we might want to calculate the difference between each group mean and the overall mean. To do that, we can gather samples from the overall mean and all group means:
-
-```{r}
-m %>% 
-    gather_samples(overall_mean, group_mean[group])
-```
-
-Within each sample, `overall_mean` is repeated as necessary to correspond to every index of `group_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `mean_qi`:
-
-```{r}
-m %>%
-    gather_samples(overall_mean, group_mean[group]) %>%
-    mutate(group_offset = group_mean - overall_mean) %>%
-    mean_qi(group_offset)
-```
-
-### Making predictions
-
-We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the group means with the residual standard deviation to generate predictive distributions from the model:
-
-```{r}
-m %>%
-    gather_samples(group_mean[group], y_sd) %>%
-    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
-    ggplot(aes(x = y_rep)) +
-    stat_density() +
-    facet_grid(group ~ .)
-```
-
-And even summarize these as predictive intervals and compare to the data:
-
-```{r}
-m %>%
-    gather_samples(group_mean[group], y_sd) %>%
-    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
-    mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
-    ggplot(aes(x = group, y = y_rep)) +
-    geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
-        color = ordered(-y_rep.prob)),
-        size = 4) +
-    geom_point(aes(y = y), data = ABC) +
-    scale_color_brewer(guide = FALSE)
-```
-
-Altogether:
-
-```{r}
-samples = m %>%
-    gather_samples(group_mean[group], y_sd)
-
-reps = samples %>%
-    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
-    mean_qi(y_rep, prob = c(.95, .8, .5))
-
-parameters = samples %>%
-    mean_qi(group_mean, prob = c(.95, .66))
-   
-ABC %>%
-    ggplot(aes(x = group, y = y)) +
-    geom_linerange(aes(y = y_rep, ymin = y_rep.lower, ymax = y_rep.upper, 
-        color = ordered(-y_rep.prob)),
-        size = 4, data = reps) +
-    geom_pointrange(aes(y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
-        size = -group_mean.prob),
-        fatten = 1.5, position=position_nudge(x=0.3),
-        data = parameters) +
-    geom_point() +
-    scale_color_brewer(guide = FALSE) +
-    scale_size_continuous(range = c(1,2), guide = FALSE)
-```
-
-## Comparing levels of a factor
-
-If we wish compare the values of `group_mean` across groups, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:
-
-```{r}
-m %>%
-    gather_samples(group_mean[group]) %>%
-    compare_levels(group_mean, by = group) %>%
-    group_by(group) %>%
-    mean_qi(group_mean)
-```
