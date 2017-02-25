@@ -71,6 +71,13 @@ as_sample_tibble.runjags = function(model) {
     }
     as_sample_tibble(as.mcmc.list(model))
 }
+as_sample_tibble.brmsfit = function(model) {
+    if (!requireNamespace("brms", quietly = TRUE)) {
+        stop('The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects.'
+            , call. = FALSE)
+    }
+    as_sample_tibble(brms::as.mcmc(model))
+}
 as_sample_tibble.map = function(model) {
     mu = coef(model)
     samples = as_tibble(mvrnorm(n = 10000, mu = mu, Sigma = vcov(model)))

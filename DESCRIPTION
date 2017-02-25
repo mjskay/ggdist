@@ -35,7 +35,8 @@ Suggests:
     gamlss,
     runjags
 Enhances:
-    rethinking
+    rethinking,
+    brms
 Remotes: rmcelreath/rethinking
 License: GPL (>= 2)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
