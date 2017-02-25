@@ -4,6 +4,7 @@
 ###############################################################################
 
 
+#' @rdname as_sample_tibble
 #' @export
 as_sample_data_frame = as_tibble
 
@@ -42,9 +43,13 @@ as_sample_data_frame = as_tibble
 #' @importFrom MASS mvrnorm
 #' @export
 as_sample_tibble = function(model) UseMethod("as_sample_tibble")
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.default = function(model) {
     as_sample_tibble(as.mcmc.list(model))
 }
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.mcmc.list = function(model) {
     n = nrow(model[[1]])
     map_df(seq_along(model), function(chain)
@@ -57,6 +62,8 @@ as_sample_tibble.mcmc.list = function(model) {
         )
     )
 }
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.stanfit = function(model) {
     if (!requireNamespace("rstan", quietly = TRUE)) {
         stop('The `rstan` package is needed for `as_sample_tibble` to support `stanfit` objects.'
@@ -64,6 +71,8 @@ as_sample_tibble.stanfit = function(model) {
     }
     as_sample_tibble(rstan::As.mcmc.list(model))
 }
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.runjags = function(model) {
     if (!requireNamespace("runjags", quietly = TRUE)) {
         stop('The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects.'
@@ -71,6 +80,8 @@ as_sample_tibble.runjags = function(model) {
     }
     as_sample_tibble(as.mcmc.list(model))
 }
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.brmsfit = function(model) {
     if (!requireNamespace("brms", quietly = TRUE)) {
         stop('The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects.'
@@ -78,15 +89,21 @@ as_sample_tibble.brmsfit = function(model) {
     }
     as_sample_tibble(brms::as.mcmc(model))
 }
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.map = function(model) {
     mu = coef(model)
     samples = as_tibble(mvrnorm(n = 10000, mu = mu, Sigma = vcov(model)))
     #map models have no chains
     bind_cols(data_frame(.chain=1, .iteration = 1:nrow(samples)), samples)
 }
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.map2stan = function(model) {
     as_sample_tibble(model@stanfit)
 }
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.matrix = function(model) {
     if (length(dim(model)) == 2) {
         # assume matrix indexed by [interations, variables]
