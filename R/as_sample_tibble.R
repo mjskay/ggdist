@@ -4,10 +4,6 @@
 ###############################################################################
 
 
-#' @rdname as_sample_tibble
-#' @export
-as_sample_data_frame = as_tibble
-
 #' Get samples from a model as a tibble
 #' 
 #' Extract samples from an MCMC fit into a wide-format data frame with a 
@@ -43,6 +39,11 @@ as_sample_data_frame = as_tibble
 #' @importFrom MASS mvrnorm
 #' @export
 as_sample_tibble = function(model) UseMethod("as_sample_tibble")
+
+#' @rdname as_sample_tibble
+#' @export
+as_sample_data_frame = as_sample_tibble
+
 #' @rdname as_sample_tibble
 #' @export
 as_sample_tibble.default = function(model) {
