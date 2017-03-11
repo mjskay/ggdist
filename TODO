@@ -1,6 +1,0 @@
-- write extract_samples_long for other samplers
-- write examples in docs and README
-- make a function add_samples(df, i, ...), where i is an index extracted by gather_samples(m, ...) that should be of the same length as df
-- replace ldply with map_df, llply with map (?)
-- replace remaining hacked-together NSEs with lazyeval
-- make sure all args on NSE functions start with "."
