@@ -345,7 +345,7 @@ gather_samples_long_ = function(model, variable_names, index_names) {
             #make long format for the variables we want to split
             gather_(".variable", ".value", variable_names) %>%
             #next, split indices in variable names into columns
-            separate_(".variable", c(".variable", index_names), sep="(\\,|\\[|\\])",
+            separate_(".variable", c(".variable", index_names), sep="[ :,]|\\[|\\]",
                 convert=TRUE #converts indices to numerics
             ) %>%
             #now, make the value of each variable a column
