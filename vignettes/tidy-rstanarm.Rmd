@@ -59,17 +59,17 @@ theme_set(theme_light())
 ```{r eval=FALSE, include=FALSE}
 # generate the dataset used below
 n = 10
-n_group = 5
+n_condition = 5
 ABC =
     data_frame(
         condition = rep(c("A","B","C","D","E"), n),
         response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
     ) %>%
-    arrange(group)
+    arrange(condition)
 #save(ABC, file = "data/ABC.Rdata")
 ```
 
-To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 groups each:
+To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 conditions each:
 
 ```{r}
 data(ABC, package = "tidybayes")
@@ -95,7 +95,7 @@ ABC %>%
 m = stan_lmer(response ~ (1|condition), data = ABC, 
     prior = normal(0, 1, autoscale = FALSE),
     prior_aux = student_t(3, 0, 1, autoscale = FALSE),
-    control = list(adapt_delta = .99))
+    adapt_delta = .99)
 ```
 
 The results look like this:

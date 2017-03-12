@@ -14,10 +14,10 @@ vignette: >
 ## Introduction
 
 This vignette introduces the `tidybayes` package, which facilitates the use of tidy data (one observation
-per row) with Bayesian samplers in R. 
+per row) with Bayesian samplers in R. This vignette is geared towards working with tidy data in general-purpose samplers like JAGS or Stan. For a similar introduction to the use of `tidybayes` with high-level modelling functions such as those in `brms` or `rstanarm`, see also [vignette("tidy-rstanarm")](tidy-rstanarm.html).
 
 The default output (and sometimes input) data formats of popular samplers
-like JAGS and Stan often don't quite conform to the ideal of "tidy" data. For example, input formats
+like JAGS and Stan often don't quite conform to the ideal of [tidy data](http://dx.doi.org/10.18637/jss.v059.i10). For example, input formats
 might expect a list instead of a data frame, and for all variables to be encoded as numeric values
 (requiring translation of factors to numeric values and the creation of index variables to store
 the number of levels per factor or the number of observations in a data frame). Output formats will
@@ -33,11 +33,11 @@ There are a few core ideas that run through the `tidybayes` API that should (hop
 
 2. __Fit into the tidyverse__. `tidybayes` methods fit into a workflow familiar to users of the `tidyverse` (`dplyr`, `tidyr`, `ggplot2`, etc), which means fitting into the pipe (`%>%`) workflow, using and respecting grouped data frames (thus `gather_samples` returns results already grouped by parameter indices, and methods like `mean_qi` calculate estimates and intervals for parameters and groups simultaneously), and not reinventing too much of the wheel if it is already made easy by functions provided by those packages (unless it makes for much clearer code for a common idiom).
 
-3. __Focus on composable operations and plotting primitives, not monolithic plots and operations__. Several other packages (notably `bayesplot` and `ggmcmc`) already provide a variety of pre-made methods for plotting Bayesian results, and are a valuable resource. `tidybayes` shies away from duplicating this funcitonality. Instead, it focuses on providing composable operations for generating and manipulating Bayesian samples in a tidy data format, and graphical primitives for `ggplot` that allow you to build custom plots easily. Most simply, where `bayesplot` and `ggmcmc` tend to have functions with many options that return a full ggplot object, `tidybayes` tends towards providing primitives (like `geom`s) that you can compose and combine into custom plots.
+3. __Focus on composable operations and plotting primitives, not monolithic plots and operations__. Several other packages (notably `bayesplot` and `ggmcmc`) already provide an excellent variety of pre-made methods for plotting Bayesian results. `tidybayes` shies away from duplicating this functionality. Instead, it focuses on providing composable operations for generating and manipulating Bayesian samples in a tidy data format, and graphical primitives for `ggplot` that allow you to build custom plots easily. Most simply, where `bayesplot` and `ggmcmc` tend to have functions with many options that return a full ggplot object, `tidybayes` tends towards providing primitives (like `geom`s) that you can compose and combine into custom plots.
 
 4. __Sensible defaults make life easy.__ But options (and the data being tidy in the first place) make it easy to go your own way when you need to.
 
-5. __Variable names in models should be descriptive, not cryptic__. This means I tend to avoid cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to variables like `J` to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like `j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a mnemonic shortform like `p`) for specific elements. 
+5. __Variable names in models should be descriptive, not cryptic__. This means I tend to avoid cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to variables like `J` to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like `j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a mnemonic shortform like `p`) for specific elements. In some cases, `tidybayes` will (be default) assume you want these sorts of more descriptive names; however, you can always override the default naming scheme.
 
 
 ## Setup
@@ -53,9 +53,9 @@ The following libraries are required to run this vignette:
 ```{r setup, message=FALSE}
 library(magrittr)
 library(dplyr)
-library(forcats)
 library(tidybayes)
 library(ggplot2)
+library(ggstance)
 library(rstan)
 ```
 
@@ -66,9 +66,9 @@ rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 ```
 
-Ggplot options:
+And these options use a simpler ggplot theme:
 
-```{r include=FALSE}
+```{r}
 theme_set(theme_light())
 ```
 
@@ -78,23 +78,23 @@ theme_set(theme_light())
 ```{r eval=FALSE, include=FALSE}
 # generate the dataset used below
 n = 10
-n_group = 5
+n_condition = 5
 ABC =
     data_frame(
-        group = rep(c("A","B","C","D","E"), n),
+        condition = rep(c("A","B","C","D","E"), n),
         y = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
     ) %>%
-    arrange(group)
+    arrange(condition)
 #save(ABC, file = "data/ABC.Rdata")
 ```
 
-To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 groups each:
+To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 conditions each:
 
 ```{r}
 data(ABC, package = "tidybayes")
 ```
 
-The data looks like this:
+A snapshot of the data looks like this:
 
 ```{r}
 ABC
@@ -104,7 +104,7 @@ This is a typical tidy format data frame: one observation per row. Graphically:
 
 ```{r}
 ABC %>%
-    ggplot(aes(x = group, y = y)) +
+    ggplot(aes(x = condition, y = response)) +
     geom_point() 
 ```
 
@@ -112,7 +112,7 @@ ABC %>%
 
 Shunting data from a data frame into a format usable in samplers like JAGS or Stan can involve a tedious set of operations, like generating index variables storing the number of operations or the number of levels in a factor. `compose_data` automates these operations.
 
-A hierarchical model of our example data might estimate an overall mean across the groups (`overall_mean`), the standard deviation of the group means (`group_mean_sd`), the mean within each group (`group_mean[group]`) and the standard deviation of the observations given a group mean (`y_sd`):
+A hierarchical model of our example data might estimate an overall mean across the conditions (`overall_mean`), the standard deviation of the condition means (`condition_mean_sd`), the mean within each condition (`condition_mean[condition]`) and the standard deviation of the observations given a condition mean (`y_sd`):
 
 ```{r, echo = FALSE, results = "asis"}
 cat("<div class='sourceCode'><strong style='float:right;padding:1em;'>ABC.stan</strong>
@@ -124,11 +124,11 @@ cat("</code></pre></div>")
 This model expects these variables as input:
 
 * `n`: number of observations
-* `n_group`: number of groups
-* `group`: a vector of integers indicating the group of each observation
-* `y`: a vector of observations
+* `n_condition`: number of conditions
+* `condition`: a vector of integers indicating the condition of each observation
+* `response`: a vector of observations
 
-Our data frame (`ABC`) only has `y` and `group`, and `group` is in the wrong format (it is a factor instead of numeric. However, `compose_data` can generate a list containing the above variables in the correct format automatically. It recognizes that `group` is a factor and converts it to a numeric, adds the `n_group` variable automatically containing the number of levels in `group`, and adds the `n` column containing the number of observations (number of rows in the data frame):
+Our data frame (`ABC`) only has `response` and `condition`, and `condition` is in the wrong format (it is a factor instead of numeric. However, `compose_data` can generate a list containing the above variables in the correct format automatically. It recognizes that `condition` is a factor and converts it to a numeric, adds the `n_condition` variable automatically containing the number of levels in `condition`, and adds the `n` column containing the number of observations (number of rows in the data frame):
 
 ```{r}
 compose_data(ABC)
@@ -136,14 +136,14 @@ compose_data(ABC)
 
 This makes it easy to skip right to running the model without munging the data yourself:
 
-```{r}
+```{r, include=FALSE}
 m = stan("ABC.stan", data = compose_data(ABC), control = list(adapt_delta=0.99))
 ```
 
 The results look like this:
 
 ```{r}
-print(m, pars = c("overall_mean", "group_mean_sd", "group_mean", "y_sd"))
+print(m, pars = c("overall_mean", "condition_mean_sd", "condition_mean", "y_sd"))
 ```
 
 
@@ -157,23 +157,23 @@ Now that we have our results, the fun begins: getting the samples out in a tidy 
 str(extract(m))
 ```
 
-The `gather_samples` method lets us instead extract samples into a data frame in tidy format, with a `.chain` and `.iteration` column storing the chain and interation for each row, and the remaining columns corresponding to parameters or parameter indices. The `gather_samples` method accepts any number of column specifications, which can include names for parameters and names for parameter indices. For example, we can extract the `group_mean` parameter as a tidy data frame, and put the value of its first (and only) index into the `group` column, using a syntax that directly echoes how we would specify indices of the `group_mean` parameter in the model itself:
+The `gather_samples` method lets us instead extract samples into a data frame in tidy format, with a `.chain` and `.iteration` column storing the chain and iteration for each row, and the remaining columns corresponding to parameters or parameter indices. The `gather_samples` method accepts any number of column specifications, which can include names for parameters and names for parameter indices. For example, we can extract the `condition_mean` parameter as a tidy data frame, and put the value of its first (and only) index into the `condition` column, using a syntax that directly echoes how we would specify indices of the `condition_mean` parameter in the model itself:
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group])
+    gather_samples(condition_mean[condition])
 ```
 
 ### Automatically converting columns and indices back into their original data types
 
-As-is, the resulting parameters don't know anything about where their indices came from. The index of the `group_mean` parameter was originally derived from the `group` factor in the `ABC` data frame. But Stan doesn't know this: it is just a numeric index to Stan, so the `group` column just contains numbers (`1, 2, 3, 4, 5`) instead of the factor levels these numbers correspond to (`"A", "B", "C", "D", "E"`).
+As-is, the resulting parameters don't know anything about where their indices came from. The index of the `condition_mean` parameter was originally derived from the `condition` factor in the `ABC` data frame. But Stan doesn't know this: it is just a numeric index to Stan, so the `condition` column just contains numbers (`1, 2, 3, 4, 5`) instead of the factor levels these numbers correspond to (`"A", "B", "C", "D", "E"`).
 
-We can recover this missing type information by passing the model through `recover_types` before using `gather_samples`. In itself `recover_types` just returns a copy of the model, with some additional attributes that store the type information from the data frame (or other objects) that you pass to it. This doesn't have any useful affect by itself, but `gather_samples` uses this information to convert any column or index back into the data type of the column with the same name in the original data frame. In this example, `gather_samples` recognizes that the `group` column was a factor with five levels (`"A", "B", "C", "D", "E"`) in the original data frame, and automatically converts it back into a factor:
+We can recover this missing type information by passing the model through `recover_types` before using `gather_samples`. In itself `recover_types` just returns a copy of the model, with some additional attributes that store the type information from the data frame (or other objects) that you pass to it. This doesn't have any useful affect by itself, but `gather_samples` uses this information to convert any column or index back into the data type of the column with the same name in the original data frame. In this example, `gather_samples` recognizes that the `condition` column was a factor with five levels (`"A", "B", "C", "D", "E"`) in the original data frame, and automatically converts it back into a factor:
 
 ```{r}
 m %>%
     recover_types(ABC) %>%
-    gather_samples(group_mean[group])
+    gather_samples(condition_mean[condition])
 ```
 
 Because we often want to make multiple separate calls to `gather_samples`, it is often convenient to decorate the original model using `recover_types` immediately after it has been fit, so we only have to call it once:
@@ -197,7 +197,7 @@ m %>%
     gather_samples(overall_mean, y_sd)
 ```
 
-Like with `group_mean[group]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
+Like with `condition_mean[condition]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
 
 ```{r}
 m %>%
@@ -215,21 +215,21 @@ m %>%
 
 ### With indexed parameters
 
-When we have a parameter with one or more indices, such as `group_mean`, we can apply `mean_qi` (or other functions in the `point_estimate` family) as we did before:
+When we have a parameter with one or more indices, such as `condition_mean`, we can apply `mean_qi` (or other functions in the `point_estimate` family) as we did before:
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group]) %>%
+    gather_samples(condition_mean[condition]) %>%
     mean_qi()
 ```
 
-How did `mean_qi` know what to aggregate? Data frames returned by `gather_samples` are automatically grouped by all index variables you pass to it; in this case, that means it groups by `group`. `mean_qi` respects groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `group_mean`. So the above shortened syntax is equivalent to this more verbose call:
+How did `mean_qi` know what to aggregate? Data frames returned by `gather_samples` are automatically grouped by all index variables you pass to it; in this case, that means it groups by `condition`. `mean_qi` respects groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `condition_mean`. So the above shortened syntax is equivalent to this more verbose call:
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group]) %>%
-    group_by(group) %>%
-    mean_qi(group_mean)
+    gather_samples(condition_mean[condition]) %>%
+    group_by(condition) %>%    # this line not necessary (done automatically by gather_samples)
+    mean_qi(condition_mean)
 ```
 
 ## Plotting point estimates and intervals
@@ -238,9 +238,9 @@ Plotting means and intervals is straightforward using the "pointrange" geom of `
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group]) %>%
+    gather_samples(condition_mean[condition]) %>%
     mean_qi() %>%
-    ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper)) +
+    ggplot(aes(x = condition, y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper)) +
     geom_pointrange()
 ```
 
@@ -251,18 +251,18 @@ m %>%
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group]) %>%
+    gather_samples(condition_mean[condition]) %>%
     mean_qi(prob = c(.95, .8, .5))
 ```
 
-The results are in a tidy format: one row per index (`group`) and probability level (`group_mean.prob`). This facilitates plotting. For example, assigning `-group_mean.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
+The results are in a tidy format: one row per index (`condition`) and probability level (`condition_mean.prob`). This facilitates plotting. For example, assigning `-condition_mean.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group]) %>%
+    gather_samples(condition_mean[condition]) %>%
     mean_qi(prob = c(.95, .8, .5)) %>%
-    ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
-        size = -group_mean.prob    # shorter interval => thicker line
+    ggplot(aes(x = condition, y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper, 
+        size = -condition_mean.prob    # shorter interval => thicker line
     )) +
     geom_pointrange(
         fatten = 2         # smaller point estimate (otherwise it is very large)
@@ -275,33 +275,33 @@ m %>%
 
 ## Combining variables with different indices in a single tidy format data frame
 
-`gather_samples` supports gathering variables that have different indices. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the difference between each group mean and the overall mean. To do that, we can gather samples from the overall mean and all group means:
+`gather_samples` supports gathering variables that have different indices. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the difference between each condition mean and the overall mean. To do that, we can gather samples from the overall mean and all condition means:
 
 ```{r}
 m %>% 
-    gather_samples(overall_mean, group_mean[group])
+    gather_samples(overall_mean, condition_mean[condition])
 ```
 
-Within each sample, `overall_mean` is repeated as necessary to correspond to every index of `group_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `mean_qi`:
+Within each sample, `overall_mean` is repeated as necessary to correspond to every index of `condition_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `mean_qi`:
 
 ```{r}
 m %>%
-    gather_samples(overall_mean, group_mean[group]) %>%
-    mutate(group_offset = group_mean - overall_mean) %>%
-    mean_qi(group_offset)
+    gather_samples(overall_mean, condition_mean[condition]) %>%
+    mutate(condition_offset = condition_mean - overall_mean) %>%
+    mean_qi(condition_offset)
 ```
 
 ## Making posterior predictions
 
-We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the group means with the residual standard deviation to generate predictive distributions from the model:
+We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the condition means with the residual standard deviation to generate predictive distributions from the model:
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group], y_sd) %>%
-    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    gather_samples(condition_mean[condition], y_sd) %>%
+    mutate(y_rep = rnorm(n(), condition_mean, y_sd)) %>%
     ggplot(aes(x = y_rep)) +
     stat_density() +
-    facet_grid(. ~ group) + 
+    facet_grid(. ~ condition) + 
     coord_flip()
 ```
 
@@ -309,14 +309,14 @@ And even summarize these as predictive intervals and compare to the data:
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group], y_sd) %>%
-    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    gather_samples(condition_mean[condition], y_sd) %>%
+    mutate(y_rep = rnorm(n(), condition_mean, y_sd)) %>%
     mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
-    ggplot(aes(x = group, y = y_rep)) +
+    ggplot(aes(x = condition, y = y_rep)) +
     geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
         color = ordered(-y_rep.prob)),
         size = 4) +
-    geom_point(aes(y = y), data = ABC) +
+    geom_point(aes(y = response), data = ABC) +
     scale_color_brewer(guide = FALSE)
 ```
 
@@ -326,47 +326,46 @@ Altogether, data, posterior predictions, and estimates of the means:
 
 ```{r}
 samples = m %>%
-    gather_samples(group_mean[group], y_sd)
+    gather_samples(condition_mean[condition], y_sd)
 
 reps = samples %>%
-    mutate(y_rep = rnorm(n(), group_mean, y_sd)) %>%
+    mutate(y_rep = rnorm(n(), condition_mean, y_sd)) %>%
     mean_qi(y_rep, prob = c(.95, .8, .5))
 
 parameters = samples %>%
-    mean_qi(group_mean, prob = c(.95, .66))
+    mean_qi(condition_mean, prob = c(.95, .66))
    
 ABC %>%
-    ggplot(aes(x = group)) +
+    ggplot(aes(x = condition)) +
     geom_linerange(
         aes(ymin = y_rep.lower, ymax = y_rep.upper, 
             color = ordered(-y_rep.prob)),
         size = 4, 
         data = reps) +
     geom_pointrange(
-        aes(y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper, 
-            size = -group_mean.prob),
+        aes(y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper, 
+            size = -condition_mean.prob),
         fatten = 1.5, position=position_nudge(x=0.3),
         data = parameters) +
-    geom_point(aes(y = y)) +
+    geom_point(aes(y = response)) +
     scale_color_brewer(guide = FALSE) +
     scale_size_continuous(range = c(1,2), guide = FALSE)
 ```
 
 ## Comparing levels of a factor
 
-If we wish compare the values of `group_mean` across groups, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:
+If we wish compare the values of `condition_mean` across conditions, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:
 
-```{r}
+```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
-    gather_samples(group_mean[group]) %>%
-    compare_levels(group_mean, by = group) %>%
-    # group_by(group) %>%
-    # mean_qi() %>%
-    ggplot(aes(x = group, y = group_mean)) +
-    geom_eye(interval_args = list(mapping=aes(size=-..prob..), fatten=2), fun.data= . %>% median_qi(., prob=c(.66,.95)))+
-    # stat_summary(aes(size=-..prob..), fun.data= . %>% median_qi(., prob=c(.95,.80,.66)), geom="pointrange", fatten=2)+
-    scale_size_continuous(range=c(1,2)) +
+    gather_samples(condition_mean[condition]) %>%
+    compare_levels(condition_mean, by = condition) %>%
+    ggplot(aes(x = condition, y = condition_mean)) +
+    geom_violin(scale="width", fill="skyblue", color=NA) +
+    stat_summary(aes(size=-..prob..), 
+        fun.data=median_qi, fun.args=list(prob=c(.95,.66)), geom="pointrange", fatten=1.25)+
+    scale_size_continuous(range=c(0.5,1.5), guide=FALSE) +
     coord_flip()
 ```
 
@@ -376,9 +375,9 @@ The `point_interval` family of functions follow the naming scheme `[mean|median|
 
 ```{r}
 m %>%
-    gather_samples(group_mean[group]) %>%
+    gather_samples(condition_mean[condition]) %>%
     mode_hdi() %>%
-    ggplot(aes(x = group, y = group_mean, ymin = group_mean.lower, ymax = group_mean.upper)) +
+    ggplot(aes(x = condition, y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper)) +
     geom_pointrange()
 ```
 

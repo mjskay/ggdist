@@ -6,3 +6,4 @@
 .Rproj*
 tidybayes.Rproj
 vignettes/ABC.rda
+vignettes/ABC.rds
