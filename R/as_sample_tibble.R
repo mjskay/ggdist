@@ -74,6 +74,21 @@ as_sample_tibble.stanfit = function(model) {
 }
 #' @rdname as_sample_tibble
 #' @export
+as_sample_tibble.stanreg = function(model) {
+    if (!requireNamespace("rstan", quietly = TRUE)) {
+        stop('The `rstan` package is needed for `as_sample_tibble` to support `stanreg` objects.'
+            , call. = FALSE)
+    }
+    #stanreg objects have more info provided for parameter names than the underlying stanfit,
+    #so we dont' just do as_sample_tibble(model$stanfit)
+    sample_matrix = as.array(model) #[iteration, chain, parameter]
+    n_chain = dim(sample_matrix)[[2]]
+    mcmc_list = as.mcmc.list(lapply(1:n_chain, function(chain) as.mcmc(sample_matrix[,chain,])))
+    as_sample_tibble(mcmc_list)
+}
+
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.runjags = function(model) {
     if (!requireNamespace("runjags", quietly = TRUE)) {
         stop('The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects.'

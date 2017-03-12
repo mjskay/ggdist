@@ -11,6 +11,7 @@
 \alias{as_sample_tibble.mcmc.list}
 \alias{as_sample_tibble.runjags}
 \alias{as_sample_tibble.stanfit}
+\alias{as_sample_tibble.stanreg}
 \title{Get samples from a model as a tibble}
 \usage{
 as_sample_tibble(model)
@@ -22,6 +23,8 @@ as_sample_data_frame(model)
 \method{as_sample_tibble}{mcmc.list}(model)
 
 \method{as_sample_tibble}{stanfit}(model)
+
+\method{as_sample_tibble}{stanreg}(model)
 
 \method{as_sample_tibble}{runjags}(model)
 
