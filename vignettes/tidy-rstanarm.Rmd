@@ -1,0 +1,371 @@
+---
+title: "Extracting tidy samples from rstanarm"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output: 
+    rmarkdown::html_vignette:
+        toc: TRUE
+vignette: >
+  %\VignetteIndexEntry{Extracting tidy data from rstanarm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+This vignette describes how to use the `tidybayes` package to extract tidy samples from `rstanarm`. For a more general introduction to `tidybayes` and its use on more general-purpose sampling languages (like Stan and JAGS), see [vignette("tidybayes")](tidybayes.html).
+
+The default output data formats of popular samplers
+like JAGS and Stan often don't quite conform to the ideal of [tidy data](http://dx.doi.org/10.18637/jss.v059.i10). Output formats will
+often be in matrix form (requiring conversion for use with libraries like ggplot). `tidybayes` automates munging the samples into tidy formats.
+
+
+## Setup
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(  #default code chunk options
+    dev = "CairoPNG"      #nicer PNG figures
+)
+```
+
+The following libraries are required to run this vignette:
+
+```{r setup, message=FALSE}
+library(magrittr)
+library(dplyr)
+library(tidybayes)
+library(ggplot2)
+library(ggstance)
+library(rstan)
+library(rstanarm)
+```
+
+These options help Stan run faster:
+
+```{r}
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+And these options use a simpler ggplot theme:
+
+```{r}
+theme_set(theme_light())
+```
+
+
+## Example dataset
+
+```{r eval=FALSE, include=FALSE}
+# generate the dataset used below
+n = 10
+n_group = 5
+ABC =
+    data_frame(
+        condition = rep(c("A","B","C","D","E"), n),
+        response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
+    ) %>%
+    arrange(group)
+#save(ABC, file = "data/ABC.Rdata")
+```
+
+To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 groups each:
+
+```{r}
+data(ABC, package = "tidybayes")
+```
+
+A snapshot of the data looks like this:
+
+```{r}
+ABC
+```
+
+This is a typical tidy format data frame: one observation per row. Graphically:
+
+```{r}
+ABC %>%
+    ggplot(aes(x = condition, y = response)) +
+    geom_point()
+```
+
+## Model
+
+```{r}
+m = stan_lmer(response ~ (1|condition), data = ABC, 
+    prior = normal(0, 1, autoscale = FALSE),
+    prior_aux = student_t(3, 0, 1, autoscale = FALSE),
+    control = list(adapt_delta = .99))
+```
+
+The results look like this:
+
+```{r}
+summary(m)
+```
+
+
+## Gathering samples from a fit in tidy-format using `gather_samples`
+
+Now that we have our results, the fun begins: getting the samples out in a tidy format! For example, given these parameters:
+
+- `b[(Intercept) condition:A]`
+- `b[(Intercept) condition:B]`
+- `b[(Intercept) condition:C]`
+- `b[(Intercept) condition:D]`
+- `b[(Intercept) condition:E]`
+
+We might want a data frame where each row is a sample from either `b[(Intercept) condition:A]`, `...B`, `...C`, `...D`, or `...E`, and where we have columns indexing which iteration of the sampler the sample came from and which condition it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.
+
+The workhorse of `tidybayes` is the `gather_samples` function, which does this extraction for us. It includes a simple specification format that we can use to extract parameters and their indices into tidy-format data frames.
+
+### Gathering parameter indices into a separate column in a tidy format data frame
+
+Given a parameter like this:
+
+`b[(Intercept) condition:D]`
+
+We can provide `gather_samples` with a column specification like this:
+
+`b[term,group,condition]`
+
+Where `term` corresponds to `(Intercept)`, `group` to `condition`, and `condition` to `D`. There is nothing too magical about what `gather_samples` does with this specification: under the hood, it splits the parameter indices by spaces, `:`, and `,`, and lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)`, `condition`, and `D`, and gather samples lets us extract these indices as columns and get a tidy data frame of samples of `b`:
+
+```{r}
+m %>%
+    gather_samples(b[term,group,condition])
+```
+
+We can choose whatever names we want for the index columns; e.g.: 
+
+```{r}
+m %>%
+    gather_samples(b[t,g,c])
+```
+
+We will prefer the more descriptive and less cryptic names.
+
+__Note:__ If you have used `gather_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `gather_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `gather_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see [vignette("tidybayes")](tidybayes.html).
+
+## Point estimates and intervals
+
+### With simple parameters
+
+`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
+
+For example, we might gather the samples corresponding to the overall mean and standard deviation of observations:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, sigma)
+```
+
+Like with `b[term,group,condition]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, sigma) %>%
+    mean_qi(`(Intercept)`, sigma)
+```
+
+We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `(Intercept)` and `sigma` are redundant arguments to `mean_qi` because they are also the only columns we gathered from the model. So we can simplify this to:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, sigma) %>%
+    mean_qi()
+```
+
+### With indexed parameters
+
+When we have a parameter with one or more indices, such as `b`, we can apply `mean_qi` (or other functions in the `point_estimate` family) as we did before:
+
+```{r}
+m %>%
+    gather_samples(b[term,group,condition]) %>%
+    mean_qi()
+```
+
+How did `mean_qi` know what to aggregate? Data frames returned by `gather_samples` are automatically grouped by all index variables you pass to it; in this case, that means `gather_samples` groups its results by `term`, `group`, and `condition`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
+
+```{r}
+m %>%
+    gather_samples(b[term,group,condition]) %>%
+    group_by(term,group,condition) %>%    # this line not necessary (done by gather_samples)
+    mean_qi(b)
+```
+
+## Combining variables with different indices in a single tidy format data frame
+
+`gather_samples` supports gathering variables that have different indices in the same data frame. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this `mu`). In this model, that mean is the intercept (`(Intercept)`) plus the effect for a given condition (`b`). 
+
+We can gather samples from `(Intercept)` and `b` together in a single data frame:
+
+```{r}
+m %>% 
+    gather_samples(`(Intercept)`, b[term,group,condition])
+```
+
+Within each sample, `(Intercept)` is repeated as necessary to correspond to every index of `b`. Thus, the `mutate` function from dplyr can be used to find their sum, `mu` (which is the estimated mean for each condition):
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    mutate(mu = `(Intercept)` + b) %>%
+    mean_qi(mu)
+```
+
+`mean_qi` can also take column expressions (rather than just column names), so we can simplify the above example by moving the calculation of `mu` from `mutate` into `mean_qi`:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    mean_qi(mu = `(Intercept)` + b)
+```
+
+## Plotting point estimates and intervals
+
+Plotting means and intervals is straightforward using the "pointrange" geom of `ggplot`, by mapping the corresponding columns onto the `y`, `ymin`, and `ymax` aesthetics used by `geom_pointrange`:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    mean_qi(mu = `(Intercept)` + b) %>%
+    ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper)) +
+    geom_pointrange()
+```
+
+
+## Interval estimates with multiple probability levels
+
+`mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `prob =` argument:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    mean_qi(mu = `(Intercept)` + b, prob = c(.95, .8, .5))
+```
+
+The results are in a tidy format: one row per group and probability level (`mu.prob`). This facilitates plotting. For example, assigning `-mu.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    mean_qi(mu = `(Intercept)` + b, prob = c(.95, .8, .5)) %>%
+    ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper, 
+        size = -mu.prob    # shorter interval => thicker line
+    )) +
+    geom_pointrange(
+        fatten = 2         # smaller point estimate (otherwise it is very large)
+    ) +
+    scale_size_continuous(
+        range = c(1, 2.5),   # default range is c(0, 6) --- makes very thick lines
+        guide = FALSE      # no need for a legend on size
+    )
+```
+
+## Making posterior predictions
+
+We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the group means with the residual standard deviation to generate predictive distributions from the model:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition], sigma) %>%
+    mutate(y_rep = rnorm(n(), `(Intercept)` + b, sigma)) %>%
+    ggplot(aes(x = y_rep)) +
+    stat_density() +
+    facet_grid(. ~ condition) + 
+    coord_flip()
+```
+
+And even summarize these as predictive intervals and compare to the data:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition], sigma) %>%
+    mutate(y_rep = rnorm(n(), `(Intercept)` + b, sigma)) %>%
+    mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
+    ggplot(aes(x = condition, y = y_rep)) +
+    geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
+        color = ordered(-y_rep.prob)),
+        size = 4) +
+    geom_point(aes(y = response), data = ABC) +
+    scale_color_brewer(guide = FALSE)
+```
+
+If this model is well-calibrated, about 95% of the data should be in the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.
+
+Altogether, data, posterior predictions, and estimates of the means:
+
+```{r}
+samples = m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition], sigma) %>%
+    mutate(mu = `(Intercept)` + b)
+
+reps = samples %>%
+    mutate(y_rep = rnorm(n(), mu, sigma)) %>%
+    mean_qi(y_rep, prob = c(.95, .8, .5))
+
+parameters = samples %>%
+    mean_qi(mu, prob = c(.95, .66))
+   
+ABC %>%
+    ggplot(aes(x = condition)) +
+    geom_linerange(
+        aes(ymin = y_rep.lower, ymax = y_rep.upper, 
+            color = ordered(-y_rep.prob)),
+        size = 4, 
+        data = reps) +
+    geom_pointrange(
+        aes(y = mu, ymin = mu.lower, ymax = mu.upper, 
+            size = -mu.prob),
+        fatten = 1.5, position=position_nudge(x=0.3),
+        data = parameters) +
+    geom_point(aes(y = response)) +
+    scale_color_brewer(guide = FALSE) +
+    scale_size_continuous(range = c(1,2), guide = FALSE)
+```
+
+## Comparing levels of a factor
+
+If we wish compare the means from each condition, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:
+
+```{r, fig.width=7}
+#N.B. the syntax for compare_levels is experimental and may change
+m %>%
+    gather_samples(b[term,group,condition]) %>%
+    compare_levels(b, by = condition) %>%
+    ggplot(aes(x = condition, y = b)) +
+    geom_violin(scale="width", fill="skyblue", color=NA) +
+    stat_summary(aes(size=-..prob..), 
+        fun.data=median_qi, fun.args=list(prob=c(.95,.66)), geom="pointrange", fatten=1.25)+
+    scale_size_continuous(range=c(0.5,1.5), guide=FALSE) +
+    coord_flip()
+```
+
+## Alternative estimates and intervals: mean, median, mode; qi, hdi
+
+The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (aka equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Replacing `mean_qi` with `mode_hdi` in the previous example yields mode and HDI instead of mean and quantile interval:
+
+```{r}
+m %>%
+    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    mode_hdi(mu = `(Intercept)` + b) %>%
+    ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper)) +
+    geom_pointrange()
+```
+
+This is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:
+
+```{r}
+sd_samples = m %>% gather_samples(sigma)
+rbind(
+    sd_samples %>% mode_hdi(sigma) %>% mutate(type="mode_hdi"),
+    sd_samples %>% mean_qi(sigma) %>% mutate(type="mean_qi")
+) %>%
+    ggplot(aes(x = sigma)) +
+    stat_density(aes(y = ..scaled.. * 10), data = sd_samples, fill="gray75") +
+    geom_point(aes(y = type)) +
+    geom_errorbarh(aes(y = type, xmin = sigma.lower, xmax = sigma.upper), width=0)
+```
+
