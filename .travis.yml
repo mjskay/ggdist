@@ -11,6 +11,8 @@ warnings_are_errors: true
 r_binary_packages:
  # won't compile under clang?
  - runjags
+ - RCurl
+ - nloptr
 r_packages:
  - rstan
  - coda
