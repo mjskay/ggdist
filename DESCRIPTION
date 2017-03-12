@@ -15,7 +15,6 @@ Depends:
 Imports:
     lazyeval,
     plyr,
-    reshape2,
     dplyr,
     tidyr,
     ggplot2,
@@ -23,20 +22,21 @@ Imports:
     lsmeans,
     LaplacesDemon,
     coda,
-    import,
     modelr,
     purrr,
     tibble,
     MASS,
     magrittr
 Suggests:
+    import,
     testthat,
     rstan,
     gamlss,
-    runjags
-Enhances:
-    rethinking,
+    runjags,
+    rstanarm,
     brms
+Enhances:
+    rethinking
 Remotes: rmcelreath/rethinking
 License: GPL (>= 2)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
