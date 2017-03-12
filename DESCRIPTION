@@ -28,6 +28,7 @@ Imports:
     MASS,
     magrittr
 Suggests:
+    ggstance,
     import,
     testthat,
     rstan,
