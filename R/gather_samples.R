@@ -162,8 +162,13 @@ parse_variable_spec = function(variable_spec) {
 #' 
 #' \preformatted{gather_samples(fit, w[i,v], x[i,v], y[i,v], z[i,v])}
 #' 
-#' Besides being more compact, the \code{c}-style syntax is currently also
+#' Besides being more compact, the \code{c()}-style syntax is currently also
 #' faster (though that may change).
+#' 
+#' Indices can be omitted from the resulting data frame by leaving their names
+#' blank; e.g. \code{gather_samples(fit, b[,v])} will omit the first index of
+#' \code{b} from the output. This is useful if an index is known to contain all
+#' the same value in a given model.
 #' 
 #' The shorthand \code{..} can be used to specify one column that should be put
 #' into a wide format and whose names will be the base variable name plus the

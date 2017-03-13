@@ -143,7 +143,14 @@ m %>%
     gather_samples(b[t,g,c])
 ```
 
-We will prefer the more descriptive and less cryptic names.
+The more descriptive and less cryptic names from above are probably preferable.
+
+In this particular model, there is only one term (`(Intercept)`) and one group (`condition`), thus we could omit those two indices altogether to just get each `condition` and the value of `b` for that condition:
+
+```{r}
+m %>%
+    gather_samples(b[,,condition])
+```
 
 __Note:__ If you have used `gather_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `gather_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `gather_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see [vignette("tidybayes")](tidybayes.html).
 
@@ -182,17 +189,17 @@ When we have a parameter with one or more indices, such as `b`, we can apply `me
 
 ```{r}
 m %>%
-    gather_samples(b[term,group,condition]) %>%
+    gather_samples(b[,,condition]) %>%
     mean_qi()
 ```
 
-How did `mean_qi` know what to aggregate? Data frames returned by `gather_samples` are automatically grouped by all index variables you pass to it; in this case, that means `gather_samples` groups its results by `term`, `group`, and `condition`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
+How did `mean_qi` know what to aggregate? Data frames returned by `gather_samples` are automatically grouped by all index variables you pass to it; in this case, that means `gather_samples` groups its results by `condition`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
 
 ```{r}
 m %>%
-    gather_samples(b[term,group,condition]) %>%
-    group_by(term,group,condition) %>%    # this line not necessary (done by gather_samples)
-    mean_qi(b)
+    gather_samples(b[,,condition]) %>%
+    group_by(condition) %>%    # this line not necessary (done by gather_samples)
+    mean_qi(b)                 # b is not necessary (it is the only non-group column)
 ```
 
 ## Combining variables with different indices in a single tidy format data frame
@@ -203,14 +210,14 @@ We can gather samples from `(Intercept)` and `b` together in a single data frame
 
 ```{r}
 m %>% 
-    gather_samples(`(Intercept)`, b[term,group,condition])
+    gather_samples(`(Intercept)`, b[,,condition])
 ```
 
 Within each sample, `(Intercept)` is repeated as necessary to correspond to every index of `b`. Thus, the `mutate` function from dplyr can be used to find their sum, `mu` (which is the estimated mean for each condition):
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    gather_samples(`(Intercept)`, b[,,condition]) %>%
     mutate(mu = `(Intercept)` + b) %>%
     mean_qi(mu)
 ```
@@ -219,7 +226,7 @@ m %>%
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    gather_samples(`(Intercept)`, b[,,condition]) %>%
     mean_qi(mu = `(Intercept)` + b)
 ```
 
@@ -229,7 +236,7 @@ Plotting means and intervals is straightforward using the "pointrange" geom of `
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    gather_samples(`(Intercept)`, b[,,condition]) %>%
     mean_qi(mu = `(Intercept)` + b) %>%
     ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper)) +
     geom_pointrange()
@@ -242,7 +249,7 @@ m %>%
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    gather_samples(`(Intercept)`, b[,,condition]) %>%
     mean_qi(mu = `(Intercept)` + b, prob = c(.95, .8, .5))
 ```
 
@@ -250,7 +257,7 @@ The results are in a tidy format: one row per group and probability level (`mu.p
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    gather_samples(`(Intercept)`, b[,,condition]) %>%
     mean_qi(mu = `(Intercept)` + b, prob = c(.95, .8, .5)) %>%
     ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper, 
         size = -mu.prob    # shorter interval => thicker line
@@ -270,7 +277,7 @@ We can use combinations of variables with difference indices to generate predict
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition], sigma) %>%
+    gather_samples(`(Intercept)`, b[,,condition], sigma) %>%
     mutate(y_rep = rnorm(n(), `(Intercept)` + b, sigma)) %>%
     ggplot(aes(x = y_rep)) +
     stat_density() +
@@ -282,7 +289,7 @@ And even summarize these as predictive intervals and compare to the data:
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition], sigma) %>%
+    gather_samples(`(Intercept)`, b[,,condition], sigma) %>%
     mutate(y_rep = rnorm(n(), `(Intercept)` + b, sigma)) %>%
     mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
     ggplot(aes(x = condition, y = y_rep)) +
@@ -299,7 +306,7 @@ Altogether, data, posterior predictions, and estimates of the means:
 
 ```{r}
 samples = m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition], sigma) %>%
+    gather_samples(`(Intercept)`, b[,,condition], sigma) %>%
     mutate(mu = `(Intercept)` + b)
 
 reps = samples %>%
@@ -333,7 +340,7 @@ If we wish compare the means from each condition, `compare_levels` facilitates c
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
-    gather_samples(b[term,group,condition]) %>%
+    gather_samples(b[,,condition]) %>%
     compare_levels(b, by = condition) %>%
     ggplot(aes(x = condition, y = b)) +
     geom_violin(scale="width", fill="skyblue", color=NA) +
@@ -349,7 +356,7 @@ The `point_interval` family of functions follow the naming scheme `[mean|median|
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[term,group,condition]) %>%
+    gather_samples(`(Intercept)`, b[,,condition]) %>%
     mode_hdi(mu = `(Intercept)` + b) %>%
     ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper)) +
     geom_pointrange()
