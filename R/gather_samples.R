@@ -66,13 +66,7 @@ parse_variable_spec = function(variable_spec) {
             
             `[` = function(spec, ...) {
                 index_names = as.character(substitute(list(...))[-1])
-                if (identical(index_names, "")) {
-                    index_names = NULL
-                }
-                else if (any(index_names == "")) {
-                    stop("Empty indices (e.g. a[,]) not allowed in variable_spec")
-                }
-                
+
                 list(
                     spec[[1]],
                     c(spec[[2]], index_names),
@@ -341,15 +335,26 @@ gather_samples_long_ = function(model, variable_names, index_names) {
         colnames(samples)[c(-1,-2)] = stri_sub(colnames(samples)[c(-1,-2)], to=-2)
         variable_names = stri_sub(variable_names, to=-2)
         
+        #specs containing empty indices (e.g. mu[] or mu[,k]) will produce
+        #some index_names == ""; we can't use empty variable names below, so we
+        #replace them with the ".drop" placeholder and then drop those columns later.
+        #TODO: probably a better way to do this.
+        temp_index_names = index_names %>% 
+            #must give each blank index column a unique name, otherwise spread_() won't work below
+            ifelse(. == "", paste0(".drop", seq_along(.)), .)
+        index_names = index_names[index_names != ""]
+
         samples[,c(".chain", ".iteration", variable_names)] %>%
             #make long format for the variables we want to split
             gather_(".variable", ".value", variable_names) %>%
             #next, split indices in variable names into columns
-            separate_(".variable", c(".variable", index_names), sep="[ :,]|\\[|\\]",
+            separate_(".variable", c(".variable", temp_index_names), sep="[ :,]|\\[|\\]",
                 convert=TRUE #converts indices to numerics
             ) %>%
             #now, make the value of each variable a column
             spread_(".variable", ".value") %>%
+            #drop the columns that correpond to blank indices in the original spec
+            select(-starts_with(".drop")) %>%
             #group by the desired indices so that we return a pre-grouped data frame to the user
             group_by_(.dots = index_names)
     }

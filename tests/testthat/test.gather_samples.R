@@ -20,7 +20,6 @@ test_that("gather_samples works on a simple parameter with no indices", {
             .iteration = 1:nrow(RankCorr),
             typical_r = RankCorr[,"typical_r"]
             )
-        expect_equal(gather_samples(RankCorr, typical_r[]), ref)
         expect_equal(gather_samples(RankCorr, typical_r), ref)
     })
 
@@ -193,13 +192,11 @@ test_that("gather_samples correctly extracts multiple variables simultaneously w
         data(RankCorr, package="tidybayes")
         dimnames(RankCorr)[[2]][[1]] <- "tr2"
 
-        ref1 = gather_samples(RankCorr, typical_r[])
-        expect_equal(gather_samples(RankCorr, c(typical_r)[]), ref1)
+        ref1 = gather_samples(RankCorr, typical_r)
         expect_equal(gather_samples(RankCorr, c(typical_r)), ref1)
 
-        ref2 = gather_samples(RankCorr, tr2[]) %>%
-            inner_join(gather_samples(RankCorr, typical_r[]), by=c(".chain",".iteration"))
-        expect_equal(gather_samples(RankCorr, c(tr2, typical_r)[]), ref2)
+        ref2 = gather_samples(RankCorr, tr2) %>%
+            inner_join(gather_samples(RankCorr, typical_r), by=c(".chain",".iteration"))
         expect_equal(gather_samples(RankCorr, c(tr2, typical_r)), ref2)
     })
 
@@ -232,4 +229,36 @@ test_that("groups from gather_samples retain factor level names", {
         samples = RankCorr %>% gather_samples(tau[i])
         
         expect_equivalent(attr(samples, "labels")$i, factor(i_labels))
+    })
+
+test_that("empty indices are dropped", {
+        data(RankCorr, package="tidybayes")
+
+        ref = RankCorr %>% 
+            gather_samples(tau[i]) %>%
+            ungroup() %>%
+            select(-i)
+
+        expect_equal(gather_samples(RankCorr, tau[]), ref)
+
+        ref2 = RankCorr %>% 
+            gather_samples(b[i,j]) %>%
+            group_by(j) %>%
+            select(-i)
+        
+        expect_equal(gather_samples(RankCorr, b[,j]), ref2)
+
+        ref3 = RankCorr %>% 
+            gather_samples(b[i,j]) %>%
+            group_by(i) %>%
+            select(-j)
+        
+        expect_equal(gather_samples(RankCorr, b[i,]), ref3)
+
+        ref4 = RankCorr %>% 
+            gather_samples(b[i,j]) %>%
+            ungroup() %>%
+            select(-i, -j)
+        
+        expect_equal(gather_samples(RankCorr, b[,]), ref4)
     })
