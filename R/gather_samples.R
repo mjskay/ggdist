@@ -171,8 +171,8 @@ parse_variable_spec = function(variable_spec) {
 #' the same value in a given model.
 #' 
 #' The shorthand \code{..} can be used to specify one column that should be put
-#' into a wide format and whose names will be the base variable name plus the
-#' value of the index at \code{..}. For example:
+#' into a wide format and whose names will be the base variable name, plus a dot
+#' ("."), plus the value of the index at \code{..}. For example:
 #' 
 #' \code{gather_samples(fit, b[i,..])} would return a grouped data frame
 #' (grouped by \code{i}), with:
@@ -180,11 +180,11 @@ parse_variable_spec = function(variable_spec) {
 #'      \item column \code{".chain"}: the chain number 
 #'      \item column \code{".iteration"}: the interation number
 #'      \item column \code{"i"}: value in \code{1:20}
-#'      \item column \code{"b1"}: value of \code{"b[i,1]"} for iteration number
+#'      \item column \code{"b.1"}: value of \code{"b[i,1]"} for iteration number
 #'          \code{".iteration"} on chain number \code{".chain"}
-#'      \item column \code{"b2"}: value of \code{"b[i,2]"} for iteration number
+#'      \item column \code{"b.2"}: value of \code{"b[i,2]"} for iteration number
 #'          \code{".iteration"} on chain number \code{".chain"}
-#'      \item column \code{"b3"}: value of \code{"b[i,3]"} for iteration number
+#'      \item column \code{"b.3"}: value of \code{"b[i,3]"} for iteration number
 #'          \code{".iteration"} on chain number \code{".chain"}
 #'  }
 #' 
@@ -299,7 +299,7 @@ gather_samples_ = function(model, variable_spec) {
             #remove it from the grouping columns on this table (mutate does not
             #allow you to modify grouping columns)
             group_by_(.dots = groups(.) %>% setdiff("..")) %>%
-            mutate(.. = factor(.., labels=variable_names)) %>%
+            mutate(.. = paste0(variable_names, ".", ..)) %>%
             spread_("..", variable_names)
     }
     else {

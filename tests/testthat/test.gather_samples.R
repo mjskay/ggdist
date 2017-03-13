@@ -65,7 +65,7 @@ test_that("gather_samples works on a parameter with one anonymous wide index", {
         ) 
         for (i in 1:18) {
             refcol = data.frame(RankCorr[,paste0("tau[", i, "]")])
-            names(refcol) = paste0("tau", i)
+            names(refcol) = paste0("tau.", i)
             ref = cbind(ref, refcol)
         }
         
@@ -153,7 +153,7 @@ test_that("gather_samples works on a parameter with one named index and one wide
                         .chain = as.integer(1),
                         .iteration = 1:nrow(RankCorr),
                         i = i_labels[i],
-                        j = paste0("b", j),
+                        j = paste0("b.", j),
                         b = RankCorr[,paste0("b[", i, ",", j, "]")]
                     )
                 })
@@ -261,4 +261,17 @@ test_that("empty indices are dropped", {
             select(-i, -j)
         
         expect_equal(gather_samples(RankCorr, b[,]), ref4)
+    })
+
+test_that("indices with existing names as strings are made wide as strings with `..`", {
+        data(RankCorr, package="tidybayes")
+        dimnames(RankCorr)[[2]][1] = "x[a]"
+        dimnames(RankCorr)[[2]][2] = "x[b]"
+        
+        ref = RankCorr %>% 
+            gather_samples(x[k]) %>%
+            spread(k, x) %>%
+            rename(x.a = a, x.b = b)
+        
+        expect_equal(gather_samples(RankCorr, x[..]), ref)
     })

@@ -94,8 +94,8 @@ blank; e.g. \code{gather_samples(fit, b[,v])} will omit the first index of
 the same value in a given model.
 
 The shorthand \code{..} can be used to specify one column that should be put
-into a wide format and whose names will be the base variable name plus the
-value of the index at \code{..}. For example:
+into a wide format and whose names will be the base variable name, plus a dot
+("."), plus the value of the index at \code{..}. For example:
 
 \code{gather_samples(fit, b[i,..])} would return a grouped data frame
 (grouped by \code{i}), with:
@@ -103,11 +103,11 @@ value of the index at \code{..}. For example:
      \item column \code{".chain"}: the chain number 
      \item column \code{".iteration"}: the interation number
      \item column \code{"i"}: value in \code{1:20}
-     \item column \code{"b1"}: value of \code{"b[i,1]"} for iteration number
+     \item column \code{"b.1"}: value of \code{"b[i,1]"} for iteration number
          \code{".iteration"} on chain number \code{".chain"}
-     \item column \code{"b2"}: value of \code{"b[i,2]"} for iteration number
+     \item column \code{"b.2"}: value of \code{"b[i,2]"} for iteration number
          \code{".iteration"} on chain number \code{".chain"}
-     \item column \code{"b3"}: value of \code{"b[i,3]"} for iteration number
+     \item column \code{"b.3"}: value of \code{"b[i,3]"} for iteration number
          \code{".iteration"} on chain number \code{".chain"}
  }
 
