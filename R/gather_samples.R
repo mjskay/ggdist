@@ -329,11 +329,26 @@ gather_samples_long_ = function(model, variable_names, index_names) {
         samples[,c(".chain", ".iteration", variable_names)]
     }
     else {
-        #determine what variables to extract: find variable names with trailing square brackets
-        variable_regex = paste0("^(", paste(variable_names, collapse="|"), ")\\[")
+        index_sep_regex = "[ :,]"
+        index_regex = "([^ :,]+)"
+        
+        #find the variables to extract matching the given names and number of indices
+        variable_regex = paste0("^",
+            #variable name
+            "(", paste(variable_names, collapse="|"), ")\\[",
+            #indices
+            paste0(rep(index_regex, length(index_names)), collapse=index_sep_regex),
+            "\\]"
+            )
         variable_names_index = stri_detect_regex(colnames(samples), variable_regex)
+        if (!any(variable_names_index)) {
+            stop(paste0("No parameters found matching spec: ",
+                "c(", paste0(variable_names, collapse=","), ")",
+                "[", paste0(index_names, collapse=","), "]"
+            ))
+        }
         variable_names = colnames(samples)[variable_names_index]
-
+        
         #rename columns to drop trailing "]" to eliminate extraneous last column
         #when we do separate(), below. e.g. "x[1,2]" becomes "x[1,2". Do the same
         #with variable_names so we can select the columns
@@ -353,8 +368,9 @@ gather_samples_long_ = function(model, variable_names, index_names) {
             #make long format for the variables we want to split
             gather_(".variable", ".value", variable_names) %>%
             #next, split indices in variable names into columns
-            separate_(".variable", c(".variable", temp_index_names), sep="[ :,]|\\[|\\]",
-                convert=TRUE #converts indices to numerics
+            separate_(".variable", c(".variable", ".indices"), sep="\\[|\\]") %>%
+            separate_(".indices", temp_index_names, sep=index_sep_regex,
+                convert=TRUE #converts indices to numerics if applicable
             ) %>%
             #now, make the value of each variable a column
             spread_(".variable", ".value") %>%
