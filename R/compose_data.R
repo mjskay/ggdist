@@ -99,7 +99,7 @@ as.data_list = function(object, name="", ...) UseMethod("as.data_list")
 #' @rdname as.data_list
 #' @export
 as.data_list.default = function(object, name="", ...) {
-    warning(deparse(name), " has unsupported type ", deparse(class(object)), " and was dropped.")
+    warning(deparse0(name), " has unsupported type ", deparse0(class(object)), " and was dropped.")
     data_list()
 }
 #' @rdname as.data_list
@@ -109,7 +109,7 @@ as.data_list.numeric = function(object, name="",
         ...) {
     data = data_list(if (scalar_as_array) as.array(object) else object)
     if (name == "") {	#name unspecified, warn
-        warning("No name provided for value ", deparse(object, nlines=1))
+        warning("No name provided for value ", deparse0(object))
     }
     names(data) = name
     data
@@ -124,7 +124,7 @@ as.data_list.logical = function(object, name="", ...) {
 as.data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
     data = as.data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
     if (any(table(object) == 0)) {
-        warning("Some levels of factor ", deparse(name), " are unused. This may cause issues if you are using it as an index in a model.")
+        warning("Some levels of factor ", deparse0(name), " are unused. This may cause issues if you are using it as an index in a model.")
     }
     data[[.n_name(name)]] = length(levels(object))
     data
@@ -229,7 +229,7 @@ compose_data = function(..., .n_name = n_prefix("n")) {
         names(objects) = rep("", length(objects))
     }
     #give a name to any unnamed argument based on its unevaluated value
-    names_from_arg_values = make.names(sapply(as.list(substitute(list(...)))[-1], deparse))
+    names_from_arg_values = make.names(sapply(as.list(substitute(list(...)))[-1], deparse0))
     unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
     names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
     #convert into data list 

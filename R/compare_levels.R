@@ -102,8 +102,8 @@ comparison_types = within(list(), {
 #' @export
 compare_levels = function(samples, variable, by, fun=`-`, comparison=default, indices=c(".chain",".iteration")) {
     eval(bquote(compare_levels_(samples, 
-                .(deparse(substitute(variable))), 
-                .(deparse(substitute(by))), 
+                .(deparse0(substitute(variable))), 
+                .(deparse0(substitute(by))), 
                 .(substitute(fun)),
                 .(substitute(comparison),
                 .(indices))
@@ -126,7 +126,7 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, i
     
     # determine a pretty function name
     fun_language = substitute(fun)
-    fun_name = if (is.name(fun_language)) deparse(fun_language) else ":"
+    fun_name = if (is.name(fun_language)) deparse0(fun_language) else ":"
 
     #get a version of the samples data frame without columns representing
     #the levels we are comparing by (these columns will be included
@@ -147,7 +147,7 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, i
             comparison = if (is.language(levels.)) {
                 #user-supplied quoted expressions are evaluated within the data frame
                 data.frame(
-                    by = deparse(levels.),
+                    by = deparse0(levels.),
                     variable = eval(levels., samples_wide)
                 )
             }

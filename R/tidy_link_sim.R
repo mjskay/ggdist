@@ -64,10 +64,10 @@ tidy_sim = function(data, fit, name = NULL, ...) {
     
     name = substitute(name)
     if (is.null(name)) {
-        name = paste0(deparse(first_y_expr(fit)), ".predicted")
+        name = paste0(deparse0(first_y_expr(fit)), ".predicted")
     }
     else {
-        name = deparse(name)
+        name = deparse0(name)
     }
     tidy_link_sim_(rethinking::sim, data, fit, single_response_name = name, ...)
 }

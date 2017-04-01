@@ -121,7 +121,7 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
         
         samples_wide = spread(samples, ff, tau)
         ref = ldply(.(a + b, exp(c - f)), function(levels.) {
-                samples_wide$ff = factor(deparse(levels.))
+                samples_wide$ff = factor(deparse0(levels.))
                 samples_wide$tau = eval(levels., samples_wide)  
                 samples_wide
             }) %>% select(-one_of(ff_labels))
