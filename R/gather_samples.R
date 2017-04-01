@@ -49,14 +49,14 @@ all_names <- function(x) {
 # 2. A vector of index names (or NULL if none)
 # 3. The name of the wide index (or NULL if none)
 #' @importFrom stats setNames
-#' @importFrom purrr reduce map2
+#' @importFrom purrr reduce set_names map map2
 parse_variable_spec = function(variable_spec) {
     names = all_names(variable_spec$expr)
     #specs for each bare variable name in the spec expression
-    names_spec = 
-        lapply(names, function(name) list(name, NULL, NULL)) %>%
-        setNames(names)
-    
+    names_spec = names %>%
+        set_names() %>%
+        map(function(name) list(name, NULL, NULL))
+
     spec_env = c(
         names_spec,
         list(
