@@ -28,6 +28,7 @@ Imports:
     MASS,
     magrittr
 Suggests:
+    Cairo,
     knitr,
     ggstance,
     import,
