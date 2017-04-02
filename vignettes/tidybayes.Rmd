@@ -14,7 +14,7 @@ vignette: >
 ## Introduction
 
 This vignette introduces the `tidybayes` package, which facilitates the use of tidy data (one observation
-per row) with Bayesian samplers in R. This vignette is geared towards working with tidy data in general-purpose samplers like JAGS or Stan. For a similar introduction to the use of `tidybayes` with high-level modelling functions such as those in `brms` or `rstanarm`, see also [vignette("tidy-rstanarm")](tidy-rstanarm.html).
+per row) with Bayesian samplers in R. This vignette is geared towards working with tidy data in general-purpose samplers like JAGS or Stan. For a similar introduction to the use of `tidybayes` with high-level modelling functions such as those in `brms` or `rstanarm`, see also <code>[vignette("tidy-rstanarm")](tidy-rstanarm.html)</code>.
 
 The default output (and sometimes input) data formats of popular samplers
 like JAGS and Stan often don't quite conform to the ideal of [tidy data](http://dx.doi.org/10.18637/jss.v059.i10). For example, input formats
@@ -61,9 +61,18 @@ library(rstan)
 
 These options help Stan run faster:
 
-```{r}
+```{r, eval=FALSE}
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
+```
+
+```{r, include=FALSE}
+# While the previous code chunk is the actual recommended approach,
+# CRAN vignette building policy limits us to 2 cores, so we use at most
+# 2 to build this vignette (but show the previous chunk to the reader
+# as a best pratice example)
+rstan_options(auto_write = TRUE)
+options(mc.cores = min(2, parallel::detectCores()))
 ```
 
 And these options use a simpler ggplot theme:

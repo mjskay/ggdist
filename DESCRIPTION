@@ -28,6 +28,7 @@ Imports:
     MASS,
     magrittr
 Suggests:
+    knitr,
     ggstance,
     import,
     testthat,

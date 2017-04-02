@@ -42,9 +42,18 @@ library(rstanarm)
 
 These options help Stan run faster:
 
-```{r}
+```{r, eval=FALSE}
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
+```
+
+```{r, include=FALSE}
+# While the previous code chunk is the actual recommended approach,
+# CRAN vignette building policy limits us to 2 cores, so we use at most
+# 2 to build this vignette (but show the previous chunk to the reader
+# as a best pratice example)
+rstan_options(auto_write = TRUE)
+options(mc.cores = min(2, parallel::detectCores()))
 ```
 
 And these options use a simpler ggplot theme:
@@ -152,7 +161,7 @@ m %>%
     gather_samples(b[,,condition])
 ```
 
-__Note:__ If you have used `gather_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `gather_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `gather_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see [vignette("tidybayes")](tidybayes.html).
+__Note:__ If you have used `gather_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `gather_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `gather_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
 ## Point estimates and intervals
 
