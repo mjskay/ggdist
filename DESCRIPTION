@@ -42,4 +42,5 @@ Remotes: rmcelreath/rethinking
 License: GPL (>= 2)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: https://github.com/mjskay/tidybayes
+VignetteBuilder: knitr
 RoxygenNote: 5.0.1
