@@ -36,6 +36,7 @@ Suggests:
     gamlss,
     runjags,
     rstanarm,
+    rstantools,
     brms
 Enhances:
     rethinking
