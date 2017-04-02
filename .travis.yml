@@ -13,6 +13,7 @@ r_binary_packages:
  - runjags
  - RCurl
  - nloptr
+ - Cairo
 r_packages:
  - rstan
  - coda
