@@ -114,12 +114,35 @@ Shunting data from a data frame into a format usable in samplers like JAGS or St
 
 A hierarchical model of our example data might estimate an overall mean across the conditions (`overall_mean`), the standard deviation of the condition means (`condition_mean_sd`), the mean within each condition (`condition_mean[condition]`) and the standard deviation of the observations given a condition mean (`y_sd`):
 
-```{r, echo = FALSE, results = "asis"}
-cat("<div class='sourceCode'><strong style='float:right;padding:1em;'>ABC.stan</strong>
-<pre class='sourceCode stan'><code class='sourceCode stan'>")
-writeLines(readLines("ABC.stan"))
-cat("</code></pre></div>")
+```{stan, output.var="ABC_stan"}
+data {
+    int<lower=1> n;
+    int<lower=1> n_condition;
+    int<lower=1, upper=n_condition> condition[n];
+    real response[n];
+}
+parameters {
+    real overall_mean;
+    vector[n_condition] condition_zoffset;
+    real<lower=0> y_sd;
+    real<lower=0> condition_mean_sd;
+}
+transformed parameters {
+    vector[n_condition] condition_mean;
+    condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
+}
+model {
+    y_sd ~ cauchy(0, 1);                # => half-cauchy(0, 1)
+    condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
+    overall_mean ~ normal(0, 5);
+    condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
+    for (i in 1:n) {
+        response[i] ~ normal(condition_mean[condition[i]], y_sd);
+    }
+}
 ```
+
+We have compiled and loaded this model into the variable `ABC_stan`.
 
 This model expects these variables as input:
 
@@ -136,8 +159,8 @@ compose_data(ABC)
 
 This makes it easy to skip right to running the model without munging the data yourself:
 
-```{r, include=FALSE}
-m = stan("ABC.stan", data = compose_data(ABC), control = list(adapt_delta=0.99))
+```{r}
+m = sampling(ABC_stan, data = compose_data(ABC), control = list(adapt_delta=0.99))
 ```
 
 The results look like this:
