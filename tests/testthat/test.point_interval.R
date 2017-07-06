@@ -5,7 +5,7 @@
 
 library(testthat)
 import::from(plyr, ldply, llply, .)
-import::from(dplyr, `%>%`, group_by, summarise, ungroup)
+import::from(dplyr, `%>%`, group_by, summarise, ungroup, rename)
 library(tidyr)
 library(tidybayes)
 
@@ -37,13 +37,20 @@ test_that("mean_qi works on a grouped variable", {
                 tau = mean(tau)
             )
         
-        result = samples %>%
+        result.broom = samples %>%
             group_by(ff) %>%
             mean_qi(tau)
         
+        result = samples %>%
+            group_by(ff) %>%
+            mean_qi(tau, .broom = FALSE)
+
+        expect_equal(result.broom$tau, ref$tau)
+        expect_equal(result.broom$conf.low, ref$tau.lower)
+        expect_equal(result.broom$conf.high, ref$tau.upper)
         expect_equal(result$tau, ref$tau)
-        expect_equal(result$tau.lower, ref$tau.lower)
-        expect_equal(result$tau.upper, ref$tau.upper)
+        expect_equal(result$tau.low, ref$tau.lower)
+        expect_equal(result$tau.high, ref$tau.upper)
 })
 
 test_that("mean_qi works on multiple columns", {
@@ -66,11 +73,11 @@ test_that("mean_qi works on multiple columns", {
             mean_qi(a, b)
         
         expect_equal(result$a, ref$a)
-        expect_equal(result$a.lower, ref$a.lower)
-        expect_equal(result$a.upper, ref$a.upper)
+        expect_equal(result$a.low, ref$a.lower)
+        expect_equal(result$a.high, ref$a.upper)
         expect_equal(result$b, ref$b)
-        expect_equal(result$b.lower, ref$b.lower)
-        expect_equal(result$b.upper, ref$b.upper)
+        expect_equal(result$b.low, ref$b.lower)
+        expect_equal(result$b.high, ref$b.upper)
 })
 
 test_that("mean_qi works on non-95% probs", {
@@ -84,11 +91,11 @@ test_that("mean_qi works on non-95% probs", {
         )
     
     result = samples %>%
-        mean_qi(tau, prob = .5)
+        mean_qi(tau, .prob = .5)
     
     expect_equal(result$tau, ref$tau)
-    expect_equal(result$tau.lower, ref$tau.lower)
-    expect_equal(result$tau.upper, ref$tau.upper)
+    expect_equal(result$conf.low, ref$tau.lower)
+    expect_equal(result$conf.high, ref$tau.upper)
 })
 
 test_that("mean_qi works on multiple probs with groups", {
@@ -97,33 +104,69 @@ test_that("mean_qi works on multiple probs with groups", {
     ref95 = samples %>%
         group_by(ff) %>%
         summarise(
-            tau.lower = as.vector(quantile(tau, .025)),
-            tau.upper = as.vector(quantile(tau, .975)),
-            tau = mean(tau)
-        )
-
+            conf.low = as.vector(quantile(tau, .025)),
+            conf.high = as.vector(quantile(tau, .975)),
+            tau = mean(tau),
+            prob = .95
+        ) %>%
+        select(ff, tau, conf.low, conf.high, prob)
+    
     ref50 = samples %>%
         group_by(ff) %>%
         summarise(
-            tau.lower = as.vector(quantile(tau, .25)),
-            tau.upper = as.vector(quantile(tau, .75)),
-            tau = mean(tau)
-        )
+            conf.low = as.vector(quantile(tau, .25)),
+            conf.high = as.vector(quantile(tau, .75)),
+            tau = mean(tau),
+            prob = .5
+        ) %>%
+        select(ff, tau, conf.low, conf.high, prob)
+    
+    ref = bind_rows(ref50, ref95)
+
+    result = samples %>%
+        group_by(ff) %>%
+        mean_qi(tau, .prob = c(.5, .95))
+    
+    expect_equal(as.data.frame(result), as.data.frame(ref))
+})
+
+test_that("mean_qi works on multiple probs with multiple vars", {
+    samples = get_samples() %>%
+        mutate(tau2 = tau * 2)
+    
+    ref95 = samples %>%
+        group_by(ff) %>%
+        summarise(
+            tau.low = as.vector(quantile(tau, .025)),
+            tau.high = as.vector(quantile(tau, .975)),
+            tau = mean(tau),
+            tau2.low = as.vector(quantile(tau2, .025)),
+            tau2.high = as.vector(quantile(tau2, .975)),
+            tau2 = mean(tau2),
+            prob = .95
+        ) %>%
+        select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, prob)
+    
+    ref50 = samples %>%
+        group_by(ff) %>%
+        summarise(
+            tau.low = as.vector(quantile(tau, .25)),
+            tau.high = as.vector(quantile(tau, .75)),
+            tau = mean(tau),
+            tau2.low = as.vector(quantile(tau2, .25)),
+            tau2.high = as.vector(quantile(tau2, .75)),
+            tau2 = mean(tau2),
+            prob = .50
+        ) %>%
+        select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, prob)
+    
+    ref = bind_rows(ref50, ref95)
     
     result = samples %>%
         group_by(ff) %>%
-        mean_qi(tau, prob = c(.5, .95))
+        mean_qi(tau, tau2, .prob = c(.5, .95))
     
-    result95 = filter(result, tau.prob == .95)
-    result50 = filter(result, tau.prob == .5)
-
-    expect_equal(nrow(result), nrow(ref50) + nrow(ref95))
-    expect_equal(result50$tau, ref50$tau)
-    expect_equal(result50$tau.lower, ref50$tau.lower)
-    expect_equal(result50$tau.upper, ref50$tau.upper)
-    expect_equal(result95$tau, ref95$tau)
-    expect_equal(result95$tau.lower, ref95$tau.lower)
-    expect_equal(result95$tau.upper, ref95$tau.upper)
+    expect_equal(as.data.frame(result), as.data.frame(ref))
 })
 
 test_that("mean_qi correctly identifies the desired columns when ... is empty", {

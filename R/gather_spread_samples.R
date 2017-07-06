@@ -425,23 +425,9 @@ spread_samples_long_ = function(model, variable_names, index_names) {
 #' @export
 gather_samples = function(model, ...) {
     tidysamples = lapply(lazy_dots(...), function(variable_spec) {
-        wide_samples = spread_samples_(model, variable_spec)
-        
-        # get a list of the names of columns that either start with "." or 
-        # which are grouping columns (these are indices from the spec)
-        #  -> e.g. list(".chain", ".iteration", "i")
-        special_columns = names(wide_samples) %>%
-            {.[stri_startswith_fixed(., ".") | . %in% groups(wide_samples)]}
-        
-        # translate that list into quoted negations of those column names
-        # so we can exclude them from the gather()
-        #  -> e.g. list(~ -.chain, ~ -.iteration, ~ -i)
-        columns_excluded_from_gather = special_columns %>%
-            map(~ quo(-!!as.name(.)))
-        
-        wide_samples %>%
-            gather(term, estimate, !!!columns_excluded_from_gather) %>%
-            group_by(term, add = TRUE)
+        model %>%
+            spread_samples_(variable_spec) %>%
+            gather_terms()
     })
     
     bind_rows(tidysamples)

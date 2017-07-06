@@ -272,7 +272,7 @@ Plotting means and intervals is straightforward using the "pointrange" geom of `
 m %>%
     spread_samples(condition_mean[condition]) %>%
     mean_qi() %>%
-    ggplot(aes(x = condition, y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper)) +
+    ggplot(aes(x = condition, y = condition_mean, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange()
 ```
 
@@ -292,9 +292,9 @@ The results are in a tidy format: one row per index (`condition`) and probabilit
 ```{r}
 m %>%
     spread_samples(condition_mean[condition]) %>%
-    mean_qi(prob = c(.95, .8, .5)) %>%
-    ggplot(aes(x = condition, y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper, 
-        size = -condition_mean.prob    # shorter interval => thicker line
+    mean_qi(.prob = c(.95, .8, .5)) %>%
+    ggplot(aes(x = condition, y = condition_mean, ymin = conf.low, ymax = conf.high, 
+        size = -prob    # shorter interval => thicker line
     )) +
     geom_pointrange(
         fatten = 2         # smaller point estimate (otherwise it is very large)
@@ -343,10 +343,10 @@ And even summarize these as predictive intervals and compare to the data:
 m %>%
     spread_samples(condition_mean[condition], y_sd) %>%
     mutate(y_rep = rnorm(n(), condition_mean, y_sd)) %>%
-    mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
+    mean_qi(y_rep, .prob = c(.95, .8, .5)) %>%
     ggplot(aes(x = condition, y = y_rep)) +
-    geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
-        color = ordered(-y_rep.prob)),
+    geom_linerange(aes(ymin = conf.low, ymax = conf.high, 
+        color = ordered(-prob)),
         size = 4) +
     geom_point(aes(y = response), data = ABC) +
     scale_color_brewer(guide = FALSE)
@@ -362,21 +362,21 @@ samples = m %>%
 
 reps = samples %>%
     mutate(y_rep = rnorm(n(), condition_mean, y_sd)) %>%
-    mean_qi(y_rep, prob = c(.95, .8, .5))
+    mean_qi(y_rep, .prob = c(.95, .8, .5))
 
 parameters = samples %>%
-    mean_qi(condition_mean, prob = c(.95, .66))
+    mean_qi(condition_mean, .prob = c(.95, .66))
    
 ABC %>%
     ggplot(aes(x = condition)) +
     geom_linerange(
-        aes(ymin = y_rep.lower, ymax = y_rep.upper, 
-            color = ordered(-y_rep.prob)),
+        aes(ymin = conf.low, ymax = conf.high, 
+            color = ordered(-prob)),
         size = 4, 
         data = reps) +
     geom_pointrange(
-        aes(y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper, 
-            size = -condition_mean.prob),
+        aes(y = condition_mean, ymin = conf.low, ymax = conf.high, 
+            size = -prob),
         fatten = 1.5, position=position_nudge(x=0.3),
         data = parameters) +
     geom_point(aes(y = response)) +
@@ -409,7 +409,7 @@ The `point_interval` family of functions follow the naming scheme `[mean|median|
 m %>%
     spread_samples(condition_mean[condition]) %>%
     mode_hdi() %>%
-    ggplot(aes(x = condition, y = condition_mean, ymin = condition_mean.lower, ymax = condition_mean.upper)) +
+    ggplot(aes(x = condition, y = condition_mean, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange()
 ```
 
@@ -424,6 +424,6 @@ rbind(
     ggplot(aes(x = y_sd)) +
     stat_density(aes(y = ..scaled.. * 10), data = sd_samples, fill="gray75") +
     geom_point(aes(y = type)) +
-    geom_errorbarh(aes(y = type, xmin = y_sd.lower, xmax = y_sd.upper), height=0)
+    geom_errorbarh(aes(y = type, xmin = conf.low, xmax = conf.high), height=0)
 ```
 
