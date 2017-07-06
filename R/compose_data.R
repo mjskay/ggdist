@@ -20,7 +20,7 @@
 #' @param ...  Items to include in the list.
 #' @return An object of class \code{c("data_list", "list")}
 #' @author Matthew Kay
-#' @seealso \code{\link{compose_data}}, \code{\link{gather_samples}}.
+#' @seealso \code{\link{compose_data}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
 #' @keywords manip
 #' @export
 data_list = function(...) {
@@ -88,7 +88,7 @@ print.data_list = function(x, ...) {
 #' @return An object of class \code{c("data_list", "list")}, where each element
 #' is a translated variable as described above.
 #' @author Matthew Kay
-#' @seealso \code{\link{compose_data}}, \code{\link{gather_samples}}.
+#' @seealso \code{\link{compose_data}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
 #' @keywords manip
 #' @examples
 #' 
@@ -213,7 +213,7 @@ as.data_list.data_list = function(object, name="", ...) {
 #' @return An object of class \code{c("data_list", "list")}, where each element
 #' is a translated variable as described above.
 #' @author Matthew Kay
-#' @seealso \code{\link{as.data_list}}, \code{\link{gather_samples}}.
+#' @seealso \code{\link{as.data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
 #' @keywords manip
 #' @examples
 #' 

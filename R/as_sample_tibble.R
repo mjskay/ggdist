@@ -7,12 +7,12 @@
 #' Get samples from a model as a tibble
 #' 
 #' Extract samples from an MCMC fit into a wide-format data frame with a 
-#' \code{.chain} and \code{.iteration} column, as well as all parameters
-#' as columns. Generally speaking not as useful as \code{\link{gather_samples}}
-#' and is mainly used interally (see `Details`)
+#' \code{.chain} and \code{.iteration} column, as well as all terms
+#' as columns. Generally speaking not as useful as \code{\link{spread_samples}} or 
+#' \code{\link{gather_samples}} and is mainly used interally (see `Details`)
 #' 
-#' You will not typically call this directly; instead use \code{\link{gather_samples}}.
-#' However, to provide support for new models in functions like \code{\link{gather_samples}},
+#' You will not typically call this directly; instead use \code{\link{spread_samples}} or \code{\link{gather_samples}}.
+#' However, to provide support for new models in those functions,
 #' you must provide an implementation of this function, \emph{or} an implementaiton
 #' of \code{\link[coda]{as.mcmc.list}} (\code{as_sample_tibble} should work on any model
 #' with an implementation of \code{\link[coda]{as.mcmc.list}})
@@ -27,8 +27,8 @@
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
 #' \code{.iteration} column, and one column for every parameter in \code{model}.
 #' @author Matthew Kay
-#' @seealso \code{\link{gather_samples}}, which uses this function internally and provides a
-#' friendly interface for extracting tidy data frames from model fits.
+#' @seealso \code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function 
+#' internally and provides a friendly interface for extracting tidy data frames from model fits.
 #' @keywords manip
 #' @aliases as_sample_data_frame
 #' @importFrom purrr map_df 
