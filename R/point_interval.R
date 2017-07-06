@@ -61,6 +61,7 @@
 #' @importFrom purrr map_df map map2 discard
 #' @importFrom dplyr do bind_cols
 #' @importFrom lazyeval lazy_dots as.lazy_dots auto_name
+#' @importFrom stringi stri_startswith_fixed
 #' @export
 point_interval = function(data, ..., prob=.95, point = mean, interval = qi) UseMethod("point_interval")
 #' @rdname point_interval

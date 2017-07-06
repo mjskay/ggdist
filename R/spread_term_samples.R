@@ -1,4 +1,4 @@
-# gather_samples (used to be "extract_samples" or "tidy_samples")
+# spread_samples (used to be "extract_samples" or "tidy_samples")
 # 
 # Author: mjskay
 ###############################################################################
@@ -8,16 +8,21 @@
 globalVariables(c(".."))
 
 
-# DEPRECATED NAMES FOR gather_samples
+# DEPRECATED NAMES FOR spread_samples
 #' @export
 extract_samples = function(...) {
-    .Deprecated("gather_samples")
-    gather_samples(...)
+    .Deprecated("spread_term_samples")
+    spread_term_samples(...)
 }
 #' @export
 tidy_samples = function(...) {
-    .Deprecated("gather_samples")
-    gather_samples(...)
+    .Deprecated("spread_term_samples")
+    spread_term_samples(...)
+}
+#' @export
+gather_samples = function(...) {
+    .Deprecated("spread_term_samples")
+    spread_term_samples(...)
 }
 
 
@@ -95,43 +100,65 @@ parse_variable_spec = function(variable_spec) {
     lazy_eval(variable_spec, spec_env)
 }
 
-#' Gather samples from a Bayesian sampler in a tidy data format
+#' Extract samples of terms in a Bayesian model fit into a tidy data format
 #' 
 #' Extract samples from a Bayesian/MCMC sampler for a variable with the given named
-#' indices into a long-format data frame.
+#' indices into one of two types of long-format data frames.
 #' 
-#' Imagine a JAGS or Stan fit named \code{fit}. The model may contain a variable named 
+#' Imagine a JAGS or Stan fit named \code{fit}. The model may contain a term named 
 #' \code{b[i,v]} (in the JAGS or Stan language) with \code{i} in \code{1:100} and \code{v} in \code{1:3}.
 #' However, samples returned from JAGS or Stan in R will not reflect this indexing structure, instead
 #' they will have multiple columns with names like \code{"b[1,1]"}, \code{"b[2,1]"}, etc.
 #' 
-#' \code{gather_samples} provides a straightforward syntax to translate these columns back into
-#' properly-indexed variables in a tidy (long-format) data frame, optionally recovering
-#' index types (e.g. factor levels) as it does so.
+#' \code{spread_term_samples} and \code{gather_term_samples} provide a straightforward 
+#' syntax to translate these columns back into properly-indexed variables in two different
+#' tidy data frame formats, optionally recovering index types (e.g. factor levels) as it does so.
 #' 
-#' \code{gather_samples} returns data frames already grouped by all indices used on the variables you specify.
+#' \code{spread_term_samples} and \code{gather_term_samples} return data frames already grouped by 
+#' all indices used on the variables you specify.
 #' 
-#' For example, \code{gather_samples(fit, b[i,v])} would return a grouped
+#' The difference between \code{spread_term_samples} is that names of terms in the model will
+#' be spread across the data frame as column names, whereas \code{gather_term_samples} will 
+#' gather terms into a single column names \code{"term"} and place estimates of terms into a
+#' column names \code{"estimate"}.
+#' 
+#' For example, \code{spread_term_samples(fit, a[i], b[i,v])} might return a grouped
 #' data frame (grouped by \code{i} and \code{v}), with:
 #' \itemize{
 #'      \item column \code{".chain"}: the chain number 
 #'      \item column \code{".iteration"}: the interation number
-#'      \item column \code{"i"}: value in \code{1:20}
-#'      \item column \code{"v"}: value in \code{1:3}
+#'      \item column \code{"i"}: value in \code{1:5}
+#'      \item column \code{"v"}: value in \code{1:10}
+#'      \item column \code{"a"}: value of \code{"a[i]"} for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
 #'      \item column \code{"b"}: value of \code{"b[i,v]"} for iteration number
 #'          \code{".iteration"} on chain number \code{".chain"}
 #'  }
-#' 
-#' \code{gather_samples} can use type information applied to the \code{fit}
-#' object by \code{\link{recover_types}} to convert columns back into their
-#' original types. This is particularly helpful if some of the indices in
+#'  
+#' \code{gather_term_samples(fit, a[i], b[i,v])} on the same fit would return a grouped
+#' data frame (grouped by \code{i} and \code{v}), with:
+#' \itemize{
+#'      \item column \code{".chain"}: the chain number 
+#'      \item column \code{".iteration"}: the interation number
+#'      \item column \code{"i"}: value in \code{1:5}
+#'      \item column \code{"v"}: value in \code{1:10}, or \code{NA} 
+#'          if \code{"term"} is \code{"a"}.
+#'      \item column \code{"term"}: value in \code{c("a", "b")}.
+#'      \item column \code{"estimate"}: value of \code{"a[i]"} (when \code{"term"} is \code{"a"})
+#'          or \code{"b[i,v]"} (when \code{"term"} is \code{"b"}) for iteration number
+#'          \code{".iteration"} on chain number \code{".chain"}
+#'  }
+#'  
+#' \code{spread_term_samples} and \code{gather_term_samples} can use type information
+#' applied to the \code{fit} object by \code{\link{recover_types}} to convert columns 
+#' back into their original types. This is particularly helpful if some of the indices in
 #' your model were originally factors. For example, if the \code{v} index
 #' in the original data frame \code{data} was a factor with levels \code{c("a","b","c")},
-#' then we could use \code{recover_types} before \code{gather_samples}:
+#' then we could use \code{recover_types} before \code{spread_term_samples}:
 #' 
 #' \preformatted{fit \%>\%
 #'     recover_types(data) %\>\%
-#'     gather_samples(fit, b[i,v])
+#'     spread_term_samples(fit, b[i,v])
 #'  }
 #'  
 #' Which would return the same data frame as above, except the \code{"v"} column
@@ -142,31 +169,44 @@ parse_variable_spec = function(variable_spec) {
 #' For example, if we have a variable d[i] with the same i subscript 
 #' as b[i,v], and a variable x with no subscripts, we could do this:
 #' 
-#' \preformatted{gather_samples(fit, x, d[i], b[i,v])}
+#' \preformatted{spread_term_samples(fit, x, d[i], b[i,v])}
 #' 
 #' Which is roughly equivalent to this:
 #'
-#' \preformatted{gather_samples(fit, x) \%>\%
-#'     inner_join(gather_samples(fit, d[i])) \%>\%
-#'     inner_join(gather_samples(fit, b[i,v])) \%>\%
+#' \preformatted{spread_term_samples(fit, x) \%>\%
+#'     inner_join(spread_term_samples(fit, d[i])) \%>\%
+#'     inner_join(spread_term_samples(fit, b[i,v])) \%>\%
 #'     group_by(i,v)
 #' }
+#' 
+#' Similarly, this:
+#' 
+#' \preformatted{gather_term_samples(fit, x, d[i], b[i,v])}
+#' 
+#' Is roughly equivalent to this:
+#' 
+#' \preformatted{bind_rows(
+#'     gather_term_samples(fit, x),
+#'     gather_term_samples(fit, d[i]),
+#'     gather_term_samples(fit, b[i,v])
+#' )}
+#' 
 #' 
 #' The \code{c} function can be used to combine multiple variable names that have 
 #' the same indices. For example, if we have several variables with the same
 #' subscripts \code{i} and \code{v}, we could do this:
 #' 
-#' \preformatted{gather_samples(fit, c(w, x, y, z)[i,v])}
+#' \preformatted{spread_term_samples(fit, c(w, x, y, z)[i,v])}
 #' 
 #' Which is roughly equivalent to this:
 #' 
-#' \preformatted{gather_samples(fit, w[i,v], x[i,v], y[i,v], z[i,v])}
+#' \preformatted{spread_term_samples(fit, w[i,v], x[i,v], y[i,v], z[i,v])}
 #' 
 #' Besides being more compact, the \code{c()}-style syntax is currently also
 #' faster (though that may change).
 #' 
 #' Indices can be omitted from the resulting data frame by leaving their names
-#' blank; e.g. \code{gather_samples(fit, b[,v])} will omit the first index of
+#' blank; e.g. \code{spread_term_samples(fit, b[,v])} will omit the first index of
 #' \code{b} from the output. This is useful if an index is known to contain all
 #' the same value in a given model.
 #' 
@@ -174,7 +214,7 @@ parse_variable_spec = function(variable_spec) {
 #' into a wide format and whose names will be the base variable name, plus a dot
 #' ("."), plus the value of the index at \code{..}. For example:
 #' 
-#' \code{gather_samples(fit, b[i,..])} would return a grouped data frame
+#' \code{spread_term_samples(fit, b[i,..])} would return a grouped data frame
 #' (grouped by \code{i}), with:
 #' \itemize{
 #'      \item column \code{".chain"}: the chain number 
@@ -191,18 +231,18 @@ parse_variable_spec = function(variable_spec) {
 #' An optional clause in the form \code{| wide_index} can also be used to put
 #' the data frame into a wide format based on \code{wide_index}. For example, this:
 #' 
-#' \preformatted{gather_samples(fit, b[i,v] | v)}
+#' \preformatted{spread_term_samples(fit, b[i,v] | v)}
 #' 
 #' is roughly equivalent to this:
 #' 
-#' \preformatted{gather_samples(fit, b[i,v]) \%>\% spread(v,b)}
+#' \preformatted{spread_term_samples(fit, b[i,v]) \%>\% spread(v,b)}
 #' 
 #' The main difference between using the \code{|} syntax instead of the
 #' \code{..} syntax is that the \code{|} syntax respects prototypes applied to
 #' indices with \code{\link{recover_types}}, and thus can be used to get
 #' columns with nicer names. For example:
 #' 
-#' \code{fit \%>\% recover_types(data) \%>\% gather_samples(fit, b[i,v] | v)} would return a grouped data frame
+#' \code{fit \%>\% recover_types(data) \%>\% spread_term_samples(fit, b[i,v] | v)} would return a grouped data frame
 #' (grouped by \code{i}), with:
 #' \itemize{
 #'      \item column \code{".chain"}: the chain number 
@@ -228,14 +268,15 @@ parse_variable_spec = function(variable_spec) {
 #' 
 #' ##TODO
 #' 
-#' @aliases extract_samples tidy_samples
+#' @aliases extract_samples tidy_samples gather_samples
 #' @importFrom lazyeval lazy_dots
 #' @importFrom purrr reduce
 #' @importFrom dplyr inner_join
+#' @rdname spread_term_samples
 #' @export
-gather_samples = function(model, ...) {
+spread_term_samples = function(model, ...) {
     tidysamples = lapply(lazy_dots(...), function(variable_spec) {
-        gather_samples_(model, variable_spec) 
+        spread_term_samples_(model, variable_spec) 
     })
     
     #get the groups from all the samples --- when we join them together,
@@ -257,7 +298,7 @@ gather_samples = function(model, ...) {
 #' @importFrom tidyr spread_
 #' @importFrom lazyeval lazy_eval
 #' @importFrom tibble has_name
-gather_samples_ = function(model, variable_spec) {
+spread_term_samples_ = function(model, variable_spec) {
     #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
     spec = parse_variable_spec(variable_spec)
     variable_names = spec[[1]]
@@ -265,7 +306,7 @@ gather_samples_ = function(model, variable_spec) {
     wide_index_name = spec[[3]]
     
     #extract the samples into a long data frame
-    samples = gather_samples_long_(model, variable_names, index_names)
+    samples = spread_term_samples_long_(model, variable_names, index_names)
     
     #convert variable and/or indices back into usable data types
     constructors = attr(model, "constructors")
@@ -313,7 +354,7 @@ gather_samples_ = function(model, variable_spec) {
 ## For example, imagine a variable b[i,v] with i in [1..100] and v in [1..3]. An MCMC sample returned from JAGS 
 ## (for example) would have columns with names like "b[1,1]", "b[2,1]", etc. 
 ##
-## gather_samples_long_(mcmcChain, "b", c("i", "v")) would return a data frame with:
+## spread_term_samples_long_(mcmcChain, "b", c("i", "v")) would return a data frame with:
 ##		column ".sample": values in [1..nrow(mcmcChain)]
 ## 		column "i":		  values in [1..100]
 ##		column "v":		  values in [1..3]
@@ -322,7 +363,7 @@ gather_samples_ = function(model, variable_spec) {
 #' @importFrom tidyr spread_ separate_ gather_
 #' @import stringi
 #' @import dplyr
-gather_samples_long_ = function(model, variable_names, index_names) {
+spread_term_samples_long_ = function(model, variable_names, index_names) {
     samples = as_sample_tibble(model)
     if (is.null(index_names)) {
         #no indices, just return the samples with a sample index added
@@ -379,4 +420,31 @@ gather_samples_long_ = function(model, variable_names, index_names) {
             #group by the desired indices so that we return a pre-grouped data frame to the user
             group_by_(.dots = index_names)
     }
+}
+
+
+#' @rdname spread_term_samples
+#' @export
+gather_term_samples = function(model, ...) {
+    tidysamples = lapply(lazy_dots(...), function(variable_spec) {
+        wide_samples = spread_term_samples_(model, variable_spec)
+        
+        # get a list of the names of columns that either start with "." or 
+        # which are grouping columns (these are indices from the spec)
+        #  -> e.g. list(".chain", ".iteration", "i")
+        special_columns = names(wide_samples) %>%
+            {.[stri_startswith_fixed(., ".") | . %in% groups(wide_samples)]}
+        
+        # translate that list into quoted negations of those column names
+        # so we can exclude them from the gather()
+        #  -> e.g. list(~ -.chain, ~ -.iteration, ~ -i)
+        columns_excluded_from_gather = special_columns %>%
+            map(~ quo(-!!as.name(.)))
+        
+        wide_samples %>%
+            gather(term, estimate, !!!columns_excluded_from_gather) %>%
+            group_by(term, add = TRUE)
+    })
+    
+    bind_rows(tidysamples)
 }
