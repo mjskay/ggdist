@@ -9,4 +9,3 @@ Test data generated from a hierarchical model with normally-distributed errors a
 }
 \keyword{datasets}
 \keyword{internal}
-

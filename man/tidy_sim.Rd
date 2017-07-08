@@ -27,4 +27,3 @@ in a tidy data format (a tidy version of \code{\link[rethinking]{sim}}).
 \seealso{
 \code{\link[rethinking]{sim}}
 }
-

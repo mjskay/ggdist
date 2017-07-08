@@ -42,12 +42,11 @@ in a consistent format: a data frame of bins suitable for use with
 ##TODO
 
 }
-\author{
-Matthew Kay
-}
 \seealso{
 See \code{\link{predict_curve}} and the shortcut
 \code{\link{predict_curve_density}}.
 }
+\author{
+Matthew Kay
+}
 \keyword{manip}
-

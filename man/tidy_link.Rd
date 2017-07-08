@@ -24,4 +24,3 @@ Computes inverse-link linear model samples for \code{\link[rethinking]{map}} and
 \seealso{
 \code{\link[rethinking]{link}}
 }
-

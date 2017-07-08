@@ -114,7 +114,7 @@ summary(m)
 ```
 
 
-## Gathering samples from a fit in tidy-format using `gather_samples`
+## Gathering samples from a fit in tidy-format using `spread_samples`
 
 Now that we have our results, the fun begins: getting the samples out in a tidy format! For example, given these parameters:
 
@@ -126,7 +126,7 @@ Now that we have our results, the fun begins: getting the samples out in a tidy 
 
 We might want a data frame where each row is a sample from either `b[(Intercept) condition:A]`, `...B`, `...C`, `...D`, or `...E`, and where we have columns indexing which iteration of the sampler the sample came from and which condition it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.
 
-The workhorse of `tidybayes` is the `gather_samples` function, which does this extraction for us. It includes a simple specification format that we can use to extract parameters and their indices into tidy-format data frames.
+The workhorse of `tidybayes` is the `spread_samples` function, which does this extraction for us. It includes a simple specification format that we can use to extract parameters and their indices into tidy-format data frames.
 
 ### Gathering parameter indices into a separate column in a tidy format data frame
 
@@ -134,22 +134,22 @@ Given a parameter like this:
 
 `b[(Intercept) condition:D]`
 
-We can provide `gather_samples` with a column specification like this:
+We can provide `spread_samples` with a column specification like this:
 
 `b[term,group,condition]`
 
-Where `term` corresponds to `(Intercept)`, `group` to `condition`, and `condition` to `D`. There is nothing too magical about what `gather_samples` does with this specification: under the hood, it splits the parameter indices by spaces, `:`, and `,`, and lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)`, `condition`, and `D`, and gather samples lets us extract these indices as columns and get a tidy data frame of samples of `b`:
+Where `term` corresponds to `(Intercept)`, `group` to `condition`, and `condition` to `D`. There is nothing too magical about what `spread_samples` does with this specification: under the hood, it splits the parameter indices by spaces, `:`, and `,`, and lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)`, `condition`, and `D`, and gather samples lets us extract these indices as columns and get a tidy data frame of samples of `b`:
 
 ```{r}
 m %>%
-    gather_samples(b[term,group,condition])
+    spread_samples(b[term,group,condition])
 ```
 
 We can choose whatever names we want for the index columns; e.g.: 
 
 ```{r}
 m %>%
-    gather_samples(b[t,g,c])
+    spread_samples(b[t,g,c])
 ```
 
 The more descriptive and less cryptic names from above are probably preferable.
@@ -158,10 +158,10 @@ In this particular model, there is only one term (`(Intercept)`) and one group (
 
 ```{r}
 m %>%
-    gather_samples(b[,,condition])
+    spread_samples(b[,,condition])
 ```
 
-__Note:__ If you have used `gather_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `gather_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `gather_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
+__Note:__ If you have used `spread_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `spread_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `spread_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
 ## Point estimates and intervals
 
@@ -173,14 +173,14 @@ For example, we might gather the samples corresponding to the overall mean and s
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, sigma)
+    spread_samples(`(Intercept)`, sigma)
 ```
 
 Like with `b[term,group,condition]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, sigma) %>%
+    spread_samples(`(Intercept)`, sigma) %>%
     mean_qi(`(Intercept)`, sigma)
 ```
 
@@ -188,7 +188,7 @@ We can specify the columns we want to get means and intervals from, as above, or
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, sigma) %>%
+    spread_samples(`(Intercept)`, sigma) %>%
     mean_qi()
 ```
 
@@ -198,35 +198,35 @@ When we have a parameter with one or more indices, such as `b`, we can apply `me
 
 ```{r}
 m %>%
-    gather_samples(b[,,condition]) %>%
+    spread_samples(b[,,condition]) %>%
     mean_qi()
 ```
 
-How did `mean_qi` know what to aggregate? Data frames returned by `gather_samples` are automatically grouped by all index variables you pass to it; in this case, that means `gather_samples` groups its results by `condition`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
+How did `mean_qi` know what to aggregate? Data frames returned by `spread_samples` are automatically grouped by all index variables you pass to it; in this case, that means `spread_samples` groups its results by `condition`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
 
 ```{r}
 m %>%
-    gather_samples(b[,,condition]) %>%
-    group_by(condition) %>%    # this line not necessary (done by gather_samples)
+    spread_samples(b[,,condition]) %>%
+    group_by(condition) %>%    # this line not necessary (done by spread_samples)
     mean_qi(b)                 # b is not necessary (it is the only non-group column)
 ```
 
 ## Combining variables with different indices in a single tidy format data frame
 
-`gather_samples` supports gathering variables that have different indices in the same data frame. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this `mu`). In this model, that mean is the intercept (`(Intercept)`) plus the effect for a given condition (`b`). 
+`spread_samples` supports gathering variables that have different indices in the same data frame. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this `mu`). In this model, that mean is the intercept (`(Intercept)`) plus the effect for a given condition (`b`). 
 
 We can gather samples from `(Intercept)` and `b` together in a single data frame:
 
 ```{r}
 m %>% 
-    gather_samples(`(Intercept)`, b[,,condition])
+    spread_samples(`(Intercept)`, b[,,condition])
 ```
 
 Within each sample, `(Intercept)` is repeated as necessary to correspond to every index of `b`. Thus, the `mutate` function from dplyr can be used to find their sum, `mu` (which is the estimated mean for each condition):
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition]) %>%
+    spread_samples(`(Intercept)`, b[,,condition]) %>%
     mutate(mu = `(Intercept)` + b) %>%
     mean_qi(mu)
 ```
@@ -235,7 +235,7 @@ m %>%
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition]) %>%
+    spread_samples(`(Intercept)`, b[,,condition]) %>%
     mean_qi(mu = `(Intercept)` + b)
 ```
 
@@ -245,31 +245,31 @@ Plotting means and intervals is straightforward using the "pointrange" geom of `
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition]) %>%
+    spread_samples(`(Intercept)`, b[,,condition]) %>%
     mean_qi(mu = `(Intercept)` + b) %>%
-    ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper)) +
+    ggplot(aes(x = condition, y = mu, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange()
 ```
 
 
 ## Interval estimates with multiple probability levels
 
-`mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `prob =` argument:
+`mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `.prob =` argument:
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition]) %>%
-    mean_qi(mu = `(Intercept)` + b, prob = c(.95, .8, .5))
+    spread_samples(`(Intercept)`, b[,,condition]) %>%
+    mean_qi(mu = `(Intercept)` + b, .prob = c(.95, .8, .5))
 ```
 
-The results are in a tidy format: one row per group and probability level (`mu.prob`). This facilitates plotting. For example, assigning `-mu.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
+The results are in a tidy format: one row per group and probability level (`.prob`). This facilitates plotting. For example, assigning `-.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition]) %>%
-    mean_qi(mu = `(Intercept)` + b, prob = c(.95, .8, .5)) %>%
-    ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper, 
-        size = -mu.prob    # shorter interval => thicker line
+    spread_samples(`(Intercept)`, b[,,condition]) %>%
+    mean_qi(mu = `(Intercept)` + b, .prob = c(.95, .8, .5)) %>%
+    ggplot(aes(x = condition, y = mu, ymin = conf.low, ymax = conf.high, 
+        size = -.prob    # shorter interval => thicker line
     )) +
     geom_pointrange(
         fatten = 2         # smaller point estimate (otherwise it is very large)
@@ -286,7 +286,7 @@ We can use combinations of variables with difference indices to generate predict
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition], sigma) %>%
+    spread_samples(`(Intercept)`, b[,,condition], sigma) %>%
     mutate(y_rep = rnorm(n(), `(Intercept)` + b, sigma)) %>%
     ggplot(aes(x = y_rep)) +
     stat_density() +
@@ -298,12 +298,12 @@ And even summarize these as predictive intervals and compare to the data:
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition], sigma) %>%
+    spread_samples(`(Intercept)`, b[,,condition], sigma) %>%
     mutate(y_rep = rnorm(n(), `(Intercept)` + b, sigma)) %>%
-    mean_qi(y_rep, prob = c(.95, .8, .5)) %>%
+    mean_qi(y_rep, .prob = c(.95, .8, .5)) %>%
     ggplot(aes(x = condition, y = y_rep)) +
-    geom_linerange(aes(ymin = y_rep.lower, ymax = y_rep.upper, 
-        color = ordered(-y_rep.prob)),
+    geom_linerange(aes(ymin = conf.low, ymax = conf.high, 
+        color = ordered(-.prob)),
         size = 4) +
     geom_point(aes(y = response), data = ABC) +
     scale_color_brewer(guide = FALSE)
@@ -315,26 +315,26 @@ Altogether, data, posterior predictions, and estimates of the means:
 
 ```{r}
 samples = m %>%
-    gather_samples(`(Intercept)`, b[,,condition], sigma) %>%
+    spread_samples(`(Intercept)`, b[,,condition], sigma) %>%
     mutate(mu = `(Intercept)` + b)
 
 reps = samples %>%
     mutate(y_rep = rnorm(n(), mu, sigma)) %>%
-    mean_qi(y_rep, prob = c(.95, .8, .5))
+    mean_qi(y_rep, .prob = c(.95, .8, .5))
 
 parameters = samples %>%
-    mean_qi(mu, prob = c(.95, .66))
+    mean_qi(mu, .prob = c(.95, .66))
    
 ABC %>%
     ggplot(aes(x = condition)) +
     geom_linerange(
-        aes(ymin = y_rep.lower, ymax = y_rep.upper, 
-            color = ordered(-y_rep.prob)),
+        aes(ymin = conf.low, ymax = conf.high, 
+            color = ordered(-.prob)),
         size = 4, 
         data = reps) +
     geom_pointrange(
-        aes(y = mu, ymin = mu.lower, ymax = mu.upper, 
-            size = -mu.prob),
+        aes(y = mu, ymin = conf.low, ymax = conf.high, 
+            size = -.prob),
         fatten = 1.5, position=position_nudge(x=0.3),
         data = parameters) +
     geom_point(aes(y = response)) +
@@ -349,12 +349,12 @@ If we wish compare the means from each condition, `compare_levels` facilitates c
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
-    gather_samples(b[,,condition]) %>%
+    spread_samples(b[,,condition]) %>%
     compare_levels(b, by = condition) %>%
     ggplot(aes(x = condition, y = b)) +
-    geom_violin(scale="width", fill="skyblue", color=NA) +
-    stat_summary(aes(size=-..prob..), 
-        fun.data=median_qi, fun.args=list(prob=c(.95,.66)), geom="pointrange", fatten=1.25)+
+    geom_violin(scale="width", fill="gray75", color=NA) +
+    stat_summary(aes(size=-...prob..), 
+        fun.data=median_qi, fun.args=list(.prob=c(.95,.66)), geom="pointrange", fatten=1.25)+
     scale_size_continuous(range=c(0.5,1.5), guide=FALSE) +
     coord_flip()
 ```
@@ -365,16 +365,16 @@ The `point_interval` family of functions follow the naming scheme `[mean|median|
 
 ```{r}
 m %>%
-    gather_samples(`(Intercept)`, b[,,condition]) %>%
+    spread_samples(`(Intercept)`, b[,,condition]) %>%
     mode_hdi(mu = `(Intercept)` + b) %>%
-    ggplot(aes(x = condition, y = mu, ymin = mu.lower, ymax = mu.upper)) +
+    ggplot(aes(x = condition, y = mu, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange()
 ```
 
 This is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:
 
 ```{r}
-sd_samples = m %>% gather_samples(sigma)
+sd_samples = m %>% spread_samples(sigma)
 rbind(
     sd_samples %>% mode_hdi(sigma) %>% mutate(type="mode_hdi"),
     sd_samples %>% mean_qi(sigma) %>% mutate(type="mean_qi")
@@ -382,6 +382,6 @@ rbind(
     ggplot(aes(x = sigma)) +
     stat_density(aes(y = ..scaled.. * 10), data = sd_samples, fill="gray75") +
     geom_point(aes(y = type)) +
-    geom_errorbarh(aes(y = type, xmin = sigma.lower, xmax = sigma.upper), width=0)
+    geom_errorbarh(aes(y = type, xmin = conf.low, xmax = conf.high), width=0)
 ```
 

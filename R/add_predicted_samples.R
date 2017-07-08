@@ -45,7 +45,7 @@ globalVariables(c(".iteration", ".pred"))
 #' sample from the posterior predictive distribution). For convenience, the resulting data
 #' frame comes grouped by the original input rows.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_term_samples}}
+#' @seealso \code{\link{spread_samples}}
 #' @keywords manip
 #' @importFrom magrittr %>%
 #' @importFrom tidyr gather

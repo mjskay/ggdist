@@ -87,13 +87,12 @@ intervals.
 ##TODO
 
 }
-\author{
-Matthew Kay
-}
 \seealso{
 See \code{\link{ggeye}} for a shortcut combining a call to
 \code{\link{ggplot}} with \code{geom_eye}. See \code{\link{geom_violin}} and
 \code{\link{stat_summary}} for the geoms this function is based on.
 }
+\author{
+Matthew Kay
+}
 \keyword{manip}
-

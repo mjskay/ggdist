@@ -42,10 +42,9 @@
 #' side is an expression that may include numeric columns from \code{data} and
 #' variables passed into this function in \code{...}.
 #' @param summary The function to apply to summarize each predicted response.
-#' Useful functions (if you just want a curve) might be \code{\link{median}}
-#' and\code{\link{mean}}, or functions like \code{\link[modeest]{parzen}} from
-#' the \code{modeest} package. If you want predictive distribution at each
-#' point on the curve, try \code{\link{density_bins}} or
+#' Useful functions (if you just want a curve) might be \code{\link{median}},
+#' \code{\link{mean}}, or \code{\link{Mode}}. If you want predictive distribution 
+#' at each point on the curve, try \code{\link{density_bins}} or
 #' \code{\link{histogram_bins}}.
 #' @param ...  Variables defining the curve. The right-hand side of
 #' \code{formula} is evaluated for every combination of values of variables in

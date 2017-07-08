@@ -2,14 +2,14 @@
 % Please edit documentation in R/compose_data.R
 \name{as.data_list}
 \alias{as.data_list}
+\alias{as.data_list.default}
+\alias{as.data_list.numeric}
+\alias{as.data_list.logical}
+\alias{as.data_list.factor}
 \alias{as.data_list.character}
+\alias{as.data_list.list}
 \alias{as.data_list.data.frame}
 \alias{as.data_list.data_list}
-\alias{as.data_list.default}
-\alias{as.data_list.factor}
-\alias{as.data_list.list}
-\alias{as.data_list.logical}
-\alias{as.data_list.numeric}
 \title{Convert data into a data_list}
 \usage{
 as.data_list(object, name = "", ...)
@@ -91,11 +91,10 @@ as.data_list.data.frame as.data_list.data_list
 ##TODO
 
 }
+\seealso{
+\code{\link{compose_data}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+}
 \author{
 Matthew Kay
 }
-\seealso{
-\code{\link{compose_data}}, \code{\link{gather_samples}}.
-}
 \keyword{manip}
-

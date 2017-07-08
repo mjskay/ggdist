@@ -13,7 +13,7 @@ predict_curve_density(data, formula, summary = function(...) density_bins(...,
 \arguments{
 \item{data}{A \code{\link{data.frame}}, \code{\link{tbl_df}} or
 \code{link{grouped_df}} representing posteriors from a Bayesian model as
-might be obtained through \code{\link{gather_samples}}. Grouped data frames
+might be obtained through \code{\link{spread_samples}}. Grouped data frames
 as returned by \code{\link{group_by}} are supported.}
 
 \item{formula}{A formula specifying the prediction curve. The left-hand side
@@ -23,10 +23,9 @@ side is an expression that may include numeric columns from \code{data} and
 variables passed into this function in \code{...}.}
 
 \item{summary}{The function to apply to summarize each predicted response.
-Useful functions (if you just want a curve) might be \code{\link{median}}
-and\code{\link{mean}}, or functions like \code{\link[modeest]{parzen}} from
-the \code{modeest} package. If you want predictive distribution at each
-point on the curve, try \code{\link{density_bins}} or
+Useful functions (if you just want a curve) might be \code{\link{median}},
+\code{\link{mean}}, or \code{\link{Mode}}. If you want predictive distribution 
+at each point on the curve, try \code{\link{density_bins}} or
 \code{\link{histogram_bins}}.}
 
 \item{...}{Variables defining the curve. The right-hand side of
@@ -58,7 +57,7 @@ density_bins} will have columns \code{lhs.mid}, \code{lhs.lower},
 \description{
 Generates a prediction curve (or a density for a prediction curve) given an
 expression based on columns of a data frame (as might be obtained using
-gather_samples) combined with arbitrary other predictors. Obeys groups
+spread_samples) combined with arbitrary other predictors. Obeys groups
 applied by group_by.
 }
 \details{
@@ -87,11 +86,10 @@ curve.
 ##TODO
 
 }
-\author{
-Matthew Kay
-}
 \seealso{
 See \code{\link{density_bins}}.
 }
+\author{
+Matthew Kay
+}
 \keyword{manip}
-

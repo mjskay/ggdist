@@ -107,9 +107,9 @@ test_that("mean_qi works on multiple probs with groups", {
             conf.low = as.vector(quantile(tau, .025)),
             conf.high = as.vector(quantile(tau, .975)),
             tau = mean(tau),
-            prob = .95
+            .prob = .95
         ) %>%
-        select(ff, tau, conf.low, conf.high, prob)
+        select(ff, tau, conf.low, conf.high, .prob)
     
     ref50 = samples %>%
         group_by(ff) %>%
@@ -117,9 +117,9 @@ test_that("mean_qi works on multiple probs with groups", {
             conf.low = as.vector(quantile(tau, .25)),
             conf.high = as.vector(quantile(tau, .75)),
             tau = mean(tau),
-            prob = .5
+            .prob = .5
         ) %>%
-        select(ff, tau, conf.low, conf.high, prob)
+        select(ff, tau, conf.low, conf.high, .prob)
     
     ref = bind_rows(ref50, ref95)
 
@@ -143,9 +143,9 @@ test_that("mean_qi works on multiple probs with multiple vars", {
             tau2.low = as.vector(quantile(tau2, .025)),
             tau2.high = as.vector(quantile(tau2, .975)),
             tau2 = mean(tau2),
-            prob = .95
+            .prob = .95
         ) %>%
-        select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, prob)
+        select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, .prob)
     
     ref50 = samples %>%
         group_by(ff) %>%
@@ -156,9 +156,9 @@ test_that("mean_qi works on multiple probs with multiple vars", {
             tau2.low = as.vector(quantile(tau2, .25)),
             tau2.high = as.vector(quantile(tau2, .75)),
             tau2 = mean(tau2),
-            prob = .50
+            .prob = .50
         ) %>%
-        select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, prob)
+        select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, .prob)
     
     ref = bind_rows(ref50, ref95)
     

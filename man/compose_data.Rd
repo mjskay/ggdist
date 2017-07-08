@@ -62,11 +62,10 @@ the implementations of \code{as.data_list.numeric},
 ##TODO
 
 }
+\seealso{
+\code{\link{as.data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+}
 \author{
 Matthew Kay
 }
-\seealso{
-\code{\link{as.data_list}}, \code{\link{gather_samples}}.
-}
 \keyword{manip}
-

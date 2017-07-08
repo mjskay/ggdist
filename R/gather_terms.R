@@ -1,3 +1,12 @@
+# gather_terms
+# 
+# Author: mjskay
+###############################################################################
+
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c("term", "estimate"))
+
 
 #' Gather terms from a tidy data frame of parameter samples into a single column
 #' 
@@ -8,7 +17,7 @@
 #' \code{ignore_columns} into key/value columns \code{"term"} and \code{"estimate"}.
 #' 
 #' This function uses \code{"term"} and \code{"estimate"} instead of names like \code{"parameter"}
-#' and \code{"value"} in order to be consistent with the naming scheme of \code{\link[broom](tidy)}.
+#' and \code{"value"} in order to be consistent with the naming scheme of \code{\link[broom]{tidy}}.
 #' 
 #' Imagine a data frame \code{data} as returned by \code{spread_samples(fit, a[i], b[i,v])}, like this:
 #' \itemize{
@@ -55,8 +64,10 @@
 #' @seealso \code{\link{spread_samples}}, \code{\link{as_sample_tibble}}.
 #' @keywords manip
 #' @examples
-#' 
+#' \dontrun{
+#' library(dplyr)
 #' data(RankCorr)
+#' 
 #' RankCorr %>%
 #'     spread_samples(b[i,v], tau[i]) %>%
 #'     gather_terms() %>%
@@ -67,7 +78,7 @@
 #'     as_sample_tibble() %>%
 #'     gather_terms() %>%
 #'     mean_qi()
-#' 
+#' }
 #' @importFrom stringi stri_detect_regex
 #' @importFrom magrittr %>%
 #' @importFrom purrr map

@@ -26,11 +26,10 @@ mapping) + geom_eye(...) + coord_flip()}.
 ##TODO
 
 }
-\author{
-Matthew Kay
-}
 \seealso{
 See \code{\link{geom_eye}} for more information.
 }
+\author{
+Matthew Kay
+}
 \keyword{manip}
-

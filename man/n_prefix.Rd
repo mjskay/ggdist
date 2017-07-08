@@ -32,4 +32,3 @@ column name.
 \seealso{
 The \code{.n_name} argument of \code{\link{compose_data}}
 }
-

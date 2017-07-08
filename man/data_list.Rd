@@ -25,11 +25,10 @@ function.  It is used by \code{\link{as.data_list}} to create data lists for
 input into Bayesian samplers. See the implementations of
 \code{as.data_list.numeric}, \code{as.data_list.logical}, etc for examples.
 }
+\seealso{
+\code{\link{compose_data}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+}
 \author{
 Matthew Kay
 }
-\seealso{
-\code{\link{compose_data}}, \code{\link{gather_samples}}.
-}
 \keyword{manip}
-

@@ -19,13 +19,12 @@ Imports:
     tidyr,
     ggplot2,
     stringi,
-    lsmeans,
     LaplacesDemon,
     coda,
-    modelr,
     purrr,
     tibble,
     MASS,
+    rlang,
     magrittr
 Suggests:
     Cairo,
@@ -34,7 +33,6 @@ Suggests:
     import,
     testthat,
     rstan,
-    gamlss,
     runjags,
     rstanarm,
     rstantools,
@@ -46,4 +44,4 @@ License: GPL (>= 2)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: https://github.com/mjskay/tidybayes
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
