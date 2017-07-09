@@ -22,12 +22,6 @@ often be in matrix form (requiring conversion for use with libraries like ggplot
 
 ## Setup
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(  #default code chunk options
-    dev = "CairoPNG"      #nicer PNG figures
-)
-```
-
 The following libraries are required to run this vignette:
 
 ```{r setup, message=FALSE}
@@ -65,8 +59,10 @@ theme_set(theme_light())
 
 ## Example dataset
 
+To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 conditions each:
+
 ```{r eval=FALSE, include=FALSE}
-# generate the dataset used below
+set.seed(5)
 n = 10
 n_condition = 5
 ABC =
@@ -75,13 +71,6 @@ ABC =
         response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
     ) %>%
     arrange(condition)
-#save(ABC, file = "data/ABC.Rdata")
-```
-
-To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 conditions each:
-
-```{r}
-data(ABC, package = "tidybayes")
 ```
 
 A snapshot of the data looks like this:
