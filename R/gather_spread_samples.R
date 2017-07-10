@@ -431,5 +431,13 @@ gather_samples = function(model, ...) {
             gather_terms()
     })
     
-    bind_rows(tidysamples)
+    #get the groups from all the samples --- when we bind them together,
+    #the grouping information is not always retained, so we'll have to recreate
+    #the full set of groups from all the data frames after we bind them
+    groups_ = tidysamples %>%
+        map(groups) %>%
+        reduce(union)
+    
+    bind_rows(tidysamples) %>%
+        group_by_(.dots = groups_)
 }
