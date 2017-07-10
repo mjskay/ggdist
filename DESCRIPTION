@@ -38,6 +38,7 @@ Suggests:
     lsmeans,
     broom,
     forcats,
+    dotwhisker,
     brms
 Enhances:
     rethinking
