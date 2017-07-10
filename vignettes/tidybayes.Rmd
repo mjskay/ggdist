@@ -4,7 +4,8 @@ author: "Matthew Kay"
 date: "`r Sys.Date()`"
 output: 
     rmarkdown::html_vignette:
-        toc: TRUE
+        toc: true
+        df_print: kable
 vignette: >
   %\VignetteIndexEntry{Using Tidy Data with Bayesian Samplers}
   %\VignetteEngine{knitr::rmarkdown}
@@ -76,8 +77,8 @@ options(mc.cores = min(
 #ggplot options
 theme_set(theme_light())
 
-#misc options
-options(width = 90)
+#figure options
+knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 ```
 
 ## Example dataset
@@ -98,7 +99,7 @@ ABC =
 A snapshot of the data looks like this:
 
 ```{r}
-ABC
+head(ABC, 10)
 ```
 
 This is a typical tidy format data frame: one observation per row. Graphically:
@@ -187,7 +188,8 @@ The `spread_samples` method lets us instead extract samples into a data frame in
 
 ```{r}
 m %>%
-    spread_samples(condition_mean[condition])
+    spread_samples(condition_mean[condition]) %>%
+    head(10)
 ```
 
 ### Automatically converting columns and indices back into their original data types
@@ -199,7 +201,8 @@ We can recover this missing type information by passing the model through `recov
 ```{r}
 m %>%
     recover_types(ABC) %>%
-    spread_samples(condition_mean[condition])
+    spread_samples(condition_mean[condition]) %>%
+    head(10)
 ```
 
 Because we often want to make multiple separate calls to `spread_samples`, it is often convenient to decorate the original model using `recover_types` immediately after it has been fit, so we only have to call it once:
@@ -220,7 +223,8 @@ For example, we might extract the samples corresponding to the overall mean and 
 
 ```{r}
 m %>%
-    spread_samples(overall_mean, response_sd)
+    spread_samples(overall_mean, response_sd) %>%
+    head(10)
 ```
 
 Like with `condition_mean[condition]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
@@ -340,7 +344,8 @@ m %>%
 
 ```{r}
 m %>% 
-    spread_samples(overall_mean, condition_mean[condition])
+    spread_samples(overall_mean, condition_mean[condition]) %>%
+    head(10)
 ```
 
 Within each sample, `overall_mean` is repeated as necessary to correspond to every index of `condition_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `mean_qi`:
@@ -423,7 +428,8 @@ Finally, if we want raw parameter names as columns names instead of having indic
 
 ```{r}
 m %>%
-    as_sample_tibble()
+    as_sample_tibble() %>%
+    head(10)
 ```
 
 Combining `as_sample_tibble` with `gather_terms` also allows us to derive similar output to `ggmcmc::ggs`, if desired:
@@ -431,7 +437,8 @@ Combining `as_sample_tibble` with `gather_terms` also allows us to derive simila
 ```{r}
 m %>%
     as_sample_tibble() %>%
-    gather_terms()
+    gather_terms() %>%
+    head(10)
 ```
 
 But again, this approach does not handle parameter indices for us automatically, so using `spread_samples` and `gather_samples` is generally recommended unless you do not have parameter indices to worry about.
@@ -519,7 +526,7 @@ m %>%
     spread_samples(condition_mean[condition]) %>%
     ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
     geom_eyeh(fun.data = mean_qih) + 
-    stat_summaryh(fun.data = mode_hdih, position = position_nudge(y = .1), color="red")
+    stat_summaryh(fun.data = mode_hdih, position = position_nudge(y = .15), color="red")
 ```
 
 The difference is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:

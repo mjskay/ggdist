@@ -1,6 +1,8 @@
 ---
 title: "tidybayes: R Package for composing data for and extracting samples from Bayesian samplers in a tidy data format"
-output: github_document
+output: 
+    github_document:
+        df_print: kable
 ---
 
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
@@ -178,7 +180,8 @@ Now we can extract parameters of interest using `spread_samples`, which automati
 
 ```{r}
 m %>%
-    spread_samples(condition_mean[condition], response_sd)
+    spread_samples(condition_mean[condition], response_sd) %>%
+    head(15)  # just show the first few rows
 ```
 
 The condition numbers are automatically turned back into text ("A", "B", "C", ...) and split into their own column. A long-format data frame is returned with a row for every iteration $\times$ every combination of indices across all variables given to `spread_samples`; for example, because `response_sd` here is not indexed by `condition`, within the same iteration it has the same value for each row corresponding to a different `condition` (some other formats supported by `tidybayes` are discussed in `vignette("tidybayes")`; in particular, the format returned by `gather_samples`).

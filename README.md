@@ -122,24 +122,27 @@ Now we can extract parameters of interest using `spread_samples`, which automati
 
 ``` r
 m %>%
-    spread_samples(condition_mean[condition], response_sd)
+    spread_samples(condition_mean[condition], response_sd) %>%
+    head(15)  # just show the first few rows
 ```
 
-    ## # A tibble: 20,000 x 5
-    ## # Groups:   condition [5]
-    ##    .chain .iteration condition condition_mean response_sd
-    ##     <int>      <int>    <fctr>          <dbl>       <dbl>
-    ##  1      1          1         A    -0.08982271   0.5405636
-    ##  2      1          1         B     1.14823816   0.5405636
-    ##  3      1          1         C     1.47873938   0.5405636
-    ##  4      1          1         D     0.94980609   0.5405636
-    ##  5      1          1         E    -0.84955620   0.5405636
-    ##  6      1          2         A     0.36474904   0.5395112
-    ##  7      1          2         B     0.80489807   0.5395112
-    ##  8      1          2         C     1.82496133   0.5395112
-    ##  9      1          2         D     0.95355302   0.5395112
-    ## 10      1          2         E    -0.82310642   0.5395112
-    ## # ... with 19,990 more rows
+|  .chain|  .iteration| condition |  condition\_mean|  response\_sd|
+|-------:|-----------:|:----------|----------------:|-------------:|
+|       1|           1| A         |       -0.0898227|     0.5405636|
+|       1|           1| B         |        1.1482382|     0.5405636|
+|       1|           1| C         |        1.4787394|     0.5405636|
+|       1|           1| D         |        0.9498061|     0.5405636|
+|       1|           1| E         |       -0.8495562|     0.5405636|
+|       1|           2| A         |        0.3647490|     0.5395112|
+|       1|           2| B         |        0.8048981|     0.5395112|
+|       1|           2| C         |        1.8249613|     0.5395112|
+|       1|           2| D         |        0.9535530|     0.5395112|
+|       1|           2| E         |       -0.8231064|     0.5395112|
+|       1|           3| A         |        0.4643932|     0.5189325|
+|       1|           3| B         |        0.8707345|     0.5189325|
+|       1|           3| C         |        1.6941884|     0.5189325|
+|       1|           3| D         |        0.8334538|     0.5189325|
+|       1|           3| E         |       -0.6453520|     0.5189325|
 
 The condition numbers are automatically turned back into text ("A", "B", "C", ...) and split into their own column. A long-format data frame is returned with a row for every iteration × every combination of indices across all variables given to `spread_samples`; for example, because `response_sd` here is not indexed by `condition`, within the same iteration it has the same value for each row corresponding to a different `condition` (some other formats supported by `tidybayes` are discussed in `vignette("tidybayes")`; in particular, the format returned by `gather_samples`).
 
@@ -171,12 +174,13 @@ linear_estimates =
 linear_estimates
 ```
 
-    ##   condition   estimate std.error df   conf.low  conf.high model
-    ## 1         A  0.1815842  0.173236 45 -0.1673310  0.5304993   OLS
-    ## 2         B  1.0142144  0.173236 45  0.6652993  1.3631296   OLS
-    ## 3         C  1.8745839  0.173236 45  1.5256687  2.2234990   OLS
-    ## 4         D  1.0271794  0.173236 45  0.6782642  1.3760946   OLS
-    ## 5         E -0.9352260  0.173236 45 -1.2841411 -0.5863108   OLS
+| condition |    estimate|  std.error|   df|    conf.low|   conf.high| model |
+|:----------|-----------:|----------:|----:|-----------:|-----------:|:------|
+| A         |   0.1815842|   0.173236|   45|  -0.1673310|   0.5304993| OLS   |
+| B         |   1.0142144|   0.173236|   45|   0.6652993|   1.3631296| OLS   |
+| C         |   1.8745839|   0.173236|   45|   1.5256687|   2.2234990| OLS   |
+| D         |   1.0271794|   0.173236|   45|   0.6782642|   1.3760946| OLS   |
+| E         |  -0.9352260|   0.173236|   45|  -1.2841411|  -0.5863108| OLS   |
 
 The output from `mean_qi` when given a single parameter uses `conf.low` and `conf.high` for interval names so that it lines up with `tidy`:
 
@@ -188,15 +192,13 @@ bayes_estimates = m %>%
 bayes_estimates
 ```
 
-    ## # A tibble: 5 x 6
-    ## # Groups:   condition [5]
-    ##   condition   estimate   conf.low  conf.high .prob model
-    ##      <fctr>      <dbl>      <dbl>      <dbl> <dbl> <chr>
-    ## 1         A  0.1969442 -0.1443410  0.5489010  0.95 Bayes
-    ## 2         B  1.0072787  0.6539753  1.3618216  0.95 Bayes
-    ## 3         C  1.8398750  1.4953742  2.1753322  0.95 Bayes
-    ## 4         D  1.0165425  0.6763650  1.3494475  0.95 Bayes
-    ## 5         E -0.8904673 -1.2314528 -0.5464018  0.95 Bayes
+| condition |    estimate|    conf.low|   conf.high|  .prob| model |
+|:----------|-----------:|-----------:|-----------:|------:|:------|
+| A         |   0.1969442|  -0.1443410|   0.5489010|   0.95| Bayes |
+| B         |   1.0072787|   0.6539753|   1.3618216|   0.95| Bayes |
+| C         |   1.8398750|   1.4953742|   2.1753322|   0.95| Bayes |
+| D         |   1.0165425|   0.6763650|   1.3494475|   0.95| Bayes |
+| E         |  -0.8904673|  -1.2314528|  -0.5464018|   0.95| Bayes |
 
 This makes it easy to bind the two estimates together and plot them:
 
