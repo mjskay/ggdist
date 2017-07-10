@@ -40,7 +40,7 @@ Suggests:
 Enhances:
     rethinking
 Remotes: rmcelreath/rethinking
-License: GPL (>= 2)
+License: GPL (>= 3)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: https://github.com/mjskay/tidybayes
 VignetteBuilder: knitr
