@@ -4,14 +4,21 @@
 \alias{point_interval}
 \alias{point_interval.default}
 \alias{point_interval.numeric}
+\alias{point_intervalh}
 \alias{qi}
 \alias{hdi}
 \alias{mean_qi}
+\alias{mean_qih}
 \alias{median_qi}
+\alias{median_qih}
 \alias{mode_qi}
+\alias{mode_qih}
 \alias{mean_hdi}
+\alias{mean_hdih}
 \alias{median_hdi}
+\alias{median_hdih}
 \alias{mode_hdi}
+\alias{mode_hdih}
 \title{Point and interval estimates for tidy sample data}
 \usage{
 point_interval(.data, ..., .prob = 0.95, .point = mean, .interval = qi,
@@ -23,21 +30,35 @@ point_interval(.data, ..., .prob = 0.95, .point = mean, .interval = qi,
 \method{point_interval}{numeric}(.data, ..., .prob = 0.95, .point = mean,
   .interval = qi, .broom = FALSE)
 
+point_intervalh(...)
+
 qi(x, .prob = 0.95)
 
 hdi(x, .prob = 0.95)
 
 mean_qi(.data, ..., .prob = 0.95)
 
+mean_qih(...)
+
 median_qi(.data, ..., .prob = 0.95)
+
+median_qih(...)
 
 mode_qi(.data, ..., .prob = 0.95)
 
+mode_qih(...)
+
 mean_hdi(.data, ..., .prob = 0.95)
+
+mean_hdih(...)
 
 median_hdi(.data, ..., .prob = 0.95)
 
+median_hdih(...)
+
 mode_hdi(.data, ..., .prob = 0.95)
+
+mode_hdih(...)
 }
 \arguments{
 \item{.data}{Data frame (or grouped data frame as returned by \code{\link{group_by}})
@@ -90,7 +111,13 @@ data frame with one row per value of \code{.prob} and three columns:
 corresponding to the interval. This behavior allows \code{point_interval}
 and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
 to be easily used to plot intervals in ggplot using methods like 
-\code{\link{geom_eye}}, \code{\link{ggeye}}, or \code{\link{stat_summary}}.
+\code{\link{geom_eye}}, \code{\link{geom_eyeh}}, or \code{\link{stat_summary}}.
+
+The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{mean_qih})
+behave identically to the function without the h, except that when passed a vector,
+they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of 
+\code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
+\code{fun.data = } argument of \code{stat_summaryh}.
 
 \code{mean_qi}, \code{mode_qi}, etc are short forms for 
 \code{point_interval(..., .point = mean, .interval = qi)}, etc.

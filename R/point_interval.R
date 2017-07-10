@@ -31,7 +31,13 @@ globalVariables(c("y", "ymin", "ymax"))
 #' corresponding to the interval. This behavior allows \code{point_interval}
 #' and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
 #' to be easily used to plot intervals in ggplot using methods like 
-#' \code{\link{geom_eye}}, \code{\link{ggeye}}, or \code{\link{stat_summary}}.
+#' \code{\link{geom_eye}}, \code{\link{geom_eyeh}}, or \code{\link{stat_summary}}.
+#'
+#' The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{mean_qih})
+#' behave identically to the function without the h, except that when passed a vector,
+#' they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of 
+#' \code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
+#' \code{fun.data = } argument of \code{stat_summaryh}.
 #'
 #' \code{mean_qi}, \code{mode_qi}, etc are short forms for 
 #' \code{point_interval(..., .point = mean, .interval = qi)}, etc.
@@ -168,6 +174,10 @@ point_interval.numeric = function(.data, ..., .prob=.95, .point = mean, .interva
     }
 }
 
+#' @rdname point_interval
+#' @export
+point_intervalh = flip_aes(point_interval)
+
 #' @importFrom stats quantile
 #' @export
 #' @rdname point_interval
@@ -191,8 +201,16 @@ mean_qi = function(.data, ..., .prob = .95)
 
 #' @export
 #' @rdname point_interval
+mean_qih = flip_aes(mean_qi)
+
+#' @export
+#' @rdname point_interval
 median_qi = function(.data, ..., .prob = .95) 
     point_interval(.data, ..., .prob = .prob, .point = median, .interval = qi)
+
+#' @export
+#' @rdname point_interval
+median_qih = flip_aes(median_qi)
 
 #' @importFrom LaplacesDemon Mode
 #' @export
@@ -202,16 +220,32 @@ mode_qi = function(.data, ..., .prob = .95)
 
 #' @export
 #' @rdname point_interval
+mode_qih = flip_aes(mode_qi)
+
+#' @export
+#' @rdname point_interval
 mean_hdi = function(.data, ..., .prob = .95) 
     point_interval(.data, ..., .prob = .prob, .point = mean, .interval = hdi)
+
+#' @export
+#' @rdname point_interval
+mean_hdih = flip_aes(mean_hdi)
 
 #' @export
 #' @rdname point_interval
 median_hdi = function(.data, ..., .prob = .95) 
     point_interval(.data, ..., .prob = .prob, .point = median, .interval = hdi)
 
+#' @export
+#' @rdname point_interval
+median_hdih = flip_aes(median_hdi)
+
 #' @importFrom LaplacesDemon Mode
 #' @export
 #' @rdname point_interval
 mode_hdi = function(.data, ..., .prob = .95) 
     point_interval(.data, ..., .prob = .prob, .point = Mode, .interval = hdi)
+
+#' @export
+#' @rdname point_interval
+mode_hdih = flip_aes(mode_hdi)
