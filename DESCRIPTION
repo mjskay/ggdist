@@ -25,17 +25,19 @@ Imports:
     tibble,
     MASS,
     rlang,
+    ggstance,
     magrittr
 Suggests:
-    Cairo,
     knitr,
-    ggstance,
     import,
     testthat,
     rstan,
     runjags,
     rstanarm,
     rstantools,
+    lsmeans,
+    broom,
+    forcats,
     brms
 Enhances:
     rethinking

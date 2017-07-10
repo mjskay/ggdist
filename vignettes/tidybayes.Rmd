@@ -50,6 +50,8 @@ library(dplyr)
 library(forcats)
 library(ggplot2)
 library(ggstance)
+library(lsmeans)
+library(broom)
 library(rstan)
 library(tidybayes)
 ```
@@ -61,7 +63,7 @@ rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 ```
 
-```{r, include=FALSE}
+```{r hidden_options, include=FALSE}
 # While the previous code chunk is the actual recommended approach,
 # CRAN vignette building policy limits us to 2 cores, so we use at most
 # 2 to build this vignette when on CRAN (but show the previous chunk to
@@ -70,20 +72,19 @@ rstan_options(auto_write = TRUE)
 options(mc.cores = min(
     ifelse(Sys.getenv("NOT_CRAN", unset = "true") == "true", Inf, 2), 
     parallel::detectCores()))
-```
 
-And these options use a simpler ggplot theme:
-
-```{r}
+#ggplot options
 theme_set(theme_light())
-```
 
+#misc options
+options(width = 90)
+```
 
 ## Example dataset
 
 To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 conditions each:
 
-```{r eval=FALSE, include=FALSE}
+```{r}
 set.seed(5)
 n = 10
 n_condition = 5
@@ -134,7 +135,7 @@ transformed parameters {
     condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
 }
 model {
-    response_sd ~ cauchy(0, 1);                # => half-cauchy(0, 1)
+    response_sd ~ cauchy(0, 1);         # => half-cauchy(0, 1)
     condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
     overall_mean ~ normal(0, 5);
     condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
@@ -215,7 +216,7 @@ Now we can omit the `recover_types` call before subsequent calls to `spread_samp
 
 `tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
 
-For example, we might gather the samples corresponding to the overall mean and standard deviation of observations:
+For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:
 
 ```{r}
 m %>%
