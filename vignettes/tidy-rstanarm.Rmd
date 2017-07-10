@@ -12,6 +12,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+</style>
+
+
 ## Introduction
 
 This vignette describes how to use the `tidybayes` package to extract tidy samples from `rstanarm`. For a more general introduction to `tidybayes` and its use on more general-purpose sampling languages (like Stan and JAGS), see [vignette("tidybayes")](tidybayes.html).
@@ -25,7 +32,7 @@ often be in matrix form (requiring conversion for use with libraries like ggplot
 
 The following libraries are required to run this vignette:
 
-```{r setup, message=FALSE}
+```{r setup, message = FALSE, warning = FALSE}
 library(magrittr)
 library(dplyr)
 library(tidybayes)
@@ -64,7 +71,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 
 To demonstrate `tidybayes`, we will use a simple dataset with 10 observations from 5 conditions each:
 
-```{r eval=FALSE, include=FALSE}
+```{r}
 set.seed(5)
 n = 10
 n_condition = 5
@@ -80,6 +87,7 @@ A snapshot of the data looks like this:
 ```{r}
 head(ABC, 10)
 ```
+*(10 rows of `r nrow(ABC)`)*
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
@@ -138,6 +146,7 @@ m %>%
     spread_samples(b[term,group,condition]) %>%
     head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
 
 We can choose whatever names we want for the index columns; e.g.: 
 
@@ -146,6 +155,7 @@ m %>%
     spread_samples(b[t,g,c]) %>%
     head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
 
 But the more descriptive and less cryptic names from the previous example are probably preferable.
 
@@ -156,6 +166,7 @@ m %>%
     spread_samples(b[,,condition]) %>%
     head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
 
 __Note:__ If you have used `spread_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `spread_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `spread_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
@@ -163,7 +174,7 @@ __Note:__ If you have used `spread_samples` with raw samples from Stan or JAGS, 
 
 ### With simple parameters
 
-`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
+`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
 
 For example, we might gather the samples corresponding to the overall mean and standard deviation of observations:
 
@@ -172,6 +183,7 @@ m %>%
     spread_samples(`(Intercept)`, sigma) %>%
     head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, sigma))`)*
 
 Like with `b[term,group,condition]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
 
@@ -231,6 +243,7 @@ m %>%
     spread_samples(`(Intercept)`, b[,,condition]) %>%
     head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
 
 Within each sample, `(Intercept)` is repeated as necessary to correspond to every index of `b`. Thus, the `mutate` function from dplyr can be used to find their sum, `condition_mean` (which is the estimated mean for each condition):
 
@@ -370,7 +383,7 @@ m %>%
 
 ## Alternative estimates and intervals: mean, median, mode; qi, hdi
 
-The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (aka equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Replacing `mean_qi` with `mode_hdi` in the previous example yields mode and HDI instead of mean and quantile interval:
+The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Replacing `mean_qi` with `mode_hdi` in the previous example yields mode and HDI instead of mean and quantile interval:
 
 ```{r}
 m %>%

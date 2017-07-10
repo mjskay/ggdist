@@ -12,6 +12,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+</style>
+
+
 ## Introduction
 
 This vignette introduces the `tidybayes` package, which facilitates the use of tidy data (one observation
@@ -101,6 +108,7 @@ A snapshot of the data looks like this:
 ```{r}
 head(ABC, 10)
 ```
+*(10 rows of `r nrow(ABC)`)*
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
@@ -191,6 +199,7 @@ m %>%
     spread_samples(condition_mean[condition]) %>%
     head(10)
 ```
+*(10 rows of `r nrow(ABC)`)*
 
 ### Automatically converting columns and indices back into their original data types
 
@@ -204,6 +213,7 @@ m %>%
     spread_samples(condition_mean[condition]) %>%
     head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, condition_mean[condition]))`)*
 
 Because we often want to make multiple separate calls to `spread_samples`, it is often convenient to decorate the original model using `recover_types` immediately after it has been fit, so we only have to call it once:
 
@@ -217,7 +227,7 @@ Now we can omit the `recover_types` call before subsequent calls to `spread_samp
 
 ### With simple parameters, wide format
 
-`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
+`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
 
 For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:
 
@@ -226,6 +236,7 @@ m %>%
     spread_samples(overall_mean, response_sd) %>%
     head(10)
 ```
+*(10 rows of `r nrow(as_sample_tibble(m))`)*
 
 Like with `condition_mean[condition]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
 
@@ -347,6 +358,7 @@ m %>%
     spread_samples(overall_mean, condition_mean[condition]) %>%
     head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, condition_mean[condition]))`)*
 
 Within each sample, `overall_mean` is repeated as necessary to correspond to every index of `condition_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `mean_qi`:
 
@@ -402,7 +414,7 @@ Observe the shrinkage towards the overall mean in the Bayesian model compared to
 
 We might also prefer all parameter names to be in a single column (long-format) instead of as column names. There are three methods for obtaining long-format data frames with `tidybayes`, whose use depends on where and how in the data processing chain you might want to transform into long-format: `gather_samples`, `gather_terms`, and `as_sample_tibble`.
 
-`gather_samples` is the counterpart to `spread_samples`, except it puts all parameter names into a `terms` column and samples into an `estimate` column (for compatibility with `broom::tidy`):
+`gather_samples` is the counterpart to `spread_samples`, except it puts all parameter names into a `term` column and samples into an `estimate` column (for compatibility with `broom::tidy`):
 
 ```{r}
 m %>%
@@ -431,6 +443,7 @@ m %>%
     as_sample_tibble() %>%
     head(10)
 ```
+*(10 rows of `r nrow(as_sample_tibble(m))`)*
 
 Combining `as_sample_tibble` with `gather_terms` also allows us to derive similar output to `ggmcmc::ggs`, if desired:
 
@@ -440,6 +453,7 @@ m %>%
     gather_terms() %>%
     head(10)
 ```
+*(10 rows of `r nrow(gather_terms(as_sample_tibble(m)))`)*
 
 But again, this approach does not handle parameter indices for us automatically, so using `spread_samples` and `gather_samples` is generally recommended unless you do not have parameter indices to worry about.
 
@@ -519,7 +533,7 @@ The above code block also shows the use of `mean_qih`. The `[point]_[interval]h`
 
 ## Alternative estimates and intervals: mean, median, mode; qi, hdi
 
-The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi][h|]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (aka equi-tailed interval or precentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Here is an example showing `mean_qi` (black) compared to `mode_hdi` (red):
+The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi][h|]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Here is an example showing `mean_qi` (black) compared to `mode_hdi` (red):
 
 ```{r}
 m %>%
