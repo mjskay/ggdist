@@ -13,6 +13,7 @@
 \alias{as_sample_tibble.map}
 \alias{as_sample_tibble.map2stan}
 \alias{as_sample_tibble.matrix}
+\alias{as_sample_tibble.MCMCglmm}
 \title{Get samples from a model as a tibble}
 \usage{
 as_sample_tibble(model)
@@ -36,11 +37,13 @@ as_sample_data_frame(model)
 \method{as_sample_tibble}{map2stan}(model)
 
 \method{as_sample_tibble}{matrix}(model)
+
+\method{as_sample_tibble}{MCMCglmm}(model)
 }
 \arguments{
 \item{model}{A supported Bayesian model fit / MCMC object. Currently
 supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rethinking]{map}},
+\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[MCMCglmm]{MCMCglmm}}, \code{\link[rethinking]{map}},
 \code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
 implementation.}
 }

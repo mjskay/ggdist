@@ -60,8 +60,6 @@ estimate and credible interval.}
 estimate and credible interval.}
 
 \item{interval.args}{Other arguments passed to \code{\link{stat_summary}}.}
-
-\item{interval_function}{Deprecated. Use \code{point_interval} above.}
 }
 \description{
 Generates a combination geom_violin and geom_pointrange (using stat_summary)

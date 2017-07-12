@@ -53,7 +53,6 @@
 #' interval), and \code{\link{mode_hdi}} (mode with highest density interval).
 #' Alias for \code{fun.data}.
 #' @param fun.args Optional arguments passed to \code{fun.data}.
-#' @param interval_function Deprecated. Use \code{point_interval} above.
 #' @param color Passed to \code{\link{stat_summaryh}}. Color of the point
 #' estimate and credible interval.
 #' @param size Passed to \code{\link{stat_summaryh}}. Line weight of the point
@@ -109,6 +108,7 @@ geom_eyeh = function(
 }
 
 
+#' @rdname geom_eyeh
 #' @import ggplot2
 #' @export
 ggeye = function(data = NULL, mapping = NULL, ...) {

@@ -21,7 +21,7 @@
 #' 
 #' @param model A supported Bayesian model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rethinking]{map}},
+#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[MCMCglmm]{MCMCglmm}}, \code{\link[rethinking]{map}},
 #' \code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
 #' implementation.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
@@ -127,4 +127,9 @@ as_sample_tibble.matrix = function(model) {
     } else {
         stop("Matrix must have only 2 dimensions (first being the sample, second the variable).")
     }
+}
+#' @rdname as_sample_tibble
+#' @export
+as_sample_tibble.MCMCglmm = function(model) {
+    as_sample_tibble(model$Sol)
 }

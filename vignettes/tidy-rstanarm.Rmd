@@ -52,12 +52,10 @@ options(mc.cores = parallel::detectCores())
 ```{r hidden_options, include=FALSE}
 # While the previous code chunk is the actual recommended approach,
 # CRAN vignette building policy limits us to 2 cores, so we use at most
-# 2 to build this vignette when on CRAN (but show the previous chunk to
+# 2 to build this vignette (but show the previous chunk to
 # the reader as a best pratice example)
 rstan_options(auto_write = TRUE)
-options(mc.cores = min(
-    ifelse(Sys.getenv("NOT_CRAN", unset = "true") == "true", Inf, 2), 
-    parallel::detectCores()))
+options(mc.cores = min(2, parallel::detectCores()))
 
 #ggplot options
 theme_set(theme_light())

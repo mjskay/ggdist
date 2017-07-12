@@ -39,6 +39,7 @@ Suggests:
     broom,
     forcats,
     dotwhisker,
+    MCMCglmm,
     brms
 Enhances:
     rethinking

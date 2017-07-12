@@ -7,3 +7,5 @@
 ^\.gitattributes$
 ^\.git$
 ^\.travis\.yml$
+^README.Rmd$
+^README_files$
