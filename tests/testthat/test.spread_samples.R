@@ -186,6 +186,9 @@ test_that("spread_samples correctly extracts multiple variables simultaneously",
                 inner_join(spread_samples(RankCorr, typical_mu[i]), by=c(".chain",".iteration","i")) %>%
                 inner_join(spread_samples(RankCorr, u_tau[i]), by=c(".chain",".iteration","i"))
         )
+        expect_equal(spread_samples(RankCorr, cbind(tau)[i]), spread_samples(RankCorr, c(tau)[i]))
+        expect_equal(spread_samples(RankCorr, cbind(tau, typical_mu)[i]), spread_samples(RankCorr, c(tau, typical_mu)[i]))
+        expect_equal(spread_samples(RankCorr, cbind(tau, typical_mu, u_tau)[i]), spread_samples(RankCorr, c(tau, typical_mu, u_tau)[i]))
     })
 
 test_that("spread_samples correctly extracts multiple variables simultaneously when those variables have no indices", {

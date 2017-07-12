@@ -58,12 +58,16 @@ parse_variable_spec = function(variable_spec) {
         set_names() %>%
         map(function(name) list(name, NULL, NULL))
 
+    
+    c_function = function(...) {
+        reduce(list(...), function(spec1, spec2) map2(spec1, spec2, base::c))
+    }
+    
     spec_env = c(
         names_spec,
         list(
-            c = function(...) {
-                reduce(list(...), function(spec1, spec2) map2(spec1, spec2, base::c))
-            },
+            c = c_function,
+            cbind = c_function,
             
             `[` = function(spec, ...) {
                 index_names = as.character(substitute(list(...))[-1])
@@ -190,13 +194,14 @@ parse_variable_spec = function(variable_spec) {
 #' )}
 #' 
 #' 
-#' The \code{c} function can be used to combine multiple variable names that have 
+#' The \code{c} and \code{cbind} functions can be used to combine multiple variable names that have 
 #' the same indices. For example, if we have several variables with the same
-#' subscripts \code{i} and \code{v}, we could do this:
+#' subscripts \code{i} and \code{v}, we could do either of these:
 #' 
 #' \preformatted{spread_samples(fit, c(w, x, y, z)[i,v])}
+#' \preformatted{spread_samples(fit, cbind(w, x, y, z)[i,v])}  # equivalent
 #' 
-#' Which is roughly equivalent to this:
+#' Each of which is roughly equivalent to this:
 #' 
 #' \preformatted{spread_samples(fit, w[i,v], x[i,v], y[i,v], z[i,v])}
 #' 

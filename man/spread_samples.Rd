@@ -114,13 +114,14 @@ Is roughly equivalent to this:
     gather_samples(fit, b[i,v])
 )}
 
-The \code{c} function can be used to combine multiple variable names that have 
+The \code{c} and \code{cbind} functions can be used to combine multiple variable names that have 
 the same indices. For example, if we have several variables with the same
-subscripts \code{i} and \code{v}, we could do this:
+subscripts \code{i} and \code{v}, we could do either of these:
 
 \preformatted{spread_samples(fit, c(w, x, y, z)[i,v])}
+\preformatted{spread_samples(fit, cbind(w, x, y, z)[i,v])}  # equivalent
 
-Which is roughly equivalent to this:
+Each of which is roughly equivalent to this:
 
 \preformatted{spread_samples(fit, w[i,v], x[i,v], y[i,v], z[i,v])}
 
