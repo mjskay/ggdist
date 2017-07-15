@@ -120,3 +120,25 @@ fitted_samples.stanreg = function(model, newdata, ...) {
     
     fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, ...)
 }
+
+#' @rdname add_predicted_samples
+#' @export
+predicted_samples.brmsfit = function(model, newdata, ...) {
+    if (!requireNamespace("brms", quietly = TRUE)) {
+        stop('The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.'
+            , call. = FALSE)
+    }
+
+    fitted_predicted_samples_stanreg_(predict, model, newdata, summary = FALSE, ...)
+}
+
+#' @rdname add_predicted_samples
+#' @export
+fitted_samples.brmsfit = function(model, newdata, ...) {
+    if (!requireNamespace("brms", quietly = TRUE)) {
+        stop('The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.'
+            , call. = FALSE)
+    }
+
+    fitted_predicted_samples_stanreg_(fitted, model, newdata, summary = FALSE, ...)
+}
