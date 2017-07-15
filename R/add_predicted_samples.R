@@ -36,6 +36,8 @@ globalVariables(c(".iteration", ".pred"))
 #' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rethinking]{map}},
 #' \code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
 #' implementation.
+#' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits 
+#' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
@@ -51,38 +53,38 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
 #' @export
-add_predicted_samples = function(newdata, model, ...) {
-    predicted_samples(model, newdata, ...)
+add_predicted_samples = function(newdata, model, var = "pred", ...) {
+    predicted_samples(model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-add_fitted_samples = function(newdata, model, ...) {
-    fitted_samples(model, newdata, ...)
+add_fitted_samples = function(newdata, model, var = "estimate", ...) {
+    fitted_samples(model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples = function(model, newdata, ...) UseMethod("predicted_samples")
+predicted_samples = function(model, newdata, var = "pred", ...) UseMethod("predicted_samples")
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples = function(model, newdata, ...) UseMethod("fitted_samples")
+fitted_samples = function(model, newdata, var = "estimate", ...) UseMethod("fitted_samples")
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.default = function(model, newdata, ...) {
+predicted_samples.default = function(model, newdata, var = "pred", ...) {
     stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `predicted_samples`"))
 }
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.default = function(model, newdata, ...) {
+fitted_samples.default = function(model, newdata, var = "estimate", ...) {
     stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `fitted_samples`"))
 }
 
 # template for predicted_samples.stanreg and fitted_samples.stanreg
-fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata, ...) {
+fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata, var, ...) {
     newdata %>%
         data.frame(
             #for some reason calculating row here instead of in a subsequent mutate()
@@ -92,7 +94,7 @@ fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata,
             t(f_fitted_predicted(model, newdata = ., ...)), 
             check.names=FALSE
         ) %>%
-        gather(.iteration, .pred, (ncol(newdata)+3):ncol(.)) %>%
+        gather_(".iteration", var, names(.)[(ncol(newdata)+3):ncol(.)]) %>%
         mutate(
             .iteration = as.numeric(.iteration)
         ) %>%
@@ -101,44 +103,44 @@ fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata,
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.stanreg = function(model, newdata, ...) {
+predicted_samples.stanreg = function(model, newdata, var = "pred", ...) {
     if (!requireNamespace("rstantools", quietly = TRUE)) {
         stop('The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.'
             , call. = FALSE)
     }
 
-    fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, ...)
+    fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.stanreg = function(model, newdata, ...) {
+fitted_samples.stanreg = function(model, newdata, var = "estimate", ...) {
     if (!requireNamespace("rstanarm", quietly = TRUE)) {
         stop('The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.'
             , call. = FALSE)
     }
     
-    fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, ...)
+    fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.brmsfit = function(model, newdata, ...) {
+predicted_samples.brmsfit = function(model, newdata, var = "pred", ...) {
     if (!requireNamespace("brms", quietly = TRUE)) {
         stop('The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.'
             , call. = FALSE)
     }
 
-    fitted_predicted_samples_stanreg_(predict, model, newdata, summary = FALSE, ...)
+    fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.brmsfit = function(model, newdata, ...) {
+fitted_samples.brmsfit = function(model, newdata, var = "estimate", ...) {
     if (!requireNamespace("brms", quietly = TRUE)) {
         stop('The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.'
             , call. = FALSE)
     }
 
-    fitted_predicted_samples_stanreg_(fitted, model, newdata, summary = FALSE, ...)
+    fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, ...)
 }
