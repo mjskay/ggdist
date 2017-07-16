@@ -9,23 +9,29 @@
 \alias{fitted_samples.default}
 \alias{predicted_samples.stanreg}
 \alias{fitted_samples.stanreg}
+\alias{predicted_samples.brmsfit}
+\alias{fitted_samples.brmsfit}
 \title{Add samples from the posterior fit or posterior prediction of a model to a data frame}
 \usage{
-add_predicted_samples(newdata, model, ...)
+add_predicted_samples(newdata, model, var = "pred", ...)
 
-add_fitted_samples(newdata, model, ...)
+add_fitted_samples(newdata, model, var = "estimate", ...)
 
-predicted_samples(model, newdata, ...)
+predicted_samples(model, newdata, var = "pred", ...)
 
-fitted_samples(model, newdata, ...)
+fitted_samples(model, newdata, var = "estimate", ...)
 
-\method{predicted_samples}{default}(model, newdata, ...)
+\method{predicted_samples}{default}(model, newdata, var = "pred", ...)
 
-\method{fitted_samples}{default}(model, newdata, ...)
+\method{fitted_samples}{default}(model, newdata, var = "estimate", ...)
 
-\method{predicted_samples}{stanreg}(model, newdata, ...)
+\method{predicted_samples}{stanreg}(model, newdata, var = "pred", ...)
 
-\method{fitted_samples}{stanreg}(model, newdata, ...)
+\method{fitted_samples}{stanreg}(model, newdata, var = "estimate", ...)
+
+\method{predicted_samples}{brmsfit}(model, newdata, var = "pred", ...)
+
+\method{fitted_samples}{brmsfit}(model, newdata, var = "estimate", ...)
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
@@ -36,6 +42,9 @@ supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}}
 \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rethinking]{map}},
 \code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
 implementation.}
+
+\item{var}{The name of the output column for the predictions (default `code{"pred"}`) or fits 
+(default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).}
 
 \item{...}{Additional arguments passed to the underlying prediction method for the type of
 model given.}
