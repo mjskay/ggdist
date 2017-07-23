@@ -24,7 +24,7 @@ two common (often tedious) operations:
   package helps automate these operations using the `compose_data` function, which
   automatically handles data types like `numeric`, `logical`, `factor`, and `ordinal`, 
   and allows easy extensions for converting other datatypes into a format the
-  sampler understands by providing your own implementation of the generic `as.data_list`.
+  sampler understands by providing your own implementation of the generic `as_data_list`.
 
 * __Extracting tidy samples__ from the sampler. This often means extracting indices
   from parameters with names like `"b[1,1]"`, `"b[1,2]"` into separate columns

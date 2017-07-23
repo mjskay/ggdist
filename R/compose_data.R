@@ -13,9 +13,9 @@
 #' 
 #' This function creates a list with class \code{c("data_list", "list")}
 #' instead of \code{c("list")}, but otherwise acts like the \code{\link{list}}
-#' function.  It is used by \code{\link{as.data_list}} to create data lists for
+#' function.  It is used by \code{\link{as_data_list}} to create data lists for
 #' input into Bayesian samplers. See the implementations of
-#' \code{as.data_list.numeric}, \code{as.data_list.logical}, etc for examples.
+#' \code{as_data_list.numeric}, \code{as_data_list.logical}, etc for examples.
 #' 
 #' @param ...  Items to include in the list.
 #' @return An object of class \code{c("data_list", "list")}
@@ -64,18 +64,18 @@ print.data_list = function(x, ...) {
 #' \code{name} is not \code{""}) is also added containing the number of rows in
 #' the data frame.  \item all other types are dropped (and a warning given) }
 #' If you wish to add support for additional types not described above, provide
-#' an implementation of \code{\link{as.data_list}} for the type. See the
-#' implementations of \code{as.data_list.numeric}, \code{as.data_list.logical},
+#' an implementation of \code{\link{as_data_list}} for the type. See the
+#' implementations of \code{as_data_list.numeric}, \code{as_data_list.logical},
 #' etc for examples.
 #' 
-#' as.data_list.logical as.data_list.factor as.data_list.list
-#' as.data_list.data.frame as.data_list.data_list
+#' as_data_list.logical as_data_list.factor as_data_list.list
+#' as_data_list.data.frame as_data_list.data_list
 #' @param object The object to convert (see `Details`).
 #' @param name The name of the element in the returned list corresponding to
 #' this object.
 #' @param scalar_as_array If \code{TRUE}, returns single scalars as an
 #' 1-dimensional array with one element. This is used by
-#' \code{as.data_list.data.frame} to ensure that columns from a data frame with
+#' \code{as_data_list.data.frame} to ensure that columns from a data frame with
 #' only one row are still returned as arrays instead of scalars.
 #' @param .n_name A function that is used to form index variables (a variable
 #' whose value is the length of a factor or a data frame in \code{...}). For
@@ -84,7 +84,7 @@ print.data_list = function(x, ...) {
 #' \code{.n_name("foo")}, which by default would be "n_foo", containing the
 #' value 3.
 #' @param ...  Additional arguments passed to other implementations of
-#' \code{as.data_list}.
+#' \code{as_data_list}.
 #' @return An object of class \code{c("data_list", "list")}, where each element
 #' is a translated variable as described above.
 #' @author Matthew Kay
@@ -95,16 +95,16 @@ print.data_list = function(x, ...) {
 #' ##TODO
 #' 
 #' @export
-as.data_list = function(object, name="", ...) UseMethod("as.data_list")
-#' @rdname as.data_list
+as_data_list = function(object, name="", ...) UseMethod("as_data_list")
+#' @rdname as_data_list
 #' @export
-as.data_list.default = function(object, name="", ...) {
+as_data_list.default = function(object, name="", ...) {
     warning(deparse0(name), " has unsupported type ", deparse0(class(object)), " and was dropped.")
     data_list()
 }
-#' @rdname as.data_list
+#' @rdname as_data_list
 #' @export
-as.data_list.numeric = function(object, name="", 
+as_data_list.numeric = function(object, name="", 
         scalar_as_array=FALSE,  #treat single scalar values as array of length 1 
         ...) {
     data = data_list(if (scalar_as_array) as.array(object) else object)
@@ -114,41 +114,41 @@ as.data_list.numeric = function(object, name="",
     names(data) = name
     data
 }
-#' @rdname as.data_list
+#' @rdname as_data_list
 #' @export
-as.data_list.logical = function(object, name="", ...) {
-    as.data_list(as.numeric(object), name, ...)
+as_data_list.logical = function(object, name="", ...) {
+    as_data_list(as.numeric(object), name, ...)
 }
-#' @rdname as.data_list
+#' @rdname as_data_list
 #' @export
-as.data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
-    data = as.data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
+as_data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
+    data = as_data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
     if (any(table(object) == 0)) {
         warning("Some levels of factor ", deparse0(name), " are unused. This may cause issues if you are using it as an index in a model.")
     }
     data[[.n_name(name)]] = length(levels(object))
     data
 }
-#' @rdname as.data_list
+#' @rdname as_data_list
 #' @export
-as.data_list.character = function(object, name="", ...) {
-    as.data_list(as.factor(object), name = name, ...)
+as_data_list.character = function(object, name="", ...) {
+    as_data_list(as.factor(object), name = name, ...)
 }
-#' @rdname as.data_list
+#' @rdname as_data_list
 #' @export
-as.data_list.list = function(object, name="", ...) {
+as_data_list.list = function(object, name="", ...) {
     #go through list and translate variables
     data = data_list()
     for (i in 1:length(object)) {
-        data = c(data, as.data_list(object[[i]], names(object)[[i]], ...))
+        data = c(data, as_data_list(object[[i]], names(object)[[i]], ...))
     }
     data
 }
-#' @rdname as.data_list
+#' @rdname as_data_list
 #' @export
-as.data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...) {
+as_data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...) {
     #first, translate all variables in the data frame
-    data = as.data_list.list(object, 
+    data = as_data_list.list(object, 
         name = name,
         .n_name = .n_name, 
         scalar_as_array = TRUE,     #when converting from a data frame with only one row, convert 
@@ -159,9 +159,9 @@ as.data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...
     data[[n_name]] = nrow(object)
     data
 }
-#' @rdname as.data_list
+#' @rdname as_data_list
 #' @export
-as.data_list.data_list = function(object, name="", ...) {
+as_data_list.data_list = function(object, name="", ...) {
     object
 }
 
@@ -172,7 +172,7 @@ as.data_list.data_list = function(object, name="", ...) {
 #' 
 #' 
 #' This function recursively translates each argument into list elements using
-#' \code{\link{as.data_list}}, concatenating all resulting lists together. By
+#' \code{\link{as_data_list}}, concatenating all resulting lists together. By
 #' default this means that: 
 #' \itemize{
 #'      \item numerics are included as-is.
@@ -194,15 +194,15 @@ as.data_list.data_list = function(object, name="", ...) {
 #' }
 #' 
 #' If you wish to add support for additional types not described above,
-#' provide an implementation of \code{\link{as.data_list}} for the type. See
-#' the implementations of \code{as.data_list.numeric},
-#' \code{as.data_list.logical}, etc for examples.
+#' provide an implementation of \code{\link{as_data_list}} for the type. See
+#' the implementations of \code{as_data_list.numeric},
+#' \code{as_data_list.logical}, etc for examples.
 #' 
 #' @param ...  Data to be composed into a list suitable for being passed into
 #' Stan, JAGS, etc. Named arguments will have their name used as the \code{name}
-#' argument to \code{as.data_list} when translated; unnamed arguments that are
+#' argument to \code{as_data_list} when translated; unnamed arguments that are
 #' not lists or data frames will have their bare value (passed through
-#' \code{make.names}) used as the \code{name} argument to \code{as.data_list}.
+#' \code{make.names}) used as the \code{name} argument to \code{as_data_list}.
 #' @param .n_name A function that is used to form index variables (a variable
 #' whose value is number of levels in a factor or the length of a data frame in
 #' \code{...}). For example, if a data frame with 20 rows and a factor \code{"foo"}
@@ -213,7 +213,7 @@ as.data_list.data_list = function(object, name="", ...) {
 #' @return An object of class \code{c("data_list", "list")}, where each element
 #' is a translated variable as described above.
 #' @author Matthew Kay
-#' @seealso \code{\link{as.data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+#' @seealso \code{\link{as_data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
 #' @keywords manip
 #' @examples
 #' 
@@ -233,7 +233,7 @@ compose_data = function(..., .n_name = n_prefix("n")) {
     unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
     names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
     #convert into data list 
-    data = as.data_list(objects, .n_name = .n_name)
+    data = as_data_list(objects, .n_name = .n_name)
     #as a hack for now, we strip the "data_list" type in the end for compatibility
     #with runjags, which incorrectly checks for class(data) == "list" instead of
     #using is.list

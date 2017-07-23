@@ -21,9 +21,9 @@ own conversion routines for a data type not already supported.
 \details{
 This function creates a list with class \code{c("data_list", "list")}
 instead of \code{c("list")}, but otherwise acts like the \code{\link{list}}
-function.  It is used by \code{\link{as.data_list}} to create data lists for
+function.  It is used by \code{\link{as_data_list}} to create data lists for
 input into Bayesian samplers. See the implementations of
-\code{as.data_list.numeric}, \code{as.data_list.logical}, etc for examples.
+\code{as_data_list.numeric}, \code{as_data_list.logical}, etc for examples.
 }
 \seealso{
 \code{\link{compose_data}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.

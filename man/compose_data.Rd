@@ -9,9 +9,9 @@ compose_data(..., .n_name = n_prefix("n"))
 \arguments{
 \item{...}{Data to be composed into a list suitable for being passed into
 Stan, JAGS, etc. Named arguments will have their name used as the \code{name}
-argument to \code{as.data_list} when translated; unnamed arguments that are
+argument to \code{as_data_list} when translated; unnamed arguments that are
 not lists or data frames will have their bare value (passed through
-\code{make.names}) used as the \code{name} argument to \code{as.data_list}.}
+\code{make.names}) used as the \code{name} argument to \code{as_data_list}.}
 
 \item{.n_name}{A function that is used to form index variables (a variable
 whose value is number of levels in a factor or the length of a data frame in
@@ -31,7 +31,7 @@ BUGS, etc).
 }
 \details{
 This function recursively translates each argument into list elements using
-\code{\link{as.data_list}}, concatenating all resulting lists together. By
+\code{\link{as_data_list}}, concatenating all resulting lists together. By
 default this means that: 
 \itemize{
      \item numerics are included as-is.
@@ -53,9 +53,9 @@ default this means that:
 }
 
 If you wish to add support for additional types not described above,
-provide an implementation of \code{\link{as.data_list}} for the type. See
-the implementations of \code{as.data_list.numeric},
-\code{as.data_list.logical}, etc for examples.
+provide an implementation of \code{\link{as_data_list}} for the type. See
+the implementations of \code{as_data_list.numeric},
+\code{as_data_list.logical}, etc for examples.
 }
 \examples{
 
@@ -63,7 +63,7 @@ the implementations of \code{as.data_list.numeric},
 
 }
 \seealso{
-\code{\link{as.data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+\code{\link{as_data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
 }
 \author{
 Matthew Kay
