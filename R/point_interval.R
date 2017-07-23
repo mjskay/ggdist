@@ -16,7 +16,10 @@ globalVariables(c("y", "ymin", "ymax"))
 #' 
 #' If \code{.data} is a data frame, then \code{...} is a list of bare names of
 #' columns (or expressions derived from columns) of \code{.data}, on which
-#' the point and interval estimates are derived. For a column named \code{x},
+#' the point and interval estimates are derived. Column expressions are processed
+#' using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
+#' 
+#' For a column named \code{x},
 #' the resulting data frame will have columns \code{x} (the point estimate),
 #' \code{x.low} (the lower end of the interval), \code{x.high} (the upper
 #' end of the interval), and \code{.prob}.
@@ -75,16 +78,15 @@ globalVariables(c("y", "ymin", "ymax"))
 #' 
 #' @importFrom purrr map_df map map2 discard
 #' @importFrom dplyr do bind_cols
-#' @importFrom lazyeval lazy_dots as.lazy_dots auto_name
 #' @importFrom stringi stri_startswith_fixed
-#' @importFrom rlang set_names
+#' @importFrom rlang set_names quos quos_auto_name eval_tidy
 #' @export
 point_interval = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) UseMethod("point_interval")
 
 #' @rdname point_interval
 #' @export
 point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) {
-    col_exprs = auto_name(lazy_dots(...))
+    col_exprs = quos(..., .named = TRUE)
 
     if (length(col_exprs) == 0) {
         # no column expressions provided => summarise all columns that are not groups and which
@@ -96,8 +98,8 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
             #don't aggregate columns that start with "." because these are special columns (such
             #as .chain or .iteration)
             discard(~ stri_startswith_fixed(.x, ".")) %>%
-            as.lazy_dots() %>%
-            auto_name()
+            map(as_quosure) %>%
+            quos_auto_name()
 
         if (length(col_exprs) == 0) {
             #still nothing to aggregate? not sure what the user wants
@@ -111,7 +113,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
         
         map_df(.prob, function(p) {
             do(.data,{
-                col_samples = lazy_eval(col_exprs, .data)[[1]]
+                col_samples = eval_tidy(col_exprs[[1]], .data)
                 interval = .interval(col_samples, .prob = p)
                 data_frame(
                     .point(col_samples),
@@ -132,7 +134,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
         
         map_df(.prob, function(p) {
             do(.data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
-                col_samples = lazy_eval(col_expr, .)
+                col_samples = eval_tidy(col_expr, .)
                 interval = .interval(col_samples, .prob = p)
                 data_frame(
                     .point(col_samples),

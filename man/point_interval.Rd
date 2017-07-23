@@ -96,7 +96,10 @@ multiple groups in a grouped data frame).
 \details{
 If \code{.data} is a data frame, then \code{...} is a list of bare names of
 columns (or expressions derived from columns) of \code{.data}, on which
-the point and interval estimates are derived. For a column named \code{x},
+the point and interval estimates are derived. Column expressions are processed
+using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
+
+For a column named \code{x},
 the resulting data frame will have columns \code{x} (the point estimate),
 \code{x.low} (the lower end of the interval), \code{x.high} (the upper
 end of the interval), and \code{.prob}.

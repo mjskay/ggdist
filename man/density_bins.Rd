@@ -5,9 +5,9 @@
 \alias{histogram_bins}
 \title{Density bins as data frames suitable for use with predict_curve}
 \usage{
-density_bins(x, ...)
+density_bins(x, n = 101, ...)
 
-histogram_bins(x, ...)
+histogram_bins(x, n = 30, breaks = n, ...)
 }
 \arguments{
 \item{x}{A numeric vector}
