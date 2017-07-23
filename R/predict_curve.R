@@ -80,6 +80,9 @@
 #' @import dplyr
 #' @export
 predict_curve = function(data, formula, summary = median, ...) {
+    .Deprecated("density_bins", 
+        "predict_curve and predict_curve_density will be removed in a future version; use modelr::expand and dplyr::do with tidybayes::density_bins / histogram_bins instead.")
+    
     #get response name and formula to generate response
     response_name = formula[[2]]
     prediction_formula = formula[[3]]
