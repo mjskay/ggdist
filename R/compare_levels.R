@@ -113,6 +113,7 @@ compare_levels = function(samples, variable, by, fun=`-`, comparison=default, in
 #' @importFrom plyr ldply
 #' @importFrom tidyr spread_
 #' @importFrom dplyr one_of
+#' @importFrom tibble as_tibble
 compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, indices=c(".chain",".iteration")) {
     #drop unused levels from "by" column
     samples[[by]] = factor(samples[[by]])
@@ -160,5 +161,6 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, i
             }
             names(comparison) = c(by, variable)
             cbind(samples_wide_no_levels, comparison)
-        })
+        }) %>%
+        as_tibble()
 }

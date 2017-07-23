@@ -6,6 +6,7 @@
 library(testthat)
 import::from(plyr, ldply, llply, .)
 import::from(dplyr, `%>%`)
+import::from(tibble, as_tibble)
 library(tidyr)
 library(tidybayes)
 
@@ -34,7 +35,9 @@ test_that("pairwise level comparison works", {
                 samples_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
                 samples_wide$tau = samples_wide[[levels.[[2]]]] - samples_wide[[levels.[[1]]]]  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% 
+            select(-one_of(ff_labels)) %>%
+            as_tibble()
 
         expect_equal(compare_levels(samples, tau, by=ff, comparison=pairwise), ref)
     })
@@ -47,7 +50,9 @@ test_that("ordered level comparison works", {
                 samples_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
                 samples_wide$tau = samples_wide[[levels.[[1]]]] - samples_wide[[levels.[[2]]]]  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% 
+            select(-one_of(ff_labels)) %>%
+            as_tibble()
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=ordered), ref)
     })
@@ -60,7 +65,9 @@ test_that("control level comparison works", {
                 samples_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
                 samples_wide$tau = samples_wide[[levels.[[1]]]] - samples_wide[[levels.[[2]]]]  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% 
+            select(-one_of(ff_labels)) %>%
+            as_tibble()
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=control), ref)
     })
@@ -85,7 +92,9 @@ test_that("named functions are supported and named with their own name", {
                 samples_wide$ff = factor(paste(levels.[[1]], "+", levels.[[2]]))
                 samples_wide$tau = samples_wide[[levels.[[1]]]] + samples_wide[[levels.[[2]]]]  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% 
+            select(-one_of(ff_labels)) %>%
+            as_tibble()
     
         expect_equal(compare_levels(samples, tau, by=ff, fun=`+`, comparison=control), ref)
     })
@@ -98,7 +107,9 @@ test_that("anonymous functions are supported and named with `:`", {
                 samples_wide$ff = factor(paste(levels.[[1]], ":", levels.[[2]]))
                 samples_wide$tau = samples_wide[[levels.[[1]]]] + samples_wide[[levels.[[2]]]]  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% 
+            select(-one_of(ff_labels)) %>%
+            as_tibble()
             
         expect_equal(compare_levels(samples, tau, by=ff, fun=function(x, y) x + y, comparison=control), ref)
     })
@@ -111,7 +122,9 @@ test_that("custom comparisons of lists of character vectors are supported", {
                 samples_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
                 samples_wide$tau = samples_wide[[levels.[[1]]]] - samples_wide[[levels.[[2]]]]  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% 
+            select(-one_of(ff_labels)) %>%
+            as_tibble()
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=list(c("a", "b"), c("c", "f"))), ref)
     })
@@ -124,7 +137,9 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
                 samples_wide$ff = factor(deparse0(levels.))
                 samples_wide$tau = eval(levels., samples_wide)  
                 samples_wide
-            }) %>% select(-one_of(ff_labels))
+            }) %>% 
+            select(-one_of(ff_labels)) %>%
+            as_tibble()
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=plyr::.(a + b, exp(c - f))), ref)
     })
@@ -138,7 +153,9 @@ test_that("comparisons of subsets of levels of factors are supported", {
                 samples_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
                 samples_wide$tau = samples_wide[[levels.[[2]]]] - samples_wide[[levels.[[1]]]]  
                 samples_wide
-            }) %>% select(-one_of(c("a","d","g")))
+            }) %>% 
+            select(-one_of(c("a","d","g"))) %>%
+            as_tibble()
         
         expect_equal(compare_levels(samples, tau, by=ff, comparison=pairwise), ref)
     })
