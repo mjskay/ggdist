@@ -156,14 +156,14 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' 
 #' @importFrom stats density
 #' @export
-density_bins = function(x, ...) {
-    d = density(x, ...)
+density_bins = function(x, n = 101, ...) {
+    d = density(x, n = n, ...)
     
     mid = d$x
     last_mid = length(mid)
     x_diffs = mid[-1] - mid[-last_mid]
     
-    data.frame(
+    data_frame(
         mid = mid,
         lower = c(mid[[1]] - x_diffs[[1]]/2, mid[-1] - x_diffs/2),
         upper = c(mid[-last_mid] + x_diffs/2, mid[[last_mid]] + x_diffs[[last_mid - 1]]/2),
@@ -175,46 +175,13 @@ density_bins = function(x, ...) {
 #' @importFrom graphics hist
 #' @importFrom stats embed
 #' @export
-histogram_bins = function(x, ...) {
-    h = hist(x, plot=FALSE)
+histogram_bins = function(x, n = 30, breaks = n, ...) {
+    h = hist(x, breaks = breaks, ..., plot=FALSE)
     
-    data.frame(
+    data_frame(
         mid = rowMeans(embed(h$breaks, 2)),
         lower = h$breaks[-length(h$breaks)],
         upper = h$breaks[-1],
         density = h$density
     )
 }
-
-
-#df_density = df %>%
-#    group_by(g) %>%
-#    predict_curve_density(y ~ x)
-#    predict_curve(y ~ x, summary=density_bins)
-#
-#df_curve = df %>%
-#    group_by(g) %>%
-#    predict_curve(y ~ x)
-#
-#
-#ggplot(df_density) + 
-#    geom_rect(aes(xmin=y.lower, xmax=y.upper, ymin=as.numeric(g)-0.5, ymax=as.numeric(g)+0.5, fill=y.density), color=NA) +
-#    geom_line(aes(x=y, y=as.numeric(g)), df_curve, color="blue", size=2)
-#    scale_alpha_continuous
-#
-#ggplot(data.frame(x1=d$x - d$bw/2, x2=d$x + d$bw/2, d = d$y), aes(xmin=x1, xmax=x2, ymin=-1, ymax=1, fill=d)) + geom_rect()
-#
-#
-#
-#
-#min_x = min_x
-#binmin = floor(min_x)        weight_breaks = seq(floor(min(.$weight)), ceiling(max(.$weight)), by=weight_bin_size)
-#
-#df = data.frame(
-#    x=c(rnorm(1000), rnorm(1000,1)), 
-#    g=c(rep("a",1000), rep("b", 1000))
-#)
-#
-#x = rnorm(1000)
-#
-#
