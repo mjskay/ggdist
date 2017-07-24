@@ -9,8 +9,9 @@ r_build_args: '--no-build-vignettes'
 r_check_args: '--ignore-vignettes'
 
 env:
-  matrix:
+  global:
     - CXX_OLEVEL=2 CXX=clang++
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 before_install:
   - mkdir -p ~/.R/
