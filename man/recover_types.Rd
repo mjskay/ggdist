@@ -50,7 +50,7 @@ labels=levels(prototypes$v), ordered=is.ordered(prototypes$v))}.  \item if
 using \code{as.logical(v)}. }
 
 Additional data types can be supported by providing a custom implementation
-of the generic function \code{as.constructor}.
+of the generic function \code{as_constructor}.
 }
 \examples{
 

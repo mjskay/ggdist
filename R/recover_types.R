@@ -1,16 +1,16 @@
-as.constructor = function(x) UseMethod("as.constructor")
+as_constructor = function(x) UseMethod("as_constructor")
 
-as.constructor.default = function(x) identity
+as_constructor.default = function(x) identity
 
-as.constructor.factor = function(x) {
+as_constructor.factor = function(x) {
   x_levels = levels(x)
   x_is_ordered = is.ordered(x)
   function(x) factor(x, levels = 1:length(x_levels), labels = x_levels, ordered = x_is_ordered)
 }
 
-as.constructor.character = function(x) as.constructor(as.factor(x))
+as_constructor.character = function(x) as_constructor(as.factor(x))
 
-as.constructor.logical = function(x) as.logical
+as_constructor.logical = function(x) as.logical
 
 
 #' @export
@@ -51,7 +51,7 @@ apply_prototypes = function(...) {
 #' using \code{as.logical(v)}. }
 #'
 #' Additional data types can be supported by providing a custom implementation
-#' of the generic function \code{as.constructor}.
+#' of the generic function \code{as_constructor}.
 #'
 #' @param model A supported Bayesain model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}.
@@ -77,7 +77,7 @@ recover_types = function(model, ...) {
     #we iterate this way instead of building a list directly
     #so that existing names are overwritten
     for (variable_name in names(prototypes)) {
-      attr(model, "constructors")[[variable_name]] = as.constructor(prototypes[[variable_name]])
+      attr(model, "constructors")[[variable_name]] = as_constructor(prototypes[[variable_name]])
     }
   }
 
