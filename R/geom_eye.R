@@ -1,5 +1,5 @@
 # geom_eye for eye plots with intervals
-# 
+#
 # Author: mjskay
 ###############################################################################
 
@@ -7,14 +7,14 @@
 
 #' Vertical eye plots (aka raindrop plots, aka violin plots) of densities with point
 #' estimates and intervals for ggplot2
-#' 
+#'
 #' Generates a combination geom_violin and geom_pointrange (using stat_summary)
 #' representing the density, point estimates, and credible interval. Useful
 #' for representing posterior estimates from Bayesian samplers; in that context
 #' this is variously called an eye plot, a raindrop plot, or a violin plot
 #' (though violin plot is also applied to plots of data, hence its use is not
 #' preferred here).
-#' 
+#'
 #' An eye plot is a compact visual summary of the distribution of some samples,
 #' used (under various names and with subtle variations) to visualize posterior
 #' distributions in Bayesian inference. This instantiation is a combination of
@@ -22,7 +22,7 @@
 #' equivalent to \code{geom_violin() + stat_summary()} with some reasonable
 #' defaults, including color choices and the use of mean with 95\% quantile
 #' intervals.
-#' 
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
 #' layer level if you are overriding the plot defaults.
@@ -59,50 +59,50 @@
 #' estimate and credible interval.
 #' @param interval.args Other arguments passed to \code{\link{stat_summary}}.
 #' @author Matthew Kay
-#' @seealso See \code{\link{geom_eyeh}} for the horizontal version. See 
-#' \code{\link{geom_violin}} and \code{\link{stat_summary}} for the geoms 
+#' @seealso See \code{\link{geom_eyeh}} for the horizontal version. See
+#' \code{\link{geom_violin}} and \code{\link{stat_summary}} for the geoms
 #' this function is based on.
 #' @keywords manip
 #' @examples
-#' 
+#'
 #' ##TODO
-#' 
+#'
 #' @importFrom utils modifyList
 #' @import ggplot2
 #' @export
 geom_eye = function(
     #shared properties
     mapping = NULL, data = NULL,
-    
+
     #violin properties
-    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = "gray65", 
+    stat = "ydensity", position = "dodge", trim = TRUE, scale = "area", fill = "gray65",
     violin.args = list(), ...,
-    
+
     #stat_summary properties
     fun.data = mean_qi, fun.args = list(),
-    color = NULL, size = NULL, 
+    color = NULL, size = NULL,
     interval.args = list(geom = "pointrange", position = "identity")
 ) {
 
     #build violin plot
-    violin.args = 
+    violin.args =
         list(mapping = mapping, data = data, stat = stat, position = position, trim = trim,
             scale = scale, color = NA, fill = fill, size = 0.5, alpha = 1.0, linetype = "solid", ...) %>%
-        {if (!is.null(fill)) modifyList(., list(fill=fill)) else .} %>%
+        {if (!is.null(fill)) modifyList(., list(fill = fill)) else .} %>%
         modifyList(violin.args)
     violin = do.call(geom_violin, violin.args)
 
     #build interval annotations
     interval.args =
         list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, fun.args = fun.args) %>%
-        {if (!is.null(color)) modifyList(., list(color=color)) else .} %>%
-        {if (!is.null(size)) modifyList(., list(size=size)) else .} %>%
+        {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
+        {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
         modifyList(interval.args)
     interval = do.call(stat_summary, interval.args)
-    
-    #we return a list of geoms that can be added to a ggplot object, as in 
-    #ggplot(...) + list(geom_a(), geom_b()), which is equivalent to 
-    #ggplot(...) + geom_a() + geom_b()
+
+    # we return a list of geoms that can be added to a ggplot object, as in
+    # > ggplot(...) + list(geom_a(), geom_b())
+    # which is equivalent to
+    # > ggplot(...) + geom_a() + geom_b()
     list(violin, interval)
 }
-

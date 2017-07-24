@@ -1,5 +1,5 @@
 # compare_levels
-# 
+#
 # Author: mjskay
 ###############################################################################
 
@@ -14,18 +14,18 @@ comparison_types = within(list(), {
         l = levels(x)
         lapply(2:length(l), function(i) c(l[[i]], l[[i - 1]]))
     }
-    
+
     control = function(x) {
         l = levels(x)
         lapply(l[-1], function(j) c(j, l[[1]]))
     }
-    
+
     pairwise = function(x) {
         #reverse combn so that the control level (first level) is second for
         #consistency with control() and ordered()
-        lapply(combn(levels(x), 2, simplify=FALSE), rev)
+        lapply(combn(levels(x), 2, simplify = FALSE), rev)
     }
-    
+
     default = function(x) {
         if (is.ordered(x)) ordered(x)
         else pairwise(x)
@@ -35,18 +35,18 @@ comparison_types = within(list(), {
 
 #' Compare the value of some variable extracted from a Bayesian posterior
 #' sample for different levels of a factor
-#' 
+#'
 #' Given a posterior sample from a Bayesian sampler in long format (e.g. as
 #' returned by spread_samples), compare the value of a variable in that sample
 #' across different paired combinations of levels of a factor.
-#' 
+#'
 #' This function simplifies conducting comparisons across levels of some
 #' variable returned from a Bayesian sample. It applies \code{fun} to all
 #' samples of \code{variable} for each pair of levels of \code{by} as selected
 #' by \code{comparison}. By default, all pairwise comparisons are generated if
 #' \code{by} is an unordered \code{factor} and ordered comparisons are made if
 #' \code{by} is \code{ordered}.
-#' 
+#'
 #' The included \code{comparison} types are: \itemize{ \item \code{ordered}:
 #' compare each level \code{i} with level \code{i - 1}; e.g. \code{fun(i, i -
 #' 1)} \item \code{pairwise}: compare each level of \code{by} with every other
@@ -55,7 +55,7 @@ comparison_types = within(list(), {
 #' first apply \code{\link{relevel}} to \code{by} to set the control
 #' (reference) level.  \item \code{default}: use \code{ordered} if
 #' \code{is.ordered(by)} and \code{pairwise} otherwise.  }
-#' 
+#'
 #' @param samples Long-format \code{data.frame} of samples such as returned by
 #' \code{\link{spread_samples}} or \code{\link{gather_samples}}.
 #' @param variable Bare (unquoted) name of a column in samples representing the
@@ -96,14 +96,14 @@ comparison_types = within(list(), {
 #' @seealso \code{\link{spread_samples}} and \code{\link{gather_samples}}.
 #' @keywords manip
 #' @examples
-#' 
+#'
 #' ##TODO
-#' 
+#'
 #' @export
-compare_levels = function(samples, variable, by, fun=`-`, comparison=default, indices=c(".chain",".iteration")) {
-    eval(bquote(compare_levels_(samples, 
-                .(deparse0(substitute(variable))), 
-                .(deparse0(substitute(by))), 
+compare_levels = function(samples, variable, by, fun=`-`, comparison = default, indices = c(".chain", ".iteration")) {
+    eval(bquote(compare_levels_(samples,
+                .(deparse0(substitute(variable))),
+                .(deparse0(substitute(by))),
                 .(substitute(fun)),
                 .(substitute(comparison),
                 .(indices))
@@ -114,17 +114,17 @@ compare_levels = function(samples, variable, by, fun=`-`, comparison=default, in
 #' @importFrom tidyr spread_
 #' @importFrom dplyr one_of
 #' @importFrom tibble as_tibble
-compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, indices=c(".chain",".iteration")) {
+compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default, indices = c(".chain", ".iteration")) {
     #drop unused levels from "by" column
     samples[[by]] = factor(samples[[by]])
-    
+
     #drop all unused columns before changing to wide format
     indices = intersect(indices, names(samples)) #don't include index columns that aren't in samples
-    samples = samples[,union(indices, c(variable, by))]
+    samples = samples[, union(indices, c(variable, by))]
 
     #get wide version of samples that we can use to generate comparisons easily
-    samples_wide = spread_(samples, by, variable) 
-    
+    samples_wide = spread_(samples, by, variable)
+
     # determine a pretty function name
     fun_language = substitute(fun)
     fun_name = if (is.name(fun_language)) deparse0(fun_language) else ":"
@@ -139,12 +139,12 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison=default, i
     comparison = substitute(comparison)
     if (is.character(comparison)) comparison = as.name(comparison)
     comparison_function = eval(comparison, comparison_types)
-    comparison_levels = 
+    comparison_levels =
         if (is.list(comparison_function)) comparison_function
-        else comparison_function(samples[[by]]) 
-    
+        else comparison_function(samples[[by]])
+
     #make comparisons
-    ldply(comparison_levels, function (levels.) {
+    ldply(comparison_levels, function(levels.) {
             comparison = if (is.language(levels.)) {
                 #user-supplied quoted expressions are evaluated within the data frame
                 data.frame(

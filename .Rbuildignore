@@ -9,3 +9,4 @@
 ^\.travis\.yml$
 ^README.Rmd$
 ^README_files$
+^.lintr$

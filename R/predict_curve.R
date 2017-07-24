@@ -1,17 +1,17 @@
 # fit_curve and for generate fit curves and densities from posteriors
-# 
+#
 # Author: mjskay
 ###############################################################################
 
 
 
 #' Prediction curves for arbitrary functions of posteriors
-#' 
+#'
 #' Generates a prediction curve (or a density for a prediction curve) given an
 #' expression based on columns of a data frame (as might be obtained using
 #' spread_samples) combined with arbitrary other predictors. Obeys groups
 #' applied by group_by.
-#' 
+#'
 #' The function generates a predictive curve given some posterior samples
 #' (\code{data}), an expression (\code{formula}), and a set of variables
 #' defining the curve (\code{...}). For every group in \code{data} (if it is a
@@ -21,17 +21,17 @@
 #' the \code{summary} function. This allows a predictive curve to be generated,
 #' given (e.g.) some samples of coefficients in \code{data} and a set of
 #' predictors defining the space of the curve in \code{...}.
-#' 
+#'
 #' Given a summary function like \code{\link{median}} or \code{\link{mean}},
 #' this function will produce the median (resp. mean) prediction at each point
 #' on the curve.
-#' 
+#'
 #' Given a summary function like \code{\link{density_bins}}, this function will
 #' produce a predictive distribution for each point on the curve.
 #' \code{predict_curve_density} is a shorthand for such a call, with a
 #' convenient parameter for adjusting the number of bins per point on the
 #' curve.
-#' 
+#'
 #' @param data A \code{\link{data.frame}}, \code{\link{tbl_df}} or
 #' \code{link{grouped_df}} representing posteriors from a Bayesian model as
 #' might be obtained through \code{\link{spread_samples}}. Grouped data frames
@@ -43,7 +43,7 @@
 #' variables passed into this function in \code{...}.
 #' @param summary The function to apply to summarize each predicted response.
 #' Useful functions (if you just want a curve) might be \code{\link{median}},
-#' \code{\link{mean}}, or \code{\link{Mode}}. If you want predictive distribution 
+#' \code{\link{mean}}, or \code{\link{Mode}}. If you want predictive distribution
 #' at each point on the curve, try \code{\link{density_bins}} or
 #' \code{\link{histogram_bins}}.
 #' @param ...  Variables defining the curve. The right-hand side of
@@ -58,7 +58,7 @@
 #' variable in \code{...}, and a column named \code{lhs} with the value of
 #' \code{summary(rhs)} evaluated for every group in \code{data} and combination
 #' of variables in \code{...}.
-#' 
+#'
 #' If \code{summary} is a function that returns a \code{data.frame}, such as
 #' \code{\link{density_bins}}, \code{predict_curve} has the same set of columns
 #' as above, except that in place of the \code{lhs} column is a set of columns
@@ -72,46 +72,47 @@
 #' @seealso See \code{\link{density_bins}}.
 #' @keywords manip
 #' @examples
-#' 
+#'
 #' ##TODO
-#' 
+#'
 #' @importFrom plyr ldply
 #' @importFrom stats median
 #' @import dplyr
 #' @export
 predict_curve = function(data, formula, summary = median, ...) {
-    .Deprecated("density_bins", 
-        "predict_curve and predict_curve_density will be removed in a future version; use modelr::expand and dplyr::do with tidybayes::density_bins / histogram_bins instead.")
-    
+    .Deprecated("density_bins",
+        paste("predict_curve and predict_curve_density will be removed in a future version;",
+        "use modelr::expand and dplyr::do with tidybayes::density_bins / histogram_bins instead."))
+
     #get response name and formula to generate response
-    response_name = formula[[2]]
-    prediction_formula = formula[[3]]
+    response_name = formula[[2]]         # nolint
+    prediction_formula = formula[[3]]    # nolint
 
     #get the predictors we will vary over the curve
-    varied_predictors = expand.grid(..., KEEP.OUT.ATTRS=FALSE)
+    varied_predictors = expand.grid(..., KEEP.OUT.ATTRS = FALSE)
     if (nrow(varied_predictors) == 0) {
         #no predictors provided => use a data frame with one row
         #and no columns so that the predictors are evaluated once
         #per group in data
-        varied_predictors = data.frame(row.names=1)
+        varied_predictors = data.frame(row.names = 1)
     }
-    
+
     eval(bquote(
         do(data, {
             #for every group defined in data ...
-            ldply(1:nrow(varied_predictors), function(r) { 
+            ldply(1:nrow(varied_predictors), function(r) {
                 #and for every prediction point on the curve
                 #defined by the values in (...)
-                predictor_row = as.list(varied_predictors[r,,drop=FALSE])
-                # N.B. we convert predictor_row to a list first (then the final result back 
-                # to a data.frame) because if summary returns more than one row 
-                # (as in density prediction, for example) we can't just do the calculation 
-                # within a data.frame: predictor_row is always exactly one row, so there 
+                predictor_row = as.list(varied_predictors[r, , drop = FALSE])
+                # N.B. we convert predictor_row to a list first (then the final result back
+                # to a data.frame) because if summary returns more than one row
+                # (as in density prediction, for example) we can't just do the calculation
+                # within a data.frame: predictor_row is always exactly one row, so there
                 # will be a row count mismatch if summary returns > 1 row.
                 # By doing the calculation within a list, the single predictor_row
                 # will automatically be repeated to match the number of rows returned
                 # when we convert back to a data.frame afterwards.
-                within(predictor_row, 
+                within(predictor_row,
                     #get the response value summarized by the summary function
                     .(response_name) <- summary(with(., .(prediction_formula)))
                 ) %>% as.data.frame(optional = TRUE)
@@ -127,21 +128,21 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 }
 
 #' Density bins as data frames suitable for use with predict_curve
-#' 
+#'
 #' Generates a data frame of bins representing the kernel density (or
 #' histogram) of a vector, suitable for use in generating predictive
 #' distributions using predict_curve.
-#' 
+#'
 #' These functions are simple wrappers to \code{\link{density}} and
 #' \code{\link{hist}} that compute density estimates and return their results
 #' in a consistent format: a data frame of bins suitable for use with
 #' \code{\link{predict_curve}}.
-#' 
+#'
 #' \code{density_bins} computes a kernel density estimate using
 #' \code{\link{density}}.
-#' 
+#'
 #' \code{histogram_bins} computes a density histogram using \code{\link{hist}}.
-#' 
+#'
 #' @param x A numeric vector
 #' @param ...  Additional arguments passed to \code{\link{density}} or
 #' \code{\link{hist}}.
@@ -154,22 +155,22 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' \code{\link{predict_curve_density}}.
 #' @keywords manip
 #' @examples
-#' 
+#'
 #' ##TODO
-#' 
+#'
 #' @importFrom stats density
 #' @export
 density_bins = function(x, n = 101, ...) {
     d = density(x, n = n, ...)
-    
+
     mid = d$x
     last_mid = length(mid)
     x_diffs = mid[-1] - mid[-last_mid]
-    
+
     data_frame(
         mid = mid,
-        lower = c(mid[[1]] - x_diffs[[1]]/2, mid[-1] - x_diffs/2),
-        upper = c(mid[-last_mid] + x_diffs/2, mid[[last_mid]] + x_diffs[[last_mid - 1]]/2),
+        lower = c(mid[[1]] - x_diffs[[1]] / 2, mid[-1] - x_diffs / 2),
+        upper = c(mid[-last_mid] + x_diffs / 2, mid[[last_mid]] + x_diffs[[last_mid - 1]] / 2),
         density = d$y
     )
 }
@@ -179,8 +180,8 @@ density_bins = function(x, n = 101, ...) {
 #' @importFrom stats embed
 #' @export
 histogram_bins = function(x, n = 30, breaks = n, ...) {
-    h = hist(x, breaks = breaks, ..., plot=FALSE)
-    
+    h = hist(x, breaks = breaks, ..., plot = FALSE)
+
     data_frame(
         mid = rowMeans(embed(h$breaks, 2)),
         lower = h$breaks[-length(h$breaks)],

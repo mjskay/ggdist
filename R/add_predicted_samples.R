@@ -1,5 +1,5 @@
 # add_predicted_samples
-# 
+#
 # Author: mjskay
 ###############################################################################
 
@@ -9,26 +9,26 @@ globalVariables(c(".iteration", ".pred"))
 
 
 #' Add samples from the posterior fit or posterior prediction of a model to a data frame
-#' 
-#' Given a data frame, adds samples from the posterior fit (aka the linear/link-level predictor) 
+#'
+#' Given a data frame, adds samples from the posterior fit (aka the linear/link-level predictor)
 #' or the posterior predictions of the model to the data in a long format.
-#' 
+#'
 #' \code{add_fitted_samples} adds samples from the posterior linear predictor (or the "link") to
 #' the data. It corresponds to \code{\link[rstanarm]{posterior_linpred}} in \code{rstanarm} or
 #' \code{\link[brms]{fitted.brmsfit}} in \code{brms}.
-#' 
+#'
 #' \code{add_predicted_samples} adds samples from the posterior prediction to
 #' the data. It corresponds to \code{\link[rstanarm]{posterior_predict}} in \code{rstanarm} or
 #' \code{\link[brms]{predict.brmsfit}} in \code{brms}.
-#' 
-#' \code{add_fitted_samples} and \code{fitted_samples} are alternate spellings of the 
+#'
+#' \code{add_fitted_samples} and \code{fitted_samples} are alternate spellings of the
 #' same function with opposite order of the first two arguments to facilitate use in data
 #' processing pipelines that start either with a data frame or a model. Similarly,
 #' \code{add_predicted_samples} and \code{predicted_samples} are alternate spellings.
-#' 
+#'
 #' Given equal choice between the two, \code{add_fitted_samples} and \code{add_predicted_samples}
 #' are the preferred spellings.
-#' 
+#'
 #' @param newdata Data frame to generate predictions from. If omitted, most model types will
 #' generate predictions from the data used to fit the model.
 #' @param model A supported Bayesian model fit / MCMC object. Currently
@@ -36,7 +36,7 @@ globalVariables(c(".iteration", ".pred"))
 #' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rethinking]{map}},
 #' \code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
 #' implementation.
-#' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits 
+#' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits
 #' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
@@ -91,10 +91,10 @@ fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata,
             #is about 3 times faster
             .row = factor(1:nrow(.)),
             .chain = as.numeric(NA),
-            t(f_fitted_predicted(model, newdata = ., ...)), 
-            check.names=FALSE
+            t(f_fitted_predicted(model, newdata = ., ...)),
+            check.names = FALSE
         ) %>%
-        gather_(".iteration", var, names(.)[(ncol(newdata)+3):ncol(.)]) %>%
+        gather_(".iteration", var, names(.)[(ncol(newdata) + 3):ncol(.)]) %>%
         mutate(
             .iteration = as.numeric(.iteration)
         ) %>%
@@ -105,7 +105,7 @@ fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata,
 #' @export
 predicted_samples.stanreg = function(model, newdata, var = "pred", ...) {
     if (!requireNamespace("rstantools", quietly = TRUE)) {
-        stop('The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.'
+        stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects."
             , call. = FALSE)
     }
 
@@ -116,10 +116,10 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ...) {
 #' @export
 fitted_samples.stanreg = function(model, newdata, var = "estimate", ...) {
     if (!requireNamespace("rstanarm", quietly = TRUE)) {
-        stop('The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.'
+        stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects."
             , call. = FALSE)
     }
-    
+
     fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, ...)
 }
 
@@ -127,7 +127,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ...) {
 #' @export
 predicted_samples.brmsfit = function(model, newdata, var = "pred", ...) {
     if (!requireNamespace("brms", quietly = TRUE)) {
-        stop('The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.'
+        stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects."
             , call. = FALSE)
     }
 
@@ -138,7 +138,7 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ...) {
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", ...) {
     if (!requireNamespace("brms", quietly = TRUE)) {
-        stop('The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.'
+        stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects."
             , call. = FALSE)
     }
 

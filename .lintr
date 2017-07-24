@@ -1,0 +1,8 @@
+linters: with_defaults(
+        assignment_linter = NULL,
+        line_length_linter(120),
+        open_curly_linter(allow_single_line = TRUE),
+        closed_curly_linter(allow_single_line = TRUE),
+        object_name_linter = NULL,
+        object_length_linter = NULL
+    )

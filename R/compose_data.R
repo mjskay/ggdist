@@ -1,22 +1,22 @@
 # Composing data
-# 
+#
 # Author: mjskay
 ###############################################################################
 
 
 #' A data_list for input into a Bayesian sampler
-#' 
+#'
 #' Used by \code{\link{compose_data}} to create lists of data suitable for
 #' input into a Bayesian sampler.  This typically should not be called directly
 #' (instead use \code{\link{compose_data}}) unless you need to implement your
 #' own conversion routines for a data type not already supported.
-#' 
+#'
 #' This function creates a list with class \code{c("data_list", "list")}
 #' instead of \code{c("list")}, but otherwise acts like the \code{\link{list}}
 #' function.  It is used by \code{\link{as_data_list}} to create data lists for
 #' input into Bayesian samplers. See the implementations of
 #' \code{as_data_list.numeric}, \code{as_data_list.logical}, etc for examples.
-#' 
+#'
 #' @param ...  Items to include in the list.
 #' @return An object of class \code{c("data_list", "list")}
 #' @author Matthew Kay
@@ -31,7 +31,7 @@ data_list = function(...) {
 #' @export
 c.data_list = function(x, ..., recursive=FALSE) {
     class(x) = class(x)[-which(class(x) == "data_list")]
-    x = c(x, ..., recursive=recursive)
+    x = c(x, ..., recursive = recursive)
     class(x) = c("data_list", class(x))
     x
 }
@@ -39,18 +39,18 @@ c.data_list = function(x, ..., recursive=FALSE) {
 print.data_list = function(x, ...) {
     cat("data_list:\n\n")
     class(x) = class(x)[-which(class(x) == "data_list")]
-    print(x, ...) 
+    print(x, ...)
 }
 
 
 #' Convert data into a data_list
-#' 
+#'
 #' Used by \code{\link{compose_data}} to create lists of data suitable for
 #' input into a Bayesian sampler.  This typically should not be called directly
 #' (instead use \code{\link{compose_data}}) unless you need to implement your
 #' own conversion routines for a data type not already supported (see
 #' `Details`).
-#' 
+#'
 #' This function recursively translates its first argument into list elements,
 #' concatenating all resulting lists together. By default this means that:
 #' \itemize{ \item numerics are included as-is.  \item logicals are translated
@@ -67,7 +67,7 @@ print.data_list = function(x, ...) {
 #' an implementation of \code{\link{as_data_list}} for the type. See the
 #' implementations of \code{as_data_list.numeric}, \code{as_data_list.logical},
 #' etc for examples.
-#' 
+#'
 #' as_data_list.logical as_data_list.factor as_data_list.list
 #' as_data_list.data.frame as_data_list.data_list
 #' @param object The object to convert (see `Details`).
@@ -91,9 +91,9 @@ print.data_list = function(x, ...) {
 #' @seealso \code{\link{compose_data}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
 #' @keywords manip
 #' @examples
-#' 
+#'
 #' ##TODO
-#' 
+#'
 #' @export
 as_data_list = function(object, name="", ...) UseMethod("as_data_list")
 #' @rdname as_data_list
@@ -104,11 +104,11 @@ as_data_list.default = function(object, name="", ...) {
 }
 #' @rdname as_data_list
 #' @export
-as_data_list.numeric = function(object, name="", 
-        scalar_as_array=FALSE,  #treat single scalar values as array of length 1 
+as_data_list.numeric = function(object, name = "",
+        scalar_as_array=FALSE,  #treat single scalar values as array of length 1
         ...) {
     data = data_list(if (scalar_as_array) as.array(object) else object)
-    if (name == "") {	#name unspecified, warn
+    if (name == "") {
         warning("No name provided for value ", deparse0(object))
     }
     names(data) = name
@@ -124,7 +124,8 @@ as_data_list.logical = function(object, name="", ...) {
 as_data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
     data = as_data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
     if (any(table(object) == 0)) {
-        warning("Some levels of factor ", deparse0(name), " are unused. This may cause issues if you are using it as an index in a model.")
+        warning("Some levels of factor ", deparse0(name),
+            " are unused. This may cause issues if you are using it as an index in a model.")
     }
     data[[.n_name(name)]] = length(levels(object))
     data
@@ -148,10 +149,10 @@ as_data_list.list = function(object, name="", ...) {
 #' @export
 as_data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...) {
     #first, translate all variables in the data frame
-    data = as_data_list.list(object, 
+    data = as_data_list.list(object,
         name = name,
-        .n_name = .n_name, 
-        scalar_as_array = TRUE,     #when converting from a data frame with only one row, convert 
+        .n_name = .n_name,
+        scalar_as_array = TRUE,     #when converting from a data frame with only one row, convert
                                     #single scalars to arrays of length 1
         ...)
     #then add "n" column and return final list
@@ -166,19 +167,19 @@ as_data_list.data_list = function(object, name="", ...) {
 }
 
 #' Compose data for input into a Bayesian sampler
-#' 
+#'
 #' Compose data into a list suitable to be passed into an MCMC sampler (JAGS,
 #' BUGS, etc).
-#' 
-#' 
+#'
+#'
 #' This function recursively translates each argument into list elements using
 #' \code{\link{as_data_list}}, concatenating all resulting lists together. By
-#' default this means that: 
+#' default this means that:
 #' \itemize{
 #'      \item numerics are included as-is.
 #'      \item logicals are translated into numeric using \code{\link{as.numeric}}.
-#'      \item factors are translated into numeric using \code{\link{as.numeric}}, 
-#'          and an additional element named \code{.n_name(argument_name)} is added 
+#'      \item factors are translated into numeric using \code{\link{as.numeric}},
+#'          and an additional element named \code{.n_name(argument_name)} is added
 #'          with the number of levels in the factor. The default \code{.n_name}
 #'          function prefixes \code{"n_"} before the factor name; e.g. a factor
 #'          named \code{foo} will have an element named \code{n_foo} added containing
@@ -192,12 +193,12 @@ as_data_list.data_list = function(object, name="", ...) {
 #'          in the data frame.
 #'      \item all other types are dropped (and a warning given)
 #' }
-#' 
+#'
 #' If you wish to add support for additional types not described above,
 #' provide an implementation of \code{\link{as_data_list}} for the type. See
 #' the implementations of \code{as_data_list.numeric},
 #' \code{as_data_list.logical}, etc for examples.
-#' 
+#'
 #' @param ...  Data to be composed into a list suitable for being passed into
 #' Stan, JAGS, etc. Named arguments will have their name used as the \code{name}
 #' argument to \code{as_data_list} when translated; unnamed arguments that are
@@ -216,9 +217,9 @@ as_data_list.data_list = function(object, name="", ...) {
 #' @seealso \code{\link{as_data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
 #' @keywords manip
 #' @examples
-#' 
+#'
 #' ##TODO
-#' 
+#'
 #' @export
 compose_data = function(..., .n_name = n_prefix("n")) {
     #translate argument names / values into a list
@@ -232,7 +233,7 @@ compose_data = function(..., .n_name = n_prefix("n")) {
     names_from_arg_values = make.names(sapply(as.list(substitute(list(...)))[-1], deparse0))
     unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
     names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
-    #convert into data list 
+    #convert into data list
     data = as_data_list(objects, .n_name = .n_name)
     #as a hack for now, we strip the "data_list" type in the end for compatibility
     #with runjags, which incorrectly checks for class(data) == "list" instead of
@@ -243,31 +244,31 @@ compose_data = function(..., .n_name = n_prefix("n")) {
 
 
 #' Prefix function generator for composing index columns
-#' 
+#'
 #' Generates a function for generating names of index columns for factors in
 #' \code{\link{compose_data}} by prefixing a character vector to the original
 #' column name.
-#' 
-#' @param prefix Character vector to be prepended to column names by 
+#'
+#' @param prefix Character vector to be prepended to column names by
 #' \code{\link{compose_data}} to create index columns. Typically something
 #' like \code{"n"} (that is the default used in the \code{.n_name} argument
 #' of \code{\link{compose_data}}).
-#' 
+#'
 #' Returns a function. The function returned takes a character vector, \code{name}
-#' and returns \code{paste0(prefix, "_", name)}, unless \code{name} is empty, in 
+#' and returns \code{paste0(prefix, "_", name)}, unless \code{name} is empty, in
 #' which case it will return \code{prefix}.
-#' 
-#' \code{n_prefix("n")} is the default method that \code{\link{compose_data}} uses to 
+#'
+#' \code{n_prefix("n")} is the default method that \code{\link{compose_data}} uses to
 #' generate column names for factor indices. Under this method, given a data frame
-#' \code{df} with a factor column \code{"foo"} containing 5 levels, the results of 
-#' \code{compose_data(df)} will include an element named \code{"n"} (the result of 
+#' \code{df} with a factor column \code{"foo"} containing 5 levels, the results of
+#' \code{compose_data(df)} will include an element named \code{"n"} (the result of
 #' \code{n_prefix("n")("")}) equal to the number of rows in \code{df} and an element
 #' named \code{"n_foo"} (the result of \code{n_prefix("n")("foo")}) equal to the
 #' number of levels in \code{df$foo}.
-#' 
+#'
 #' @seealso The \code{.n_name} argument of \code{\link{compose_data}}
-#' 
+#'
 #' @export
 n_prefix = function(prefix) {
-    function(name) if(name == "") prefix else paste0(prefix, "_", name)
+    function(name) if (name == "") prefix else paste0(prefix, "_", name)
 }

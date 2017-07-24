@@ -1,5 +1,5 @@
 # flip_aes
-# 
+#
 # Based on https://github.com/lionel-/ggstance/blob/master/R/flip-aes.R by lionel-
 # Modified to add flip_aes.function by mjskay
 ###############################################################################

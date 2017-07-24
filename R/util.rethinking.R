@@ -1,5 +1,5 @@
 # Utility functions for models from the "rethinking" package (e.g. map and map2stan models)
-# 
+#
 # Author: mjskay
 ###############################################################################
 

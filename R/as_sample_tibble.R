@@ -1,37 +1,38 @@
 # as_sample_tibble
-# 
+#
 # Author: mjskay
 ###############################################################################
 
 
 #' Get samples from a model as a tibble
-#' 
-#' Extract samples from an MCMC fit into a wide-format data frame with a 
+#'
+#' Extract samples from an MCMC fit into a wide-format data frame with a
 #' \code{.chain} and \code{.iteration} column, as well as all terms
-#' as columns. Generally speaking not as useful as \code{\link{spread_samples}} or 
+#' as columns. Generally speaking not as useful as \code{\link{spread_samples}} or
 #' \code{\link{gather_samples}} and is mainly used interally (see `Details`)
-#' 
+#'
 #' You will not typically call this directly; instead use \code{\link{spread_samples}} or \code{\link{gather_samples}}.
 #' However, to provide support for new models in those functions,
 #' you must provide an implementation of this function, \emph{or} an implementaiton
 #' of \code{\link[coda]{as.mcmc.list}} (\code{as_sample_tibble} should work on any model
 #' with an implementation of \code{\link[coda]{as.mcmc.list}})
-#' 
+#'
 #' \code{as_sample_data_frame} is an alias.
-#' 
+#'
 #' @param model A supported Bayesian model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[MCMCglmm]{MCMCglmm}}, \code{\link[rethinking]{map}},
-#' \code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
-#' implementation.
+#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[MCMCglmm]{MCMCglmm}},
+#' \code{\link[rethinking]{map}}, \code{\link[rethinking]{map2stan}}, and anything with its own
+#' \code{\link[coda]{as.mcmc.list}} implementation.
+#'
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
 #' \code{.iteration} column, and one column for every parameter in \code{model}.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function 
+#' @seealso \code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function
 #' internally and provides a friendly interface for extracting tidy data frames from model fits.
 #' @keywords manip
 #' @aliases as_sample_data_frame
-#' @importFrom purrr map_df 
+#' @importFrom purrr map_df
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble as_tibble tibble
 #' @importFrom coda as.mcmc.list as.mcmc
@@ -67,7 +68,7 @@ as_sample_tibble.mcmc.list = function(model) {
 #' @export
 as_sample_tibble.stanfit = function(model) {
     if (!requireNamespace("rstan", quietly = TRUE)) {
-        stop('The `rstan` package is needed for `as_sample_tibble` to support `stanfit` objects.'
+        stop("The `rstan` package is needed for `as_sample_tibble` to support `stanfit` objects."
             , call. = FALSE)
     }
     as_sample_tibble(rstan::As.mcmc.list(model))
@@ -76,14 +77,14 @@ as_sample_tibble.stanfit = function(model) {
 #' @export
 as_sample_tibble.stanreg = function(model) {
     if (!requireNamespace("rstan", quietly = TRUE)) {
-        stop('The `rstan` package is needed for `as_sample_tibble` to support `stanreg` objects.'
+        stop("The `rstan` package is needed for `as_sample_tibble` to support `stanreg` objects."
             , call. = FALSE)
     }
     #stanreg objects have more info provided for parameter names than the underlying stanfit,
     #so we dont' just do as_sample_tibble(model$stanfit)
     sample_matrix = as.array(model) #[iteration, chain, parameter]
     n_chain = dim(sample_matrix)[[2]]
-    mcmc_list = as.mcmc.list(lapply(1:n_chain, function(chain) as.mcmc(sample_matrix[,chain,])))
+    mcmc_list = as.mcmc.list(lapply(1:n_chain, function(chain) as.mcmc(sample_matrix[, chain, ])))
     as_sample_tibble(mcmc_list)
 }
 
@@ -91,7 +92,7 @@ as_sample_tibble.stanreg = function(model) {
 #' @export
 as_sample_tibble.runjags = function(model) {
     if (!requireNamespace("runjags", quietly = TRUE)) {
-        stop('The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects.'
+        stop("The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects."
         , call. = FALSE)
     }
     as_sample_tibble(as.mcmc.list(model))
@@ -100,7 +101,7 @@ as_sample_tibble.runjags = function(model) {
 #' @export
 as_sample_tibble.brmsfit = function(model) {
     if (!requireNamespace("brms", quietly = TRUE)) {
-        stop('The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects.'
+        stop("The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects."
             , call. = FALSE)
     }
     as_sample_tibble(brms::as.mcmc(model))
@@ -111,7 +112,7 @@ as_sample_tibble.map = function(model) {
     mu = coef(model)
     samples = as_tibble(mvrnorm(n = 10000, mu = mu, Sigma = vcov(model)))
     #map models have no chains
-    bind_cols(data_frame(.chain=1, .iteration = 1:nrow(samples)), samples)
+    bind_cols(data_frame(.chain = 1, .iteration = 1:nrow(samples)), samples)
 }
 #' @rdname as_sample_tibble
 #' @export

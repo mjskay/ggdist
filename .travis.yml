@@ -26,7 +26,7 @@ r_packages:
 env:
   global:
     - NOT_CRAN=true CXXFLAGS=-O2 CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++ CPP=clang CC=clang
-before_install: 
+before_install:
  - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
  - mkdir -p ~/.R
  - echo 'CXXFLAGS=-O2' > ~/.R/Makevars
