@@ -153,7 +153,7 @@ The condition numbers are automatically turned back into text ("A", "B", "C", ..
 
 ### Plotting posteriors as eye plots: `geom_eye` / `geom_eyeh`
 
-Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the `tidybayes::geom_eyeh` geom (horizontal version of `tidybayes::geom_eye`), which combines a violin plot of the posterior density, mean, and 95% quantile interval to give an "eye plot" of the posterior. The point and interval types are customizable using the `point_interval` family of functions.
+Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the `tidybayes::geom_eyeh` geom (horizontal version of `tidybayes::geom_eye`), which combines a violin plot of the posterior density, mean, and 95% quantile interval to give an "eye plot" of the posterior. The point and interval types are customizable using the `point_interval` family of functions. A "half-eye" plot (non-mirrored density) is also available as `tidybayes::geom_halfeyeh`.
 
 ``` r
 m %>%

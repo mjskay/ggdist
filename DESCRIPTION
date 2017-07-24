@@ -26,6 +26,7 @@ Imports:
     MASS,
     rlang,
     ggstance,
+    ggjoy,
     magrittr
 Suggests:
     knitr,

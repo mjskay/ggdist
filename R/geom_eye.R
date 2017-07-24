@@ -59,9 +59,9 @@
 #' estimate and credible interval.
 #' @param interval.args Other arguments passed to \code{\link{stat_summary}}.
 #' @author Matthew Kay
-#' @seealso See \code{\link{geom_eyeh}} for the horizontal version. See
-#' \code{\link{geom_violin}} and \code{\link{stat_summary}} for the geoms
-#' this function is based on.
+#' @seealso See \code{\link{geom_eyeh}} for the horizontal version. See \code{\link{geom_halfeyeh}}
+#' for the non-mirrored density ("half eye") version. See \code{\link{geom_violin}} and \code{\link{stat_summary}}
+#' for the geoms this function is based on.
 #' @keywords manip
 #' @examples
 #'

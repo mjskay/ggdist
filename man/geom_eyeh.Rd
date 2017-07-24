@@ -87,9 +87,9 @@ intervals.
 
 }
 \seealso{
-See \code{\link{geom_eye}} for the vertical version. See
-\code{\link{geom_violinh}} and \code{\link{stat_summaryh}} for the geoms
-this function is based on.
+See \code{\link{geom_eye}} for the vertical version. See \code{\link{geom_halfeyeh}}
+for the non-mirrored density ("half eye") version. See \code{\link{geom_violin}} and \code{\link{stat_summary}}
+for the geoms this function is based on.
 }
 \author{
 Matthew Kay

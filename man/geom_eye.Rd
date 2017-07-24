@@ -84,9 +84,9 @@ intervals.
 
 }
 \seealso{
-See \code{\link{geom_eyeh}} for the horizontal version. See
-\code{\link{geom_violin}} and \code{\link{stat_summary}} for the geoms
-this function is based on.
+See \code{\link{geom_eyeh}} for the horizontal version. See \code{\link{geom_halfeyeh}}
+for the non-mirrored density ("half eye") version. See \code{\link{geom_violin}} and \code{\link{stat_summary}}
+for the geoms this function is based on.
 }
 \author{
 Matthew Kay
