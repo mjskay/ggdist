@@ -79,7 +79,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @importFrom purrr map_df map map2 discard
 #' @importFrom dplyr do bind_cols
 #' @importFrom stringi stri_startswith_fixed
-#' @importFrom rlang set_names quos quos_auto_name eval_tidy
+#' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
 point_interval = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) {
   UseMethod("point_interval")

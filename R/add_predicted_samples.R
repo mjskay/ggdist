@@ -53,6 +53,7 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom magrittr %>%
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
+#' @importFrom stats fitted predict
 #' @export
 add_predicted_samples = function(newdata, model, var = "pred", ...) {
   predicted_samples(model, newdata, var, ...)

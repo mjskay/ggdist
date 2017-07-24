@@ -144,6 +144,9 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' \code{histogram_bins} computes a density histogram using \code{\link{hist}}.
 #'
 #' @param x A numeric vector
+#' @param n Number of bins
+#' @param breaks Used to set bins for \code{histogram_bins}. Can be number of bins (by default it is set to the value
+#' of \code{n}) or a method for setting bins. See the \code{breaks} parameter of \code{\link{hist}}.
 #' @param ...  Additional arguments passed to \code{\link{density}} or
 #' \code{\link{hist}}.
 #' @return A data frame representing bins and their densities with the
