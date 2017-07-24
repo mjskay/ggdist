@@ -72,40 +72,40 @@
 #' @import ggplot2
 #' @export
 geom_eyeh = function(
-    #shared properties
-    mapping = NULL, data = NULL,
+  #shared properties
+  mapping = NULL, data = NULL,
 
-    #violin properties
-    stat = "xdensity", position = "dodgev", trim = TRUE, scale = "area", fill = "gray65",
-    violin.args = list(), ...,
+  #violin properties
+  stat = "xdensity", position = "dodgev", trim = TRUE, scale = "area", fill = "gray65",
+  violin.args = list(), ...,
 
-    #stat_summaryh properties
-    fun.data = mean_qih, fun.args = list(),
-    color = NULL, size = NULL,
-    interval.args = list(geom = "pointrangeh", position = "identity")
+  #stat_summaryh properties
+  fun.data = mean_qih, fun.args = list(),
+  color = NULL, size = NULL,
+  interval.args = list(geom = "pointrangeh", position = "identity")
 ) {
 
-    #build violin plot
-    violin.args =
-        list(mapping = mapping, data = data, stat = stat, position = position, trim = trim,
-            scale = scale, color = NA, fill = fill, size = 0.5, alpha = 1.0, linetype = "solid", ...) %>%
-        {if (!is.null(fill)) modifyList(., list(fill = fill)) else .} %>%
-        modifyList(violin.args)
-    violin = do.call(geom_violinh, violin.args)
+  #build violin plot
+  violin.args =
+    list(mapping = mapping, data = data, stat = stat, position = position, trim = trim,
+      scale = scale, color = NA, fill = fill, size = 0.5, alpha = 1.0, linetype = "solid", ...) %>%
+      {if (!is.null(fill)) modifyList(., list(fill = fill)) else .} %>%
+    modifyList(violin.args)
+  violin = do.call(geom_violinh, violin.args)
 
-    #build interval annotations
-    interval.args =
-        list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, fun.args = fun.args) %>%
-        {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
-        {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
-        modifyList(interval.args)
-    interval = do.call(stat_summaryh, interval.args)
+  #build interval annotations
+  interval.args =
+    list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, fun.args = fun.args) %>%
+    {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
+    {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
+    modifyList(interval.args)
+  interval = do.call(stat_summaryh, interval.args)
 
-    # we return a list of geoms that can be added to a ggplot object, as in
-    # > ggplot(...) + list(geom_a(), geom_b())
-    # which is equivalent to
-    # > ggplot(...) + geom_a() + geom_b()
-    list(violin, interval)
+  # we return a list of geoms that can be added to a ggplot object, as in
+  # > ggplot(...) + list(geom_a(), geom_b())
+  # which is equivalent to
+  # > ggplot(...) + geom_a() + geom_b()
+  list(violin, interval)
 }
 
 
@@ -113,6 +113,6 @@ geom_eyeh = function(
 #' @import ggplot2
 #' @export
 ggeye = function(data = NULL, mapping = NULL, ...) {
-    .Deprecated("geom_eyeh")
-    ggplot(data = data, mapping = mapping) + geom_eye(...) + coord_flip()
+  .Deprecated("geom_eyeh")
+  ggplot(data = data, mapping = mapping) + geom_eye(...) + coord_flip()
 }

@@ -54,13 +54,13 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom dplyr mutate
 #' @export
 add_predicted_samples = function(newdata, model, var = "pred", ...) {
-    predicted_samples(model, newdata, var, ...)
+  predicted_samples(model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
 add_fitted_samples = function(newdata, model, var = "estimate", ...) {
-    fitted_samples(model, newdata, var, ...)
+  fitted_samples(model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
@@ -74,73 +74,69 @@ fitted_samples = function(model, newdata, var = "estimate", ...) UseMethod("fitt
 #' @rdname add_predicted_samples
 #' @export
 predicted_samples.default = function(model, newdata, var = "pred", ...) {
-    stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `predicted_samples`"))
+  stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `predicted_samples`"))
 }
 
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples.default = function(model, newdata, var = "estimate", ...) {
-    stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `fitted_samples`"))
+  stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `fitted_samples`"))
 }
 
 # template for predicted_samples.stanreg and fitted_samples.stanreg
 fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata, var, ...) {
-    newdata %>%
-        data.frame(
-            #for some reason calculating row here instead of in a subsequent mutate()
-            #is about 3 times faster
-            .row = factor(1:nrow(.)),
-            .chain = as.numeric(NA),
-            t(f_fitted_predicted(model, newdata = ., ...)),
-            check.names = FALSE
-        ) %>%
-        gather_(".iteration", var, names(.)[(ncol(newdata) + 3):ncol(.)]) %>%
-        mutate(
-            .iteration = as.numeric(.iteration)
-        ) %>%
-        group_by_(".row", .dots = colnames(newdata))
+  newdata %>%
+    data.frame(
+      #for some reason calculating row here instead of in a subsequent mutate()
+      #is about 3 times faster
+      .row = factor(1:nrow(.)),
+      .chain = as.numeric(NA),
+      t(f_fitted_predicted(model, newdata = ., ...)),
+      check.names = FALSE
+    ) %>%
+    gather_(".iteration", var, names(.)[(ncol(newdata) + 3):ncol(.)]) %>%
+    mutate(
+      .iteration = as.numeric(.iteration)
+    ) %>%
+    group_by_(".row", .dots = colnames(newdata))
 }
 
 #' @rdname add_predicted_samples
 #' @export
 predicted_samples.stanreg = function(model, newdata, var = "pred", ...) {
-    if (!requireNamespace("rstantools", quietly = TRUE)) {
-        stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects."
-            , call. = FALSE)
-    }
+  if (!requireNamespace("rstantools", quietly = TRUE)) {
+    stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
+  }
 
-    fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, ...)
+  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples.stanreg = function(model, newdata, var = "estimate", ...) {
-    if (!requireNamespace("rstanarm", quietly = TRUE)) {
-        stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects."
-            , call. = FALSE)
-    }
+  if (!requireNamespace("rstanarm", quietly = TRUE)) {
+    stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
+  }
 
-    fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, ...)
+  fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
 predicted_samples.brmsfit = function(model, newdata, var = "pred", ...) {
-    if (!requireNamespace("brms", quietly = TRUE)) {
-        stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects."
-            , call. = FALSE)
-    }
+  if (!requireNamespace("brms", quietly = TRUE)) {
+    stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
+  }
 
-    fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE, ...)
+  fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", ...) {
-    if (!requireNamespace("brms", quietly = TRUE)) {
-        stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects."
-            , call. = FALSE)
-    }
+  if (!requireNamespace("brms", quietly = TRUE)) {
+    stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
+  }
 
-    fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, ...)
+  fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, ...)
 }

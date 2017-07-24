@@ -24,22 +24,22 @@
 #' @keywords manip
 #' @export
 data_list = function(...) {
-    x = list(...)
-    class(x) = c("data_list", "list")
-    x
+  x = list(...)
+  class(x) = c("data_list", "list")
+  x
 }
 #' @export
 c.data_list = function(x, ..., recursive=FALSE) {
-    class(x) = class(x)[-which(class(x) == "data_list")]
-    x = c(x, ..., recursive = recursive)
-    class(x) = c("data_list", class(x))
-    x
+  class(x) = class(x)[-which(class(x) == "data_list")]
+  x = c(x, ..., recursive = recursive)
+  class(x) = c("data_list", class(x))
+  x
 }
 #' @export
 print.data_list = function(x, ...) {
-    cat("data_list:\n\n")
-    class(x) = class(x)[-which(class(x) == "data_list")]
-    print(x, ...)
+  cat("data_list:\n\n")
+  class(x) = class(x)[-which(class(x) == "data_list")]
+  print(x, ...)
 }
 
 
@@ -99,71 +99,71 @@ as_data_list = function(object, name="", ...) UseMethod("as_data_list")
 #' @rdname as_data_list
 #' @export
 as_data_list.default = function(object, name="", ...) {
-    warning(deparse0(name), " has unsupported type ", deparse0(class(object)), " and was dropped.")
-    data_list()
+  warning(deparse0(name), " has unsupported type ", deparse0(class(object)), " and was dropped.")
+  data_list()
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.numeric = function(object, name = "",
-        scalar_as_array=FALSE,  #treat single scalar values as array of length 1
-        ...) {
-    data = data_list(if (scalar_as_array) as.array(object) else object)
-    if (name == "") {
-        warning("No name provided for value ", deparse0(object))
-    }
-    names(data) = name
-    data
+  scalar_as_array=FALSE,  #treat single scalar values as array of length 1
+  ...) {
+  data = data_list(if (scalar_as_array) as.array(object) else object)
+  if (name == "") {
+    warning("No name provided for value ", deparse0(object))
+  }
+  names(data) = name
+  data
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.logical = function(object, name="", ...) {
-    as_data_list(as.numeric(object), name, ...)
+  as_data_list(as.numeric(object), name, ...)
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
-    data = as_data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
-    if (any(table(object) == 0)) {
-        warning("Some levels of factor ", deparse0(name),
-            " are unused. This may cause issues if you are using it as an index in a model.")
-    }
-    data[[.n_name(name)]] = length(levels(object))
-    data
+  data = as_data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
+  if (any(table(object) == 0)) {
+    warning("Some levels of factor ", deparse0(name),
+      " are unused. This may cause issues if you are using it as an index in a model.")
+  }
+  data[[.n_name(name)]] = length(levels(object))
+  data
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.character = function(object, name="", ...) {
-    as_data_list(as.factor(object), name = name, ...)
+  as_data_list(as.factor(object), name = name, ...)
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.list = function(object, name="", ...) {
-    #go through list and translate variables
-    data = data_list()
-    for (i in 1:length(object)) {
-        data = c(data, as_data_list(object[[i]], names(object)[[i]], ...))
-    }
-    data
+  #go through list and translate variables
+  data = data_list()
+  for (i in 1:length(object)) {
+    data = c(data, as_data_list(object[[i]], names(object)[[i]], ...))
+  }
+  data
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.data.frame = function(object, name="", .n_name = n_prefix("n"), ...) {
-    #first, translate all variables in the data frame
-    data = as_data_list.list(object,
-        name = name,
-        .n_name = .n_name,
-        scalar_as_array = TRUE,     #when converting from a data frame with only one row, convert
-                                    #single scalars to arrays of length 1
-        ...)
-    #then add "n" column and return final list
-    n_name = .n_name(name)
-    data[[n_name]] = nrow(object)
-    data
+  #first, translate all variables in the data frame
+  data = as_data_list.list(object,
+    name = name,
+    .n_name = .n_name,
+    scalar_as_array = TRUE,     #when converting from a data frame with only one row, convert
+    #single scalars to arrays of length 1
+    ...)
+  #then add "n" column and return final list
+  n_name = .n_name(name)
+  data[[n_name]] = nrow(object)
+  data
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.data_list = function(object, name="", ...) {
-    object
+  object
 }
 
 #' Compose data for input into a Bayesian sampler
@@ -222,24 +222,24 @@ as_data_list.data_list = function(object, name="", ...) {
 #'
 #' @export
 compose_data = function(..., .n_name = n_prefix("n")) {
-    #translate argument names / values into a list
-    objects = list(...)
-    if (is.null(names(objects))) {
-        #when no named arguments are supplied, translate NULL into empty string
-        #so that the naming code below works
-        names(objects) = rep("", length(objects))
-    }
-    #give a name to any unnamed argument based on its unevaluated value
-    names_from_arg_values = make.names(sapply(as.list(substitute(list(...)))[-1], deparse0))
-    unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
-    names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
-    #convert into data list
-    data = as_data_list(objects, .n_name = .n_name)
-    #as a hack for now, we strip the "data_list" type in the end for compatibility
-    #with runjags, which incorrectly checks for class(data) == "list" instead of
-    #using is.list
-    class(data) = "list"
-    data
+  #translate argument names / values into a list
+  objects = list(...)
+  if (is.null(names(objects))) {
+    #when no named arguments are supplied, translate NULL into empty string
+    #so that the naming code below works
+    names(objects) = rep("", length(objects))
+  }
+  #give a name to any unnamed argument based on its unevaluated value
+  names_from_arg_values = make.names(sapply(as.list(substitute(list(...)))[-1], deparse0))
+  unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
+  names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
+  #convert into data list
+  data = as_data_list(objects, .n_name = .n_name)
+  #as a hack for now, we strip the "data_list" type in the end for compatibility
+  #with runjags, which incorrectly checks for class(data) == "list" instead of
+  #using is.list
+  class(data) = "list"
+  data
 }
 
 
@@ -270,5 +270,5 @@ compose_data = function(..., .n_name = n_prefix("n")) {
 #'
 #' @export
 n_prefix = function(prefix) {
-    function(name) if (name == "") prefix else paste0(prefix, "_", name)
+  function(name) if (name == "") prefix else paste0(prefix, "_", name)
 }

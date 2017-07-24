@@ -80,51 +80,51 @@
 #' @import dplyr
 #' @export
 predict_curve = function(data, formula, summary = median, ...) {
-    .Deprecated("density_bins",
-        paste("predict_curve and predict_curve_density will be removed in a future version;",
-        "use modelr::expand and dplyr::do with tidybayes::density_bins / histogram_bins instead."))
+  .Deprecated("density_bins",
+    paste("predict_curve and predict_curve_density will be removed in a future version;",
+      "use modelr::expand and dplyr::do with tidybayes::density_bins / histogram_bins instead."))
 
-    #get response name and formula to generate response
-    response_name = formula[[2]]         # nolint
-    prediction_formula = formula[[3]]    # nolint
+  #get response name and formula to generate response
+  response_name = formula[[2]]         # nolint
+  prediction_formula = formula[[3]]    # nolint
 
-    #get the predictors we will vary over the curve
-    varied_predictors = expand.grid(..., KEEP.OUT.ATTRS = FALSE)
-    if (nrow(varied_predictors) == 0) {
-        #no predictors provided => use a data frame with one row
-        #and no columns so that the predictors are evaluated once
-        #per group in data
-        varied_predictors = data.frame(row.names = 1)
-    }
+  #get the predictors we will vary over the curve
+  varied_predictors = expand.grid(..., KEEP.OUT.ATTRS = FALSE)
+  if (nrow(varied_predictors) == 0) {
+    #no predictors provided => use a data frame with one row
+    #and no columns so that the predictors are evaluated once
+    #per group in data
+    varied_predictors = data.frame(row.names = 1)
+  }
 
-    eval(bquote(
-        do(data, {
-            #for every group defined in data ...
-            ldply(1:nrow(varied_predictors), function(r) {
-                #and for every prediction point on the curve
-                #defined by the values in (...)
-                predictor_row = as.list(varied_predictors[r, , drop = FALSE])
-                # N.B. we convert predictor_row to a list first (then the final result back
-                # to a data.frame) because if summary returns more than one row
-                # (as in density prediction, for example) we can't just do the calculation
-                # within a data.frame: predictor_row is always exactly one row, so there
-                # will be a row count mismatch if summary returns > 1 row.
-                # By doing the calculation within a list, the single predictor_row
-                # will automatically be repeated to match the number of rows returned
-                # when we convert back to a data.frame afterwards.
-                within(predictor_row,
-                    #get the response value summarized by the summary function
-                    .(response_name) <- summary(with(., .(prediction_formula)))
-                ) %>% as.data.frame(optional = TRUE)
-            })
-        })
-    ))
+  eval(bquote(
+    do(data, {
+      #for every group defined in data ...
+      ldply(1:nrow(varied_predictors), function(r) {
+        #and for every prediction point on the curve
+        #defined by the values in (...)
+        predictor_row = as.list(varied_predictors[r, , drop = FALSE])
+        # N.B. we convert predictor_row to a list first (then the final result back
+        # to a data.frame) because if summary returns more than one row
+        # (as in density prediction, for example) we can't just do the calculation
+        # within a data.frame: predictor_row is always exactly one row, so there
+        # will be a row count mismatch if summary returns > 1 row.
+        # By doing the calculation within a list, the single predictor_row
+        # will automatically be repeated to match the number of rows returned
+        # when we convert back to a data.frame afterwards.
+        within(predictor_row,
+          #get the response value summarized by the summary function
+          .(response_name) <- summary(with(., .(prediction_formula)))
+        ) %>% as.data.frame(optional = TRUE)
+      })
+    })
+  ))
 }
 
 #' @rdname predict_curve
 #' @export
 predict_curve_density = function(data, formula, summary = function(...) density_bins(..., n = n), n = 50, ...) {
-    predict_curve(data, formula, summary = summary, ...)
+  predict_curve(data, formula, summary = summary, ...)
 }
 
 #' Density bins as data frames suitable for use with predict_curve
@@ -161,18 +161,18 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' @importFrom stats density
 #' @export
 density_bins = function(x, n = 101, ...) {
-    d = density(x, n = n, ...)
+  d = density(x, n = n, ...)
 
-    mid = d$x
-    last_mid = length(mid)
-    x_diffs = mid[-1] - mid[-last_mid]
+  mid = d$x
+  last_mid = length(mid)
+  x_diffs = mid[-1] - mid[-last_mid]
 
-    data_frame(
-        mid = mid,
-        lower = c(mid[[1]] - x_diffs[[1]] / 2, mid[-1] - x_diffs / 2),
-        upper = c(mid[-last_mid] + x_diffs / 2, mid[[last_mid]] + x_diffs[[last_mid - 1]] / 2),
-        density = d$y
-    )
+  data_frame(
+    mid = mid,
+    lower = c(mid[[1]] - x_diffs[[1]] / 2, mid[-1] - x_diffs / 2),
+    upper = c(mid[-last_mid] + x_diffs / 2, mid[[last_mid]] + x_diffs[[last_mid - 1]] / 2),
+    density = d$y
+  )
 }
 
 #' @rdname density_bins
@@ -180,12 +180,12 @@ density_bins = function(x, n = 101, ...) {
 #' @importFrom stats embed
 #' @export
 histogram_bins = function(x, n = 30, breaks = n, ...) {
-    h = hist(x, breaks = breaks, ..., plot = FALSE)
+  h = hist(x, breaks = breaks, ..., plot = FALSE)
 
-    data_frame(
-        mid = rowMeans(embed(h$breaks, 2)),
-        lower = h$breaks[-length(h$breaks)],
-        upper = h$breaks[-1],
-        density = h$density
-    )
+  data_frame(
+    mid = rowMeans(embed(h$breaks, 2)),
+    lower = h$breaks[-length(h$breaks)],
+    upper = h$breaks[-1],
+    density = h$density
+  )
 }

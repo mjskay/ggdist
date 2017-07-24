@@ -82,100 +82,100 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy
 #' @export
 point_interval = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) {
-    UseMethod("point_interval")
+  UseMethod("point_interval")
 }
 
 #' @rdname point_interval
 #' @export
 point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) {
-    col_exprs = quos(..., .named = TRUE)
+  col_exprs = quos(..., .named = TRUE)
+
+  if (length(col_exprs) == 0) {
+    # no column expressions provided => summarise all columns that are not groups and which
+    # do not start with "."
+    col_exprs = names(.data) %>%
+      map(as.name) %>%
+      #don't aggregate groups because we aggregate within these
+      setdiff(groups(.data)) %>%
+      #don't aggregate columns that start with "." because these are special columns (such
+      #as .chain or .iteration)
+      discard(~ stri_startswith_fixed(.x, ".")) %>%
+      map(as_quosure) %>%
+      quos_auto_name()
 
     if (length(col_exprs) == 0) {
-        # no column expressions provided => summarise all columns that are not groups and which
-        # do not start with "."
-        col_exprs = names(.data) %>%
-            map(as.name) %>%
-            #don't aggregate groups because we aggregate within these
-            setdiff(groups(.data)) %>%
-            #don't aggregate columns that start with "." because these are special columns (such
-            #as .chain or .iteration)
-            discard(~ stri_startswith_fixed(.x, ".")) %>%
-            map(as_quosure) %>%
-            quos_auto_name()
-
-        if (length(col_exprs) == 0) {
-            #still nothing to aggregate? not sure what the user wants
-            stop("No columns found to calculate point and interval estimates for.")
-        }
+      #still nothing to aggregate? not sure what the user wants
+      stop("No columns found to calculate point and interval estimates for.")
     }
+  }
 
-    if (length(col_exprs) == 1 && .broom) {
-        # only one column provided => summarise that column and use "conf.low" and "conf.high" as
-        # the generated column names for consistency with tidy() in broom
+  if (length(col_exprs) == 1 && .broom) {
+    # only one column provided => summarise that column and use "conf.low" and "conf.high" as
+    # the generated column names for consistency with tidy() in broom
 
-        map_df(.prob, function(p) {
-            do(.data, {
-                col_samples = eval_tidy(col_exprs[[1]], .data)
-                interval = .interval(col_samples, .prob = p)
-                data_frame(
-                    .point(col_samples),
-                    interval[[1]],
-                    interval[[2]],
-                    p
-                ) %>%
-                    set_names(c(
-                        names(col_exprs),
-                        "conf.low",
-                        "conf.high",
-                        ".prob"
-                    ))
-            })
-        })
-    } else {
-        # multiple columns provided => generate unique names for each one
+    map_df(.prob, function(p) {
+      do(.data, {
+        col_samples = eval_tidy(col_exprs[[1]], .data)
+        interval = .interval(col_samples, .prob = p)
+        data_frame(
+          .point(col_samples),
+          interval[[1]],
+          interval[[2]],
+          p
+        ) %>%
+          set_names(c(
+            names(col_exprs),
+            "conf.low",
+            "conf.high",
+            ".prob"
+          ))
+      })
+    })
+  } else {
+    # multiple columns provided => generate unique names for each one
 
-        map_df(.prob, function(p) {
-            do(.data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
-                col_samples = eval_tidy(col_expr, .)
-                interval = .interval(col_samples, .prob = p)
-                data_frame(
-                    .point(col_samples),
-                    interval[[1]],
-                    interval[[2]]
-                ) %>%
-                    set_names(c(
-                        col_name,
-                        paste0(col_name, ".low"),
-                        paste0(col_name, ".high")
-                    ))
-            }))) %>% mutate(
-                .prob = p
-            )
-        })
-    }
+    map_df(.prob, function(p) {
+      do(.data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
+        col_samples = eval_tidy(col_expr, .)
+        interval = .interval(col_samples, .prob = p)
+        data_frame(
+          .point(col_samples),
+          interval[[1]],
+          interval[[2]]
+        ) %>%
+          set_names(c(
+            col_name,
+            paste0(col_name, ".low"),
+            paste0(col_name, ".high")
+          ))
+      }))) %>% mutate(
+        .prob = p
+      )
+    })
+  }
 }
 
 #' @rdname point_interval
 #' @importFrom dplyr rename
 #' @export
 point_interval.numeric = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = FALSE) {
-    result = map_df(.prob, function(p) {
-        interval = .interval(.data, .prob = p)
-        data.frame(
-            y = .point(.data),
-            ymin = interval[[1]],
-            ymax = interval[[2]],
-            .prob = p
-        )
-    })
+  result = map_df(.prob, function(p) {
+    interval = .interval(.data, .prob = p)
+    data.frame(
+      y = .point(.data),
+      ymin = interval[[1]],
+      ymax = interval[[2]],
+      .prob = p
+    )
+  })
 
-    if (.broom) {
-        result %>%
-            rename(estimate = y, conf.low = ymin, conf.high = ymax)
-    }
-    else {
-        result
-    }
+  if (.broom) {
+    result %>%
+      rename(estimate = y, conf.low = ymin, conf.high = ymax)
+  }
+  else {
+    result
+  }
 }
 
 #' @rdname point_interval
@@ -186,22 +186,22 @@ point_intervalh = flip_aes(point_interval)
 #' @export
 #' @rdname point_interval
 qi = function(x, .prob = .95) {
-    lower_prob = (1 - .prob) / 2
-    upper_prob = (1 + .prob) / 2
-    unname(quantile(x, c(lower_prob, upper_prob)))
+  lower_prob = (1 - .prob) / 2
+  upper_prob = (1 + .prob) / 2
+  unname(quantile(x, c(lower_prob, upper_prob)))
 }
 
 #' @importFrom coda HPDinterval as.mcmc
 #' @export
 #' @rdname point_interval
 hdi = function(x, .prob = .95) {
-    as.vector(HPDinterval(as.mcmc(x), .prob = .prob))
+  as.vector(HPDinterval(as.mcmc(x), .prob = .prob))
 }
 
 #' @export
 #' @rdname point_interval
 mean_qi = function(.data, ..., .prob = .95)
-    point_interval(.data, ..., .prob = .prob, .point = mean, .interval = qi)
+  point_interval(.data, ..., .prob = .prob, .point = mean, .interval = qi)
 
 #' @export
 #' @rdname point_interval
@@ -210,7 +210,7 @@ mean_qih = flip_aes(mean_qi)
 #' @export
 #' @rdname point_interval
 median_qi = function(.data, ..., .prob = .95)
-    point_interval(.data, ..., .prob = .prob, .point = median, .interval = qi)
+  point_interval(.data, ..., .prob = .prob, .point = median, .interval = qi)
 
 #' @export
 #' @rdname point_interval
@@ -220,7 +220,7 @@ median_qih = flip_aes(median_qi)
 #' @export
 #' @rdname point_interval
 mode_qi = function(.data, ..., .prob = .95)
-    point_interval(.data, ..., .prob = .prob, .point = Mode, .interval = qi)
+  point_interval(.data, ..., .prob = .prob, .point = Mode, .interval = qi)
 
 #' @export
 #' @rdname point_interval
@@ -229,7 +229,7 @@ mode_qih = flip_aes(mode_qi)
 #' @export
 #' @rdname point_interval
 mean_hdi = function(.data, ..., .prob = .95)
-    point_interval(.data, ..., .prob = .prob, .point = mean, .interval = hdi)
+  point_interval(.data, ..., .prob = .prob, .point = mean, .interval = hdi)
 
 #' @export
 #' @rdname point_interval
@@ -238,7 +238,7 @@ mean_hdih = flip_aes(mean_hdi)
 #' @export
 #' @rdname point_interval
 median_hdi = function(.data, ..., .prob = .95)
-    point_interval(.data, ..., .prob = .prob, .point = median, .interval = hdi)
+  point_interval(.data, ..., .prob = .prob, .point = median, .interval = hdi)
 
 #' @export
 #' @rdname point_interval
@@ -248,7 +248,7 @@ median_hdih = flip_aes(median_hdi)
 #' @export
 #' @rdname point_interval
 mode_hdi = function(.data, ..., .prob = .95)
-    point_interval(.data, ..., .prob = .prob, .point = Mode, .interval = hdi)
+  point_interval(.data, ..., .prob = .prob, .point = Mode, .interval = hdi)
 
 #' @export
 #' @rdname point_interval

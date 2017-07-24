@@ -51,8 +51,8 @@ globalVariables(c("term", "estimate"))
 #' Is roughly equivalent to:
 #'
 #' \preformatted{data \%>\%
-#'     gather(term, estimate, -c(.chain, .iteration, i, v)) \%>\%
-#'     group_by(term, add = TRUE)
+#'   gather(term, estimate, -c(.chain, .iteration, i, v)) \%>\%
+#'   group_by(term, add = TRUE)
 #' }
 #'
 #' @param data A data frame with parameter/term names spread across columns, such as one returned by
@@ -69,15 +69,15 @@ globalVariables(c("term", "estimate"))
 #' data(RankCorr)
 #'
 #' RankCorr %>%
-#'     spread_samples(b[i,v], tau[i]) %>%
-#'     gather_terms() %>%
-#'     mean_qi()
+#'   spread_samples(b[i,v], tau[i]) %>%
+#'   gather_terms() %>%
+#'   mean_qi()
 #'
 #' # the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)
 #' RankCorr %>%
-#'     as_sample_tibble() %>%
-#'     gather_terms() %>%
-#'     mean_qi()
+#'   as_sample_tibble() %>%
+#'   gather_terms() %>%
+#'   mean_qi()
 #' }
 #' @importFrom stringi stri_detect_regex
 #' @importFrom magrittr %>%
@@ -85,19 +85,19 @@ globalVariables(c("term", "estimate"))
 #' @importFrom tidyr gather
 #' @export
 gather_terms = function(data, ignore_columns = "^\\..*") {
-    # get a list of the names of columns that either start with "." or
-    # which are grouping columns (these are indices from the spec)
-    #  -> e.g. c(".chain", ".iteration", "i")
-    special_columns = names(data) %>%
-        {.[stri_detect_regex(., ignore_columns) | . %in% groups(data)]}
+  # get a list of the names of columns that either start with "." or
+  # which are grouping columns (these are indices from the spec)
+  #  -> e.g. c(".chain", ".iteration", "i")
+  special_columns = names(data) %>%
+  {.[stri_detect_regex(., ignore_columns) | . %in% groups(data)]}
 
-    # translate that list into quoted negations of those column names
-    # so we can exclude them from the gather()
-    #  -> e.g. list(~ -.chain, ~ -.iteration, ~ -i)
-    columns_excluded_from_gather = special_columns %>%
-        map(~ quo(-!!as.name(.)))
+  # translate that list into quoted negations of those column names
+  # so we can exclude them from the gather()
+  #  -> e.g. list(~ -.chain, ~ -.iteration, ~ -i)
+  columns_excluded_from_gather = special_columns %>%
+    map(~ quo(-!!as.name(.)))
 
-    data %>%
-        gather(term, estimate, !!!columns_excluded_from_gather) %>%
-        group_by(term, add = TRUE)
+  data %>%
+    gather(term, estimate, !!!columns_excluded_from_gather) %>%
+    group_by(term, add = TRUE)
 }

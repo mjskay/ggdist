@@ -10,26 +10,26 @@ globalVariables(c("default"))
 
 #COMPARISON TYPES
 comparison_types = within(list(), {
-    ordered = function(x) {
-        l = levels(x)
-        lapply(2:length(l), function(i) c(l[[i]], l[[i - 1]]))
-    }
+  ordered = function(x) {
+    l = levels(x)
+    lapply(2:length(l), function(i) c(l[[i]], l[[i - 1]]))
+  }
 
-    control = function(x) {
-        l = levels(x)
-        lapply(l[-1], function(j) c(j, l[[1]]))
-    }
+  control = function(x) {
+    l = levels(x)
+    lapply(l[-1], function(j) c(j, l[[1]]))
+  }
 
-    pairwise = function(x) {
-        #reverse combn so that the control level (first level) is second for
-        #consistency with control() and ordered()
-        lapply(combn(levels(x), 2, simplify = FALSE), rev)
-    }
+  pairwise = function(x) {
+    #reverse combn so that the control level (first level) is second for
+    #consistency with control() and ordered()
+    lapply(combn(levels(x), 2, simplify = FALSE), rev)
+  }
 
-    default = function(x) {
-        if (is.ordered(x)) ordered(x)
-        else pairwise(x)
-    }
+  default = function(x) {
+    if (is.ordered(x)) ordered(x)
+    else pairwise(x)
+  }
 })
 
 
@@ -101,13 +101,13 @@ comparison_types = within(list(), {
 #'
 #' @export
 compare_levels = function(samples, variable, by, fun=`-`, comparison = default, indices = c(".chain", ".iteration")) {
-    eval(bquote(compare_levels_(samples,
-                .(deparse0(substitute(variable))),
-                .(deparse0(substitute(by))),
-                .(substitute(fun)),
-                .(substitute(comparison),
-                .(indices))
-    )))
+  eval(bquote(compare_levels_(samples,
+    .(deparse0(substitute(variable))),
+    .(deparse0(substitute(by))),
+    .(substitute(fun)),
+    .(substitute(comparison),
+      .(indices))
+  )))
 }
 
 #' @importFrom plyr ldply
@@ -115,52 +115,52 @@ compare_levels = function(samples, variable, by, fun=`-`, comparison = default, 
 #' @importFrom dplyr one_of
 #' @importFrom tibble as_tibble
 compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default, indices = c(".chain", ".iteration")) {
-    #drop unused levels from "by" column
-    samples[[by]] = factor(samples[[by]])
+  #drop unused levels from "by" column
+  samples[[by]] = factor(samples[[by]])
 
-    #drop all unused columns before changing to wide format
-    indices = intersect(indices, names(samples)) #don't include index columns that aren't in samples
-    samples = samples[, union(indices, c(variable, by))]
+  #drop all unused columns before changing to wide format
+  indices = intersect(indices, names(samples)) #don't include index columns that aren't in samples
+  samples = samples[, union(indices, c(variable, by))]
 
-    #get wide version of samples that we can use to generate comparisons easily
-    samples_wide = spread_(samples, by, variable)
+  #get wide version of samples that we can use to generate comparisons easily
+  samples_wide = spread_(samples, by, variable)
 
-    # determine a pretty function name
-    fun_language = substitute(fun)
-    fun_name = if (is.name(fun_language)) deparse0(fun_language) else ":"
+  # determine a pretty function name
+  fun_language = substitute(fun)
+  fun_name = if (is.name(fun_language)) deparse0(fun_language) else ":"
 
-    #get a version of the samples data frame without columns representing
-    #the levels we are comparing by (these columns will be included
-    #alongside the comparison results for reference)
-    by_levels = levels(samples[[by]])
-    samples_wide_no_levels = select(samples_wide, -one_of(by_levels))
+  #get a version of the samples data frame without columns representing
+  #the levels we are comparing by (these columns will be included
+  #alongside the comparison results for reference)
+  by_levels = levels(samples[[by]])
+  samples_wide_no_levels = select(samples_wide, -one_of(by_levels))
 
-    #get list of pairs of levels to compare
-    comparison = substitute(comparison)
-    if (is.character(comparison)) comparison = as.name(comparison)
-    comparison_function = eval(comparison, comparison_types)
-    comparison_levels =
-        if (is.list(comparison_function)) comparison_function
-        else comparison_function(samples[[by]])
+  #get list of pairs of levels to compare
+  comparison = substitute(comparison)
+  if (is.character(comparison)) comparison = as.name(comparison)
+  comparison_function = eval(comparison, comparison_types)
+  comparison_levels =
+    if (is.list(comparison_function)) comparison_function
+  else comparison_function(samples[[by]])
 
-    #make comparisons
-    ldply(comparison_levels, function(levels.) {
-            comparison = if (is.language(levels.)) {
-                #user-supplied quoted expressions are evaluated within the data frame
-                data.frame(
-                    by = deparse0(levels.),
-                    variable = eval(levels., samples_wide)
-                )
-            }
-            else {
-                #otherwise, levels should be pairs of strings representing levels
-                data.frame(
-                    by = paste(levels.[[1]], fun_name, levels.[[2]]),
-                    variable = fun(samples_wide[[levels.[[1]]]], samples_wide[[levels.[[2]]]])
-                )
-            }
-            names(comparison) = c(by, variable)
-            cbind(samples_wide_no_levels, comparison)
-        }) %>%
-        as_tibble()
+  #make comparisons
+  ldply(comparison_levels, function(levels.) {
+    comparison = if (is.language(levels.)) {
+      #user-supplied quoted expressions are evaluated within the data frame
+      data.frame(
+        by = deparse0(levels.),
+        variable = eval(levels., samples_wide)
+      )
+    }
+    else {
+      #otherwise, levels should be pairs of strings representing levels
+      data.frame(
+        by = paste(levels.[[1]], fun_name, levels.[[2]]),
+        variable = fun(samples_wide[[levels.[[1]]]], samples_wide[[levels.[[2]]]])
+      )
+    }
+    names(comparison) = c(by, variable)
+    cbind(samples_wide_no_levels, comparison)
+  }) %>%
+    as_tibble()
 }
