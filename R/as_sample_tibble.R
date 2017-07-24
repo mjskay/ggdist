@@ -21,9 +21,10 @@
 #'
 #' @param model A supported Bayesian model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[MCMCglmm]{MCMCglmm}},
-#' \code{\link[rethinking]{map}}, \code{\link[rethinking]{map2stan}}, and anything with its own
-#' \code{\link[coda]{as.mcmc.list}} implementation.
+#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, and anything with its own
+#' \code{\link[coda]{as.mcmc.list}} implementation. If you install the \code{tidybayes.rethinking}
+#' package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
+#' \code{map2stan} models from the \code{rethinking} package are also supported.
 #'
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
 #' \code{.iteration} column, and one column for every parameter in \code{model}.
@@ -105,21 +106,6 @@ as_sample_tibble.brmsfit = function(model) {
     stop("The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects.", call. = FALSE)
   }
   as_sample_tibble(brms::as.mcmc(model))
-}
-
-#' @rdname as_sample_tibble
-#' @export
-as_sample_tibble.map = function(model) {
-  mu = coef(model)
-  samples = as_tibble(mvrnorm(n = 10000, mu = mu, Sigma = vcov(model)))
-  #map models have no chains
-  bind_cols(data_frame(.chain = 1, .iteration = 1:nrow(samples)), samples)
-}
-
-#' @rdname as_sample_tibble
-#' @export
-as_sample_tibble.map2stan = function(model) {
-  as_sample_tibble(model@stanfit)
 }
 
 #' @rdname as_sample_tibble

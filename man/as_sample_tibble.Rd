@@ -10,8 +10,6 @@
 \alias{as_sample_tibble.stanreg}
 \alias{as_sample_tibble.runjags}
 \alias{as_sample_tibble.brmsfit}
-\alias{as_sample_tibble.map}
-\alias{as_sample_tibble.map2stan}
 \alias{as_sample_tibble.matrix}
 \alias{as_sample_tibble.MCMCglmm}
 \title{Get samples from a model as a tibble}
@@ -32,10 +30,6 @@ as_sample_data_frame(model)
 
 \method{as_sample_tibble}{brmsfit}(model)
 
-\method{as_sample_tibble}{map}(model)
-
-\method{as_sample_tibble}{map2stan}(model)
-
 \method{as_sample_tibble}{matrix}(model)
 
 \method{as_sample_tibble}{MCMCglmm}(model)
@@ -43,18 +37,19 @@ as_sample_data_frame(model)
 \arguments{
 \item{model}{A supported Bayesian model fit / MCMC object. Currently
 supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[MCMCglmm]{MCMCglmm}}, \code{\link[rethinking]{map}},
-\code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
-implementation.}
+\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, and anything with its own
+\code{\link[coda]{as.mcmc.list}} implementation. If you install the \code{tidybayes.rethinking}
+package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
+\code{map2stan} models from the \code{rethinking} package are also supported.}
 }
 \value{
 A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
 \code{.iteration} column, and one column for every parameter in \code{model}.
 }
 \description{
-Extract samples from an MCMC fit into a wide-format data frame with a 
+Extract samples from an MCMC fit into a wide-format data frame with a
 \code{.chain} and \code{.iteration} column, as well as all terms
-as columns. Generally speaking not as useful as \code{\link{spread_samples}} or 
+as columns. Generally speaking not as useful as \code{\link{spread_samples}} or
 \code{\link{gather_samples}} and is mainly used interally (see `Details`)
 }
 \details{
@@ -67,7 +62,7 @@ with an implementation of \code{\link[coda]{as.mcmc.list}})
 \code{as_sample_data_frame} is an alias.
 }
 \seealso{
-\code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function 
+\code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function
 internally and provides a friendly interface for extracting tidy data frames from model fits.
 }
 \author{

@@ -32,12 +32,12 @@ BUGS, etc).
 \details{
 This function recursively translates each argument into list elements using
 \code{\link{as_data_list}}, concatenating all resulting lists together. By
-default this means that: 
+default this means that:
 \itemize{
      \item numerics are included as-is.
      \item logicals are translated into numeric using \code{\link{as.numeric}}.
-     \item factors are translated into numeric using \code{\link{as.numeric}}, 
-         and an additional element named \code{.n_name(argument_name)} is added 
+     \item factors are translated into numeric using \code{\link{as.numeric}},
+         and an additional element named \code{.n_name(argument_name)} is added
          with the number of levels in the factor. The default \code{.n_name}
          function prefixes \code{"n_"} before the factor name; e.g. a factor
          named \code{foo} will have an element named \code{n_foo} added containing

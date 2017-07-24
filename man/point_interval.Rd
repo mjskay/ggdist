@@ -113,16 +113,16 @@ data frame with one row per value of \code{.prob} and three columns:
 \code{ymax} (the upper end of the interval), and \code{.prob}, the probability
 corresponding to the interval. This behavior allows \code{point_interval}
 and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
-to be easily used to plot intervals in ggplot using methods like 
+to be easily used to plot intervals in ggplot using methods like
 \code{\link{geom_eye}}, \code{\link{geom_eyeh}}, or \code{\link{stat_summary}}.
 
 The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{mean_qih})
 behave identically to the function without the h, except that when passed a vector,
-they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of 
+they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 \code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
 \code{fun.data = } argument of \code{stat_summaryh}.
 
-\code{mean_qi}, \code{mode_qi}, etc are short forms for 
+\code{mean_qi}, \code{mode_qi}, etc are short forms for
 \code{point_interval(..., .point = mean, .interval = qi)}, etc.
 
 \code{qi} yields the quantile interval (also known as the percentile interval or

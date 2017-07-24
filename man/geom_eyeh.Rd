@@ -87,8 +87,8 @@ intervals.
 
 }
 \seealso{
-See \code{\link{geom_eye}} for the vertical version. See 
-\code{\link{geom_violinh}} and \code{\link{stat_summaryh}} for the geoms 
+See \code{\link{geom_eye}} for the vertical version. See
+\code{\link{geom_violinh}} and \code{\link{stat_summaryh}} for the geoms
 this function is based on.
 }
 \author{

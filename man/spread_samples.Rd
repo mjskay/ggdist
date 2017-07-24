@@ -26,70 +26,70 @@ Extract samples from a Bayesian/MCMC sampler for a variable with the given named
 indices into one of two types of long-format data frames.
 }
 \details{
-Imagine a JAGS or Stan fit named \code{fit}. The model may contain a parameter named 
+Imagine a JAGS or Stan fit named \code{fit}. The model may contain a parameter named
 \code{b[i,v]} (in the JAGS or Stan language) with \code{i} in \code{1:100} and \code{v} in \code{1:3}.
 However, samples returned from JAGS or Stan in R will not reflect this indexing structure, instead
 they will have multiple columns with names like \code{"b[1,1]"}, \code{"b[2,1]"}, etc.
 
-\code{spread_samples} and \code{gather_samples} provide a straightforward 
+\code{spread_samples} and \code{gather_samples} provide a straightforward
 syntax to translate these columns back into properly-indexed variables in two different
 tidy data frame formats, optionally recovering index types (e.g. factor levels) as it does so.
 
-\code{spread_samples} and \code{gather_samples} return data frames already grouped by 
+\code{spread_samples} and \code{gather_samples} return data frames already grouped by
 all indices used on the variables you specify.
 
 The difference between \code{spread_samples} is that names of parameters in the model will
-be spread across the data frame as column names, whereas \code{gather_samples} will 
+be spread across the data frame as column names, whereas \code{gather_samples} will
 gather terms into a single column named \code{"term"} and place estimates of terms into a
 column names \code{"estimate"}. The \code{"term"} and \code{"estimate"} naming scheme
-is used in order to be consistent with output from the \code{\link[broom]{tidy}} function 
+is used in order to be consistent with output from the \code{\link[broom]{tidy}} function
 in the broom package, to make it easier to use tidybayes with broom for model comparison.
 
 For example, \code{spread_samples(fit, a[i], b[i,v])} might return a grouped
 data frame (grouped by \code{i} and \code{v}), with:
 \itemize{
-     \item column \code{".chain"}: the chain number 
-     \item column \code{".iteration"}: the interation number
-     \item column \code{"i"}: value in \code{1:5}
-     \item column \code{"v"}: value in \code{1:10}
-     \item column \code{"a"}: value of \code{"a[i]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
-     \item column \code{"b"}: value of \code{"b[i,v]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
+   \item column \code{".chain"}: the chain number
+   \item column \code{".iteration"}: the interation number
+   \item column \code{"i"}: value in \code{1:5}
+   \item column \code{"v"}: value in \code{1:10}
+   \item column \code{"a"}: value of \code{"a[i]"} for iteration number
+     \code{".iteration"} on chain number \code{".chain"}
+   \item column \code{"b"}: value of \code{"b[i,v]"} for iteration number
+     \code{".iteration"} on chain number \code{".chain"}
  }
- 
+
 \code{gather_samples(fit, a[i], b[i,v])} on the same fit would return a grouped
 data frame (grouped by \code{i} and \code{v}), with:
 \itemize{
-     \item column \code{".chain"}: the chain number 
-     \item column \code{".iteration"}: the interation number
-     \item column \code{"i"}: value in \code{1:5}
-     \item column \code{"v"}: value in \code{1:10}, or \code{NA} 
-         if \code{"term"} is \code{"a"}.
-     \item column \code{"term"}: value in \code{c("a", "b")}.
-     \item column \code{"estimate"}: value of \code{"a[i]"} (when \code{"term"} is \code{"a"})
-         or \code{"b[i,v]"} (when \code{"term"} is \code{"b"}) for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
+   \item column \code{".chain"}: the chain number
+   \item column \code{".iteration"}: the interation number
+   \item column \code{"i"}: value in \code{1:5}
+   \item column \code{"v"}: value in \code{1:10}, or \code{NA}
+     if \code{"term"} is \code{"a"}.
+   \item column \code{"term"}: value in \code{c("a", "b")}.
+   \item column \code{"estimate"}: value of \code{"a[i]"} (when \code{"term"} is \code{"a"})
+     or \code{"b[i,v]"} (when \code{"term"} is \code{"b"}) for iteration number
+     \code{".iteration"} on chain number \code{".chain"}
  }
- 
+
 \code{spread_samples} and \code{gather_samples} can use type information
-applied to the \code{fit} object by \code{\link{recover_types}} to convert columns 
+applied to the \code{fit} object by \code{\link{recover_types}} to convert columns
 back into their original types. This is particularly helpful if some of the indices in
 your model were originally factors. For example, if the \code{v} index
 in the original data frame \code{data} was a factor with levels \code{c("a","b","c")},
 then we could use \code{recover_types} before \code{spread_samples}:
 
 \preformatted{fit \%>\%
-    recover_types(data) %\>\%
-    spread_samples(fit, b[i,v])
- }
- 
+ recover_types(data) %\>\%
+ spread_samples(fit, b[i,v])
+}
+
 Which would return the same data frame as above, except the \code{"v"} column
 would be a value in \code{c("a","b","c")} instead of \code{1:3}.
 
 For variables that do not share the same subscripts (or share
-some but not all subscripts), we can supply their specifications separately. 
-For example, if we have a variable d[i] with the same i subscript 
+some but not all subscripts), we can supply their specifications separately.
+For example, if we have a variable d[i] with the same i subscript
 as b[i,v], and a variable x with no subscripts, we could do this:
 
 \preformatted{spread_samples(fit, x, d[i], b[i,v])}
@@ -97,9 +97,9 @@ as b[i,v], and a variable x with no subscripts, we could do this:
 Which is roughly equivalent to this:
 
 \preformatted{spread_samples(fit, x) \%>\%
-    inner_join(spread_samples(fit, d[i])) \%>\%
-    inner_join(spread_samples(fit, b[i,v])) \%>\%
-    group_by(i,v)
+ inner_join(spread_samples(fit, d[i])) \%>\%
+ inner_join(spread_samples(fit, b[i,v])) \%>\%
+ group_by(i,v)
 }
 
 Similarly, this:
@@ -109,12 +109,12 @@ Similarly, this:
 Is roughly equivalent to this:
 
 \preformatted{bind_rows(
-    gather_samples(fit, x),
-    gather_samples(fit, d[i]),
-    gather_samples(fit, b[i,v])
+ gather_samples(fit, x),
+ gather_samples(fit, d[i]),
+ gather_samples(fit, b[i,v])
 )}
 
-The \code{c} and \code{cbind} functions can be used to combine multiple variable names that have 
+The \code{c} and \code{cbind} functions can be used to combine multiple variable names that have
 the same indices. For example, if we have several variables with the same
 subscripts \code{i} and \code{v}, we could do either of these:
 
@@ -140,16 +140,16 @@ into a wide format and whose names will be the base variable name, plus a dot
 \code{spread_samples(fit, b[i,..])} would return a grouped data frame
 (grouped by \code{i}), with:
 \itemize{
-     \item column \code{".chain"}: the chain number 
-     \item column \code{".iteration"}: the interation number
-     \item column \code{"i"}: value in \code{1:20}
-     \item column \code{"b.1"}: value of \code{"b[i,1]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
-     \item column \code{"b.2"}: value of \code{"b[i,2]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
-     \item column \code{"b.3"}: value of \code{"b[i,3]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
- }
+ \item column \code{".chain"}: the chain number
+ \item column \code{".iteration"}: the interation number
+ \item column \code{"i"}: value in \code{1:20}
+ \item column \code{"b.1"}: value of \code{"b[i,1]"} for iteration number
+   \code{".iteration"} on chain number \code{".chain"}
+ \item column \code{"b.2"}: value of \code{"b[i,2]"} for iteration number
+   \code{".iteration"} on chain number \code{".chain"}
+ \item column \code{"b.3"}: value of \code{"b[i,3]"} for iteration number
+   \code{".iteration"} on chain number \code{".chain"}
+}
 
 An optional clause in the form \code{| wide_index} can also be used to put
 the data frame into a wide format based on \code{wide_index}. For example, this:
@@ -168,16 +168,16 @@ columns with nicer names. For example:
 \code{fit \%>\% recover_types(data) \%>\% spread_samples(fit, b[i,v] | v)} would return a grouped data frame
 (grouped by \code{i}), with:
 \itemize{
-     \item column \code{".chain"}: the chain number 
-     \item column \code{".iteration"}: the interation number
-     \item column \code{"i"}: value in \code{1:20}
-     \item column \code{"a"}: value of \code{"b[i,1]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
-     \item column \code{"b"}: value of \code{"b[i,2]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
-     \item column \code{"c"}: value of \code{"b[i,3]"} for iteration number
-         \code{".iteration"} on chain number \code{".chain"}
- }
+ \item column \code{".chain"}: the chain number
+ \item column \code{".iteration"}: the interation number
+ \item column \code{"i"}: value in \code{1:20}
+ \item column \code{"a"}: value of \code{"b[i,1]"} for iteration number
+   \code{".iteration"} on chain number \code{".chain"}
+ \item column \code{"b"}: value of \code{"b[i,2]"} for iteration number
+   \code{".iteration"} on chain number \code{".chain"}
+ \item column \code{"c"}: value of \code{"b[i,3]"} for iteration number
+   \code{".iteration"} on chain number \code{".chain"}
+}
 }
 \examples{
 

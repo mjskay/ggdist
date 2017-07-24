@@ -39,11 +39,12 @@ generate predictions from the data used to fit the model.}
 
 \item{model}{A supported Bayesian model fit / MCMC object. Currently
 supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rethinking]{map}},
-\code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
-implementation.}
+\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, and anything with its own
+\code{\link[coda]{as.mcmc.list}} implementation. If you install the \code{tidybayes.rethinking}
+package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
+\code{map2stan} models from the \code{rethinking} package are also supported.}
 
-\item{var}{The name of the output column for the predictions (default `code{"pred"}`) or fits 
+\item{var}{The name of the output column for the predictions (default `code{"pred"}`) or fits
 (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).}
 
 \item{...}{Additional arguments passed to the underlying prediction method for the type of
@@ -58,7 +59,7 @@ sample from the posterior predictive distribution). For convenience, the resulti
 frame comes grouped by the original input rows.
 }
 \description{
-Given a data frame, adds samples from the posterior fit (aka the linear/link-level predictor) 
+Given a data frame, adds samples from the posterior fit (aka the linear/link-level predictor)
 or the posterior predictions of the model to the data in a long format.
 }
 \details{
@@ -70,7 +71,7 @@ the data. It corresponds to \code{\link[rstanarm]{posterior_linpred}} in \code{r
 the data. It corresponds to \code{\link[rstanarm]{posterior_predict}} in \code{rstanarm} or
 \code{\link[brms]{predict.brmsfit}} in \code{brms}.
 
-\code{add_fitted_samples} and \code{fitted_samples} are alternate spellings of the 
+\code{add_fitted_samples} and \code{fitted_samples} are alternate spellings of the
 same function with opposite order of the first two arguments to facilitate use in data
 processing pipelines that start either with a data frame or a model. Similarly,
 \code{add_predicted_samples} and \code{predicted_samples} are alternate spellings.

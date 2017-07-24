@@ -24,7 +24,7 @@ variables passed into this function in \code{...}.}
 
 \item{summary}{The function to apply to summarize each predicted response.
 Useful functions (if you just want a curve) might be \code{\link{median}},
-\code{\link{mean}}, or \code{\link{Mode}}. If you want predictive distribution 
+\code{\link{mean}}, or \code{\link{Mode}}. If you want predictive distribution
 at each point on the curve, try \code{\link{density_bins}} or
 \code{\link{histogram_bins}}.}
 

@@ -39,7 +39,17 @@ There are a few core ideas that run through the `tidybayes` API that should (hop
   
 5. __Variable names in models should be descriptive, not cryptic__. This principle implies avoiding cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to use variables like `J` to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like `j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a mnemonic shortform like `p`) for specific elements. In functions where names are auto-generated (like `compose_data`), `tidybayes` will (by default) assume you want these sorts of more descriptive names; however, you can always override the default naming scheme.
   
-  
+
+## Supported model types
+
+`tidybayes` aims to support a variety of models. Currently
+supported models include [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda), 
+[runjags](https://cran.r-project.org/package=runjags), [rstanarm](https://cran.r-project.org/package=rstanarm), 
+[brms](https://cran.r-project.org/package=brms), [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and 
+anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the 
+[rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
+
+
 ## Setup
   
 The following libraries are required to run this vignette:

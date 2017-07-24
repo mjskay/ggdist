@@ -33,9 +33,10 @@ globalVariables(c(".iteration", ".pred"))
 #' generate predictions from the data used to fit the model.
 #' @param model A supported Bayesian model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rethinking]{map}},
-#' \code{\link[rethinking]{map2stan}}, and anything with its own \code{\link[coda]{as.mcmc.list}}
-#' implementation.
+#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, and anything with its own
+#' \code{\link[coda]{as.mcmc.list}} implementation. If you install the \code{tidybayes.rethinking}
+#' package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
+#' \code{map2stan} models from the \code{rethinking} package are also supported.
 #' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits
 #' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
