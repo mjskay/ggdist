@@ -1,35 +1,9 @@
 language: r
+r: devel
+sudo: FALSE
+cache: packages
 
-# sudo is needed for R on travis-CI. See http://docs.travis-ci.com/user/workers/container-based-infrastructure/
-sudo: required
+warnings_are_errors: TRUE
 
-# Be strict when checking our package
-warnings_are_errors: true
-
-# list suggested packages here too since they
-# aren't installed automatically
-r_binary_packages:
- # won't compile under clang?
- - runjags
- - RCurl
- - nloptr
- - Cairo
-r_packages:
- - rstan
- - coda
- - modeest
- - testthat
-
-# NOT_CRAN and options in .Rprofile are workarounds for "cyclic dependency check" error
-# see https://github.com/travis-ci/travis-ci/issues/4125
-# Using clang instead of gcc because rstan won't compile on gcc on travis
-env:
-  global:
-    - NOT_CRAN=true CXXFLAGS=-O2 CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++ CPP=clang CC=clang
-before_install:
- - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
- - mkdir -p ~/.R
- - echo 'CXXFLAGS=-O2' > ~/.R/Makevars
- - echo 'CC=clang' >> ~/.R/Makevars
- - echo 'CPP=clang' >> ~/.R/Makevars
- - echo 'CXX=clang++' >> ~/.R/Makevars
+r_build_args: '--no-build-vignettes'
+r_check_args: '--ignore-vignettes'
