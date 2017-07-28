@@ -11,6 +11,11 @@ unspread_samples(data, ..., indices = c(".chain", ".iteration"))
 
 \item{...}{Expressions in the form of
 \code{variable_name[index_1, index_2, ...]}. See \code{\link{spread_samples}}.}
+
+\item{indices}{Character vector of column names in \code{data} that
+should be treated as indices of chain/iteration. The default is \code{c(".chain",".iteration")},
+which are the same names used for chain/iteration indices returned by
+\code{\link{spread_samples}} or \code{\link{gather_samples}}.}
 }
 \value{
 A data frame.

@@ -3,6 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c("..index_values"))
+
+
 #' Turn tidy data frames of parameters from a Bayesian model back into untidy data
 #'
 #' Inverse operations of \code{\link{spread_samples}} and \code{\link{gather_samples}}, giving
@@ -15,6 +20,10 @@
 #' @param data A tidy data frame of samples, such as one output by `spread_samples` or `gather_samples`.
 #' @param ... Expressions in the form of
 #' \code{variable_name[index_1, index_2, ...]}. See \code{\link{spread_samples}}.
+#' @param indices Character vector of column names in \code{data} that
+#' should be treated as indices of chain/iteration. The default is \code{c(".chain",".iteration")},
+#' which are the same names used for chain/iteration indices returned by
+#' \code{\link{spread_samples}} or \code{\link{gather_samples}}.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_samples}}, \code{\link{gather_samples}}, \code{\link{as_sample_tibble}}.
@@ -48,18 +57,24 @@ unspread_samples_ = function(data, variable_spec, indices = c(".chain", ".iterat
   }
 
   # generate the subset of the data that has just the variable names and indices in question
-  # we have to do distinct() here in case a variable had duplicates created for indices of
-  # other variables that it does not share; e.g. in the case of spread_samples(a, b[i]) %>% unspread_samples(a)
   # we also have to ungroup() here because otherwise grouping columns that are not involved in this variable
   # will be automatically retained even when we try to select() them out.
   data_subset = data %>%
     ungroup() %>%
-    select(!!c(indices, variable_names, index_names)) %>%
+    select(!!c(indices, variable_names, index_names))
+
+  if (is.null(index_names)) {
+    return(distinct(data_subset))
+  }
+
+  # we have to do distinct() here in case a variable had duplicates created for indices of
+  # other variables that it does not share; e.g. in the case of spread_samples(a, b[i]) %>% unspread_samples(a)
+  data_distinct = data_subset %>%
     unite(..index_values, !!!index_names, sep = ",") %>%
     distinct()
 
   map(variable_names, function(variable_name) {
-    data_subset %>%
+    data_distinct %>%
       select(!!c(indices, variable_name, "..index_values")) %>%
       mutate(..term = paste0(variable_name, "[", ..index_values, "]")) %>%
       select(-..index_values) %>%
