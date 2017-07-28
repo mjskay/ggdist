@@ -25,8 +25,8 @@
 #'
 #' @importFrom lazyeval lazy_dots
 #' @importFrom purrr map reduce
-#' @importFrom dplyr inner_join ungroup select unite distinct mutate
-#' @importFrom tidyr spread_
+#' @importFrom dplyr inner_join ungroup select distinct mutate
+#' @importFrom tidyr spread_ unite
 #' @rdname unspread_samples
 #' @export
 unspread_samples = function(data, ..., indices = c(".chain", ".iteration")) {
