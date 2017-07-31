@@ -2,9 +2,13 @@
 % Please edit documentation in R/unspread_ungather_samples.R
 \name{unspread_samples}
 \alias{unspread_samples}
+\alias{ungather_samples}
 \title{Turn tidy data frames of parameters from a Bayesian model back into untidy data}
 \usage{
 unspread_samples(data, ..., indices = c(".chain", ".iteration"))
+
+ungather_samples(data, ..., term = "term", estimate = "estimate",
+  indices = c(".chain", ".iteration"))
 }
 \arguments{
 \item{data}{A tidy data frame of samples, such as one output by `spread_samples` or `gather_samples`.}

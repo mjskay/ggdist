@@ -1,4 +1,4 @@
-# Tests for unspread_samples
+# Tests for ungather_samples
 #
 # Author: mjskay
 ###############################################################################
@@ -9,9 +9,9 @@ import::from(purrr, map_df)
 library(tidyr)
 library(tidybayes)
 
-context("unspread_samples")
+context("ungather_samples")
 
-test_that("unspread_samples works on a simple parameter with no indices", {
+test_that("ungather_samples works on a simple parameter with no indices", {
   data(RankCorr, package = "tidybayes")
 
   ref = data_frame(
@@ -21,23 +21,23 @@ test_that("unspread_samples works on a simple parameter with no indices", {
   )
 
   RankCorr %>%
-    spread_samples(typical_r) %>%
-    unspread_samples(typical_r) %>%
+    gather_samples(typical_r) %>%
+    ungather_samples(typical_r) %>%
     expect_equal(ref)
 
   RankCorr %>%
-    spread_samples(typical_r, b[i, j]) %>%
-    unspread_samples(typical_r) %>%
+    gather_samples(typical_r, b[i, j]) %>%
+    ungather_samples(typical_r) %>%
     expect_equal(ref)
 })
 
 
-test_that("unspread_samples works on a multiple parameters with different indices", {
+test_that("ungather_samples works on multiple parameters with different indices", {
   data(RankCorr, package = "tidybayes")
 
   result = RankCorr %>%
-    spread_samples(b[i, j], c(u_tau, tau)[i]) %>%
-    unspread_samples(b[i, j], c(u_tau, tau)[i])
+    gather_samples(b[i, j], c(u_tau, tau)[i]) %>%
+    ungather_samples(b[i, j], c(u_tau, tau)[i])
 
   ref = RankCorr %>%
     as_sample_tibble() %>%
