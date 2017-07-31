@@ -17,13 +17,14 @@ globalVariables(c("..index_values"))
 #' \code{\link{spread_samples}} and \code{\link{gather_samples}} and invert the tidy data frame back into
 #' a data frame whose column names are parameters with indices in them.
 #'
-#' @param data A tidy data frame of samples, such as one output by `spread_samples` or `gather_samples`.
+#' @param data A tidy data frame of samples, such as one output by \code{spread_samples} or \code{gather_samples}.
 #' @param ... Expressions in the form of
 #' \code{variable_name[index_1, index_2, ...]}. See \code{\link{spread_samples}}.
 #' @param indices Character vector of column names in \code{data} that
 #' should be treated as indices of chain/iteration. The default is \code{c(".chain",".iteration")},
 #' which are the same names used for chain/iteration indices returned by
 #' \code{\link{spread_samples}} or \code{\link{gather_samples}}.
+#' @param drop_indices Drop the columns specified by \code{indices} from the resulting data frame. Default \code{FALSE}.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_samples}}, \code{\link{gather_samples}}, \code{\link{as_sample_tibble}}.
@@ -38,11 +39,19 @@ globalVariables(c("..index_values"))
 #' @importFrom tidyr spread_ unite
 #' @rdname unspread_samples
 #' @export
-unspread_samples = function(data, ..., indices = c(".chain", ".iteration")) {
-  map(lazy_dots(...), function(variable_spec) {
-    unspread_samples_(data, variable_spec, indices = indices)
-  }) %>%
+unspread_samples = function(data, ..., indices = c(".chain", ".iteration"), drop_indices = FALSE) {
+  result =
+    map(lazy_dots(...), function(variable_spec) {
+      unspread_samples_(data, variable_spec, indices = indices)
+    }) %>%
     reduce(inner_join, by = indices)
+
+  if (drop_indices) {
+    result %>%
+      select(-one_of(indices))
+  } else {
+    result
+  }
 }
 
 unspread_samples_ = function(data, variable_spec, indices = c(".chain", ".iteration")) {
@@ -86,14 +95,28 @@ unspread_samples_ = function(data, variable_spec, indices = c(".chain", ".iterat
 
 #' @rdname unspread_samples
 #' @export
-ungather_samples = function(data, ..., term = "term", estimate = "estimate", indices = c(".chain", ".iteration")) {
-  map(lazy_dots(...), function(variable_spec) {
-    ungather_samples_(data, variable_spec, term = term, estimate = estimate, indices = indices)
-  }) %>%
+ungather_samples = function(
+  data, ..., term = "term", estimate = "estimate", indices = c(".chain", ".iteration"), drop_indices = FALSE
+) {
+
+  result =
+    map(lazy_dots(...), function(variable_spec) {
+      ungather_samples_(data, variable_spec, term = term, estimate = estimate, indices = indices)
+    }) %>%
     reduce(inner_join, by = indices)
+
+  if (drop_indices) {
+    result %>%
+      select(-one_of(indices))
+  } else {
+    result
+  }
 }
 
-ungather_samples_ = function(data, variable_spec, term = "term", estimate = "estimate", indices = c(".chain", ".iteration")) {
+ungather_samples_ = function(
+  data, variable_spec, term = "term", estimate = "estimate", indices = c(".chain", ".iteration")
+) {
+
   #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
   spec = parse_variable_spec(variable_spec)
   variable_names = spec[[1]]

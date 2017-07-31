@@ -5,13 +5,14 @@
 \alias{ungather_samples}
 \title{Turn tidy data frames of parameters from a Bayesian model back into untidy data}
 \usage{
-unspread_samples(data, ..., indices = c(".chain", ".iteration"))
+unspread_samples(data, ..., indices = c(".chain", ".iteration"),
+  drop_indices = FALSE)
 
 ungather_samples(data, ..., term = "term", estimate = "estimate",
-  indices = c(".chain", ".iteration"))
+  indices = c(".chain", ".iteration"), drop_indices = FALSE)
 }
 \arguments{
-\item{data}{A tidy data frame of samples, such as one output by `spread_samples` or `gather_samples`.}
+\item{data}{A tidy data frame of samples, such as one output by \code{spread_samples} or \code{gather_samples}.}
 
 \item{...}{Expressions in the form of
 \code{variable_name[index_1, index_2, ...]}. See \code{\link{spread_samples}}.}
@@ -20,6 +21,8 @@ ungather_samples(data, ..., term = "term", estimate = "estimate",
 should be treated as indices of chain/iteration. The default is \code{c(".chain",".iteration")},
 which are the same names used for chain/iteration indices returned by
 \code{\link{spread_samples}} or \code{\link{gather_samples}}.}
+
+\item{drop_indices}{Drop the columns specified by \code{indices} from the resulting data frame. Default \code{FALSE}.}
 }
 \value{
 A data frame.

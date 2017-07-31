@@ -45,3 +45,18 @@ test_that("ungather_samples works on multiple parameters with different indices"
 
   expect_equal(result[, order(names(result))], ref[, order(names(ref))])
 })
+
+
+test_that("ungather_samples(drop_indices = TRUE) drops indices", {
+  data(RankCorr, package = "tidybayes")
+
+  result = RankCorr %>%
+    gather_samples(b[i, j], c(u_tau, tau)[i]) %>%
+    ungather_samples(b[i, j], c(u_tau, tau)[i], drop_indices = TRUE)
+
+  ref = RankCorr %>%
+    as_sample_tibble() %>%
+    select(starts_with("b"), starts_with("tau"), starts_with("u_tau"))
+
+  expect_equal(result[, order(names(result))], ref[, order(names(ref))])
+})
