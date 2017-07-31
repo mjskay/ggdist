@@ -25,6 +25,8 @@ globalVariables(c("..index_values"))
 #' which are the same names used for chain/iteration indices returned by
 #' \code{\link{spread_samples}} or \code{\link{gather_samples}}.
 #' @param drop_indices Drop the columns specified by \code{indices} from the resulting data frame. Default \code{FALSE}.
+#' @param term The name of the column in \code{data} that contains the names of parameters from the model.
+#' @param estimate The name of the column in \code{data} that contains the samples of the parameters.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_samples}}, \code{\link{gather_samples}}, \code{\link{as_sample_tibble}}.
@@ -37,6 +39,7 @@ globalVariables(c("..index_values"))
 #' @importFrom purrr map reduce
 #' @importFrom dplyr inner_join ungroup select distinct mutate
 #' @importFrom tidyr spread_ unite
+#' @importFrom magrittr %<>% %>%
 #' @rdname unspread_samples
 #' @export
 unspread_samples = function(data, ..., indices = c(".chain", ".iteration"), drop_indices = FALSE) {

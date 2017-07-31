@@ -23,6 +23,10 @@ which are the same names used for chain/iteration indices returned by
 \code{\link{spread_samples}} or \code{\link{gather_samples}}.}
 
 \item{drop_indices}{Drop the columns specified by \code{indices} from the resulting data frame. Default \code{FALSE}.}
+
+\item{term}{The name of the column in \code{data} that contains the names of parameters from the model.}
+
+\item{estimate}{The name of the column in \code{data} that contains the samples of the parameters.}
 }
 \value{
 A data frame.
