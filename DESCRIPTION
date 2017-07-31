@@ -41,6 +41,7 @@ Suggests:
     forcats,
     dotwhisker,
     MCMCglmm,
+    bayesplot,
     brms
 License: GPL (>= 3)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
