@@ -16,6 +16,9 @@ vignette: >
 .kable-table table {
   margin-left: 0;
 }
+img {
+  border: none;
+}
 </style>
 
 

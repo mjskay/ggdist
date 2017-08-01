@@ -16,6 +16,9 @@ vignette: >
 .kable-table table {
   margin-left: 0;
 }
+img {
+  border: none;
+}
 </style>
   
   
@@ -40,7 +43,7 @@ There are a few core ideas that run through the `tidybayes` API that should (hop
 5. __Variable names in models should be descriptive, not cryptic__. This principle implies avoiding cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to use variables like `J` to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like `j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a mnemonic shortform like `p`) for specific elements. In functions where names are auto-generated (like `compose_data`), `tidybayes` will (by default) assume you want these sorts of more descriptive names; however, you can always override the default naming scheme.
   
 
-## Supported model types
+### Supported model types
 
 `tidybayes` aims to support a variety of models. Currently supported models include [rstan](https://cran.r-project.org/package=rstan), [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda), [runjags](https://cran.r-project.org/package=runjags), [rstanarm](https://cran.r-project.org/package=rstanarm), [brms](https://cran.r-project.org/package=brms), [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
 
@@ -82,6 +85,8 @@ theme_set(theme_light())
 
 #figure options
 knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
+
+options(width = 100)
 ```
 
 ## Example dataset
@@ -112,7 +117,6 @@ This is a typical tidy format data frame: one observation per row. Graphically:
 ABC %>%
   ggplot(aes(x = response, y = fct_rev(condition))) +
   geom_point(alpha = 0.5) +
-  geom_vline(xintercept = 0) + 
   ylab("condition")
 ```
 
@@ -124,29 +128,29 @@ A hierarchical model of our example data might estimate an overall mean across t
 
 ```{stan, output.var="ABC_stan"}
 data {
-int<lower=1> n;
-int<lower=1> n_condition;
-int<lower=1, upper=n_condition> condition[n];
-real response[n];
+  int<lower=1> n;
+  int<lower=1> n_condition;
+  int<lower=1, upper=n_condition> condition[n];
+  real response[n];
 }
 parameters {
-real overall_mean;
-vector[n_condition] condition_zoffset;
-real<lower=0> response_sd;
-real<lower=0> condition_mean_sd;
+  real overall_mean;
+  vector[n_condition] condition_zoffset;
+  real<lower=0> response_sd;
+  real<lower=0> condition_mean_sd;
 }
 transformed parameters {
-vector[n_condition] condition_mean;
-condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
+  vector[n_condition] condition_mean;
+  condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
 }
 model {
-response_sd ~ cauchy(0, 1);         # => half-cauchy(0, 1)
-condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
-overall_mean ~ normal(0, 5);
-condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
-for (i in 1:n) {
-response[i] ~ normal(condition_mean[condition[i]], response_sd);
-}
+  response_sd ~ cauchy(0, 1);         # => half-cauchy(0, 1)
+  condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
+  overall_mean ~ normal(0, 5);
+  condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
+  for (i in 1:n) {
+    response[i] ~ normal(condition_mean[condition[i]], response_sd);
+  }
 }
 ```
 
@@ -178,9 +182,9 @@ print(m, pars = c("overall_mean", "condition_mean_sd", "condition_mean", "respon
 ```
 
 
-## Gathering samples from a fit in tidy-format using `spread_samples` and `gather_samples`
+## Extracting samples from a fit in tidy-format using `spread_samples`
 
-### Gathering parameter indices into a separate column in a tidy format data frame
+### Extracting parameter indices into a separate column in a tidy format data frame
 
 Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:
 
@@ -188,7 +192,9 @@ Now that we have our results, the fun begins: getting the samples out in a tidy 
 str(extract(m))
 ```
 
-The `spread_samples` method lets us instead extract samples into a data frame in tidy format, with a `.chain` and `.iteration` column storing the chain and iteration for each row, and the remaining columns corresponding to parameters or parameter indices. The `spread_samples` method accepts any number of column specifications, which can include names for parameters and names for parameter indices. For example, we can extract the `condition_mean` parameter as a tidy data frame, and put the value of its first (and only) index into the `condition` column, using a syntax that directly echoes how we would specify indices of the `condition_mean` parameter in the model itself:
+There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).
+
+The `spread_samples` method yields a common format for all model types supported by `tidybayes`. It lets us instead extract samples into a data frame in tidy format, with a `.chain` and `.iteration` column storing the chain and iteration for each row, and the remaining columns corresponding to parameters or parameter indices. The `spread_samples` method accepts any number of column specifications, which can include names for parameters and names for parameter indices. For example, we can extract the `condition_mean` parameter as a tidy data frame, and put the value of its first (and only) index into the `condition` column, using a syntax that directly echoes how we would specify indices of the `condition_mean` parameter in the model itself:
 
 ```{r}
 m %>%
@@ -219,11 +225,11 @@ m %<>% recover_types(ABC)
 
 Now we can omit the `recover_types` call before subsequent calls to `spread_samples`.
 
-## Point estimates and intervals
+## Point estimates and intervals with the `point_interval` functions: `[mean|median|mode]_[qi|hdi]`
 
 ### With simple parameters, wide format
 
-`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
+`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
 
 For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:
 
@@ -241,6 +247,8 @@ m %>%
   spread_samples(overall_mean, response_sd) %>%
   mean_qi(overall_mean, response_sd)
 ```
+
+`mean_qi` summarizes each input column using its mean. If there are multiple columns to summarise, each gets its own `x.high` and `x.low` column (for each column `x`) corresponding to the bounds of the `.prob`% interval. If there is only one column, the names `conf.low` and `conf.high` are used for the interval bounds; this is for compatibility with `broom::tidy`.
 
 We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `overall_mean` and `response_sd` are redundant arguments to `mean_qi` because they are also the only columns we gathered from the model. So we can simplify the previous code to the following:
 
@@ -287,7 +295,7 @@ m %>%
 
 ### Using `stat_summary`/`stat_summaryh`
 
-Rather than summarizing the posterior before calling ggplot, we could also use `stat_summary` to perform the summary within ggplot:
+Rather than summarizing the posterior before calling ggplot, we could also use `stat_summary` to perform the summary within ggplot.
 
 ```{r}
 m %>%
@@ -296,6 +304,9 @@ m %>%
   stat_summaryh(fun.data = mean_qih)
 ```
 
+#### A note on functions ending in `h`
+
+`tidybayes` follows the naming convention established by `ggstance` for horizontal versions of `geom`s and summary functions. It includes horizontal versions of all `point_interval` functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with `h`. When calling `stat_summaryh` (the horizontal version of `stat_summary` from the `ggstance` package), we must use the horizontal versions of the `point_interval` functions, like `mean_qih` in the above example. This is because `mean_qi` returns a data frame with `y`, `ymin`, and `ymax` columns when passed a vector (making it suitable for `stat_summary`), and `mean_qih` returns a data frame with `x`, `xmin`, and `xmax` columns when passed a vector (making it suitable for `stat_summaryh`).
 
 ### Interval estimates with posterior violins ("eye plots"): `geom_eye` and `geom_eyeh`
 
@@ -331,7 +342,7 @@ m %>%
 ```
 
 
-### Interval estimates with multiple probability levels
+### Interval estimates with multiple probability levels: the `.prob =` argument
 
 `mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `.prob =` argument:
 
@@ -356,6 +367,30 @@ m %>%
   )
 ```
 
+### Alternative estimates and intervals: mean, median, mode; qi, hdi
+
+The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi][h|]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Here is an example showing `mean_qi` (black) compared to `mode_hdi` (red):
+
+```{r}
+m %>%
+  spread_samples(condition_mean[condition]) %>%
+  ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
+  geom_eyeh(fun.data = mean_qih) + 
+  stat_summaryh(fun.data = mode_hdih, position = position_nudge(y = .15), color="red")
+```
+
+The difference is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:
+
+```{r}
+m %>%
+  spread_samples(response_sd) %>%
+  ggplot(aes(x = response_sd)) +
+  stat_density(aes(y = ..scaled.. * 15), fill = "gray75") +
+  stat_summaryh(aes(y = "mean_qi"), fun.data = mean_qih) +
+  stat_summaryh(aes(y = "mode_hdi"), fun.data = mode_hdih) +
+  ylab("")
+```
+
 
 ## Combining variables with different indices in a single tidy format data frame
 
@@ -376,94 +411,6 @@ m %>%
   mutate(condition_offset = condition_mean - overall_mean) %>%
   mean_qi(condition_offset)
 ```
-
-## Comparison with models using `broom::tidy`
-
-Because mean_qi and related functions use a similar naming scheme to that of `broom::tidy`, it is easy to compare results against models support by `broom::tidy`. For example, let's compare our model estimates of condtional means against an ordinary least squares (OLS) regression:
-
-```{r}
-m_linear = lm(response ~ condition, data = ABC)
-```
-
-Combining `lsmeans` with `broom::tidy`, we can generate tidy-format estimates of parameters from the above model:
-
-```{r}
-linear_estimates = m_linear %>% 
-  lsmeans(~ condition) %>% 
-  tidy() %>%
-  mutate(model = "OLS")
-
-linear_estimates
-```
-
-We can derive corresponding estimates from our model:
-
-```{r}
-bayes_estimates = m %>%
-  spread_samples(condition_mean[condition]) %>%
-  mean_qi(estimate = condition_mean) %>%
-  mutate(model = "Bayes")
-
-bayes_estimates
-```
-
-And plot them together to compare:
-
-```{r}
-bind_rows(linear_estimates, bayes_estimates) %>%
-  mutate(condition = fct_rev(condition)) %>%
-  ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-  geom_pointrangeh(position = position_dodgev(height = .3))
-```
-
-Observe the shrinkage towards the overall mean in the Bayesian model compared to the OLS model.
-
-## Long format parameter data frames: `gather_samples` and `gather_terms`
-
-We might also prefer all parameter names to be in a single column (long-format) instead of as column names. There are three methods for obtaining long-format data frames with `tidybayes`, whose use depends on where and how in the data processing chain you might want to transform into long-format: `gather_samples`, `gather_terms`, and `as_sample_tibble`.
-
-`gather_samples` is the counterpart to `spread_samples`, except it puts all parameter names into a `term` column and samples into an `estimate` column (for compatibility with `broom::tidy`):
-
-```{r}
-m %>%
-  gather_samples(overall_mean, condition_mean[condition]) %>%
-  mean_qi()
-```
-
-Note that `condition = NA` for the `overall_mean` row, because it does not have an index with that name in the specification passed to `gather_samples`.
-
-While this works well if we do not need to perform computations that involve multiple columns, the wide format returned by `spread_samples` is very useful for computations that involve multiple columns names, such as the calculation of the `condition_offset` above. If we want to make intermediate computations on the format returned by `spread_samples` and *then* gather parameters into one column, we can use `gather_terms`, which will gather all non-grouped terms that do not start with `"."`:
-
-```{r}
-m %>%
-  spread_samples(overall_mean, condition_mean[condition]) %>%
-  mutate(condition_offset = condition_mean - overall_mean) %>%
-  gather_terms() %>%
-  mean_qi()
-```
-
-Note how `overall_mean` is now repeated here for each condition, because we have performed the gather after spreading parameters across columns.
-
-Finally, if we want raw parameter names as columns names instead of having indices split out as their own column names, we can use `as_sample_tibble`. Generally speaking this should not be necessary, but is provided as a common method for generating data frames from many types of Bayesian models, and is used internally by `gather_samples` and `spread_samples`:
-
-```{r}
-m %>%
-  as_sample_tibble() %>%
-  head(10)
-```
-*(10 rows of `r nrow(as_sample_tibble(m))`)*
-
-Combining `as_sample_tibble` with `gather_terms` also allows us to derive similar output to `ggmcmc::ggs`, if desired:
-
-```{r}
-m %>%
-  as_sample_tibble() %>%
-  gather_terms() %>%
-  head(10)
-```
-*(10 rows of `r nrow(gather_terms(as_sample_tibble(m)))`)*
-
-But again, this approach does not handle parameter indices for us automatically, so using `spread_samples` and `gather_samples` is generally recommended unless you do not have parameter indices to worry about.
 
 ## Posterior predictions
 
@@ -536,14 +483,112 @@ m %>%
   geom_eyeh()
 ```
 
-The above code block also shows the use of `mean_qih`. The `[point]_[interval]h` family of functions act like the `[point]_[interval]` functions, except they return a data frame with `x`/`xmin`/`xmax` instead of `y`/`ymin`/`ymax` when given a vector, making them suitable for use with `stat_summaryh` (whereas `[point]_[interval]` can be used with `stat_summary`).
+
+## Gathering all parameter names into a single column: `gather_samples` and `gather_terms`
+
+We might also prefer all parameter names to be in a single column (long-format) instead of as column names. There are three methods for obtaining long-format data frames with `tidybayes`, whose use depends on where and how in the data processing chain you might want to transform into long-format: `gather_samples`, `gather_terms`, and `as_sample_tibble`.
+
+`gather_samples` is the counterpart to `spread_samples`, except it puts all parameter names into a `term` column and samples into an `estimate` column (for compatibility with `broom::tidy`):
+
+```{r}
+m %>%
+  gather_samples(overall_mean, condition_mean[condition]) %>%
+  mean_qi()
+```
+
+Note that `condition = NA` for the `overall_mean` row, because it does not have an index with that name in the specification passed to `gather_samples`.
+
+While this works well if we do not need to perform computations that involve multiple columns, the wide format returned by `spread_samples` is very useful for computations that involve multiple columns names, such as the calculation of the `condition_offset` above. If we want to make intermediate computations on the format returned by `spread_samples` and *then* gather parameters into one column, we can use `gather_terms`, which will gather all non-grouped terms that do not start with `"."`:
+
+```{r}
+m %>%
+  spread_samples(overall_mean, condition_mean[condition]) %>%
+  mutate(condition_offset = condition_mean - overall_mean) %>%
+  gather_terms() %>%
+  mean_qi()
+```
+
+Note how `overall_mean` is now repeated here for each condition, because we have performed the gather after spreading parameters across columns.
+
+Finally, if we want raw parameter names as columns names instead of having indices split out as their own column names, we can use `as_sample_tibble`. Generally speaking this should not be necessary, but is provided as a common method for generating data frames from many types of Bayesian models, and is used internally by `gather_samples` and `spread_samples`:
+
+```{r}
+m %>%
+  as_sample_tibble() %>%
+  head(10)
+```
+*(10 rows of `r nrow(as_sample_tibble(m))`)*
+
+Combining `as_sample_tibble` with `gather_terms` also allows us to derive similar output to `ggmcmc::ggs`, if desired:
+
+```{r}
+m %>%
+  as_sample_tibble() %>%
+  gather_terms() %>%
+  head(10)
+```
+*(10 rows of `r nrow(gather_terms(as_sample_tibble(m)))`)*
+
+But again, this approach does not handle parameter indices for us automatically, so using `spread_samples` and `gather_samples` is generally recommended unless you do not have parameter indices to worry about.
 
 
-## Interoperability with `bayesplot` and other packages
+
+## Compatibility with other packages
+
+### Compatibility of `point_interval` with `broom::tidy` and `dotwhisker::dwplot`: A model comparison example
+
+Because `mean_qi` and the `point_interval` family of functions use a similar naming scheme to that of `broom::tidy`, it is easy to compare results against models supported by `broom::tidy`. For example, let's compare our model's estimates of conditional means against an ordinary least squares (OLS) regression:
+
+```{r}
+m_linear = lm(response ~ condition, data = ABC)
+```
+
+Combining `lsmeans::lsmeans` with `broom::tidy`, we can generate tidy-format estimates of conditional means from the above model:
+
+```{r}
+linear_estimates = m_linear %>% 
+  lsmeans(~ condition) %>% 
+  tidy() %>%
+  mutate(model = "OLS")
+
+linear_estimates
+```
+
+We can derive corresponding estimates from our model:
+
+```{r}
+bayes_estimates = m %>%
+  spread_samples(condition_mean[condition]) %>%
+  mean_qi(estimate = condition_mean) %>%
+  mutate(model = "Bayes")
+
+bayes_estimates
+```
+
+Because the `point_interval` functions use the same column names for `conf.low` and `conf.high` as `broom::tidy` does, the column names for the columns we need to make the comparison (`condition`, `estimate`, `conf.low`, and `conf.high`) all line up easily. This makes it simple to combine the two tidy data frame together using `bind_rows`, and plot them:
+
+```{r}
+bind_rows(linear_estimates, bayes_estimates) %>%
+  mutate(condition = fct_rev(condition)) %>%
+  ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
+  geom_pointrangeh(position = position_dodgev(height = .3))
+```
+
+Comptability with `tidy` also gives compatibility with `dotwhisker::dwplot`:
+
+```{r, warning = FALSE}
+bind_rows(linear_estimates, bayes_estimates) %>%
+    rename(term = condition) %>%
+    dotwhisker::dwplot()
+```
+
+Observe the shrinkage towards the overall mean in the Bayesian model compared to the OLS model.
+
+### Compatibility with `bayesplot` and other non-tidy packages using `unspread_samples` and `ungather_samples`
 
 Function from other packages might expect samples in the form of a data frame or matrix with parameters as columns and samples as rows. That is the format returned by `as_sample_tibble`, but not by `gather_samples` or `spread_samples`, which split indices from parameters out into columns. 
 
-It may be desirable to use the `spread_samples` or `gather_samples` functions to transform your samples in some way, and then convert them *back* into the sample $\times$ parameter format to pass them into functions from `bayesplot` or other packages like it. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples` to return a data frame with parameter names that including indices in them as columns and samples as rows.
+It may be desirable to use the `spread_samples` or `gather_samples` functions to transform your samples in some way, and then convert them *back* into the sample $\times$ parameter format to pass them into functions from `bayesplot` or other packages like it. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples` to return a data frame with parameter names that include indices in them as columns and samples as rows.
 
 As an example, let's re-do the previous example of `compare_levels`, but use `bayesplot::mcmc_hist` to plot the results instead of `geom_eyeh`. First, the result of `compare_levels` looks like this:
 
@@ -551,7 +596,7 @@ As an example, let's re-do the previous example of `compare_levels`, but use `ba
 m %>%
   spread_samples(condition_mean[condition]) %>%
   compare_levels(condition_mean, by = condition) %>%
-  head()
+  head(10)
 ```
 *(10 rows of `r nrow(m %>% spread_samples(condition_mean[condition]) %>% compare_levels(condition_mean, by = condition))`)*
 
@@ -566,7 +611,7 @@ m %>%
 ```
 *(10 rows of `r nrow(as_sample_tibble(m))`)*
 
-We can pass that into `bayesplot::mcmc_areas` directly. The `drop_indices = TRUE` parameter to `unspread_samples` indicates that `.chain` and `.iteration` should not be included in the output
+We can pass that into `bayesplot::mcmc_areas` directly. The `drop_indices = TRUE` parameter to `unspread_samples` indicates that `.chain` and `.iteration` should not be included in the output:
 
 ```{r}
 m %>%
@@ -578,28 +623,4 @@ m %>%
 
 If you are instead working with tidy samples generated by `gather_samples` or `gather_terms`, the `ungather_samples` function will transform those samples into the sample $\times$ parameter format. It has the same syntax as `unspread_samples`.
 
-
-## Alternative estimates and intervals: mean, median, mode; qi, hdi
-
-The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi][h|]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Here is an example showing `mean_qi` (black) compared to `mode_hdi` (red):
-
-```{r}
-m %>%
-  spread_samples(condition_mean[condition]) %>%
-  ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_eyeh(fun.data = mean_qih) + 
-  stat_summaryh(fun.data = mode_hdih, position = position_nudge(y = .15), color="red")
-```
-
-The difference is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:
-
-```{r}
-m %>%
-  spread_samples(response_sd) %>%
-  ggplot(aes(x = response_sd)) +
-  stat_density(aes(y = ..scaled.. * 15), fill = "gray75") +
-  stat_summaryh(aes(y = "mean_qi"), fun.data = mean_qih) +
-  stat_summaryh(aes(y = "mode_hdi"), fun.data = mode_hdih) +
-  ylab("")
-```
 
