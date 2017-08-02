@@ -56,7 +56,8 @@ and visualization tasks common to many models:
   family of functions (`mean_qi`, `median_qi`, `mode_hdi`, etc) are methods 
   for generating estimates and intervals that are designed with tidy workflows 
   in mind. They can generate estimates plus an arbitrary number of probability 
-  intervals from a tidy data frame of samples.
+  intervals *from* tidy data frames of samples, they *return* tidy data frames,
+  and they **respect data frame groups**.
 
 * __Visualizing posteriors__, which when many estimates are involved
   can be done succinctly using **eye plots** (aka raindrop plots or violin
