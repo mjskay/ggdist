@@ -70,15 +70,15 @@ set.seed(5)
 n = 10
 n_condition = 5
 ABC =
-    data_frame(
-        condition = rep(c("A","B","C","D","E"), n),
-        response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
-    )
+  data_frame(
+    condition = rep(c("A","B","C","D","E"), n),
+    response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
+  )
 
 ABC %>%
-    ggplot(aes(x = response, y = condition)) +
-    geom_point(alpha = 0.5) +
-    ylab("condition")
+  ggplot(aes(x = response, y = condition)) +
+  geom_point(alpha = 0.5) +
+  ylab("condition")
 ```
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-2-1.png)
@@ -87,29 +87,29 @@ A hierarchical model of this data might estimate an overall mean across the cond
 
 ``` stan
 data {
-    int<lower=1> n;
-    int<lower=1> n_condition;
-    int<lower=1, upper=n_condition> condition[n];
-    real response[n];
+  int<lower=1> n;
+  int<lower=1> n_condition;
+  int<lower=1, upper=n_condition> condition[n];
+  real response[n];
 }
 parameters {
-    real overall_mean;
-    vector[n_condition] condition_zoffset;
-    real<lower=0> response_sd;
-    real<lower=0> condition_mean_sd;
+  real overall_mean;
+  vector[n_condition] condition_zoffset;
+  real<lower=0> response_sd;
+  real<lower=0> condition_mean_sd;
 }
 transformed parameters {
-    vector[n_condition] condition_mean;
-    condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
+  vector[n_condition] condition_mean;
+  condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
 }
 model {
-    response_sd ~ cauchy(0, 1);         # => half-cauchy(0, 1)
-    condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
-    overall_mean ~ normal(0, 5);
-    condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
-    for (i in 1:n) {
-        response[i] ~ normal(condition_mean[condition[i]], response_sd);
-    }
+  response_sd ~ cauchy(0, 1);         # => half-cauchy(0, 1)
+  condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
+  overall_mean ~ normal(0, 5);
+  condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
+  for (i in 1:n) {
+    response[i] ~ normal(condition_mean[condition[i]], response_sd);
+  }
 }
 ```
 
@@ -140,8 +140,8 @@ Now we can extract parameters of interest using `spread_samples`, which automati
 
 ``` r
 m %>%
-    spread_samples(condition_mean[condition], response_sd) %>%
-    head(15)  # just show the first few rows
+  spread_samples(condition_mean[condition], response_sd) %>%
+  head(15)  # just show the first few rows
 ```
 
 |  .chain|  .iteration| condition |  condition\_mean|  response\_sd|
@@ -170,9 +170,9 @@ Automatic splitting of indices into columns makes it easy to plot the condition 
 
 ``` r
 m %>%
-    spread_samples(condition_mean[condition]) %>%
-    ggplot(aes(x = condition_mean, y = condition)) +
-    geom_eyeh()
+  spread_samples(condition_mean[condition]) %>%
+  ggplot(aes(x = condition_mean, y = condition)) +
+  geom_eyeh()
 ```
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
@@ -185,10 +185,10 @@ For example, let's compare to ordinary least squares (OLS) regression:
 
 ``` r
 linear_estimates = 
-    lm(response ~ condition, data = ABC) %>% 
-    lsmeans(~ condition) %>% 
-    tidy() %>%
-    mutate(model = "OLS")
+  lm(response ~ condition, data = ABC) %>% 
+  lsmeans(~ condition) %>% 
+  tidy() %>%
+  mutate(model = "OLS")
 linear_estimates
 ```
 
@@ -204,9 +204,9 @@ The output from `mean_qi` when given a single parameter uses `conf.low` and `con
 
 ``` r
 bayes_estimates = m %>%
-    spread_samples(condition_mean[condition]) %>%
-    mean_qi(estimate = condition_mean) %>%
-    mutate(model = "Bayes")
+  spread_samples(condition_mean[condition]) %>%
+  mean_qi(estimate = condition_mean) %>%
+  mutate(model = "Bayes")
 bayes_estimates
 ```
 
@@ -222,20 +222,20 @@ This makes it easy to bind the two estimates together and plot them:
 
 ``` r
 bind_rows(linear_estimates, bayes_estimates) %>%
-    ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-    geom_pointrangeh(position = position_dodgev(height = .3))
+  ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
+  geom_pointrangeh(position = position_dodgev(height = .3))
 ```
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
 
 Shrinkage towards the overall mean is visible in the Bayesian estimates.
 
-Comptability with `tidy` also gives compatibility with `dotwhisker::dwplot`:
+Comptability with `broom::tidy` also gives compatibility with `dotwhisker::dwplot`:
 
 ``` r
 bind_rows(linear_estimates, bayes_estimates) %>%
-    rename(term = condition) %>%
-    dotwhisker::dwplot()
+  rename(term = condition) %>%
+  dotwhisker::dwplot()
 ```
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
@@ -246,20 +246,20 @@ The tidy data format returned by `spread_samples` also facilitates additional co
 
 ``` r
 m %>%
-    spread_samples(condition_mean[condition], response_sd) %>%
-    mutate(pred = rnorm(n(), condition_mean, response_sd)) %>%
-    ggplot(aes(y = condition)) +
-    
-    # posterior predictive intervals
-    stat_summaryh(aes(x = pred, color = ordered(-...prob..)), size = 4,
-        fun.data = mean_qih, fun.args = list(.prob = c(.95, .8, .5)), geom = "linerangeh") +
-    scale_color_brewer(guide = FALSE) +
-    
-    # mean and qi of condition mean
-    stat_summaryh(aes(x = condition_mean), fun.data = mean_qih, position = position_nudge(y = -0.2)) +
-    
-    # data
-    geom_point(aes(x = response), data = ABC)
+  spread_samples(condition_mean[condition], response_sd) %>%
+  mutate(pred = rnorm(n(), condition_mean, response_sd)) %>%
+  ggplot(aes(y = condition)) +
+  
+  # posterior predictive intervals
+  stat_summaryh(aes(x = pred, color = ordered(-...prob..)), size = 4,
+    fun.data = mean_qih, fun.args = list(.prob = c(.95, .8, .5)), geom = "linerangeh") +
+  scale_color_brewer(guide = FALSE) +
+  
+  # mean and qi of condition mean
+  stat_summaryh(aes(x = condition_mean), fun.data = mean_qih, position = position_nudge(y = -0.2)) +
+  
+  # data
+  geom_point(aes(x = response), data = ABC)
 ```
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
