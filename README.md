@@ -13,16 +13,26 @@ tidybayes: R Package for composing data for and extracting samples from Bayesian
 
 `tidybayes` also provides some additional functionality for data manipulation and visualization tasks common to many models:
 
--   **Visualizing posterior estimates**, which when many estimates are involved can be done succinctly using eye plots (aka raindrop plots or violin plots). Eye plots are a compact representation of posterior densities that combines credible intervals and point estimates with a symmetric visualization of density, making for straightforward and compact comparison of many data points. The `geom_eye` and `geom_eyeh` functions provide a convenient way to generate eye plots using `ggplot2`.
+-   **Extracting tidy fits and predictions** from models. For models like those provided by `rstanarm` and `brms`, `tidybayes` provides a tidy analog of the `fitted` and `predict` functions, called `add_fitted_samples` and `add_predicted_samples`. These functions are modeled after the `modelr::add_predictions` function, and turn a grid of predictions into a long-format data frame of samples from either the fits or predictions from a model. These functions make it straightforward to generate arbitrary fit lines from a model.
 
-Posterior fit lines (with densities around the fit) can also be visualized using a combination of `predict_curve` and `predict_curve_density` plus `geom_rect`. More succinct shortcuts for this are coming.
+-   **Summarizing posterior distributions** from models. The `point_interval` family of functions (`mean_qi`, `median_qi`, `mode_hdi`, etc) are methods for generating estimates and intervals that are designed with tidy workflows in mind. They can generate estimates plus an arbitrary number of probability intervals from a tidy data frame of samples.
+
+-   **Visualizing posteriors**, which when many estimates are involved can be done succinctly using **eye plots** (aka raindrop plots or violin plots). Eye plots are a compact representation of posterior densities that combines credible intervals and point estimates with a symmetric visualization of density, making for straightforward and compact comparison of many data points. The `geom_eye` and `geom_eyeh` functions provide a convenient way to generate eye plots using `ggplot2`. If you prefer intervals plus densities (instead of violins), the **half-eye plot** is also easily constructing using `geom_halfeyeh`.
+
+The focus on tidy data suitable for use with `ggplot` means that existing `geom`s (line `geom_pointrange` and `geom_linerange`) can also be used easily to construct custom plots.
 
 -   **Comparing a variable across levels of a factor**, which often means first generating pairs of levels of a factor (according to some desired set of comparisons) and then computing a function over the value of the comparison variable for those pairs of levels. Assuming your data is in the format returned by `spread_samples`, the `compare_levels` function allows comparison across levels to be made easily.
+
+Finally, `tidybayes` aims to fit into common workflows through compatibility with other packages:
+
+-   **Compatibility with other tidy packages**. Default column names in the output have also been chosen for compatibility with `broom::tidy`, which makes comparison with estimates from non-Bayesian models straightforward.
+
+-   **Compatibility with non-tidy packages**. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples`, aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`).
 
 Supported model types
 ---------------------
 
-`tidybayes` aims to support a variety of models. Currently supported models include [rstan](https://cran.r-project.org/package=rstan), [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda), [runjags](https://cran.r-project.org/package=runjags), [rstanarm](https://cran.r-project.org/package=rstanarm), [brms](https://cran.r-project.org/package=brms), [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
+`tidybayes` aims to support a variety of models with a uniform interface. Currently supported models include [rstan](https://cran.r-project.org/package=rstan), [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda), [runjags](https://cran.r-project.org/package=runjags), [rstanarm](https://cran.r-project.org/package=rstanarm), [brms](https://cran.r-project.org/package=brms), [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
 
 Installation
 ------------
@@ -48,6 +58,9 @@ library(rstan)
 library(tidybayes)
 library(lsmeans)
 library(broom)
+library(brms)
+library(modelr)
+library(forcats)
 ```
 
 Imagine this dataset:
@@ -252,6 +265,38 @@ m %>%
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
 
 This plot shows 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
+
+#### Fit curves
+
+For models that support it (like `rstanarm` and `brms` models), We can also use the `add_fitted_samples` or `add_predicted_samples` functions to generate posterior fits or predictions. Combined with the functions from the `modelr` package, this makes it easy to generate fit curves.
+
+Let's fit a slightly naive model to miles per gallon versus horsepower in the `mtcars` dataset:
+
+``` r
+m_mpg = brm(mpg ~ log(hp), data = mtcars, family = lognormal)
+```
+
+    ## Compiling the C++ model
+
+    ## Start sampling
+
+Now we will use `modelr::data_grid` plus `tidybayes::add_predicted_samples` to generate a fit curve with multiple probability bands:
+
+``` r
+mtcars %>%
+  data_grid(hp = seq_range(hp, n = 100)) %>%
+  add_predicted_samples(m_mpg) %>%
+  median_qi(.prob = c(.99, .95, .8, .5)) %>%
+  ggplot(aes(x = hp, y = pred, ymin = conf.low, ymax = conf.high)) +
+  geom_ribbon(aes(fill = fct_rev(ordered(.prob)))) +
+  geom_line(color = "red", size = 1.5) +
+  geom_point(aes(x = hp, y = mpg), data = mtcars, inherit.aes = FALSE) +
+  scale_fill_brewer()
+```
+
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
+
+Because this is all tidy data, if you wanted to generate predictions faceted over a categorical variable (say different curves), this would be just as straightforward, and you could use the existing faceting features built in to ggplot to do it.
 
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
 
