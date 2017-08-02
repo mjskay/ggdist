@@ -19,7 +19,7 @@ tidybayes: R Package for composing data for and extracting samples from Bayesian
 
 -   **Visualizing posteriors**, which when many estimates are involved can be done succinctly using **eye plots** (aka raindrop plots or violin plots). Eye plots are a compact representation of posterior densities that combines credible intervals and point estimates with a symmetric visualization of density, making for straightforward and compact comparison of many data points. The `geom_eye` and `geom_eyeh` functions provide a convenient way to generate eye plots using `ggplot2`. If you prefer intervals plus densities (instead of violins), the **half-eye plot** is also easily constructing using `geom_halfeyeh`.
 
-The focus on tidy data suitable for use with `ggplot` means that existing `geom`s (line `geom_pointrange` and `geom_linerange`) can also be used easily to construct custom plots.
+    The focus on tidy data suitable for use with `ggplot` means that existing `geom`s (like `geom_pointrange` and `geom_linerange`) can also be used easily to construct custom plots.
 
 -   **Comparing a variable across levels of a factor**, which often means first generating pairs of levels of a factor (according to some desired set of comparisons) and then computing a function over the value of the comparison variable for those pairs of levels. Assuming your data is in the format returned by `spread_samples`, the `compare_levels` function allows comparison across levels to be made easily.
 
@@ -276,10 +276,6 @@ Let's fit a slightly naive model to miles per gallon versus horsepower in the `m
 m_mpg = brm(mpg ~ log(hp), data = mtcars, family = lognormal)
 ```
 
-    ## Compiling the C++ model
-
-    ## Start sampling
-
 Now we will use `modelr::data_grid` plus `tidybayes::add_predicted_samples` to generate a fit curve with multiple probability bands:
 
 ``` r
@@ -287,16 +283,39 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 100)) %>%
   add_predicted_samples(m_mpg) %>%
   median_qi(.prob = c(.99, .95, .8, .5)) %>%
-  ggplot(aes(x = hp, y = pred, ymin = conf.low, ymax = conf.high)) +
-  geom_ribbon(aes(fill = fct_rev(ordered(.prob)))) +
-  geom_line(color = "red", size = 1.5) +
-  geom_point(aes(x = hp, y = mpg), data = mtcars, inherit.aes = FALSE) +
+  ggplot(aes(x = hp)) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))) +
+  geom_line(aes(y = pred), color = "red", size = 1.5) +
+  geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer()
 ```
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
 
-Because this is all tidy data, if you wanted to generate predictions faceted over a categorical variable (say different curves), this would be just as straightforward, and you could use the existing faceting features built in to ggplot to do it.
+Because this is all tidy data, if you wanted to build a model with interactions among different categorical variables (say a different curve for automatic and manula transmissions), you can easily generate predictions faceted over that variable (say, different curves for different transmission types). Then you could use the existing faceting features built in to ggplot to plot them.
+
+Such a model might be:
+
+``` r
+m_mpg_am = brm(mpg ~ log(hp)*am, data = mtcars, family = lognormal)
+```
+
+Then we can generate and plot predictions as before (differences from above are highlighted as comments):
+
+``` r
+mtcars %>%
+  data_grid(hp = seq_range(hp, n = 100), am) %>%    # add am to the prediction grid
+  add_predicted_samples(m_mpg_am) %>%
+  median_qi(.prob = c(.99, .95, .8, .5)) %>%
+  ggplot(aes(x = hp)) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))) +
+  geom_line(aes(y = pred), color = "red", size = 1.5) +
+  geom_point(aes(y = mpg), data = mtcars) +
+  scale_fill_brewer() +
+  facet_wrap(~ am)                                  # facet by am
+```
+
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
 
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
 
