@@ -281,3 +281,15 @@ test_that("indices with existing names as strings are made wide as strings with 
 
   expect_equal(spread_samples(RankCorr, x[..]), ref)
 })
+
+test_that("regular expressions for parameter names work on non-indexed parameters", {
+  data(RankCorr, package = "tidybayes")
+
+  expect_equal(spread_samples(RankCorr, typical_r), spread_samples(RankCorr, `typical..`))
+})
+
+test_that("regular expressions for parameter names work on indexed parameters", {
+  data(RankCorr, package = "tidybayes")
+
+  expect_equal(spread_samples(RankCorr, c(tau, u_tau)[i]), spread_samples(RankCorr, `.*tau`[i]))
+})
