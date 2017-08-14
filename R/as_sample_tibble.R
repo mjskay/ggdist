@@ -120,7 +120,24 @@ as_sample_tibble.matrix = function(model) {
 }
 
 #' @rdname as_sample_tibble
+#' @importFrom dplyr inner_join
+#' @importFrom purrr discard
 #' @export
 as_sample_tibble.MCMCglmm = function(model) {
-  as_sample_tibble(model$Sol)
+  # samples from MME solutions, including fixed effects
+  sol_samples = as_sample_tibble(model$Sol)
+
+  # samples from (co)variance matrices, ordinal cutpoints, and latent variables
+  other_samples =
+    model[c("VCV", "CP", "Liab")] %>%
+    discard(is.null) %>%
+    map2(names(.), function(samples, param_type) {
+      dimnames(samples)[[2]] %<>% paste0(param_type, "_", .)
+      as_sample_tibble(samples)
+    })
+
+  sol_samples %>%
+    list() %>%
+    c(other_samples) %>%
+    reduce(inner_join, by = c(".chain", ".iteration"))
 }
