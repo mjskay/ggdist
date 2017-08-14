@@ -359,7 +359,17 @@ spread_samples_ = function(model, variable_spec) {
 spread_samples_long_ = function(model, variable_names, index_names) {
   samples = as_sample_tibble(model)
   if (is.null(index_names)) {
-    #no indices, just return the samples with a sample index added
+    #no indices, just find the colnames matching the regex(es)
+    variable_regex = paste0("^(", paste(variable_names, collapse = "|"), ")$")
+    variable_names_index = stri_detect_regex(colnames(samples), variable_regex)
+
+    if (!any(variable_names_index)) {
+      stop(paste0("No parameters found matching spec: ",
+        "c(", paste0(variable_names, collapse = ","), ")"
+      ))
+    }
+
+    variable_names = colnames(samples)[variable_names_index]
     samples[, c(".chain", ".iteration", variable_names)]
   }
   else {
@@ -372,7 +382,7 @@ spread_samples_long_ = function(model, variable_names, index_names) {
       "(", paste(variable_names, collapse = "|"), ")\\[",
       #indices
       paste0(rep(index_regex, length(index_names)), collapse = index_sep_regex),
-      "\\]"
+      "\\]$"
     )
     variable_names_index = stri_detect_regex(colnames(samples), variable_regex)
     if (!any(variable_names_index)) {
