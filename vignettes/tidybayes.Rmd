@@ -532,6 +532,17 @@ m %>%
 But again, this approach does not handle parameter indices for us automatically, so using `spread_samples` and `gather_samples` is generally recommended unless you do not have parameter indices to worry about.
 
 
+## Selecting parameters using regular expressions
+
+You can use regular expressions in the specifications passed to `spread_samples` and `gather_samples` to match multiple columns. Our example fit contains parameters named `condition_mean[i]` and `condition_zoffset[i]`. We could extract both using regular expressions:
+
+```{r}
+m %>%
+  spread_samples(`condition_.*`[condition])
+```
+
+This result is equivalent to `spread_samples(c(condition_mean, condition_zoffset)[condition])`, but does not require us to list each parameter explicitly---this can be useful, for example, in models with naming schemes like `b_[some name]` for coefficients.
+
 
 ## Compatibility with other packages
 

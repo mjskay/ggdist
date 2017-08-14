@@ -245,7 +245,7 @@ parse_variable_spec = function(variable_spec) {
 #' indices with \code{\link{recover_types}}, and thus can be used to get
 #' columns with nicer names. For example:
 #'
-#' \code{fit \%>\% recover_types(data) \%>\% spread_samples(fit, b[i,v] | v)} would return a grouped data frame
+#' \code{fit \%>\% recover_types(data) \%>\% spread_samples(b[i,v] | v)} would return a grouped data frame
 #' (grouped by \code{i}), with:
 #' \itemize{
 #'  \item column \code{".chain"}: the chain number
@@ -258,6 +258,12 @@ parse_variable_spec = function(variable_spec) {
 #'  \item column \code{"c"}: value of \code{"b[i,3]"} for iteration number
 #'    \code{".iteration"} on chain number \code{".chain"}
 #' }
+#'
+#' Finally, parameter names can be regular expressions; e.g.:
+#'
+#' \code{spread_samples(fit, `b_.*`[i])}
+#'
+#' Would return a tidy data frame with parameters starting with `b_` and having one index.
 #'
 #' @param model A supported Bayesian model fit / MCMC object. Currently
 #' supported models include \code{\link[coda]{mcmc}}.
