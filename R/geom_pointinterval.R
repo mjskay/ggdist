@@ -4,6 +4,11 @@
 ###############################################################################
 
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c("conf.low", "conf.high", ".prob"))
+
+
 #' Point + interval geoms
 #'
 #' Modified versions of \code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} with default aesthetics
@@ -37,6 +42,8 @@
 #' lines. The default decreases the line size, because the default range of \code{\link{scale_size_continuous}}
 #' has an upper end of 6, which is quite large.
 #' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
+#' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
+#' values are silently removed.
 #' @param show.legend Should this later be included in the legends? Default is \code{FALSE}, unlike most geoms,
 #' to match its common use cases; N.B. this is unlike most geoms, which have a default of \code{NA}.
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
@@ -47,6 +54,8 @@
 #' @keywords manip
 #' @examples
 #'
+#' library(magrittr)
+#' library(ggplot2)
 #' data(RankCorr)
 #'
 #' RankCorr %>%

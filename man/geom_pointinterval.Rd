@@ -33,6 +33,9 @@ has an upper end of 6, which is quite large.}
 
 \item{fatten.point}{A multiplicate factor used to adjust the size of the point relative to the largest line.}
 
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
+values are silently removed.}
+
 \item{show.legend}{Should this later be included in the legends? Default is \code{FALSE}, unlike most geoms,
 to match its common use cases; N.B. this is unlike most geoms, which have a default of \code{NA}.}
 
@@ -63,6 +66,8 @@ geoms) or \code{show.legend = TRUE}.
 }
 \examples{
 
+library(magrittr)
+library(ggplot2)
 data(RankCorr)
 
 RankCorr \%>\%

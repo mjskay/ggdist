@@ -553,8 +553,10 @@ You can use regular expressions in the specifications passed to `spread_samples`
 
 ```{r}
 m %>%
-  spread_samples(`condition_.*`[condition], regex = TRUE)
+  spread_samples(`condition_.*`[condition], regex = TRUE) %>%
+  head(10)
 ```
+*(10 rows of `r nrow(spread_samples(m, condition_mean[condition]))`)*
 
 This result is equivalent in this case to `spread_samples(c(condition_mean, condition_zoffset)[condition])`, but does not require us to list each parameter explicitly---this can be useful, for example, in models with naming schemes like `b_[some name]` for coefficients.
 

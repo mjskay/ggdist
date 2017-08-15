@@ -4,6 +4,11 @@
 ###############################################################################
 
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c("conf.low", "conf.high", ".prob"))
+
+
 #' @rdname geom_pointinterval
 #' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2
@@ -52,6 +57,7 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
 }
 
 #' @importFrom grid grobTree
+#' @importFrom ggstance draw_key_hpath
 draw_key_pointintervalh <- function(data, params, size) {
   grobTree(
     draw_key_hpath(transform(data, size = data$size * 2/6), params, size)
