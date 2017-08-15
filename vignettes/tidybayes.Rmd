@@ -281,16 +281,26 @@ When given only a single column, `mean_qi` will use the names `conf.low` and `co
 
 ## Plotting point estimates and intervals
 
-### Using `geom_pointrange`/`geom_pointrangeh`
+### Using `geom_pointinterval`/`geom_pointintervalh`
 
-Plotting means and intervals is straightforward using the "pointrange" geom of `ggplot` (or its horizontal version, "pointrangeh" from `ggstance`):
+Plotting means and intervals is straightforward using the `pointinterval` geom (or its horizontal version, `pointintervalh`), which are a modified versions of `ggplot2::geom_pointrange` and `ggstance::geom_pointrangeh` with sensible defaults for multiple intervals (functionality we will use later):
 
 ```{r}
 m %>%
   spread_samples(condition_mean[condition]) %>%
   mean_qi() %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean, xmin = conf.low, xmax = conf.high)) +
-  geom_pointrangeh()
+  geom_pointintervalh()
+```
+
+`geom_pointintervalh` includes `xmin = conf.low` and `xmax = conf.high` in its default aesthetics, so these can be omitted:
+
+```{r}
+m %>%
+  spread_samples(condition_mean[condition]) %>%
+  mean_qi() %>%
+  ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
+  geom_pointintervalh()
 ```
 
 ### Using `stat_summary`/`stat_summaryh`
@@ -358,13 +368,20 @@ The results are in a tidy format: one row per index (`condition`) and probabilit
 m %>%
   spread_samples(condition_mean[condition]) %>%
   mean_qi(.prob = c(.95, .8, .5)) %>%
-  ggplot(aes(y = fct_rev(condition), x = condition_mean, xmin = conf.low, xmax = conf.high, 
-    size = -.prob)) +             # smaller probability interval => thicker line
-  geom_pointrangeh(fatten = 2) +    # smaller point estimate (otherwise it is very large)
-  scale_size_continuous(
-    range = c(1, 2.5),   # default range is c(0, 6) --- makes very thick lines
-    guide = FALSE      # no need for a legend on size
-  )
+  ggplot(aes(y = fct_rev(condition), x = condition_mean, 
+    size = -.prob)) +               # smaller probability interval => thicker line
+  geom_pointintervalh()
+```
+
+Just as `geom_pointrangeh` includes `xmin = conf.low` and `xmax = conf.high` as default aesthetics, it also includes 
+`size = -.prob` to facilitate exactly this usage. This, the above can be simplified to:
+
+```{r}
+m %>%
+  spread_samples(condition_mean[condition]) %>%
+  mean_qi(.prob = c(.95, .8, .5)) %>%
+  ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
+  geom_pointintervalh()
 ```
 
 ### Alternative estimates and intervals: mean, median, mode; qi, hdi
@@ -456,18 +473,16 @@ reps = samples %>%
   mean_qi(y_rep, .prob = c(.95, .8, .5))
 
 parameters = samples %>%
-  mean_qi(condition_mean, .prob = c(.95, .50))
+  mean_qi(condition_mean, .prob = c(.95, .66))
 
 ABC %>%
   ggplot(aes(y = condition)) +
   geom_linerangeh(aes(xmin = conf.low, xmax = conf.high, 
     color = ordered(-.prob)), size = 4, data = reps) +
-  geom_pointrangeh(aes(x = condition_mean, xmin = conf.low, xmax = conf.high, 
-    size = -.prob), fatten = 1.5, position = position_nudge(y = -0.2),
-    data = parameters) +
+  geom_pointintervalh(aes(x = condition_mean),
+    position = position_nudge(y = -0.2), data = parameters) +
   geom_point(aes(x = response)) +
-  scale_color_brewer(guide = FALSE) +
-  scale_size_continuous(range = c(1,2), guide = FALSE)
+  scale_color_brewer(guide = FALSE)
 ```
 
 ## Comparing levels of a factor

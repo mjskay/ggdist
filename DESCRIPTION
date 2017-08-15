@@ -27,6 +27,7 @@ Imports:
     rlang,
     ggstance,
     ggjoy,
+    grid,
     magrittr
 Suggests:
     knitr,

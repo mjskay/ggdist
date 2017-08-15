@@ -70,7 +70,9 @@ and visualization tasks common to many models:
   
     The focus on tidy data suitable for use with `ggplot` means that existing
     `geom`s (like `geom_pointrange` and `geom_linerange`) can also be used easily to 
-    construct custom plots.
+    construct custom plots. Modified versions of those vanilla geoms are also provided
+    (e.g., `geom_pointinterval` and `geom_pointintervalh`) with sensible defaults for
+    tasks like plotting multiple intervals per estimate.
 
 * __Comparing a variable across levels of a factor__, which often means first
   generating pairs of levels of a factor (according to some desired set of 

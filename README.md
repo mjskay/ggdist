@@ -19,7 +19,7 @@ tidybayes: R Package for composing data for and extracting samples from Bayesian
 
 -   **Visualizing posteriors**, which when many estimates are involved can be done succinctly using **eye plots** (aka raindrop plots or violin plots). Eye plots are a compact representation of posterior densities that combines credible intervals and point estimates with a symmetric visualization of density, making for straightforward and compact comparison of many data points. The `geom_eye` and `geom_eyeh` functions provide a convenient way to generate eye plots using `ggplot2`. If you prefer intervals plus densities (instead of violins), the **half-eye plot** is also easily constructing using `geom_halfeyeh`.
 
-    The focus on tidy data suitable for use with `ggplot` means that existing `geom`s (like `geom_pointrange` and `geom_linerange`) can also be used easily to construct custom plots.
+    The focus on tidy data suitable for use with `ggplot` means that existing `geom`s (like `geom_pointrange` and `geom_linerange`) can also be used easily to construct custom plots. Modified versions of those vanilla geoms are also provided (e.g., `geom_pointinterval` and `geom_pointintervalh`) with sensible defaults for tasks like plotting multiple intervals per estimate.
 
 -   **Comparing a variable across levels of a factor**, which often means first generating pairs of levels of a factor (according to some desired set of comparisons) and then computing a function over the value of the comparison variable for those pairs of levels. Assuming your data is in the format returned by `spread_samples`, the `compare_levels` function allows comparison across levels to be made easily.
 
