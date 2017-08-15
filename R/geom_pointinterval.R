@@ -77,7 +77,7 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 geom_pointinterval <- function(mapping = NULL, data = NULL,
   stat = "identity", position = "identity",
   ...,
-  fatten.interval = 2/6,
+  fatten.interval = 2 / 6,
   fatten.point = 2,
   na.rm = FALSE,
   show.legend = FALSE,
@@ -120,7 +120,7 @@ geom_pointinterval <- function(mapping = NULL, data = NULL,
 #' @importFrom grid grobTree
 draw_key_pointinterval <- function(data, params, size) {
   grobTree(
-    draw_key_vpath(transform(data, size = data$size * 2/6), params, size)
+    draw_key_vpath(transform(data, size = data$size * 2 / 6), params, size)
   )
 }
 
@@ -138,7 +138,7 @@ GeomPointinterval <- ggproto("GeomPointinterval", Geom,
 
   required_aes = c("x", "y", "ymin", "ymax"),
 
-  draw_panel = function(data, panel_scales, coord, fatten.point = 2.5, fatten.interval = 2/6) {
+  draw_panel = function(data, panel_scales, coord, fatten.point = 2.5, fatten.interval = 2 / 6) {
     if (is.null(data$x))
       return(GeomLinerange$draw_panel(transform(data, size = size * fatten.interval), panel_scales, coord))
 

@@ -20,7 +20,7 @@ apply_default_computed_aesthetics = function(self, plot, default_computed_aesthe
     self$mapping = aes()
   }
 
-  map2(names(default_computed_aesthetics), default_computed_aesthetics, function (name, value) {
+  map2(names(default_computed_aesthetics), default_computed_aesthetics, function(name, value) {
     for (aesthetic in default_computed_aesthetics)
       if (!(name %in% names(plot$mapping)) &&
           !(name %in% names(self$mapping))
