@@ -259,9 +259,9 @@ parse_variable_spec = function(variable_spec) {
 #'    \code{".iteration"} on chain number \code{".chain"}
 #' }
 #'
-#' Finally, parameter names can be regular expressions; e.g.:
+#' Finally, parameter names can be regular expressions by setting \code{regex = TRUE}; e.g.:
 #'
-#' \code{spread_samples(fit, `b_.*`[i])}
+#' \code{spread_samples(fit, `b_.*`[i], regex = TRUE)}
 #'
 #' Would return a tidy data frame with parameters starting with `b_` and having one index.
 #'
@@ -269,6 +269,8 @@ parse_variable_spec = function(variable_spec) {
 #' supported models include \code{\link[coda]{mcmc}}.
 #' @param ... Expressions in the form of
 #' \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.
+#' @param regex If \code{TRUE}, parameter names are treated as regular expressions and all column matching the
+#' regular expression and number of indices are included in the output. Default \code{FALSE}.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{recover_types}}, \code{\link{compose_data}}.
@@ -283,9 +285,9 @@ parse_variable_spec = function(variable_spec) {
 #' @importFrom dplyr inner_join
 #' @rdname spread_samples
 #' @export
-spread_samples = function(model, ...) {
+spread_samples = function(model, ..., regex = FALSE) {
   tidysamples = lapply(lazy_dots(...), function(variable_spec) {
-    spread_samples_(model, variable_spec)
+    spread_samples_(model, variable_spec, regex = regex)
   })
 
   #get the groups from all the samples --- when we join them together,
@@ -307,7 +309,7 @@ spread_samples = function(model, ...) {
 #' @importFrom tidyr spread_
 #' @importFrom lazyeval lazy_eval
 #' @importFrom tibble has_name
-spread_samples_ = function(model, variable_spec) {
+spread_samples_ = function(model, variable_spec, regex = FALSE) {
   #parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
   spec = parse_variable_spec(variable_spec)
   variable_names = spec[[1]]
@@ -315,7 +317,7 @@ spread_samples_ = function(model, variable_spec) {
   wide_index_name = spec[[3]]
 
   #extract the samples into a long data frame
-  samples = spread_samples_long_(model, variable_names, index_names)
+  samples = spread_samples_long_(model, variable_names, index_names, regex = regex)
 
   #convert variable and/or indices back into usable data types
   constructors = attr(model, "constructors")
@@ -362,8 +364,12 @@ spread_samples_ = function(model, variable_spec) {
 #' @importFrom tidyr spread_ separate_ gather_
 #' @import stringi
 #' @import dplyr
-spread_samples_long_ = function(model, variable_names, index_names) {
+spread_samples_long_ = function(model, variable_names, index_names, regex = FALSE) {
   samples = as_sample_tibble(model)
+  if (!regex) {
+    variable_names = escape_regex(variable_names)
+  }
+
   if (is.null(index_names)) {
     #no indices, just find the colnames matching the regex(es)
     variable_regex = paste0("^(", paste(variable_names, collapse = "|"), ")$")
@@ -435,10 +441,10 @@ spread_samples_long_ = function(model, variable_names, index_names) {
 #' @rdname spread_samples
 #' @importFrom dplyr bind_rows
 #' @export
-gather_samples = function(model, ...) {
+gather_samples = function(model, ..., regex = FALSE) {
   tidysamples = lapply(lazy_dots(...), function(variable_spec) {
     model %>%
-      spread_samples_(variable_spec) %>%
+      spread_samples_(variable_spec, regex = regex) %>%
       gather_terms()
   })
 

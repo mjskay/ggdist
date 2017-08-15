@@ -285,11 +285,27 @@ test_that("indices with existing names as strings are made wide as strings with 
 test_that("regular expressions for parameter names work on non-indexed parameters", {
   data(RankCorr, package = "tidybayes")
 
-  expect_equal(spread_samples(RankCorr, typical_r), spread_samples(RankCorr, `typical..`))
+  ref = spread_samples(RankCorr, typical_r)
+
+  expect_equal(spread_samples(RankCorr, `typical..`, regex = TRUE), ref)
 })
 
 test_that("regular expressions for parameter names work on indexed parameters", {
   data(RankCorr, package = "tidybayes")
 
-  expect_equal(spread_samples(RankCorr, c(tau, u_tau)[i]), spread_samples(RankCorr, `.*tau`[i]))
+  ref = spread_samples(RankCorr, c(tau, u_tau)[i])
+
+  expect_equal(spread_samples(RankCorr, `.*tau`[i], regex = TRUE), ref)
+})
+
+test_that("parameter names containing regex special chars work", {
+  data(RankCorr, package = "tidybayes")
+
+  dimnames(RankCorr)[[2]][[1]] = "(Intercept("
+
+  ref = RankCorr %>%
+    as_sample_tibble() %>%
+    select(.chain, .iteration, `(Intercept(`)
+
+  expect_equal(spread_samples(RankCorr, `(Intercept(`), ref)
 })

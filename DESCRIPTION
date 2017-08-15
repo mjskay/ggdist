@@ -19,6 +19,7 @@ Imports:
     tidyr,
     ggplot2,
     stringi,
+    stringr,
     LaplacesDemon,
     coda,
     purrr,

@@ -7,9 +7,9 @@
 \alias{gather_samples}
 \title{Extract samples of parameters in a Bayesian model fit into a tidy data format}
 \usage{
-spread_samples(model, ...)
+spread_samples(model, ..., regex = FALSE)
 
-gather_samples(model, ...)
+gather_samples(model, ..., regex = FALSE)
 }
 \arguments{
 \item{model}{A supported Bayesian model fit / MCMC object. Currently
@@ -17,6 +17,9 @@ supported models include \code{\link[coda]{mcmc}}.}
 
 \item{...}{Expressions in the form of
 \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.}
+
+\item{regex}{If \code{TRUE}, parameter names are treated as regular expressions and all column matching the
+regular expression and number of indices are included in the output. Default \code{FALSE}.}
 }
 \value{
 A data frame.
@@ -179,9 +182,9 @@ columns with nicer names. For example:
    \code{".iteration"} on chain number \code{".chain"}
 }
 
-Finally, parameter names can be regular expressions; e.g.:
+Finally, parameter names can be regular expressions by setting \code{regex = TRUE}; e.g.:
 
-\code{spread_samples(fit, `b_.*`[i])}
+\code{spread_samples(fit, `b_.*`[i], regex = TRUE)}
 
 Would return a tidy data frame with parameters starting with `b_` and having one index.
 }
