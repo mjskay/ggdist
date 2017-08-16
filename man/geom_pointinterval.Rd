@@ -6,11 +6,11 @@
 \title{Point + interval geoms}
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., fatten.interval = 2/6, fatten.point = 2,
+  position = "identity", ..., fatten.interval = 1.5/6, fatten.point = 2,
   na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE)
 
 geom_pointintervalh(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., fatten.interval = 2/6, fatten.point = 2,
+  position = "identity", ..., fatten.interval = 1.5/6, fatten.point = 2,
   na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE)
 }
 \arguments{

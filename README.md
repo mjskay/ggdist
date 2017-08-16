@@ -146,21 +146,21 @@ m %>%
 
 |  .chain|  .iteration| condition |  condition\_mean|  response\_sd|
 |-------:|-----------:|:----------|----------------:|-------------:|
-|       1|           1| A         |       -0.0898227|     0.5405636|
-|       1|           1| B         |        1.1482382|     0.5405636|
-|       1|           1| C         |        1.4787394|     0.5405636|
-|       1|           1| D         |        0.9498061|     0.5405636|
-|       1|           1| E         |       -0.8495562|     0.5405636|
-|       1|           2| A         |        0.3647490|     0.5395112|
-|       1|           2| B         |        0.8048981|     0.5395112|
-|       1|           2| C         |        1.8249613|     0.5395112|
-|       1|           2| D         |        0.9535530|     0.5395112|
-|       1|           2| E         |       -0.8231064|     0.5395112|
-|       1|           3| A         |        0.4643932|     0.5189325|
-|       1|           3| B         |        0.8707345|     0.5189325|
-|       1|           3| C         |        1.6941884|     0.5189325|
-|       1|           3| D         |        0.8334538|     0.5189325|
-|       1|           3| E         |       -0.6453520|     0.5189325|
+|       1|           1| A         |       -0.1206604|     0.6131074|
+|       1|           1| B         |        1.0043807|     0.6131074|
+|       1|           1| C         |        1.5011137|     0.6131074|
+|       1|           1| D         |        1.1089315|     0.6131074|
+|       1|           1| E         |       -1.1163084|     0.6131074|
+|       1|           2| A         |        0.2778306|     0.4997878|
+|       1|           2| B         |        0.7552125|     0.4997878|
+|       1|           2| C         |        1.8340128|     0.4997878|
+|       1|           2| D         |        0.7040865|     0.4997878|
+|       1|           2| E         |       -1.1510277|     0.4997878|
+|       1|           3| A         |        0.0078763|     0.4952302|
+|       1|           3| B         |        1.2779759|     0.4952302|
+|       1|           3| C         |        2.0680137|     0.4952302|
+|       1|           3| D         |        1.3867664|     0.4952302|
+|       1|           3| E         |       -0.7519878|     0.4952302|
 
 The condition numbers are automatically turned back into text ("A", "B", "C", ...) and split into their own column. A long-format data frame is returned with a row for every iteration × every combination of indices across all variables given to `spread_samples`; for example, because `response_sd` here is not indexed by `condition`, within the same iteration it has the same value for each row corresponding to a different `condition` (some other formats supported by `tidybayes` are discussed in `vignette("tidybayes")`; in particular, the format returned by `gather_samples`).
 
@@ -212,11 +212,11 @@ bayes_estimates
 
 | condition |    estimate|    conf.low|   conf.high|  .prob| model |
 |:----------|-----------:|-----------:|-----------:|------:|:------|
-| A         |   0.1969442|  -0.1443410|   0.5489010|   0.95| Bayes |
-| B         |   1.0072787|   0.6539753|   1.3618216|   0.95| Bayes |
-| C         |   1.8398750|   1.4953742|   2.1753322|   0.95| Bayes |
-| D         |   1.0165425|   0.6763650|   1.3494475|   0.95| Bayes |
-| E         |  -0.8904673|  -1.2314528|  -0.5464018|   0.95| Bayes |
+| A         |   0.1968434|  -0.1427452|   0.5482592|   0.95| Bayes |
+| B         |   1.0075166|   0.6539753|   1.3588999|   0.95| Bayes |
+| C         |   1.8420086|   1.4953866|   2.1836275|   0.95| Bayes |
+| D         |   1.0153748|   0.6710544|   1.3494475|   0.95| Bayes |
+| E         |  -0.8916102|  -1.2320089|  -0.5412994|   0.95| Bayes |
 
 This makes it easy to bind the two estimates together and plot them:
 

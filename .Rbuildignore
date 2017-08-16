@@ -10,3 +10,5 @@
 ^README.Rmd$
 ^README_files$
 ^.lintr$
+^docs$
+^_pkgdown\.yml$

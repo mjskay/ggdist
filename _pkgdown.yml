@@ -1,0 +1,5 @@
+url: http://mjskay.github.io/tidybayes
+
+template:
+  params:
+    bootswatch: cerulean
