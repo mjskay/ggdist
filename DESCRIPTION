@@ -29,6 +29,7 @@ Imports:
     ggstance,
     ggjoy,
     grid,
+    forcats,
     magrittr
 Suggests:
     knitr,
@@ -40,7 +41,6 @@ Suggests:
     rstantools,
     lsmeans,
     broom,
-    forcats,
     dotwhisker,
     MCMCglmm,
     bayesplot,
