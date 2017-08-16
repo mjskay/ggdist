@@ -84,7 +84,8 @@ RankCorr \%>\%
 
 }
 \seealso{
-See \code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} for the geoms these are based on.
+See \code{\link{geom_lineribbon}} for a similar geom designed for curves plus probability bands. See
+\code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} for the geoms these are based on.
 }
 \author{
 Matthew Kay

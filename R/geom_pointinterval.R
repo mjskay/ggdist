@@ -50,7 +50,8 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
 #' default plot specification, e.g. borders.
 #' @author Matthew Kay
-#' @seealso See \code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} for the geoms these are based on.
+#' @seealso See \code{\link{geom_lineribbon}} for a similar geom designed for curves plus probability bands. See
+#' \code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} for the geoms these are based on.
 #' @keywords manip
 #' @examples
 #'
@@ -120,7 +121,7 @@ geom_pointinterval <- function(mapping = NULL, data = NULL,
 #' @importFrom grid grobTree
 draw_key_pointinterval <- function(data, params, size) {
   grobTree(
-    draw_key_vpath(transform(data, size = data$size * 2 / 6), params, size)
+    draw_key_path(transform(data, size = data$size * 2 / 6), params, size)
   )
 }
 

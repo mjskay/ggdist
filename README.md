@@ -284,13 +284,19 @@ mtcars %>%
   add_predicted_samples(m_mpg) %>%
   median_qi(.prob = c(.99, .95, .8, .5)) %>%
   ggplot(aes(x = hp)) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))) +
-  geom_line(aes(y = pred), color = "red", size = 1.5) +
+  geom_lineribbon(aes(y = pred)) +
   geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer()
 ```
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
+
+`geom_lineribbon(aes(y = pred))` in the above code is a shortcut for something like:
+
+``` r
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = forcats::fct_rev(ordered(.prob)))) +
+  geom_line(aes(y = pred), color = "red", size = 1.25)
+```
 
 Because this is all tidy data, if you wanted to build a model with interactions among different categorical variables (say a different curve for automatic and manula transmissions), you can easily generate predictions faceted over that variable (say, different curves for different transmission types). Then you could use the existing faceting features built in to ggplot to plot them.
 
@@ -308,8 +314,7 @@ mtcars %>%
   add_predicted_samples(m_mpg_am) %>%
   median_qi(.prob = c(.99, .95, .8, .5)) %>%
   ggplot(aes(x = hp)) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))) +
-  geom_line(aes(y = pred), color = "red", size = 1.5) +
+  geom_lineribbon(aes(y = pred)) +
   geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer() +
   facet_wrap(~ am)                                  # facet by am

@@ -57,10 +57,9 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
 }
 
 #' @importFrom grid grobTree
-#' @importFrom ggstance draw_key_hpath
 draw_key_pointintervalh <- function(data, params, size) {
   grobTree(
-    draw_key_hpath(transform(data, size = data$size * 2 / 6), params, size)
+    draw_key_path(transform(data, size = data$size * 2 / 6), params, size)
   )
 }
 
