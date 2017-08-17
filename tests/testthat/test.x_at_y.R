@@ -26,7 +26,7 @@ test_that("x_at_y works on a nested design with no missing levels", {
 })
 
 test_that("x_at_y works on a nested design with missing levels", {
-  df = get_nested_data()[-c(1, 9, 6, 14),]  #drop rows for p1, p6
+  df = get_nested_data()[-c(1, 9, 6, 14), ]  #drop rows for p1, p6
 
   expect_equal(df %$% x_at_y(site, plot), factor(c(NA, "s1", "s2", "s2", "s3", NA, "s4", "s4")))
   expect_equal(df %$% x_at_y(as.numeric(site), as.numeric(plot)), c(NA, 1, 2, 2, 3, NA, 4, 4))
@@ -52,7 +52,7 @@ test_that("x_at_y does not work when there is a non-unique x for a given y", {
 test_that("x_at_y does not work with an integer y having min(y) < 1", {
   df = get_nested_data()
   df$plot = as.numeric(df$plot)
-  df[1,"plot"] = 0
+  df[1, "plot"] = 0
 
   expect_error(df %$% x_at_y(site, plot), "All values of `plot` must be >= 1. Got min\\(`plot`\\) == 0")
 })

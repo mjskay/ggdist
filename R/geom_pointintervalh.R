@@ -80,12 +80,12 @@ GeomPointintervalh <- ggproto("GeomPointintervalh", Geom,
 
   draw_panel = function(data, panel_scales, coord, fatten.point = 1.8, fatten.interval = 1.5 / 6) {
     if (is.null(data$x))
-      return(GeomLinerangeh$draw_panel(transform(data, size = size * fatten.interval), panel_scales, coord))
+      return(GeomLinerangeh$draw_panel(transform(data, size = size * fatten.interval), panel_scales, coord)) # nolint
 
     ggname("geom_pointintervalh",
       gTree(children = gList(
-        GeomLinerangeh$draw_panel(transform(data, size = size * fatten.interval), panel_scales, coord),
-        GeomPoint$draw_panel(transform(data, size = size * fatten.point * fatten.interval), panel_scales, coord)
+        GeomLinerangeh$draw_panel(transform(data, size = size * fatten.interval), panel_scales, coord), # nolint
+        GeomPoint$draw_panel(transform(data, size = size * fatten.point * fatten.interval), panel_scales, coord) # nolint
       ))
     )
   }

@@ -52,7 +52,7 @@ x_at_y = function(x, y, missing = NA) {
     group_by(y) %>%
     slice(1)
 
-  if(nrow(distinct(data)) != nrow(index)) {
+  if (nrow(distinct(data)) != nrow(index)) {
     stop(paste0(
       y_label, " does not appear to be nested in ", x_label,
       ": there are multiple values of ", x_label, " for at least one value of ", y_label

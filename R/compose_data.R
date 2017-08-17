@@ -262,7 +262,7 @@ compose_data = function(..., .n_name = n_prefix("n")) {
     object_to_compose = eval_tidy(exprs[[i]], data)
 
     # lists and data frames don't use names unless they were provided explicitly
-    name = if(is.list(object_to_compose)) given_names[[i]] else forced_names[[i]]
+    name = if (is.list(object_to_compose)) given_names[[i]] else forced_names[[i]]
 
     if (is.null(object_to_compose)) {
       data[[name]] = NULL

@@ -103,7 +103,7 @@ predict_curve = function(data, formula, summary = median, ...) {
       ldply(1:nrow(varied_predictors), function(r) {
         #and for every prediction point on the curve
         #defined by the values in (...)
-        predictor_row = as.list(varied_predictors[r, , drop = FALSE])
+        predictor_row = as.list(varied_predictors[r, , drop = FALSE]) # nolint
         # N.B. we convert predictor_row to a list first (then the final result back
         # to a data.frame) because if summary returns more than one row
         # (as in density prediction, for example) we can't just do the calculation

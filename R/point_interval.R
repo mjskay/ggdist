@@ -158,7 +158,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
 #' @rdname point_interval
 #' @importFrom dplyr rename
 #' @export
-point_interval.numeric = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = FALSE) {
+point_interval.numeric = function(.data, ..., .prob = .95, .point = mean, .interval = qi, .broom = FALSE) {
   result = map_df(.prob, function(p) {
     interval = .interval(.data, .prob = p)
     data.frame(

@@ -49,7 +49,7 @@ as_sample_data_frame = as_sample_tibble
 #' @rdname as_sample_tibble
 #' @export
 as_sample_tibble.default = function(model) {
-  as_sample_tibble(as.mcmc.list(model))
+  as_sample_tibble(as.mcmc.list(model))  # nolint
 }
 
 #' @rdname as_sample_tibble
@@ -86,7 +86,7 @@ as_sample_tibble.stanreg = function(model) {
   #so we dont' just do as_sample_tibble(model$stanfit)
   sample_matrix = as.array(model) #[iteration, chain, parameter]
   n_chain = dim(sample_matrix)[[2]]
-  mcmc_list = as.mcmc.list(lapply(1:n_chain, function(chain) as.mcmc(sample_matrix[, chain, ])))
+  mcmc_list = as.mcmc.list(lapply(1:n_chain, function(chain) as.mcmc(sample_matrix[, chain, ]))) # nolint
   as_sample_tibble(mcmc_list)
 }
 
@@ -96,7 +96,7 @@ as_sample_tibble.runjags = function(model) {
   if (!requireNamespace("runjags", quietly = TRUE)) {
     stop("The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects.", call. = FALSE)
   }
-  as_sample_tibble(as.mcmc.list(model))
+  as_sample_tibble(as.mcmc.list(model)) # nolint
 }
 
 #' @rdname as_sample_tibble
@@ -113,7 +113,7 @@ as_sample_tibble.brmsfit = function(model) {
 as_sample_tibble.matrix = function(model) {
   if (length(dim(model)) == 2) {
     # assume matrix indexed by [interations, variables]
-    as_sample_tibble(as.mcmc.list(as.mcmc(model)))
+    as_sample_tibble(as.mcmc.list(as.mcmc(model))) # nolint
   } else {
     stop("Matrix must have only 2 dimensions (first being the sample, second the variable).")
   }
