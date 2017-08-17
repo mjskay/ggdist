@@ -3,3 +3,7 @@ url: http://mjskay.github.io/tidybayes
 template:
   params:
     bootswatch: cerulean
+
+authors:
+  Matthew Kay:
+    href: http://www.mjskay.com

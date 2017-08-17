@@ -1,5 +1,6 @@
-tidybayes: R Package for composing data for and extracting samples from Bayesian samplers in a tidy data format
-================
+
+tidybayes: Bayesian analysis + tidy data
+========================================
 
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 

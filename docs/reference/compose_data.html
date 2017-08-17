@@ -114,7 +114,9 @@ BUGS, etc).</p>
 Stan, JAGS, etc. Named arguments will have their name used as the <code>name</code>
 argument to <code>as_data_list</code> when translated; unnamed arguments that are
 not lists or data frames will have their bare value (passed through
-<code>make.names</code>) used as the <code>name</code> argument to <code>as_data_list</code>.</p></td>
+<code>make.names</code>) used as the <code>name</code> argument to <code>as_data_list</code>.
+Each argument is evaluated using <code>eval_tidy</code> in an environment that
+includes all list items composed so far.</p></td>
     </tr>
     <tr>
       <th>.n_name</th>
@@ -130,13 +132,12 @@ containing the value 20. See <code><a href='n_prefix.html'>n_prefix</a></code>.<
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>c("data_list", "list")</code>, where each element
-is a translated variable as described above.</p>
+    <p>A list where each element is a translated variable as described above.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function recursively translates each argument into list elements using
-<code><a href='as_data_list.html'>as_data_list</a></code>, concatenating all resulting lists together. By
+<code><a href='as_data_list.html'>as_data_list</a></code>, merging all resulting lists together. By
 default this means that:</p><ul>
 <li><p>numerics are included as-is.</p></li>
 <li><p>logicals are translated into numeric using <code>as.numeric</code>.</p></li>
@@ -153,22 +154,71 @@ default this means that:</p><ul>
          <code>.n_name(argument_name)</code> if the data.frame is passed as a named
          argument <code>argument_name</code>) is also added containing the number of rows
          in the data frame.</p></li>
+<li><p><code>NULL</code> values are dropped. Setting a named argument to <code>NULL</code>
+         can be used to drop that item from the resulting list (if an unwanted
+         element was added to the list by a previous argument, such as a column
+         from a data frame that is not needed in the model).</p></li>
 <li><p>all other types are dropped (and a warning given)</p></li>
 </ul>
-    <p>If you wish to add support for additional types not described above,
+    <p>As in functions like <code>mutate</code>, each expression is evaluated in an
+environment containing the data list built up so far.</p>
+<p>For example, this means that if the first argument to <code>compose_data</code>
+is a data frame, subsequent arguments can include direct references to columns
+from that data frame. This allows you, for example, to easily use
+<code>x_at_y</code> to generate indices for nested models.</p>
+<p>If you wish to add support for additional types not described above,
 provide an implementation of <code><a href='as_data_list.html'>as_data_list</a></code> for the type. See
 the implementations of <code>as_data_list.numeric</code>,
 <code>as_data_list.logical</code>, etc for examples.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='as_data_list.html'>as_data_list</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='spread_samples.html'>gather_samples</a></code>.</p>
+    <p><code><a href='as_data_list.html'>as_data_list</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>,
+<code><a href='spread_samples.html'>gather_samples</a></code>, <code>x_at_y</code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-##TODO
+<span class='fu'>library</span>(<span class='no'>magrittr</span>)
 
+<span class='no'>df</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(
+  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>paste0</span>(<span class='st'>"p"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>))),
+  <span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>paste0</span>(<span class='st'>"s"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>)))
+)
+
+<span class='no'>df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>compose_data</span>()</div><div class='output co'>#&gt; $plot
+#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+#&gt; 
+#&gt; $n_plot
+#&gt; [1] 8
+#&gt; 
+#&gt; $site
+#&gt;  [1] 1 1 2 2 3 3 4 4 1 1 2 2 3 3 4 4
+#&gt; 
+#&gt; $n_site
+#&gt; [1] 4
+#&gt; 
+#&gt; $n
+#&gt; [1] 16
+#&gt; </div><div class='input'>
+<span class='co'># turns site into a nested index: site[p] gives the site for plot p</span>
+<span class='no'>df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>compose_data</span>(<span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>x_at_y</span>(<span class='no'>site</span>, <span class='no'>plot</span>))</div><div class='output co'>#&gt; $plot
+#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+#&gt; 
+#&gt; $n_plot
+#&gt; [1] 8
+#&gt; 
+#&gt; $site
+#&gt; [1] 1 1 2 2 3 3 4 4
+#&gt; 
+#&gt; $n_site
+#&gt; [1] 4
+#&gt; 
+#&gt; $n
+#&gt; [1] 16
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -194,7 +244,7 @@ Matthew Kay
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Kay.</p>
+  <p>Developed by <a href='http://www.mjskay.com'>Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">

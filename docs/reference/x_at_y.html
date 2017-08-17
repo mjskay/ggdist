@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get samples from a model as a tibble — as_sample_tibble â€¢ tidybayes</title>
+<title>Generate lookup vectors for composing nested indices — x_at_y â€¢ tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -95,90 +95,87 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get samples from a model as a tibble</h1>
+    <h1>Generate lookup vectors for composing nested indices</h1>
     </div>
 
     
-    <p>Extract samples from an MCMC fit into a wide-format data frame with a
-<code>.chain</code> and <code>.iteration</code> column, as well as all terms
-as columns. Generally speaking not as useful as <code><a href='spread_samples.html'>spread_samples</a></code> or
-<code><a href='spread_samples.html'>gather_samples</a></code> and is mainly used interally (see `Details`)</p>
+    <p>Generates a lookup vector such that <code>x_at_y(x, y)[y] == x</code>. Particularly useful
+for generating lookup tables for nested indices in conjunction with <code><a href='compose_data.html'>compose_data</a></code>.</p>
     
 
-    <pre class="usage"><span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='fu'>as_sample_data_frame</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for default</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for mcmc.list</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for stanfit</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for stanreg</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for runjags</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for brmsfit</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for matrix</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='co'># S3 method for MCMCglmm</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)</pre>
+    <pre class="usage"><span class='fu'>x_at_y</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>model</th>
-      <td><p>A supported Bayesian model fit / MCMC object. Currently
-supported models include <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc'>mcmc</a></code>, <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>mcmc.list</a></code>,
-<code><a href='http://www.rdocumentation.org/packages/runjags/topics/runjags'>runjags</a></code>, <code><a href='http://www.rdocumentation.org/packages/rstan/topics/stanfit-class'>stanfit</a></code>, and anything with its own
-<code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code> implementation. If you install the <code>tidybayes.rethinking</code>
-package (available at <a href='https://github.com/mjskay/tidybayes.rethinking'>https://github.com/mjskay/tidybayes.rethinking</a>), <code>map</code> and
-<code>map2stan</code> models from the <code>rethinking</code> package are also supported.</p></td>
+      <th>x</th>
+      <td><p>Values in the resulting lookup vector. There should be only
+one unique value of <code>x</code> for every corresponding value of <code>y</code>.</p></td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td><p>Keys in the resulting lookup vector. Should be factors or integers.</p></td>
+    </tr>
+    <tr>
+      <th>missing</th>
+      <td><p>Missing levels from <code>y</code> will be filled in with this value
+in the resulting lookup vector. Default <code>NA</code>.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A data frame (actually, a <code><a href='http://www.rdocumentation.org/packages/tibble/topics/tibble'>tibble</a></code>) with a <code>.chain</code> column,
-<code>.iteration</code> column, and one column for every parameter in <code>model</code>.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>You will not typically call this directly; instead use <code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>.
-However, to provide support for new models in those functions,
-you must provide an implementation of this function, <em>or</em> an implementaiton
-of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code> (<code>as_sample_tibble</code> should work on any model
-with an implementation of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code>)
-    <code>as_sample_data_frame</code> is an alias.</p>
+    <p><code>x_at_y(x, y)</code> returns a vector <code>k</code> such that <code>k[y] == x</code>. It also
+fills in missing values in <code>y</code>: if <code>y</code> is an integer, <code>k</code> will contain
+entries for all values from <code>1</code> to <code>max(y)</code>; if <code>y</code> is a factor,
+<code>k</code> will contain entries for all values from <code>1</code> to <code>nlevels(y)</code>.
+Missing values are replaced with <code>missing</code> (default <code>NA</code>).</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>, which use this function
-internally and provides a friendly interface for extracting tidy data frames from model fits.</p>
+    <p><code><a href='compose_data.html'>compose_data</a></code>.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>library</span>(<span class='no'>magrittr</span>)
+
+<span class='no'>df</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(
+  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>paste0</span>(<span class='st'>"p"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>))),
+  <span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>paste0</span>(<span class='st'>"s"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>)))
+)
+
+<span class='co'># turns site into a nested index: site[p] gives the site for plot p</span>
+<span class='no'>df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='compose_data.html'>compose_data</a></span>(<span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>x_at_y</span>(<span class='no'>site</span>, <span class='no'>plot</span>))</div><div class='output co'>#&gt; $plot
+#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+#&gt; 
+#&gt; $n_plot
+#&gt; [1] 8
+#&gt; 
+#&gt; $site
+#&gt; [1] 1 1 2 2 3 3 4 4
+#&gt; 
+#&gt; $n_site
+#&gt; [1] 4
+#&gt; 
+#&gt; $n
+#&gt; [1] 16
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     
