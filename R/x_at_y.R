@@ -7,13 +7,13 @@
 #' Generate lookup vectors for composing nested indices
 #'
 #' Generates a lookup vector such that \code{x_at_y(x, y)[y] == x}. Particularly useful
-#' for generating lookup tables for nested indices in conjunction with \code{link{compose_data}}.
+#' for generating lookup tables for nested indices in conjunction with \code{\link{compose_data}}.
 #'
 #' \code{x_at_y(x, y)} returns a vector \code{k} such that \code{k[y] == x}. It also
 #' fills in missing values in \code{y}: if \code{y} is an integer, \code{k} will contain
 #' entries for all values from \code{1} to \code{max(y)}; if \code{y} is a factor,
-#' \code{k} will contains entries for all values from \code{1} to \code{nlevels(y)}.
-#' Missing values are replaces with \code{missing} (default \code{NA}).
+#' \code{k} will contain entries for all values from \code{1} to \code{nlevels(y)}.
+#' Missing values are replaced with \code{missing} (default \code{NA}).
 #'
 #' @param x Values in the resulting lookup vector. There should be only
 #' one unique value of \code{x} for every corresponding value of \code{y}.
@@ -24,7 +24,16 @@
 #' @seealso \code{\link{compose_data}}.
 #' @examples
 #'
-#' ##TODO
+#' library(magrittr)
+#'
+#' df = data.frame(
+#'   plot = factor(paste0("p", rep(1:8, times = 2))),
+#'   site = factor(paste0("s", rep(1:4, each = 2, times = 2)))
+#' )
+#'
+#' # turns site into a nested index: site[p] gives the site for plot p
+#' df %>%
+#'   compose_data(site = x_at_y(site, plot))
 #'
 #' @importFrom rlang enquo quo_label
 #' @importFrom tibble data_frame

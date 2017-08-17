@@ -95,17 +95,17 @@ print.data_list = function(x, ...) {
 #' ##TODO
 #'
 #' @export
-as_data_list = function(object, name="", ...) UseMethod("as_data_list")
+as_data_list = function(object, name = "", ...) UseMethod("as_data_list")
 #' @rdname as_data_list
 #' @export
-as_data_list.default = function(object, name="", ...) {
+as_data_list.default = function(object, name = "", ...) {
   warning(deparse0(name), " has unsupported type ", deparse0(class(object)), " and was dropped.")
   data_list()
 }
 #' @rdname as_data_list
 #' @export
 as_data_list.numeric = function(object, name = "",
-  scalar_as_array=FALSE,  #treat single scalar values as array of length 1
+  scalar_as_array = FALSE,  #treat single scalar values as array of length 1
   ...) {
   data = data_list(if (scalar_as_array) as.array(object) else object)
   if (name == "") {
@@ -116,12 +116,12 @@ as_data_list.numeric = function(object, name = "",
 }
 #' @rdname as_data_list
 #' @export
-as_data_list.logical = function(object, name="", ...) {
-  as_data_list(as.numeric(object), name, ...)
+as_data_list.logical = function(object, name = "", ...) {
+  as_data_list(as.numeric(object), name = name, ...)
 }
 #' @rdname as_data_list
 #' @export
-as_data_list.factor = function(object, name="", .n_name = n_prefix("n"), ...) {
+as_data_list.factor = function(object, name = "", .n_name = n_prefix("n"), ...) {
   data = as_data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
   if (any(table(object) == 0)) {
     warning("Some levels of factor ", deparse0(name),
@@ -141,7 +141,7 @@ as_data_list.list = function(object, name="", ...) {
   #go through list and translate variables
   data = data_list()
   for (i in 1:length(object)) {
-    data = c(data, as_data_list(object[[i]], names(object)[[i]], ...))
+    data = c(data, as_data_list(object[[i]], name = names(object)[[i]], ...))
   }
   data
 }
@@ -173,7 +173,7 @@ as_data_list.data_list = function(object, name="", ...) {
 #'
 #'
 #' This function recursively translates each argument into list elements using
-#' \code{\link{as_data_list}}, concatenating all resulting lists together. By
+#' \code{\link{as_data_list}}, merging all resulting lists together. By
 #' default this means that:
 #' \itemize{
 #'      \item numerics are included as-is.
@@ -191,8 +191,20 @@ as_data_list.data_list = function(object, name="", ...) {
 #'          \code{.n_name(argument_name)} if the data.frame is passed as a named
 #'          argument \code{argument_name}) is also added containing the number of rows
 #'          in the data frame.
+#'      \item \code{NULL} values are dropped. Setting a named argument to \code{NULL}
+#'          can be used to drop that item from the resulting list (if an unwanted
+#'          element was added to the list by a previous argument, such as a column
+#'          from a data frame that is not needed in the model).
 #'      \item all other types are dropped (and a warning given)
 #' }
+#'
+#' As in functions like \code{\link{mutate}}, each expression is evaluated in an
+#' environment containing the data list built up so far.
+#'
+#' For example, this means that if the first argument to \code{compose_data}
+#' is a data frame, subsequent arguments can include direct references to columns
+#' from that data frame. This allows you, for example, to easily use
+#' \code{\link{x_at_y}} to generate indices for nested models.
 #'
 #' If you wish to add support for additional types not described above,
 #' provide an implementation of \code{\link{as_data_list}} for the type. See
@@ -204,6 +216,8 @@ as_data_list.data_list = function(object, name="", ...) {
 #' argument to \code{as_data_list} when translated; unnamed arguments that are
 #' not lists or data frames will have their bare value (passed through
 #' \code{make.names}) used as the \code{name} argument to \code{as_data_list}.
+#' Each argument is evaluated using \code{eval_tidy} in an environment that
+#' includes all list items composed so far.
 #' @param .n_name A function that is used to form index variables (a variable
 #' whose value is number of levels in a factor or the length of a data frame in
 #' \code{...}). For example, if a data frame with 20 rows and a factor \code{"foo"}
@@ -211,34 +225,51 @@ as_data_list.data_list = function(object, name="", ...) {
 #' \code{compose_data} will include an element named \code{.n_name("foo")}, which
 #' by default would be "n_foo", containing the value 3, and a column named "n"
 #' containing the value 20. See \code{\link{n_prefix}}.
-#' @return An object of class \code{c("data_list", "list")}, where each element
-#' is a translated variable as described above.
+#' @return A list where each element is a translated variable as described above.
 #' @author Matthew Kay
-#' @seealso \code{\link{as_data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+#' @seealso \code{\link{as_data_list}}, \code{\link{spread_samples}},
+#' \code{\link{gather_samples}}, \code{\link{x_at_y}}
 #' @keywords manip
 #' @examples
 #'
-#' ##TODO
+#' library(magrittr)
+#'
+#' df = data.frame(
+#'   plot = factor(paste0("p", rep(1:8, times = 2))),
+#'   site = factor(paste0("s", rep(1:4, each = 2, times = 2)))
+#' )
+#'
+#' df %>%
+#'   compose_data()
+#'
+#' # turns site into a nested index: site[p] gives the site for plot p
+#' df %>%
+#'   compose_data(site = x_at_y(site, plot))
 #'
 #' @export
 compose_data = function(..., .n_name = n_prefix("n")) {
   #translate argument names / values into a list
-  objects = list(...)
-  if (is.null(names(objects))) {
-    #when no named arguments are supplied, translate NULL into empty string
-    #so that the naming code below works
-    names(objects) = rep("", length(objects))
+  exprs = quos(...)
+  given_names = names(exprs)
+  given_names[is.null(given_names)] = ""
+  forced_names = names(quos(..., .named = TRUE))
+
+  #convert objects into a data list one by one, evaluating each argument in the
+  #environment of the previous lists (to allow the user to refer to previously composed elements)
+  data = list()
+  for (i in 1:length(exprs)) {
+    object_to_compose = eval_tidy(exprs[[i]], data)
+
+    # lists and data frames don't use names unless they were provided explicitly
+    name = if(is.list(object_to_compose)) given_names[[i]] else forced_names[[i]]
+
+    if (is.null(object_to_compose)) {
+      data[[name]] = NULL
+    } else {
+      data %<>% modifyList(as_data_list(object_to_compose, name = name, .n_name = .n_name))
+    }
   }
-  #give a name to any unnamed argument based on its unevaluated value
-  names_from_arg_values = make.names(sapply(as.list(substitute(list(...)))[-1], deparse0))
-  unnamed_indices = which(names(objects) == "" & !sapply(objects, is.list))
-  names(objects)[unnamed_indices] = names_from_arg_values[unnamed_indices]
-  #convert into data list
-  data = as_data_list(objects, .n_name = .n_name)
-  #as a hack for now, we strip the "data_list" type in the end for compatibility
-  #with runjags, which incorrectly checks for class(data) == "list" instead of
-  #using is.list
-  class(data) = "list"
+
   data
 }
 

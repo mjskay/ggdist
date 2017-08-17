@@ -11,7 +11,9 @@ compose_data(..., .n_name = n_prefix("n"))
 Stan, JAGS, etc. Named arguments will have their name used as the \code{name}
 argument to \code{as_data_list} when translated; unnamed arguments that are
 not lists or data frames will have their bare value (passed through
-\code{make.names}) used as the \code{name} argument to \code{as_data_list}.}
+\code{make.names}) used as the \code{name} argument to \code{as_data_list}.
+Each argument is evaluated using \code{eval_tidy} in an environment that
+includes all list items composed so far.}
 
 \item{.n_name}{A function that is used to form index variables (a variable
 whose value is number of levels in a factor or the length of a data frame in
@@ -22,8 +24,7 @@ by default would be "n_foo", containing the value 3, and a column named "n"
 containing the value 20. See \code{\link{n_prefix}}.}
 }
 \value{
-An object of class \code{c("data_list", "list")}, where each element
-is a translated variable as described above.
+A list where each element is a translated variable as described above.
 }
 \description{
 Compose data into a list suitable to be passed into an MCMC sampler (JAGS,
@@ -31,7 +32,7 @@ BUGS, etc).
 }
 \details{
 This function recursively translates each argument into list elements using
-\code{\link{as_data_list}}, concatenating all resulting lists together. By
+\code{\link{as_data_list}}, merging all resulting lists together. By
 default this means that:
 \itemize{
      \item numerics are included as-is.
@@ -49,8 +50,20 @@ default this means that:
          \code{.n_name(argument_name)} if the data.frame is passed as a named
          argument \code{argument_name}) is also added containing the number of rows
          in the data frame.
+     \item \code{NULL} values are dropped. Setting a named argument to \code{NULL}
+         can be used to drop that item from the resulting list (if an unwanted
+         element was added to the list by a previous argument, such as a column
+         from a data frame that is not needed in the model).
      \item all other types are dropped (and a warning given)
 }
+
+As in functions like \code{\link{mutate}}, each expression is evaluated in an
+environment containing the data list built up so far.
+
+For example, this means that if the first argument to \code{compose_data}
+is a data frame, subsequent arguments can include direct references to columns
+from that data frame. This allows you, for example, to easily use
+\code{\link{x_at_y}} to generate indices for nested models.
 
 If you wish to add support for additional types not described above,
 provide an implementation of \code{\link{as_data_list}} for the type. See
@@ -59,11 +72,24 @@ the implementations of \code{as_data_list.numeric},
 }
 \examples{
 
-##TODO
+library(magrittr)
+
+df = data.frame(
+  plot = factor(paste0("p", rep(1:8, times = 2))),
+  site = factor(paste0("s", rep(1:4, each = 2, times = 2)))
+)
+
+df \%>\%
+  compose_data()
+
+# turns site into a nested index: site[p] gives the site for plot p
+df \%>\%
+  compose_data(site = x_at_y(site, plot))
 
 }
 \seealso{
-\code{\link{as_data_list}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+\code{\link{as_data_list}}, \code{\link{spread_samples}},
+\code{\link{gather_samples}}, \code{\link{x_at_y}}
 }
 \author{
 Matthew Kay
