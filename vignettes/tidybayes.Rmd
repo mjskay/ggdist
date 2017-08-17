@@ -370,7 +370,7 @@ m %>%
   mean_qi(.prob = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean, 
     size = -.prob)) +               # smaller probability interval => thicker line
-  geom_pointintervalh()
+  geom_pointintervalh(fatten.interval = .2)
 ```
 
 Just as `geom_pointrangeh` includes `xmin = conf.low` and `xmax = conf.high` as default aesthetics, it also includes 
@@ -381,7 +381,7 @@ m %>%
   spread_samples(condition_mean[condition]) %>%
   mean_qi(.prob = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_pointintervalh()
+  geom_pointintervalh(fatten.interval = .2)
 ```
 
 ### Alternative estimates and intervals: mean, median, mode; qi, hdi

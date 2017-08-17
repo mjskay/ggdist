@@ -39,8 +39,8 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}.
 #' @param fatten.interval A multiplicative factor used to adjust the size of the interval
-#' lines. The default decreases the line size, because the default range of \code{\link{scale_size_continuous}}
-#' has an upper end of 6, which is quite large.
+#' lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
+#' default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.
 #' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 #' values are silently removed.
@@ -78,8 +78,8 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 geom_pointinterval <- function(mapping = NULL, data = NULL,
   stat = "identity", position = "identity",
   ...,
-  fatten.interval = 1.5 / 6,
-  fatten.point = 2,
+  fatten.interval = 0.15,
+  fatten.point = 1.8,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE) {
@@ -121,7 +121,7 @@ geom_pointinterval <- function(mapping = NULL, data = NULL,
 #' @importFrom grid grobTree
 draw_key_pointinterval <- function(data, params, size) {
   grobTree(
-    draw_key_path(transform(data, size = data$size * 1.5 / 6), params, size)
+    draw_key_path(transform(data, size = (3 + data$size) * 0.15), params, size)
   )
 }
 
@@ -132,14 +132,14 @@ draw_key_pointinterval <- function(data, params, size) {
 #' @import ggplot2
 #' @export
 GeomPointinterval <- ggproto("GeomPointinterval", Geom,
-  default_aes = aes(colour = "black", size = 1.5, linetype = 1, shape = 19,
+  default_aes = aes(colour = "black", size = 1.35, linetype = 1, shape = 19,
     fill = NA, alpha = NA, stroke = 1),
 
   draw_key = draw_key_pointinterval,
 
   required_aes = c("x", "y", "ymin", "ymax"),
 
-  draw_panel = function(data, panel_scales, coord, fatten.point = 1.8, fatten.interval = 1.5 / 6) {
+  draw_panel = function(data, panel_scales, coord, fatten.point = 1.8, fatten.interval = 0.15) {
     if (is.null(data$x))
       return(GeomLinerange$draw_panel(transform(data, size = size * fatten.interval), panel_scales, coord))
 
