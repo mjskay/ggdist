@@ -6,11 +6,11 @@
 \title{Point + interval geoms}
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., fatten.interval = 1.5/6, fatten.point = 2,
+  position = "identity", ..., fatten.interval = 0.15, fatten.point = 1.8,
   na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE)
 
 geom_pointintervalh(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., fatten.interval = 1.5/6, fatten.point = 2,
+  position = "identity", ..., fatten.interval = 0.15, fatten.point = 1.8,
   na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE)
 }
 \arguments{
@@ -28,8 +28,8 @@ the plot defaults.}
 \item{...}{Other arguments passed to \code{\link{layer}}.}
 
 \item{fatten.interval}{A multiplicative factor used to adjust the size of the interval
-lines. The default decreases the line size, because the default range of \code{\link{scale_size_continuous}}
-has an upper end of 6, which is quite large.}
+lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
+default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.}
 
 \item{fatten.point}{A multiplicate factor used to adjust the size of the point relative to the largest line.}
 
