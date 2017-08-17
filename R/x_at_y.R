@@ -35,9 +35,9 @@
 #' df %>%
 #'   compose_data(site = x_at_y(site, plot))
 #'
-#' @importFrom rlang enquo quo_label
+#' @importFrom rlang enquo quo_label is_integerish
 #' @importFrom tibble data_frame
-#' @importFrom dplyr group_by slice
+#' @importFrom dplyr group_by slice distinct left_join
 #' @importFrom magrittr %$%
 #' @export
 x_at_y = function(x, y, missing = NA) {

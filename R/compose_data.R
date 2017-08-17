@@ -246,6 +246,7 @@ as_data_list.data_list = function(object, name="", ...) {
 #' df %>%
 #'   compose_data(site = x_at_y(site, plot))
 #'
+#' @importFrom rlang quos eval_tidy
 #' @export
 compose_data = function(..., .n_name = n_prefix("n")) {
   #translate argument names / values into a list
