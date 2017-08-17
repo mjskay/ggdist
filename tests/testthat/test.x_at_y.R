@@ -6,6 +6,7 @@
 library(testthat)
 library(tidybayes)
 import::from(magrittr, `%$%`)
+import::from(purrr, map_df)
 
 context("x_at_y")
 
@@ -30,6 +31,13 @@ test_that("x_at_y works on a nested design with missing levels", {
   expect_equal(df %$% x_at_y(site, plot), factor(c(NA, "s1", "s2", "s2", "s3", NA, "s4", "s4")))
   expect_equal(df %$% x_at_y(as.numeric(site), as.numeric(plot)), c(NA, 1, 2, 2, 3, NA, 4, 4))
   expect_equal(df %$% x_at_y(site, plot)[plot], df$site)
+})
+
+test_that("x_at_y works even if the data frame is not sorted by y", {
+  df = get_nested_data()
+  rev_df = map_df(df, rev)
+
+  expect_equal(df %$% x_at_y(site, plot), rev_df %$% x_at_y(site, plot))
 })
 
 test_that("x_at_y does not work when there is a non-unique x for a given y", {
