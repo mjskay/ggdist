@@ -73,7 +73,6 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #'
 #' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2
-#' @name geom_pointinterval
 #' @export
 geom_pointinterval <- function(mapping = NULL, data = NULL,
   stat = "identity", position = "identity",

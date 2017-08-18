@@ -370,7 +370,7 @@ m %>%
   mean_qi(.prob = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean, 
     size = -.prob)) +               # smaller probability interval => thicker line
-  geom_pointintervalh(fatten.interval = .2)
+  geom_pointintervalh(fatten.interval = .25)
 ```
 
 Just as `geom_pointrangeh` includes `xmin = conf.low` and `xmax = conf.high` as default aesthetics, it also includes 
@@ -381,7 +381,7 @@ m %>%
   spread_samples(condition_mean[condition]) %>%
   mean_qi(.prob = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_pointintervalh(fatten.interval = .2)
+  geom_pointintervalh(fatten.interval = .25)
 ```
 
 ### Alternative estimates and intervals: mean, median, mode; qi, hdi
@@ -450,11 +450,9 @@ m %>%
   mutate(y_rep = rnorm(n(), condition_mean, response_sd)) %>%
   mean_qi(y_rep, .prob = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = y_rep)) +
-  geom_linerangeh(aes(xmin = conf.low, xmax = conf.high, 
-    color = ordered(-.prob)),
-    size = 4) +
+  geom_intervalh() + #auto-sets aes(xmin = conf.low, xmax = conf.high, color = fct_rev(ordered(.prob)))
   geom_point(aes(x = response), data = ABC) +
-  scale_color_brewer(guide = FALSE)
+  scale_color_brewer()
 ```
 
 If this model is well-calibrated, about 95% of the data should be within the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.
@@ -477,12 +475,10 @@ parameters = samples %>%
 
 ABC %>%
   ggplot(aes(y = condition)) +
-  geom_linerangeh(aes(xmin = conf.low, xmax = conf.high, 
-    color = ordered(-.prob)), size = 4, data = reps) +
-  geom_pointintervalh(aes(x = condition_mean),
-    position = position_nudge(y = -0.2), data = parameters) +
+  geom_intervalh(aes(x = y_rep), data = reps) +
+  geom_pointintervalh(aes(x = condition_mean), position = position_nudge(y = -0.2), data = parameters) +
   geom_point(aes(x = response)) +
-  scale_color_brewer(guide = FALSE)
+  scale_color_brewer()
 ```
 
 ## Comparing levels of a factor
