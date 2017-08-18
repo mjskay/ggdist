@@ -289,12 +289,12 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>) +
 <span class="st">  </span>
 <span class="st">  </span><span class="co"># mean and qi of condition mean</span>
-<span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean), <span class="dt">fun.data =</span> mean_qih, <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>)) +
+<span class="st">  </span><span class="kw">stat_pointintervalh</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>)) +
 <span class="st">  </span>
 <span class="st">  </span><span class="co"># data</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC)</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
-<p>This plot shows 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.</p>
+<p>This plot shows 66% and 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.</p>
 <div id="fit-curves" class="section level4">
 <h4 class="hasAnchor">
 <a href="#fit-curves" class="anchor"></a>Fit curves</h4>

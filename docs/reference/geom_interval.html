@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point + interval geoms — geom_pointinterval â€¢ tidybayes</title>
+<title>Interval geoms — geom_interval â€¢ tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -95,21 +95,21 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Point + interval geoms</h1>
+    <h1>Interval geoms</h1>
     </div>
 
     
-    <p>Modified versions of <code>geom_pointrange</code> and <code>geom_pointrangeh</code> with default aesthetics
+    <p>Modified versions of <code>geom_linerange</code> and <code>geom_linerangeh</code> with default aesthetics
 designed for use with output from <code><a href='point_interval.html'>point_interval</a></code>.</p>
     
 
-    <pre class="usage"><span class='fu'>geom_pointinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='fl'>0.15</span>, <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='fl'>1.8</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>geom_interval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>geom_pointintervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='fl'>0.15</span>, <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='fl'>1.8</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='fu'>geom_intervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -138,24 +138,14 @@ the plot defaults.</p></td>
       <td><p>Other arguments passed to <code>layer</code>.</p></td>
     </tr>
     <tr>
-      <th>fatten.interval</th>
-      <td><p>A multiplicative factor used to adjust the size of the interval
-lines (line size will be <code>(size + 3) * fatten.interval</code>. The default decreases the line size, because the
-default range of <code>scale_size_continuous</code> has an upper end of 6, which is quite large.</p></td>
-    </tr>
-    <tr>
-      <th>fatten.point</th>
-      <td><p>A multiplicate factor used to adjust the size of the point relative to the largest line.</p></td>
-    </tr>
-    <tr>
       <th>na.rm</th>
       <td><p>If <code>FALSE</code>, the default, missing values are removed with a warning. If <code>TRUE</code>, missing
 values are silently removed.</p></td>
     </tr>
     <tr>
       <th>show.legend</th>
-      <td><p>Should this later be included in the legends? Default is <code>FALSE</code>, unlike most geoms,
-to match its common use cases; N.B. this is unlike most geoms, which have a default of <code>NA</code>.</p></td>
+      <td><p>Should this layer be included in the legends? <code>NA</code>, the default, includes if any aesthetics
+are mapped. <code>FALSE</code> never includes, and <code>TRUE</code> always includes.</p></td>
     </tr>
     <tr>
       <th>inherit.aes</th>
@@ -167,24 +157,19 @@ default plot specification, e.g. borders.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>geom_pointinterval</code> is a modified version of <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_pointrange</a></code>, and <code>geom_pointintervalh</code> is
-a modified version of <code>geom_pointrangeh</code>. These geoms set some default aesthetics equal
+    <p><code>geom_interval</code> is a modified version of <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_linerange</a></code>, and <code>geom_intervalh</code> is
+a modified version of <code>geom_linerangeh</code>. These geoms set some default aesthetics equal
 to the <code>conf.low</code>, <code>conf.high</code>, and <code>.prob</code> columns generated by the <code>point_interval</code> family
-of functions, making them often more convenient than vanilla <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_pointrange</a></code> or
-<code>geom_pointrangeh</code> when used with functions like <code><a href='point_interval.html'>mean_qi</a></code>, <code><a href='point_interval.html'>median_qi</a></code>, etc.</p>
-<p>Specifically, <code>geom_pointinterval</code> acts as if its default aesthetics are
-<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes(ymin = conf.low, ymax = conf.high, size = -.prob)</a></code>. <code>geom_pointintervalh</code> acts as if its default
-aesthetics are <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes(xmin = conf.low, xmax = conf.high, size = -.prob)</a></code>.</p>
-<p>Both geoms provides a scaling factor for line width as well as point size through the <code>fatten.interval</code> and
-<code>fatten.point</code> arguments; this scaling factor is designed to give multiple probability intervals reasonable
-scaling at the default settings for <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_size'>scale_size_continuous</a></code>. Finally, these geoms default to not
-displaying the legend, though this can be overriden through setting <code>show.legend = NA</code> (the setting for most
-geoms) or <code>show.legend = TRUE</code>.</p>
+of functions, making them often more convenient than vanilla <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_linerange</a></code> or
+<code>geom_linerangeh</code> when used with functions like <code><a href='point_interval.html'>mean_qi</a></code>, <code><a href='point_interval.html'>median_qi</a></code>, etc.</p>
+<p>Specifically, <code>geom_interval</code> acts as if its default aesthetics are
+<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes(ymin = conf.low, ymax = conf.high, color = fct_rev(ordered(.prob)))</a></code>. <code>geom_intervalh</code> acts as if
+its default aesthetics are <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes(xmin = conf.low, xmax = conf.high, color = fct_rev(ordered(.prob)))</a></code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p>See <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code> for a similar geom designed for curves plus probability bands. See
-<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_pointrange</a></code> and <code>geom_pointrangeh</code> for the geoms these are based on.</p>
+<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_linerange</a></code> and <code>geom_linerangeh</code> for the geoms these are based on.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -195,14 +180,14 @@ geoms) or <code>show.legend = TRUE</code>.</p>
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>geom_pointintervalh</span>()</div><div class='img'><img src='geom_pointinterval-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'>geom_intervalh</span>()</div><div class='img'><img src='geom_interval-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>geom_pointinterval</span>()</div><div class='img'><img src='geom_pointinterval-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'>geom_interval</span>()</div><div class='img'><img src='geom_interval-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

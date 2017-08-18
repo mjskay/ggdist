@@ -75,7 +75,7 @@
       <h1>Using Tidy Data with Bayesian Samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-08-17</h4>
+            <h4 class="date">2017-08-18</h4>
           </div>
 
     
@@ -245,7 +245,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.17 -1.23 -1.01 -0.89 -0.78 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.46  0.52  0.55  0.60  0.70  1556    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Thu Aug 17 00:41:47 2017.
+## Samples were drawn using NUTS(diag_e) at Fri Aug 18 00:41:40 2017.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -260,24 +260,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">extract</span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.783 1.361 0.527 1.467 0.506 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.558 0.129 0.213 1.178 0.646 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.524 -0.665 -0.291 -1.117 -0.088 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.5338 0.1358 0.0533 -1.2864 -0.3851 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.522 0.524 0.696 0.599 0.771 ...
+##  $ response_sd      : num [1:4000(1d)] 0.489 0.46 0.514 0.509 0.521 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.913 1.408 0.588 0.815 1.752 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 0.962 1.207 1.031 0.843 0.966 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.305 0.426 0.356 0.556 0.352 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.0447 0.2931 0.2679 0.0929 0.2738 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 2.41 1.98 -6.58 -3.33 -1.54 ...
+##  $ lp__             : num [1:4000(1d)] 1.03 1.116 1.646 0.522 2.784 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -511,14 +511,14 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean, 
     <span class="dt">size =</span> -.prob)) +<span class="st">               </span><span class="co"># smaller probability interval =&gt; thicker line</span>
-<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">fatten.interval =</span> .<span class="dv">25</span>)</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
 <p>Just as <code>geom_pointrangeh</code> includes <code>xmin = conf.low</code> and <code>xmax = conf.high</code> as default aesthetics, it also includes <code>size = -.prob</code> to facilitate exactly this usage. This, the above can be simplified to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
-<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">fatten.interval =</span> .<span class="dv">25</span>)</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
 </div>
 <div id="alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="section level3">
@@ -597,11 +597,9 @@ model {
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_rep =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), condition_mean, response_sd)) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(y_rep, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> y_rep)) +
-<span class="st">  </span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high, 
-    <span class="dt">color =</span> <span class="kw">ordered</span>(-.prob)),
-    <span class="dt">size =</span> <span class="dv">4</span>) +
+<span class="st">  </span><span class="kw">geom_intervalh</span>() +<span class="st"> </span><span class="co">#auto-sets aes(xmin = conf.low, xmax = conf.high, color = fct_rev(ordered(.prob)))</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) +
-<span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
 <p>If this model is well-calibrated, about 95% of the data should be within the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.</p>
 <div id="posterior-predictions-with-paramter-estimates" class="section level3">
@@ -620,12 +618,10 @@ parameters =<span class="st"> </span>samples %&gt;%
 
 ABC %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition)) +
-<span class="st">  </span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high, 
-    <span class="dt">color =</span> <span class="kw">ordered</span>(-.prob)), <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">data =</span> reps) +
-<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean),
-    <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>), <span class="dt">data =</span> parameters) +
+<span class="st">  </span><span class="kw">geom_intervalh</span>(<span class="kw">aes</span>(<span class="dt">x =</span> y_rep), <span class="dt">data =</span> reps) +
+<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>), <span class="dt">data =</span> parameters) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response)) +
-<span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
 </div>
 </div>

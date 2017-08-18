@@ -257,7 +257,7 @@ m %>%
   scale_color_brewer(guide = FALSE) +
   
   # mean and qi of condition mean
-  stat_summaryh(aes(x = condition_mean), fun.data = mean_qih, position = position_nudge(y = -0.2)) +
+  stat_pointintervalh(aes(x = condition_mean), .prob = c(.66, .95), position = position_nudge(y = -0.2)) +
   
   # data
   geom_point(aes(x = response), data = ABC)
@@ -265,7 +265,7 @@ m %>%
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
 
-This plot shows 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
+This plot shows 66% and 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
 
 #### Fit curves
 
