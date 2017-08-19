@@ -61,7 +61,7 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #'   mean_qi(.prob = c(.5, .8, .95, .99)) %>%
 #'   ggplot(aes(x = i, y = u_tau)) +
 #'   geom_interval() +
-#'   scale_color_brewer
+#'   scale_color_brewer()
 #'
 #' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2

@@ -85,6 +85,11 @@ processing pipelines that start either with a data frame or a model. Similarly,
 Given equal choice between the two, \code{add_fitted_samples} and \code{add_predicted_samples}
 are the preferred spellings.
 }
+\examples{
+
+##TODO
+
+}
 \seealso{
 \code{\link{spread_samples}}
 }

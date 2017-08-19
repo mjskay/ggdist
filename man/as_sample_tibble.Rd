@@ -61,6 +61,11 @@ with an implementation of \code{\link[coda]{as.mcmc.list}})
 
 \code{as_sample_data_frame} is an alias.
 }
+\examples{
+
+##TODO
+
+}
 \seealso{
 \code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function
 internally and provides a friendly interface for extracting tidy data frames from model fits.

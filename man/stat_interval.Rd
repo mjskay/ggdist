@@ -75,7 +75,7 @@ RankCorr \%>\%
   spread_samples(u_tau[i]) \%>\%
   ggplot(aes(x = i, y = u_tau)) +
   stat_interval() +
-  scale_color_brewer
+  scale_color_brewer()
 
 }
 \seealso{
