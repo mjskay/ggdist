@@ -60,23 +60,23 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom dplyr mutate
 #' @importFrom stats fitted predict
 #' @export
-add_predicted_samples = function(newdata, model, var = "pred", n = NULL, ...) {
+add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL) {
   predicted_samples(model, newdata, var, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-add_fitted_samples = function(newdata, model, var = "estimate", n = NULL, ...) {
+add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL) {
   fitted_samples(model, newdata, var, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples = function(model, newdata, var = "pred", n = NULL, ...) UseMethod("predicted_samples")
+predicted_samples = function(model, newdata, var = "pred", ..., n = NULL) UseMethod("predicted_samples")
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples = function(model, newdata, var = "estimate", n = NULL, ...) UseMethod("fitted_samples")
+fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL) UseMethod("fitted_samples")
 
 #' @rdname add_predicted_samples
 #' @export
@@ -110,7 +110,7 @@ fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata,
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.stanreg = function(model, newdata, var = "pred", n = NULL, ...) {
+predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL) {
   if (!requireNamespace("rstantools", quietly = TRUE)) {
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
@@ -120,7 +120,7 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", n = NULL, ...
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.stanreg = function(model, newdata, var = "estimate", n = NULL, ...) {
+fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NULL) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
@@ -130,7 +130,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", n = NULL, ..
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.brmsfit = function(model, newdata, var = "pred", n = NULL, ...) {
+predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
@@ -140,7 +140,7 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", n = NULL, ...
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.brmsfit = function(model, newdata, var = "estimate", n = NULL, ...) {
+fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }

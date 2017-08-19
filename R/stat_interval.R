@@ -4,6 +4,11 @@
 ###############################################################################
 
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c("...prob.."))
+
+
 #' Multiple probability interval stats
 #'
 #' Variants of \code{\link{stat_summary}} and \code{\link{stat_summaryh}} that
