@@ -51,6 +51,10 @@ globalVariables(c(".iteration", ".pred"))
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_samples}}
 #' @keywords manip
+#' @examples
+#'
+#' ##TODO
+#'
 #' @importFrom magrittr %>%
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate

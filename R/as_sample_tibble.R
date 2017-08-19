@@ -32,6 +32,10 @@
 #' @seealso \code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function
 #' internally and provides a friendly interface for extracting tidy data frames from model fits.
 #' @keywords manip
+#' @examples
+#'
+#' ##TODO
+#'
 #' @aliases as_sample_data_frame
 #' @importFrom purrr map_df
 #' @importFrom dplyr bind_cols
