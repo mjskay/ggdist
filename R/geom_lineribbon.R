@@ -9,7 +9,7 @@
 globalVariables(c("conf.low", "conf.high", ".prob"))
 
 
-#' Line + ribbon geoms
+#' Line + multiple probability ribbon geoms for ggplot
 #'
 #' A combination of \code{\link{geom_line}} and \code{\link{geom_ribbon}} with default aesthetics
 #' designed for use with output from \code{\link{point_interval}}.
@@ -44,7 +44,16 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #' @keywords manip
 #' @examples
 #'
-#'  # TBD
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' data_frame(x = 1:10) %>%
+#'   group_by_all() %>%
+#'   do(data_frame(y = rnorm(100, .$x))) %>%
+#'   median_qi(.prob = c(.5, .8, .95)) %>%
+#'   ggplot(aes(x = x, y = y)) +
+#'   geom_lineribbon() +   # automatically uses aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))
+#'   scale_fill_brewer()
 #'
 #' @importFrom forcats fct_rev
 #' @import ggplot2

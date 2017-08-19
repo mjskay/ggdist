@@ -276,7 +276,7 @@ bind_rows(linear_estimates, bayes_estimates) %>%
 
 ### Posterior prediction and complex custom plots
 
-The tidy data format returned by `spread_samples` also facilitates additional computation on parameters followed by the construction of more complex custom plots. For example, we can generate posterior predictions easily, and use the `.prob` argument of `mean_qih` to generate several intervals from the posterior predictions, then plot them alongside parameter estimates and the data:
+The tidy data format returned by `spread_samples` also facilitates additional computation on parameters followed by the construction of more complex custom plots. For example, we can generate posterior predictions easily, and use the `.prob` argument (passed intervally to `mean_qi`) to generate any number of intervals from the posterior predictions, then plot them alongside parameter estimates and the data:
 
 ```{r}
 m %>%
@@ -285,11 +285,10 @@ m %>%
   ggplot(aes(y = condition)) +
   
   # posterior predictive intervals
-  stat_summaryh(aes(x = pred, color = ordered(-...prob..)), size = 4,
-    fun.data = mean_qih, fun.args = list(.prob = c(.95, .8, .5)), geom = "linerangeh") +
-  scale_color_brewer(guide = FALSE) +
+  stat_intervalh(aes(x = pred), .prob = c(.5, .8, .95)) +
+  scale_color_brewer() +
   
-  # mean and qi of condition mean
+  # mean and quantile intervals of condition mean
   stat_pointintervalh(aes(x = condition_mean), .prob = c(.66, .95), position = position_nudge(y = -0.2)) +
   
   # data
@@ -309,24 +308,26 @@ Let's fit a slightly naive model to miles per gallon versus horsepower in the `m
 m_mpg = brm(mpg ~ log(hp), data = mtcars, family = lognormal)
 ```
 
-Now we will use `modelr::data_grid` plus `tidybayes::add_predicted_samples` to generate a fit curve with multiple probability bands:
+Now we will use `modelr::data_grid`, `tidybayes::add_predicted_samples`, and `tidybayes::stat_lineribbon` to generate a fit curve with multiple probability bands:
 
 ```{r}
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 100)) %>%
   add_predicted_samples(m_mpg) %>%
-  median_qi(.prob = c(.99, .95, .8, .5)) %>%
   ggplot(aes(x = hp)) +
-  geom_lineribbon(aes(y = pred)) +
+  stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5)) +
   geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer()
 ```
 
-`geom_lineribbon(aes(y = pred))` in the above code is a shortcut for something like:
+`stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5))` is one of several shortcut geoms that simplify common combinations of `tidybayes` functions and `ggplot` goems. It is roughly equivalent to the following:
 
-```r
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = forcats::fct_rev(ordered(.prob)))) +
-  geom_line(aes(y = pred), color = "red", size = 1.25)
+```{r, eval=FALSE}
+  stat_summary(
+    aes(y = pred, fill = forcats::fct_rev(ordered(...prob..)), group = -...prob..), 
+    geom = "ribbon", fun.data = median_qi, fun.args = list(.prob = c(.99, .95, .8, .5)))
+  ) +
+  stat_summary(aes(y = pred), fun.y = median, geom = "line", color = "red", size = 1.25)
 ```
 
 Because this is all tidy data, if you wanted to build a model with interactions among different categorical variables (say a different curve for automatic and manula transmissions), you can easily generate predictions faceted over that variable (say, different curves for different transmission types). Then you could use the existing faceting features built in to ggplot to plot them.
@@ -341,14 +342,26 @@ Then we can generate and plot predictions as before (differences from above are 
 
 ```{r}
 mtcars %>%
-  data_grid(hp = seq_range(hp, n = 100), am) %>%    # add am to the prediction grid
+  data_grid(hp = seq_range(hp, n = 101), am) %>%    # add am to the prediction grid
   add_predicted_samples(m_mpg_am) %>%
-  median_qi(.prob = c(.99, .95, .8, .5)) %>%
   ggplot(aes(x = hp)) +
-  geom_lineribbon(aes(y = pred)) +
+  stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5)) +
   geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer() +
   facet_wrap(~ am)                                  # facet by am
+```
+
+Or, if you would like overplotted posterior fit lines, you can instead use `tidybayes::add_fitted_samples` to get samples from fit lines (instead of predictions), select some reasonable number of them (say `n = 100`), and then plot them:
+
+```{r}
+mtcars %>%
+  data_grid(hp = seq_range(hp, n = 101), am) %>%
+  add_fitted_samples(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
+  ggplot(aes(x = hp)) +
+  geom_line(aes(y = estimate, group = .iteration), alpha = 0.25, color = "red") +
+  geom_point(aes(y = mpg), data = mtcars) +
+  scale_fill_brewer() +
+  facet_wrap(~ am)
 ```
 
 

@@ -13,25 +13,29 @@
 \alias{fitted_samples.brmsfit}
 \title{Add samples from the posterior fit or posterior prediction of a model to a data frame}
 \usage{
-add_predicted_samples(newdata, model, var = "pred", ...)
+add_predicted_samples(newdata, model, var = "pred", n = NULL, ...)
 
-add_fitted_samples(newdata, model, var = "estimate", ...)
+add_fitted_samples(newdata, model, var = "estimate", n = NULL, ...)
 
-predicted_samples(model, newdata, var = "pred", ...)
+predicted_samples(model, newdata, var = "pred", n = NULL, ...)
 
-fitted_samples(model, newdata, var = "estimate", ...)
+fitted_samples(model, newdata, var = "estimate", n = NULL, ...)
 
-\method{predicted_samples}{default}(model, newdata, var = "pred", ...)
+\method{predicted_samples}{default}(model, newdata, ...)
 
-\method{fitted_samples}{default}(model, newdata, var = "estimate", ...)
+\method{fitted_samples}{default}(model, newdata, ...)
 
-\method{predicted_samples}{stanreg}(model, newdata, var = "pred", ...)
+\method{predicted_samples}{stanreg}(model, newdata, var = "pred", n = NULL,
+  ...)
 
-\method{fitted_samples}{stanreg}(model, newdata, var = "estimate", ...)
+\method{fitted_samples}{stanreg}(model, newdata, var = "estimate", n = NULL,
+  ...)
 
-\method{predicted_samples}{brmsfit}(model, newdata, var = "pred", ...)
+\method{predicted_samples}{brmsfit}(model, newdata, var = "pred", n = NULL,
+  ...)
 
-\method{fitted_samples}{brmsfit}(model, newdata, var = "estimate", ...)
+\method{fitted_samples}{brmsfit}(model, newdata, var = "estimate", n = NULL,
+  ...)
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
@@ -46,6 +50,8 @@ package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \co
 
 \item{var}{The name of the output column for the predictions (default `code{"pred"}`) or fits
 (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).}
+
+\item{n}{The number of samples per prediction / fit to return.}
 
 \item{...}{Additional arguments passed to the underlying prediction method for the type of
 model given.}

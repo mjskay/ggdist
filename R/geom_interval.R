@@ -9,7 +9,7 @@
 globalVariables(c("conf.low", "conf.high", ".prob"))
 
 
-#' Interval geoms
+#' Multiple probability interval geoms for ggplot
 #'
 #' Modified versions of \code{\link{geom_linerange}} and \code{\link{geom_linerangeh}} with default aesthetics
 #' designed for use with output from \code{\link{point_interval}}.
@@ -53,13 +53,15 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #'   spread_samples(u_tau[i]) %>%
 #'   mean_qi(.prob = c(.5, .8, .95, .99)) %>%
 #'   ggplot(aes(y = i, x = u_tau)) +
-#'   geom_intervalh()
+#'   geom_intervalh() +
+#'   scale_color_brewer()
 #'
 #' RankCorr %>%
 #'   spread_samples(u_tau[i]) %>%
 #'   mean_qi(.prob = c(.5, .8, .95, .99)) %>%
 #'   ggplot(aes(x = i, y = u_tau)) +
-#'   geom_interval()
+#'   geom_interval() +
+#'   scale_color_brewer
 #'
 #' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2

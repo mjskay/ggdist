@@ -39,6 +39,7 @@ globalVariables(c(".iteration", ".pred"))
 #' \code{map2stan} models from the \code{rethinking} package are also supported.
 #' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits
 #' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
+#' @param n The number of samples per prediction / fit to return.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
@@ -55,33 +56,33 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom dplyr mutate
 #' @importFrom stats fitted predict
 #' @export
-add_predicted_samples = function(newdata, model, var = "pred", ...) {
-  predicted_samples(model, newdata, var, ...)
+add_predicted_samples = function(newdata, model, var = "pred", n = NULL, ...) {
+  predicted_samples(model, newdata, var, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-add_fitted_samples = function(newdata, model, var = "estimate", ...) {
-  fitted_samples(model, newdata, var, ...)
+add_fitted_samples = function(newdata, model, var = "estimate", n = NULL, ...) {
+  fitted_samples(model, newdata, var, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples = function(model, newdata, var = "pred", ...) UseMethod("predicted_samples")
+predicted_samples = function(model, newdata, var = "pred", n = NULL, ...) UseMethod("predicted_samples")
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples = function(model, newdata, var = "estimate", ...) UseMethod("fitted_samples")
+fitted_samples = function(model, newdata, var = "estimate", n = NULL, ...) UseMethod("fitted_samples")
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.default = function(model, newdata, var = "pred", ...) {
+predicted_samples.default = function(model, newdata, ...) {
   stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `predicted_samples`"))
 }
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.default = function(model, newdata, var = "estimate", ...) {
+fitted_samples.default = function(model, newdata, ...) {
   stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `fitted_samples`"))
 }
 
@@ -105,40 +106,40 @@ fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata,
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.stanreg = function(model, newdata, var = "pred", ...) {
+predicted_samples.stanreg = function(model, newdata, var = "pred", n = NULL, ...) {
   if (!requireNamespace("rstantools", quietly = TRUE)) {
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, ...)
+  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.stanreg = function(model, newdata, var = "estimate", ...) {
+fitted_samples.stanreg = function(model, newdata, var = "estimate", n = NULL, ...) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, ...)
+  fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.brmsfit = function(model, newdata, var = "pred", ...) {
+predicted_samples.brmsfit = function(model, newdata, var = "pred", n = NULL, ...) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE, ...)
+  fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE, nsamples = n, ...)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.brmsfit = function(model, newdata, var = "estimate", ...) {
+fitted_samples.brmsfit = function(model, newdata, var = "estimate", n = NULL, ...) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, ...)
+  fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, nsamples = n, ...)
 }

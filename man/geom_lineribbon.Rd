@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_lineribbon.R
 \name{geom_lineribbon}
 \alias{geom_lineribbon}
-\title{Line + ribbon geoms}
+\title{Line + multiple probability ribbon geoms for ggplot}
 \usage{
 geom_lineribbon(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., na.rm = FALSE, show.legend = NA,
@@ -47,7 +47,16 @@ Specifically, \code{geom_lineribbon} acts as if its default aesthetics are
 }
 \examples{
 
- # TBD
+library(dplyr)
+library(ggplot2)
+
+data_frame(x = 1:10) \%>\%
+  group_by_all() \%>\%
+  do(data_frame(y = rnorm(100, .$x))) \%>\%
+  median_qi(.prob = c(.5, .8, .95)) \%>\%
+  ggplot(aes(x = x, y = y)) +
+  geom_lineribbon() +   # automatically uses aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))
+  scale_fill_brewer()
 
 }
 \seealso{

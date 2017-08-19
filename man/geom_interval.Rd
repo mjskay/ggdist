@@ -3,7 +3,7 @@
 \name{geom_interval}
 \alias{geom_interval}
 \alias{geom_intervalh}
-\title{Interval geoms}
+\title{Multiple probability interval geoms for ggplot}
 \usage{
 geom_interval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., na.rm = FALSE, show.legend = NA,
@@ -62,13 +62,15 @@ RankCorr \%>\%
   spread_samples(u_tau[i]) \%>\%
   mean_qi(.prob = c(.5, .8, .95, .99)) \%>\%
   ggplot(aes(y = i, x = u_tau)) +
-  geom_intervalh()
+  geom_intervalh() +
+  scale_color_brewer()
 
 RankCorr \%>\%
   spread_samples(u_tau[i]) \%>\%
   mean_qi(.prob = c(.5, .8, .95, .99)) \%>\%
   ggplot(aes(x = i, y = u_tau)) +
-  geom_interval()
+  geom_interval() +
+  scale_color_brewer
 
 }
 \seealso{

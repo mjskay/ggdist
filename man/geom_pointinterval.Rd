@@ -3,7 +3,7 @@
 \name{geom_pointinterval}
 \alias{geom_pointinterval}
 \alias{geom_pointintervalh}
-\title{Point + interval geoms}
+\title{Point estimate + multiple probability interval geoms for ggplot}
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., fatten.interval = 0.15, fatten.point = 1.8,
