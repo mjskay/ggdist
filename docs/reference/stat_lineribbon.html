@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point estimate + multiple probability interval stats for ggplot — stat_pointinterval â€¢ tidybayes</title>
+<title>Multiple probability interval stats — stat_lineribbon â€¢ tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -95,27 +95,17 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Point estimate + multiple probability interval stats for ggplot</h1>
+    <h1>Multiple probability interval stats</h1>
     </div>
 
     
-    <p>Variants of <code>stat_summary</code> and <code>stat_summaryh</code> that
-use <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> and <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code>
-by default. While the corresponding <code>geom</code>s are intended for use on
-data frames that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code>
-function, these <code>stat</code>s are intended for use directly on data frames of samples, and
-will perform the summarization using a <code><a href='point_interval.html'>point_interval</a></code> function.</p>
+    <p>A variants of a <code>stat_summary</code> and a <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code></p>
     
 
-    <pre class="usage"><span class='fu'>stat_pointinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointinterval"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>,
-  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='fu'>stat_pointintervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointintervalh"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>,
-  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>stat_lineribbon</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"lineribbon"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
+  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.5</span>, <span class='fl'>0.8</span>, <span class='fl'>0.95</span>), <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -134,7 +124,7 @@ the plot defaults.</p></td>
     <tr>
       <th>geom</th>
       <td><p>Use to override the default connection between
-<code>geom_pointinterval</code>/<code>geom_pointintervalh</code> and <code>stat_pointinterval</code>/<code>stat_pointintervalh</code>.</p></td>
+<code>geom_lineribbon</code> and <code>stat_lineribbon</code>.</p></td>
     </tr>
     <tr>
       <th>position</th>
@@ -151,9 +141,7 @@ the plot defaults.</p></td>
     <tr>
       <th>fun.data</th>
       <td><p>A function that is given a vector and should
-return a data frame with variables <code>y</code>, <code>ymin</code> and <code>ymax</code>
-(<code>x</code>, <code>xmin</code> and <code>xmax</code> for <code>stat_pointintervalh</code>),
-and <code>.prob</code>. See the <code>point_interval</code> family of functions.</p></td>
+return a data frame with variables <code>y</code>, <code>ymin</code> and <code>ymax</code>. See the <code>point_interval</code> family of functions.</p></td>
     </tr>
     <tr>
       <th>.prob</th>
@@ -170,8 +158,8 @@ values are silently removed.</p></td>
     </tr>
     <tr>
       <th>show.legend</th>
-      <td><p>Should this later be included in the legends? Default is <code>FALSE</code>, unlike most stats/geoms,
-to match its common use cases; N.B. this is unlike most geoms, which have a default of <code>NA</code>.</p></td>
+      <td><p>Should this layer be included in the legends? <code>NA</code>, the default, includes if any aesthetics
+are mapped. <code>FALSE</code> never includes, and <code>TRUE</code> always includes.</p></td>
     </tr>
     <tr>
       <th>inherit.aes</th>
@@ -183,23 +171,20 @@ default plot specification, e.g. borders.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='geom_pointinterval.html'>geom_pointinterval</a></code></p>
+    <p><code><a href='geom_lineribbon.html'>geom_lineribbon</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>library</span>(<span class='no'>magrittr</span>)
+<span class='fu'>library</span>(<span class='no'>dplyr</span>)
 <span class='fu'>library</span>(<span class='no'>ggplot2</span>)
-<span class='fu'>data</span>(<span class='no'>RankCorr</span>)
 
-<span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointintervalh</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-<span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by_all.html'>group_by_all</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/do.html'>do</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>100</span>, <span class='no'>.</span>$<span class='no'>x</span>))) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>)) +
+  <span class='fu'>stat_lineribbon</span>() +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_fill_brewer</a></span>()</div><div class='img'><img src='stat_lineribbon-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -360,7 +360,6 @@ mtcars %>%
   ggplot(aes(x = hp)) +
   geom_line(aes(y = estimate, group = .iteration), alpha = 0.25, color = "red") +
   geom_point(aes(y = mpg), data = mtcars) +
-  scale_fill_brewer() +
   facet_wrap(~ am)
 ```
 

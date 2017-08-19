@@ -103,31 +103,35 @@
 or the posterior predictions of the model to the data in a long format.</p>
     
 
-    <pre class="usage"><span class='fu'>add_predicted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>add_predicted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>add_fitted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>)
+<span class='fu'>add_fitted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>)
+<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for default</span>
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>)
+<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>)
+<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>)
+<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>)
+<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>)
+<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -155,6 +159,10 @@ package (available at <a href='https://github.com/mjskay/tidybayes.rethinking'>h
       <th>...</th>
       <td><p>Additional arguments passed to the underlying prediction method for the type of
 model given.</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>The number of samples per prediction / fit to return.</p></td>
     </tr>
     </table>
     
@@ -187,6 +195,11 @@ are the preferred spellings.</p>
     <p><code><a href='spread_samples.html'>spread_samples</a></code></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+##TODO
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -198,7 +211,9 @@ are the preferred spellings.</p>
       <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     
