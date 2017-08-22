@@ -15,11 +15,13 @@
 \usage{
 add_predicted_samples(newdata, model, var = "pred", ..., n = NULL)
 
-add_fitted_samples(newdata, model, var = "estimate", ..., n = NULL)
+add_fitted_samples(newdata, model, var = "estimate", auxpars = TRUE, ...,
+  n = NULL)
 
 predicted_samples(model, newdata, var = "pred", ..., n = NULL)
 
-fitted_samples(model, newdata, var = "estimate", ..., n = NULL)
+fitted_samples(model, newdata, var = "estimate", auxpars = TRUE, ...,
+  n = NULL)
 
 \method{predicted_samples}{default}(model, newdata, ...)
 
@@ -28,14 +30,14 @@ fitted_samples(model, newdata, var = "estimate", ..., n = NULL)
 \method{predicted_samples}{stanreg}(model, newdata, var = "pred", ...,
   n = NULL)
 
-\method{fitted_samples}{stanreg}(model, newdata, var = "estimate", ...,
-  n = NULL)
+\method{fitted_samples}{stanreg}(model, newdata, var = "estimate",
+  auxpars = TRUE, ..., n = NULL)
 
 \method{predicted_samples}{brmsfit}(model, newdata, var = "pred", ...,
   n = NULL)
 
-\method{fitted_samples}{brmsfit}(model, newdata, var = "estimate", ...,
-  n = NULL)
+\method{fitted_samples}{brmsfit}(model, newdata, var = "estimate",
+  auxpars = TRUE, ..., n = NULL)
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
@@ -55,6 +57,12 @@ package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \co
 model given.}
 
 \item{n}{The number of samples per prediction / fit to return.}
+
+\item{auxpars}{For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
+parameters be included in the output? Valid only for models that support auxiliary parameters,
+(such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
+parameters are included in the output as additional columns with the name \code{paste0(par, ".", var)}.
+If \code{FALSE}, auxiliary parameters are not included.}
 }
 \value{
 A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a

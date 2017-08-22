@@ -40,6 +40,11 @@ globalVariables(c(".iteration", ".pred"))
 #' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits
 #' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
 #' @param n The number of samples per prediction / fit to return.
+#' @param auxpars For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
+#' parameters be included in the output? Valid only for models that support auxiliary parameters,
+#' (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
+#' parameters are included in the output as additional columns with the name \code{paste0(par, ".", var)}.
+#' If \code{FALSE}, auxiliary parameters are not included.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
@@ -66,8 +71,8 @@ add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL) {
 
 #' @rdname add_predicted_samples
 #' @export
-add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL) {
-  fitted_samples(model, newdata, var, n = n, ...)
+add_fitted_samples = function(newdata, model, var = "estimate", auxpars = TRUE, ..., n = NULL) {
+  fitted_samples(model, newdata, var, auxpars = TRUE, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
@@ -76,7 +81,7 @@ predicted_samples = function(model, newdata, var = "pred", ..., n = NULL) UseMet
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL) UseMethod("fitted_samples")
+fitted_samples = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL) UseMethod("fitted_samples")
 
 #' @rdname add_predicted_samples
 #' @export
@@ -120,7 +125,7 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NULL) {
+fitted_samples.stanreg = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
@@ -140,10 +145,34 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL) {
+fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, nsamples = n, ...)
+  dpars = if (auxpars == TRUE) {
+    names(model$formula$pforms)
+  } else if (auxpars == FALSE) {
+    NULL
+  } else {
+    auxpars
+  }
+
+  varname_to_dpar = list(NULL) %>%
+    set_names(var) %>%
+    c(set_names(as.list(dpars), dpars))
+
+  samples = fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, nsamples = n,
+    dpar = varname_to_dpar[[1]], ...)
+
+  if (length(varname_to_dpar) > 1) {
+    for (p in 2:length(varname_to_dpar)) {
+      varname = paste0(names(varname_to_dpar)[[p]], ".", var)
+      dpar = varname_to_dpar[[p]]
+      samples[[varname]] = fitted_predicted_samples_stanreg_(fitted, model, newdata, var = ".estimate", summary = FALSE,
+        nsamples = n, dpar = dpar, ...)[[".estimate"]]
+    }
+  }
+
+  samples
 }
