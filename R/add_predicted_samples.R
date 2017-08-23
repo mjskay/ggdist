@@ -43,7 +43,9 @@ globalVariables(c(".iteration", ".pred"))
 #' @param auxpars For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
 #' parameters be included in the output? Valid only for models that support auxiliary parameters,
 #' (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
-#' parameters are included in the output as additional columns with the name \code{paste0(par, ".", var)}.
+#' parameters are included in the output as additional columns named after each parameter
+#' (alternative names can be provided using a list or named vector, e.g. \code{c(sigma.hat = "sigma")}
+#' would output the \code{"sigma"} parameter from a model as a column named \code{"sigma.hat"}).
 #' If \code{FALSE}, auxiliary parameters are not included.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
@@ -72,7 +74,7 @@ add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL) {
 #' @rdname add_predicted_samples
 #' @export
 add_fitted_samples = function(newdata, model, var = "estimate", auxpars = TRUE, ..., n = NULL) {
-  fitted_samples(model, newdata, var, auxpars = TRUE, n = n, ...)
+  fitted_samples(model, newdata, var, auxpars = auxpars, n = n, ...)
 }
 
 #' @rdname add_predicted_samples
@@ -150,28 +152,30 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TR
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
 
+  # get the names of distributional regression parameters to include
   dpars = if (auxpars == TRUE) {
-    names(model$formula$pforms)
+    as.list(names(model$formula$pforms))
   } else if (auxpars == FALSE) {
     NULL
   } else {
     auxpars
   }
 
-  varname_to_dpar = list(NULL) %>%
-    set_names(var) %>%
-    c(set_names(as.list(dpars), dpars))
+  # missing names default to the same name used for the parameter in the model
+  missing_names = is.null(names(dpars))
+  names(dpars)[missing_names] = dpars[missing_names]
 
-  samples = fitted_predicted_samples_stanreg_(fitted, model, newdata, var, summary = FALSE, nsamples = n,
-    dpar = varname_to_dpar[[1]], ...)
+  # get the samples for the primary parameter first so we can stick the other estimates onto it
+  samples = fitted_predicted_samples_stanreg_(
+    fitted, model, newdata, var, summary = FALSE, nsamples = n, dpar = NULL, ...
+  )
 
-  if (length(varname_to_dpar) > 1) {
-    for (p in 2:length(varname_to_dpar)) {
-      varname = paste0(names(varname_to_dpar)[[p]], ".", var)
-      dpar = varname_to_dpar[[p]]
-      samples[[varname]] = fitted_predicted_samples_stanreg_(fitted, model, newdata, var = ".estimate", summary = FALSE,
-        nsamples = n, dpar = dpar, ...)[[".estimate"]]
-    }
+  for (i in seq_along(dpars)) {
+    varname = names(dpars)[[i]]
+    dpar = dpars[[i]]
+    samples[[varname]] = fitted_predicted_samples_stanreg_(
+      fitted, model, newdata, var = ".estimate", summary = FALSE, nsamples = n, dpar = dpar, ...
+    )[[".estimate"]]
   }
 
   samples

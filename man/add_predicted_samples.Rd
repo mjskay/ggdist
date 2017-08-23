@@ -61,7 +61,9 @@ model given.}
 \item{auxpars}{For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
 parameters be included in the output? Valid only for models that support auxiliary parameters,
 (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
-parameters are included in the output as additional columns with the name \code{paste0(par, ".", var)}.
+parameters are included in the output as additional columns named after each parameter
+(alternative names can be provided using a list or named vector, e.g. \code{c(sigma.hat = "sigma")}
+would output the \code{"sigma"} parameter from a model as a column named \code{"sigma.hat"}).
 If \code{FALSE}, auxiliary parameters are not included.}
 }
 \value{
