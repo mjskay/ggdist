@@ -36,7 +36,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
   )
 
   #provide some default computed aesthetics
-  default_computed_aesthetics = aes(size = -...prob..)
+  default_computed_aesthetics = aes(size = -...prob..)  # nolint
 
   compute_aesthetics = l$compute_aesthetics
   l$compute_aesthetics = function(self, data, plot) {

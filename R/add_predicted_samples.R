@@ -68,13 +68,13 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom stats fitted predict
 #' @export
 add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL) {
-  predicted_samples(model, newdata, var, n = n, ...)
+  predicted_samples(model, newdata, var, ..., n = n)
 }
 
 #' @rdname add_predicted_samples
 #' @export
 add_fitted_samples = function(newdata, model, var = "estimate", auxpars = TRUE, ..., n = NULL) {
-  fitted_samples(model, newdata, var, auxpars = auxpars, n = n, ...)
+  fitted_samples(model, newdata, var, auxpars = auxpars, ..., n = n)
 }
 
 #' @rdname add_predicted_samples
@@ -122,7 +122,7 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, n = n, ...)
+  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, draws = n, ...)
 }
 
 #' @rdname add_predicted_samples
@@ -132,7 +132,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", auxpars = TR
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, n = n, ...)
+  fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, draws = n, ...)
 }
 
 #' @rdname add_predicted_samples

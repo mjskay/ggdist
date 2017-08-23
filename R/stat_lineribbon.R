@@ -85,8 +85,8 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
 
   #provide some default computed aesthetics
   default_computed_aesthetics = aes(
-    fill = forcats::fct_rev(ordered(...prob..)),
-    group = forcats::fct_rev(ordered(...prob..))
+    fill = forcats::fct_rev(ordered(...prob..)),  # nolint
+    group = forcats::fct_rev(ordered(...prob..))  # nolint
   )
 
   compute_aesthetics = l$compute_aesthetics

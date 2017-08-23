@@ -55,7 +55,8 @@ data_frame(x = 1:10) \%>\%
   do(data_frame(y = rnorm(100, .$x))) \%>\%
   median_qi(.prob = c(.5, .8, .95)) \%>\%
   ggplot(aes(x = x, y = y)) +
-  geom_lineribbon() +   # automatically uses aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))
+  # automatically uses aes(ymin = conf.low, ymax = conf.high, fill = fct_rev(ordered(.prob)))
+  geom_lineribbon() +
   scale_fill_brewer()
 
 }

@@ -67,6 +67,6 @@ GeomIntervalh <- ggproto("GeomIntervalh", Geom,
   required_aes = c("x", "y", "xmin", "xmax"),
 
   draw_panel = function(data, panel_scales, coord) {
-    GeomLinerangeh$draw_panel(data, panel_scales, coord)
+    GeomLinerangeh$draw_panel(data, panel_scales, coord)  # nolint
   }
 )

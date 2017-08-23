@@ -96,7 +96,7 @@ stat_interval <- function(mapping = NULL, data = NULL,
   )
 
   #provide some default computed aesthetics
-  default_computed_aesthetics = aes(color = forcats::fct_rev(ordered(...prob..)))
+  default_computed_aesthetics = aes(color = forcats::fct_rev(ordered(...prob..)))  # nolint
 
   compute_aesthetics = l$compute_aesthetics
   l$compute_aesthetics = function(self, data, plot) {
