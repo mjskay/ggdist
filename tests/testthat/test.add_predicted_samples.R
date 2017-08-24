@@ -8,6 +8,7 @@ library(tidybayes)
 library(dplyr)
 library(tidyr)
 library(magrittr)
+library(rstanarm)
 import::from(purrr, quietly)
 
 context("predicted_samples")
