@@ -32,7 +32,7 @@ test_that("spread_samples works on a parameter with one unnamed index", {
       .chain = as.integer(1),
       .iteration = 1:nrow(RankCorr),
       i = i,
-      tau = RankCorr[, paste0("tau[", i, "]")]
+      tau = as.vector(RankCorr[, paste0("tau[", i, "]")])
     )
   })
 
