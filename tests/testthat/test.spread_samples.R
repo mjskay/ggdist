@@ -27,7 +27,7 @@ test_that("spread_samples works on a parameter with one unnamed index", {
   data(RankCorr, package = "tidybayes")
 
   ref = ldply(1:18, function(i) {
-    data_frame(
+    data.frame(
       .chain = as.integer(1),
       .iteration = 1:nrow(RankCorr),
       i = i,
