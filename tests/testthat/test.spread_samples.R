@@ -6,7 +6,6 @@
 library(testthat)
 import::from(plyr, ldply, .)  #TODO: drop remaining ldplys from this file
 import::from(dplyr, `%>%`, inner_join, data_frame)
-import::from(purrr, map_df)
 library(tidyr)
 library(tidybayes)
 
@@ -27,12 +26,12 @@ test_that("spread_samples works on a simple parameter with no indices", {
 test_that("spread_samples works on a parameter with one unnamed index", {
   data(RankCorr, package = "tidybayes")
 
-  ref = map_df(1:18, function(i) {
+  ref = ldply(1:18, function(i) {
     data_frame(
       .chain = as.integer(1),
       .iteration = 1:nrow(RankCorr),
       i = i,
-      tau = as.vector(RankCorr[, paste0("tau[", i, "]")])
+      tau = RankCorr[, paste0("tau[", i, "]")]
     )
   })
 
