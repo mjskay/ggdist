@@ -146,6 +146,7 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
 }
 
 #' @rdname add_predicted_samples
+#' @importFrom rlang is_true is_false
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
@@ -153,9 +154,9 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TR
   }
 
   # get the names of distributional regression parameters to include
-  dpars = if (auxpars == TRUE) {
-    as.list(names(model$formula$pforms))
-  } else if (auxpars == FALSE) {
+  dpars = if (is_true(auxpars)) {
+    names(model$formula$pforms)
+  } else if (is_false(auxpars)) {
     NULL
   } else {
     auxpars
