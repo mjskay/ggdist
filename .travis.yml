@@ -12,6 +12,7 @@ env:
   global:
     - CXX_OLEVEL=2 CXX=clang++
     - _R_CHECK_FORCE_SUGGESTS_=FALSE
+    - NOT_CRAN=true
 
 before_install:
   - mkdir -p ~/.R/
