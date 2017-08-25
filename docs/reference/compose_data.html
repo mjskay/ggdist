@@ -165,7 +165,7 @@ environment containing the data list built up so far.</p>
 <p>For example, this means that if the first argument to <code>compose_data</code>
 is a data frame, subsequent arguments can include direct references to columns
 from that data frame. This allows you, for example, to easily use
-<code>x_at_y</code> to generate indices for nested models.</p>
+<code><a href='x_at_y.html'>x_at_y</a></code> to generate indices for nested models.</p>
 <p>If you wish to add support for additional types not described above,
 provide an implementation of <code><a href='as_data_list.html'>as_data_list</a></code> for the type. See
 the implementations of <code>as_data_list.numeric</code>,
@@ -174,7 +174,7 @@ the implementations of <code>as_data_list.numeric</code>,
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p><code><a href='as_data_list.html'>as_data_list</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>,
-<code><a href='spread_samples.html'>gather_samples</a></code>, <code>x_at_y</code></p>
+<code><a href='spread_samples.html'>gather_samples</a></code>, <code><a href='x_at_y.html'>x_at_y</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -204,7 +204,7 @@ the implementations of <code>as_data_list.numeric</code>,
 #&gt; </div><div class='input'>
 <span class='co'># turns site into a nested index: site[p] gives the site for plot p</span>
 <span class='no'>df</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>compose_data</span>(<span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>x_at_y</span>(<span class='no'>site</span>, <span class='no'>plot</span>))</div><div class='output co'>#&gt; $plot
+  <span class='fu'>compose_data</span>(<span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'><a href='x_at_y.html'>x_at_y</a></span>(<span class='no'>site</span>, <span class='no'>plot</span>))</div><div class='output co'>#&gt; $plot
 #&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
 #&gt; 
 #&gt; $n_plot

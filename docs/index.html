@@ -109,7 +109,8 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the latest development version from GitHub with these R commands:</p>
+<p><code>tidybayes</code> is not yet on CRAN, but I am in the process of preparing a CRAN submission. You can track progress towards the CRAN submission at the <a href="https://github.com/mjskay/tidybayes/milestone/1">CRAN Milestone</a>.</p>
+<p>In the mean time, you can install the latest development version from GitHub with these R commands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
 devtools::<span class="kw">install_github</span>(<span class="st">"mjskay/tidybayes"</span>)</code></pre></div>
 </div>
@@ -161,10 +162,10 @@ transformed parameters {
   condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
 }
 model {
-  response_sd ~ cauchy(0, 1);         # =&gt; half-cauchy(0, 1)
-  condition_mean_sd ~ cauchy(0, 1);   # =&gt; half-cauchy(0, 1)
+  response_sd ~ cauchy(0, 1);         // =&gt; half-cauchy(0, 1)
+  condition_mean_sd ~ cauchy(0, 1);   // =&gt; half-cauchy(0, 1)
   overall_mean ~ normal(0, 5);
-  condition_zoffset ~ normal(0, 1);   # =&gt; condition_mean ~ normal(overall_mean, condition_mean_sd)
+  condition_zoffset ~ normal(0, 1);   // =&gt; condition_mean ~ normal(overall_mean, condition_mean_sd)
   for (i in 1:n) {
     response[i] ~ normal(condition_mean[condition[i]], response_sd);
   }
@@ -284,11 +285,11 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition)) +
 <span class="st">  </span>
 <span class="st">  </span><span class="co"># posterior predictive intervals</span>
-<span class="st">  </span><span class="kw">stat_intervalh</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">5</span>, .<span class="dv">8</span>, .<span class="dv">95</span>)) +
+<span class="st">  </span><span class="kw"><a href="reference/stat_interval.html">stat_intervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">5</span>, .<span class="dv">8</span>, .<span class="dv">95</span>)) +
 <span class="st">  </span><span class="kw">scale_color_brewer</span>() +
 <span class="st">  </span>
 <span class="st">  </span><span class="co"># mean and quantile intervals of condition mean</span>
-<span class="st">  </span><span class="kw">stat_pointintervalh</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>)) +
+<span class="st">  </span><span class="kw"><a href="reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>)) +
 <span class="st">  </span>
 <span class="st">  </span><span class="co"># data</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC)</code></pre></div>
@@ -300,20 +301,20 @@ bayes_estimates</code></pre></div>
 <p>For models that support it (like <code>rstanarm</code> and <code>brms</code> models), We can also use the <code>add_fitted_samples</code> or <code>add_predicted_samples</code> functions to generate posterior fits or predictions. Combined with the functions from the <code>modelr</code> package, this makes it easy to generate fit curves.</p>
 <p>Let’s fit a slightly naive model to miles per gallon versus horsepower in the <code>mtcars</code> dataset:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_mpg =<span class="st"> </span><span class="kw">brm</span>(mpg ~<span class="st"> </span><span class="kw">log</span>(hp), <span class="dt">data =</span> mtcars, <span class="dt">family =</span> lognormal)</code></pre></div>
-<p>Now we will use <code><a href="http://www.rdocumentation.org/packages/modelr/topics/data_grid">modelr::data_grid</a></code>, <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/add_predicted_samples">tidybayes::add_predicted_samples</a></code>, and <code>tidybayes::stat_lineribbon</code> to generate a fit curve with multiple probability bands:</p>
+<p>Now we will use <code><a href="http://www.rdocumentation.org/packages/modelr/topics/data_grid">modelr::data_grid</a></code>, <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/add_predicted_samples">tidybayes::add_predicted_samples</a></code>, and <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/stat_lineribbon">tidybayes::stat_lineribbon</a></code> to generate a fit curve with multiple probability bands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars %&gt;%
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">100</span>)) %&gt;%
 <span class="st">  </span><span class="kw"><a href="reference/add_predicted_samples.html">add_predicted_samples</a></span>(m_mpg) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp)) +
-<span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) +
+<span class="st">  </span><span class="kw"><a href="reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mpg), <span class="dt">data =</span> mtcars) +
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>()</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
-<p><code>stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5))</code> is one of several shortcut geoms that simplify common combinations of <code>tidybayes</code> functions and <code>ggplot</code> goems. It is roughly equivalent to the following:</p>
+<p><code><a href="reference/stat_lineribbon.html">stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5))</a></code> is one of several shortcut geoms that simplify common combinations of <code>tidybayes</code> functions and <code>ggplot</code> goems. It is roughly equivalent to the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">stat_summary</span>(
     <span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">fill =</span> forcats::<span class="kw">fct_rev</span>(<span class="kw">ordered</span>(...prob..)), <span class="dt">group =</span> -...prob..), 
-    <span class="dt">geom =</span> <span class="st">"ribbon"</span>, <span class="dt">fun.data =</span> median_qi, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)))
-  <span class="er">)</span> +
+    <span class="dt">geom =</span> <span class="st">"ribbon"</span>, <span class="dt">fun.data =</span> median_qi, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))
+  ) +
 <span class="st">  </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">fun.y =</span> median, <span class="dt">geom =</span> <span class="st">"line"</span>, <span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="fl">1.25</span>)</code></pre></div>
 <p>Because this is all tidy data, if you wanted to build a model with interactions among different categorical variables (say a different curve for automatic and manula transmissions), you can easily generate predictions faceted over that variable (say, different curves for different transmission types). Then you could use the existing faceting features built in to ggplot to plot them.</p>
 <p>Such a model might be:</p>
@@ -323,7 +324,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>), am) %&gt;%<span class="st">    </span><span class="co"># add am to the prediction grid</span>
 <span class="st">  </span><span class="kw"><a href="reference/add_predicted_samples.html">add_predicted_samples</a></span>(m_mpg_am) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp)) +
-<span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) +
+<span class="st">  </span><span class="kw"><a href="reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mpg), <span class="dt">data =</span> mtcars) +
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() +
 <span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>am)                                  <span class="co"># facet by am</span></code></pre></div>

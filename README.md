@@ -38,7 +38,9 @@ Supported model types
 Installation
 ------------
 
-You can install the latest development version from GitHub with these R commands:
+`tidybayes` is not yet on CRAN, but I am in the process of preparing a CRAN submission. You can track progress towards the CRAN submission at the [CRAN Milestone](https://github.com/mjskay/tidybayes/milestone/1).
+
+In the mean time, you can install the latest development version from GitHub with these R commands:
 
 ``` r
 install.packages("devtools")
@@ -104,10 +106,10 @@ transformed parameters {
   condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
 }
 model {
-  response_sd ~ cauchy(0, 1);         # => half-cauchy(0, 1)
-  condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
+  response_sd ~ cauchy(0, 1);         // => half-cauchy(0, 1)
+  condition_mean_sd ~ cauchy(0, 1);   // => half-cauchy(0, 1)
   overall_mean ~ normal(0, 5);
-  condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
+  condition_zoffset ~ normal(0, 1);   // => condition_mean ~ normal(overall_mean, condition_mean_sd)
   for (i in 1:n) {
     response[i] ~ normal(condition_mean[condition[i]], response_sd);
   }
@@ -295,7 +297,7 @@ mtcars %>%
 ``` r
   stat_summary(
     aes(y = pred, fill = forcats::fct_rev(ordered(...prob..)), group = -...prob..), 
-    geom = "ribbon", fun.data = median_qi, fun.args = list(.prob = c(.99, .95, .8, .5)))
+    geom = "ribbon", fun.data = median_qi, fun.args = list(.prob = c(.99, .95, .8, .5))
   ) +
   stat_summary(aes(y = pred), fun.y = median, geom = "line", color = "red", size = 1.25)
 ```
