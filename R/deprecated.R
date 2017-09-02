@@ -16,6 +16,7 @@
 #' be used instad of \code{ggeye}.
 #'
 #' @format NULL
+#' @usage NULL
 #' @author Matthew Kay
 #' @seealso \code{\link{geom_eyeh}}
 #' @name tidybayes-deprecated

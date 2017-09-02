@@ -303,20 +303,20 @@ m %>%
   geom_pointintervalh()
 ```
 
-### Using `stat_summary`/`stat_summaryh`
+### Using `stat_pointinterval`/`stat_pointintervalh`
 
-Rather than summarizing the posterior before calling ggplot, we could also use `stat_summary` to perform the summary within ggplot.
+Rather than summarizing the posterior before calling ggplot, we could also use `stat_pointinterval` / `stat_pointintervalh` to perform the summary within ggplot.
 
 ```{r}
 m %>%
   spread_samples(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  stat_summaryh(fun.data = mean_qih)
+  stat_pointintervalh()
 ```
 
 #### A note on functions ending in `h`
 
-`tidybayes` follows the naming convention established by `ggstance` for horizontal versions of `geom`s and summary functions. It includes horizontal versions of all `point_interval` functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with `h`. When calling `stat_summaryh` (the horizontal version of `stat_summary` from the `ggstance` package), we must use the horizontal versions of the `point_interval` functions, like `mean_qih` in the above example. This is because `mean_qi` returns a data frame with `y`, `ymin`, and `ymax` columns when passed a vector (making it suitable for `stat_summary`), and `mean_qih` returns a data frame with `x`, `xmin`, and `xmax` columns when passed a vector (making it suitable for `stat_summaryh`).
+`tidybayes` follows the naming convention established by `ggstance` for horizontal versions of `geom`s and summary functions. It includes horizontal versions of all `point_interval` functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with `h`. When calling `stat_pointintervalh` (the horizontal version of `stat_pointinterval`), we must use the horizontal versions of the `point_interval` functions, like `mean_qih` in the above example. This is because `mean_qi` returns a data frame with `y`, `ymin`, and `ymax` columns when passed a vector (making it suitable for `stat_pointinterval` or `stat_summary`), and `mean_qih` returns a data frame with `x`, `xmin`, and `xmax` columns when passed a vector (making it suitable for `stat_pointintervalh` or `stat_summaryh`).
 
 ### Interval estimates with posterior violins ("eye plots"): `geom_eye` and `geom_eyeh`
 
@@ -327,7 +327,7 @@ m %>%
   spread_samples(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
   geom_violinh(color = NA, fill = "gray65") +
-  stat_summaryh(fun.data = mean_qih)
+  stat_pointintervalh(.prob = c(.95, .66))
 ```
 
 The `geom_eye` and `geom_eyeh` geoms provide a shortcut to generating eye plots with some sensible defaults:
@@ -367,10 +367,10 @@ The results are in a tidy format: one row per index (`condition`) and probabilit
 ```{r}
 m %>%
   spread_samples(condition_mean[condition]) %>%
-  mean_qi(.prob = c(.95, .8, .5)) %>%
+  mean_qi(.prob = c(.95, .66)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean, 
     size = -.prob)) +               # smaller probability interval => thicker line
-  geom_pointintervalh(fatten.interval = .25)
+  geom_pointintervalh()
 ```
 
 Just as `geom_pointrangeh` includes `xmin = conf.low` and `xmax = conf.high` as default aesthetics, it also includes 
@@ -379,10 +379,21 @@ Just as `geom_pointrangeh` includes `xmin = conf.low` and `xmax = conf.high` as 
 ```{r}
 m %>%
   spread_samples(condition_mean[condition]) %>%
+  mean_qi(.prob = c(.95, .66)) %>%
+  ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
+  geom_pointintervalh()
+```
+
+Just as the `point_interval` functions can generate an arbitrary number of intervals per estimate, so too can `geom_pointrangeh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `fatten.interval =` to make it legible). Here it is with 3:
+
+```{r}
+m %>%
+  spread_samples(condition_mean[condition]) %>%
   mean_qi(.prob = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
   geom_pointintervalh(fatten.interval = .25)
 ```
+
 
 ### Alternative estimates and intervals: mean, median, mode; qi, hdi
 

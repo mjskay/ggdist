@@ -4,9 +4,6 @@
 \alias{tidybayes-deprecated}
 \alias{ggeye}
 \title{Deprecated functions in tidybayes}
-\usage{
-ggeye(data = NULL, mapping = NULL, ...)
-}
 \description{
 See `Details` for information on each deprecated function and suggested alternatives.
 }
