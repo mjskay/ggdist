@@ -29,7 +29,11 @@ before_install:
 script:
   - |
     R CMD build --no-build-vignettes .
-    travis_wait 40 R CMD check --no--vignettes tidybayes*tar.gz
+    travis_wait 40 R CMD check --ignore-vignettes --as-cran tidybayes*tar.gz
+    if grep tidybayes.Rcheck/00* -q WARNING; then
+      echo "Found warnings, treated as errors."
+      exit 1
+    fi
 
-after_failure:
+after_script:
   - cat tidybayes.Rcheck/00*
