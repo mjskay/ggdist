@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vertical eye plots (aka raindrop plots, aka violin plots) of densities with point
+<title>Eye plots (aka raindrop plots, aka violin plots) of densities with point
 estimates and intervals for ggplot2 — geom_eye â€¢ tidybayes</title>
 
 <!-- jquery -->
@@ -96,24 +96,31 @@ estimates and intervals for ggplot2 — geom_eye â€¢ tidybayes</title>
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Vertical eye plots (aka raindrop plots, aka violin plots) of densities with point
+    <h1>Eye plots (aka raindrop plots, aka violin plots) of densities with point
 estimates and intervals for ggplot2</h1>
     </div>
 
     
-    <p>Generates a combination geom_violin and geom_pointrange (using stat_summary)
-representing the density, point estimates, and credible interval. Useful
-for representing posterior estimates from Bayesian samplers; in that context
-this is variously called an eye plot, a raindrop plot, or a violin plot
+    <p>Generates a combination <code>geom_violin</code> and <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code>
+(for <code>geom_eye</code>) or <code>geom_violinh</code> and <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>
+(for <code>geom_eyeh</code>) representing the density, point estimates, and uncertainty intervals
+for some samples. Useful for representing posterior estimates from Bayesian samplers;
+in that context this is variously called an eye plot, a raindrop plot, or a violin plot
 (though violin plot is also applied to plots of data, hence its use is not
 preferred here).</p>
     
 
     <pre class="usage"><span class='fu'>geom_eye</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"ydensity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodge"</span>, <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>,
-  <span class='kw'>violin.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='no'>...</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>interval.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointrange"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>))</pre>
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodge"</span>, <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>, <span class='no'>...</span>,
+  <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
+  <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+
+<span class='fu'>geom_eyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"xdensity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodgev"</span>, <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>,
+  <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>,
+  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -131,69 +138,73 @@ the plot defaults.</p></td>
     </tr>
     <tr>
       <th>stat</th>
-      <td><p>Passed to <code>geom_violin</code>. The statistical
+      <td><p>Passed to <code>geom_violin</code> / <code>geom_violinh</code>. The statistical
 transformation to use on the data for this layer.</p></td>
     </tr>
     <tr>
       <th>position</th>
-      <td><p>Passed to <code>geom_violin</code>. The position adjustment
+      <td><p>Passed to <code>geom_violin</code> / <code>geom_violinh</code>. The position adjustment
 to use for overlapping points on this layer.</p></td>
     </tr>
     <tr>
       <th>trim</th>
-      <td><p>Passed to <code>geom_violin</code>. If <code>TRUE</code> (default),
+      <td><p>Passed to <code>geom_violin</code> / <code>geom_violinh</code>. If <code>TRUE</code> (default),
 trim the tails of the violins to the range of the data. If <code>FALSE</code>,
 don't trim the tails.</p></td>
     </tr>
     <tr>
       <th>scale</th>
-      <td><p>Passed to <code>geom_violin</code>. If "area" (default), all
+      <td><p>Passed to <code>geom_violin</code> / <code>geom_violinh</code>. If "area" (default), all
 violins have the same area (before trimming the tails).  If "count", areas
 are scaled proportionally to the number of observations. If "width", all
 violins have the same maximum width.</p></td>
     </tr>
     <tr>
       <th>fill</th>
-      <td><p>Passed to <code>geom_violin</code>. Fill color of the violin.</p></td>
-    </tr>
-    <tr>
-      <th>violin.args</th>
-      <td><p>Other arguments passed to <code>geom_violin</code>.</p></td>
+      <td><p>Passed to <code>geom_violin</code> / <code>geom_violinh</code>. Fill color of the violin.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code>geom_violin</code>.</p></td>
+      <td><p>Currently unused.</p></td>
+    </tr>
+    <tr>
+      <th>point.interval</th>
+      <td><p>Alias for <code>fun.data</code></p></td>
     </tr>
     <tr>
       <th>fun.data</th>
-      <td><p>The function used to construct point estimates and
-credible intervals from the data. Should be a function that takes a vector
-of data as input and returns a data frame with columns <code>y</code>,
-<code>ymin</code>, and <code>ymax</code>, representing the point estimate, lower bound
-of the credible interval, and upper bound of the credible interval. See
-<code><a href='point_interval.html'>point_interval</a></code> for examples; some
-typical functions to consider here are <code><a href='point_interval.html'>mean_qi</a></code> (mean
-with quantile interval), <code><a href='point_interval.html'>median_qi</a></code> (median with quantile
-interval), and <code><a href='point_interval.html'>mode_hdi</a></code> (mode with highest density interval).
-Alias for <code>fun.data</code>.</p></td>
+      <td><p>A function that is given a vector and should
+return a data frame with variables <code>y</code>, <code>ymin</code> and <code>ymax</code>
+(<code>x</code>, <code>xmin</code> and <code>xmax</code> for <code>stat_pointintervalh</code>),
+and <code>.prob</code>. See the <code>point_interval</code> family of functions.</p></td>
     </tr>
     <tr>
       <th>fun.args</th>
       <td><p>Optional arguments passed to <code>fun.data</code>.</p></td>
     </tr>
     <tr>
+      <th>.prob</th>
+      <td><p>The <code>.prob</code> argument passed to <code>fun.data</code>.</p></td>
+    </tr>
+    <tr>
       <th>color</th>
-      <td><p>Passed to <code>stat_summary</code>. Color of the point
+      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Color of the point
 estimate and credible interval.</p></td>
     </tr>
     <tr>
       <th>size</th>
-      <td><p>Passed to <code>stat_summary</code>. Line weight of the point
+      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Line weight of the point
 estimate and credible interval.</p></td>
     </tr>
     <tr>
-      <th>interval.args</th>
-      <td><p>Other arguments passed to <code>stat_summary</code>.</p></td>
+      <th>fatten.interval</th>
+      <td><p>A multiplicative factor used to adjust the size of the interval
+lines (line size will be <code>(size + 3) * fatten.interval</code>. The default decreases the line size, because the
+default range of <code>scale_size_continuous</code> has an upper end of 6, which is quite large.</p></td>
+    </tr>
+    <tr>
+      <th>fatten.point</th>
+      <td><p>A multiplicate factor used to adjust the size of the point relative to the largest line.</p></td>
     </tr>
     </table>
     
@@ -202,21 +213,22 @@ estimate and credible interval.</p></td>
     <p>An eye plot is a compact visual summary of the distribution of some samples,
 used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
-a violin plot, point estimate, and credible interval. <code>geom_eye()</code> is
-equivalent to <code>geom_violin() + stat_summary()</code> with some reasonable
-defaults, including color choices and the use of mean with 95% quantile
-intervals.</p>
+a violin plot, point estimate, and credible interval.</p>
+<p>The vertical form, <code>geom_eye</code>, is equivalent to  <code>geom_violin() + stat_pointinterval()</code>
+with some reasonable defaults, including color choices and the use of mean with 95%
+and 6% quantile intervals.</p>
+<p>The horizontal form, <code>geom_eyeh()</code>, is equivalent to <code>geom_violinh() + stat_pointintervalh()</code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>See <code><a href='geom_eyeh.html'>geom_eyeh</a></code> for the horizontal version. See <code><a href='geom_halfeyeh.html'>geom_halfeyeh</a></code>
-for the non-mirrored density ("half eye") version. See <code>geom_violin</code> and <code>stat_summary</code>
-for the geoms this function is based on.</p>
+    <p>See <code><a href='geom_halfeyeh.html'>geom_halfeyeh</a></code>
+for the non-mirrored density ("half eye") version. See <code>geom_violin</code> and <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code>
+for the geoms these functions are based on.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-##TODO
+#TODO
 
 </div></pre>
   </div>

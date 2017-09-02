@@ -223,11 +223,11 @@ model {
 <h3 class="hasAnchor">
 <a href="#plotting-posteriors-as-eye-plots-geom_eye-geom_eyeh" class="anchor"></a>Plotting posteriors as eye plots: <code>geom_eye</code> / <code>geom_eyeh</code>
 </h3>
-<p>Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/geom_eyeh">tidybayes::geom_eyeh</a></code> geom (horizontal version of <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/geom_eye">tidybayes::geom_eye</a></code>), which combines a violin plot of the posterior density, mean, and 95% quantile interval to give an “eye plot” of the posterior. The point and interval types are customizable using the <code>point_interval</code> family of functions. A “half-eye” plot (non-mirrored density) is also available as <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/geom_halfeyeh">tidybayes::geom_halfeyeh</a></code>.</p>
+<p>Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/geom_eye">tidybayes::geom_eyeh</a></code> geom (horizontal version of <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/geom_eye">tidybayes::geom_eye</a></code>), which combines a violin plot of the posterior density, mean, and 95% quantile interval to give an “eye plot” of the posterior. The point and interval types are customizable using the <code>point_interval</code> family of functions. A “half-eye” plot (non-mirrored density) is also available as <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/geom_halfeyeh">tidybayes::geom_halfeyeh</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean, <span class="dt">y =</span> condition)) +
-<span class="st">  </span><span class="kw"><a href="reference/geom_eyeh.html">geom_eyeh</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="reference/geom_eye.html">geom_eyeh</a></span>()</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
 </div>
 <div id="model-comparison-via-compatibility-with-broom" class="section level3">

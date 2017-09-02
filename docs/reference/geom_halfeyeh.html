@@ -110,9 +110,10 @@ violin plot; hence "half-eye" for this plot.</p>
 
     <pre class="usage"><span class='fu'>geom_halfeyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"joy"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>rel_min_height</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>, <span class='kw'>density.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='no'>...</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>,
-  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>interval.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointrangeh"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>))</pre>
+  <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>,
+  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>),
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -157,29 +158,26 @@ densities. Default is 0, so nothing is removed.</p></td>
       <td><p>Passed to <code>geom_joy</code>. Fill color of the density.</p></td>
     </tr>
     <tr>
-      <th>density.args</th>
-      <td><p>Other arguments passed to <code>geom_joy</code>.</p></td>
+      <th>...</th>
+      <td><p>Currently unused.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Other arguments passed to <code>geom_joy</code>.</p></td>
+      <th>point.interval</th>
+      <td><p>Alias for <code>fun.data</code></p></td>
     </tr>
     <tr>
       <th>fun.data</th>
-      <td><p>The function used to construct point estimates and
-credible intervals from the data. Should be a function that takes a vector
-of data as input and returns a data frame with columns <code>y</code>,
-<code>ymin</code>, and <code>ymax</code>, representing the point estimate, lower bound
-of the credible interval, and upper bound of the credible interval. See
-<code><a href='point_interval.html'>point_interval</a></code> for examples; some
-typical functions to consider here are <code><a href='point_interval.html'>mean_qi</a></code> (mean
-with quantile interval), <code><a href='point_interval.html'>median_qi</a></code> (median with quantile
-interval), and <code><a href='point_interval.html'>mode_hdi</a></code> (mode with highest density interval).
-Alias for <code>fun.data</code>.</p></td>
+      <td><p>A function that is given a vector and should
+return a data frame with variables <code>x</code>, <code>xmin</code> and <code>xmax</code>
+and <code>.prob</code>. See the <code>point_interval</code> family of functions.</p></td>
     </tr>
     <tr>
       <th>fun.args</th>
       <td><p>Optional arguments passed to <code>fun.data</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.prob</th>
+      <td><p>The <code>.prob</code> argument passed to <code>fun.data</code>.</p></td>
     </tr>
     <tr>
       <th>color</th>
@@ -192,8 +190,14 @@ estimate and credible interval.</p></td>
 estimate and credible interval.</p></td>
     </tr>
     <tr>
-      <th>interval.args</th>
-      <td><p>Other arguments passed to <code>stat_summaryh</code>.</p></td>
+      <th>fatten.interval</th>
+      <td><p>A multiplicative factor used to adjust the size of the interval
+lines (line size will be <code>(size + 3) * fatten.interval</code>. The default decreases the line size, because the
+default range of <code>scale_size_continuous</code> has an upper end of 6, which is quite large.</p></td>
+    </tr>
+    <tr>
+      <th>fatten.point</th>
+      <td><p>A multiplicate factor used to adjust the size of the point relative to the largest line.</p></td>
     </tr>
     </table>
     
@@ -209,14 +213,14 @@ intervals.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>See <code><a href='geom_eye.html'>geom_eye</a></code> and <code><a href='geom_eyeh.html'>geom_eyeh</a></code> for the mirrored-density
+    <p>See <code><a href='geom_eye.html'>geom_eye</a></code> and <code><a href='geom_eye.html'>geom_eyeh</a></code> for the mirrored-density
 (full "eye") versions. See <code>geom_joy</code> and <code>stat_summaryh</code> for the geoms
 this function is based on.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-##TODO
+#TODO
 
 </div></pre>
   </div>

@@ -75,7 +75,7 @@
       <h1>Using Tidy Data with Bayesian Samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-08-24</h4>
+            <h4 class="date">2017-09-02</h4>
           </div>
 
     
@@ -245,7 +245,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.17 -1.23 -1.01 -0.89 -0.78 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.46  0.52  0.55  0.60  0.70  1556    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Thu Aug 24 20:00:30 2017.
+## Samples were drawn using NUTS(diag_e) at Sat Sep 02 19:46:30 2017.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -260,24 +260,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">extract</span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 2.638 0.527 1.426 -0.258 0.582 ...
+##  $ overall_mean     : num [1:4000(1d)] 1.444 1.286 0.964 0.422 0.185 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -1.9808 -0.1141 -0.7297 0.0553 -0.2572 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.629 -1.201 -0.747 -0.507 -0.158 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.607 0.517 0.606 0.515 0.65 ...
+##  $ response_sd      : num [1:4000(1d)] 0.539 0.457 0.495 0.474 0.546 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.255 1.466 1.964 1.673 0.924 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 2.23 0.96 0.847 0.812 0.912 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.1513 0.36 -0.0074 -0.1653 0.344 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.04042 0.13384 0.33178 0.00999 0.04047 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -5.421 0.963 1.568 1.377 0.236 ...
+##  $ lp__             : num [1:4000(1d)] 3.416 -0.247 1.099 1.301 1.711 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -431,21 +431,21 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-19-1.png" width="576"></p>
 </div>
-<div id="using-stat_summarystat_summaryh" class="section level3">
+<div id="using-stat_pointintervalstat_pointintervalh" class="section level3">
 <h3 class="hasAnchor">
-<a href="#using-stat_summarystat_summaryh" class="anchor"></a>Using <code>stat_summary</code>/<code>stat_summaryh</code>
+<a href="#using-stat_pointintervalstat_pointintervalh" class="anchor"></a>Using <code>stat_pointinterval</code>/<code>stat_pointintervalh</code>
 </h3>
-<p>Rather than summarizing the posterior before calling ggplot, we could also use <code>stat_summary</code> to perform the summary within ggplot.</p>
+<p>Rather than summarizing the posterior before calling ggplot, we could also use <code>stat_pointinterval</code> / <code>stat_pointintervalh</code> to perform the summary within ggplot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
-<span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="dt">fun.data =</span> mean_qih)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-20-1.png" width="576"></p>
 <div id="a-note-on-functions-ending-in-h" class="section level4">
 <h4 class="hasAnchor">
 <a href="#a-note-on-functions-ending-in-h" class="anchor"></a>A note on functions ending in <code>h</code>
 </h4>
-<p><code>tidybayes</code> follows the naming convention established by <code>ggstance</code> for horizontal versions of <code>geom</code>s and summary functions. It includes horizontal versions of all <code>point_interval</code> functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with <code>h</code>. When calling <code>stat_summaryh</code> (the horizontal version of <code>stat_summary</code> from the <code>ggstance</code> package), we must use the horizontal versions of the <code>point_interval</code> functions, like <code>mean_qih</code> in the above example. This is because <code>mean_qi</code> returns a data frame with <code>y</code>, <code>ymin</code>, and <code>ymax</code> columns when passed a vector (making it suitable for <code>stat_summary</code>), and <code>mean_qih</code> returns a data frame with <code>x</code>, <code>xmin</code>, and <code>xmax</code> columns when passed a vector (making it suitable for <code>stat_summaryh</code>).</p>
+<p><code>tidybayes</code> follows the naming convention established by <code>ggstance</code> for horizontal versions of <code>geom</code>s and summary functions. It includes horizontal versions of all <code>point_interval</code> functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with <code>h</code>. When calling <code>stat_pointintervalh</code> (the horizontal version of <code>stat_pointinterval</code>), we must use the horizontal versions of the <code>point_interval</code> functions, like <code>mean_qih</code> in the above example. This is because <code>mean_qi</code> returns a data frame with <code>y</code>, <code>ymin</code>, and <code>ymax</code> columns when passed a vector (making it suitable for <code>stat_pointinterval</code> or <code>stat_summary</code>), and <code>mean_qih</code> returns a data frame with <code>x</code>, <code>xmin</code>, and <code>xmax</code> columns when passed a vector (making it suitable for <code>stat_pointintervalh</code> or <code>stat_summaryh</code>).</p>
 </div>
 </div>
 <div id="interval-estimates-with-posterior-violins-eye-plots-geom_eye-and-geom_eyeh" class="section level3">
@@ -457,25 +457,24 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
 <span class="st">  </span><span class="kw">geom_violinh</span>(<span class="dt">color =</span> <span class="ot">NA</span>, <span class="dt">fill =</span> <span class="st">"gray65"</span>) +
-<span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="dt">fun.data =</span> mean_qih)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>))</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
 <p>The <code>geom_eye</code> and <code>geom_eyeh</code> geoms provide a shortcut to generating eye plots with some sensible defaults:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
-<span class="st">  </span><span class="kw"><a href="../reference/geom_eyeh.html">geom_eyeh</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_eye.html">geom_eyeh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
 </div>
 <div id="interval-estimates-with-posterior-densities-half-eye-plots-geom_halfeyeh" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interval-estimates-with-posterior-densities-half-eye-plots-geom_halfeyeh" class="anchor"></a>Interval estimates with posterior densities (“half-eye plots”): <code>geom_halfeyeh</code>
 </h3>
-<p>If you prefer densities over violins, you can use <code>geom_halfeyeh</code> (the vertical version, not yet available, will be called <code>geom_helfeye</code>). This example also demonstrates how to change the interval probability (here, to 80% intervals):</p>
+<p>If you prefer densities over violins, you can use <code>geom_halfeyeh</code> (the vertical version, not yet available, will be called <code>geom_helfeye</code>). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
-<span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>(<span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">.prob =</span> .<span class="dv">8</span>))</code></pre></div>
-<pre><code>## Warning: Ignoring unknown parameters: position</code></pre>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">8</span>))</code></pre></div>
 <pre><code>## Picking joint bandwidth of 0.0299</code></pre>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-23-1.png" width="576"></p>
 </div>
@@ -508,36 +507,36 @@ model {
 <p>The results are in a tidy format: one row per index (<code>condition</code>) and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean, 
     <span class="dt">size =</span> -.prob)) +<span class="st">               </span><span class="co"># smaller probability interval =&gt; thicker line</span>
-<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">fatten.interval =</span> .<span class="dv">25</span>)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
 <p>Just as <code>geom_pointrangeh</code> includes <code>xmin = conf.low</code> and <code>xmax = conf.high</code> as default aesthetics, it also includes <code>size = -.prob</code> to facilitate exactly this usage. This, the above can be simplified to:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
+<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+<p>Just as the <code>point_interval</code> functions can generate an arbitrary number of intervals per estimate, so too can <code>geom_pointrangeh</code> draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of <code>fatten.interval =</code> to make it legible). Here it is with 3:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">fatten.interval =</span> .<span class="dv">25</span>)</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
 </div>
 <div id="alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="section level3">
 <h3 class="hasAnchor">
 <a href="#alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="anchor"></a>Alternative estimates and intervals: mean, median, mode; qi, hdi</h3>
 <p>The <code>point_interval</code> family of functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi][h|]</code>, and all work in the same way as <code>mean_qi</code>: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. These can be used in any combination desired. Here is an example showing <code>mean_qi</code> (black) compared to <code>mode_hdi</code> (red):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) +
-<span class="st">  </span><span class="kw"><a href="../reference/geom_eyeh.html">geom_eyeh</a></span>(<span class="dt">fun.data =</span> mean_qih) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="dt">fun.data =</span> mode_hdih, <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> .<span class="dv">15</span>), <span class="dt">color=</span><span class="st">"red"</span>)</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
-<p>The difference is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(response_sd) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response_sd)) +
 <span class="st">  </span><span class="kw">stat_density</span>(<span class="kw">aes</span>(<span class="dt">y =</span> ..scaled.. *<span class="st"> </span><span class="dv">15</span>), <span class="dt">fill =</span> <span class="st">"gray75"</span>) +
-<span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">"mean_qi"</span>), <span class="dt">fun.data =</span> mean_qih) +
-<span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">"mode_hdi"</span>), <span class="dt">fun.data =</span> mode_hdih) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">"mean_qi"</span>), <span class="dt">fun.data =</span> mean_qih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>)) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">"mode_hdi"</span>), <span class="dt">fun.data =</span> mode_hdih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">color =</span> <span class="st">"red"</span>) +
 <span class="st">  </span><span class="kw">ylab</span>(<span class="st">""</span>)</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
 </div>
@@ -634,7 +633,8 @@ m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(condition_mean, <span class="dt">by =</span> condition) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean)) +
-<span class="st">  </span><span class="kw"><a href="../reference/geom_eyeh.html">geom_eyeh</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
+<pre><code>## Picking joint bandwidth of 0.042</code></pre>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-34-1.png" width="672"></p>
 </div>
 <div id="gathering-all-parameter-names-into-a-single-column-gather_samples-and-gather_terms" class="section level2">
@@ -655,7 +655,7 @@ m %&gt;%
 ## 3 condition_mean         C  1.8420086  1.4953866  2.1836275  0.95
 ## 4 condition_mean         D  1.0153748  0.6710544  1.3494475  0.95
 ## 5 condition_mean         E -0.8916102 -1.2320089 -0.5412994  0.95
-## 6   overall_mean        NA  0.6320543 -0.5883171  1.8716527  0.95</code></pre>
+## 6   overall_mean      &lt;NA&gt;  0.6320543 -0.5883171  1.8716527  0.95</code></pre>
 <p>Note that <code>condition = NA</code> for the <code>overall_mean</code> row, because it does not have an index with that name in the specification passed to <code>gather_samples</code>.</p>
 <p>While this works well if we do not need to perform computations that involve multiple columns, the wide format returned by <code>spread_samples</code> is very useful for computations that involve multiple columns names, such as the calculation of the <code>condition_offset</code> above. If we want to make intermediate computations on the format returned by <code>spread_samples</code> and <em>then</em> gather parameters into one column, we can use <code>gather_terms</code>, which will gather all non-grouped terms that do not start with <code>"."</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
