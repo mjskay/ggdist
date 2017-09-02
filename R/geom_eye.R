@@ -66,19 +66,7 @@
 #' @keywords manip
 #' @examples
 #'
-#' library(magrittr)
-#' library(ggplot2)
-#' data(RankCorr)
-#'
-#' RankCorr %>%
-#'   spread_samples(u_tau[i]) %>%
-#'   ggplot(aes(y = i, x = u_tau)) +
-#'   geom_eyeh()
-#'
-#' RankCorr %>%
-#'   spread_samples(u_tau[i]) %>%
-#'   ggplot(aes(x = i, y = u_tau)) +
-#'   geom_eye()
+#' #TODO
 #'
 #' @importFrom utils modifyList
 #' @import ggplot2
