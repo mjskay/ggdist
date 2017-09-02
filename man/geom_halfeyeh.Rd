@@ -7,9 +7,10 @@ estimates and intervals for ggplot2}
 \usage{
 geom_halfeyeh(mapping = NULL, data = NULL, stat = "joy",
   position = "identity", scale = 0.9, rel_min_height = 0,
-  fill = "gray65", density.args = list(), ..., fun.data = mean_qih,
-  fun.args = list(), color = NULL, size = NULL,
-  interval.args = list(geom = "pointrangeh", position = "identity"))
+  fill = "gray65", ..., point.interval = mean_qih,
+  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
+  color = NULL, size = NULL, fatten.interval = NULL,
+  fatten.point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -37,28 +38,29 @@ densities. Default is 0, so nothing is removed.}
 
 \item{fill}{Passed to \code{\link{geom_joy}}. Fill color of the density.}
 
-\item{density.args}{Other arguments passed to \code{\link{geom_joy}}.}
+\item{...}{Currently unused.}
 
-\item{...}{Other arguments passed to \code{\link{geom_joy}}.}
+\item{point.interval}{Alias for \code{fun.data}}
 
-\item{fun.data}{The function used to construct point estimates and
-credible intervals from the data. Should be a function that takes a vector
-of data as input and returns a data frame with columns \code{y},
-\code{ymin}, and \code{ymax}, representing the point estimate, lower bound
-of the credible interval, and upper bound of the credible interval. See
-\code{\link{point_interval}} for examples; some
-typical functions to consider here are \code{\link{mean_qi}} (mean
-with quantile interval), \code{\link{median_qi}} (median with quantile
-interval), and \code{\link{mode_hdi}} (mode with highest density interval).
-Alias for \code{fun.data}.}
+\item{fun.data}{A function that is given a vector and should
+return a data frame with variables \code{x}, \code{xmin} and \code{xmax}
+and \code{.prob}. See the \code{point_interval} family of functions.}
 
 \item{fun.args}{Optional arguments passed to \code{fun.data}.}
+
+\item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
 
 \item{color}{Passed to \code{\link{stat_summaryh}}. Color of the point
 estimate and credible interval.}
 
 \item{size}{Passed to \code{\link{stat_summaryh}}. Line weight of the point
 estimate and credible interval.}
+
+\item{fatten.interval}{A multiplicative factor used to adjust the size of the interval
+lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
+default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.}
+
+\item{fatten.point}{A multiplicate factor used to adjust the size of the point relative to the largest line.}
 
 \item{interval.args}{Other arguments passed to \code{\link{stat_summaryh}}.}
 }

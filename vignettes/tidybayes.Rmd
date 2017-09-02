@@ -342,13 +342,13 @@ m %>%
 
 ### Interval estimates with posterior densities ("half-eye plots"): `geom_halfeyeh`
 
-If you prefer densities over violins, you can use `geom_halfeyeh` (the vertical version, not yet available, will be called `geom_helfeye`). This example also demonstrates how to change the interval probability (here, to 80% intervals):
+If you prefer densities over violins, you can use `geom_halfeyeh` (the vertical version, not yet available, will be called `geom_helfeye`). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):
 
 ```{r}
 m %>%
   spread_samples(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_halfeyeh(fun.args = list(.prob = .8))
+  geom_halfeyeh(.prob = c(.99, .8))
 ```
 
 

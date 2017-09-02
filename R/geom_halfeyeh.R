@@ -40,19 +40,17 @@
 #' would remove everything that is 1% or less than the highest point among all
 #' densities. Default is 0, so nothing is removed.
 #' @param fill Passed to \code{\link{geom_joy}}. Fill color of the density.
-#' @param density.args Other arguments passed to \code{\link{geom_joy}}.
-#' @param ...  Other arguments passed to \code{\link{geom_joy}}.
-#' @param fun.data The function used to construct point estimates and
-#' credible intervals from the data. Should be a function that takes a vector
-#' of data as input and returns a data frame with columns \code{y},
-#' \code{ymin}, and \code{ymax}, representing the point estimate, lower bound
-#' of the credible interval, and upper bound of the credible interval. See
-#' \code{\link{point_interval}} for examples; some
-#' typical functions to consider here are \code{\link{mean_qi}} (mean
-#' with quantile interval), \code{\link{median_qi}} (median with quantile
-#' interval), and \code{\link{mode_hdi}} (mode with highest density interval).
-#' Alias for \code{fun.data}.
+#' @param ...  Currently unused.
+#' @param fun.data A function that is given a vector and should
+#'   return a data frame with variables \code{x}, \code{xmin} and \code{xmax}
+#'   and \code{.prob}. See the \code{point_interval} family of functions.
+#' @param point.interval Alias for \code{fun.data}
 #' @param fun.args Optional arguments passed to \code{fun.data}.
+#' @param .prob The \code{.prob} argument passed to \code{fun.data}.
+#' @param fatten.interval A multiplicative factor used to adjust the size of the interval
+#' lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
+#' default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.
+#' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
 #' @param color Passed to \code{\link{stat_summaryh}}. Color of the point
 #' estimate and credible interval.
 #' @param size Passed to \code{\link{stat_summaryh}}. Line weight of the point
@@ -78,29 +76,35 @@ geom_halfeyeh = function(
 
   #deity properties
   stat = "joy", position = "identity", scale = 0.9, rel_min_height = 0, fill = "gray65",
-  density.args = list(), ...,
+
+  ...,
 
   #stat_summaryh properties
-  fun.data = mean_qih, fun.args = list(),
-  color = NULL, size = NULL,
-  interval.args = list(geom = "pointrangeh", position = "identity")
+  point.interval = mean_qih,
+  fun.data = point.interval,
+  fun.args = list(),
+  .prob = c(.95, .66),
+  color = NULL, size = NULL, fatten.interval = NULL, fatten.point = NULL
 ) {
 
   #build density plot
   density.args =
-    list(mapping = mapping, data = data, stat = stat, position = position, scale = scale,
-      rel_min_height = rel_min_height, color = NA, ...) %>%
-      {if (!is.null(fill)) modifyList(., list(fill = fill)) else .} %>%
-    modifyList(density.args)
+    list(mapping = mapping, data = data, stat = stat, scale = scale,
+      rel_min_height = rel_min_height, color = NA, ...
+    ) %>%
+    {if (!is.null(fill)) modifyList(., list(fill = fill)) else .}
+
   joy = do.call(geom_joy, density.args)
 
   #build interval annotations
   interval.args =
-    list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, fun.args = fun.args) %>%
+    list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
-    modifyList(interval.args)
-  interval = do.call(stat_summaryh, interval.args)
+    {if (!is.null(fatten.interval)) modifyList(., list(fatten.interval = fatten.interval)) else .} %>%
+    {if (!is.null(fatten.point)) modifyList(., list(fatten.point = fatten.point)) else .}
+
+  interval = do.call(stat_pointintervalh, interval.args)
 
   # we return a list of geoms that can be added to a ggplot object, as in
   # > ggplot(...) + list(geom_a(), geom_b())

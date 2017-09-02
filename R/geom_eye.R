@@ -51,6 +51,10 @@
 #' @param point.interval Alias for \code{fun.data}
 #' @param fun.args Optional arguments passed to \code{fun.data}.
 #' @param .prob The \code{.prob} argument passed to \code{fun.data}.
+#' @param fatten.interval A multiplicative factor used to adjust the size of the interval
+#' lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
+#' default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.
+#' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
 #' @param color Passed to \code{\link{stat_pointintervalh}}. Color of the point
 #' estimate and credible interval.
 #' @param size Passed to \code{\link{stat_pointintervalh}}. Line weight of the point

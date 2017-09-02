@@ -61,6 +61,12 @@ estimate and credible interval.}
 
 \item{size}{Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
 estimate and credible interval.}
+
+\item{fatten.interval}{A multiplicative factor used to adjust the size of the interval
+lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
+default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.}
+
+\item{fatten.point}{A multiplicate factor used to adjust the size of the point relative to the largest line.}
 }
 \description{
 Generates a combination \code{\link{geom_violin}} and \code{\link{stat_pointinterval}}
