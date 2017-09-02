@@ -107,12 +107,3 @@ geom_eyeh = function(
   # > ggplot(...) + geom_a() + geom_b()
   list(violin, interval)
 }
-
-
-#' @rdname geom_eyeh
-#' @import ggplot2
-#' @export
-ggeye = function(data = NULL, mapping = NULL, ...) {
-  .Deprecated("geom_eyeh")
-  ggplot(data = data, mapping = mapping) + geom_eye(...) + coord_flip()
-}

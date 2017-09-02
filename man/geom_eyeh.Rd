@@ -2,7 +2,6 @@
 % Please edit documentation in R/geom_eyeh.R
 \name{geom_eyeh}
 \alias{geom_eyeh}
-\alias{ggeye}
 \title{Horizontal eye plots (aka raindrop plots, aka violin plots) of densities with point
 estimates and intervals for ggplot2}
 \usage{
@@ -11,8 +10,6 @@ geom_eyeh(mapping = NULL, data = NULL, stat = "xdensity",
   violin.args = list(), ..., fun.data = mean_qih, fun.args = list(),
   color = NULL, size = NULL, interval.args = list(geom = "pointrangeh",
   position = "identity"))
-
-ggeye(data = NULL, mapping = NULL, ...)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
