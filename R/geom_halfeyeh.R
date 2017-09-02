@@ -55,7 +55,6 @@
 #' estimate and credible interval.
 #' @param size Passed to \code{\link{stat_summaryh}}. Line weight of the point
 #' estimate and credible interval.
-#' @param interval.args Other arguments passed to \code{\link{stat_summaryh}}.
 #' @author Matthew Kay
 #' @seealso See \code{\link{geom_eye}} and \code{\link{geom_eyeh}} for the mirrored-density
 #' (full "eye") versions. See \code{\link{geom_joy}} and \code{\link{stat_summaryh}} for the geoms

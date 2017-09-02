@@ -61,8 +61,6 @@ lines (line size will be \code{(size + 3) * fatten.interval}. The default decrea
 default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.}
 
 \item{fatten.point}{A multiplicate factor used to adjust the size of the point relative to the largest line.}
-
-\item{interval.args}{Other arguments passed to \code{\link{stat_summaryh}}.}
 }
 \description{
 Generates a combination geom_joy and geom_pointrangeh (using stat_summaryh)

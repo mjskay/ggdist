@@ -195,7 +195,7 @@ qi = function(x, .prob = .95) {
 #' @export
 #' @rdname point_interval
 hdi = function(x, .prob = .95) {
-  as.vector(HPDinterval(as.mcmc(x), .prob = .prob))
+  as.vector(HPDinterval(as.mcmc(x), prob = .prob))
 }
 
 #' @export
