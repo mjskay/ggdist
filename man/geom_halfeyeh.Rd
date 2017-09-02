@@ -82,7 +82,14 @@ intervals.
 }
 \examples{
 
-##TODO
+library(magrittr)
+library(ggplot2)
+data(RankCorr)
+
+RankCorr \%>\%
+  spread_samples(u_tau[i]) \%>\%
+  ggplot(aes(y = i, x = u_tau)) +
+  geom_halfeyeh()
 
 }
 \seealso{
