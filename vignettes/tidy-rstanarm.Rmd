@@ -36,9 +36,11 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(magrittr)
 library(dplyr)
+library(modelr)
 library(tidybayes)
 library(ggplot2)
 library(ggstance)
+library(ggjoy)
 library(rstan)
 library(rstanarm)
 ```
@@ -63,6 +65,8 @@ theme_set(theme_light())
 
 #figure options
 knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
+
+options(width = 120)
 ```
 
 
@@ -284,126 +288,159 @@ m %>%
   mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .8, .5))
 ```
 
-The results are in a tidy format: one row per group and probability level (`.prob`). This facilitates plotting. For example, assigning `-.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
+The results are in a tidy format: one row per group and probability level (`.prob`). This facilitates plotting. For example, assigning `-.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom, provided by tidybayes, is a shorthand for a `geom_pointrangeh` with `xmin`, `xmax`, and `size` set appropriately based on the `conf.low`, `conf.high`, and `.prob` columns in the data to produce plots of estimates with multiple probability levels:
 
 ```{r}
 m %>%
   spread_samples(`(Intercept)`, b[,,condition]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .8, .5)) %>%
-  ggplot(aes(y = condition, x = condition_mean, xmin = conf.low, xmax = conf.high, 
-    size = -.prob    # shorter interval => thicker line
-  )) +
-  geom_pointrangeh(
-    fatten = 2         # smaller point estimate (otherwise it is very large)
-  ) +
-  scale_size_continuous(
-    range = c(1, 2.5),   # default range is c(0, 6) --- makes very thick lines
-    guide = FALSE      # no need for a legend on size
-  )
+  mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .66)) %>%
+  ggplot(aes(y = condition, x = condition_mean)) +
+  geom_pointintervalh() 
 ```
 
-## Making posterior predictions
+## Posterior fits
 
-We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the group means with the residual standard deviation to generate predictive distributions from the model:
+Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_samples`, which is analogous to `rstanarm::posterior_linpred` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of samples of posterior fits:
 
 ```{r}
-m %>%
-  spread_samples(`(Intercept)`, b[,,condition], sigma) %>%
-  mutate(pred = rnorm(n(), `(Intercept)` + b, sigma)) %>%
-  ggplot(aes(x = pred)) +
-  stat_density() +
-  facet_grid(condition ~ ., switch = "y")
+ABC %>%
+  data_grid(condition) %>%
+  add_fitted_samples(m) %>%
+  head(10)
 ```
+*(10 rows of `r nrow(ABC %>% data_grid(condition) %>% add_fitted_samples(m))`)*
 
-And even summarize these as predictive intervals and compare to the data:
+To plot this example, we'll also show the use `stat_pointintervalh` instead of `geom_pointintervalh`, which does the summarizing of samples into estimates and intervals within ggplot:
 
 ```{r}
-m %>%
-  spread_samples(`(Intercept)`, b[,,condition], sigma) %>%
-  mutate(pred = rnorm(n(), `(Intercept)` + b, sigma)) %>%
-  mean_qi(pred, .prob = c(.95, .8, .5)) %>%
-  ggplot(aes(x = condition, y = pred)) +
-  geom_linerange(aes(ymin = conf.low, ymax = conf.high, 
-    color = ordered(-.prob)),
-    size = 4) +
-  geom_point(aes(y = response), data = ABC) +
-  scale_color_brewer(guide = FALSE)
+ABC %>%
+  data_grid(condition) %>%
+  add_fitted_samples(m) %>%
+  ggplot(aes(x = estimate, y = condition)) +
+  stat_pointintervalh(.prob = c(.66, .95))
 ```
 
-If this model is well-calibrated, about 95% of the data should be in the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.
+## Posterior predictions
+
+Where `add_fitted_samples` is analogous to `rstanarm::posterior_linpred`, `add_predicted_samples` is analogous to `rstanarm::posterior_predict`, giving samples from the posterior predictive distribution.
+
+Here is an example of posterior predictive distributions plotted using `ggjoy::geom_joy`:
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  add_predicted_samples(m) %>%
+  ggplot(aes(x = pred, y = condition)) +
+  geom_joy(scale = 0.8)
+```
+
+We could also use `tidybayes::stat_intervalh` to plot predictive bands alongside the data:
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  add_predicted_samples(m) %>%
+  ggplot(aes(y = condition, x = pred)) +
+  stat_intervalh() +
+  geom_point(aes(x = response), data = ABC) +
+  scale_color_brewer()
+```
 
 Altogether, data, posterior predictions, and estimates of the means:
 
 ```{r}
-samples = m %>%
-  spread_samples(`(Intercept)`, b[,,condition], sigma) %>%
-  mutate(mu = `(Intercept)` + b)
+grid = ABC %>%
+  data_grid(condition)
 
-reps = samples %>%
-  mutate(pred = rnorm(n(), mu, sigma)) %>%
-  mean_qi(pred, .prob = c(.95, .8, .5))
+fits = grid %>%
+  add_fitted_samples(m)
 
-parameters = samples %>%
-  mean_qi(mu, .prob = c(.95, .66))
+preds = grid %>%
+  add_predicted_samples(m)
 
 ABC %>%
-  ggplot(aes(x = condition)) +
-  geom_linerange(
-    aes(ymin = conf.low, ymax = conf.high, 
-      color = ordered(-.prob)),
-    size = 4, 
-    data = reps) +
-  geom_pointrange(
-    aes(y = mu, ymin = conf.low, ymax = conf.high, 
-      size = -.prob),
-    fatten = 1.5, position=position_nudge(x=0.3),
-    data = parameters) +
-  geom_point(aes(y = response)) +
-  scale_color_brewer(guide = FALSE) +
-  scale_size_continuous(range = c(1,2), guide = FALSE)
+  ggplot(aes(y = condition, x = response)) +
+  stat_intervalh(aes(x = pred), data = preds) +
+  stat_pointintervalh(aes(x = estimate), data = fits, .prob = c(.66, .95), position = position_nudge(y = -0.2)) +
+  geom_point() +
+  scale_color_brewer()
 ```
+
+## Fit/prediction curves
+
+To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
+
+```{r, results = "hide", message = FALSE, warning = FALSE}
+m_mpg = stan_glm(log(mpg) ~ log(hp), data = mtcars)
+```
+
+We can draw fit curves with probability bands:
+
+```{r}
+mtcars %>%
+  data_grid(hp = seq_range(hp, n = 101), am) %>%
+  add_fitted_samples(m_mpg) %>%
+  mutate(estimate = exp(estimate)) %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  stat_lineribbon(aes(y = estimate), .prob = c(.99, .95, .8, .5)) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer(palette = "Greys")
+```
+
+Or we can sample a reasonable number of fit lines (say 100) and overplot them:
+
+```{r}
+mtcars %>%
+  data_grid(hp = seq_range(hp, n = 101), am) %>%
+  add_fitted_samples(m_mpg, n = 100) %>%
+  mutate(estimate = exp(estimate)) %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_line(aes(y = estimate, group = .iteration), alpha = 0.25, color = "red") +
+  geom_point(data = mtcars)
+```
+
+Or, for posterior predictions (instead of fits), we can go back to probability bands:
+
+```{r}
+mtcars %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
+  add_predicted_samples(m_mpg) %>%
+  mutate(pred = exp(pred)) %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5)) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer()
+```
+
 
 ## Comparing levels of a factor
 
-If we wish compare the means from each condition, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:
+If we wish compare the means from each condition, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences. 
+
+Let's demonstrate `compare_levels` with another plotting geom, `geom_halfeyeh`, which gives horizontal "half-eye" plots, combining interval estimates with a density plot:
 
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
   spread_samples(b[,,condition]) %>%
   compare_levels(b, by = condition) %>%
-  ggplot(aes(x = condition, y = b)) +
-  geom_violin(scale="width", fill="gray75", color=NA) +
-  stat_summary(aes(size=-...prob..), 
-    fun.data=median_qi, fun.args=list(.prob=c(.95,.66)), geom="pointrange", fatten=1.25)+
-  scale_size_continuous(range=c(0.5,1.5), guide=FALSE) +
-  coord_flip()
+  ggplot(aes(y = condition, x = b)) +
+  geom_halfeyeh()
 ```
 
-## Alternative estimates and intervals: mean, median, mode; qi, hdi
+If you prefer "caterpillar" plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:
 
-The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Replacing `mean_qi` with `mode_hdi` in the previous example yields mode and HDI instead of mean and quantile interval:
-
-```{r}
+```{r, fig.width=7}
+#N.B. the syntax for compare_levels is experimental and may change
 m %>%
-  spread_samples(`(Intercept)`, b[,,condition]) %>%
-  mode_hdi(mu = `(Intercept)` + b) %>%
-  ggplot(aes(x = condition, y = mu, ymin = conf.low, ymax = conf.high)) +
-  geom_pointrange()
+  spread_samples(b[,,condition]) %>%
+  compare_levels(b, by = condition) %>%
+  mutate(condition = reorder(condition, b)) %>%
+  ggplot(aes(y = condition, x = b)) +
+  geom_halfeyeh() +
+  geom_vline(xintercept = 0, linetype = "dashed") 
 ```
 
-This is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:
 
-```{r}
-sd_samples = m %>% spread_samples(sigma)
 
-rbind(
-  sd_samples %>% mode_hdi(sigma) %>% mutate(type="mode_hdi"),
-  sd_samples %>% mean_qi(sigma) %>% mutate(type="mean_qi")
-) %>%
-  ggplot(aes(x = sigma)) +
-  stat_density(aes(y = ..scaled.. * 10), data = sd_samples, fill="gray75") +
-  geom_point(aes(y = type)) +
-  geom_errorbarh(aes(y = type, xmin = conf.low, xmax = conf.high), width=0)
-```
 

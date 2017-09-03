@@ -64,7 +64,7 @@ globalVariables(c(".iteration", ".pred"))
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tidyr gather
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate sample_n
 #' @importFrom stats fitted predict
 #' @export
 add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL) {
@@ -132,7 +132,15 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", auxpars = TR
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, draws = n, ...)
+  samples = fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, ...)
+  # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
+  if (!is.null(n)) {
+    iterations = sample(samples$.iteration, n)
+    samples %>%
+      filter(.iteration %in% !!iterations)
+  } else {
+    samples
+  }
 }
 
 #' @rdname add_predicted_samples
