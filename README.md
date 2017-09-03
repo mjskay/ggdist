@@ -316,9 +316,9 @@ Then we can generate and plot predictions as before (differences from above are 
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%    # add am to the prediction grid
   add_predicted_samples(m_mpg_am) %>%
-  ggplot(aes(x = hp)) +
+  ggplot(aes(x = hp, y = mpg)) +
   stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5)) +
-  geom_point(aes(y = mpg), data = mtcars) +
+  geom_point(data = mtcars) +
   scale_fill_brewer() +
   facet_wrap(~ am)                                  # facet by am
 ```
@@ -331,9 +331,9 @@ Or, if you would like overplotted posterior fit lines, you can instead use `tidy
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%
   add_fitted_samples(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
-  ggplot(aes(x = hp)) +
+  ggplot(aes(x = hp, y = mpg)) +
   geom_line(aes(y = estimate, group = .iteration), alpha = 0.25, color = "red") +
-  geom_point(aes(y = mpg), data = mtcars) +
+  geom_point(data = mtcars) +
   facet_wrap(~ am)
 ```
 

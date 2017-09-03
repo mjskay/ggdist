@@ -323,9 +323,9 @@ bayes_estimates</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars %&gt;%
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>), am) %&gt;%<span class="st">    </span><span class="co"># add am to the prediction grid</span>
 <span class="st">  </span><span class="kw"><a href="reference/add_predicted_samples.html">add_predicted_samples</a></span>(m_mpg_am) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp)) +
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) +
 <span class="st">  </span><span class="kw"><a href="reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mpg), <span class="dt">data =</span> mtcars) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) +
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() +
 <span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>am)                                  <span class="co"># facet by am</span></code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
@@ -333,9 +333,9 @@ bayes_estimates</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars %&gt;%
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>), am) %&gt;%
 <span class="st">  </span><span class="kw"><a href="reference/add_predicted_samples.html">add_fitted_samples</a></span>(m_mpg_am, <span class="dt">n =</span> <span class="dv">100</span>) %&gt;%<span class="st">         </span><span class="co"># sample 100 fits from the posterior</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp)) +
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) +
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">group =</span> .iteration), <span class="dt">alpha =</span> <span class="fl">0.25</span>, <span class="dt">color =</span> <span class="st">"red"</span>) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mpg), <span class="dt">data =</span> mtcars) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) +
 <span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>am)</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
 <p>See <code><a href="articles/tidybayes.html">vignette("tidybayes")</a></code> for a variety of additional examples and more explanation of how it works.</p>

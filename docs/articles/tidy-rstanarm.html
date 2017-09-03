@@ -101,9 +101,11 @@ img {
 <p>The following libraries are required to run this vignette:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
 <span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(modelr)
 <span class="kw">library</span>(tidybayes)
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(ggstance)
+<span class="kw">library</span>(ggjoy)
 <span class="kw">library</span>(rstan)
 <span class="kw">library</span>(rstanarm)</code></pre></div>
 <p>These options help Stan run faster:</p>
@@ -168,28 +170,17 @@ ABC =
 ##  groups:    condition (5)
 ## 
 ## Estimates:
-##                                            mean   sd    2.5%   25%   50%
-## (Intercept)                                0.6    0.5  -0.4    0.3   0.6
-## b[(Intercept) condition:A]                -0.4    0.5  -1.5   -0.7  -0.4
-## b[(Intercept) condition:B]                 0.4    0.5  -0.8    0.0   0.4
-## b[(Intercept) condition:C]                 1.2    0.5   0.1    0.9   1.2
-## b[(Intercept) condition:D]                 0.4    0.5  -0.7    0.1   0.4
-## b[(Intercept) condition:E]                -1.5    0.5  -2.6   -1.8  -1.5
-## sigma                                      0.6    0.1   0.5    0.5   0.6
-## Sigma[condition:(Intercept),(Intercept)]   1.3    1.1   0.3    0.7   1.0
-## mean_PPD                                   0.6    0.1   0.4    0.6   0.6
-## log-posterior                            -56.9    2.4 -62.9  -58.3 -56.5
-##                                            75%   97.5%
-## (Intercept)                                0.9   1.7  
-## b[(Intercept) condition:A]                -0.1   0.6  
-## b[(Intercept) condition:B]                 0.7   1.4  
-## b[(Intercept) condition:C]                 1.5   2.3  
-## b[(Intercept) condition:D]                 0.7   1.4  
-## b[(Intercept) condition:E]                -1.2  -0.5  
-## sigma                                      0.6   0.7  
-## Sigma[condition:(Intercept),(Intercept)]   1.5   3.8  
-## mean_PPD                                   0.7   0.9  
-## log-posterior                            -55.2 -53.4  
+##                                            mean   sd    2.5%   25%   50%   75%   97.5%
+## (Intercept)                                0.6    0.5  -0.4    0.3   0.6   0.9   1.7  
+## b[(Intercept) condition:A]                -0.4    0.5  -1.5   -0.7  -0.4  -0.1   0.6  
+## b[(Intercept) condition:B]                 0.4    0.5  -0.8    0.0   0.4   0.7   1.4  
+## b[(Intercept) condition:C]                 1.2    0.5   0.1    0.9   1.2   1.5   2.3  
+## b[(Intercept) condition:D]                 0.4    0.5  -0.7    0.1   0.4   0.7   1.4  
+## b[(Intercept) condition:E]                -1.5    0.5  -2.6   -1.8  -1.5  -1.2  -0.5  
+## sigma                                      0.6    0.1   0.5    0.5   0.6   0.6   0.7  
+## Sigma[condition:(Intercept),(Intercept)]   1.3    1.1   0.3    0.7   1.0   1.5   3.8  
+## mean_PPD                                   0.6    0.1   0.4    0.6   0.6   0.7   0.9  
+## log-posterior                            -56.9    2.4 -62.9  -58.3 -56.5 -55.2 -53.4  
 ## 
 ## Diagnostics:
 ##                                          mcse Rhat n_eff
@@ -318,19 +309,17 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma)</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
-##   `(Intercept)` `(Intercept).low` `(Intercept).high`     sigma sigma.low
-##           &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1     0.6433902        -0.3851976           1.688643 0.5665717 0.4611307
-## # ... with 2 more variables: sigma.high &lt;dbl&gt;, .prob &lt;dbl&gt;</code></pre>
+##   `(Intercept)` `(Intercept).low` `(Intercept).high`     sigma sigma.low sigma.high .prob
+##           &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.6433902        -0.3851976           1.688643 0.5665717 0.4611307  0.6967005  0.95</code></pre>
 <p>We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, <code>mean_qi</code> will use every column that is not a grouping column or a special column (one that starts with <code>.</code>, like <code>.chain</code> or <code>.iteration</code>). Thus in the above example, <code>(Intercept)</code> and <code>sigma</code> are redundant arguments to <code>mean_qi</code> because they are also the only columns we gathered from the model. So we can simplify this to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
-##   `(Intercept)` `(Intercept).low` `(Intercept).high`     sigma sigma.low
-##           &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1     0.6433902        -0.3851976           1.688643 0.5665717 0.4611307
-## # ... with 2 more variables: sigma.high &lt;dbl&gt;, .prob &lt;dbl&gt;</code></pre>
+##   `(Intercept)` `(Intercept).low` `(Intercept).high`     sigma sigma.low sigma.high .prob
+##           &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.6433902        -0.3851976           1.688643 0.5665717 0.4611307  0.6967005  0.95</code></pre>
 <p>If you would rather have a long-format list of intervals, use <code>gather_samples</code> instead:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">gather_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) %&gt;%
@@ -465,113 +454,143 @@ ABC =
 ## 13         C      1.8297281  1.71254516  1.9453390  0.50
 ## 14         D      1.0134035  0.89586528  1.1303665  0.50
 ## 15         E     -0.8777451 -0.99566047 -0.7614082  0.50</code></pre>
-<p>The results are in a tidy format: one row per group and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals:</p>
+<p>The results are in a tidy format: one row per group and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The <code>geom_pointintervalh</code> geom, provided by tidybayes, is a shorthand for a <code>geom_pointrangeh</code> with <code>xmin</code>, <code>xmax</code>, and <code>size</code> set appropriately based on the <code>conf.low</code>, <code>conf.high</code>, and <code>.prob</code> columns in the data to produce plots of estimates with multiple probability levels:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high, 
-    <span class="dt">size =</span> -.prob    <span class="co"># shorter interval =&gt; thicker line</span>
-  )) +
-<span class="st">  </span><span class="kw">geom_pointrangeh</span>(
-    <span class="dt">fatten =</span> <span class="dv">2</span>         <span class="co"># smaller point estimate (otherwise it is very large)</span>
-  ) +
-<span class="st">  </span><span class="kw">scale_size_continuous</span>(
-    <span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">2.5</span>),   <span class="co"># default range is c(0, 6) --- makes very thick lines</span>
-    <span class="dt">guide =</span> <span class="ot">FALSE</span>      <span class="co"># no need for a legend on size</span>
-  )</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean)) +
+<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>() </code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
 </div>
-<div id="making-posterior-predictions" class="section level2">
+<div id="posterior-fits" class="section level2">
 <h2 class="hasAnchor">
-<a href="#making-posterior-predictions" class="anchor"></a>Making posterior predictions</h2>
-<p>We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the group means with the residual standard deviation to generate predictive distributions from the model:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition], sigma) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>b, sigma)) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred)) +
-<span class="st">  </span><span class="kw">stat_density</span>() +
-<span class="st">  </span><span class="kw">facet_grid</span>(condition ~<span class="st"> </span>., <span class="dt">switch =</span> <span class="st">"y"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
-<p>And even summarize these as predictive intervals and compare to the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition], sigma) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>b, sigma)) %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(pred, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition, <span class="dt">y =</span> pred)) +
-<span class="st">  </span><span class="kw">geom_linerange</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high, 
-    <span class="dt">color =</span> <span class="kw">ordered</span>(-.prob)),
-    <span class="dt">size =</span> <span class="dv">4</span>) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> response), <span class="dt">data =</span> ABC) +
-<span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<a href="#posterior-fits" class="anchor"></a>Posterior fits</h2>
+<p>Rather than calculating conditional means manually as in the previous example, we could use <code>add_fitted_samples</code>, which is analogous to <code><a href="http://www.rdocumentation.org/packages/rstanarm/topics/posterior_linpred.stanreg">rstanarm::posterior_linpred</a></code> (giving posterior draws from the model’s linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with <code><a href="http://www.rdocumentation.org/packages/modelr/topics/data_grid">modelr::data_grid</a></code> to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of samples of posterior fits:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(condition) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) %&gt;%
+<span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
+<pre><code>## # A tibble: 10 x 5
+## # Groups:   condition, .row [5]
+##    condition   .row .chain .iteration   estimate
+##        &lt;chr&gt; &lt;fctr&gt;  &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+##  1         A      1     NA          1  0.4545797
+##  2         B      2     NA          1  1.0920762
+##  3         C      3     NA          1  1.7900088
+##  4         D      4     NA          1  1.1472891
+##  5         E      5     NA          1 -0.9660574
+##  6         A      1     NA          2  0.1106835
+##  7         B      2     NA          2  1.1539286
+##  8         C      3     NA          2  1.9864563
+##  9         D      4     NA          2  0.9563613
+## 10         E      5     NA          2 -0.8057953</code></pre>
+<p><em>(10 rows of 20000)</em></p>
+<p>To plot this example, we’ll also show the use <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which does the summarizing of samples into estimates and intervals within ggplot:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(condition) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> condition)) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>))</code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-23-1.png" width="576"></p>
-<p>If this model is well-calibrated, about 95% of the data should be in the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.</p>
+</div>
+<div id="posterior-predictions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#posterior-predictions" class="anchor"></a>Posterior predictions</h2>
+<p>Where <code>add_fitted_samples</code> is analogous to <code><a href="http://www.rdocumentation.org/packages/rstanarm/topics/posterior_linpred.stanreg">rstanarm::posterior_linpred</a></code>, <code>add_predicted_samples</code> is analogous to <code><a href="http://www.rdocumentation.org/packages/rstanarm/topics/posterior_predict.stanreg">rstanarm::posterior_predict</a></code>, giving samples from the posterior predictive distribution.</p>
+<p>Here is an example of posterior predictive distributions plotted using <code><a href="http://www.rdocumentation.org/packages/ggjoy/topics/geom_joy">ggjoy::geom_joy</a></code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(condition) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_predicted_samples</a></span>(m) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred, <span class="dt">y =</span> condition)) +
+<span class="st">  </span><span class="kw">geom_joy</span>(<span class="dt">scale =</span> <span class="fl">0.8</span>)</code></pre></div>
+<pre><code>## Picking joint bandwidth of 0.101</code></pre>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
+<p>We could also use <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/stat_interval">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(condition) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_predicted_samples</a></span>(m) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> pred)) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>() +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) +
+<span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
 <p>Altogether, data, posterior predictions, and estimates of the means:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samples =<span class="st"> </span>m %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition], sigma) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mu =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>b)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid =<span class="st"> </span>ABC %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(condition)
 
-reps =<span class="st"> </span>samples %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), mu, sigma)) %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(pred, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))
+fits =<span class="st"> </span>grid %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m)
 
-parameters =<span class="st"> </span>samples %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(mu, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>))
+preds =<span class="st"> </span>grid %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_predicted_samples</a></span>(m)
 
 ABC %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition)) +
-<span class="st">  </span><span class="kw">geom_linerange</span>(
-    <span class="kw">aes</span>(<span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high, 
-      <span class="dt">color =</span> <span class="kw">ordered</span>(-.prob)),
-    <span class="dt">size =</span> <span class="dv">4</span>, 
-    <span class="dt">data =</span> reps) +
-<span class="st">  </span><span class="kw">geom_pointrange</span>(
-    <span class="kw">aes</span>(<span class="dt">y =</span> mu, <span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high, 
-      <span class="dt">size =</span> -.prob),
-    <span class="dt">fatten =</span> <span class="fl">1.5</span>, <span class="dt">position=</span><span class="kw">position_nudge</span>(<span class="dt">x=</span><span class="fl">0.3</span>),
-    <span class="dt">data =</span> parameters) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> response)) +
-<span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>) +
-<span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">guide =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> response)) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred), <span class="dt">data =</span> preds) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate), <span class="dt">data =</span> fits, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>)) +
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+</div>
+<div id="fitprediction-curves" class="section level2">
+<h2 class="hasAnchor">
+<a href="#fitprediction-curves" class="anchor"></a>Fit/prediction curves</h2>
+<p>To demonstrate drawing fit curves with uncertainty, let’s fit a slightly naive model to part of the <code>mtcars</code> dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_mpg =<span class="st"> </span><span class="kw">stan_glm</span>(<span class="kw">log</span>(mpg) ~<span class="st"> </span><span class="kw">log</span>(hp), <span class="dt">data =</span> mtcars)</code></pre></div>
+<p>We can draw fit curves with probability bands:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>), am) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m_mpg) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estimate =</span> <span class="kw">exp</span>(estimate)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) +
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>), am) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m_mpg, <span class="dt">n =</span> <span class="dv">100</span>) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estimate =</span> <span class="kw">exp</span>(estimate)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">group =</span> .iteration), <span class="dt">alpha =</span> <span class="fl">0.25</span>, <span class="dt">color =</span> <span class="st">"red"</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars)</code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
+<p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_predicted_samples</a></span>(m_mpg) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">exp</span>(pred)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) +
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>()</code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
 </div>
 <div id="comparing-levels-of-a-factor" class="section level2">
 <h2 class="hasAnchor">
 <a href="#comparing-levels-of-a-factor" class="anchor"></a>Comparing levels of a factor</h2>
-<p>If we wish compare the means from each condition, <code>compare_levels</code> facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences:</p>
+<p>If we wish compare the means from each condition, <code>compare_levels</code> facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences.</p>
+<p>Let’s demonstrate <code>compare_levels</code> with another plotting geom, <code>geom_halfeyeh</code>, which gives horizontal “half-eye” plots, combining interval estimates with a density plot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
 m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(b, <span class="dt">by =</span> condition) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition, <span class="dt">y =</span> b)) +
-<span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">scale=</span><span class="st">"width"</span>, <span class="dt">fill=</span><span class="st">"gray75"</span>, <span class="dt">color=</span><span class="ot">NA</span>) +
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">size=</span>-...prob..), 
-    <span class="dt">fun.data=</span>median_qi, <span class="dt">fun.args=</span><span class="kw">list</span>(<span class="dt">.prob=</span><span class="kw">c</span>(.<span class="dv">95</span>,.<span class="dv">66</span>)), <span class="dt">geom=</span><span class="st">"pointrange"</span>, <span class="dt">fatten=</span><span class="fl">1.25</span>)+
-<span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">range=</span><span class="kw">c</span>(<span class="fl">0.5</span>,<span class="fl">1.5</span>), <span class="dt">guide=</span><span class="ot">FALSE</span>) +
-<span class="st">  </span><span class="kw">coord_flip</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="672"></p>
-</div>
-<div id="alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="section level2">
-<h2 class="hasAnchor">
-<a href="#alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="anchor"></a>Alternative estimates and intervals: mean, median, mode; qi, hdi</h2>
-<p>The <code>point_interval</code> family of functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi]</code>, and all work in the same way as <code>mean_qi</code>: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. These can be used in any combination desired. Replacing <code>mean_qi</code> with <code>mode_hdi</code> in the previous example yields mode and HDI instead of mean and quantile interval:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mode_hdi</a></span>(<span class="dt">mu =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>b) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition, <span class="dt">y =</span> mu, <span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high)) +
-<span class="st">  </span><span class="kw">geom_pointrange</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
-<p>This is probably more noticeable given a skewed distribution, such as might be expected on a scale parameter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sd_samples =<span class="st"> </span>m %&gt;%<span class="st"> </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(sigma)
-
-<span class="kw">rbind</span>(
-  sd_samples %&gt;%<span class="st"> </span><span class="kw"><a href="../reference/point_interval.html">mode_hdi</a></span>(sigma) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">type=</span><span class="st">"mode_hdi"</span>),
-  sd_samples %&gt;%<span class="st"> </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(sigma) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">type=</span><span class="st">"mean_qi"</span>)
-) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sigma)) +
-<span class="st">  </span><span class="kw">stat_density</span>(<span class="kw">aes</span>(<span class="dt">y =</span> ..scaled.. *<span class="st"> </span><span class="dv">10</span>), <span class="dt">data =</span> sd_samples, <span class="dt">fill=</span><span class="st">"gray75"</span>) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> type)) +
-<span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">y =</span> type, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high), <span class="dt">width=</span><span class="dv">0</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) +
+<span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
+<pre><code>## Picking joint bandwidth of 0.0423</code></pre>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="672"></p>
+<p>If you prefer “caterpillar” plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
+m %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(b, <span class="dt">by =</span> condition) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">reorder</span>(condition, b)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) +
+<span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() +
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>) </code></pre></div>
+<pre><code>## Picking joint bandwidth of 0.0423</code></pre>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="672"></p>
 </div>
 </div>
   </div>
@@ -590,9 +609,10 @@ m %&gt;%
       <li><a href="#combining-variables-with-different-indices-in-a-single-tidy-format-data-frame">Combining variables with different indices in a single tidy format data frame</a></li>
       <li><a href="#plotting-point-estimates-and-intervals">Plotting point estimates and intervals</a></li>
       <li><a href="#interval-estimates-with-multiple-probability-levels">Interval estimates with multiple probability levels</a></li>
-      <li><a href="#making-posterior-predictions">Making posterior predictions</a></li>
+      <li><a href="#posterior-fits">Posterior fits</a></li>
+      <li><a href="#posterior-predictions">Posterior predictions</a></li>
+      <li><a href="#fitprediction-curves">Fit/prediction curves</a></li>
       <li><a href="#comparing-levels-of-a-factor">Comparing levels of a factor</a></li>
-      <li><a href="#alternative-estimates-and-intervals-mean-median-mode-qi-hdi">Alternative estimates and intervals: mean, median, mode; qi, hdi</a></li>
       </ul>
 </div>
       </div>
