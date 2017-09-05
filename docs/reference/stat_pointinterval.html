@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point estimate + multiple probability interval stats for ggplot — stat_pointinterval â€¢ tidybayes</title>
+<title>Point estimate + multiple probability interval plots (ggplot stat) — stat_pointinterval â€¢ tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -95,13 +95,13 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Point estimate + multiple probability interval stats for ggplot</h1>
+    <h1>Point estimate + multiple probability interval plots (ggplot stat)</h1>
     </div>
 
     
-    <p>Variants of <code>stat_summary</code> and <code>stat_summaryh</code> that
-use <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> and <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code>
-by default. While the corresponding <code>geom</code>s are intended for use on
+    <p>A combination of <code>stat_summary</code> / <code>stat_summaryh</code> and
+<code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code> with sensible defaults.
+While the corresponding <code>geom</code>s are intended for use on
 data frames that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code>
 function, these <code>stat</code>s are intended for use directly on data frames of samples, and
 will perform the summarization using a <code><a href='point_interval.html'>point_interval</a></code> function.</p>
@@ -183,7 +183,10 @@ default plot specification, e.g. borders.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='geom_pointinterval.html'>geom_pointinterval</a></code></p>
+    <p>See <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code> for the geom versions, intended
+for use on estimates and intervals that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code> function.
+See <code><a href='stat_interval.html'>stat_interval</a></code> / <code><a href='stat_interval.html'>stat_intervalh</a></code> for a similar stat intended for intervals without
+point estimates.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -195,11 +198,11 @@ default plot specification, e.g. borders.</p></td>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointintervalh</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'>stat_pointintervalh</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-7.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Multiple probability interval stats — stat_lineribbon â€¢ tidybayes</title>
+<title>Line + multiple probability ribbon stat for ggplot — stat_lineribbon â€¢ tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -95,11 +95,14 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Multiple probability interval stats</h1>
+    <h1>Line + multiple probability ribbon stat for ggplot</h1>
     </div>
 
     
-    <p>A variants of a <code>stat_summary</code> and a <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code></p>
+    <p>A combination of <code>stat_summary</code> and <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code> with sensible defaults.
+While <code>geom_lineribbon</code> is intended for use on data frames that have already been summarized using
+a <code><a href='point_interval.html'>point_interval</a></code> function, <code>stat_lineribbon</code> is intended for use directly on data
+frames of samples, and will perform the summarization using a <code><a href='point_interval.html'>point_interval</a></code> function.</p>
     
 
     <pre class="usage"><span class='fu'>stat_lineribbon</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"lineribbon"</span>,
@@ -171,7 +174,9 @@ default plot specification, e.g. borders.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='geom_lineribbon.html'>geom_lineribbon</a></code></p>
+    <p>See <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code> for the geom version, intended for use on estimates/intervals that have
+already been summarized using a <code><a href='point_interval.html'>point_interval</a></code> function. See <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code> /
+<code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code> for a similar stat intended for point estimates and intervals.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -184,7 +189,7 @@ default plot specification, e.g. borders.</p></td>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/do.html'>do</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>100</span>, <span class='no'>.</span>$<span class='no'>x</span>))) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>)) +
   <span class='fu'>stat_lineribbon</span>() +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_fill_brewer</a></span>()</div><div class='img'><img src='stat_lineribbon-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_fill_brewer</a></span>()</div><div class='img'><img src='stat_lineribbon-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
