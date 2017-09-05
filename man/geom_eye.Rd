@@ -3,8 +3,7 @@
 \name{geom_eye}
 \alias{geom_eye}
 \alias{geom_eyeh}
-\title{Eye plots (aka raindrop plots, aka violin plots) of densities with point
-estimates and intervals for ggplot2}
+\title{Eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
 geom_eye(mapping = NULL, data = NULL, stat = "ydensity",
   position = "dodge", trim = TRUE, scale = "area", fill = "gray65", ...,

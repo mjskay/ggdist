@@ -9,11 +9,11 @@
 globalVariables(c("...prob.."))
 
 
-#' Multiple probability interval stats
+#' Multiple probability interval plots (ggplot stat)
 #'
-#' Variants of \code{\link{stat_summary}} and \code{\link{stat_summaryh}} that
-#' use \code{\link{geom_interval}} and \code{\link{geom_intervalh}}
-#' by default. While the corresponding \code{geom}s are intended for use on
+#' A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and
+#' \code{\link{geom_interval}} / \code{\link{geom_intervalh}} with sensible defaults.
+#' While the corresponding \code{geom}s are intended for use on
 #' data frames that have already been summarized using a \code{\link{point_interval}}
 #' function, these \code{stat}s are intended for use directly on data frames of samples, and
 #' will perform the summarization using a \code{\link{point_interval}} function.
@@ -41,7 +41,10 @@ globalVariables(c("...prob.."))
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
 #' default plot specification, e.g. borders.
-#' @seealso \code{\link{geom_interval}}
+#' @seealso See \code{\link{geom_interval}} / \code{\link{geom_intervalh}} for the geom versions, intended for use on
+#' intervals that have already been summarized using a \code{\link{point_interval}} function.
+#' See \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}} for a similar stat intended for
+#' point estimates and intervals.
 #' @examples
 #'
 #' library(magrittr)

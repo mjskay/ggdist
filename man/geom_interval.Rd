@@ -3,7 +3,7 @@
 \name{geom_interval}
 \alias{geom_interval}
 \alias{geom_intervalh}
-\title{Multiple probability interval geoms for ggplot}
+\title{Multiple probability interval plots (ggplot geom)}
 \usage{
 geom_interval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., na.rm = FALSE, show.legend = NA,

@@ -5,8 +5,7 @@
 
 
 
-#' Horizontal half-eye plots of densities with point
-#' estimates and intervals for ggplot2
+#' Half-eye plots of densities with point estimates and intervals (ggplot geom)
 #'
 #' Generates a combination geom_joy and geom_pointrangeh (using stat_summaryh)
 #' representing the density, point estimates, and credible interval. Useful

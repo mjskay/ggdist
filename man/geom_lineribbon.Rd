@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_lineribbon.R
 \name{geom_lineribbon}
 \alias{geom_lineribbon}
-\title{Line + multiple probability ribbon geoms for ggplot}
+\title{Line + multiple probability ribbon plots (ggplot geom)}
 \usage{
 geom_lineribbon(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., na.rm = FALSE, show.legend = NA,
@@ -61,7 +61,8 @@ data_frame(x = 1:10) \%>\%
 
 }
 \seealso{
-See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for a similar geom intended for
+See \code{\link{stat_lineribbon}} for a version that does summarizing of samples into estimate and intervals
+within ggplot. See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for a similar geom intended for
 point estimates and intervals. See \code{\link{geom_ribbon}} and \code{\link{geom_line}} for the geoms this is based
 on.
 }

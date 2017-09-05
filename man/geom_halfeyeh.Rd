@@ -2,8 +2,7 @@
 % Please edit documentation in R/geom_halfeyeh.R
 \name{geom_halfeyeh}
 \alias{geom_halfeyeh}
-\title{Horizontal half-eye plots of densities with point
-estimates and intervals for ggplot2}
+\title{Half-eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
 geom_halfeyeh(mapping = NULL, data = NULL, stat = "joy",
   position = "identity", scale = 0.9, rel_min_height = 0,

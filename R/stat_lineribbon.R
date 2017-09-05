@@ -9,9 +9,12 @@
 globalVariables(c("...prob.."))
 
 
-#' Multiple probability interval stats
+#' Line + multiple probability ribbon stat for ggplot
 #'
-#' A variants of a \code{\link{stat_summary}} and a \code{\link{geom_lineribbon}}
+#' A combination of \code{\link{stat_summary}} and \code{\link{geom_lineribbon}} with sensible defaults.
+#' While \code{geom_lineribbon} is intended for use on data frames that have already been summarized using
+#' a \code{\link{point_interval}} function, \code{stat_lineribbon} is intended for use directly on data
+#' frames of samples, and will perform the summarization using a \code{\link{point_interval}} function.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
@@ -34,7 +37,9 @@ globalVariables(c("...prob.."))
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
 #' default plot specification, e.g. borders.
-#' @seealso \code{\link{geom_lineribbon}}
+#' @seealso See \code{\link{geom_lineribbon}} for the geom version, intended for use on estimates/intervals that have
+#' already been summarized using a \code{\link{point_interval}} function. See \code{\link{stat_pointinterval}} /
+#' \code{\link{stat_pointintervalh}} for a similar stat intended for point estimates and intervals.
 #' @examples
 #'
 #' library(dplyr)

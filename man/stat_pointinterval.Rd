@@ -3,7 +3,7 @@
 \name{stat_pointinterval}
 \alias{stat_pointinterval}
 \alias{stat_pointintervalh}
-\title{Point estimate + multiple probability interval stats for ggplot}
+\title{Point estimate + multiple probability interval plots (ggplot stat)}
 \usage{
 stat_pointinterval(mapping = NULL, data = NULL, geom = "pointinterval",
   position = "identity", ..., point.interval = mean_qi,
@@ -52,9 +52,9 @@ most useful for helper functions that define both data and aesthetics and should
 default plot specification, e.g. borders.}
 }
 \description{
-Variants of \code{\link{stat_summary}} and \code{\link{stat_summaryh}} that
-use \code{\link{geom_pointinterval}} and \code{\link{geom_pointintervalh}}
-by default. While the corresponding \code{geom}s are intended for use on
+A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and
+\code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} with sensible defaults.
+While the corresponding \code{geom}s are intended for use on
 data frames that have already been summarized using a \code{\link{point_interval}}
 function, these \code{stat}s are intended for use directly on data frames of samples, and
 will perform the summarization using a \code{\link{point_interval}} function.
@@ -77,5 +77,8 @@ RankCorr \%>\%
 
 }
 \seealso{
-\code{\link{geom_pointinterval}}
+See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
+for use on estimates and intervals that have already been summarized using a \code{\link{point_interval}} function.
+See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
+point estimates.
 }

@@ -9,7 +9,7 @@
 globalVariables(c("conf.low", "conf.high", ".prob"))
 
 
-#' Multiple probability interval geoms for ggplot
+#' Multiple probability interval plots (ggplot geom)
 #'
 #' Modified versions of \code{\link{geom_linerange}} and \code{\link{geom_linerangeh}} with default aesthetics
 #' designed for use with output from \code{\link{point_interval}}.

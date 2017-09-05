@@ -9,7 +9,7 @@
 globalVariables(c("conf.low", "conf.high", ".prob"))
 
 
-#' Point estimate + multiple probability interval geoms for ggplot
+#' Point estimate + multiple probability interval plots (ggplot geom)
 #'
 #' Modified versions of \code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} with default aesthetics
 #' designed for use with output from \code{\link{point_interval}}.

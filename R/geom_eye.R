@@ -4,8 +4,7 @@
 ###############################################################################
 
 
-#' Eye plots (aka raindrop plots, aka violin plots) of densities with point
-#' estimates and intervals for ggplot2
+#' Eye plots of densities with point estimates and intervals (ggplot geom)
 #'
 #' Generates a combination \code{\link{geom_violin}} and \code{\link{stat_pointinterval}}
 #' (for \code{geom_eye}) or \code{\link{geom_violinh}} and \code{\link{stat_pointintervalh}}

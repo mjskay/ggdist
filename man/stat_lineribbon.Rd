@@ -2,7 +2,7 @@
 % Please edit documentation in R/stat_lineribbon.R
 \name{stat_lineribbon}
 \alias{stat_lineribbon}
-\title{Multiple probability interval stats}
+\title{Line + multiple probability ribbon stat for ggplot}
 \usage{
 stat_lineribbon(mapping = NULL, data = NULL, geom = "lineribbon",
   position = "identity", ..., point.interval = median_qi,
@@ -44,7 +44,10 @@ most useful for helper functions that define both data and aesthetics and should
 default plot specification, e.g. borders.}
 }
 \description{
-A variants of a \code{\link{stat_summary}} and a \code{\link{geom_lineribbon}}
+A combination of \code{\link{stat_summary}} and \code{\link{geom_lineribbon}} with sensible defaults.
+While \code{geom_lineribbon} is intended for use on data frames that have already been summarized using
+a \code{\link{point_interval}} function, \code{stat_lineribbon} is intended for use directly on data
+frames of samples, and will perform the summarization using a \code{\link{point_interval}} function.
 }
 \examples{
 
@@ -60,5 +63,7 @@ data_frame(x = 1:10) \%>\%
 
 }
 \seealso{
-\code{\link{geom_lineribbon}}
+See \code{\link{geom_lineribbon}} for the geom version, intended for use on estimates/intervals that have
+already been summarized using a \code{\link{point_interval}} function. See \code{\link{stat_pointinterval}} /
+\code{\link{stat_pointintervalh}} for a similar stat intended for point estimates and intervals.
 }
