@@ -110,6 +110,8 @@ draw_key_lineribbon <- function(data, params, size) {
 #' @format NULL
 #' @usage NULL
 #' @importFrom grid grobName gTree gList
+#' @importFrom plyr dlply
+#' @importFrom purrr map map_dbl
 #' @import ggplot2
 #' @export
 GeomLineribbon <- ggproto("GeomLineribbon", Geom,
@@ -120,17 +122,36 @@ GeomLineribbon <- ggproto("GeomLineribbon", Geom,
 
   required_aes = c("x", "y", "ymin", "ymax"),
 
-  draw_group = function(data, panel_scales, coord) {
-    ribbon_data = transform(data, size = NA)
+  draw_panel = function(data, panel_scales, coord) {
+    # ribbons do not autogroup by color and fill, so if someone groups by changing the color
+    # of the line or by setting fill, the ribbons might give an error. So we will do the
+    # grouping ourselves
+    grouping_columns = names(data) %>%
+      intersect(c("colour", "fill", "group"))
 
-    if (is.null(data$x))
-      return(GeomRibbon$draw_panel(ribbon_data, panel_scales, coord))
+    grobs = data %>%
+      dlply(grouping_columns, function(d) {
+        group_grobs = list(GeomRibbon$draw_panel(transform(d, size = NA), panel_scales, coord))
+
+        if (!is.null(d$y)) {
+          group_grobs[[2]] = GeomLine$draw_panel(d, panel_scales, coord)
+        }
+
+        list(
+          width = d %$% mean(abs(ymax - ymin)),
+          grobs = group_grobs
+        )
+      })
+
+    # this is a slightly hackish approach to getting the draw order correct for the common
+    # use case of fit lines / curves: draw the ribbons in order from largest mean width to
+    # smallest mean width, so that the widest intervals are on the bottom.
+    grobs = grobs[order(-map_dbl(grobs, "width"))] %>%
+      map("grobs") %>%
+      reduce(c)
 
     ggname("geom_lineribbon",
-      gTree(children = gList(
-        GeomRibbon$draw_panel(ribbon_data, panel_scales, coord),
-        GeomLine$draw_panel(data, panel_scales, coord)
-      ))
+      gTree(children = do.call(gList, grobs))
     )
   }
 )
