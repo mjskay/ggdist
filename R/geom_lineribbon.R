@@ -123,11 +123,11 @@ GeomLineribbon <- ggproto("GeomLineribbon", Geom,
   required_aes = c("x", "y", "ymin", "ymax"),
 
   draw_panel = function(data, panel_scales, coord) {
-    # ribbons do not autogroup by color and fill, so if someone groups by changing the color
+    # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
     # of the line or by setting fill, the ribbons might give an error. So we will do the
     # grouping ourselves
     grouping_columns = names(data) %>%
-      intersect(c("colour", "fill", "group"))
+      intersect(c("colour", "fill", "linetype", "group"))
 
     grobs = data %>%
       dlply(grouping_columns, function(d) {
