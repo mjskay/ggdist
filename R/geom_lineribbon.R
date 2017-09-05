@@ -100,10 +100,11 @@ geom_lineribbon <- function(mapping = NULL, data = NULL,
 
 #' @importFrom grid grobTree
 draw_key_lineribbon <- function(data, params, size) {
-  grobTree(
-    draw_key_rect(data, params, size),
+  if (is.na(data$fill)) {
     draw_key_path(data, params, size)
-  )
+  } else {
+    draw_key_rect(data, params, size)
+  }
 }
 
 #' @rdname tidybayes-ggproto
