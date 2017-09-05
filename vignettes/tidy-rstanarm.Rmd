@@ -371,18 +371,18 @@ ABC %>%
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
 
 ```{r, results = "hide", message = FALSE, warning = FALSE}
-m_mpg = stan_glm(log(mpg) ~ log(hp), data = mtcars)
+m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars)
 ```
 
 We can draw fit curves with probability bands:
 
 ```{r}
 mtcars %>%
-  data_grid(hp = seq_range(hp, n = 101), am) %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 51), am) %>%
   add_fitted_samples(m_mpg) %>%
-  mutate(estimate = exp(estimate)) %>%
-  ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = estimate), .prob = c(.99, .95, .8, .5)) +
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  stat_lineribbon(aes(y = estimate)) +
   geom_point(data = mtcars) +
   scale_fill_brewer(palette = "Greys")
 ```
@@ -391,11 +391,11 @@ Or we can sample a reasonable number of fit lines (say 100) and overplot them:
 
 ```{r}
 mtcars %>%
-  data_grid(hp = seq_range(hp, n = 101), am) %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 51), am) %>%
   add_fitted_samples(m_mpg, n = 100) %>%
-  mutate(estimate = exp(estimate)) %>%
-  ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = estimate, group = .iteration), alpha = 0.25, color = "red") +
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  geom_line(aes(y = estimate, group = paste(cyl, .iteration)), alpha = 0.25) +
   geom_point(data = mtcars)
 ```
 
@@ -403,14 +403,29 @@ Or, for posterior predictions (instead of fits), we can go back to probability b
 
 ```{r}
 mtcars %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 51)) %>%
+  add_predicted_samples(m_mpg) %>%
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer(palette = "Greys")
+```
+
+This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:
+
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_samples(m_mpg) %>%
-  mutate(pred = exp(pred)) %>%
   ggplot(aes(x = hp, y = mpg)) +
   stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5)) +
   geom_point(data = mtcars) +
-  scale_fill_brewer()
+  scale_fill_brewer() +
+  facet_grid(. ~ cyl)
 ```
+
 
 
 ## Comparing levels of a factor
