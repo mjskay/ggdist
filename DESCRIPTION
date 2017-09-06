@@ -30,6 +30,7 @@ Imports:
     ggjoy,
     grid,
     forcats,
+    HDInterval,
     magrittr
 Suggests:
     knitr,

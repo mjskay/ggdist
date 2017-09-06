@@ -48,8 +48,9 @@ globalVariables(c("y", "ymin", "ymax"))
 #' \code{qi} yields the quantile interval (also known as the percentile interval or
 #' equi-tailed interval).
 #'
-#' \code{hdi} yields the highest-density interval (also known as the highest posterior
-#' density interval).
+#' \code{hdi} yields the highest-density interval(s) (also known as the highest posterior
+#' density interval). \emph{Note:} If the distribution is multimodal, \code{hdi} may return multiple
+#' intervals for each estimate (these will be spread over rows). Internally it uses \code{\link[HDInterval]{hdi}}.
 #'
 #' @param .data Data frame (or grouped data frame as returned by \code{\link{group_by}})
 #' that contains samples to summarize.
@@ -119,8 +120,8 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
         interval = .interval(col_samples, .prob = p)
         data_frame(
           .point(col_samples),
-          interval[[1]],
-          interval[[2]],
+          interval[,1],
+          interval[,2],
           p
         ) %>%
           set_names(c(
@@ -138,10 +139,22 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
       do(.data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
         col_samples = eval_tidy(col_expr, .)
         interval = .interval(col_samples, .prob = p)
+
+        if (nrow(interval) > 1) {
+          stop(paste(
+            "You are summarizing a multimodal distribution using a method that returns multiple intervals",
+            "(such as `hdi`), but you are attempting to generate intervals for multiple columns in wide format.",
+            "To use a multiple-interval method like `hdi` on distributions that are multi-modal, you can",
+            "only summarize one column at a time. You might try using `gather_terms` to put all your samples",
+            "into a single column before summarizing them, or use an interval type (such as `qi`) that always",
+            "returns exactly one interval per probability level."
+          ))
+        }
+
         data_frame(
           .point(col_samples),
-          interval[[1]],
-          interval[[2]]
+          interval[,1],
+          interval[,2]
         ) %>%
           set_names(c(
             col_name,
@@ -163,8 +176,8 @@ point_interval.numeric = function(.data, ..., .prob = .95, .point = mean, .inter
     interval = .interval(.data, .prob = p)
     data.frame(
       y = .point(.data),
-      ymin = interval[[1]],
-      ymax = interval[[2]],
+      ymin = interval[,1],
+      ymax = interval[,2],
       .prob = p
     )
   })
@@ -188,14 +201,20 @@ point_intervalh = flip_aes(point_interval)
 qi = function(x, .prob = .95) {
   lower_prob = (1 - .prob) / 2
   upper_prob = (1 + .prob) / 2
-  unname(quantile(x, c(lower_prob, upper_prob)))
+  matrix(quantile(x, c(lower_prob, upper_prob)), ncol = 2)
 }
 
 #' @importFrom coda HPDinterval as.mcmc
 #' @export
 #' @rdname point_interval
 hdi = function(x, .prob = .95) {
-  as.vector(HPDinterval(as.mcmc(x), prob = .prob))
+  intervals = HDInterval::hdi(density(x), credMass = .prob, allowSplit = TRUE)
+  if (nrow(intervals) == 1) {
+    # the above method tends to be a little conservative on unimodal distributions, so if the
+    # result is unimodal, switch to the method below (which will be slightly narrower)
+    intervals = HDInterval::hdi(x, credMass = .prob)
+  }
+  matrix(intervals, ncol = 2)
 }
 
 #' @export

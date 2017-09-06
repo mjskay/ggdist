@@ -128,8 +128,9 @@ they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 \code{qi} yields the quantile interval (also known as the percentile interval or
 equi-tailed interval).
 
-\code{hdi} yields the highest-density interval (also known as the highest posterior
-density interval).
+\code{hdi} yields the highest-density interval(s) (also known as the highest posterior
+density interval). \emph{Note:} If the distribution is multimodal, \code{hdi} may return multiple
+intervals for each estimate (these will be spread over rows). Internally it uses \code{\link[HDInterval]{hdi}}.
 }
 \examples{
 
