@@ -397,16 +397,35 @@ m %>%
 
 ### Alternative estimates and intervals: mean, median, mode; qi, hdi
 
-The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi][h|]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. Here is an example showing `mean_qi` (black) compared to `mode_hdi` (red):
+The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi][h|]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. 
+
+The `*_hdi` functions have an additional difference: In the case of multimodal distributions, they may return multiple intervals for each probability level. Here are some samples from a multimodal normal mixture:
 
 ```{r}
-m %>%
-  spread_samples(response_sd) %>%
-  ggplot(aes(x = response_sd)) +
-  stat_density(aes(y = ..scaled.. * 15), fill = "gray75") +
-  stat_pointintervalh(aes(y = "mean_qi"), fun.data = mean_qih, .prob = c(.66, .95)) +
-  stat_pointintervalh(aes(y = "mode_hdi"), fun.data = mode_hdih, .prob = c(.66, .95), color = "red") +
-  ylab("")
+set.seed(123)
+multimodal_samples = data_frame(
+  x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))
+)
+```
+
+Passed through `mode_hdi`, we get multiple intervals at the 80% probability level:
+
+```{r}
+multimodal_samples %>%
+  mode_hdi(x, .prob = .80)
+```
+
+This is easier to see when plotted:
+
+```{r, fig.height = 3, fig.width = 8}
+multimodal_samples %>%
+  ggplot(aes(x = x)) +
+  stat_density(fill = "gray75") +
+  stat_pointintervalh(aes(y = -0.05), fun.data = median_qih, .prob = c(.95, .80)) +
+  annotate("text", label = "median, 80% and 95% quantile intervals", x = 6, y = -0.05, hjust = 0, vjust = 0.3) +
+  stat_pointintervalh(aes(y = -0.025), fun.data = mode_hdih, .prob = c(.95, .80)) +
+  annotate("text", label = "mode, 80% and 95% highest-density intervals", x = 6, y = -0.025, hjust = 0, vjust = 0.3) +
+  xlim(-3.5, 14.5)
 ```
 
 
