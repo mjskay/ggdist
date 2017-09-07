@@ -219,9 +219,10 @@ they return a data frame with <code>x</code>/<code>xmin</code>/<code>xmax</code>
     <code>mean_qi</code>, <code>mode_qi</code>, etc are short forms for
 <code>point_interval(..., .point = mean, .interval = qi)</code>, etc.
     <code>qi</code> yields the quantile interval (also known as the percentile interval or
-equi-tailed interval).
-    <code>hdi</code> yields the highest-density interval (also known as the highest posterior
-density interval).</p>
+equi-tailed interval) as a 1  2 matrix.
+    <code>hdi</code> yields the highest-density interval(s) (also known as the highest posterior
+density interval). <em>Note:</em> If the distribution is multimodal, <code>hdi</code> may return multiple
+intervals for each estimate (these will be spread over rows). Internally it uses <code><a href='http://www.rdocumentation.org/packages/HDInterval/topics/hdi'>hdi</a></code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

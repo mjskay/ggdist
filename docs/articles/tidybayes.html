@@ -75,7 +75,7 @@
       <h1>Using Tidy Data with Bayesian Samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-09-05</h4>
+            <h4 class="date">2017-09-06</h4>
           </div>
 
     
@@ -245,7 +245,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.17 -1.23 -1.01 -0.89 -0.78 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.46  0.52  0.55  0.60  0.70  1556    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Tue Sep 05 13:16:58 2017.
+## Samples were drawn using NUTS(diag_e) at Wed Sep 06 21:36:25 2017.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -260,24 +260,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">extract</span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.579 1.016 0.909 0.47 0.272 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.469 0.488 0.219 1.134 2.388 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.3501 -0.5302 -0.7253 -0.3813 -0.0317 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.133 -0.275 0.048 -0.718 -1.249 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.521 0.598 0.537 0.529 0.734 ...
+##  $ response_sd      : num [1:4000(1d)] 0.516 0.581 0.516 0.5 0.612 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.704 1.314 1.091 0.644 0.796 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.07 0.85 2.23 1.48 1.58 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.333 0.319 0.117 0.225 0.247 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.3272 0.2546 0.326 0.0738 0.4122 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 0.812 1.503 3.655 -4.285 -2.703 ...
+##  $ lp__             : num [1:4000(1d)] -0.14 0.943 3.643 3.254 -0.316 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -530,15 +530,30 @@ model {
 <div id="alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="section level3">
 <h3 class="hasAnchor">
 <a href="#alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="anchor"></a>Alternative estimates and intervals: mean, median, mode; qi, hdi</h3>
-<p>The <code>point_interval</code> family of functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi][h|]</code>, and all work in the same way as <code>mean_qi</code>: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. These can be used in any combination desired. Here is an example showing <code>mean_qi</code> (black) compared to <code>mode_hdi</code> (red):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(response_sd) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response_sd)) +
-<span class="st">  </span><span class="kw">stat_density</span>(<span class="kw">aes</span>(<span class="dt">y =</span> ..scaled.. *<span class="st"> </span><span class="dv">15</span>), <span class="dt">fill =</span> <span class="st">"gray75"</span>) +
-<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">"mean_qi"</span>), <span class="dt">fun.data =</span> mean_qih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>)) +
-<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">"mode_hdi"</span>), <span class="dt">fun.data =</span> mode_hdih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">color =</span> <span class="st">"red"</span>) +
-<span class="st">  </span><span class="kw">ylab</span>(<span class="st">""</span>)</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p>The <code>point_interval</code> family of functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi][h|]</code>, and all work in the same way as <code>mean_qi</code>: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. These can be used in any combination desired.</p>
+<p>The <code>*_hdi</code> functions have an additional difference: In the case of multimodal distributions, they may return multiple intervals for each probability level. Here are some samples from a multimodal normal mixture:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
+  <span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">5000</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="kw">rnorm</span>(<span class="dv">2500</span>, <span class="dv">4</span>, <span class="dv">1</span>))
+)</code></pre></div>
+<p>Passed through <code>mode_hdi</code>, we get multiple intervals at the 80% probability level:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">multimodal_samples %&gt;%
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mode_hdi</a></span>(x, <span class="dt">.prob =</span> .<span class="dv">80</span>)</code></pre></div>
+<pre><code>## # A tibble: 2 x 4
+##               x  conf.low conf.high .prob
+##           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.0008542564 -1.527536  1.600910   0.8
+## 2 -0.0008542564  3.027481  4.979632   0.8</code></pre>
+<p>This is easier to see when plotted:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">multimodal_samples %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x)) +
+<span class="st">  </span><span class="kw">stat_density</span>(<span class="dt">fill =</span> <span class="st">"gray75"</span>) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> -<span class="fl">0.05</span>), <span class="dt">fun.data =</span> median_qih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">80</span>)) +
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">"text"</span>, <span class="dt">label =</span> <span class="st">"median, 80% and 95% quantile intervals"</span>, <span class="dt">x =</span> <span class="dv">6</span>, <span class="dt">y =</span> -<span class="fl">0.05</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="fl">0.3</span>) +
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> -<span class="fl">0.025</span>), <span class="dt">fun.data =</span> mode_hdih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">80</span>)) +
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">"text"</span>, <span class="dt">label =</span> <span class="st">"mode, 80% and 95% highest-density intervals"</span>, <span class="dt">x =</span> <span class="dv">6</span>, <span class="dt">y =</span> -<span class="fl">0.025</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="fl">0.3</span>) +
+<span class="st">  </span><span class="kw">xlim</span>(-<span class="fl">3.5</span>, <span class="fl">14.5</span>)</code></pre></div>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-30-1.png" width="768"></p>
 </div>
 </div>
 <div id="combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="section level2">
@@ -589,7 +604,7 @@ model {
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> y_rep)) +
 <span class="st">  </span><span class="kw">stat_density</span>() +
 <span class="st">  </span><span class="kw">facet_grid</span>(condition ~<span class="st"> </span>., <span class="dt">switch =</span> <span class="st">"y"</span>)</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
 <p>And even summarize these as predictive intervals and compare them to the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition], response_sd) %&gt;%
@@ -599,7 +614,7 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/geom_interval.html">geom_intervalh</a></span>() +<span class="st"> </span><span class="co">#auto-sets aes(xmin = conf.low, xmax = conf.high, color = fct_rev(ordered(.prob)))</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) +
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-34-1.png" width="576"></p>
 <p>If this model is well-calibrated, about 95% of the data should be within the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.</p>
 <div id="posterior-predictions-with-paramter-estimates" class="section level3">
 <h3 class="hasAnchor">
@@ -621,7 +636,7 @@ ABC %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> -<span class="fl">0.2</span>), <span class="dt">data =</span> parameters) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response)) +
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-35-1.png" width="576"></p>
 </div>
 </div>
 <div id="comparing-levels-of-a-factor" class="section level2">
@@ -635,7 +650,7 @@ m %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean)) +
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
 <pre><code>## Picking joint bandwidth of 0.042</code></pre>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-34-1.png" width="672"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-36-1.png" width="672"></p>
 </div>
 <div id="gathering-all-parameter-names-into-a-single-column-gather_samples-and-gather_terms" class="section level2">
 <h2 class="hasAnchor">
@@ -793,12 +808,12 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">fct_rev</span>(condition)) %&gt;%
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> estimate, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high, <span class="dt">color =</span> model)) +
 <span class="st">  </span><span class="kw">geom_pointrangeh</span>(<span class="dt">position =</span> <span class="kw">position_dodgev</span>(<span class="dt">height =</span> .<span class="dv">3</span>))</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-43-1.png" width="576"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-45-1.png" width="576"></p>
 <p>Comptability with <code>tidy</code> also gives compatibility with <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) %&gt;%
 <span class="st">    </span><span class="kw">rename</span>(<span class="dt">term =</span> condition) %&gt;%
 <span class="st">    </span>dotwhisker::<span class="kw">dwplot</span>()</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-44-1.png" width="576"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-46-1.png" width="576"></p>
 <p>Observe the shrinkage towards the overall mean in the Bayesian model compared to the OLS model.</p>
 </div>
 <div id="compatibility-with-bayesplot-and-other-non-tidy-packages-using-unspread_samples-and-ungather_samples" class="section level3">
@@ -855,7 +870,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(condition_mean, <span class="dt">by =</span> condition) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/unspread_samples.html">unspread_samples</a></span>(condition_mean[condition], <span class="dt">drop_indices =</span> <span class="ot">TRUE</span>) %&gt;%
 <span class="st">  </span><span class="kw">mcmc_areas</span>()</code></pre></div>
-<p><img src="tidybayes_files/figure-html/unnamed-chunk-47-1.png" width="576"></p>
+<p><img src="tidybayes_files/figure-html/unnamed-chunk-49-1.png" width="576"></p>
 <p>If you are instead working with tidy samples generated by <code>gather_samples</code> or <code>gather_terms</code>, the <code>ungather_samples</code> function will transform those samples into the sample <span class="math inline">\(\times\)</span> parameter format. It has the same syntax as <code>unspread_samples</code>.</p>
 </div>
 </div>
