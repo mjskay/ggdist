@@ -120,8 +120,8 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
         interval = .interval(col_samples, .prob = p)
         data_frame(
           .point(col_samples),
-          interval[,1],
-          interval[,2],
+          interval[, 1],
+          interval[, 2],
           p
         ) %>%
           set_names(c(
@@ -153,8 +153,8 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
 
         data_frame(
           .point(col_samples),
-          interval[,1],
-          interval[,2]
+          interval[, 1],
+          interval[, 2]
         ) %>%
           set_names(c(
             col_name,
@@ -176,8 +176,8 @@ point_interval.numeric = function(.data, ..., .prob = .95, .point = mean, .inter
     interval = .interval(.data, .prob = p)
     data.frame(
       y = .point(.data),
-      ymin = interval[,1],
-      ymax = interval[,2],
+      ymin = interval[, 1],
+      ymax = interval[, 2],
       .prob = p
     )
   })
