@@ -46,7 +46,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' \code{point_interval(..., .point = mean, .interval = qi)}, etc.
 #'
 #' \code{qi} yields the quantile interval (also known as the percentile interval or
-#' equi-tailed interval) as a 1 \times 2 matrix.
+#' equi-tailed interval) as a 1x2 matrix.
 #'
 #' \code{hdi} yields the highest-density interval(s) (also known as the highest posterior
 #' density interval). \emph{Note:} If the distribution is multimodal, \code{hdi} may return multiple
