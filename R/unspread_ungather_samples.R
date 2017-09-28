@@ -47,7 +47,8 @@ unspread_samples = function(data, ..., indices = c(".chain", ".iteration"), drop
     map(lazy_dots(...), function(variable_spec) {
       unspread_samples_(data, variable_spec, indices = indices)
     }) %>%
-    reduce(inner_join, by = indices)
+    reduce(inner_join, by = indices) %>%
+    as_tibble()
 
   if (drop_indices) {
     result %>%
@@ -106,7 +107,8 @@ ungather_samples = function(
     map(lazy_dots(...), function(variable_spec) {
       ungather_samples_(data, variable_spec, term = term, estimate = estimate, indices = indices)
     }) %>%
-    reduce(inner_join, by = indices)
+    reduce(inner_join, by = indices) %>%
+    as_tibble()
 
   if (drop_indices) {
     result %>%
