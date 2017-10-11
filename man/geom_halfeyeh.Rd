@@ -4,7 +4,7 @@
 \alias{geom_halfeyeh}
 \title{Half-eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
-geom_halfeyeh(mapping = NULL, data = NULL, stat = "joy",
+geom_halfeyeh(mapping = NULL, data = NULL, stat = "density_ridges",
   position = "identity", scale = 0.9, rel_min_height = 0,
   fill = "gray65", ..., point.interval = mean_qih,
   fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
@@ -19,13 +19,13 @@ layer level if you are overriding the plot defaults.}
 \item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
-\item{stat}{Passed to \code{\link{geom_joy}}. The statistical
+\item{stat}{Passed to \code{\link{geom_density_ridges}}. The statistical
 transformation to use on the data for this layer.}
 
-\item{position}{Passed to \code{\link{geom_joy}}. The position adjustment
+\item{position}{Passed to \code{\link{geom_density_ridges}}. The position adjustment
 to use for overlapping points on this layer.}
 
-\item{scale}{Passed to \code{\link{geom_joy}}. A scaling factor to scale the
+\item{scale}{Passed to \code{\link{geom_density_ridges}}. A scaling factor to scale the
 height of the densities relative to the spacing between them. A value of 1
 indicates that the maximum point of any density touches the baseline right
 above, assuming even spacing between baselines.}
@@ -35,7 +35,7 @@ The cutoff is measured relative to the overall maximum, so rel_min_height=0.01
 would remove everything that is 1% or less than the highest point among all
 densities. Default is 0, so nothing is removed.}
 
-\item{fill}{Passed to \code{\link{geom_joy}}. Fill color of the density.}
+\item{fill}{Passed to \code{\link{geom_density_ridges}}. Fill color of the density.}
 
 \item{...}{Currently unused.}
 
@@ -62,7 +62,7 @@ default range of \code{\link{scale_size_continuous}} has an upper end of 6, whic
 \item{fatten.point}{A multiplicate factor used to adjust the size of the point relative to the largest line.}
 }
 \description{
-Generates a combination geom_joy and geom_pointrangeh (using stat_summaryh)
+Generates a combination geom_density_ridges and geom_pointrangeh (using stat_summaryh)
 representing the density, point estimates, and credible interval. Useful
 for representing posterior estimates from Bayesian samplers; in that context
 the mirrored verison is variously called an eye plot, a raindrop plot, or a
@@ -73,7 +73,7 @@ A half-eye plot is a compact visual summary of the distribution of some samples,
 used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
 a density plot, point estimate, and credible interval. \code{geom_halfeyeh()} is
-equivalent to \code{geom_joy() + stat_summaryh()} with some reasonable
+equivalent to \code{geom_density_ridges() + stat_summaryh()} with some reasonable
 defaults, including color choices and the use of mean with 95\% quantile
 intervals.
 }
@@ -84,7 +84,7 @@ intervals.
 }
 \seealso{
 See \code{\link{geom_eye}} and \code{\link{geom_eyeh}} for the mirrored-density
-(full "eye") versions. See \code{\link{geom_joy}} and \code{\link{stat_summaryh}} for the geoms
+(full "eye") versions. See \code{\link{geom_density_ridges}} and \code{\link{stat_summaryh}} for the geoms
 this function is based on.
 }
 \author{

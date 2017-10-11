@@ -27,7 +27,7 @@ Imports:
     MASS,
     rlang,
     ggstance,
-    ggjoy,
+    ggridges,
     grid,
     forcats,
     HDInterval,

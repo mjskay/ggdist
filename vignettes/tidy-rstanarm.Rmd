@@ -40,7 +40,7 @@ library(modelr)
 library(tidybayes)
 library(ggplot2)
 library(ggstance)
-library(ggjoy)
+library(ggridges)
 library(rstan)
 library(rstanarm)
 ```
@@ -324,14 +324,14 @@ ABC %>%
 
 Where `add_fitted_samples` is analogous to `rstanarm::posterior_linpred`, `add_predicted_samples` is analogous to `rstanarm::posterior_predict`, giving samples from the posterior predictive distribution.
 
-Here is an example of posterior predictive distributions plotted using `ggjoy::geom_joy`:
+Here is an example of posterior predictive distributions plotted using `ggridges::geom_density_ridges`:
 
 ```{r}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_samples(m) %>%
   ggplot(aes(x = pred, y = condition)) +
-  geom_joy(scale = 0.8)
+  geom_density_ridges(scale = 0.8)
 ```
 
 We could also use `tidybayes::stat_intervalh` to plot predictive bands alongside the data:
