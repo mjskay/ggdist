@@ -36,6 +36,7 @@ Suggests:
     knitr,
     import,
     testthat,
+    vdiffr,
     rstan,
     runjags,
     rstanarm,
