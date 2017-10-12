@@ -144,10 +144,10 @@ transformed parameters {
   condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
 }
 model {
-  response_sd ~ cauchy(0, 1);         # => half-cauchy(0, 1)
-  condition_mean_sd ~ cauchy(0, 1);   # => half-cauchy(0, 1)
+  response_sd ~ cauchy(0, 1);         // => half-cauchy(0, 1)
+  condition_mean_sd ~ cauchy(0, 1);   // => half-cauchy(0, 1)
   overall_mean ~ normal(0, 5);
-  condition_zoffset ~ normal(0, 1);   # => condition_mean ~ normal(overall_mean, condition_mean_sd)
+  condition_zoffset ~ normal(0, 1);   // => condition_mean ~ normal(overall_mean, condition_mean_sd)
   for (i in 1:n) {
     response[i] ~ normal(condition_mean[condition[i]], response_sd);
   }
