@@ -372,9 +372,8 @@ mtcars %>%
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
 
 
-## Feedback and issues
+## Feedback, issues, and contributions
 
-I welcome feedback, suggestions, and issues! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it 
-[here](https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce the issue.
+I welcome feedback, suggestions, issues, and contributions! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [dev](https://github.com/mjskay/tidybayes/tree/dev) branch.
 
 `tidybayes` grew out of helper functions I wrote to make my own analysis pipelines tidier. Over time it has expanded to cover more use cases I have encountered, but I would love to make it cover more!

@@ -99,14 +99,14 @@
     </div>
 
     
-    <p>Generates a combination geom_joy and geom_pointrangeh (using stat_summaryh)
+    <p>Generates a combination geom_density_ridges and geom_pointrangeh (using stat_summaryh)
 representing the density, point estimates, and credible interval. Useful
 for representing posterior estimates from Bayesian samplers; in that context
 the mirrored verison is variously called an eye plot, a raindrop plot, or a
 violin plot; hence "half-eye" for this plot.</p>
     
 
-    <pre class="usage"><span class='fu'>geom_halfeyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"joy"</span>,
+    <pre class="usage"><span class='fu'>geom_halfeyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"density_ridges"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>rel_min_height</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>,
   <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>),
@@ -129,17 +129,17 @@ the plot defaults.</p></td>
     </tr>
     <tr>
       <th>stat</th>
-      <td><p>Passed to <code>geom_joy</code>. The statistical
+      <td><p>Passed to <code>geom_density_ridges</code>. The statistical
 transformation to use on the data for this layer.</p></td>
     </tr>
     <tr>
       <th>position</th>
-      <td><p>Passed to <code>geom_joy</code>. The position adjustment
+      <td><p>Passed to <code>geom_density_ridges</code>. The position adjustment
 to use for overlapping points on this layer.</p></td>
     </tr>
     <tr>
       <th>scale</th>
-      <td><p>Passed to <code>geom_joy</code>. A scaling factor to scale the
+      <td><p>Passed to <code>geom_density_ridges</code>. A scaling factor to scale the
 height of the densities relative to the spacing between them. A value of 1
 indicates that the maximum point of any density touches the baseline right
 above, assuming even spacing between baselines.</p></td>
@@ -153,7 +153,7 @@ densities. Default is 0, so nothing is removed.</p></td>
     </tr>
     <tr>
       <th>fill</th>
-      <td><p>Passed to <code>geom_joy</code>. Fill color of the density.</p></td>
+      <td><p>Passed to <code>geom_density_ridges</code>. Fill color of the density.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -205,14 +205,14 @@ default range of <code>scale_size_continuous</code> has an upper end of 6, which
 used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
 a density plot, point estimate, and credible interval. <code>geom_halfeyeh()</code> is
-equivalent to <code>geom_joy() + stat_summaryh()</code> with some reasonable
+equivalent to <code>geom_density_ridges() + stat_summaryh()</code> with some reasonable
 defaults, including color choices and the use of mean with 95% quantile
 intervals.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p>See <code><a href='geom_eye.html'>geom_eye</a></code> and <code><a href='geom_eye.html'>geom_eyeh</a></code> for the mirrored-density
-(full "eye") versions. See <code>geom_joy</code> and <code>stat_summaryh</code> for the geoms
+(full "eye") versions. See <code>geom_density_ridges</code> and <code>stat_summaryh</code> for the geoms
 this function is based on.</p>
     
 

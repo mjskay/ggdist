@@ -28,7 +28,7 @@ Finally, `tidybayes` aims to fit into common workflows through compatibility wit
 
 -   **Compatibility with other tidy packages**. Default column names in the output have also been chosen for compatibility with `broom::tidy`, which makes comparison with estimates from non-Bayesian models straightforward.
 
--   **Compatibility with non-tidy packages**. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples`, aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`).
+-   **Compatibility with non-tidy packages**. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples`, aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`). The `gather_lsmeans_samples` function turns the output from `lsmeans::lsmeans` (when applied to supported model types, like `MCMCglmm` and `rstanarm` models) into long-format data frames.
 
 Supported model types
 ---------------------
@@ -149,21 +149,21 @@ m %>%
 
 |  .chain|  .iteration| condition |  condition\_mean|  response\_sd|
 |-------:|-----------:|:----------|----------------:|-------------:|
-|       1|           1| A         |       -0.1206604|     0.6131074|
-|       1|           1| B         |        1.0043807|     0.6131074|
-|       1|           1| C         |        1.5011137|     0.6131074|
-|       1|           1| D         |        1.1089315|     0.6131074|
-|       1|           1| E         |       -1.1163084|     0.6131074|
-|       1|           2| A         |        0.2778306|     0.4997878|
-|       1|           2| B         |        0.7552125|     0.4997878|
-|       1|           2| C         |        1.8340128|     0.4997878|
-|       1|           2| D         |        0.7040865|     0.4997878|
-|       1|           2| E         |       -1.1510277|     0.4997878|
-|       1|           3| A         |        0.0078763|     0.4952302|
-|       1|           3| B         |        1.2779759|     0.4952302|
-|       1|           3| C         |        2.0680137|     0.4952302|
-|       1|           3| D         |        1.3867664|     0.4952302|
-|       1|           3| E         |       -0.7519878|     0.4952302|
+|       1|           1| A         |       -0.0488381|     0.5824056|
+|       1|           1| B         |        1.1920197|     0.5824056|
+|       1|           1| C         |        1.8984306|     0.5824056|
+|       1|           1| D         |        0.9617923|     0.5824056|
+|       1|           1| E         |       -0.8784776|     0.5824056|
+|       1|           2| A         |        0.1930336|     0.5961389|
+|       1|           2| B         |        1.0703175|     0.5961389|
+|       1|           2| C         |        1.9749954|     0.5961389|
+|       1|           2| D         |        1.1242398|     0.5961389|
+|       1|           2| E         |       -1.0909016|     0.5961389|
+|       1|           3| A         |        0.2633968|     0.5559389|
+|       1|           3| B         |        0.7562821|     0.5559389|
+|       1|           3| C         |        1.5831328|     0.5559389|
+|       1|           3| D         |        1.1647897|     0.5559389|
+|       1|           3| E         |       -0.8511654|     0.5559389|
 
 The condition numbers are automatically turned back into text ("A", "B", "C", ...) and split into their own column. A long-format data frame is returned with a row for every iteration × every combination of indices across all variables given to `spread_samples`; for example, because `response_sd` here is not indexed by `condition`, within the same iteration it has the same value for each row corresponding to a different `condition` (some other formats supported by `tidybayes` are discussed in `vignette("tidybayes")`; in particular, the format returned by `gather_samples`).
 
@@ -215,11 +215,11 @@ bayes_estimates
 
 | condition |    estimate|    conf.low|   conf.high|  .prob| model |
 |:----------|-----------:|-----------:|-----------:|------:|:------|
-| A         |   0.1968434|  -0.1427452|   0.5482592|   0.95| Bayes |
-| B         |   1.0075166|   0.6539753|   1.3588999|   0.95| Bayes |
-| C         |   1.8420086|   1.4953866|   2.1836275|   0.95| Bayes |
-| D         |   1.0153748|   0.6710544|   1.3494475|   0.95| Bayes |
-| E         |  -0.8916102|  -1.2320089|  -0.5412994|   0.95| Bayes |
+| A         |   0.1932542|  -0.1374798|   0.5480979|   0.95| Bayes |
+| B         |   1.0054696|   0.6559603|   1.3464413|   0.95| Bayes |
+| C         |   1.8387243|   1.4854153|   2.1840286|   0.95| Bayes |
+| D         |   1.0128392|   0.6541362|   1.3738020|   0.95| Bayes |
+| E         |  -0.8927952|  -1.2404690|  -0.5443226|   0.95| Bayes |
 
 This makes it easy to bind the two estimates together and plot them:
 
@@ -341,9 +341,9 @@ mtcars %>%
 
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
 
-Feedback and issues
--------------------
+Feedback, issues, and contributions
+-----------------------------------
 
-I welcome feedback, suggestions, and issues! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce the issue.
+I welcome feedback, suggestions, issues, and contributions! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [dev](https://github.com/mjskay/tidybayes/tree/dev) branch.
 
 `tidybayes` grew out of helper functions I wrote to make my own analysis pipelines tidier. Over time it has expanded to cover more use cases I have encountered, but I would love to make it cover more!
