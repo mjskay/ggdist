@@ -92,6 +92,9 @@ other packages:
 * __Compatibility with non-tidy packages__. The `unspread_samples` and 
   `ungather_samples` functions invert `spread_samples` and `gather_samples`, 
   aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`).
+  The `gather_lsmeans_samples` function turns the output from `lsmeans::lsmeans`
+  (when applied to supported model types, like `MCMCglmm` and `rstanarm` models)
+  into long-format data frames.
   
 
 ## Supported model types
