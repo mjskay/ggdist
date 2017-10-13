@@ -171,9 +171,6 @@ GeomDensityOrViolin <- ggproto("GeomDensityOrViolin", Geom,
     grouping_columns = names(data) %>%
       intersect(c("colour", "fill", "linetype", "group", "x"))
 
-    print(grouping_columns)
-    print(summary(data))
-
     grobs = data %>%
       dlply(grouping_columns, function(d) {
         # Find the points for the line to go all the way around
@@ -198,8 +195,6 @@ GeomDensityOrViolin <- ggproto("GeomDensityOrViolin", Geom,
           grobs = group_grobs
         )
       })
-
-    print(str(grobs))
 
     # this is a slightly hackish approach to getting the draw order correct for the common
     # use case of fit lines / curves: draw the ribbons in order from largest mean width to
