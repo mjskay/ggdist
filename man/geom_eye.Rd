@@ -5,8 +5,8 @@
 \alias{geom_eyeh}
 \title{Eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
-geom_eye(mapping = NULL, data = NULL, stat = "ydensity",
-  position = "dodge", trim = TRUE, scale = "area", fill = "gray65", ...,
+geom_eye(mapping = NULL, data = NULL, stat = "grouped_ydensity",
+  position = "dodge", trim = TRUE, scale = "area", fill = NULL, ...,
   point.interval = mean_qi, fun.data = point.interval, fun.args = list(),
   .prob = c(0.95, 0.66), color = NULL, size = NULL,
   fatten.interval = NULL, fatten.point = NULL)
