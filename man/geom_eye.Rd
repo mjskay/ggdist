@@ -6,16 +6,18 @@
 \title{Eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
 geom_eye(mapping = NULL, data = NULL, stat = "grouped_ydensity",
-  position = "dodge", trim = TRUE, scale = "area", fill = NULL, ...,
-  point.interval = mean_qi, fun.data = point.interval, fun.args = list(),
-  .prob = c(0.95, 0.66), color = NULL, size = NULL,
-  fatten.interval = NULL, fatten.point = NULL)
+  position = "dodge", trim = TRUE, scale = "area", fill = NULL,
+  violin.color = NA, ..., point.interval = mean_qi,
+  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
+  color = NULL, size = NULL, fatten.interval = NULL,
+  fatten.point = NULL)
 
-geom_eyeh(mapping = NULL, data = NULL, stat = "xdensity",
-  position = "dodgev", trim = TRUE, scale = "area", fill = "gray65",
-  ..., point.interval = mean_qih, fun.data = point.interval,
-  fun.args = list(), .prob = c(0.95, 0.66), color = NULL, size = NULL,
-  fatten.interval = NULL, fatten.point = NULL)
+geom_eyeh(mapping = NULL, data = NULL, stat = "grouped_xdensity",
+  position = "dodgev", trim = TRUE, scale = "area", fill = NULL,
+  violin.color = NA, ..., point.interval = mean_qih,
+  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
+  color = NULL, size = NULL, fatten.interval = NULL,
+  fatten.point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -41,6 +43,10 @@ are scaled proportionally to the number of observations. If "width", all
 violins have the same maximum width.}
 
 \item{fill}{Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. Fill color of the violin.}
+
+\item{violin.color}{Passed as the \code{color} argument of \code{\link{geom_violin}} / \code{\link{geom_violinh}}.
+The default, \code{NA}, suppresses the violin outline. Set to another value to set the violin outline color manually,
+or set to \code{NULL} if you want the outline color of the violin to be determined by the aesthetic mapping.}
 
 \item{...}{Currently unused.}
 

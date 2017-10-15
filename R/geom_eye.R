@@ -42,6 +42,9 @@
 #' are scaled proportionally to the number of observations. If "width", all
 #' violins have the same maximum width.
 #' @param fill Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. Fill color of the violin.
+#' @param violin.color Passed as the \code{color} argument of \code{\link{geom_violin}} / \code{\link{geom_violinh}}.
+#' The default, \code{NA}, suppresses the violin outline. Set to another value to set the violin outline color manually,
+#' or set to \code{NULL} if you want the outline color of the violin to be determined by the aesthetic mapping.
 #' @param ...  Currently unused.
 #' @param fun.data A function that is given a vector and should
 #'   return a data frame with variables \code{y}, \code{ymin} and \code{ymax}
@@ -76,7 +79,7 @@ geom_eye = function(
   mapping = NULL, data = NULL,
 
   #violin properties
-  stat = "grouped_ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL,
+  stat = "grouped_ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
 
   ...,
 
@@ -90,14 +93,15 @@ geom_eye = function(
 
   #build violin plot
   violin.args = list(
-      mapping = mapping, data = data, stat = stat, position = position, trim = trim, scale = scale, fill = fill
+      mapping = mapping, data = data, stat = stat, position = position, trim = trim, scale = scale,
+      fill = fill, color = violin.color
     ) %>%
     discard(is.null)
   violin = do.call(geom_grouped_violin, violin.args)
 
   #build interval annotations
   interval.args =
-    list(position = position_dodge(width = 0.9), mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
+    list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
     {if (!is.null(fatten.interval)) modifyList(., list(fatten.interval = fatten.interval)) else .} %>%

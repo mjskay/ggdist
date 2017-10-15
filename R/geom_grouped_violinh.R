@@ -1,4 +1,4 @@
-# Variant of geom_violin and stat_xdensity that groups at x values.
+# Variant of geom_violinh and stat_xdensity that groups at x values.
 # These are kind of hacky and mostly to fix #76. These are not exported for
 # for now, since at some point they will probably be replaced with more
 # comprehensive geoms for eye plots.
@@ -6,12 +6,13 @@
 # Author: mjskay
 ###############################################################################
 
-#' @importFrom ggplot2 StatYdensity ggproto_parent
+#' @importFrom ggstance StatXdensity GeomViolinh
+#' @importFrom ggplot2  ggproto_parent
 #' @importFrom plyr ddply
 
 
-geom_grouped_violin = function(mapping = NULL, data = NULL,
-  stat = "grouped_ydensity", position = "dodge",
+geom_grouped_violinh = function(mapping = NULL, data = NULL,
+  stat = "grouped_xdensity", position = "dodgev",
   ...,
   trim = TRUE,
   scale = "area",
@@ -22,7 +23,7 @@ geom_grouped_violin = function(mapping = NULL, data = NULL,
     data = data,
     mapping = mapping,
     stat = stat,
-    geom = GeomGroupedViolin,
+    geom = GeomGroupedViolinh,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
@@ -35,21 +36,21 @@ geom_grouped_violin = function(mapping = NULL, data = NULL,
   )
 }
 
-GeomGroupedViolin = ggproto("GeomGroupedViolin", GeomViolin,
+GeomGroupedViolinh = ggproto("GeomGroupedViolinh", GeomViolinh,
   default_aes = aes(weight = 1, colour = NA, fill = "gray65", size = 0,
     alpha = NA, linetype = "solid"),
 
   draw_group = function(self, data, ...) {
-    grobs = dlply(data, "x", function(d) ggproto_parent(GeomViolin, self)$draw_group(d, ...))
+    grobs = dlply(data, "y", function(d) ggproto_parent(GeomViolinh, self)$draw_group(d, ...))
 
-    ggname("geom_grouped_violin",
+    ggname("geom_grouped_violinh",
       gTree(children = do.call(gList, grobs))
     )
   }
 )
 
-stat_grouped_ydensity = function(mapping = NULL, data = NULL,
-  geom = "violin", position = "dodge",
+stat_grouped_xdensity = function(mapping = NULL, data = NULL,
+  geom = "violinh", position = "dodgev",
   ...,
   bw = "nrd0",
   adjust = 1,
@@ -64,7 +65,7 @@ stat_grouped_ydensity = function(mapping = NULL, data = NULL,
   layer(
     data = data,
     mapping = mapping,
-    stat = StatGroupedYdensity,
+    stat = StatGroupedXdensity,
     geom = geom,
     position = position,
     show.legend = show.legend,
@@ -81,9 +82,9 @@ stat_grouped_ydensity = function(mapping = NULL, data = NULL,
   )
 }
 
-StatGroupedYdensity = ggproto("StatYdensity", StatYdensity,
+StatGroupedXdensity = ggproto("StatXdensity", StatXdensity,
   compute_group = function(self, data, scales, ...) {
 
-    ddply(data, "x", function(d) ggproto_parent(StatYdensity, self)$compute_group(d, scales, ...))
+    ddply(data, "y", function(d) ggproto_parent(StatXdensity, self)$compute_group(d, scales, ...))
   }
 )

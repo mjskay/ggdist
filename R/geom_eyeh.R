@@ -6,7 +6,7 @@
 
 #' @rdname geom_eye
 #' @importFrom utils modifyList
-#' @importFrom ggstance geom_violinh
+#' @importFrom purrr discard
 #' @import ggplot2
 #' @export
 geom_eyeh = function(
@@ -14,7 +14,7 @@ geom_eyeh = function(
   mapping = NULL, data = NULL,
 
   #violin properties
-  stat = "xdensity", position = "dodgev", trim = TRUE, scale = "area", fill = "gray65",
+  stat = "grouped_xdensity", position = "dodgev", trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
 
   ...,
 
@@ -27,13 +27,12 @@ geom_eyeh = function(
 ) {
 
   #build violin plot
-  violin.args =
-    list(mapping = mapping, data = data, stat = stat, position = position, trim = trim,
-      scale = scale, color = NA, fill = fill, size = 0.5, alpha = 1.0, linetype = "solid"
+  violin.args = list(
+      mapping = mapping, data = data, stat = stat, position = position, trim = trim, scale = scale,
+      fill = fill, color = violin.color
     ) %>%
-    {if (!is.null(fill)) modifyList(., list(fill = fill)) else .}
-
-  violin = do.call(geom_violinh, violin.args)
+    discard(is.null)
+  violin = do.call(geom_grouped_violinh, violin.args)
 
   #build interval annotations
   interval.args =
