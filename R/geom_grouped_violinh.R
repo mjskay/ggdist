@@ -16,6 +16,7 @@ geom_grouped_violinh = function(mapping = NULL, data = NULL,
   ...,
   trim = TRUE,
   scale = "area",
+  side = "both",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE) {
@@ -30,6 +31,7 @@ geom_grouped_violinh = function(mapping = NULL, data = NULL,
     params = list(
       trim = trim,
       scale = scale,
+      side = side,
       na.rm = na.rm,
       ...
     )
@@ -39,6 +41,25 @@ geom_grouped_violinh = function(mapping = NULL, data = NULL,
 GeomGroupedViolinh = ggproto("GeomGroupedViolinh", GeomViolinh,
   default_aes = aes(weight = 1, colour = NA, fill = "gray65", size = 0,
     alpha = NA, linetype = "solid"),
+
+  extra_params = c("na.rm", "side"),
+
+  setup_data = function(data, params) {
+    data$width <- data$width %||%
+      params$width %||% (resolution(data$y, FALSE) * 0.9)
+
+    # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
+    switch(params$side,
+      top = plyr::ddply(data, "group", transform,
+        ymin = y,
+        ymax = y + width
+      ),
+      both = plyr::ddply(data, "group", transform,
+        ymin = y - width / 2,
+        ymax = y + width / 2
+      )
+    )
+  },
 
   draw_group = function(self, data, ...) {
     grobs = dlply(data, "y", function(d) ggproto_parent(GeomViolinh, self)$draw_group(d, ...))
