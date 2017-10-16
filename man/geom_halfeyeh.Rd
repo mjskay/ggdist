@@ -4,12 +4,11 @@
 \alias{geom_halfeyeh}
 \title{Half-eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
-geom_halfeyeh(mapping = NULL, data = NULL, stat = "density_ridges",
-  position = "identity", scale = 0.9, rel_min_height = 0,
-  fill = "gray65", ..., point.interval = mean_qih,
-  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
-  color = NULL, size = NULL, fatten.interval = NULL,
-  fatten.point = NULL)
+geom_halfeyeh(mapping = NULL, data = NULL, position = position_dodgev(),
+  trim = TRUE, scale = "area", fill = NULL, density.color = NA, ...,
+  point.interval = mean_qih, fun.data = point.interval, fun.args = list(),
+  .prob = c(0.95, 0.66), color = NULL, size = NULL,
+  fatten.interval = NULL, fatten.point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -19,23 +18,24 @@ layer level if you are overriding the plot defaults.}
 \item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
-\item{stat}{Passed to \code{\link{geom_density_ridges}}. The statistical
-transformation to use on the data for this layer.}
-
 \item{position}{Passed to \code{\link{geom_density_ridges}}. The position adjustment
 to use for overlapping points on this layer.}
 
-\item{scale}{Passed to \code{\link{geom_density_ridges}}. A scaling factor to scale the
-height of the densities relative to the spacing between them. A value of 1
-indicates that the maximum point of any density touches the baseline right
-above, assuming even spacing between baselines.}
+\item{trim}{If \code{TRUE} (default),
+trim the tails of the density to the range of the data. If \code{FALSE},
+don't trim the tails.}
 
-\item{rel_min_height}{Densities at heights below this cutoff will be removed.
-The cutoff is measured relative to the overall maximum, so rel_min_height=0.01
-would remove everything that is 1% or less than the highest point among all
-densities. Default is 0, so nothing is removed.}
+\item{scale}{If "area" (default), all
+densities have the same area (before trimming the tails).  If "count", areas
+are scaled proportionally to the number of observations. If "width", all
+densities have the same maximum width/height.}
 
-\item{fill}{Passed to \code{\link{geom_density_ridges}}. Fill color of the density.}
+\item{fill}{Fill color of the density.}
+
+\item{density.color}{Outline color of the density.
+The default, \code{NA}, suppresses the density outline. Set to another value to set the density outline color
+manually, or set to \code{NULL} if you want the outline color of the density to be determined by the aesthetic
+mapping.}
 
 \item{...}{Currently unused.}
 
@@ -49,10 +49,10 @@ and \code{.prob}. See the \code{point_interval} family of functions.}
 
 \item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
 
-\item{color}{Passed to \code{\link{stat_summaryh}}. Color of the point
+\item{color}{Passed to \code{\link{stat_pointintervalh}}. Color of the point
 estimate and credible interval.}
 
-\item{size}{Passed to \code{\link{stat_summaryh}}. Line weight of the point
+\item{size}{Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
 estimate and credible interval.}
 
 \item{fatten.interval}{A multiplicative factor used to adjust the size of the interval

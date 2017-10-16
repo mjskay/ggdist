@@ -30,8 +30,6 @@
 #' layer level if you are overriding the plot defaults.
 #' @param data A layer specific dataset - only needed if you want to override
 #' the plot defaults.
-#' @param stat Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. The statistical
-#' transformation to use on the data for this layer.
 #' @param position Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. The position adjustment
 #' to use for overlapping points on this layer.
 #' @param trim Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. If \code{TRUE} (default),
@@ -43,8 +41,9 @@
 #' violins have the same maximum width.
 #' @param fill Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. Fill color of the violin.
 #' @param violin.color Passed as the \code{color} argument of \code{\link{geom_violin}} / \code{\link{geom_violinh}}.
-#' The default, \code{NA}, suppresses the violin outline. Set to another value to set the violin outline color manually,
-#' or set to \code{NULL} if you want the outline color of the violin to be determined by the aesthetic mapping.
+#' The default, \code{NA}, suppresses the violin outline. Set to another value to set the violin outline color
+#' manually, or set to \code{NULL} if you want the outline color of the violin to be determined by the aesthetic
+#' mapping.
 #' @param ...  Currently unused.
 #' @param fun.data A function that is given a vector and should
 #'   return a data frame with variables \code{y}, \code{ymin} and \code{ymax}
@@ -57,9 +56,9 @@
 #' lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
 #' default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.
 #' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
-#' @param color Passed to \code{\link{stat_pointintervalh}}. Color of the point
+#' @param color Passed to \code{\link{stat_pointinterval}}. Color of the point
 #' estimate and credible interval.
-#' @param size Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
+#' @param size Passed to \code{\link{stat_pointinterval}}. Line weight of the point
 #' estimate and credible interval.
 #' @author Matthew Kay
 #' @seealso See \code{\link{geom_halfeyeh}}
@@ -79,7 +78,7 @@ geom_eye = function(
   mapping = NULL, data = NULL,
 
   #violin properties
-  stat = "grouped_ydensity", position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
+  position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
 
   ...,
 
@@ -93,7 +92,7 @@ geom_eye = function(
 
   #build violin plot
   violin.args = list(
-      mapping = mapping, data = data, stat = stat, position = position, trim = trim, scale = scale,
+      mapping = mapping, data = data, position = position, trim = trim, scale = scale,
       fill = fill, color = violin.color
     ) %>%
     discard(is.null)

@@ -6,9 +6,10 @@
 # Author: mjskay
 ###############################################################################
 
-#' @importFrom ggstance StatXdensity GeomViolinh
+#' @importFrom ggstance StatXdensity GeomViolinh position_dodgev
 #' @importFrom ggplot2  ggproto_parent
 #' @importFrom plyr ddply
+#' @importFrom rlang %||%
 
 
 geom_grouped_violinh = function(mapping = NULL, data = NULL,

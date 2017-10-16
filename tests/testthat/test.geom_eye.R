@@ -39,6 +39,7 @@ test_that("two-parameter eye plots work", {
 
   p = ggplot(df, aes(x = x, y = y_int))
   expect_doppelganger("two-parameter (numeric) horizontal eye", p + geom_eyeh())
+  expect_doppelganger("two-parameter (numeric) horizontal half-eye", p + geom_halfeyeh())
 
   p = ggplot(df, aes(x = y_int, y = x))
   expect_doppelganger("two-parameter (numeric) vertical eye", p + geom_eye())

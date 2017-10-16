@@ -14,7 +14,7 @@ geom_eyeh = function(
   mapping = NULL, data = NULL,
 
   #violin properties
-  stat = "grouped_xdensity", position = "dodgev", trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
+  position = position_dodgev(), trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
 
   ...,
 
@@ -28,7 +28,7 @@ geom_eyeh = function(
 
   #build violin plot
   violin.args = list(
-      mapping = mapping, data = data, stat = stat, position = position, trim = trim, scale = scale,
+      mapping = mapping, data = data, position = position, trim = trim, scale = scale,
       fill = fill, color = violin.color
     ) %>%
     discard(is.null)

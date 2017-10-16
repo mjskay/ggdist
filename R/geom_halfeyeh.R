@@ -26,19 +26,20 @@
 #' layer level if you are overriding the plot defaults.
 #' @param data A layer specific dataset - only needed if you want to override
 #' the plot defaults.
-#' @param stat Passed to \code{\link{geom_density_ridges}}. The statistical
-#' transformation to use on the data for this layer.
 #' @param position Passed to \code{\link{geom_density_ridges}}. The position adjustment
 #' to use for overlapping points on this layer.
-#' @param scale Passed to \code{\link{geom_density_ridges}}. A scaling factor to scale the
-#' height of the densities relative to the spacing between them. A value of 1
-#' indicates that the maximum point of any density touches the baseline right
-#' above, assuming even spacing between baselines.
-#' @param rel_min_height Densities at heights below this cutoff will be removed.
-#' The cutoff is measured relative to the overall maximum, so rel_min_height=0.01
-#' would remove everything that is 1% or less than the highest point among all
-#' densities. Default is 0, so nothing is removed.
-#' @param fill Passed to \code{\link{geom_density_ridges}}. Fill color of the density.
+#' @param trim If \code{TRUE} (default),
+#' trim the tails of the density to the range of the data. If \code{FALSE},
+#' don't trim the tails.
+#' @param scale If "area" (default), all
+#' densities have the same area (before trimming the tails).  If "count", areas
+#' are scaled proportionally to the number of observations. If "width", all
+#' densities have the same maximum width/height.
+#' @param fill Fill color of the density.
+#' @param density.color Outline color of the density.
+#' The default, \code{NA}, suppresses the density outline. Set to another value to set the density outline color
+#' manually, or set to \code{NULL} if you want the outline color of the density to be determined by the aesthetic
+#' mapping.
 #' @param ...  Currently unused.
 #' @param fun.data A function that is given a vector and should
 #'   return a data frame with variables \code{x}, \code{xmin} and \code{xmax}
@@ -50,9 +51,9 @@
 #' lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
 #' default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.
 #' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
-#' @param color Passed to \code{\link{stat_summaryh}}. Color of the point
+#' @param color Passed to \code{\link{stat_pointintervalh}}. Color of the point
 #' estimate and credible interval.
-#' @param size Passed to \code{\link{stat_summaryh}}. Line weight of the point
+#' @param size Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
 #' estimate and credible interval.
 #' @author Matthew Kay
 #' @seealso See \code{\link{geom_eye}} and \code{\link{geom_eyeh}} for the mirrored-density
@@ -72,8 +73,8 @@ geom_halfeyeh = function(
   #shared properties
   mapping = NULL, data = NULL,
 
-  #deity properties
-  stat = "density_ridges", position = "identity", scale = 0.9, rel_min_height = 0, fill = "gray65",
+  #density properties
+  position = position_dodgev(), trim = TRUE, scale = "area", fill = NULL, density.color = NA,
 
   ...,
 
@@ -85,14 +86,13 @@ geom_halfeyeh = function(
   color = NULL, size = NULL, fatten.interval = NULL, fatten.point = NULL
 ) {
 
-  #build density plot
-  density.args =
-    list(mapping = mapping, data = data, stat = stat, scale = scale,
-      rel_min_height = rel_min_height, color = NA, ...
+  #build violin plot
+  density.args = list(
+      mapping = mapping, data = data, position = position, trim = trim, scale = scale, side = "top",
+      fill = fill, color = density.color
     ) %>%
-    {if (!is.null(fill)) modifyList(., list(fill = fill)) else .}
-
-  dens = do.call(geom_density_ridges, density.args)
+    discard(is.null)
+  dens = do.call(geom_grouped_violinh, density.args)
 
   #build interval annotations
   interval.args =
