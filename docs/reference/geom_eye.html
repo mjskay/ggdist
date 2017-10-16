@@ -108,16 +108,16 @@ in that context this is variously called an eye plot, a raindrop plot, or a viol
 preferred here).</p>
     
 
-    <pre class="usage"><span class='fu'>geom_eye</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"ydensity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodge"</span>, <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>, <span class='no'>...</span>,
+    <pre class="usage"><span class='fu'>geom_eye</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodge"</span>, <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>,
   <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
   <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>geom_eyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"xdensity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodgev"</span>, <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>,
-  <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>,
-  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'>geom_eyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='fu'>position_dodgev</span>(),
+  <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>,
+  <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
+  <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -133,11 +133,6 @@ layer level if you are overriding the plot defaults.</p></td>
       <th>data</th>
       <td><p>A layer specific dataset - only needed if you want to override
 the plot defaults.</p></td>
-    </tr>
-    <tr>
-      <th>stat</th>
-      <td><p>Passed to <code>geom_violin</code> / <code>geom_violinh</code>. The statistical
-transformation to use on the data for this layer.</p></td>
     </tr>
     <tr>
       <th>position</th>
@@ -160,6 +155,13 @@ violins have the same maximum width.</p></td>
     <tr>
       <th>fill</th>
       <td><p>Passed to <code>geom_violin</code> / <code>geom_violinh</code>. Fill color of the violin.</p></td>
+    </tr>
+    <tr>
+      <th>violin.color</th>
+      <td><p>Passed as the <code>color</code> argument of <code>geom_violin</code> / <code>geom_violinh</code>.
+The default, <code>NA</code>, suppresses the violin outline. Set to another value to set the violin outline color
+manually, or set to <code>NULL</code> if you want the outline color of the violin to be determined by the aesthetic
+mapping.</p></td>
     </tr>
     <tr>
       <th>...</th>

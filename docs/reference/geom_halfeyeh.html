@@ -106,12 +106,11 @@ the mirrored verison is variously called an eye plot, a raindrop plot, or a
 violin plot; hence "half-eye" for this plot.</p>
     
 
-    <pre class="usage"><span class='fu'>geom_halfeyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"density_ridges"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>rel_min_height</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"gray65"</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>,
-  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>),
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>geom_halfeyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='fu'>position_dodgev</span>(),
+  <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>density.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>,
+  <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
+  <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fatten.interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten.point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -128,32 +127,33 @@ layer level if you are overriding the plot defaults.</p></td>
 the plot defaults.</p></td>
     </tr>
     <tr>
-      <th>stat</th>
-      <td><p>Passed to <code>geom_density_ridges</code>. The statistical
-transformation to use on the data for this layer.</p></td>
-    </tr>
-    <tr>
       <th>position</th>
       <td><p>Passed to <code>geom_density_ridges</code>. The position adjustment
 to use for overlapping points on this layer.</p></td>
     </tr>
     <tr>
-      <th>scale</th>
-      <td><p>Passed to <code>geom_density_ridges</code>. A scaling factor to scale the
-height of the densities relative to the spacing between them. A value of 1
-indicates that the maximum point of any density touches the baseline right
-above, assuming even spacing between baselines.</p></td>
+      <th>trim</th>
+      <td><p>If <code>TRUE</code> (default),
+trim the tails of the density to the range of the data. If <code>FALSE</code>,
+don't trim the tails.</p></td>
     </tr>
     <tr>
-      <th>rel_min_height</th>
-      <td><p>Densities at heights below this cutoff will be removed.
-The cutoff is measured relative to the overall maximum, so rel_min_height=0.01
-would remove everything that is 1<!-- % or less than the highest point among all -->
-densities. Default is 0, so nothing is removed.</p></td>
+      <th>scale</th>
+      <td><p>If "area" (default), all
+densities have the same area (before trimming the tails).  If "count", areas
+are scaled proportionally to the number of observations. If "width", all
+densities have the same maximum width/height.</p></td>
     </tr>
     <tr>
       <th>fill</th>
-      <td><p>Passed to <code>geom_density_ridges</code>. Fill color of the density.</p></td>
+      <td><p>Fill color of the density.</p></td>
+    </tr>
+    <tr>
+      <th>density.color</th>
+      <td><p>Outline color of the density.
+The default, <code>NA</code>, suppresses the density outline. Set to another value to set the density outline color
+manually, or set to <code>NULL</code> if you want the outline color of the density to be determined by the aesthetic
+mapping.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -179,12 +179,12 @@ and <code>.prob</code>. See the <code>point_interval</code> family of functions.
     </tr>
     <tr>
       <th>color</th>
-      <td><p>Passed to <code>stat_summaryh</code>. Color of the point
+      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Color of the point
 estimate and credible interval.</p></td>
     </tr>
     <tr>
       <th>size</th>
-      <td><p>Passed to <code>stat_summaryh</code>. Line weight of the point
+      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Line weight of the point
 estimate and credible interval.</p></td>
     </tr>
     <tr>
