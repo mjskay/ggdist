@@ -188,12 +188,12 @@ and <code>.prob</code>. See the <code>point_interval</code> family of functions.
     </tr>
     <tr>
       <th>color</th>
-      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Color of the point
+      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code>. Color of the point
 estimate and credible interval.</p></td>
     </tr>
     <tr>
       <th>size</th>
-      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Line weight of the point
+      <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code>. Line weight of the point
 estimate and credible interval.</p></td>
     </tr>
     <tr>
@@ -222,14 +222,24 @@ and 6% quantile intervals.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p>See <code><a href='geom_halfeyeh.html'>geom_halfeyeh</a></code>
-for the non-mirrored density ("half eye") version. See <code>geom_violin</code> and <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code>
+for the non-mirrored density ("half eye") version. See <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_violin'>geom_violin</a></code> and <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code>
 for the geoms these functions are based on.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-#TODO
+<span class='fu'>library</span>(<span class='no'>magrittr</span>)
+<span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='fu'>data</span>(<span class='no'>RankCorr</span>)
 
+<span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
+  <span class='fu'>geom_eyeh</span>()</div><div class='img'><img src='geom_eye-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
+  <span class='fu'>geom_eye</span>()</div><div class='img'><img src='geom_eye-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -57,10 +57,10 @@ and \code{.prob}. See the \code{point_interval} family of functions.}
 
 \item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
 
-\item{color}{Passed to \code{\link{stat_pointintervalh}}. Color of the point
+\item{color}{Passed to \code{\link{stat_pointinterval}}. Color of the point
 estimate and credible interval.}
 
-\item{size}{Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
+\item{size}{Passed to \code{\link{stat_pointinterval}}. Line weight of the point
 estimate and credible interval.}
 
 \item{fatten.interval}{A multiplicative factor used to adjust the size of the interval
@@ -92,7 +92,19 @@ The horizontal form, \code{geom_eyeh()}, is equivalent to \code{geom_violinh() +
 }
 \examples{
 
-#TODO
+library(magrittr)
+library(ggplot2)
+data(RankCorr)
+
+RankCorr \%>\%
+  spread_samples(u_tau[i]) \%>\%
+  ggplot(aes(y = i, x = u_tau)) +
+  geom_eyeh()
+
+RankCorr \%>\%
+  spread_samples(u_tau[i]) \%>\%
+  ggplot(aes(x = i, y = u_tau)) +
+  geom_eye()
 
 }
 \seealso{
