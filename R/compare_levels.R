@@ -114,6 +114,7 @@ compare_levels = function(samples, variable, by, fun=`-`, comparison = default, 
 #' @importFrom tidyr spread_
 #' @importFrom dplyr one_of
 #' @importFrom tibble as_tibble
+#' @importFrom rlang sym
 compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default, indices = c(".chain", ".iteration")) {
   #drop unused levels from "by" column
   samples[[by]] = factor(samples[[by]])
@@ -162,5 +163,5 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default,
     names(comparison) = c(by, variable)
     cbind(samples_wide_no_levels, comparison)
   }) %>%
-    as_tibble()
+    group_by(!!sym(by))
 }

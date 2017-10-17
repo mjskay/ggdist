@@ -450,12 +450,9 @@ If you prefer "caterpillar" plots, ordered by something like the mean of the dif
 m %>%
   spread_samples(b[,,condition]) %>%
   compare_levels(b, by = condition) %>%
+  ungroup() %>%
   mutate(condition = reorder(condition, b)) %>%
   ggplot(aes(y = condition, x = b)) +
   geom_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
-
-
-
-
