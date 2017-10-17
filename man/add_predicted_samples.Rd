@@ -13,31 +13,33 @@
 \alias{fitted_samples.brmsfit}
 \title{Add samples from the posterior fit or posterior prediction of a model to a data frame}
 \usage{
-add_predicted_samples(newdata, model, var = "pred", ..., n = NULL)
+add_predicted_samples(newdata, model, var = "pred", ..., n = NULL,
+  re_formula = NULL)
 
 add_fitted_samples(newdata, model, var = "estimate", auxpars = TRUE, ...,
-  n = NULL)
+  n = NULL, re_formula = NULL)
 
-predicted_samples(model, newdata, var = "pred", ..., n = NULL)
+predicted_samples(model, newdata, var = "pred", ..., n = NULL,
+  re_formula = NULL)
 
 fitted_samples(model, newdata, var = "estimate", auxpars = TRUE, ...,
-  n = NULL)
+  n = NULL, re_formula = NULL)
 
 \method{predicted_samples}{default}(model, newdata, ...)
 
 \method{fitted_samples}{default}(model, newdata, ...)
 
 \method{predicted_samples}{stanreg}(model, newdata, var = "pred", ...,
-  n = NULL)
+  n = NULL, re_formula = NULL)
 
 \method{fitted_samples}{stanreg}(model, newdata, var = "estimate",
-  auxpars = TRUE, ..., n = NULL)
+  auxpars = TRUE, ..., n = NULL, re_formula = NULL)
 
 \method{predicted_samples}{brmsfit}(model, newdata, var = "pred", ...,
-  n = NULL)
+  n = NULL, re_formula = NULL)
 
 \method{fitted_samples}{brmsfit}(model, newdata, var = "estimate",
-  auxpars = TRUE, ..., n = NULL)
+  auxpars = TRUE, ..., n = NULL, re_formula = NULL)
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
@@ -57,6 +59,13 @@ package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \co
 model given.}
 
 \item{n}{The number of samples per prediction / fit to return.}
+
+\item{re_formula}{formula containing group-level effects to be considered in the prediction.
+If \code{NULL} (default), include all group-level effects; if \code{NA}, include no group-level effects.
+Some model types (such as \code{\link[brms]{brm}} and \code{\link[rstanarm]{stanreg-objects}}) allow
+marginalizing over grouping factors by specifying new levels of a factor in \code{newdata}. In the case of
+\code{\link[brms]{brm}}, you must also pass \code{allow_new_levels = TRUE} here to include new levels (see
+\code{\link[brms]{predict.brmsfit}}).}
 
 \item{auxpars}{For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
 parameters be included in the output? Valid only for models that support auxiliary parameters,

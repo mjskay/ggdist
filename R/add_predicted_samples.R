@@ -39,7 +39,6 @@ globalVariables(c(".iteration", ".pred"))
 #' \code{map2stan} models from the \code{rethinking} package are also supported.
 #' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits
 #' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
-#' @param n The number of samples per prediction / fit to return.
 #' @param auxpars For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
 #' parameters be included in the output? Valid only for models that support auxiliary parameters,
 #' (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
@@ -49,6 +48,13 @@ globalVariables(c(".iteration", ".pred"))
 #' If \code{FALSE}, auxiliary parameters are not included.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
+#' @param n The number of samples per prediction / fit to return.
+#' @param re_formula formula containing group-level effects to be considered in the prediction.
+#' If \code{NULL} (default), include all group-level effects; if \code{NA}, include no group-level effects.
+#' Some model types (such as \code{\link[brms]{brm}} and \code{\link[rstanarm]{stanreg-objects}}) allow
+#' marginalizing over grouping factors by specifying new levels of a factor in \code{newdata}. In the case of
+#' \code{\link[brms]{brm}}, you must also pass \code{allow_new_levels = TRUE} here to include new levels (see
+#' \code{\link[brms]{predict.brmsfit}}).
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
 #' factor grouping rows from the input \code{newdata}), \code{.chain} column (the chain
 #' each sample came from, or \code{NA} if the model does not provide chain information),
@@ -67,23 +73,27 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom dplyr mutate sample_n
 #' @importFrom stats fitted predict
 #' @export
-add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL) {
-  predicted_samples(model, newdata, var, ..., n = n)
+add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL, re_formula = NULL) {
+  predicted_samples(model, newdata, var, ..., n = n, re_formula = re_formula)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-add_fitted_samples = function(newdata, model, var = "estimate", auxpars = TRUE, ..., n = NULL) {
-  fitted_samples(model, newdata, var, auxpars = auxpars, ..., n = n)
+add_fitted_samples = function(newdata, model, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
+  fitted_samples(model, newdata, var, auxpars = auxpars, ..., n = n, re_formula = re_formula)
 }
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples = function(model, newdata, var = "pred", ..., n = NULL) UseMethod("predicted_samples")
+predicted_samples = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
+  UseMethod("predicted_samples")
+}
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL) UseMethod("fitted_samples")
+fitted_samples = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
+  UseMethod("fitted_samples")
+}
 
 #' @rdname add_predicted_samples
 #' @export
@@ -117,22 +127,26 @@ fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata,
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL) {
+predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
   if (!requireNamespace("rstantools", quietly = TRUE)) {
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var, draws = n, ...)
+  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var,
+    draws = n, re.form = re_formula, ...
+  )
 }
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.stanreg = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL) {
+fitted_samples.stanreg = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  samples = fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var, ...)
+  samples = fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var,
+    re.form = re_formula, ...
+  )
   # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
   if (!is.null(n)) {
     iterations = sample(samples$.iteration, n)
@@ -145,18 +159,20 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", auxpars = TR
 
 #' @rdname add_predicted_samples
 #' @export
-predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL) {
+predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE, nsamples = n, ...)
+  fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE,
+    nsamples = n, re_formula = re_formula, ...
+  )
 }
 
 #' @rdname add_predicted_samples
 #' @importFrom rlang is_true is_false
 #' @export
-fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL) {
+fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
@@ -176,14 +192,16 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TR
 
   # get the samples for the primary parameter first so we can stick the other estimates onto it
   samples = fitted_predicted_samples_stanreg_(
-    fitted, model, newdata, var, summary = FALSE, nsamples = n, dpar = NULL, ...
+    fitted, model, newdata, var, summary = FALSE,
+    nsamples = n, re_formula = re_formula, dpar = NULL, ...
   )
 
   for (i in seq_along(dpars)) {
     varname = names(dpars)[[i]]
     dpar = dpars[[i]]
     samples[[varname]] = fitted_predicted_samples_stanreg_(
-      fitted, model, newdata, var = ".estimate", summary = FALSE, nsamples = n, dpar = dpar, ...
+      fitted, model, newdata, var = ".estimate", summary = FALSE,
+      nsamples = n, re_formula = re_formula, dpar = dpar, ...
     )[[".estimate"]]
   }
 
