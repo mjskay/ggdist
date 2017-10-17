@@ -76,6 +76,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @examples
 #'
 #' library(dplyr)
+#' library(ggplot2)
+#'
 #' set.seed(123)
 #'
 #' rnorm(1000) %>%
