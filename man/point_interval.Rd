@@ -134,7 +134,42 @@ intervals for each estimate (these will be spread over rows). Internally it uses
 }
 \examples{
 
-##TODO
+library(dplyr)
+set.seed(123)
+
+rnorm(1000) \%>\%
+  mean_qi()
+
+data.frame(x = rnorm(1000)) \%>\%
+  median_qi(x, .prob = c(.50, .80, .95))
+
+data.frame(
+    x = rnorm(1000),
+    y = rnorm(1000, mean = 2, sd = 2)
+  ) \%>\%
+  median_qi(x, y)
+
+data.frame(
+    x = rnorm(1000),
+    group = "a"
+  ) \%>\%
+  rbind(data.frame(
+    x = rnorm(1000, mean = 2, sd = 2),
+    group = "b")
+  ) \%>\%
+  group_by(group) \%>\%
+  mean_qi(.prob = c(.50, .80, .95))
+
+multimodal_samples = data.frame(
+    x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))
+  )
+
+multimodal_samples \%>\%
+  mode_hdi(.prob = c(.66, .95))
+
+multimodal_samples \%>\%
+  ggplot(aes(x = x, y = 0)) +
+  geom_halfeyeh(fun.data = mode_hdih, .prob = c(.66, .95))
 
 }
 \author{
