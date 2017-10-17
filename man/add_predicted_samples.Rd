@@ -16,14 +16,14 @@
 add_predicted_samples(newdata, model, var = "pred", ..., n = NULL,
   re_formula = NULL)
 
-add_fitted_samples(newdata, model, var = "estimate", auxpars = TRUE, ...,
-  n = NULL, re_formula = NULL)
+add_fitted_samples(newdata, model, var = "estimate", ..., n = NULL,
+  re_formula = NULL, auxpars = TRUE, scale = c("response", "linear"))
 
 predicted_samples(model, newdata, var = "pred", ..., n = NULL,
   re_formula = NULL)
 
-fitted_samples(model, newdata, var = "estimate", auxpars = TRUE, ...,
-  n = NULL, re_formula = NULL)
+fitted_samples(model, newdata, var = "estimate", ..., n = NULL,
+  re_formula = NULL, auxpars = TRUE, scale = c("response", "linear"))
 
 \method{predicted_samples}{default}(model, newdata, ...)
 
@@ -32,14 +32,16 @@ fitted_samples(model, newdata, var = "estimate", auxpars = TRUE, ...,
 \method{predicted_samples}{stanreg}(model, newdata, var = "pred", ...,
   n = NULL, re_formula = NULL)
 
-\method{fitted_samples}{stanreg}(model, newdata, var = "estimate",
-  auxpars = TRUE, ..., n = NULL, re_formula = NULL)
+\method{fitted_samples}{stanreg}(model, newdata, var = "estimate", ...,
+  n = NULL, re_formula = NULL, auxpars = TRUE, scale = c("response",
+  "linear"))
 
 \method{predicted_samples}{brmsfit}(model, newdata, var = "pred", ...,
   n = NULL, re_formula = NULL)
 
-\method{fitted_samples}{brmsfit}(model, newdata, var = "estimate",
-  auxpars = TRUE, ..., n = NULL, re_formula = NULL)
+\method{fitted_samples}{brmsfit}(model, newdata, var = "estimate", ...,
+  n = NULL, re_formula = NULL, auxpars = TRUE, scale = c("response",
+  "linear"))
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
@@ -74,6 +76,10 @@ parameters are included in the output as additional columns named after each par
 (alternative names can be provided using a list or named vector, e.g. \code{c(sigma.hat = "sigma")}
 would output the \code{"sigma"} parameter from a model as a column named \code{"sigma.hat"}).
 If \code{FALSE}, auxiliary parameters are not included.}
+
+\item{scale}{Either \code{"response"} or \code{"linear"}. If \code{"response"}, results are returned
+on the scale of the response variable. If \code{"linear"}, fitted values are returned on the scale of
+the linear predictor.}
 }
 \value{
 A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a

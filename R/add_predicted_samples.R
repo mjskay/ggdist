@@ -39,13 +39,6 @@ globalVariables(c(".iteration", ".pred"))
 #' \code{map2stan} models from the \code{rethinking} package are also supported.
 #' @param var The name of the output column for the predictions (default `code{"pred"}`) or fits
 #' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
-#' @param auxpars For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
-#' parameters be included in the output? Valid only for models that support auxiliary parameters,
-#' (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
-#' parameters are included in the output as additional columns named after each parameter
-#' (alternative names can be provided using a list or named vector, e.g. \code{c(sigma.hat = "sigma")}
-#' would output the \code{"sigma"} parameter from a model as a column named \code{"sigma.hat"}).
-#' If \code{FALSE}, auxiliary parameters are not included.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
 #' @param n The number of samples per prediction / fit to return.
@@ -55,6 +48,16 @@ globalVariables(c(".iteration", ".pred"))
 #' marginalizing over grouping factors by specifying new levels of a factor in \code{newdata}. In the case of
 #' \code{\link[brms]{brm}}, you must also pass \code{allow_new_levels = TRUE} here to include new levels (see
 #' \code{\link[brms]{predict.brmsfit}}).
+#' @param auxpars For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
+#' parameters be included in the output? Valid only for models that support auxiliary parameters,
+#' (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
+#' parameters are included in the output as additional columns named after each parameter
+#' (alternative names can be provided using a list or named vector, e.g. \code{c(sigma.hat = "sigma")}
+#' would output the \code{"sigma"} parameter from a model as a column named \code{"sigma.hat"}).
+#' If \code{FALSE}, auxiliary parameters are not included.
+#' @param scale Either \code{"response"} or \code{"linear"}. If \code{"response"}, results are returned
+#' on the scale of the response variable. If \code{"linear"}, fitted values are returned on the scale of
+#' the linear predictor.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
 #' factor grouping rows from the input \code{newdata}), \code{.chain} column (the chain
 #' each sample came from, or \code{NA} if the model does not provide chain information),
@@ -79,8 +82,10 @@ add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL, re
 
 #' @rdname add_predicted_samples
 #' @export
-add_fitted_samples = function(newdata, model, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
-  fitted_samples(model, newdata, var, auxpars = auxpars, ..., n = n, re_formula = re_formula)
+add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL, re_formula = NULL,
+  auxpars = TRUE, scale = c("response", "linear")
+) {
+  fitted_samples(model, newdata, var, ..., n = n, re_formula = re_formula, auxpars = auxpars, scale = scale)
 }
 
 #' @rdname add_predicted_samples
@@ -91,7 +96,9 @@ predicted_samples = function(model, newdata, var = "pred", ..., n = NULL, re_for
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
+fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
+  auxpars = TRUE, scale = c("response", "linear")
+) {
   UseMethod("fitted_samples")
 }
 
@@ -139,13 +146,17 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
 
 #' @rdname add_predicted_samples
 #' @export
-fitted_samples.stanreg = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
+fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
+  auxpars = TRUE, scale = c("response", "linear")
+) {
+  transform = match.arg(scale) == "response"
+
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
   samples = fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var,
-    re.form = re_formula, ...
+    re.form = re_formula, transform = transform, ...
   )
   # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
   if (!is.null(n)) {
@@ -172,7 +183,11 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
 #' @rdname add_predicted_samples
 #' @importFrom rlang is_true is_false
 #' @export
-fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TRUE, ..., n = NULL, re_formula = NULL) {
+fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
+  auxpars = TRUE, scale = c("response", "linear")
+) {
+  scale = match.arg(scale)
+
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
@@ -193,7 +208,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TR
   # get the samples for the primary parameter first so we can stick the other estimates onto it
   samples = fitted_predicted_samples_stanreg_(
     fitted, model, newdata, var, summary = FALSE,
-    nsamples = n, re_formula = re_formula, dpar = NULL, ...
+    nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale, ...
   )
 
   for (i in seq_along(dpars)) {
@@ -201,7 +216,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", auxpars = TR
     dpar = dpars[[i]]
     samples[[varname]] = fitted_predicted_samples_stanreg_(
       fitted, model, newdata, var = ".estimate", summary = FALSE,
-      nsamples = n, re_formula = re_formula, dpar = dpar, ...
+      nsamples = n, re_formula = re_formula, dpar = dpar, scale = scale, ...
     )[[".estimate"]]
   }
 
