@@ -75,7 +75,7 @@
       <h1>Extracting tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-10-16</h4>
+            <h4 class="date">2017-10-18</h4>
           </div>
 
     
@@ -594,6 +594,7 @@ m <span class="op">%&gt;%</span>
 m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(b, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">reorder</span>(condition, b)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span>

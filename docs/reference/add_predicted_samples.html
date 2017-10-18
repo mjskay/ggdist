@@ -103,15 +103,17 @@
 or the posterior predictions of the model to the data in a long format.</p>
     
 
-    <pre class="usage"><span class='fu'>add_predicted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+    <pre class="usage"><span class='fu'>add_predicted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>add_fitted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>add_fitted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
@@ -121,19 +123,21 @@ or the posterior predictions of the model to the data in a long format.</p>
 
 <span class='co'># S3 method for stanreg</span>
 <span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>,
-  <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>,
+  <span class='st'>"linear"</span>))
 
 <span class='co'># S3 method for brmsfit</span>
 <span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>,
-  <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>,
+  <span class='st'>"linear"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -167,6 +171,15 @@ model given.</p></td>
       <td><p>The number of samples per prediction / fit to return.</p></td>
     </tr>
     <tr>
+      <th>re_formula</th>
+      <td><p>formula containing group-level effects to be considered in the prediction.
+If <code>NULL</code> (default), include all group-level effects; if <code>NA</code>, include no group-level effects.
+Some model types (such as <code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code> and <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stanreg-objects'>stanreg-objects</a></code>) allow
+marginalizing over grouping factors by specifying new levels of a factor in <code>newdata</code>. In the case of
+<code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code>, you must also pass <code>allow_new_levels = TRUE</code> here to include new levels (see
+<code><a href='http://www.rdocumentation.org/packages/brms/topics/predict.brmsfit'>predict.brmsfit</a></code>).</p></td>
+    </tr>
+    <tr>
       <th>auxpars</th>
       <td><p>For <code>fitted_samples</code> and <code>add_fitted_samples</code>: Should auxiliary
 parameters be included in the output? Valid only for models that support auxiliary parameters,
@@ -175,6 +188,12 @@ parameters are included in the output as additional columns named after each par
 (alternative names can be provided using a list or named vector, e.g. <code>c(sigma.hat = "sigma")</code>
 would output the <code>"sigma"</code> parameter from a model as a column named <code>"sigma.hat"</code>).
 If <code>FALSE</code>, auxiliary parameters are not included.</p></td>
+    </tr>
+    <tr>
+      <th>scale</th>
+      <td><p>Either <code>"response"</code> or <code>"linear"</code>. If <code>"response"</code>, results are returned
+on the scale of the response variable. If <code>"linear"</code>, fitted values are returned on the scale of
+the linear predictor.</p></td>
     </tr>
     </table>
     
