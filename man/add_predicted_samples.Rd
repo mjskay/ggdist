@@ -47,14 +47,15 @@ fitted_samples(model, newdata, var = "estimate", ..., n = NULL,
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
 generate predictions from the data used to fit the model.}
 
-\item{model}{A supported Bayesian model fit / MCMC object. Currently
-supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, and anything with its own
-\code{\link[coda]{as.mcmc.list}} implementation. If you install the \code{tidybayes.rethinking}
-package (available at \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
-\code{map2stan} models from the \code{rethinking} package are also supported.}
+\item{model}{A supported Bayesian model fit / MCMC object that can provide fits and predictions. Currently
+supported models include \code{\link[rstanarm]{stanreg-objects}} (e.g. \code{rstanarm} models) and
+\code{\link[brms]{brm}} models. While other functions in this package (like \code{\link{spread_samples}})
+support a wider range of models, to work with \code{add_fitted_samples} and \code{add_predicted_samples}
+a model must provide an interface for generating predictions, thus more generic Bayesian modeling interfaces
+like \code{runjags} and \code{rstan} are not directly supported for these functions (only wrappers around
+those languages that provide predictions, like \code{rstanarm} and \code{brm}, are supported here).}
 
-\item{var}{The name of the output column for the predictions (default `code{"pred"}`) or fits
+\item{var}{The name of the output column for the predictions (default \code{"pred"}) or fits
 (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).}
 
 \item{...}{Additional arguments passed to the underlying prediction method for the type of
@@ -90,8 +91,8 @@ sample from the posterior predictive distribution). For convenience, the resulti
 frame comes grouped by the original input rows.
 }
 \description{
-Given a data frame, adds samples from the posterior fit (aka the linear/link-level predictor)
-or the posterior predictions of the model to the data in a long format.
+Given a data frame and a model, adds samples from the posterior fit (aka the linear/link-level predictor)
+or the posterior predictions of the model to the data frame in a long format.
 }
 \details{
 \code{add_fitted_samples} adds samples from the posterior linear predictor (or the "link") to
