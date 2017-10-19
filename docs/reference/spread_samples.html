@@ -103,9 +103,9 @@
 indices into one of two types of long-format data frames.</p>
     
 
-    <pre class="usage"><span class='fu'>spread_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>spread_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[,: ]"</span>)
 
-<span class='fu'>gather_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>gather_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[,: ]"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -124,6 +124,10 @@ supported models include <code><a href='http://www.rdocumentation.org/packages/c
       <th>regex</th>
       <td><p>If <code>TRUE</code>, parameter names are treated as regular expressions and all column matching the
 regular expression and number of indices are included in the output. Default <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>sep</th>
+      <td><p>Separator used to separate indices in parameter names, as a regular expression.</p></td>
     </tr>
     </table>
     
