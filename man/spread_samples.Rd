@@ -7,9 +7,9 @@
 \alias{gather_samples}
 \title{Extract samples of parameters in a Bayesian model fit into a tidy data format}
 \usage{
-spread_samples(model, ..., regex = FALSE)
+spread_samples(model, ..., regex = FALSE, sep = "[,: ]")
 
-gather_samples(model, ..., regex = FALSE)
+gather_samples(model, ..., regex = FALSE, sep = "[,: ]")
 }
 \arguments{
 \item{model}{A supported Bayesian model fit / MCMC object. Currently
@@ -20,6 +20,8 @@ supported models include \code{\link[coda]{mcmc}}.}
 
 \item{regex}{If \code{TRUE}, parameter names are treated as regular expressions and all column matching the
 regular expression and number of indices are included in the output. Default \code{FALSE}.}
+
+\item{sep}{Separator used to separate indices in parameter names, as a regular expression.}
 }
 \value{
 A data frame.
