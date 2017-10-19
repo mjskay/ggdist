@@ -99,8 +99,8 @@
     </div>
 
     
-    <p>Given a data frame, adds samples from the posterior fit (aka the linear/link-level predictor)
-or the posterior predictions of the model to the data in a long format.</p>
+    <p>Given a data frame and a model, adds samples from the posterior fit (aka the linear/link-level predictor)
+or the posterior predictions of the model to the data frame in a long format.</p>
     
 
     <pre class="usage"><span class='fu'>add_predicted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -149,16 +149,17 @@ generate predictions from the data used to fit the model.</p></td>
     </tr>
     <tr>
       <th>model</th>
-      <td><p>A supported Bayesian model fit / MCMC object. Currently
-supported models include <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc'>mcmc</a></code>, <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>mcmc.list</a></code>,
-<code><a href='http://www.rdocumentation.org/packages/runjags/topics/runjags'>runjags</a></code>, <code><a href='http://www.rdocumentation.org/packages/rstan/topics/stanfit-class'>stanfit</a></code>, and anything with its own
-<code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code> implementation. If you install the <code>tidybayes.rethinking</code>
-package (available at <a href='https://github.com/mjskay/tidybayes.rethinking'>https://github.com/mjskay/tidybayes.rethinking</a>), <code>map</code> and
-<code>map2stan</code> models from the <code>rethinking</code> package are also supported.</p></td>
+      <td><p>A supported Bayesian model fit / MCMC object that can provide fits and predictions. Currently
+supported models include <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stanreg-objects'>stanreg-objects</a></code> (e.g. <code>rstanarm</code> models) and
+<code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code> models. While other functions in this package (like <code><a href='spread_samples.html'>spread_samples</a></code>)
+support a wider range of models, to work with <code>add_fitted_samples</code> and <code>add_predicted_samples</code>
+a model must provide an interface for generating predictions, thus more generic Bayesian modeling interfaces
+like <code>runjags</code> and <code>rstan</code> are not directly supported for these functions (only wrappers around
+those languages that provide predictions, like <code>rstanarm</code> and <code>brm</code>, are supported here).</p></td>
     </tr>
     <tr>
       <th>var</th>
-      <td><p>The name of the output column for the predictions (default `code"pred"`) or fits
+      <td><p>The name of the output column for the predictions (default <code>"pred"</code>) or fits
 (default <code>"estimate"</code>, for compatibility with <code><a href='http://www.rdocumentation.org/packages/broom/topics/tidy'>tidy</a></code>).</p></td>
     </tr>
     <tr>
