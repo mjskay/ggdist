@@ -28,3 +28,9 @@ saveRDS(brms.m_hp_sigma, "tests/testthat/models.brms.m_hp_sigma.rds", compress =
 
 rstanarm.m_hp_wt = stan_glm(mpg ~ hp*wt, data = mtcars_tbl, chains = 1, iter = 500)
 saveRDS(rstanarm.m_hp_wt, "tests/testthat/models.rstanarm.m_hp_wt.rds", compress = FALSE)
+
+
+brms.m_cyl_mpg = brm(ordered(cyl) ~ mpg, data = mtcars_tbl, chains = 1, iter = 500,
+  family = cumulative("logit"), threshold = "flexible",
+  prior = prior(normal(0,1), class = b))
+saveRDS(brms.m_cyl_mpg, "tests/testthat/models.brms.m_cyl_mpg.rds", compress = FALSE)

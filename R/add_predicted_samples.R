@@ -49,6 +49,9 @@ globalVariables(c(".iteration", ".pred"))
 #' marginalizing over grouping factors by specifying new levels of a factor in \code{newdata}. In the case of
 #' \code{\link[brms]{brm}}, you must also pass \code{allow_new_levels = TRUE} here to include new levels (see
 #' \code{\link[brms]{predict.brmsfit}}).
+#' @param category For ordinal and multinomial models, the name of the column to put the category names
+#' into in the resulting data frame. For these models, multiple sets of rows will be returned per prediction,
+#' one for each category.
 #' @param auxpars For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
 #' parameters be included in the output? Valid only for models that support auxiliary parameters,
 #' (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
@@ -84,9 +87,10 @@ add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL, re
 #' @rdname add_predicted_samples
 #' @export
 add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL, re_formula = NULL,
-  auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = TRUE, scale = c("response", "linear")
 ) {
-  fitted_samples(model, newdata, var, ..., n = n, re_formula = re_formula, auxpars = auxpars, scale = scale)
+  fitted_samples(model, newdata, var, ..., n = n, re_formula = re_formula,
+    category = category, auxpars = auxpars, scale = scale)
 }
 
 #' @rdname add_predicted_samples
@@ -98,7 +102,7 @@ predicted_samples = function(model, newdata, var = "pred", ..., n = NULL, re_for
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = TRUE, scale = c("response", "linear")
 ) {
   UseMethod("fitted_samples")
 }
@@ -115,24 +119,6 @@ fitted_samples.default = function(model, newdata, ...) {
   stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `fitted_samples`"))
 }
 
-# template for predicted_samples.stanreg and fitted_samples.stanreg
-fitted_predicted_samples_stanreg_ = function(f_fitted_predicted, model, newdata, var, ...) {
-  newdata %>%
-    data.frame(
-      #for some reason calculating row here instead of in a subsequent mutate()
-      #is about 3 times faster
-      .row = factor(1:nrow(.)),
-      .chain = as.numeric(NA),
-      t(f_fitted_predicted(model, newdata = ., ...)),
-      check.names = FALSE
-    ) %>%
-    gather_(".iteration", var, names(.)[(ncol(newdata) + 3):ncol(.)]) %>%
-    mutate(
-      .iteration = as.numeric(.iteration)
-    ) %>%
-    group_by_(".row", .dots = colnames(newdata))
-}
-
 #' @rdname add_predicted_samples
 #' @export
 predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
@@ -140,15 +126,15 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(rstantools::posterior_predict, model, newdata, var,
-    draws = n, re.form = re_formula, ...
+  fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
+    draws = n, re.form = re_formula
   )
 }
 
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = TRUE, scale = c("response", "linear")
 ) {
   transform = match.arg(scale) == "response"
 
@@ -156,8 +142,8 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
 
-  samples = fitted_predicted_samples_stanreg_(rstanarm::posterior_linpred, model, newdata, var,
-    re.form = re_formula, transform = transform, ...
+  samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
+    category = category, re.form = re_formula, transform = transform
   )
   # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
   if (!is.null(n)) {
@@ -176,8 +162,8 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
 
-  fitted_predicted_samples_stanreg_(predict, model, newdata, var, summary = FALSE,
-    nsamples = n, re_formula = re_formula, ...
+  fitted_predicted_samples_brmsfit_(predict, model, newdata, var, ...,
+    nsamples = n, re_formula = re_formula
   )
 }
 
@@ -185,7 +171,7 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
 #' @importFrom rlang is_true is_false
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = TRUE, scale = c("response", "linear")
 ) {
   scale = match.arg(scale)
 
@@ -207,19 +193,62 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   names(dpars)[missing_names] = dpars[missing_names]
 
   # get the samples for the primary parameter first so we can stick the other estimates onto it
-  samples = fitted_predicted_samples_stanreg_(
-    fitted, model, newdata, var, summary = FALSE,
-    nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale, ...
+  samples = fitted_predicted_samples_brmsfit_(
+    fitted, model, newdata, var, ...,
+    category = category, nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale
   )
 
   for (i in seq_along(dpars)) {
     varname = names(dpars)[[i]]
     dpar = dpars[[i]]
-    samples[[varname]] = fitted_predicted_samples_stanreg_(
-      fitted, model, newdata, var = ".estimate", summary = FALSE,
-      nsamples = n, re_formula = re_formula, dpar = dpar, scale = scale, ...
+    samples[[varname]] = fitted_predicted_samples_brmsfit_(
+      fitted, model, newdata, var = ".estimate", ...,
+      category = category, nsamples = n, re_formula = re_formula, dpar = dpar, scale = scale
     )[[".estimate"]]
   }
 
   samples
+}
+
+
+#' @importFrom arrayhelpers array2df ndim
+fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata, var, category, ...) {
+  column_format = list(
+    .iteration = NA,        #NA here means numeric
+    .row = NA
+  )
+
+  fits_preds <- f_fitted_predicted(model, newdata = newdata, summary = FALSE, ...)
+
+  groups = union(colnames(newdata), ".row")
+
+  if (ndim(fits_preds) == 3) {
+    #3 dimensions implies a categorical outcome, we must determine the category names
+    #however, with summary = FALSE brms does not provide category names, so we'll grab them
+    #by fitting just one row with summary = TRUE
+    category_names = dimnames(f_fitted_predicted(model, newdata = newdata[1,], summary = TRUE))[[3]]
+    column_format[[3]] = category_names
+    names(column_format)[[3]] = category
+    groups %<>% union(category)
+  }
+
+  fits_preds_df = array2df(fits_preds, column_format, label.x = var)
+
+  #rstanarm does something weird that prevents array2df from propoerly seeing .row and .iteration as numerics,
+  #so we have to convert them manually
+  if (is.factor(fits_preds_df$.row) || is.character(fits_preds_df$.row)) {
+    fits_preds_df$.row = as.numeric(as.character(fits_preds_df$.row))
+  }
+  if (is.factor(fits_preds_df$.iteration) || is.character(fits_preds_df$.iteration)) {
+    fits_preds_df$.iteration = as.numeric(as.character(fits_preds_df$.iteration))
+  }
+
+  newdata %>%
+    mutate(
+      .row = seq_len(n()),
+      .chain = as.numeric(NA)
+    ) %>%
+    inner_join(fits_preds_df, by = ".row") %>%
+    select(-!!sym(var), !!sym(var)) %>%
+    group_by(!!!syms(groups))
 }
