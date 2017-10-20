@@ -98,7 +98,7 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
 })
 
 
-test_that("[add_]fitted_samples works on brms models with categorical outcomes", {
+test_that("[add_]fitted_samples works on brms models with categorical outcomes (response scale)", {
   m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
 
   category_names = dimnames(fitted(m_cyl_mpg, mtcars_tbl, summary = TRUE))[[3]]
@@ -110,4 +110,19 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes",
 
   expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg))
+})
+
+
+test_that("[add_]fitted_samples works on brms models with categorical outcomes (linear scale)", {
+  m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
+
+  category_names = dimnames(fitted(m_cyl_mpg, mtcars_tbl, summary = TRUE, scale = "linear"))[[3]]
+  fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
+    array2df(list(.iteration = NA, .row = NA, category = category_names), label.x = "estimate") %>%
+    mutate(.chain = as.numeric(NA))
+
+  ref = inner_join(mtcars_tbl %>% mutate(.row = as.numeric(rownames(.))), fits, by = ".row")
+
+  expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl, scale = "linear"))
+  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"))
 })
