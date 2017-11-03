@@ -46,6 +46,28 @@ test_that("[add_]fitted_samples works on a simple rstanarm model", {
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_wt))
 })
 
+test_that("[add_]fitted_samples works on an rstanarm model with grouped newdata", {
+  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+
+  fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
+    as.data.frame() %>%
+    mutate(
+      .chain = as.integer(NA),
+      .iteration = seq_len(n())
+    ) %>%
+    gather(.row, estimate, -.chain, -.iteration) %>%
+    as_data_frame()
+
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(fits, by = ".row") %>%
+    mutate(.row = as.integer(.row))
+
+  expect_equal(ref, fitted_samples(m_hp_wt, group_by(mtcars_tbl, hp)))
+  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_wt))
+})
+
+
 test_that("[add_]fitted_samples works on brms models without auxpars", {
   m_hp = readRDS("models.brms.m_hp.rds")
 

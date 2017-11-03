@@ -45,6 +45,29 @@ test_that("[add_]predicted_samples and basic arguments works on a simple rstanar
   expect_equal(ref, add_predicted_samples(mtcars_tbl, m_hp_wt, n = 100, seed = 123))
 })
 
+
+test_that("[add_]predicted_samples and basic arguments works on an rstanarm model with random effects", {
+  m_cyl = readRDS("models.rstanarm.m_cyl.rds")
+
+  preds = posterior_predict(m_cyl, mtcars_tbl, draws = 100, seed = 123) %>%
+    as.data.frame() %>%
+    mutate(
+      .chain = as.integer(NA),
+      .iteration = seq_len(n())
+    ) %>%
+    gather(.row, pred, -.chain, -.iteration) %>%
+    as_data_frame()
+
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(preds, by = ".row") %>%
+    mutate(.row = as.integer(.row))
+
+  expect_equal(ref, predicted_samples(m_cyl, mtcars_tbl, n = 100, seed = 123))
+  expect_equal(ref, add_predicted_samples(mtcars_tbl, m_cyl, n = 100, seed = 123))
+})
+
+
 test_that("[add_]predicted_samples works on a simple brms model", {
   m_hp = readRDS("models.brms.m_hp.rds")
 

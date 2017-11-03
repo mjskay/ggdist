@@ -77,7 +77,7 @@ globalVariables(c(".iteration", ".pred"))
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tidyr gather
-#' @importFrom dplyr mutate sample_n
+#' @importFrom dplyr mutate sample_n ungroup group_by
 #' @importFrom stats fitted predict
 #' @export
 add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL, re_formula = NULL) {
@@ -127,7 +127,7 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
   }
 
   fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
-    draws = n, re.form = re_formula
+    draws = n, re.form = re_formula, is_brms = FALSE
   )
 }
 
@@ -143,7 +143,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
   }
 
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
-    category = category, re.form = re_formula, transform = transform
+    category = category, re.form = re_formula, transform = transform, is_brms = FALSE
   )
   # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
   if (!is.null(n)) {
@@ -212,21 +212,29 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
 
 
 #' @importFrom arrayhelpers array2df ndim
-fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata, var, category, ...) {
+fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata, var, category, ...,
+  is_brms = TRUE, summary = NULL #summary is ignored, we change it ourselves
+) {
+  newdata %<>% ungroup()
+
   column_format = list(
     .iteration = NA,        #NA here means numeric
     .row = NA
   )
 
-  fits_preds <- f_fitted_predicted(model, newdata = newdata, summary = FALSE, ...)
+  fits_preds <- if (is_brms) { #only brms has the summary parameter
+    f_fitted_predicted(model, newdata = newdata, summary = FALSE, ...)
+  } else {
+    f_fitted_predicted(model, newdata = newdata, ...)
+  }
 
   groups = union(colnames(newdata), ".row")
 
   if (ndim(fits_preds) == 3) {
     #3 dimensions implies a categorical outcome, we must determine the category names
     #however, with summary = FALSE brms does not provide category names, so we'll grab them
-    #by fitting just one row with summary = TRUE
-    category_names = dimnames(f_fitted_predicted(model, newdata = newdata[1, ], summary = TRUE, ...))[[3]]
+    #by fitting just one row without it
+    category_names = dimnames(f_fitted_predicted(model, newdata = newdata[1, ], ...))[[3]]
     column_format[[3]] = category_names
     names(column_format)[[3]] = category
     groups %<>% union(category)
