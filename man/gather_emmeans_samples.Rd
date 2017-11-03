@@ -7,8 +7,8 @@
 gather_emmeans_samples(object)
 }
 \arguments{
-\item{object}{An \code{\link[emmeans]{ref_grid}} object such as returned by \code{\link[emmeans]{ref_grid}} or
-\code{\link[emmeans]{emmeans}}.}
+\item{object}{An \code{emmGrid} object such as returned by
+\code{\link[emmeans]{ref_grid}} or \code{\link[emmeans]{emmeans}}.}
 }
 \value{
 A data frame of tidy samples. The columns of the reference grid are returned as-is, with an
