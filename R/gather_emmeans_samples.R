@@ -6,6 +6,8 @@
 
 # DEPRECATED NAMES FOR gather_emmeans_samples
 #' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
 #' @export
 gather_lsmeans_samples = function(...) {
   .Deprecated("gather_emmeans_samples")
@@ -66,7 +68,7 @@ gather_emmeans_samples = function(object) {
     )
   })
 
-  samples[, names(samples) %>% setdiff(c(".wgt.", ".offset."))] %>%
+  samples[, setdiff(names(samples), c(".wgt.", ".offset."))] %>%
     as_tibble() %>%
-    group_by(!!!syms(names(.) %>% setdiff(c(".chain", ".iteration", "estimate"))))
+    group_by(!!!syms(setdiff(names(.), c(".chain", ".iteration", "estimate"))))
 }

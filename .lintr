@@ -4,4 +4,5 @@ linters: with_defaults(
   open_curly_linter(allow_single_line = TRUE),
   closed_curly_linter = NULL,
   object_name_linter = NULL,
-  object_length_linter = NULL)
+  object_length_linter = NULL,
+  snake_case_linter = NULL)

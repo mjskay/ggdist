@@ -25,8 +25,8 @@ globalVariables(c("...prob.."))
 #' \code{geom_lineribbon} and \code{stat_lineribbon}.
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.
-#' @param fun.data A function that is given a vector and should
-#'   return a data frame with variables \code{y}, \code{ymin} and \code{ymax}. See the \code{point_interval} family of functions.
+#' @param fun.data A function that is given a vector and should return a data frame with variables \code{y}, \code{ymin}
+#' and \code{ymax}. See the \code{point_interval} family of functions.
 #' @param point.interval Alias for \code{fun.data}
 #' @param .prob The \code{.prob} argument passed to \code{fun.data}.
 #' @param fun.args Other optional arguments passed to \code{fun.data}.

@@ -26,8 +26,8 @@ the plot defaults.}
 
 \item{point.interval}{Alias for \code{fun.data}}
 
-\item{fun.data}{A function that is given a vector and should
-return a data frame with variables \code{y}, \code{ymin} and \code{ymax}. See the \code{point_interval} family of functions.}
+\item{fun.data}{A function that is given a vector and should return a data frame with variables \code{y}, \code{ymin}
+and \code{ymax}. See the \code{point_interval} family of functions.}
 
 \item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
 

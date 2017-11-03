@@ -36,7 +36,9 @@ test_that("gather_emmeans_samples works on a simple rstanarm model", {
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()
 
-  ref = inner_join(as_data_frame(estimate_grid) %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
+  ref = as_data_frame(estimate_grid) %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(fits, by = ".row") %>%
     select(-.row)
 
   # recover_data for stanreg objects seems to require the data to be in the same environment as in the

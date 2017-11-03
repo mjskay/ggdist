@@ -45,4 +45,3 @@ test_that("two-parameter eye plots work", {
   expect_doppelganger("two-parameter (numeric) vertical eye", p + geom_eye())
 
 })
-

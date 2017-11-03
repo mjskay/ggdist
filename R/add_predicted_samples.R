@@ -226,7 +226,7 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
     #3 dimensions implies a categorical outcome, we must determine the category names
     #however, with summary = FALSE brms does not provide category names, so we'll grab them
     #by fitting just one row with summary = TRUE
-    category_names = dimnames(f_fitted_predicted(model, newdata = newdata[1,], summary = TRUE, ...))[[3]]
+    category_names = dimnames(f_fitted_predicted(model, newdata = newdata[1, ], summary = TRUE, ...))[[3]]
     column_format[[3]] = category_names
     names(column_format)[[3]] = category
     groups %<>% union(category)

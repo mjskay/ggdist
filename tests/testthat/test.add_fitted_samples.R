@@ -37,7 +37,9 @@ test_that("[add_]fitted_samples works on a simple rstanarm model", {
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
   expect_equal(ref, fitted_samples(m_hp_wt, mtcars_tbl))
@@ -57,7 +59,9 @@ test_that("[add_]fitted_samples works on brms models without auxpars", {
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
   expect_equal(ref, fitted_samples(m_hp, mtcars_tbl))
@@ -84,7 +88,9 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
     gather(.row, sigma) %$%
     sigma
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
   fitted_samples(m_hp_sigma, mtcars_tbl, auxpars = FALSE)

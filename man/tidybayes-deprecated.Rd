@@ -5,9 +5,6 @@
 \alias{ggeye}
 \alias{gather_lsmeans_samples}
 \title{Deprecated functions in tidybayes}
-\usage{
-gather_lsmeans_samples(...)
-}
 \description{
 See `Details` for information on each deprecated function and suggested alternatives.
 }

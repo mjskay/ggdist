@@ -36,7 +36,9 @@ test_that("[add_]predicted_samples and basic arguments works on a simple rstanar
     gather(.row, pred, -.chain, -.iteration) %>%
     as_data_frame()
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), preds, by = ".row") %>%
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(preds, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
   expect_equal(ref, predicted_samples(m_hp_wt, mtcars_tbl, n = 100, seed = 123))
@@ -57,7 +59,9 @@ test_that("[add_]predicted_samples works on a simple brms model", {
     gather(.row, pred, -.chain, -.iteration) %>%
     as_data_frame()
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), preds, by = ".row") %>%
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(preds, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
   set.seed(123)
