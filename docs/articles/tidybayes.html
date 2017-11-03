@@ -75,7 +75,7 @@
       <h1>Using Tidy Data with Bayesian Samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-10-19</h4>
+            <h4 class="date">2017-11-03</h4>
           </div>
 
     
@@ -121,7 +121,7 @@ img {
 <span class="kw">library</span>(forcats)
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(ggstance)
-<span class="kw">library</span>(lsmeans)
+<span class="kw">library</span>(emmeans)
 <span class="kw">library</span>(broom)
 <span class="kw">library</span>(rstan)
 <span class="kw">library</span>(rstanarm)
@@ -246,7 +246,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Thu Oct 19 23:54:54 2017.
+## Samples were drawn using NUTS(diag_e) at Fri Nov 03 16:29:06 2017.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -261,24 +261,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">extract</span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.882 0.568 1.589 0.803 -0.505 ...
+##  $ overall_mean     : num [1:4000(1d)] -0.0646 0.9236 0.9215 0.6407 0.3045 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.379 -0.313 -1.116 -1.22 0.793 ...
+##  $ condition_zoffset: num [1:4000, 1:5] 0.0357 -0.5319 -0.6987 -0.8263 -0.4777 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.577 0.531 0.758 0.513 0.573 ...
+##  $ response_sd      : num [1:4000(1d)] 0.569 0.445 0.504 0.569 0.548 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 2.179 0.842 1.124 0.782 1.105 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.022 1.386 0.995 0.764 0.81 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.0548 0.3041 0.3344 -0.1518 0.3712 ...
+##  $ condition_mean   : num [1:4000, 1:5] -0.02817 0.1861 0.22659 0.00968 -0.08232 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 4.173 2.591 -3.58 -1.326 -0.684 ...
+##  $ lp__             : num [1:4000(1d)] -1.471 -2.481 -3.627 -1.144 -0.668 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -772,14 +772,14 @@ m <span class="op">%&gt;%</span>
 <a href="#compatibility-of-point_interval-with-broomtidy-and-dotwhiskerdwplot-a-model-comparison-example" class="anchor"></a>Compatibility of <code>point_interval</code> with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> and <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>: A model comparison example</h3>
 <p>Because <code>mean_qi</code> and the <code>point_interval</code> family of functions use a similar naming scheme to that of <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>, it is easy to compare results against models supported by <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>. For example, let’s compare our model’s estimates of conditional means against an ordinary least squares (OLS) regression:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_linear =<span class="st"> </span><span class="kw">lm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC)</code></pre></div>
-<p>Combining <code><a href="http://www.rdocumentation.org/packages/lsmeans/topics/lsmeans">lsmeans::lsmeans</a></code> with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>, we can generate tidy-format estimates of conditional means from the above model:</p>
+<p>Combining <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>, we can generate tidy-format estimates of conditional means from the above model:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">linear_estimates =<span class="st"> </span>m_linear <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">lsmeans</span>(<span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">tidy</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">emmeans</span>(<span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>broom<span class="op">:::</span><span class="kw">tidy.ref.grid</span>() <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># need to specify explicitly until broom updates to support emmeans (formerly lsmeans)</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="st">"OLS"</span>)
 
 linear_estimates</code></pre></div>
-<pre><code>##   condition   estimate std.error df   conf.low  conf.high model
+<pre><code>##   condition     emmean std.error df   conf.low  conf.high model
 ## 1         A  0.1815842  0.173236 45 -0.1673310  0.5304993   OLS
 ## 2         B  1.0142144  0.173236 45  0.6652993  1.3631296   OLS
 ## 3         C  1.8745839  0.173236 45  1.5256687  2.2234990   OLS
@@ -806,6 +806,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">fct_rev</span>(condition)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> estimate, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high, <span class="dt">color =</span> model)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_pointrangeh</span>(<span class="dt">position =</span> <span class="kw">position_dodgev</span>(<span class="dt">height =</span> .<span class="dv">3</span>))</code></pre></div>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_pointrangeh).</code></pre>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-45-1.png" width="576"></p>
 <p>Comptability with <code>tidy</code> also gives compatibility with <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) <span class="op">%&gt;%</span>
@@ -826,6 +827,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(condition_mean, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 4
+## # Groups:   condition [1]
 ##    .chain .iteration condition condition_mean
 ##     &lt;int&gt;      &lt;int&gt;    &lt;fctr&gt;          &lt;dbl&gt;
 ##  1      1          1     B - A      1.2408578
@@ -871,18 +873,17 @@ bayes_estimates</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-49-1.png" width="576"></p>
 <p>If you are instead working with tidy samples generated by <code>gather_samples</code> or <code>gather_terms</code>, the <code>ungather_samples</code> function will transform those samples into the sample <span class="math inline">\(\times\)</span> parameter format. It has the same syntax as <code>unspread_samples</code>.</p>
 </div>
-<div id="compatibility-with-lsmeans" class="section level3">
+<div id="compatibility-with-emmeans-formerly-lsmeans" class="section level3">
 <h3 class="hasAnchor">
-<a href="#compatibility-with-lsmeans" class="anchor"></a>Compatibility with <code>lsmeans</code>
-</h3>
-<p>The <code>lsmeans</code> package provides a convenient syntax for generating marginal estimates from a model, including numerous types of contrasts. It also supports some Bayesian modeling packages, like <code>MCMCglmm</code> and <code>rstanarm</code>. However, it does not provide samples in a tidy format. The <code>gather_lsmeans_samples</code> function converts output from <code>lsmeans</code> into a tidy format, keeping the <code>lsmeans</code> reference grid and adding an <code>estimate</code> column with long-format samples.</p>
+<a href="#compatibility-with-emmeans-formerly-lsmeans" class="anchor"></a>Compatibility with <code>emmeans</code> (formerly <code>lsmeans</code>)</h3>
+<p>The <code>emmeans</code> package provides a convenient syntax for generating marginal estimates from a model, including numerous types of contrasts. It also supports some Bayesian modeling packages, like <code>MCMCglmm</code> and <code>rstanarm</code>. However, it does not provide samples in a tidy format. The <code>gather_emmeans_samples</code> function converts output from <code>emmeans</code> into a tidy format, keeping the <code>emmeans</code> reference grid and adding an <code>estimate</code> column with long-format samples.</p>
 <p>For example, given this <code>rstanarm</code> model:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst =<span class="st"> </span><span class="kw">stan_glm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC)</code></pre></div>
 <pre><code>## trying deprecated constructor; please alert package maintainer</code></pre>
-<p>We can use <code><a href="http://www.rdocumentation.org/packages/lsmeans/topics/lsmeans">lsmeans::lsmeans</a></code> to get conditional means with uncertainty:</p>
+<p>We can use <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> to get conditional means with uncertainty:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">lsmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/gather_lsmeans_samples.html">gather_lsmeans_samples</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_samples.html">gather_emmeans_samples</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   condition [5]
@@ -893,11 +894,11 @@ bayes_estimates</code></pre></div>
 ## 3         C  1.8676747  1.5187897  2.226109  0.95
 ## 4         D  1.0283522  0.6789814  1.383511  0.95
 ## 5         E -0.9269598 -1.2679125 -0.580387  0.95</code></pre>
-<p>Or <code><a href="http://www.rdocumentation.org/packages/lsmeans/topics/lsmeans">lsmeans::lsmeans</a></code> with <code><a href="http://www.rdocumentation.org/packages/lsmeans/topics/contrast">lsmeans::contrast</a></code> to do all pairwise comparisons:</p>
+<p>Or <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> with <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/contrast">emmeans::contrast</a></code> to do all pairwise comparisons:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">lsmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/gather_lsmeans_samples.html">gather_lsmeans_samples</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_samples.html">gather_emmeans_samples</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ## # Groups:   contrast [10]
@@ -913,12 +914,12 @@ bayes_estimates</code></pre></div>
 ##  8    C - D  0.83932242  0.3577575  1.3280053  0.95
 ##  9    C - E  2.79463445  2.3015182  3.2905067  0.95
 ## 10    D - E  1.95531203  1.4815349  2.4361678  0.95</code></pre>
-<p>See <code>?pairwise.lsmc</code> for a list of the numerous contrast types supported by <code>lsmeans</code>.</p>
+<p>See <code>?pairwise.emmc</code> for a list of the numerous contrast types supported by <code>emmeans</code>.</p>
 <p>As before, we can plot the results instead of using a table:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">lsmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/gather_lsmeans_samples.html">gather_lsmeans_samples</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_samples.html">gather_emmeans_samples</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> contrast)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-53-1.png" width="576"></p>

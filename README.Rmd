@@ -247,7 +247,7 @@ For example, let's compare to ordinary least squares (OLS) regression:
 linear_estimates = 
   lm(response ~ condition, data = ABC) %>% 
   emmeans(~ condition) %>% 
-  tidy() %>%
+  broom:::tidy.ref.grid() %>%  # need to specify explicitly until broom updates to support emmeans (formerly lsmeans)
   mutate(model = "OLS")
 linear_estimates
 ```

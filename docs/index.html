@@ -99,7 +99,7 @@
 <p>Finally, <code>tidybayes</code> aims to fit into common workflows through compatibility with other packages:</p>
 <ul>
 <li><p><strong>Compatibility with other tidy packages</strong>. Default column names in the output have also been chosen for compatibility with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>, which makes comparison with estimates from non-Bayesian models straightforward.</p></li>
-<li><p><strong>Compatibility with non-tidy packages</strong>. The <code>unspread_samples</code> and <code>ungather_samples</code> functions invert <code>spread_samples</code> and <code>gather_samples</code>, aiding compatiblity with other Bayesian plotting packages (notably <code>bayesplot</code>). The <code>gather_lsmeans_samples</code> function turns the output from <code><a href="http://www.rdocumentation.org/packages/lsmeans/topics/lsmeans">lsmeans::lsmeans</a></code> (when applied to supported model types, like <code>MCMCglmm</code> and <code>rstanarm</code> models) into long-format data frames.</p></li>
+<li><p><strong>Compatibility with non-tidy packages</strong>. The <code>unspread_samples</code> and <code>ungather_samples</code> functions invert <code>spread_samples</code> and <code>gather_samples</code>, aiding compatiblity with other Bayesian plotting packages (notably <code>bayesplot</code>). The <code>gather_emmeans_samples</code> function turns the output from <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> (formerly <code>lsmeans</code>) into long-format data frames (when applied to supported model types, like <code>MCMCglmm</code> and <code>rstanarm</code> models).</p></li>
 </ul>
 <div id="supported-model-types" class="section level2">
 <h2 class="hasAnchor">
@@ -124,7 +124,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="kw">library</span>(ggstance)
 <span class="kw">library</span>(rstan)
 <span class="kw">library</span>(tidybayes)
-<span class="kw">library</span>(lsmeans)
+<span class="kw">library</span>(emmeans)
 <span class="kw">library</span>(broom)
 <span class="kw">library</span>(brms)
 <span class="kw">library</span>(modelr)
@@ -238,11 +238,11 @@ model {
 <p>For example, let’s compare to ordinary least squares (OLS) regression:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">linear_estimates =<span class="st"> </span>
 <span class="st">  </span><span class="kw">lm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">lsmeans</span>(<span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">tidy</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">emmeans</span>(<span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>broom<span class="op">:::</span><span class="kw">tidy.ref.grid</span>() <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># need to specify explicitly until broom updates to support emmeans (formerly lsmeans)</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="st">"OLS"</span>)
 linear_estimates</code></pre></div>
-<pre><code>##   condition   estimate std.error df   conf.low  conf.high model
+<pre><code>##   condition     emmean std.error df   conf.low  conf.high model
 ## 1         A  0.1815842  0.173236 45 -0.1673310  0.5304993   OLS
 ## 2         B  1.0142144  0.173236 45  0.6652993  1.3631296   OLS
 ## 3         C  1.8745839  0.173236 45  1.5256687  2.2234990   OLS
@@ -267,6 +267,7 @@ bayes_estimates</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> estimate, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high, <span class="dt">color =</span> model)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_pointrangeh</span>(<span class="dt">position =</span> <span class="kw">position_dodgev</span>(<span class="dt">height =</span> .<span class="dv">3</span>))</code></pre></div>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_pointrangeh).</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 <p>Shrinkage towards the overall mean is visible in the Bayesian estimates.</p>
 <p>Comptability with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> also gives compatibility with <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>:</p>

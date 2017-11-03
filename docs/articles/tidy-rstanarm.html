@@ -75,7 +75,7 @@
       <h1>Extracting tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-10-19</h4>
+            <h4 class="date">2017-11-03</h4>
           </div>
 
     
@@ -470,19 +470,19 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
-## # Groups:   condition, .row [5]
-##    condition   .row .chain .iteration    estimate
-##        &lt;chr&gt; &lt;fctr&gt;  &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;
-##  1         A      1     NA          1  0.09591888
-##  2         B      2     NA          1  1.10484872
-##  3         C      3     NA          1  1.80364340
-##  4         D      4     NA          1  0.76848173
-##  5         E      5     NA          1 -1.08002907
-##  6         A      1     NA          2  0.54475718
-##  7         B      2     NA          2  1.10940980
-##  8         C      3     NA          2  1.79236027
-##  9         D      4     NA          2  0.60241993
-## 10         E      5     NA          2 -0.82868941</code></pre>
+## # Groups:   condition, .row [1]
+##    condition  .row .chain .iteration    estimate
+##        &lt;chr&gt; &lt;int&gt;  &lt;int&gt;      &lt;int&gt;       &lt;dbl&gt;
+##  1         A     1     NA          1  0.09591888
+##  2         A     1     NA          2  0.54475718
+##  3         A     1     NA          3  0.27932616
+##  4         A     1     NA          4  0.22340871
+##  5         A     1     NA          5  0.15265757
+##  6         A     1     NA          6  0.09414627
+##  7         A     1     NA          7  0.18295475
+##  8         A     1     NA          8  0.33439407
+##  9         A     1     NA          9  0.45748109
+## 10         A     1     NA         10 -0.02620168</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>To plot this example, we’ll also show the use <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which does the summarizing of samples into estimates and intervals within ggplot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC <span class="op">%&gt;%</span>

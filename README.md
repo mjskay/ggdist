@@ -28,7 +28,7 @@ Finally, `tidybayes` aims to fit into common workflows through compatibility wit
 
 -   **Compatibility with other tidy packages**. Default column names in the output have also been chosen for compatibility with `broom::tidy`, which makes comparison with estimates from non-Bayesian models straightforward.
 
--   **Compatibility with non-tidy packages**. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples`, aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`). The `gather_lsmeans_samples` function turns the output from `lsmeans::lsmeans` (when applied to supported model types, like `MCMCglmm` and `rstanarm` models) into long-format data frames.
+-   **Compatibility with non-tidy packages**. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples`, aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`). The `gather_emmeans_samples` function turns the output from `emmeans::emmeans` (formerly `lsmeans`) into long-format data frames (when applied to supported model types, like `MCMCglmm` and `rstanarm` models).
 
 Supported model types
 ---------------------
@@ -59,7 +59,7 @@ library(ggplot2)
 library(ggstance)
 library(rstan)
 library(tidybayes)
-library(lsmeans)
+library(emmeans)
 library(broom)
 library(brms)
 library(modelr)
@@ -189,13 +189,13 @@ For example, let's compare to ordinary least squares (OLS) regression:
 ``` r
 linear_estimates = 
   lm(response ~ condition, data = ABC) %>% 
-  lsmeans(~ condition) %>% 
-  tidy() %>%
+  emmeans(~ condition) %>% 
+  broom:::tidy.ref.grid() %>%  # need to specify explicitly until broom updates to support emmeans (formerly lsmeans)
   mutate(model = "OLS")
 linear_estimates
 ```
 
-| condition |    estimate|  std.error|   df|    conf.low|   conf.high| model |
+| condition |      emmean|  std.error|   df|    conf.low|   conf.high| model |
 |:----------|-----------:|----------:|----:|-----------:|-----------:|:------|
 | A         |   0.1815842|   0.173236|   45|  -0.1673310|   0.5304993| OLS   |
 | B         |   1.0142144|   0.173236|   45|   0.6652993|   1.3631296| OLS   |
@@ -228,6 +228,8 @@ bind_rows(linear_estimates, bayes_estimates) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
   geom_pointrangeh(position = position_dodgev(height = .3))
 ```
+
+    ## Warning: Removed 5 rows containing missing values (geom_pointrangeh).
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
 
