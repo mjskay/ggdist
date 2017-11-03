@@ -16,7 +16,7 @@ test_that("ungather_samples works on a simple parameter with no indices", {
 
   ref = data_frame(
     .chain = as.integer(1),
-    .iteration = 1:nrow(RankCorr),
+    .iteration = seq_len(nrow(RankCorr)),
     typical_r = RankCorr[, "typical_r"]
   )
 

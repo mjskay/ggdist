@@ -64,7 +64,7 @@ as_sample_tibble.mcmc.list = function(model) {
     bind_cols(
       tibble(
         .chain = chain,
-        .iteration = 1:n
+        .iteration = seq_len(n)
       ),
       as_tibble(model[[chain]])
     )

@@ -31,14 +31,14 @@ test_that("[add_]fitted_samples works on a simple rstanarm model", {
   fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
     mutate(
-      .chain = as.numeric(NA),
-      .iteration = as.numeric(1:n())
+      .chain = as.integer(NA),
+      .iteration = seq_len(n())
     ) %>%
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
-    mutate(.row = as.numeric(.row))
+    mutate(.row = as.integer(.row))
 
   expect_equal(ref, fitted_samples(m_hp_wt, mtcars_tbl))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_wt))
@@ -51,14 +51,14 @@ test_that("[add_]fitted_samples works on brms models without auxpars", {
     as.data.frame() %>%
     set_names(1:ncol(.)) %>%
     mutate(
-      .chain = as.numeric(NA),
-      .iteration = as.numeric(1:n())
+      .chain = as.integer(NA),
+      .iteration = seq_len(n())
     ) %>%
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
-    mutate(.row = as.numeric(.row))
+    mutate(.row = as.integer(.row))
 
   expect_equal(ref, fitted_samples(m_hp, mtcars_tbl))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp))
@@ -73,8 +73,8 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
     as.data.frame() %>%
     set_names(1:ncol(.)) %>%
     mutate(
-      .chain = as.numeric(NA),
-      .iteration = as.numeric(1:n())
+      .chain = as.integer(NA),
+      .iteration = seq_len(n())
     ) %>%
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()
@@ -85,7 +85,7 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
     sigma
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
-    mutate(.row = as.numeric(.row))
+    mutate(.row = as.integer(.row))
 
   fitted_samples(m_hp_sigma, mtcars_tbl, auxpars = FALSE)
 
@@ -104,9 +104,13 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
   category_names = dimnames(fitted(m_cyl_mpg, mtcars_tbl, summary = TRUE))[[3]]
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE) %>%
     array2df(list(.iteration = NA, .row = NA, category = category_names), label.x = "estimate") %>%
-    mutate(.chain = as.numeric(NA))
+    mutate(
+      .chain = as.integer(NA),
+      .row = as.integer(.row),
+      .iteration = as.integer(.iteration)
+    )
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = as.numeric(rownames(.))), fits, by = ".row")
+  ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
 
   expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg))
@@ -119,9 +123,13 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
   category_names = dimnames(fitted(m_cyl_mpg, mtcars_tbl, summary = TRUE, scale = "linear"))[[3]]
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
     array2df(list(.iteration = NA, .row = NA, category = category_names), label.x = "estimate") %>%
-    mutate(.chain = as.numeric(NA))
+    mutate(
+      .chain = as.integer(NA),
+      .row = as.integer(.row),
+      .iteration = as.integer(.iteration)
+    )
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = as.numeric(rownames(.))), fits, by = ".row")
+  ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
 
   expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl, scale = "linear"))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"))

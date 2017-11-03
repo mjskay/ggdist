@@ -234,19 +234,24 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
 
   fits_preds_df = array2df(fits_preds, column_format, label.x = var)
 
-  #rstanarm does something weird that prevents array2df from propoerly seeing .row and .iteration as numerics,
-  #so we have to convert them manually
+  #rstanarm does something weird that prevents array2df from properly seeing .row and .iteration as numerics,
+  #so we have to convert them manually from factors. While we're at it, we should also make sure they are integers.
   if (is.factor(fits_preds_df$.row) || is.character(fits_preds_df$.row)) {
-    fits_preds_df$.row = as.numeric(as.character(fits_preds_df$.row))
+    fits_preds_df$.row = as.integer(as.character(fits_preds_df$.row))
+  } else {
+    fits_preds_df$.row = as.integer(fits_preds_df$.row)
   }
   if (is.factor(fits_preds_df$.iteration) || is.character(fits_preds_df$.iteration)) {
-    fits_preds_df$.iteration = as.numeric(as.character(fits_preds_df$.iteration))
+    fits_preds_df$.iteration = as.integer(as.character(fits_preds_df$.iteration))
+  } else {
+    fits_preds_df$.iteration = as.integer(fits_preds_df$.iteration)
   }
+
 
   newdata %>%
     mutate(
       .row = seq_len(n()),
-      .chain = as.numeric(NA)
+      .chain = as.integer(NA)
     ) %>%
     inner_join(fits_preds_df, by = ".row") %>%
     select(-!!sym(var), !!sym(var)) %>%

@@ -16,7 +16,7 @@ test_that("spread_samples works on a simple parameter with no indices", {
 
   ref = data_frame(
     .chain = as.integer(1),
-    .iteration = 1:nrow(RankCorr),
+    .iteration = seq_len(nrow(RankCorr)),
     typical_r = RankCorr[, "typical_r"]
   )
   expect_equal(spread_samples(RankCorr, typical_r), ref)
@@ -29,7 +29,7 @@ test_that("spread_samples works on a parameter with one unnamed index", {
   ref = ldply(1:18, function(i) {
     data.frame(
       .chain = as.integer(1),
-      .iteration = 1:nrow(RankCorr),
+      .iteration = seq_len(nrow(RankCorr)),
       i = i,
       tau = RankCorr[, paste0("tau[", i, "]")]
     )
@@ -46,7 +46,7 @@ test_that("spread_samples works on a parameter with one named index", {
   ref = ldply(1:18, function(i) {
     data.frame(
       .chain = as.integer(1),
-      .iteration = 1:nrow(RankCorr),
+      .iteration = seq_len(nrow(RankCorr)),
       i = i_labels[i],
       tau = RankCorr[, paste0("tau[", i, "]")]
     )
@@ -60,7 +60,7 @@ test_that("spread_samples works on a parameter with one anonymous wide index", {
 
   ref = data.frame(
     .chain = as.integer(1),
-    .iteration = 1:nrow(RankCorr)
+    .iteration = seq_len(nrow(RankCorr))
   )
   for (i in 1:18) {
     refcol = data.frame(RankCorr[, paste0("tau[", i, "]")])
@@ -79,7 +79,7 @@ test_that("spread_samples works on a parameter with one named wide index", {
 
   ref = data.frame(
     .chain = as.integer(1),
-    .iteration = 1:nrow(RankCorr)
+    .iteration = seq_len(nrow(RankCorr))
   )
   for (i in 1:18) {
     refcol = data.frame(RankCorr[, paste0("tau[", i, "]")])
@@ -103,7 +103,7 @@ test_that("spread_samples works on a parameter with two named indices", {
     ldply(1:18, function(i) {
       data.frame(
         .chain = as.integer(1),
-        .iteration = 1:nrow(RankCorr),
+        .iteration = seq_len(nrow(RankCorr)),
         i = i_labels[i],
         j = j_labels[j],
         b = RankCorr[, paste0("b[", i, ",", j, "]")]
@@ -127,7 +127,7 @@ test_that("spread_samples works on a parameter with two named indices, one that 
     ldply(1:18, function(i) {
       data.frame(
         .chain = as.integer(1),
-        .iteration = 1:nrow(RankCorr),
+        .iteration = seq_len(nrow(RankCorr)),
         i = i_labels[i],
         j = j_labels[j],
         b = RankCorr[, paste0("b[", i, ",", j, "]")]
@@ -150,7 +150,7 @@ test_that("spread_samples works on a parameter with one named index and one wide
     ldply(1:18, function(i) {
       data.frame(
         .chain = as.integer(1),
-        .iteration = 1:nrow(RankCorr),
+        .iteration = seq_len(nrow(RankCorr)),
         i = i_labels[i],
         j = paste0("b.", j),
         b = RankCorr[, paste0("b[", i, ",", j, "]")]
