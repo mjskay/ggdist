@@ -39,5 +39,14 @@ test_that("gather_emmeans_samples works on a simple rstanarm model", {
   ref = inner_join(as_data_frame(estimate_grid) %>% mutate(.row = rownames(.)), fits, by = ".row") %>%
     select(-.row)
 
-  expect_equal(ref, m_hp_wt %>% ref_grid(estimate_grid) %>% gather_emmeans_samples())
+  # recover_data for stanreg objects seems to require the data to be in the same environment as in the
+  # call that created the model (here, the global environment). So we'll put mtcars_tbl there temporarily.
+  old_global_mtcars_tbl = .GlobalEnv[["mtcars_tbl"]]
+  .GlobalEnv[["mtcars_tbl"]] = mtcars_tbl
+  result = m_hp_wt %>%
+    ref_grid(estimate_grid) %>%
+    gather_emmeans_samples()
+  .GlobalEnv[["mtcars_tbl"]] = old_global_mtcars_tbl
+
+  expect_equal(ref, result)
 })
