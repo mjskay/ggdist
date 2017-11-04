@@ -100,7 +100,7 @@ predict_curve = function(data, formula, summary = median, ...) {
   eval(bquote(
     do(data, {
       #for every group defined in data ...
-      ldply(1:nrow(varied_predictors), function(r) {
+      ldply(seq_len(nrow(varied_predictors)), function(r) {
         #and for every prediction point on the curve
         #defined by the values in (...)
         predictor_row = as.list(varied_predictors[r, , drop = FALSE]) # nolint

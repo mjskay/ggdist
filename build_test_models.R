@@ -11,7 +11,7 @@ library(brms)
 
 
 mtcars_tbl = mtcars %>%
-  set_rownames(1:nrow(.)) %>%
+  set_rownames(seq_len(nrow(.))) %>%
   as_data_frame()
 
 

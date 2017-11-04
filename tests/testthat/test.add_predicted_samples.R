@@ -20,7 +20,7 @@ context("predicted_samples")
 
 # data
 mtcars_tbl = mtcars %>%
-  set_rownames(1:nrow(.)) %>%
+  set_rownames(seq_len(nrow(.))) %>%
   as_data_frame()
 
 
@@ -74,7 +74,7 @@ test_that("[add_]predicted_samples works on a simple brms model", {
   set.seed(123)
   preds = predict(m_hp, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
-    set_names(1:ncol(.)) %>%
+    set_names(seq_len(ncol(.))) %>%
     mutate(
       .chain = as.integer(NA),
       .iteration = seq_len(n())

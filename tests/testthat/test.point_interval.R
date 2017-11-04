@@ -19,7 +19,7 @@ get_samples = function() {
   ldply(1:18, function(i) {
     data.frame(
       .chain = 1,
-      .iteration = 1:nrow(RankCorr),
+      .iteration = seq_len(nrow(RankCorr)),
       ff = ff_labels[i],
       tau = RankCorr[, paste0("tau[", i, "]")]
     )

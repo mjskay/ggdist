@@ -5,7 +5,7 @@ as_constructor.default = function(x) identity
 as_constructor.factor = function(x) {
   x_levels = levels(x)
   x_is_ordered = is.ordered(x)
-  function(x) factor(x, levels = 1:length(x_levels), labels = x_levels, ordered = x_is_ordered)
+  function(x) factor(x, levels = seq_along(x_levels), labels = x_levels, ordered = x_is_ordered)
 }
 
 as_constructor.character = function(x) as_constructor(as.factor(x))

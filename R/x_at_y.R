@@ -68,7 +68,7 @@ x_at_y = function(x, y, missing = NA) {
       if (min(y) < 1) {
         stop(paste0("All values of ", y_label, " must be >= 1. Got min(", y_label, ") == ", min(y)))
       }
-      1:max(y)
+      seq_len(max(y))
     } else {
       stop(paste0(
         "Cannot generate a lookup table for non-numeric / non-factor variable: ",

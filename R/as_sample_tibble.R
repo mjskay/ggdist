@@ -90,7 +90,7 @@ as_sample_tibble.stanreg = function(model) {
   #so we dont' just do as_sample_tibble(model$stanfit)
   sample_matrix = as.array(model) #[iteration, chain, parameter]
   n_chain = dim(sample_matrix)[[2]]
-  mcmc_list = as.mcmc.list(lapply(1:n_chain, function(chain) as.mcmc(sample_matrix[, chain, ]))) # nolint
+  mcmc_list = as.mcmc.list(lapply(seq_len(n_chain), function(chain) as.mcmc(sample_matrix[, chain, ]))) # nolint
   as_sample_tibble(mcmc_list)
 }
 

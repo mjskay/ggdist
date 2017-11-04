@@ -21,7 +21,7 @@ context("fitted_samples")
 
 # data
 mtcars_tbl = mtcars %>%
-  set_rownames(1:nrow(.)) %>%
+  set_rownames(seq_len(nrow(.))) %>%
   as_data_frame()
 
 
@@ -73,7 +73,7 @@ test_that("[add_]fitted_samples works on brms models without auxpars", {
 
   fits = fitted(m_hp, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
-    set_names(1:ncol(.)) %>%
+    set_names(seq_len(ncol(.))) %>%
     mutate(
       .chain = as.integer(NA),
       .iteration = seq_len(n())
@@ -97,7 +97,7 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
 
   fits = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
-    set_names(1:ncol(.)) %>%
+    set_names(seq_len(ncol(.))) %>%
     mutate(
       .chain = as.integer(NA),
       .iteration = seq_len(n())

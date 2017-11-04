@@ -18,7 +18,7 @@ context("gather_emmeans_samples")
 
 # data
 mtcars_tbl = mtcars %>%
-  set_rownames(1:nrow(.)) %>%
+  set_rownames(seq_len(nrow(.))) %>%
   as_data_frame()
 
 
@@ -31,7 +31,7 @@ test_that("gather_emmeans_samples works on a simple rstanarm model", {
     as.data.frame() %>%
     mutate(
       .chain = as.integer(NA),
-      .iteration = as.integer(1:n())
+      .iteration = seq_len(n())
     ) %>%
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()

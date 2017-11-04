@@ -140,7 +140,7 @@ as_data_list.character = function(object, name="", ...) {
 as_data_list.list = function(object, name="", ...) {
   #go through list and translate variables
   data = data_list()
-  for (i in 1:length(object)) {
+  for (i in seq_along(object)) {
     data = c(data, as_data_list(object[[i]], name = names(object)[[i]], ...))
   }
   data
@@ -258,7 +258,7 @@ compose_data = function(..., .n_name = n_prefix("n")) {
   #convert objects into a data list one by one, evaluating each argument in the
   #environment of the previous lists (to allow the user to refer to previously composed elements)
   data = list()
-  for (i in 1:length(exprs)) {
+  for (i in seq_along(exprs)) {
     object_to_compose = eval_tidy(exprs[[i]], data)
 
     # lists and data frames don't use names unless they were provided explicitly
