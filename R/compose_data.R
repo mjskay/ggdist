@@ -7,7 +7,7 @@
 #' Data lists for input into a Bayesian sampler
 #'
 #' Functions used by \code{\link{compose_data}} to create lists of data suitable for
-#' input into a Bayesian sampler. \textbf{These functions typically should not be called directly}
+#' input into a Bayesian sampler. \strong{These functions typically should not be called directly}
 #' (instead use \code{\link{compose_data}}), but are exposed for the rare cases in which
 #' you may need to provide your own conversion routines for a data type not already
 #' supported (see `Details`).
