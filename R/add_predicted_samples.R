@@ -222,7 +222,8 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
     .row = NA
   )
 
-  fits_preds <- if (is_brms) { #only brms has the summary parameter
+  fits_preds <- if (is_brms) {
+    # only brms has/needs the summary parameter
     f_fitted_predicted(model, newdata = newdata, summary = FALSE, ...)
   } else {
     f_fitted_predicted(model, newdata = newdata, ...)
