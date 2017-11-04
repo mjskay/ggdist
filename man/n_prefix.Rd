@@ -30,5 +30,5 @@ Generates a function for generating names of index columns for factors in
 column name.
 }
 \seealso{
-The \code{.n_name} argument of \code{\link{compose_data}}
+The \code{.n_name} argument of \code{\link{compose_data}}.
 }

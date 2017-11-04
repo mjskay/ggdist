@@ -43,6 +43,8 @@ default this means that:
          function prefixes \code{"n_"} before the factor name; e.g. a factor
          named \code{foo} will have an element named \code{n_foo} added containing
          the number of levels in \code{foo}.
+     \item character vectors are converted into factors then translated into numeric
+         in the same manner as factors are.
      \item lists are translated by translating all elements of the list
          (recursively) and adding them to the result.
      \item data.frames are translated by translating every column of the data.frame
@@ -88,8 +90,8 @@ df \%>\%
 
 }
 \seealso{
-\code{\link{as_data_list}}, \code{\link{spread_samples}},
-\code{\link{gather_samples}}, \code{\link{x_at_y}}
+\code{\link{x_at_y}}, \code{\link{spread_samples}},
+\code{\link{gather_samples}}.
 }
 \author{
 Matthew Kay

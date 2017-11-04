@@ -2,31 +2,108 @@
 % Please edit documentation in R/compose_data.R
 \name{data_list}
 \alias{data_list}
-\title{A data_list for input into a Bayesian sampler}
+\alias{as_data_list}
+\alias{as_data_list.default}
+\alias{as_data_list.numeric}
+\alias{as_data_list.logical}
+\alias{as_data_list.factor}
+\alias{as_data_list.character}
+\alias{as_data_list.list}
+\alias{as_data_list.data.frame}
+\alias{as_data_list.data_list}
+\title{Data lists for input into a Bayesian sampler}
 \usage{
 data_list(...)
+
+as_data_list(object, name = "", ...)
+
+\method{as_data_list}{default}(object, name = "", ...)
+
+\method{as_data_list}{numeric}(object, name = "", scalar_as_array = FALSE,
+  ...)
+
+\method{as_data_list}{logical}(object, name = "", ...)
+
+\method{as_data_list}{factor}(object, name = "", .n_name = n_prefix("n"),
+  ...)
+
+\method{as_data_list}{character}(object, name = "", ...)
+
+\method{as_data_list}{list}(object, name = "", ...)
+
+\method{as_data_list}{data.frame}(object, name = "",
+  .n_name = n_prefix("n"), ...)
+
+\method{as_data_list}{data_list}(object, name = "", ...)
 }
 \arguments{
-\item{...}{Items to include in the list.}
+\item{...}{Additional arguments passed to other implementations of
+\code{as_data_list}, or for \code{data_list}, passed to \code{\link{list}}.}
+
+\item{object}{The object to convert (see `Details`).}
+
+\item{name}{The name of the element in the returned list corresponding to
+this object.}
+
+\item{scalar_as_array}{If \code{TRUE}, returns single scalars as an
+1-dimensional array with one element. This is used by
+\code{as_data_list.data.frame} to ensure that columns from a data frame with
+only one row are still returned as arrays instead of scalars.}
+
+\item{.n_name}{A function that is used to form index variables (a variable
+whose value is the length of a factor or a data frame in \code{...}). For
+example, if a factor with \code{name = "foo"} (having three levels) is
+passed in, the list returned will include an element named
+\code{.n_name("foo")}, which by default would be "n_foo", containing the
+value 3.}
 }
 \value{
-An object of class \code{c("data_list", "list")}
+An object of class \code{c("data_list", "list")}, where each element
+is a translated variable as described above.
 }
 \description{
-Used by \code{\link{compose_data}} to create lists of data suitable for
-input into a Bayesian sampler.  This typically should not be called directly
-(instead use \code{\link{compose_data}}) unless you need to implement your
-own conversion routines for a data type not already supported.
+Functions used by \code{\link{compose_data}} to create lists of data suitable for
+input into a Bayesian sampler. \textbf{These functions typically should not be called directly}
+(instead use \code{\link{compose_data}}), but are exposed for the rare cases in which
+you may need to provide your own conversion routines for a data type not already
+supported (see `Details`).
 }
 \details{
-This function creates a list with class \code{c("data_list", "list")}
-instead of \code{c("list")}, but otherwise acts like the \code{\link{list}}
-function.  It is used by \code{\link{as_data_list}} to create data lists for
-input into Bayesian samplers. See the implementations of
-\code{as_data_list.numeric}, \code{as_data_list.logical}, etc for examples.
+\code{data_list} creates a list with class \code{c("data_list", "list")}
+instead of \code{c("list")}, but largely otherwise acts like the \code{\link{list}}
+function.
+
+\code{as_data_list} recursively translates its first argument into list elements,
+concatenating all resulting lists together. By default this means that:
+
+\itemize{
+ \item numerics are included as-is.
+ \item logicals are translated into numeric using \code{\link{as.numeric}}.
+ \item factors are translated into numeric using \code{\link{as.numeric}}, and an additional element named
+   \code{.n_name(name)} is added with the number of levels in the factor.
+ \item character vectors are converted into factors then translated into numeric in the same manner as factors are.
+ \item lists are translated by translating all elements of the list
+   (recursively) and adding them to the result.
+ \item data.frames are translated by translating every column of the data.frame and adding them to
+   the result. A variable named \code{"n"} (or \code{.n_name(name)} if \code{name} is not \code{""})
+   is also added containing the number of rows in the data frame.
+ \item all other types are dropped (and a warning given)
+}
+
+If you wish to add support for additional types not described above, provide
+an implementation of \code{\link{as_data_list}} for the type. See the
+implementations of \code{as_data_list.numeric}, \code{as_data_list.logical},
+etc for examples.
+}
+\examples{
+
+# Typically these functions should not be used directly.
+# See the compose_data function for examples of how to translate
+# data in lists for input to Bayesian samplers.
+
 }
 \seealso{
-\code{\link{compose_data}}, \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+\code{\link{compose_data}}.
 }
 \author{
 Matthew Kay
