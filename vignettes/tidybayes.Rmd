@@ -594,6 +594,7 @@ Combining `emmeans::emmeans` with `broom::tidy`, we can generate tidy-format est
 linear_estimates = m_linear %>% 
   emmeans(~ condition) %>% 
   broom:::tidy.ref.grid() %>%  # need to specify explicitly until broom updates to support emmeans (formerly lsmeans)
+  rename(estimate = emmean) %>%
   mutate(model = "OLS")
 
 linear_estimates

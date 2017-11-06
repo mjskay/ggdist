@@ -126,7 +126,7 @@ library(ggplot2)
 library(ggstance)
 library(rstan)
 library(tidybayes)
-library(emmeans)
+library(lsmeans)
 library(broom)
 library(brms)
 library(modelr)
@@ -246,8 +246,8 @@ For example, let's compare to ordinary least squares (OLS) regression:
 ```{r}
 linear_estimates = 
   lm(response ~ condition, data = ABC) %>% 
-  emmeans(~ condition) %>% 
-  broom:::tidy.ref.grid() %>%  # need to specify explicitly until broom updates to support emmeans (formerly lsmeans)
+  lsmeans(~ condition) %>% 
+  tidy() %>%
   mutate(model = "OLS")
 linear_estimates
 ```

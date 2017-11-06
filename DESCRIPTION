@@ -42,6 +42,7 @@ Suggests:
     runjags,
     rstanarm,
     rstantools,
+    lsmeans,
     emmeans,
     broom,
     dotwhisker,
