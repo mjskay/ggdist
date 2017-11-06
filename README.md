@@ -59,7 +59,7 @@ library(ggplot2)
 library(ggstance)
 library(rstan)
 library(tidybayes)
-library(emmeans)
+library(lsmeans)
 library(broom)
 library(brms)
 library(modelr)
@@ -189,13 +189,13 @@ For example, let's compare to ordinary least squares (OLS) regression:
 ``` r
 linear_estimates = 
   lm(response ~ condition, data = ABC) %>% 
-  emmeans(~ condition) %>% 
-  broom:::tidy.ref.grid() %>%  # need to specify explicitly until broom updates to support emmeans (formerly lsmeans)
+  lsmeans(~ condition) %>% 
+  tidy() %>%
   mutate(model = "OLS")
 linear_estimates
 ```
 
-| condition |      emmean|  std.error|   df|    conf.low|   conf.high| model |
+| condition |    estimate|  std.error|   df|    conf.low|   conf.high| model |
 |:----------|-----------:|----------:|----:|-----------:|-----------:|:------|
 | A         |   0.1815842|   0.173236|   45|  -0.1673310|   0.5304993| OLS   |
 | B         |   1.0142144|   0.173236|   45|   0.6652993|   1.3631296| OLS   |
@@ -228,8 +228,6 @@ bind_rows(linear_estimates, bayes_estimates) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
   geom_pointrangeh(position = position_dodgev(height = .3))
 ```
-
-    ## Warning: Removed 5 rows containing missing values (geom_pointrangeh).
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
 
@@ -334,7 +332,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%
   add_fitted_samples(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = estimate, group = .iteration), alpha = 0.25, color = "red") +
+  geom_line(aes(y = estimate, group = .iteration), alpha = 0.2, color = "red") +
   geom_point(data = mtcars) +
   facet_wrap(~ am)
 ```

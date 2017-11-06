@@ -137,7 +137,7 @@ containing the value 20. See <code><a href='n_prefix.html'>n_prefix</a></code>.<
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function recursively translates each argument into list elements using
-<code><a href='as_data_list.html'>as_data_list</a></code>, merging all resulting lists together. By
+<code><a href='data_list.html'>as_data_list</a></code>, merging all resulting lists together. By
 default this means that:</p><ul>
 <li><p>numerics are included as-is.</p></li>
 <li><p>logicals are translated into numeric using <code>as.numeric</code>.</p></li>
@@ -147,6 +147,8 @@ default this means that:</p><ul>
          function prefixes <code>"n_"</code> before the factor name; e.g. a factor
          named <code>foo</code> will have an element named <code>n_foo</code> added containing
          the number of levels in <code>foo</code>.</p></li>
+<li><p>character vectors are converted into factors then translated into numeric
+         in the same manner as factors are.</p></li>
 <li><p>lists are translated by translating all elements of the list
          (recursively) and adding them to the result.</p></li>
 <li><p>data.frames are translated by translating every column of the data.frame
@@ -167,14 +169,14 @@ is a data frame, subsequent arguments can include direct references to columns
 from that data frame. This allows you, for example, to easily use
 <code><a href='x_at_y.html'>x_at_y</a></code> to generate indices for nested models.</p>
 <p>If you wish to add support for additional types not described above,
-provide an implementation of <code><a href='as_data_list.html'>as_data_list</a></code> for the type. See
+provide an implementation of <code><a href='data_list.html'>as_data_list</a></code> for the type. See
 the implementations of <code>as_data_list.numeric</code>,
 <code>as_data_list.logical</code>, etc for examples.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='as_data_list.html'>as_data_list</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>,
-<code><a href='spread_samples.html'>gather_samples</a></code>, <code><a href='x_at_y.html'>x_at_y</a></code></p>
+    <p><code><a href='x_at_y.html'>x_at_y</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>,
+<code><a href='spread_samples.html'>gather_samples</a></code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

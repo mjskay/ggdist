@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A data_list for input into a Bayesian sampler — data_list â€¢ tidybayes</title>
+<title>Data lists for input into a Bayesian sampler — data_list â€¢ tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -95,44 +95,124 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A data_list for input into a Bayesian sampler</h1>
+    <h1>Data lists for input into a Bayesian sampler</h1>
     </div>
 
     
-    <p>Used by <code><a href='compose_data.html'>compose_data</a></code> to create lists of data suitable for
-input into a Bayesian sampler.  This typically should not be called directly
-(instead use <code><a href='compose_data.html'>compose_data</a></code>) unless you need to implement your
-own conversion routines for a data type not already supported.</p>
+    <p>Functions used by <code><a href='compose_data.html'>compose_data</a></code> to create lists of data suitable for
+input into a Bayesian sampler. <strong>These functions typically should not be called directly</strong>
+(instead use <code><a href='compose_data.html'>compose_data</a></code>), but are exposed for the rare cases in which
+you may need to provide your own conversion routines for a data type not already
+supported (see `Details`).</p>
     
 
-    <pre class="usage"><span class='fu'>data_list</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>data_list</span>(<span class='no'>...</span>)
+
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for numeric</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>scalar_as_array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>)
+
+<span class='co'># S3 method for logical</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for factor</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'><a href='n_prefix.html'>n_prefix</a></span>(<span class='st'>"n"</span>),
+  <span class='no'>...</span>)
+
+<span class='co'># S3 method for character</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for list</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for data.frame</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'><a href='n_prefix.html'>n_prefix</a></span>(<span class='st'>"n"</span>), <span class='no'>...</span>)
+
+<span class='co'># S3 method for data_list</span>
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>...</th>
-      <td><p>Items to include in the list.</p></td>
+      <td><p>Additional arguments passed to other implementations of
+<code>as_data_list</code>, or for <code>data_list</code>, passed to <code>list</code>.</p></td>
+    </tr>
+    <tr>
+      <th>object</th>
+      <td><p>The object to convert (see `Details`).</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>The name of the element in the returned list corresponding to
+this object.</p></td>
+    </tr>
+    <tr>
+      <th>scalar_as_array</th>
+      <td><p>If <code>TRUE</code>, returns single scalars as an
+1-dimensional array with one element. This is used by
+<code>as_data_list.data.frame</code> to ensure that columns from a data frame with
+only one row are still returned as arrays instead of scalars.</p></td>
+    </tr>
+    <tr>
+      <th>.n_name</th>
+      <td><p>A function that is used to form index variables (a variable
+whose value is the length of a factor or a data frame in <code>...</code>). For
+example, if a factor with <code>name = "foo"</code> (having three levels) is
+passed in, the list returned will include an element named
+<code>.n_name("foo")</code>, which by default would be "n_foo", containing the
+value 3.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>c("data_list", "list")</code></p>
+    <p>An object of class <code>c("data_list", "list")</code>, where each element
+is a translated variable as described above.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function creates a list with class <code>c("data_list", "list")</code>
-instead of <code>c("list")</code>, but otherwise acts like the <code>list</code>
-function.  It is used by <code><a href='as_data_list.html'>as_data_list</a></code> to create data lists for
-input into Bayesian samplers. See the implementations of
-<code>as_data_list.numeric</code>, <code>as_data_list.logical</code>, etc for examples.</p>
+    <p><code>data_list</code> creates a list with class <code>c("data_list", "list")</code>
+instead of <code>c("list")</code>, but largely otherwise acts like the <code>list</code>
+function.
+    <code>as_data_list</code> recursively translates its first argument into list elements,
+concatenating all resulting lists together. By default this means that:</p><ul>
+<li><p>numerics are included as-is.</p></li>
+<li><p>logicals are translated into numeric using <code>as.numeric</code>.</p></li>
+<li><p>factors are translated into numeric using <code>as.numeric</code>, and an additional element named
+   <code>.n_name(name)</code> is added with the number of levels in the factor.</p></li>
+<li><p>character vectors are converted into factors then translated into numeric in the same manner as factors are.</p></li>
+<li><p>lists are translated by translating all elements of the list
+   (recursively) and adding them to the result.</p></li>
+<li><p>data.frames are translated by translating every column of the data.frame and adding them to
+   the result. A variable named <code>"n"</code> (or <code>.n_name(name)</code> if <code>name</code> is not <code>""</code>)
+   is also added containing the number of rows in the data frame.</p></li>
+<li><p>all other types are dropped (and a warning given)</p></li>
+</ul>
+    <p>If you wish to add support for additional types not described above, provide
+an implementation of <code>as_data_list</code> for the type. See the
+implementations of <code>as_data_list.numeric</code>, <code>as_data_list.logical</code>,
+etc for examples.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='compose_data.html'>compose_data</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='spread_samples.html'>gather_samples</a></code>.</p>
+    <p><code><a href='compose_data.html'>compose_data</a></code>.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+# Typically these functions should not be used directly.
+# See the compose_data function for examples of how to translate
+# data in lists for input to Bayesian samplers.
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -144,7 +224,9 @@ input into Bayesian samplers. See the implementations of
       <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     

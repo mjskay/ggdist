@@ -364,7 +364,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%
   add_fitted_samples(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = estimate, group = .iteration), alpha = 0.25, color = "red") +
+  geom_line(aes(y = estimate, group = .iteration), alpha = 0.2, color = "red") +
   geom_point(data = mtcars) +
   facet_wrap(~ am)
 ```
