@@ -36,6 +36,7 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(magrittr)
 library(dplyr)
+library(tidyr)
 library(modelr)
 library(tidybayes)
 library(ggplot2)
@@ -140,36 +141,55 @@ Given a parameter like this:
 
 We can provide `spread_samples` with a column specification like this:
 
-`b[term,group,condition]`
+`b[term,group]`
 
-Where `term` corresponds to `(Intercept)`, `group` to `condition`, and `condition` to `D`. There is nothing too magical about what `spread_samples` does with this specification: under the hood, it splits the parameter indices by spaces, `:`, and `,`, and lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)`, `condition`, and `D`, and gather samples lets us extract these indices as columns and get a tidy data frame of samples of `b`:
+Where `term` corresponds to `(Intercept)` and `group` to `condition:D`. There is nothing too magical about what `spread_samples` does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the `sep` argument). It lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)` and `condition:D`, and `spread_samples` lets us extract these indices as columns in the resulting tidy data frame of samples of `b`:
 
 ```{r}
 m %>%
-  spread_samples(b[term,group,condition]) %>%
+  spread_samples(b[term,group]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
+*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
 
 We can choose whatever names we want for the index columns; e.g.: 
 
 ```{r}
 m %>%
-  spread_samples(b[t,g,c]) %>%
+  spread_samples(b[t,g]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
+*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
 
 But the more descriptive and less cryptic names from the previous example are probably preferable.
 
-In this particular model, there is only one term (`(Intercept)`) and one group (`condition`), thus we could omit those two indices altogether to just get each `condition` and the value of `b` for that condition:
+In this particular model, there is only one term (`(Intercept)`), thus we could omit that index altogether to just get each `condition` and the value of `b` for that condition:
 
 ```{r}
 m %>%
-  spread_samples(b[,,condition]) %>%
+  spread_samples(b[,group]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
+*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
+
+Since all the groups in this case are from the `condition` factor, we may also want to separate out a column just containing the corresponding condition (`A`, `B`, `C`, etc). We can do that using `tidyr::separate`:
+
+```{r}
+m %>% 
+  spread_samples(b[,group]) %>%
+  separate(group, c("group", "condition"), ":") %>%
+  head(10)
+```
+*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
+
+Alternatively, we could change the `sep` argument to `spread_samples` to also split on `:` (`sep` is a regular expression). __Note:__ This works in this example, but will not work well on rstanarm models where interactions between factors are used as grouping levels in a multilevel model, thus `:` is not included in the default separators.
+
+```{r}
+m %>% 
+  spread_samples(b[,group,condition], sep = "[, :]") %>%
+  head(10)
+```
+
 
 __Note:__ If you have used `spread_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `spread_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `spread_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
@@ -222,7 +242,7 @@ When we have a parameter with one or more indices, such as `b`, we can apply `me
 
 ```{r}
 m %>%
-  spread_samples(b[,,condition]) %>%
+  spread_samples(b[,group]) %>%
   mean_qi()
 ```
 
@@ -230,9 +250,9 @@ How did `mean_qi` know what to aggregate? Data frames returned by `spread_sample
 
 ```{r}
 m %>%
-  spread_samples(b[,,condition]) %>%
-  group_by(condition) %>%    # this line not necessary (done by spread_samples)
-  mean_qi(b)                 # b is not necessary (it is the only non-group column)
+  spread_samples(b[,group]) %>%
+  group_by(group) %>%       # this line not necessary (done by spread_samples)
+  mean_qi(b)                # b is not necessary (it is the only non-group column)
 ```
 
 ## Combining variables with different indices in a single tidy format data frame
@@ -243,7 +263,7 @@ We can gather samples from `(Intercept)` and `b` together in a single data frame
 
 ```{r}
 m %>% 
-  spread_samples(`(Intercept)`, b[,,condition]) %>%
+  spread_samples(`(Intercept)`, b[,group]) %>%
   head(10)
 ```
 *(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
@@ -252,16 +272,16 @@ Within each sample, `(Intercept)` is repeated as necessary to correspond to ever
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,,condition]) %>%
+  spread_samples(`(Intercept)`, b[,group]) %>%
   mutate(condition_mean = `(Intercept)` + b) %>%
   mean_qi(condition_mean)
 ```
 
-`mean_qi` can also take column expressions (rather than just column names), so we can simplify the above example by moving the calculation of `condition_mean` from `mutate` into `mean_qi`:
+`mean_qi` uses tidy evaluation (see `vignette("tidy-evaluation", package = "rlang")`), so it can take column expressions (not just column names). Thus, we can simplify the above example by moving the calculation of `condition_mean` from `mutate` into `mean_qi`:
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,,condition]) %>%
+  spread_samples(`(Intercept)`, b[,group]) %>%
   mean_qi(condition_mean = `(Intercept)` + b)
 ```
 
@@ -271,9 +291,9 @@ Plotting means and intervals is straightforward using the "pointrange" or "point
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,,condition]) %>%
+  spread_samples(`(Intercept)`, b[,group]) %>%
   mean_qi(condition_mean = `(Intercept)` + b) %>%
-  ggplot(aes(y = condition, x = condition_mean, xmin = conf.low, xmax = conf.high)) +
+  ggplot(aes(y = group, x = condition_mean, xmin = conf.low, xmax = conf.high)) +
   geom_pointrangeh()
 ```
 
@@ -284,7 +304,7 @@ m %>%
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,,condition]) %>%
+  spread_samples(`(Intercept)`, b[,group]) %>%
   mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .8, .5))
 ```
 
@@ -292,9 +312,9 @@ The results are in a tidy format: one row per group and probability level (`.pro
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,,condition]) %>%
+  spread_samples(`(Intercept)`, b[,group]) %>%
   mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .66)) %>%
-  ggplot(aes(y = condition, x = condition_mean)) +
+  ggplot(aes(y = group, x = condition_mean)) +
   geom_pointintervalh() 
 ```
 
@@ -331,7 +351,7 @@ ABC %>%
   data_grid(condition) %>%
   add_predicted_samples(m) %>%
   ggplot(aes(x = pred, y = condition)) +
-  geom_density_ridges(scale = 0.8)
+  geom_density_ridges()
 ```
 
 We could also use `tidybayes::stat_intervalh` to plot predictive bands alongside the data:
@@ -437,7 +457,7 @@ Let's demonstrate `compare_levels` with another plotting geom, `geom_halfeyeh`, 
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
-  spread_samples(b[,,condition]) %>%
+  spread_samples(b[,,condition], sep = "[, :]") %>%
   compare_levels(b, by = condition) %>%
   ggplot(aes(y = condition, x = b)) +
   geom_halfeyeh()
@@ -448,7 +468,7 @@ If you prefer "caterpillar" plots, ordered by something like the mean of the dif
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
-  spread_samples(b[,,condition]) %>%
+  spread_samples(b[,,condition], sep = "[, :]") %>%
   compare_levels(b, by = condition) %>%
   ungroup() %>%
   mutate(condition = reorder(condition, b)) %>%

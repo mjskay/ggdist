@@ -7,9 +7,9 @@
 \alias{gather_samples}
 \title{Extract samples of parameters in a Bayesian model fit into a tidy data format}
 \usage{
-spread_samples(model, ..., regex = FALSE, sep = "[,: ]")
+spread_samples(model, ..., regex = FALSE, sep = "[, ]")
 
-gather_samples(model, ..., regex = FALSE, sep = "[,: ]")
+gather_samples(model, ..., regex = FALSE, sep = "[, ]")
 }
 \arguments{
 \item{model}{A supported Bayesian model fit / MCMC object. Currently
