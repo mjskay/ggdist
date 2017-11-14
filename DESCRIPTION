@@ -1,6 +1,6 @@
 Package: tidybayes
 Title: Tidy Data for MCMC/Bayesian Samplers
-Version: 0.11.1.000001
+Version: 0.12.0.000001
 Date: 2017-09-05
 Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
     email = "mjskay@umich.edu"))
