@@ -208,7 +208,7 @@ m %>%
 ```
 *(10 rows of `r nrow(spread_samples(m, sigma))`)*
 
-Like with `b[term,group,condition]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
+Like with `b[term,group]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
 
 ```{r}
 m %>%
@@ -266,7 +266,7 @@ m %>%
   spread_samples(`(Intercept)`, b[,group]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group,condition]))`)*
+*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
 
 Within each sample, `(Intercept)` is repeated as necessary to correspond to every index of `b`. Thus, the `mutate` function from dplyr can be used to find their sum, `condition_mean` (which is the estimated mean for each condition):
 

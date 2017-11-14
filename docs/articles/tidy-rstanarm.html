@@ -75,7 +75,7 @@
       <h1>Extracting tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-11-06</h4>
+            <h4 class="date">2017-11-14</h4>
           </div>
 
     
@@ -101,6 +101,7 @@ img {
 <p>The following libraries are required to run this vignette:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
 <span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(tidyr)
 <span class="kw">library</span>(modelr)
 <span class="kw">library</span>(tidybayes)
 <span class="kw">library</span>(ggplot2)
@@ -217,65 +218,102 @@ ABC =
 <p>Given a parameter like this:</p>
 <p><code>b[(Intercept) condition:D]</code></p>
 <p>We can provide <code>spread_samples</code> with a column specification like this:</p>
-<p><code>b[term,group,condition]</code></p>
-<p>Where <code>term</code> corresponds to <code>(Intercept)</code>, <code>group</code> to <code>condition</code>, and <code>condition</code> to <code>D</code>. There is nothing too magical about what <code>spread_samples</code> does with this specification: under the hood, it splits the parameter indices by spaces, <code>:</code>, and <code>,</code>, and lets you assign columns to the resulting indices in order. So <code>b[(Intercept) condition:D]</code> has indices <code>(Intercept)</code>, <code>condition</code>, and <code>D</code>, and gather samples lets us extract these indices as columns and get a tidy data frame of samples of <code>b</code>:</p>
+<p><code>b[term,group]</code></p>
+<p>Where <code>term</code> corresponds to <code>(Intercept)</code> and <code>group</code> to <code>condition:D</code>. There is nothing too magical about what <code>spread_samples</code> does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the <code>sep</code> argument). It lets you assign columns to the resulting indices in order. So <code>b[(Intercept) condition:D]</code> has indices <code>(Intercept)</code> and <code>condition:D</code>, and <code>spread_samples</code> lets us extract these indices as columns in the resulting tidy data frame of samples of <code>b</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[term,group,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[term,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
-<pre><code>## # A tibble: 10 x 6
-## # Groups:   term, group, condition [5]
-##    .chain .iteration        term     group condition          b
-##     &lt;int&gt;      &lt;int&gt;       &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;
-##  1      1          1 (Intercept) condition         A -0.8864052
-##  2      1          1 (Intercept) condition         B  0.1225246
-##  3      1          1 (Intercept) condition         C  0.8213193
-##  4      1          1 (Intercept) condition         D -0.2138424
-##  5      1          1 (Intercept) condition         E -2.0623532
-##  6      1          2 (Intercept) condition         A -0.3856220
-##  7      1          2 (Intercept) condition         B  0.1790306
-##  8      1          2 (Intercept) condition         C  0.8619811
-##  9      1          2 (Intercept) condition         D -0.3279592
-## 10      1          2 (Intercept) condition         E -1.7590686</code></pre>
+<pre><code>## # A tibble: 10 x 5
+## # Groups:   term, group [5]
+##    .chain .iteration        term       group          b
+##     &lt;int&gt;      &lt;int&gt;       &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;
+##  1      1          1 (Intercept) condition:A -0.8864052
+##  2      1          1 (Intercept) condition:B  0.1225246
+##  3      1          1 (Intercept) condition:C  0.8213193
+##  4      1          1 (Intercept) condition:D -0.2138424
+##  5      1          1 (Intercept) condition:E -2.0623532
+##  6      1          2 (Intercept) condition:A -0.3856220
+##  7      1          2 (Intercept) condition:B  0.1790306
+##  8      1          2 (Intercept) condition:C  0.8619811
+##  9      1          2 (Intercept) condition:D -0.3279592
+## 10      1          2 (Intercept) condition:E -1.7590686</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>We can choose whatever names we want for the index columns; e.g.:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[t,g,c]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[t,g]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
-<pre><code>## # A tibble: 10 x 6
-## # Groups:   t, g, c [5]
-##    .chain .iteration           t         g     c          b
-##     &lt;int&gt;      &lt;int&gt;       &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;
-##  1      1          1 (Intercept) condition     A -0.8864052
-##  2      1          1 (Intercept) condition     B  0.1225246
-##  3      1          1 (Intercept) condition     C  0.8213193
-##  4      1          1 (Intercept) condition     D -0.2138424
-##  5      1          1 (Intercept) condition     E -2.0623532
-##  6      1          2 (Intercept) condition     A -0.3856220
-##  7      1          2 (Intercept) condition     B  0.1790306
-##  8      1          2 (Intercept) condition     C  0.8619811
-##  9      1          2 (Intercept) condition     D -0.3279592
-## 10      1          2 (Intercept) condition     E -1.7590686</code></pre>
+<pre><code>## # A tibble: 10 x 5
+## # Groups:   t, g [5]
+##    .chain .iteration           t           g          b
+##     &lt;int&gt;      &lt;int&gt;       &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;
+##  1      1          1 (Intercept) condition:A -0.8864052
+##  2      1          1 (Intercept) condition:B  0.1225246
+##  3      1          1 (Intercept) condition:C  0.8213193
+##  4      1          1 (Intercept) condition:D -0.2138424
+##  5      1          1 (Intercept) condition:E -2.0623532
+##  6      1          2 (Intercept) condition:A -0.3856220
+##  7      1          2 (Intercept) condition:B  0.1790306
+##  8      1          2 (Intercept) condition:C  0.8619811
+##  9      1          2 (Intercept) condition:D -0.3279592
+## 10      1          2 (Intercept) condition:E -1.7590686</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>But the more descriptive and less cryptic names from the previous example are probably preferable.</p>
-<p>In this particular model, there is only one term (<code>(Intercept)</code>) and one group (<code>condition</code>), thus we could omit those two indices altogether to just get each <code>condition</code> and the value of <code>b</code> for that condition:</p>
+<p>In this particular model, there is only one term (<code>(Intercept)</code>), thus we could omit that index altogether to just get each <code>condition</code> and the value of <code>b</code> for that condition:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 4
-## # Groups:   condition [5]
-##    .chain .iteration condition          b
-##     &lt;int&gt;      &lt;int&gt;     &lt;chr&gt;      &lt;dbl&gt;
-##  1      1          1         A -0.8864052
-##  2      1          1         B  0.1225246
-##  3      1          1         C  0.8213193
-##  4      1          1         D -0.2138424
-##  5      1          1         E -2.0623532
-##  6      1          2         A -0.3856220
-##  7      1          2         B  0.1790306
-##  8      1          2         C  0.8619811
-##  9      1          2         D -0.3279592
-## 10      1          2         E -1.7590686</code></pre>
+## # Groups:   group [5]
+##    .chain .iteration       group          b
+##     &lt;int&gt;      &lt;int&gt;       &lt;chr&gt;      &lt;dbl&gt;
+##  1      1          1 condition:A -0.8864052
+##  2      1          1 condition:B  0.1225246
+##  3      1          1 condition:C  0.8213193
+##  4      1          1 condition:D -0.2138424
+##  5      1          1 condition:E -2.0623532
+##  6      1          2 condition:A -0.3856220
+##  7      1          2 condition:B  0.1790306
+##  8      1          2 condition:C  0.8619811
+##  9      1          2 condition:D -0.3279592
+## 10      1          2 condition:E -1.7590686</code></pre>
 <p><em>(10 rows of 20000)</em></p>
+<p>Since all the groups in this case are from the <code>condition</code> factor, we may also want to separate out a column just containing the corresponding condition (<code>A</code>, <code>B</code>, <code>C</code>, etc). We can do that using <code><a href="http://www.rdocumentation.org/packages/tidyr/topics/separate">tidyr::separate</a></code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">separate</span>(group, <span class="kw">c</span>(<span class="st">"group"</span>, <span class="st">"condition"</span>), <span class="st">":"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
+<pre><code>## # A tibble: 10 x 5
+##    .chain .iteration     group condition          b
+##     &lt;int&gt;      &lt;int&gt;     &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;
+##  1      1          1 condition         A -0.8864052
+##  2      1          1 condition         B  0.1225246
+##  3      1          1 condition         C  0.8213193
+##  4      1          1 condition         D -0.2138424
+##  5      1          1 condition         E -2.0623532
+##  6      1          2 condition         A -0.3856220
+##  7      1          2 condition         B  0.1790306
+##  8      1          2 condition         C  0.8619811
+##  9      1          2 condition         D -0.3279592
+## 10      1          2 condition         E -1.7590686</code></pre>
+<p><em>(10 rows of 20000)</em></p>
+<p>Alternatively, we could change the <code>sep</code> argument to <code>spread_samples</code> to also split on <code>:</code> (<code>sep</code> is a regular expression). <strong>Note:</strong> This works in this example, but will not work well on rstanarm models where interactions between factors are used as grouping levels in a multilevel model, thus <code>:</code> is not included in the default separators.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group,condition], <span class="dt">sep =</span> <span class="st">"[, :]"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
+<pre><code>## # A tibble: 10 x 5
+## # Groups:   group, condition [5]
+##    .chain .iteration     group condition          b
+##     &lt;int&gt;      &lt;int&gt;     &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;
+##  1      1          1 condition         A -0.8864052
+##  2      1          1 condition         B  0.1225246
+##  3      1          1 condition         C  0.8213193
+##  4      1          1 condition         D -0.2138424
+##  5      1          1 condition         E -2.0623532
+##  6      1          2 condition         A -0.3856220
+##  7      1          2 condition         B  0.1790306
+##  8      1          2 condition         C  0.8619811
+##  9      1          2 condition         D -0.3279592
+## 10      1          2 condition         E -1.7590686</code></pre>
 <p><strong>Note:</strong> If you have used <code>spread_samples</code> with raw samples from Stan or JAGS, you may be used to using <code>recover_types</code> before <code>spread_samples</code> to get index column values back (e.g. if the index was a factor). This is not necessary when using <code>spread_samples</code> on <code>rstanarm</code> models, because those models already contain that information in their parameter names. For more on <code>recover_types</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
 </div>
@@ -304,7 +342,7 @@ ABC =
 ##  9      1          9     0.7855021 0.5333723
 ## 10      1         10     1.0673462 0.4902027</code></pre>
 <p><em>(10 rows of 4000)</em></p>
-<p>Like with <code>b[term,group,condition]</code>, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply <code>mean_qi</code>:</p>
+<p>Like with <code>b[term,group]</code>, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply <code>mean_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma)</code></pre></div>
@@ -338,31 +376,31 @@ ABC =
 <a href="#with-indexed-parameters" class="anchor"></a>With indexed parameters</h3>
 <p>When we have a parameter with one or more indices, such as <code>b</code>, we can apply <code>mean_qi</code> (or other functions in the <code>point_estimate</code> family) as we did before:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups:   condition [5]
-##   condition          b   conf.low  conf.high .prob
-##       &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1         A -0.4485364 -1.5399540  0.5967447  0.95
-## 2         B  0.3496682 -0.7195102  1.3890186  0.95
-## 3         C  1.1794403  0.1207989  2.2576505  0.95
-## 4         D  0.3678050 -0.7356849  1.4271432  0.95
-## 5         E -1.5229349 -2.6627544 -0.5064543  0.95</code></pre>
+## # Groups:   group [5]
+##         group          b   conf.low  conf.high .prob
+##         &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 condition:A -0.4485364 -1.5399540  0.5967447  0.95
+## 2 condition:B  0.3496682 -0.7195102  1.3890186  0.95
+## 3 condition:C  1.1794403  0.1207989  2.2576505  0.95
+## 4 condition:D  0.3678050 -0.7356849  1.4271432  0.95
+## 5 condition:E -1.5229349 -2.6627544 -0.5064543  0.95</code></pre>
 <p>How did <code>mean_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_samples</code> groups its results by <code>condition</code>. <code>mean_qi</code> respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>mean_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>b</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(condition) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># this line not necessary (done by spread_samples)</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(b)                 <span class="co"># b is not necessary (it is the only non-group column)</span></code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># this line not necessary (done by spread_samples)</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(b)                <span class="co"># b is not necessary (it is the only non-group column)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups:   condition [5]
-##   condition          b   conf.low  conf.high .prob
-##       &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1         A -0.4485364 -1.5399540  0.5967447  0.95
-## 2         B  0.3496682 -0.7195102  1.3890186  0.95
-## 3         C  1.1794403  0.1207989  2.2576505  0.95
-## 4         D  0.3678050 -0.7356849  1.4271432  0.95
-## 5         E -1.5229349 -2.6627544 -0.5064543  0.95</code></pre>
+## # Groups:   group [5]
+##         group          b   conf.low  conf.high .prob
+##         &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 condition:A -0.4485364 -1.5399540  0.5967447  0.95
+## 2 condition:B  0.3496682 -0.7195102  1.3890186  0.95
+## 3 condition:C  1.1794403  0.1207989  2.2576505  0.95
+## 4 condition:D  0.3678050 -0.7356849  1.4271432  0.95
+## 5 condition:E -1.5229349 -2.6627544 -0.5064543  0.95</code></pre>
 </div>
 </div>
 <div id="combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="section level2">
@@ -371,95 +409,95 @@ ABC =
 <p><code>spread_samples</code> supports gathering variables that have different indices in the same data frame. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this <code>condition_mean</code>). In this model, that mean is the intercept (<code>(Intercept)</code>) plus the effect for a given condition (<code>b</code>).</p>
 <p>We can gather samples from <code>(Intercept)</code> and <code>b</code> together in a single data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
-## # Groups:   condition [5]
-##    .chain .iteration `(Intercept)` condition          b
-##     &lt;int&gt;      &lt;int&gt;         &lt;dbl&gt;     &lt;chr&gt;      &lt;dbl&gt;
-##  1      1          1     0.9823241         A -0.8864052
-##  2      1          1     0.9823241         B  0.1225246
-##  3      1          1     0.9823241         C  0.8213193
-##  4      1          1     0.9823241         D -0.2138424
-##  5      1          1     0.9823241         E -2.0623532
-##  6      1          2     0.9303792         A -0.3856220
-##  7      1          2     0.9303792         B  0.1790306
-##  8      1          2     0.9303792         C  0.8619811
-##  9      1          2     0.9303792         D -0.3279592
-## 10      1          2     0.9303792         E -1.7590686</code></pre>
+## # Groups:   group [5]
+##    .chain .iteration `(Intercept)`       group          b
+##     &lt;int&gt;      &lt;int&gt;         &lt;dbl&gt;       &lt;chr&gt;      &lt;dbl&gt;
+##  1      1          1     0.9823241 condition:A -0.8864052
+##  2      1          1     0.9823241 condition:B  0.1225246
+##  3      1          1     0.9823241 condition:C  0.8213193
+##  4      1          1     0.9823241 condition:D -0.2138424
+##  5      1          1     0.9823241 condition:E -2.0623532
+##  6      1          2     0.9303792 condition:A -0.3856220
+##  7      1          2     0.9303792 condition:B  0.1790306
+##  8      1          2     0.9303792 condition:C  0.8619811
+##  9      1          2     0.9303792 condition:D -0.3279592
+## 10      1          2     0.9303792 condition:E -1.7590686</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>Within each sample, <code>(Intercept)</code> is repeated as necessary to correspond to every index of <code>b</code>. Thus, the <code>mutate</code> function from dplyr can be used to find their sum, <code>condition_mean</code> (which is the estimated mean for each condition):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(condition_mean)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups:   condition [5]
-##   condition condition_mean   conf.low  conf.high .prob
-##       &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1         A      0.1978469 -0.1419774  0.5428787  0.95
-## 2         B      0.9960515  0.6429001  1.3526794  0.95
-## 3         C      1.8258236  1.4554026  2.1989515  0.95
-## 4         D      1.0141883  0.6659141  1.3659712  0.95
-## 5         E     -0.8765516 -1.2306814 -0.5116099  0.95</code></pre>
-<p><code>mean_qi</code> can also take column expressions (rather than just column names), so we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>mean_qi</code>:</p>
+## # Groups:   group [5]
+##         group condition_mean   conf.low  conf.high .prob
+##         &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 condition:A      0.1978469 -0.1419774  0.5428787  0.95
+## 2 condition:B      0.9960515  0.6429001  1.3526794  0.95
+## 3 condition:C      1.8258236  1.4554026  2.1989515  0.95
+## 4 condition:D      1.0141883  0.6659141  1.3659712  0.95
+## 5 condition:E     -0.8765516 -1.2306814 -0.5116099  0.95</code></pre>
+<p><code>mean_qi</code> uses tidy evaluation (see <code><a href="https://cran.rstudio.com/web/packages/rlang/vignettes/tidy-evaluation.html">vignette("tidy-evaluation", package = "rlang")</a></code>), so it can take column expressions (not just column names). Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>mean_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups:   condition [5]
-##   condition condition_mean   conf.low  conf.high .prob
-##       &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1         A      0.1978469 -0.1419774  0.5428787  0.95
-## 2         B      0.9960515  0.6429001  1.3526794  0.95
-## 3         C      1.8258236  1.4554026  2.1989515  0.95
-## 4         D      1.0141883  0.6659141  1.3659712  0.95
-## 5         E     -0.8765516 -1.2306814 -0.5116099  0.95</code></pre>
+## # Groups:   group [5]
+##         group condition_mean   conf.low  conf.high .prob
+##         &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 condition:A      0.1978469 -0.1419774  0.5428787  0.95
+## 2 condition:B      0.9960515  0.6429001  1.3526794  0.95
+## 3 condition:C      1.8258236  1.4554026  2.1989515  0.95
+## 4 condition:D      1.0141883  0.6659141  1.3659712  0.95
+## 5 condition:E     -0.8765516 -1.2306814 -0.5116099  0.95</code></pre>
 </div>
 <div id="plotting-point-estimates-and-intervals" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotting-point-estimates-and-intervals" class="anchor"></a>Plotting point estimates and intervals</h2>
 <p>Plotting means and intervals is straightforward using the “pointrange” or “pointrangeh” geoms:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_pointrangeh</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-19-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
 </div>
 <div id="interval-estimates-with-multiple-probability-levels" class="section level2">
 <h2 class="hasAnchor">
 <a href="#interval-estimates-with-multiple-probability-levels" class="anchor"></a>Interval estimates with multiple probability levels</h2>
 <p><code>mean_qi</code> and its sister functions can also produce an arbitrary number of probability intervals by setting the <code>.prob =</code> argument:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))</code></pre></div>
 <pre><code>## # A tibble: 15 x 5
-## # Groups:   condition [5]
-##    condition condition_mean    conf.low  conf.high .prob
-##        &lt;chr&gt;          &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-##  1         A      0.1978469 -0.14197745  0.5428787  0.95
-##  2         B      0.9960515  0.64290005  1.3526794  0.95
-##  3         C      1.8258236  1.45540264  2.1989515  0.95
-##  4         D      1.0141883  0.66591412  1.3659712  0.95
-##  5         E     -0.8765516 -1.23068136 -0.5116099  0.95
-##  6         A      0.1978469 -0.02875107  0.4195926  0.80
-##  7         B      0.9960515  0.77476474  1.2249650  0.80
-##  8         C      1.8258236  1.59631644  2.0562649  0.80
-##  9         D      1.0141883  0.78749030  1.2361349  0.80
-## 10         E     -0.8765516 -1.10744446 -0.6458896  0.80
-## 11         A      0.1978469  0.08110352  0.3162024  0.50
-## 12         B      0.9960515  0.87457676  1.1164316  0.50
-## 13         C      1.8258236  1.70479516  1.9459754  0.50
-## 14         D      1.0141883  0.89839524  1.1310492  0.50
-## 15         E     -0.8765516 -0.99937841 -0.7525919  0.50</code></pre>
+## # Groups:   group [5]
+##          group condition_mean    conf.low  conf.high .prob
+##          &lt;chr&gt;          &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+##  1 condition:A      0.1978469 -0.14197745  0.5428787  0.95
+##  2 condition:B      0.9960515  0.64290005  1.3526794  0.95
+##  3 condition:C      1.8258236  1.45540264  2.1989515  0.95
+##  4 condition:D      1.0141883  0.66591412  1.3659712  0.95
+##  5 condition:E     -0.8765516 -1.23068136 -0.5116099  0.95
+##  6 condition:A      0.1978469 -0.02875107  0.4195926  0.80
+##  7 condition:B      0.9960515  0.77476474  1.2249650  0.80
+##  8 condition:C      1.8258236  1.59631644  2.0562649  0.80
+##  9 condition:D      1.0141883  0.78749030  1.2361349  0.80
+## 10 condition:E     -0.8765516 -1.10744446 -0.6458896  0.80
+## 11 condition:A      0.1978469  0.08110352  0.3162024  0.50
+## 12 condition:B      0.9960515  0.87457676  1.1164316  0.50
+## 13 condition:C      1.8258236  1.70479516  1.9459754  0.50
+## 14 condition:D      1.0141883  0.89839524  1.1310492  0.50
+## 15 condition:E     -0.8765516 -0.99937841 -0.7525919  0.50</code></pre>
 <p>The results are in a tidy format: one row per group and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The <code>geom_pointintervalh</code> geom, provided by tidybayes, is a shorthand for a <code>geom_pointrangeh</code> with <code>xmin</code>, <code>xmax</code>, and <code>size</code> set appropriately based on the <code>conf.low</code>, <code>conf.high</code>, and <code>.prob</code> columns in the data to produce plots of estimates with multiple probability levels:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>() </code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-23-1.png" width="576"></p>
 </div>
 <div id="posterior-fits" class="section level2">
 <h2 class="hasAnchor">
@@ -490,7 +528,7 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> condition)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>))</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-23-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
 </div>
 <div id="posterior-predictions" class="section level2">
 <h2 class="hasAnchor">
@@ -501,9 +539,9 @@ ABC =
 <span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_predicted_samples</a></span>(m) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred, <span class="dt">y =</span> condition)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_density_ridges</span>(<span class="dt">scale =</span> <span class="fl">0.8</span>)</code></pre></div>
+<span class="st">  </span><span class="kw">geom_density_ridges</span>()</code></pre></div>
 <pre><code>## Picking joint bandwidth of 0.101</code></pre>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
 <p>We could also use <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/stat_interval">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span>
@@ -512,7 +550,7 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
 <p>Altogether, data, posterior predictions, and estimates of the means:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid =<span class="st"> </span>ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(condition)
@@ -529,7 +567,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate), <span class="dt">data =</span> fits, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="op">-</span><span class="fl">0.2</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
 </div>
 <div id="fitprediction-curves" class="section level2">
 <h2 class="hasAnchor">
@@ -545,7 +583,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
 <p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -554,7 +592,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw">ordered</span>(cyl))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">group =</span> <span class="kw">paste</span>(cyl, .iteration)), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -564,7 +602,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
 <p>This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -575,7 +613,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
 </div>
 <div id="comparing-levels-of-a-factor" class="section level2">
 <h2 class="hasAnchor">
@@ -584,22 +622,22 @@ ABC <span class="op">%&gt;%</span>
 <p>Let’s demonstrate <code>compare_levels</code> with another plotting geom, <code>geom_halfeyeh</code>, which gives horizontal “half-eye” plots, combining interval estimates with a density plot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
 m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition], <span class="dt">sep =</span> <span class="st">"[, :]"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(b, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="672"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-34-1.png" width="672"></p>
 <p>If you prefer “caterpillar” plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
 m <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,,condition], <span class="dt">sep =</span> <span class="st">"[, :]"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(b, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">reorder</span>(condition, b)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>) </code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="672"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-35-1.png" width="672"></p>
 </div>
 </div>
   </div>
