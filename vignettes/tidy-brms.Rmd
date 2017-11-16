@@ -1,5 +1,5 @@
 ---
-title: "Extracting and visualizing tidy samples from rstanarm"
+title: "Extracting and visualizing tidy samples from brms"
 author: "Matthew Kay"
 date: "`r Sys.Date()`"
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     df_print: kable
 vignette: >
-  %\VignetteIndexEntry{Extracting and visualizing tidy samples from rstanarm}
+  %\VignetteIndexEntry{Extracting and visualizing tidy samples from brms}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,7 +24,7 @@ img {
 
 ## Introduction
   
-This vignette describes how to use the `tidybayes` package to extract [tidy data](http://dx.doi.org/10.18637/jss.v059.i10) data frames of samples of parameters, fits, and predictions from `rstanarm`. For a more general introduction to `tidybayes` and its use on general-purpose sampling languages (like Stan and JAGS), see [vignette("tidybayes")](tidybayes.html).
+This vignette describes how to use the `tidybayes` package to extract [tidy data](http://dx.doi.org/10.18637/jss.v059.i10) data frames of samples of parameters, fits, and predictions from `brms::brm`. For a more general introduction to `tidybayes` and its use on general-purpose sampling languages (like Stan and JAGS), see [vignette("tidybayes")](tidybayes.html).
 
 
 ## Setup
@@ -41,7 +41,7 @@ library(ggplot2)
 library(ggstance)
 library(ggridges)
 library(rstan)
-library(rstanarm)
+library(brms)
 ```
 
 These options help Stan run faster:
@@ -104,10 +104,12 @@ ABC %>%
 Let's fit a hierarchical model with shrinkage towards a global mean:
 
 ```{r}
-m = stan_lmer(response ~ (1|condition), data = ABC, 
-  prior = normal(0, 1, autoscale = FALSE),
-  prior_aux = student_t(3, 0, 1, autoscale = FALSE),
-  adapt_delta = .99)
+m = brm(response ~ (1|condition), data = ABC, control = list(adapt_delta = .99),
+  prior = c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+  ))
 ```
 
 The results look like this:
@@ -125,15 +127,15 @@ Now that we have our results, the fun begins: getting the samples out in a tidy 
 parameters(m)
 ```
 
-Here, `(Intercept)` is the global mean, and the `b` parameters are offsets from that mean for each condition. Given these parameters:
+Here, `b_Intercept` is the global mean, and the `r_condition` parameters are offsets from that mean for each condition. Given these parameters:
 
-- `b[(Intercept) condition:A]`
-- `b[(Intercept) condition:B]`
-- `b[(Intercept) condition:C]`
-- `b[(Intercept) condition:D]`
-- `b[(Intercept) condition:E]`
+- `r_condition[A,Intercept]`
+- `r_condition[B,Intercept]`
+- `r_condition[C,Intercept]`
+- `r_condition[D,Intercept]`
+- `r_condition[E,Intercept]`
 
-We might want a data frame where each row is a sample from either `b[(Intercept) condition:A]`, `b[(Intercept) condition:B]`, `...:C]`, `...:D]`, or `...:E]`, and where we have columns indexing which iteration of the sampler the sample came from and which condition (`A` to `E`) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.
+We might want a data frame where each row is a sample from either `r_condition[A,Intercept]`, `r_condition[B,Intercept]`, `...[C,...]`, `...[D,...]`, or `...[E,...]`, and where we have columns indexing which iteration of the sampler the sample came from and which condition (`A` to `E`) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.
 
 The workhorse of `tidybayes` is the `spread_samples` function, which does this extraction for us. It includes a simple specification format that we can use to extract parameters and their indices into tidy-format data frames.
 
@@ -141,58 +143,40 @@ The workhorse of `tidybayes` is the `spread_samples` function, which does this e
 
 Given a parameter like this:
 
-`b[(Intercept) condition:D]`
+`r_condition[D,Intercept]`
 
 We can provide `spread_samples` with a column specification like this:
 
-`b[term,group]`
+`r_condition[condition,term]`
 
-Where `term` corresponds to `(Intercept)` and `group` to `condition:D`. There is nothing too magical about what `spread_samples` does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the `sep` argument). It lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)` and `condition:D`, and `spread_samples` lets us extract these indices as columns in the resulting tidy data frame of samples of `b`:
+Where `condition` corresponds `D` and `term` corresponds to `Intercept`. There is nothing too magical about what `spread_samples` does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the `sep` argument). It lets you assign columns to the resulting indices in order. So `r_condition[D,Intercept]` has indices `D` and `Intercept`, and `spread_samples` lets us extract these indices as columns in the resulting tidy data frame of samples of `r_condition`:
 
 ```{r}
 m %>%
-  spread_samples(b[term,group]) %>%
+  spread_samples(r_condition[condition,term]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
+*(10 rows of `r nrow(spread_samples(m, r_condition[condition,term]))`)*
 
 We can choose whatever names we want for the index columns; e.g.: 
 
 ```{r}
 m %>%
-  spread_samples(b[t,g]) %>%
+  spread_samples(r_condition[c,t]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
+*(10 rows of `r nrow(spread_samples(m, r_condition[condition,term]))`)*
 
 But the more descriptive and less cryptic names from the previous example are probably preferable.
 
-In this particular model, there is only one term (`(Intercept)`), thus we could omit that index altogether to just get each `group` and the value of `b` for the corresponding condition:
+In this particular model, there is only one term (`Intercept`), thus we could omit that index altogether to just get each `condition` and the value of `r_condition` for that condition:
 
 ```{r}
 m %>%
-  spread_samples(b[,group]) %>%
+  spread_samples(r_condition[condition,]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
-
-Since all the groups in this case are from the `condition` factor, we may also want to separate out a column just containing the corresponding condition (`A`, `B`, `C`, etc). We can do that using `tidyr::separate`:
-
-```{r}
-m %>% 
-  spread_samples(b[,group]) %>%
-  separate(group, c("group", "condition"), ":") %>%
-  head(10)
-```
-*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
-
-Alternatively, we could change the `sep` argument to `spread_samples` to also split on `:` (`sep` is a regular expression). __Note:__ This works in this example, but will not work well on rstanarm models where interactions between factors are used as grouping levels in a multilevel model, thus `:` is not included in the default separators.
-
-```{r}
-m %>% 
-  spread_samples(b[,group,condition], sep = "[, :]") %>%
-  head(10)
-```
+*(10 rows of `r nrow(spread_samples(m, r_condition[condition,term]))`)*
 
 
 __Note:__ If you have used `spread_samples` with raw samples from Stan or JAGS, you may be used to using `recover_types` before `spread_samples` to get index column values back (e.g. if the index was a factor). This is not necessary when using `spread_samples` on `rstanarm` models, because those models already contain that information in their parameter names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
@@ -207,24 +191,24 @@ For example, we might gather the samples corresponding to the overall mean and s
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, sigma) %>%
+  spread_samples(b_Intercept, sigma) %>%
   head(10)
 ```
 *(10 rows of `r nrow(spread_samples(m, sigma))`)*
 
-Like with `b[term,group]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
+Like with `r_condition[condition,term]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, sigma) %>%
-  mean_qi(`(Intercept)`, sigma)
+  spread_samples(b_Intercept, sigma) %>%
+  mean_qi(b_Intercept, sigma)
 ```
 
-We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `(Intercept)` and `sigma` are redundant arguments to `mean_qi` because they are also the only columns we gathered from the model. So we can simplify this to:
+We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `b_Intercept` and `sigma` are redundant arguments to `mean_qi` because they are also the only columns we gathered from the model. So we can simplify this to:
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, sigma) %>%
+  spread_samples(b_Intercept, sigma) %>%
   mean_qi()
 ```
 
@@ -232,7 +216,7 @@ If you would rather have a long-format list of intervals, use `gather_samples` i
 
 ```{r}
 m %>%
-  gather_samples(`(Intercept)`, sigma) %>%
+  gather_samples(b_Intercept, sigma) %>%
   mean_qi()
 ```
 
@@ -242,42 +226,42 @@ For more on `gather_samples`, see <code>[vignette("tidybayes")](tidybayes.html)<
 
 ### With indexed parameters
 
-When we have a parameter with one or more indices, such as `b`, we can apply `mean_qi` (or other functions in the `point_estimate` family) as we did before:
+When we have a parameter with one or more indices, such as `r_condition`, we can apply `mean_qi` (or other functions in the `point_estimate` family) as we did before:
 
 ```{r}
 m %>%
-  spread_samples(b[,group]) %>%
+  spread_samples(r_condition[condition,]) %>%
   mean_qi()
 ```
 
-How did `mean_qi` know what to aggregate? Data frames returned by `spread_samples` are automatically grouped by all index variables you pass to it; in this case, that means `spread_samples` groups its results by `group`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
+How did `mean_qi` know what to aggregate? Data frames returned by `spread_samples` are automatically grouped by all index variables you pass to it; in this case, that means `spread_samples` groups its results by `condition`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `r_condition`. So the above shortened syntax is equivalent to this more verbose call:
 
 ```{r}
 m %>%
-  spread_samples(b[,group]) %>%
-  group_by(group) %>%       # this line not necessary (done by spread_samples)
-  mean_qi(b)                # b is not necessary (it is the only non-group column)
+  spread_samples(r_condition[condition,]) %>%
+  group_by(condition) %>%   # this line not necessary (done by spread_samples)
+  mean_qi(r_condition)      # b is not necessary (it is the only non-group column)
 ```
 
 ## Combining variables with different indices in a single tidy format data frame
 
-`spread_samples` and `gather_samples` support extracting variables that have different indices into the same data frame. Indices with the same name are automatically matched up, and values are duplicated as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this `condition_mean`). In this model, that mean is the intercept (`(Intercept)`) plus the effect for a given condition (`b`). 
+`spread_samples` and `gather_samples` support extracting variables that have different indices into the same data frame. Indices with the same name are automatically matched up, and values are duplicated as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this `condition_mean`). In this model, that mean is the intercept (`b_Intercept`) plus the effect for a given condition (`r_condition`). 
 
-We can gather samples from `(Intercept)` and `b` together in a single data frame:
+We can gather samples from `b_Intercept` and `r_condition` together in a single data frame:
 
 ```{r}
 m %>% 
-  spread_samples(`(Intercept)`, b[,group]) %>%
+  spread_samples(b_Intercept, r_condition[condition,]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_samples(m, b[term,group]))`)*
+*(10 rows of `r nrow(spread_samples(m, b_Intercept, r_condition[condition,]))`)*
 
-Within each sample, `(Intercept)` is repeated as necessary to correspond to every index of `b`. Thus, the `mutate` function from dplyr can be used to find their sum, `condition_mean` (which is the estimated mean for each condition):
+Within each sample, `b_Intercept` is repeated as necessary to correspond to every index of `r_condition`. Thus, the `mutate` function from dplyr can be used to find their sum, `condition_mean` (which is the estimated mean for each condition):
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,group]) %>%
-  mutate(condition_mean = `(Intercept)` + b) %>%
+  spread_samples(`b_Intercept`, r_condition[condition,]) %>%
+  mutate(condition_mean = b_Intercept + r_condition) %>%
   mean_qi(condition_mean)
 ```
 
@@ -285,8 +269,8 @@ m %>%
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b)
+  spread_samples(b_Intercept, r_condition[condition,]) %>%
+  mean_qi(condition_mean = b_Intercept + r_condition)
 ```
 
 ## Plotting point estimates and intervals
@@ -295,9 +279,9 @@ Plotting means and intervals is straightforward using the "pointrange" or "point
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b) %>%
-  ggplot(aes(y = group, x = condition_mean, xmin = conf.low, xmax = conf.high)) +
+  spread_samples(b_Intercept, r_condition[condition,]) %>%
+  mean_qi(condition_mean = b_Intercept + r_condition) %>%
+  ggplot(aes(y = condition, x = condition_mean, xmin = conf.low, xmax = conf.high)) +
   geom_pointrangeh()
 ```
 
@@ -308,23 +292,23 @@ m %>%
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .8, .5))
+  spread_samples(b_Intercept, r_condition[condition,]) %>%
+  mean_qi(condition_mean = b_Intercept + r_condition, .prob = c(.95, .8, .5))
 ```
 
 The results are in a tidy format: one row per group and probability level (`.prob`). This facilitates plotting. For example, assigning `-.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom, provided by tidybayes, is a shorthand for a `geom_pointrangeh` with `xmin`, `xmax`, and `size` set appropriately based on the `conf.low`, `conf.high`, and `.prob` columns in the data to produce plots of estimates with multiple probability levels:
 
 ```{r}
 m %>%
-  spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .66)) %>%
-  ggplot(aes(y = group, x = condition_mean)) +
+  spread_samples(b_Intercept, r_condition[condition,]) %>%
+  mean_qi(condition_mean = b_Intercept + r_condition, .prob = c(.95, .66)) %>%
+  ggplot(aes(y = condition, x = condition_mean)) +
   geom_pointintervalh() 
 ```
 
 ## Posterior fits
 
-Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_samples`, which is analogous to `rstanarm::posterior_linpred` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of samples of posterior fits:
+Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_samples`, which is analogous to `fitted.brmsfit` or `brms::posterior_linpred` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of samples of posterior fits:
 
 ```{r}
 ABC %>%
@@ -346,7 +330,7 @@ ABC %>%
 
 ## Posterior predictions
 
-Where `add_fitted_samples` is analogous to `rstanarm::posterior_linpred`, `add_predicted_samples` is analogous to `rstanarm::posterior_predict`, giving samples from the posterior predictive distribution.
+Where `add_fitted_samples` is analogous to `fitted.brmsfit` (or `brms::posterior_linpred`), `add_predicted_samples` is analogous to `predict.brmsfit` (`brms::posterior_predict`), giving samples from the posterior predictive distribution.
 
 Here is an example of posterior predictive distributions plotted using `ggridges::geom_density_ridges`:
 
@@ -395,7 +379,7 @@ ABC %>%
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
 
 ```{r, results = "hide", message = FALSE, warning = FALSE}
-m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars)
+m_mpg = brm(mpg ~ hp * cyl, data = mtcars)
 ```
 
 We can draw fit curves with probability bands:
@@ -461,9 +445,9 @@ Let's demonstrate `compare_levels` with another plotting geom, `geom_halfeyeh`, 
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
-  spread_samples(b[,,condition], sep = "[, :]") %>%
-  compare_levels(b, by = condition) %>%
-  ggplot(aes(y = condition, x = b)) +
+  spread_samples(r_condition[condition,]) %>%
+  compare_levels(r_condition, by = condition) %>%
+  ggplot(aes(y = condition, x = r_condition)) +
   geom_halfeyeh()
 ```
 
@@ -472,11 +456,11 @@ If you prefer "caterpillar" plots, ordered by something like the mean of the dif
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
-  spread_samples(b[,,condition], sep = "[, :]") %>%
-  compare_levels(b, by = condition) %>%
+  spread_samples(r_condition[condition,]) %>%
+  compare_levels(r_condition, by = condition) %>%
   ungroup() %>%
-  mutate(condition = reorder(condition, b)) %>%
-  ggplot(aes(y = condition, x = b)) +
+  mutate(condition = reorder(condition, r_condition)) %>%
+  ggplot(aes(y = condition, x = r_condition)) +
   geom_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
