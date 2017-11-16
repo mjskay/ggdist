@@ -37,7 +37,7 @@ data(line, package = "coda")
 parameters(line)
 
 data(RankCorr, package = "tidybayes")
-parameter(RankCorr)
+parameters(RankCorr)
 
 }
 \seealso{

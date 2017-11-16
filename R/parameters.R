@@ -31,7 +31,7 @@
 #' parameters(line)
 #'
 #' data(RankCorr, package = "tidybayes")
-#' parameter(RankCorr)
+#' parameters(RankCorr)
 #'
 #' @importFrom magrittr %>%
 #' @export
