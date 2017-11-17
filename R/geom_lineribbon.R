@@ -131,14 +131,10 @@ GeomLineribbon <- ggproto("GeomLineribbon", Geom,
     grouping_columns = names(data) %>%
       intersect(c("colour", "fill", "linetype", "group"))
 
-    grobs = data %>%
+    # draw all the ribbons
+    ribbon_grobs = data %>%
       dlply(grouping_columns, function(d) {
         group_grobs = list(GeomRibbon$draw_panel(transform(d, size = NA), panel_scales, coord))
-
-        if (!is.null(d$y)) {
-          group_grobs[[2]] = GeomLine$draw_panel(d, panel_scales, coord)
-        }
-
         list(
           width = d %$% mean(abs(ymax - ymin)),
           grobs = group_grobs
@@ -148,9 +144,23 @@ GeomLineribbon <- ggproto("GeomLineribbon", Geom,
     # this is a slightly hackish approach to getting the draw order correct for the common
     # use case of fit lines / curves: draw the ribbons in order from largest mean width to
     # smallest mean width, so that the widest intervals are on the bottom.
-    grobs = grobs[order(-map_dbl(grobs, "width"))] %>%
+    ribbon_grobs = ribbon_grobs[order(-map_dbl(ribbon_grobs, "width"))] %>%
       map("grobs") %>%
       reduce(c)
+
+    # now draw all the lines
+    line_grobs = data %>%
+      dlply(grouping_columns, function(d) {
+        if (!is.null(d$y)) {
+          list(GeomLine$draw_panel(d, panel_scales, coord))
+        } else {
+          list()
+        }
+      })
+
+    line_grobs = reduce(line_grobs, c)
+
+    grobs = c(ribbon_grobs, line_grobs)
 
     ggname("geom_lineribbon",
       gTree(children = do.call(gList, grobs))

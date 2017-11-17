@@ -464,3 +464,44 @@ m %>%
   geom_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
+
+## Ordinal and multinomial models
+
+The `fitted.brmsfit` function for ordinal and multinomial regression models in brms returns multiple estimates for each sample: one for each outcome category (in contrast to `rstanarm::stan_polr` models, which return samples from the latent linear predictor---see `vignette("tidy-rstanarm")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal and multinomial `brms` models, `add_fitted_samples` adds an additional column called `category` and a separate row containing the estimate for each category is output for every sample and predictor. 
+
+Consider this ordinal regression model:
+
+```{r}
+m_cyl = brm(ordered(cyl) ~ mpg, data = mtcars, family = cumulative)
+```
+
+`add_fitted_samples` will include a `category` column containing the estimated probability that the response is in that category. For example, here is the fit for the first row in the dataset:
+
+```{r}
+data_frame(mpg = 21) %>%
+  add_fitted_samples(m_cyl) %>%
+  mean_qi(estimate)
+```
+
+We could plot fit lines for estimatd probabilities against the dataset:
+
+```{r}
+data_plot = mtcars %>%
+  ggplot(aes(x = mpg, y = cyl, color = ordered(cyl))) +
+  geom_point()
+
+fit_plot = mtcars %>%
+  data_grid(mpg = seq_range(mpg, n = 101)) %>%
+  add_fitted_samples(m_cyl) %>%
+  ggplot(aes(x = mpg, y = estimate, color = category)) +
+  stat_lineribbon(alpha = .5) +
+  scale_fill_brewer(palette = "Greys")
+
+plot_grid(ncol = 1, align = "v",
+  data_plot,
+  fit_plot
+)
+```
+
+
+
