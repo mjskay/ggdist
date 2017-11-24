@@ -22,7 +22,7 @@ Imports:
     stringr,
     LaplacesDemon,
     coda,
-    purrr,
+    purrr (>= 0.2.3),
     tibble,
     MASS,
     rlang,
