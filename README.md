@@ -59,7 +59,7 @@ library(ggplot2)
 library(ggstance)
 library(rstan)
 library(tidybayes)
-library(lsmeans)
+library(emmeans)
 library(broom)
 library(brms)
 library(modelr)
@@ -189,7 +189,7 @@ For example, let's compare to ordinary least squares (OLS) regression:
 ``` r
 linear_estimates = 
   lm(response ~ condition, data = ABC) %>% 
-  lsmeans(~ condition) %>% 
+  emmeans(~ condition) %>% 
   tidy() %>%
   mutate(model = "OLS")
 linear_estimates

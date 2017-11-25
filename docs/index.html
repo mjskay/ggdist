@@ -48,7 +48,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/tidy-rstanarm.html">Extracting tidy samples from rstanarm</a>
+      <a href="articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+    </li>
+    <li>
+      <a href="articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
     </li>
   </ul>
 </li>
@@ -124,7 +127,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="kw">library</span>(ggstance)
 <span class="kw">library</span>(rstan)
 <span class="kw">library</span>(tidybayes)
-<span class="kw">library</span>(lsmeans)
+<span class="kw">library</span>(emmeans)
 <span class="kw">library</span>(broom)
 <span class="kw">library</span>(brms)
 <span class="kw">library</span>(modelr)
@@ -238,7 +241,7 @@ model {
 <p>For example, let’s compare to ordinary least squares (OLS) regression:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">linear_estimates =<span class="st"> </span>
 <span class="st">  </span><span class="kw">lm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">lsmeans</span>(<span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">emmeans</span>(<span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">tidy</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="st">"OLS"</span>)
 linear_estimates</code></pre></div>

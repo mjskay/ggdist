@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Extracting tidy samples from rstanarm • tidybayes</title>
+<title>Extracting and visualizing tidy samples from rstanarm • tidybayes</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -48,7 +48,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting tidy samples from rstanarm</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+    </li>
+    <li>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
     </li>
   </ul>
 </li>
@@ -72,10 +75,10 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Extracting tidy samples from rstanarm</h1>
+      <h1>Extracting and visualizing tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2017-11-14</h4>
+            <h4 class="date">2017-11-24</h4>
           </div>
 
     
@@ -92,8 +95,7 @@ img {
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette describes how to use the <code>tidybayes</code> package to extract tidy samples from <code>rstanarm</code>. For a more general introduction to <code>tidybayes</code> and its use on more general-purpose sampling languages (like Stan and JAGS), see <a href="tidybayes.html">vignette(“tidybayes”)</a>.</p>
-<p>The default output data formats of popular samplers like JAGS and Stan often don’t quite conform to the ideal of <a href="http://dx.doi.org/10.18637/jss.v059.i10">tidy data</a>. Output formats will often be in matrix form (requiring conversion for use with libraries like ggplot). <code>tidybayes</code> automates munging the samples into tidy formats.</p>
+<p>This vignette describes how to use the <code>tidybayes</code> package to extract <a href="http://dx.doi.org/10.18637/jss.v059.i10">tidy data</a> data frames of samples of parameters, fits, and predictions from <code>rstanarm</code>. For a more general introduction to <code>tidybayes</code> and its use on general-purpose sampling languages (like Stan and JAGS), see <a href="tidybayes.html">vignette(“tidybayes”)</a>.</p>
 </div>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
@@ -202,7 +204,13 @@ ABC =
 <h2 class="hasAnchor">
 <a href="#gathering-samples-from-a-fit-in-tidy-format-using-spread_samples" class="anchor"></a>Gathering samples from a fit in tidy-format using <code>spread_samples</code>
 </h2>
-<p>Now that we have our results, the fun begins: getting the samples out in a tidy format! For example, given these parameters:</p>
+<p>Now that we have our results, the fun begins: getting the samples out in a tidy format! First, we’ll use the <code>parameters</code> function to get a list of raw parameter names so that we know what parameters we can extract from the model:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/parameters.html">parameters</a></span>(m)</code></pre></div>
+<pre><code>## [1] "(Intercept)"                              "b[(Intercept) condition:A]"              
+## [3] "b[(Intercept) condition:B]"               "b[(Intercept) condition:C]"              
+## [5] "b[(Intercept) condition:D]"               "b[(Intercept) condition:E]"              
+## [7] "sigma"                                    "Sigma[condition:(Intercept),(Intercept)]"</code></pre>
+<p>Here, <code>(Intercept)</code> is the global mean, and the <code>b</code> parameters are offsets from that mean for each condition. Given these parameters:</p>
 <ul>
 <li><code>b[(Intercept) condition:A]</code></li>
 <li><code>b[(Intercept) condition:B]</code></li>
@@ -210,7 +218,7 @@ ABC =
 <li><code>b[(Intercept) condition:D]</code></li>
 <li><code>b[(Intercept) condition:E]</code></li>
 </ul>
-<p>We might want a data frame where each row is a sample from either <code>b[(Intercept) condition:A]</code>, <code>b[(Intercept) condition:B]</code>, <code>...:C]</code>, <code>...:D]</code>, or <code>...:E]</code>, and where we have columns indexing which iteration of the sampler the sample came from and which condition it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.</p>
+<p>We might want a data frame where each row is a sample from either <code>b[(Intercept) condition:A]</code>, <code>b[(Intercept) condition:B]</code>, <code>...:C]</code>, <code>...:D]</code>, or <code>...:E]</code>, and where we have columns indexing which iteration of the sampler the sample came from and which condition (<code>A</code> to <code>E</code>) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.</p>
 <p>The workhorse of <code>tidybayes</code> is the <code>spread_samples</code> function, which does this extraction for us. It includes a simple specification format that we can use to extract parameters and their indices into tidy-format data frames.</p>
 <div id="gathering-parameter-indices-into-a-separate-column-in-a-tidy-format-data-frame" class="section level3">
 <h3 class="hasAnchor">
@@ -258,7 +266,7 @@ ABC =
 ## 10      1          2 (Intercept) condition:E -1.7590686</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>But the more descriptive and less cryptic names from the previous example are probably preferable.</p>
-<p>In this particular model, there is only one term (<code>(Intercept)</code>), thus we could omit that index altogether to just get each <code>condition</code> and the value of <code>b</code> for that condition:</p>
+<p>In this particular model, there is only one term (<code>(Intercept)</code>), thus we could omit that index altogether to just get each <code>group</code> and the value of <code>b</code> for the corresponding condition:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
@@ -387,7 +395,7 @@ ABC =
 ## 3 condition:C  1.1794403  0.1207989  2.2576505  0.95
 ## 4 condition:D  0.3678050 -0.7356849  1.4271432  0.95
 ## 5 condition:E -1.5229349 -2.6627544 -0.5064543  0.95</code></pre>
-<p>How did <code>mean_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_samples</code> groups its results by <code>condition</code>. <code>mean_qi</code> respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>mean_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>b</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
+<p>How did <code>mean_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_samples</code> groups its results by <code>group</code>. <code>mean_qi</code> respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>mean_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>b</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># this line not necessary (done by spread_samples)</span>
@@ -406,7 +414,7 @@ ABC =
 <div id="combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="section level2">
 <h2 class="hasAnchor">
 <a href="#combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="anchor"></a>Combining variables with different indices in a single tidy format data frame</h2>
-<p><code>spread_samples</code> supports gathering variables that have different indices in the same data frame. It automatically matches up indices with the same name, and duplicates values as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this <code>condition_mean</code>). In this model, that mean is the intercept (<code>(Intercept)</code>) plus the effect for a given condition (<code>b</code>).</p>
+<p><code>spread_samples</code> and <code>gather_samples</code> support extracting variables that have different indices into the same data frame. Indices with the same name are automatically matched up, and values are duplicated as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this <code>condition_mean</code>). In this model, that mean is the intercept (<code>(Intercept)</code>) plus the effect for a given condition (<code>b</code>).</p>
 <p>We can gather samples from <code>(Intercept)</code> and <code>b</code> together in a single data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
@@ -440,7 +448,7 @@ ABC =
 ## 3 condition:C      1.8258236  1.4554026  2.1989515  0.95
 ## 4 condition:D      1.0141883  0.6659141  1.3659712  0.95
 ## 5 condition:E     -0.8765516 -1.2306814 -0.5116099  0.95</code></pre>
-<p><code>mean_qi</code> uses tidy evaluation (see <code><a href="https://cran.rstudio.com/web/packages/rlang/vignettes/tidy-evaluation.html">vignette("tidy-evaluation", package = "rlang")</a></code>), so it can take column expressions (not just column names). Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>mean_qi</code>:</p>
+<p><code>mean_qi</code> uses tidy evaluation (see <code><a href="https://cran.rstudio.com/web/packages/rlang/vignettes/tidy-evaluation.html">vignette("tidy-evaluation", package = "rlang")</a></code>), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>mean_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b)</code></pre></div>
@@ -463,7 +471,7 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_pointrangeh</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
 </div>
 <div id="interval-estimates-with-multiple-probability-levels" class="section level2">
 <h2 class="hasAnchor">
@@ -497,7 +505,7 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>() </code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-23-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
 </div>
 <div id="posterior-fits" class="section level2">
 <h2 class="hasAnchor">
@@ -528,7 +536,7 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> condition)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>))</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
 </div>
 <div id="posterior-predictions" class="section level2">
 <h2 class="hasAnchor">
@@ -541,7 +549,7 @@ ABC =
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred, <span class="dt">y =</span> condition)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_density_ridges</span>()</code></pre></div>
 <pre><code>## Picking joint bandwidth of 0.101</code></pre>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
 <p>We could also use <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/stat_interval">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span>
@@ -550,7 +558,7 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
 <p>Altogether, data, posterior predictions, and estimates of the means:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid =<span class="st"> </span>ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(condition)
@@ -567,7 +575,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate), <span class="dt">data =</span> fits, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="op">-</span><span class="fl">0.2</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
 </div>
 <div id="fitprediction-curves" class="section level2">
 <h2 class="hasAnchor">
@@ -583,7 +591,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
 <p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -592,7 +600,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw">ordered</span>(cyl))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">group =</span> <span class="kw">paste</span>(cyl, .iteration)), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -602,7 +610,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
 <p>This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -613,7 +621,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-34-1.png" width="576"></p>
 </div>
 <div id="comparing-levels-of-a-factor" class="section level2">
 <h2 class="hasAnchor">
@@ -626,7 +634,7 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(b, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-34-1.png" width="672"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-35-1.png" width="672"></p>
 <p>If you prefer “caterpillar” plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
 m <span class="op">%&gt;%</span>
@@ -637,7 +645,7 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>) </code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-35-1.png" width="672"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-36-1.png" width="672"></p>
 </div>
 </div>
   </div>

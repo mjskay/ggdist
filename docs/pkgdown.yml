@@ -2,6 +2,7 @@ urls:
   reference: http://mjskay.github.io/tidybayes/reference
   article: http://mjskay.github.io/tidybayes/articles
 articles:
+  tidy-brms: tidy-brms.html
   tidy-rstanarm: tidy-rstanarm.html
   tidybayes: tidybayes.html
 
