@@ -79,9 +79,9 @@
     
     
 <div class="contents">
-<div id="tidybayes-bayesian-analysis-tidy-data" class="section level1">
+<div id="tidybayes-bayesian-analysis-tidy-data-geoms" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#tidybayes-bayesian-analysis-tidy-data" class="anchor"></a>tidybayes: Bayesian analysis + tidy data</h1></div>
+<a href="#tidybayes-bayesian-analysis-tidy-data-geoms" class="anchor"></a>tidybayes: Bayesian analysis + tidy data + geoms</h1></div>
 
 <p><em>Matthew Kay, University of Michigan, <a href="mailto:mjskay@umich.edu">mjskay@umich.edu</a></em></p>
 <p><a href="http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">Tidy</a> data frames (one observation per row) are particularly convenient for use in a variety of R data manipulation and visualization packages. However, when using MCMC / Bayesian samplers like JAGS or Stan in R, we often have to translate this data into a form the sampler understands, and then after running the model, translate the resulting sample into a more tidy format for use with other R functions. <code>tidybayes</code> aims to simplify these two common (often tedious) operations:</p>
@@ -232,6 +232,26 @@ model {
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean, <span class="dt">y =</span> condition)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="reference/geom_eye.html">geom_eyeh</a></span>()</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<p>Or one can employ the similar “half-eye” plot:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean, <span class="dt">y =</span> condition)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+</div>
+<div id="plotting-posteriors-as-quantile-dotplots" class="section level3">
+<h3 class="hasAnchor">
+<a href="#plotting-posteriors-as-quantile-dotplots" class="anchor"></a>Plotting posteriors as quantile dotplots</h3>
+<p>Intervals are nice if the alpha level happens to line up with whatever inference you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (ratio of area estimation is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating <a href="https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md">quantile dotplots</a>, which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">do</span>(<span class="kw">data_frame</span>(<span class="dt">condition_mean =</span> <span class="kw">quantile</span>(.<span class="op">$</span>condition_mean, <span class="kw">ppoints</span>(<span class="dv">100</span>)))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_dotplot</span>(<span class="dt">binwidth =</span> .<span class="dv">04</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(<span class="kw">fct_rev</span>(condition) <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="ot">NULL</span>)</code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
+<p>The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.</p>
 </div>
 <div id="model-comparison-via-compatibility-with-broom" class="section level3">
 <h3 class="hasAnchor">
@@ -270,13 +290,13 @@ bayes_estimates</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> estimate, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high, <span class="dt">color =</span> model)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_pointrangeh</span>(<span class="dt">position =</span> <span class="kw">position_dodgev</span>(<span class="dt">height =</span> .<span class="dv">3</span>))</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
 <p>Shrinkage towards the overall mean is visible in the Bayesian estimates.</p>
 <p>Comptability with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> also gives compatibility with <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rename</span>(<span class="dt">term =</span> condition) <span class="op">%&gt;%</span>
 <span class="st">  </span>dotwhisker<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dwplot</a></span>()</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 </div>
 <div id="posterior-prediction-and-complex-custom-plots" class="section level3">
 <h3 class="hasAnchor">
@@ -296,7 +316,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span>
 <span class="st">  </span><span class="co"># data</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC)</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
 <p>This plot shows 66% and 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.</p>
 <div id="fit-curves" class="section level4">
 <h4 class="hasAnchor">
@@ -312,7 +332,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw"><a href="reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mpg), <span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>()</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 <p><code><a href="reference/stat_lineribbon.html">stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5))</a></code> is one of several shortcut geoms that simplify common combinations of <code>tidybayes</code> functions and <code>ggplot</code> goems. It is roughly equivalent to the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">stat_summary</span>(
     <span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">fill =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_rev">fct_rev</a></span>(<span class="kw">ordered</span>(...prob..)), <span class="dt">group =</span> <span class="op">-</span>...prob..), 
@@ -331,7 +351,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>am)                                  <span class="co"># facet by am</span></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
 <p>Or, if you would like overplotted posterior fit lines, you can instead use <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/add_predicted_samples">tidybayes::add_fitted_samples</a></code> to get samples from fit lines (instead of predictions), select some reasonable number of them (say <code>n = 100</code>), and then plot them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>), am) <span class="op">%&gt;%</span>
@@ -340,7 +360,7 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">group =</span> .iteration), <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">color =</span> <span class="st">"red"</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>am)</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 <p>See <code><a href="articles/tidybayes.html">vignette("tidybayes")</a></code> for a variety of additional examples and more explanation of how it works.</p>
 </div>
 </div>

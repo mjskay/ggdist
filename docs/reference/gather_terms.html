@@ -165,21 +165,46 @@ data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>dplyr</span>)
+    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)
 <span class='fu'>data</span>(<span class='no'>RankCorr</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>v</span>], <span class='no'>tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()
-
+  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 144 x 7
+#&gt; # Groups:   i, v, term [144]
+#&gt;        i     v  term    estimate    conf.low  conf.high .prob
+#&gt;    &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1     1     1     b -1.07813380 -1.24631300 -0.9054563  0.95
+#&gt;  2     1     1   tau  6.03129167  5.07486825  7.1405325  0.95
+#&gt;  3     1     2     b -1.82516817 -2.07576900 -1.5438657  0.95
+#&gt;  4     1     2   tau  6.03129167  5.07486825  7.1405325  0.95
+#&gt;  5     1     3     b  0.17349259  0.03489905  0.3170186  0.95
+#&gt;  6     1     3   tau  6.03129167  5.07486825  7.1405325  0.95
+#&gt;  7     1     4     b -0.09884865 -0.34174593  0.1410597  0.95
+#&gt;  8     1     4   tau  6.03129167  5.07486825  7.1405325  0.95
+#&gt;  9     2     1     b -0.73395324 -1.03256875 -0.4346341  0.95
+#&gt; 10     2     1   tau  3.37725239  2.40876750  4.5755795  0.95
+#&gt; # ... with 134 more rows</div><div class='input'>
 <span class='co'># the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='as_sample_tibble.html'>as_sample_tibble</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()
-<span class='co'># }</span></pre>
+  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; |======================================                | 72% ~1 s remaining     |=======================================               | 74% ~1 s remaining     |========================================              | 76% ~1 s remaining     |==========================================            | 78% ~1 s remaining     |===========================================           | 80% ~1 s remaining     |============================================          | 82% ~1 s remaining     |=============================================         | 84% ~0 s remaining     |==============================================        | 86% ~0 s remaining     |===============================================       | 88% ~0 s remaining     |================================================      | 90% ~0 s remaining     |=================================================     | 92% ~0 s remaining     |==================================================    | 94% ~0 s remaining     |===================================================   | 96% ~0 s remaining     |===================================================== | 98% ~0 s remaining     |======================================================|100% ~0 s remaining     </div><div class='output co'>#&gt; # A tibble: 235 x 5
+#&gt; # Groups:   term [235]
+#&gt;       term    estimate    conf.low  conf.high .prob
+#&gt;      &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1  b[1,1] -1.07813380 -1.24631300 -0.9054563  0.95
+#&gt;  2  b[1,2] -1.82516817 -2.07576900 -1.5438657  0.95
+#&gt;  3  b[1,3]  0.17349259  0.03489905  0.3170186  0.95
+#&gt;  4  b[1,4] -0.09884865 -0.34174593  0.1410597  0.95
+#&gt;  5 b[10,1] -0.49728198 -0.67700202 -0.3091694  0.95
+#&gt;  6 b[10,2] -1.70815594 -1.99129300 -1.4242285  0.95
+#&gt;  7 b[10,3]  0.03443984 -0.11406630  0.1873531  0.95
+#&gt;  8 b[10,4]  0.32755347  0.07510573  0.5739541  0.95
+#&gt;  9 b[11,1] -1.19414856 -1.37085550 -1.0125650  0.95
+#&gt; 10 b[11,2] -2.38960803 -2.65112400 -2.1254285  0.95
+#&gt; # ... with 225 more rows</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

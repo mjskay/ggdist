@@ -1,6 +1,6 @@
 
-tidybayes: Bayesian analysis + tidy data
-========================================
+tidybayes: Bayesian analysis + tidy data + geoms
+================================================
 
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 
@@ -180,6 +180,35 @@ m %>%
 
 ![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
 
+Or one can employ the similar "half-eye" plot:
+
+``` r
+m %>%
+  spread_samples(condition_mean[condition]) %>%
+  ggplot(aes(x = condition_mean, y = condition)) +
+  geom_halfeyeh()
+```
+
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
+
+### Plotting posteriors as quantile dotplots
+
+Intervals are nice if the alpha level happens to line up with whatever inference you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (ratio of area estimation is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating [quantile dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):
+
+``` r
+m %>%
+  spread_samples(condition_mean[condition]) %>%
+  do(data_frame(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
+  ggplot(aes(x = condition_mean)) +
+  geom_dotplot(binwidth = .04) +
+  facet_grid(fct_rev(condition) ~ .) +
+  scale_y_continuous(breaks = NULL)
+```
+
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
+
+The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
+
 ### Model comparison via compatibility with `broom`
 
 The output of the `tidybayes::mean_qi` function (and other `point_interval` functions) is compatible with `broom::tidy`, so we can compare parameter estimates easily to models supported by `broom`.
@@ -229,7 +258,7 @@ bind_rows(linear_estimates, bayes_estimates) %>%
   geom_pointrangeh(position = position_dodgev(height = .3))
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
 
 Shrinkage towards the overall mean is visible in the Bayesian estimates.
 
@@ -241,7 +270,7 @@ bind_rows(linear_estimates, bayes_estimates) %>%
   dotwhisker::dwplot()
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
 
 ### Posterior prediction and complex custom plots
 
@@ -264,7 +293,7 @@ m %>%
   geom_point(aes(x = response), data = ABC)
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
 
 This plot shows 66% and 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
 
@@ -290,7 +319,7 @@ mtcars %>%
   scale_fill_brewer()
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
 
 `stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5))` is one of several shortcut geoms that simplify common combinations of `tidybayes` functions and `ggplot` goems. It is roughly equivalent to the following:
 
@@ -323,7 +352,7 @@ mtcars %>%
   facet_wrap(~ am)                                  # facet by am
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-17-1.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-1.png)
 
 Or, if you would like overplotted posterior fit lines, you can instead use `tidybayes::add_fitted_samples` to get samples from fit lines (instead of predictions), select some reasonable number of them (say `n = 100`), and then plot them:
 
@@ -337,7 +366,7 @@ mtcars %>%
   facet_wrap(~ am)
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-1.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-20-1.png)
 
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
 
