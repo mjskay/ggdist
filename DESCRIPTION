@@ -48,7 +48,8 @@ Suggests:
     MCMCglmm,
     bayesplot,
     modelr,
-    brms
+    brms,
+    cowplot
 License: GPL (>= 3)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: https://github.com/mjskay/tidybayes
