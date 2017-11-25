@@ -467,7 +467,7 @@ m %>%
 
 ## Ordinal and multinomial models
 
-The `fitted.brmsfit` function for ordinal and multinomial regression models in brms returns multiple estimates for each sample: one for each outcome category (in contrast to `rstanarm::stan_polr` models, which return samples from the latent linear predictor---see `vignette("tidy-rstanarm")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal and multinomial `brms` models, `add_fitted_samples` adds an additional column called `category` and a separate row containing the estimate for each category is output for every sample and predictor. 
+The `fitted.brmsfit` function for ordinal and multinomial regression models in brms returns multiple estimates for each sample: one for each outcome category (in contrast to `rstanarm::stan_polr` models, which return samples from the latent linear predictor). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal and multinomial `brms` models, `add_fitted_samples` adds an additional column called `category` and a separate row containing the estimate for each category is output for every sample and predictor. 
 
 Consider this ordinal regression model:
 
@@ -483,7 +483,7 @@ data_frame(mpg = 21) %>%
   mean_qi(estimate)
 ```
 
-We could plot fit lines for estimatd probabilities against the dataset:
+We could plot fit lines for estimated probabilities against the dataset:
 
 ```{r}
 data_plot = mtcars %>%
