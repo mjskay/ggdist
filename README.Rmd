@@ -4,7 +4,7 @@ output:
         df_print: kable
 ---
 
-# tidybayes: Bayesian analysis + tidy data
+# tidybayes: Bayesian analysis + tidy data + geoms
 
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 
