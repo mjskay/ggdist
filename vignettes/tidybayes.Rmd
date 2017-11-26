@@ -24,7 +24,7 @@ img {
   
 ## Introduction
   
-This vignette introduces the `tidybayes` package, which facilitates the use of tidy data (one observation per row) with Bayesian samplers in R. This vignette is geared towards working with tidy data in general-purpose samplers like JAGS or Stan. For a similar introduction to the use of `tidybayes` with high-level modelling functions such as those in `brms` or `rstanarm`, see also <code>[vignette("tidy-rstanarm")](tidy-rstanarm.html)</code>.
+This vignette introduces the `tidybayes` package, which facilitates the use of tidy data (one observation per row) with Bayesian samplers in R. This vignette is geared towards working with tidy data in general-purpose samplers like JAGS or Stan. For a similar introduction to the use of `tidybayes` with high-level modelling functions such as those in `brms` or `rstanarm`, see <code>[vignette("tidy-brms")](tidy-brms.html)</code> or <code>[vignette("tidy-rstanarm")](tidy-rstanarm.html)</code>.
   
 The default output (and sometimes input) data formats of popular samplers like JAGS and Stan often don't quite conform to the ideal of [tidy data](http://dx.doi.org/10.18637/jss.v059.i10). For example, input formats might expect a list instead of a data frame, and for all variables to be encoded as numeric values (requiring translation of factors to numeric values and the creation of index variables to store the number of levels per factor or the number of observations in a data frame). Output formats will often be in matrix form (requiring conversion for use with libraries like ggplot), and will use numeric indices (requiring conversion back into factor level names if the you wish to make meaningfully-labelled plots or estimates). `tidybayes` automates all of these sorts of tasks.
   

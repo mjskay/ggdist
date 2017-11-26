@@ -24,7 +24,7 @@ img {
 
 ## Introduction
   
-This vignette describes how to use the `tidybayes` package to extract [tidy data](http://dx.doi.org/10.18637/jss.v059.i10) data frames of samples of parameters, fits, and predictions from `brms::brm`. For a more general introduction to `tidybayes` and its use on general-purpose sampling languages (like Stan and JAGS), see [vignette("tidybayes")](tidybayes.html).
+This vignette describes how to use the `tidybayes` package to extract [tidy data](http://dx.doi.org/10.18637/jss.v059.i10) data frames of samples of parameters, fits, and predictions from `brms::brm`. For a more general introduction to `tidybayes` and its use on general-purpose sampling languages (like Stan and JAGS), see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
 
 ## Setup
