@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Using Tidy Data with Bayesian Samplers • tidybayes</title>
+<title>Using tidy data with Bayesian samplers • tidybayes</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -41,7 +41,7 @@
 <li>
   <a href="..//index.html">
     <span class="fa fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -53,7 +53,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -70,7 +70,7 @@
 <li>
   <a href="https://github.com/mjskay/tidybayes">
     <span class="fa fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -81,18 +81,18 @@
 </div>
 <!--/.navbar -->
 
-      
+
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Using Tidy Data with Bayesian Samplers</h1>
+      <h1>Using tidy data with Bayesian samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
-            
+
             <h4 class="date">2017-11-26</h4>
           </div>
 
-    
-    
+
+
 <div class="contents">
 <style type="text/css">
 .kable-table table {
@@ -226,10 +226,10 @@ model {
 <pre><code>## $condition
 ##  [1] 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3
 ## [49] 4 5
-## 
+##
 ## $n_condition
 ## [1] 5
-## 
+##
 ## $response
 ##  [1] -0.42042774  1.69217967  1.37225407  1.03507138 -0.14427956 -0.30145399  0.76391681  1.68231434
 ##  [9]  0.85711318 -0.93094589  0.61381517  0.59911027  1.45980370  0.92123282 -1.53588002 -0.06949307
@@ -238,7 +238,7 @@ model {
 ## [33]  3.10773029  1.60855182 -0.26038911  0.47578692  0.49523368  0.99976363  0.11890706 -1.07130406
 ## [41]  0.77503018  0.59878841  1.96271054  1.94783398 -1.22828447  0.28111168  0.55649574  1.76987771
 ## [49]  0.63783576 -1.03460558
-## 
+##
 ## $n
 ## [1] 50</code></pre>
 <p>This makes it easy to skip right to running the model without munging the data yourself:</p>
@@ -246,9 +246,9 @@ model {
 <p>The results look like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(m, <span class="dt">pars =</span> <span class="kw">c</span>(<span class="st">"overall_mean"</span>, <span class="st">"condition_mean_sd"</span>, <span class="st">"condition_mean"</span>, <span class="st">"response_sd"</span>))</code></pre></div>
 <pre><code>## Inference for Stan model: a079ffbff39f9d3c47919d14be5398a6.
-## 4 chains, each with iter=2000; warmup=1000; thin=1; 
+## 4 chains, each with iter=2000; warmup=1000; thin=1;
 ## post-warmup draws per chain=1000, total post-warmup draws=4000.
-## 
+##
 ##                    mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
 ## overall_mean       0.59    0.02 0.57 -0.59  0.26  0.59  0.93  1.69   825    1
 ## condition_mean_sd  1.22    0.02 0.56  0.61  0.87  1.09  1.43  2.49  1021    1
@@ -258,10 +258,10 @@ model {
 ## condition_mean[4]  1.01    0.00 0.18  0.65  0.89  1.01  1.13  1.37  4000    1
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
-## 
+##
 ## Samples were drawn using NUTS(diag_e) at Sun Nov 26 14:26:42 2017.
 ## For each parameter, n_eff is a crude measure of effective sample size,
-## and Rhat is the potential scale reduction factor on split chains (at 
+## and Rhat is the potential scale reduction factor on split chains (at
 ## convergence, Rhat=1).</code></pre>
 </div>
 <div id="extracting-samples-from-a-fit-in-tidy-format-using-spread_samples" class="section level2">
@@ -521,7 +521,7 @@ model {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean, 
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean,
     <span class="dt">size =</span> <span class="op">-</span>.prob)) <span class="op">+</span><span class="st">               </span><span class="co"># smaller probability interval =&gt; thicker line</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>

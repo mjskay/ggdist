@@ -1,5 +1,5 @@
 ---
-title: "Using Tidy Data with Bayesian Samplers"
+title: "Using tidy data with Bayesian samplers"
 author: "Matthew Kay"
 date: "`r Sys.Date()`"
 output: 
