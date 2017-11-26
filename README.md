@@ -1,6 +1,3 @@
-Matthew Kay
-2017-11-26
-
 tidybayes: Bayesian analysis + tidy data + geoms
 ================================================
 

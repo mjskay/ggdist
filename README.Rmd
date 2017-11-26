@@ -1,6 +1,4 @@
 ---
-author: "Matthew Kay"
-date: "`r Sys.Date()`"
 output: 
   github_document:
     df_print: kable
