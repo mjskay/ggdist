@@ -3,6 +3,7 @@ url: http://mjskay.github.io/tidybayes
 template:
   params:
     bootswatch: cerulean
+    ganalytics: UA-93322-5
 
 authors:
   Matthew Kay:

@@ -2,9 +2,8 @@ year <- sub("-.*", "", meta$Date)
 note <- sprintf("R package version %s", meta$Version)
 
 bibentry(bibtype = "Manual",
-         title = "{tidybayes}: R package for composing/extracting tidy data from Bayesian samplers",
+         title = paste("{tidybayes}:", meta$Title),
          author = c(person("Matthew", "Kay")),
          year = year,
          note = note,
          url = "https://github.com/mjskay/tidybayes")
-         

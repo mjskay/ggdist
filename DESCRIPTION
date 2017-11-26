@@ -1,15 +1,16 @@
 Package: tidybayes
-Title: Tidy Data for MCMC/Bayesian Samplers
+Title: Tidy Data and Geoms for MCMC/Bayesian Samplers
 Version: 0.12.0.000001
-Date: 2017-09-05
+Date: 2017-11-26
 Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
     email = "mjskay@umich.edu"))
 Maintainer: Matthew Kay <mjskay@umich.edu>
 Description: Facilitates composing data for and gathering samples from
-    Bayesian samplers (JAGS, Stan, ...) in a tidy data format. Also provides
+    Bayesian samplers (JAGS, Stan, rstanarm, brms, ...) in a tidy data format. Also provides
     miscellaneous functions helpful for analysing tidy samples from Bayesian models, such 
-    as estimates and intervals, and a ggplot2 function for easy eye plots of posteriors
-    (aka raindrop plots or violin plots).
+    as estimates and intervals, and geoms for common tasks like estimates with multiple
+    intervals, eye plots (intervals plus densities), and fit curves with multiple uncertainty
+    bands.
 Depends:
     R (>= 2.10)
 Imports:
