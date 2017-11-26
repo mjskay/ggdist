@@ -479,7 +479,7 @@ m %>%
 If this model is well-calibrated, about 95% of the data should be within the outer intervals, 80% in the next-smallest intervals, and 50% in the smallest intervals.
 
 
-### Posterior predictions with paramter estimates
+### Posterior predictions with parameter estimates
 
 Altogether, data, posterior predictions, and estimates of the means:
 

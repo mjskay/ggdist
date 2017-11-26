@@ -2,7 +2,7 @@ url: http://mjskay.github.io/tidybayes
 
 template:
   params:
-    bootswatch: cerulean
+    bootswatch: paper
     ganalytics: UA-93322-5
 
 authors:

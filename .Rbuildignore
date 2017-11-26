@@ -13,3 +13,5 @@
 ^docs$
 ^_pkgdown\.yml$
 ^build_test_models.R$
+^pkgdown/.*$
+^pkgdown$

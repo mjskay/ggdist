@@ -1,10 +1,10 @@
+Matthew Kay
+2017-11-26
 
 tidybayes: Bayesian analysis + tidy data + geoms
 ================================================
 
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
-
-*Matthew Kay, University of Michigan, <mjskay@umich.edu>*
 
 ![Preview of tidybayes plots](man/figures/preview.png)
 
@@ -297,7 +297,7 @@ m %>%
 
 This plot shows 66% and 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
 
-#### Fit curves
+### Fit curves
 
 For models that support it (like `rstanarm` and `brms` models), We can also use the `add_fitted_samples` or `add_predicted_samples` functions to generate posterior fits or predictions. Combined with the functions from the `modelr` package, this makes it easy to generate fit curves.
 
