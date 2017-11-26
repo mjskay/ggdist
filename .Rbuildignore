@@ -7,8 +7,6 @@
 ^\.gitattributes$
 ^\.git$
 ^\.travis\.yml$
-^preview.pdf$
-^preview.png$
 ^README.Rmd$
 ^README_files$
 ^.lintr$

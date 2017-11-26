@@ -10,7 +10,7 @@ output:
 
 _Matthew Kay, University of Michigan, <mjskay@umich.edu>_
 
-![Preview of tidybayes plots](preview.png)
+![Preview of tidybayes plots](man/figures/preview.png)
 
 [Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
 data frames (one observation per row) are particularly convenient for use
