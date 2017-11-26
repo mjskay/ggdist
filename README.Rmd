@@ -1,7 +1,7 @@
 ---
 output: 
-    github_document:
-        df_print: kable
+  github_document:
+    df_print: kable
 ---
 
 # tidybayes: Bayesian analysis + tidy data + geoms
@@ -9,6 +9,8 @@ output:
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 
 _Matthew Kay, University of Michigan, <mjskay@umich.edu>_
+
+![Preview of tidybayes plots](preview.png)
 
 [Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
 data frames (one observation per row) are particularly convenient for use
@@ -60,20 +62,17 @@ and visualization tasks common to many models:
   intervals *from* tidy data frames of samples, they *return* tidy data frames,
   and they **respect data frame groups**.
 
-* __Visualizing posteriors__, which when many estimates are involved
-  can be done succinctly using **eye plots** (aka raindrop plots or violin
-  plots). Eye plots are a compact representation of posterior densities that 
-  combines credible intervals and point estimates with a symmetric visualization 
-  of density, making for straightforward and compact comparison of many data points. 
-  The `geom_eye` and `geom_eyeh` functions provide a convenient way to generate eye 
-  plots using `ggplot2`. If you prefer intervals plus densities (instead of violins),
-  the **half-eye plot** is also easily constructing using `geom_halfeyeh`.
-  
-    The focus on tidy data suitable for use with `ggplot` means that existing
-    `geom`s (like `geom_pointrange` and `geom_linerange`) can also be used easily to 
-    construct custom plots. Modified versions of those vanilla geoms are also provided
-    (e.g., `geom_pointinterval` and `geom_pointintervalh`) with sensible defaults for
-    tasks like plotting multiple intervals per estimate.
+* __Visualizing posteriors__. The focus on tidy data makes the output from tidybayes
+  easy to visualize using `ggplot`. Existing `geom`s (like `geom_pointrange` and 
+  `geom_linerange`) can give useful output, but `tidybayes` also includes several
+  geoms to simplify common combinations of `stats` and `geoms` with sensible
+  defaults suitable for visualizing posterior estimates and intervals (`geom_pointinterval`,
+  `geom_pointintervalh`, `stat_pointinterval`, `stat_pointintervalh`), visualizing
+  densities with point estimates and intervals ("eye plots", `geom_eye` and `geom_eyeh`;
+  or "half-eye plots", `geom_halfeyeh`), and visualizing fit lines with an arbitrary 
+  number of uncertainty bands (`geom_lineribbon` and `stat_lineribbon`). Combining the
+  base-R `quantile` function with `geom_dotplot` also facilitates the contruction
+  of quantile dotplots of posteriors (see example in this document).
 
 * __Comparing a variable across levels of a factor__, which often means first
   generating pairs of levels of a factor (according to some desired set of 
