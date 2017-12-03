@@ -93,15 +93,6 @@ test_that("[add_]predicted_samples works on a simple brms model", {
   expect_equal(ref, add_predicted_samples(mtcars_tbl, m_hp, seed = 123))
 })
 
-# Test Suite:
-# Test 1: "[add_]predicted_samples gives same results with standardized arguments
-#         "and prediction method arguments in rstanarm"
-# Test 2: "[add_]predicted_samples gives same results with standardized arguments
-#         "and prediction method arguments in brms"
-
-# can't use cmd-shift-t, or devtools::test()
-# need to use testthat::test_package("tidybayes")
-
 test_that("[add_]predicted_samples gives same results with standardized arguments and prediction method arguments in brms", {
   m_hp = readRDS("models.brms.m_hp.rds")
   
