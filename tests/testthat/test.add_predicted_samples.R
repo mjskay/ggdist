@@ -97,17 +97,17 @@ test_that("[add_]predicted_samples gives same results with standardized argument
   m_hp = readRDS("models.brms.m_hp.rds")
   
   set.seed(123)
-  std_args_pred <- m_hp %>%
+  std_args_pred = m_hp %>%
     predicted_samples(newdata = mtcars_tbl, n = 100)
   set.seed(123)
-  std_args_add <- m_hp %>%
+  std_args_add = m_hp %>%
     add_predicted_samples(newdata = mtcars_tbl, n = 100)
   
   set.seed(123)
-  predict_args_pred <- m_hp %>%
+  predict_args_pred = m_hp %>%
     predicted_samples(newdata = mtcars_tbl, nsamples = 100)
   set.seed(123)
-  predict_args_add <- m_hp %>%
+  predict_args_add = m_hp %>%
     add_predicted_samples(newdata = mtcars_tbl, nsamples = 100)
   
   expect_equal(nrow(std_args_pred), nrow(predict_args_pred))
