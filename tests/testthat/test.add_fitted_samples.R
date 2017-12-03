@@ -162,3 +162,27 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
   expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl, scale = "linear"))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"))
 })
+
+test_that("[add_]predicted_samples gives same results with standardized arguments and prediction method arguments in brms", {
+  m_hp = readRDS("models.brms.m_hp.rds")
+  
+  set.seed(123)
+  std_args_fit <- m_hp %>%
+    fitted_samples(newdata = mtcars_tbl, n = 100)
+  set.seed(123)
+  std_args_add <- m_hp %>%
+    add_fitted_samples(newdata = mtcars_tbl, n = 100)
+  
+  set.seed(123)
+  predict_args_fit <- m_hp %>%
+    fitted_samples(newdata = mtcars_tbl, nsamples = 100)
+  set.seed(123)
+  predict_args_add <- m_hp %>%
+    add_fitted_samples(newdata = mtcars_tbl, nsamples = 100)
+  
+  expect_equal(nrow(std_args_fit), nrow(predict_args_fit))
+  expect_equal(std_args_fit, predict_args_fit)
+  
+  expect_equal(nrow(std_args_add), nrow(predict_args_add))
+  expect_equal(std_args_add, predict_args_add)
+})
