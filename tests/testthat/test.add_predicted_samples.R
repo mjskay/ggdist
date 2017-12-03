@@ -92,3 +92,37 @@ test_that("[add_]predicted_samples works on a simple brms model", {
   set.seed(123)
   expect_equal(ref, add_predicted_samples(mtcars_tbl, m_hp, seed = 123))
 })
+
+# Test Suite:
+# Test 1: "[add_]predicted_samples gives same results with standardized arguments
+#         "and prediction method arguments in rstanarm"
+# Test 2: "[add_]predicted_samples gives same results with standardized arguments
+#         "and prediction method arguments in brms"
+
+# can't use cmd-shift-t, or devtools::test()
+# need to use testthat::test_package("tidybayes")
+
+test_that("[add_]predicted_samples gives same results with standardized arguments and prediction method arguments in brms", {
+  m_hp = readRDS("models.brms.m_hp.rds")
+  
+  set.seed(123)
+  std_args_pred <- m_hp %>%
+    predicted_samples(newdata = mtcars_tbl, n = 100)
+  set.seed(123)
+  std_args_add <- m_hp %>%
+    add_predicted_samples(newdata = mtcars_tbl, n = 100)
+  
+  set.seed(123)
+  predict_args_pred <- m_hp %>%
+    predicted_samples(newdata = mtcars_tbl, nsamples = 100)
+  set.seed(123)
+  predict_args_add <- m_hp %>%
+    add_predicted_samples(newdata = mtcars_tbl, nsamples = 100)
+  
+  expect_equal(nrow(std_args_pred), nrow(predict_args_pred))
+  expect_equal(std_args_pred, predict_args_pred)
+  
+  expect_equal(nrow(std_args_add), nrow(predict_args_add))
+  expect_equal(std_args_add, predict_args_add)
+})
+
