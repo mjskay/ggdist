@@ -186,3 +186,28 @@ test_that("[add_]predicted_samples gives same results with standardized argument
   expect_equal(nrow(std_args_add), nrow(predict_args_add))
   expect_equal(std_args_add, predict_args_add)
 })
+
+test_that("[add_]predicted_samples gives same results with standardized arguments and prediction method arguments in rstanarm", {
+  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  
+  set.seed(123)
+  std_args_fit = m_hp_wt %>%
+    fitted_samples(newdata = mtcars_tbl, n = 100)
+  set.seed(123)
+  std_args_add = m_hp_wt %>%
+    add_fitted_samples(newdata = mtcars_tbl, n = 100)
+  
+  set.seed(123)
+  predict_args_fit = m_hp_wt %>%
+    fitted_samples(newdata = mtcars_tbl, nsamples = 100)
+  set.seed(123)
+  predict_args_add = m_hp_wt %>%
+    add_fitted_samples(newdata = mtcars_tbl, nsamples = 100)
+  
+  expect_equal(nrow(std_args_fit), nrow(predict_args_fit))
+  expect_equal(std_args_fit, predict_args_fit)
+  
+  expect_equal(nrow(std_args_add), nrow(predict_args_add))
+  expect_equal(std_args_add, predict_args_add)
+})
+
