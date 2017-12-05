@@ -183,3 +183,11 @@ test_that("[add_]predicted_samples throws an error when re.form is called instea
                "`tidybayes`*")
 })
 
+test_that("[add_]predicted_samples throws an error when transform is called instead of scale in rstanarm", {
+  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  
+  expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, transform = TRUE),
+               "`tidybayes`*")
+  expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, transform = TRUE),
+               "`tidybayes`*")
+})
