@@ -125,7 +125,13 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("rstantools", quietly = TRUE)) {
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
-
+  
+  if (hasArg(draws)) { # See https://github.com/mjskay/tidybayes/issues/70
+    stop("`tidybayes` has standardized some arguments for [add_]predicted_samples",
+         " Please use `n` rather than `draws`. See the documentation for",
+         " more details.")
+  }
+  
   fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
     draws = n, re.form = re_formula, is_brms = FALSE
   )
@@ -141,7 +147,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
-
+  
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
     category = category, re.form = re_formula, transform = transform, is_brms = FALSE
   )
@@ -185,6 +191,12 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
 
+  if(hasArg(nsamples)) {
+    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
+         " Please use `n` rather than `nsamples`. See the documentation for",
+         " more details.")  
+  }
+  
   # get the names of distributional regression parameters to include
   dpars = if (is_true(auxpars)) {
     names(model$formula$pforms)
@@ -199,12 +211,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   names(dpars)[missing_names] = dpars[missing_names]
 
   # get the samples for the primary parameter first so we can stick the other estimates onto it
-  if(hasArg(nsamples)) {
-    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
-         " Please use `n` rather than `nsamples`. See the documentation for",
-         " more details.")  
-  }
-  
+
   samples = fitted_predicted_samples_brmsfit_(
     fitted, model, newdata, var, ...,
     category = category, nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale
