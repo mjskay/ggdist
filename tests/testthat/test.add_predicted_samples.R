@@ -111,3 +111,12 @@ test_that("[add_]predicted_samples throws an error when draws is called instead 
                "`tidybayes`*")
 })
 
+test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
+  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  
+  expect_error(m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, re.form = NULL),
+               "`tidybayes`*")
+  expect_error(m_hp_wt %>% add_predicted_samples(newdata = mtcars_tbl, re.form = NULL),
+               "`tidybayes`*")
+})
+

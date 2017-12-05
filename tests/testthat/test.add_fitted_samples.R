@@ -173,3 +173,13 @@ test_that("[add_]fitted_samples throws an error when nsamples is called instead 
 })
 
 # rstanarm doesn't have a draws method for fitted samples
+
+test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
+  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  
+  expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, re.form = NULL),
+               "`tidybayes`*")
+  expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, re.form = NULL),
+               "`tidybayes`*")
+})
+
