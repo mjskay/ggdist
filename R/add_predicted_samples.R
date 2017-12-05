@@ -209,6 +209,10 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
     stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
          " Please use `n` rather than `nsamples`. See the documentation for",
          " more details.")  
+  } else if (hasArg(dpars)) {
+    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
+         " Please use `auxpars` rather than `dpars`. See the documentation for",
+         " more details.") 
   }
   
   # get the names of distributional regression parameters to include
@@ -219,7 +223,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   } else {
     auxpars
   }
-
+  
   # missing names default to the same name used for the parameter in the model
   missing_names = is.null(names(dpars))
   names(dpars)[missing_names] = dpars[missing_names]
