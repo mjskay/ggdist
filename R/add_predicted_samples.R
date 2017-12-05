@@ -130,6 +130,10 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
     stop("`tidybayes` has standardized some arguments for [add_]predicted_samples",
          " Please use `n` rather than `draws`. See the documentation for",
          " more details.")
+  } else if (hasArg(re.form)) {
+    stop("`tidybayes` has standardized some arguments for [add_]predicted_samples",
+         " Please use `re_formula` rather than `re.form`. See the documentation for",
+         " more details.")
   }
   
   fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
@@ -146,6 +150,12 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
 
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
+  }
+  
+  if (hasArg(re.form)) {
+    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
+         " Please use `re_formula` rather than `re.form`. See the documentation for",
+         " more details.")
   }
   
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
