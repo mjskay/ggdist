@@ -161,18 +161,16 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
-  fun_args = as.list(environment())
-  std_args = list(pass = list(f_fitted_predicted = predict, nsamples = n),
-                  names = c("n"))
-
-  if(any(names(std_args$pass) %in% names(list(...)))) {
-    warning("Use tidybayes add_predicted_samples arguments for",
-            " prediction methods. See function documentation for details.")
+  
+  if (hasArg(nsamples)) { # See https://github.com/mjskay/tidybayes/issues/70
+    stop("`tidybayes` has standardized some arguments for [add_]predicted_samples",
+         " Please use `n` rather than `nsamples`. See the documentation for",
+         " more details.")
   }
-  std_args$pass[names(list(...))] = list(...)
-  fun_args = fun_args[!(names(fun_args) %in% std_args$names)]
-
-  do.call(fitted_predicted_samples_brmsfit_, c(fun_args, std_args$pass))
+  
+  fitted_predicted_samples_brmsfit_(predict, model, newdata, var, ...,
+                                    nsamples = n, re_formula = re_formula
+  )
 }
 
 #' @rdname add_predicted_samples
@@ -202,17 +200,16 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
 
   # get the samples for the primary parameter first so we can stick the other estimates onto it
   if(hasArg(nsamples)) {
-    samples = fitted_predicted_samples_brmsfit_(
-      fitted, model, newdata, var, ...,
-      category = category, re_formula = re_formula, dpar = NULL, scale = scale
-    )
+    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
+         " Please use `n` rather than `nsamples`. See the documentation for",
+         " more details.")  
   }
-  else {
-    samples = fitted_predicted_samples_brmsfit_(
-      fitted, model, newdata, var, ...,
-      category = category, nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale
-    )
-  }
+  
+  samples = fitted_predicted_samples_brmsfit_(
+    fitted, model, newdata, var, ...,
+    category = category, nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale
+  )
+
 
   for (i in seq_along(dpars)) {
     varname = names(dpars)[[i]]
