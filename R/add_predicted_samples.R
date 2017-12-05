@@ -189,7 +189,7 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
   }
   
   fitted_predicted_samples_brmsfit_(predict, model, newdata, var, ...,
-                                    nsamples = n, re_formula = re_formula
+    nsamples = n, re_formula = re_formula
   )
 }
 
