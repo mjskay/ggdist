@@ -310,19 +310,20 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
 }
 
 stop_on_non_generic_arg_ <- function(parent_dot_args_names, method_type, ...) {
-  # names of arguments passed in dot args of parent function
-  non_generic_names_passed = parent_dot_args_names[parent_dot_args_names %in% list(...)]
-  
-  stop(
-    paste(
-      c("`", non_generic_names_passed[1], 
-        "` is not supported in `",
-        method_type,
-        "`. Please use the generic argument `", 
-        names(list(...))[list(...) %in% non_generic_names_passed[1]],
-        "`. See the documentation for more details."
-        ), 
-      sep = ""
+  if (any(parent_dot_args_names %in% list(...))) {
+    non_generic_names_passed = parent_dot_args_names[parent_dot_args_names %in% list(...)]
+    
+    stop(
+      paste(
+        c("`", non_generic_names_passed[1], 
+          "` is not supported in `",
+          method_type,
+          "`. Please use the generic argument `", 
+          names(list(...))[list(...) %in% non_generic_names_passed[1]],
+          "`. See the documentation for more details."
+          ), 
+        sep = ""
+      )
     )
-  )
+  }
 }
