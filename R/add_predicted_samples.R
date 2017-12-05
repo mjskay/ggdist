@@ -156,6 +156,10 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
     stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
          " Please use `re_formula` rather than `re.form`. See the documentation for",
          " more details.")
+  } else if (hasArg(transform)) {
+    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
+         " Please use `scale` rather than `transform`. See the documentation for",
+         " more details.")
   }
   
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
