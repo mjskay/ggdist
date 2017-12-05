@@ -320,7 +320,7 @@ stop_on_non_generic_arg_ <- function(parent_dot_args_names, method_type, ...) {
           method_type,
           "`. Please use the generic argument `", 
           names(list(...))[list(...) %in% non_generic_names_passed[1]],
-          "`. See the documentation for more details."
+          "`. See the documentation for additional details."
           ), 
         sep = ""
       )
