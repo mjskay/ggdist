@@ -181,12 +181,16 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
+  # testfind
   
-  if (hasArg(nsamples)) { # See https://github.com/mjskay/tidybayes/issues/70
-    stop("`tidybayes` has standardized some arguments for [add_]predicted_samples",
-         " Please use `n` rather than `nsamples`. See the documentation for",
-         " more details.")
-  }
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]predicted_samples", n = "nsamples"
+  )
+  # if (hasArg(nsamples)) {
+  #   stop("`tidybayes` has standardized some arguments for [add_]predicted_samples.",
+  #        " Please use `n` rather than `nsamples`. See the documentation for",
+  #        " more details.", call. = FALSE)
+  # }
   
   fitted_predicted_samples_brmsfit_(predict, model, newdata, var, ...,
     nsamples = n, re_formula = re_formula
@@ -303,4 +307,22 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
     inner_join(fits_preds_df, by = ".row") %>%
     select(-!!sym(var), !!sym(var)) %>%
     group_by(!!!syms(groups))
+}
+
+stop_on_non_generic_arg_ <- function(parent_dot_args_names, method_type, ...) {
+  # names of arguments passed in dot args of parent function
+  non_generic_names_passed = parent_dot_args_names[parent_dot_args_names %in% list(...)]
+  
+  stop(
+    paste(
+      c("`", non_generic_names_passed[1], 
+        "` is not supported in `",
+        method_type,
+        "`. Please use the generic argument `", 
+        names(list(...))[list(...) %in% non_generic_names_passed[1]],
+        "`. See the documentation for more details."
+        ), 
+      sep = ""
+    )
+  )
 }
