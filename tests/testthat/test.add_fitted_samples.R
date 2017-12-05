@@ -163,51 +163,20 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"))
 })
 
-test_that("[add_]predicted_samples gives same results with standardized arguments and prediction method arguments in brms", {
+test_that("[add_]fitted_samples throws an error when nsamples is called instead of n in brms", {
   m_hp = readRDS("models.brms.m_hp.rds")
   
-  set.seed(123)
-  std_args_fit = m_hp %>%
-    fitted_samples(newdata = mtcars_tbl, n = 100)
-  set.seed(123)
-  std_args_add = m_hp %>%
-    add_fitted_samples(newdata = mtcars_tbl, n = 100)
-  
-  set.seed(123)
-  predict_args_fit = m_hp %>%
-    fitted_samples(newdata = mtcars_tbl, nsamples = 100)
-  set.seed(123)
-  predict_args_add = m_hp %>%
-    add_fitted_samples(newdata = mtcars_tbl, nsamples = 100)
-  
-  expect_equal(nrow(std_args_fit), nrow(predict_args_fit))
-  expect_equal(std_args_fit, predict_args_fit)
-  
-  expect_equal(nrow(std_args_add), nrow(predict_args_add))
-  expect_equal(std_args_add, predict_args_add)
+  expect_error(m_hp %>% fitted_samples(newdata = mtcars_tbl, nsamples = 100),
+               "`tidybayes`.*")
+  expect_error(m_hp %>% add_fitted_samples(newdata = mtcars_tbl, nsamples = 100),
+               "`tidybayes`.*")
 })
 
-test_that("[add_]predicted_samples gives same results with standardized arguments and prediction method arguments in rstanarm", {
+test_that("[add_]fitted_samples throws an error when draws is called instead of n in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
-  set.seed(123)
-  std_args_fit = m_hp_wt %>%
-    fitted_samples(newdata = mtcars_tbl, n = 100)
-  set.seed(123)
-  std_args_add = m_hp_wt %>%
-    add_fitted_samples(newdata = mtcars_tbl, n = 100)
-  
-  set.seed(123)
-  predict_args_fit = m_hp_wt %>%
-    fitted_samples(newdata = mtcars_tbl, nsamples = 100)
-  set.seed(123)
-  predict_args_add = m_hp_wt %>%
-    add_fitted_samples(newdata = mtcars_tbl, nsamples = 100)
-  
-  expect_equal(nrow(std_args_fit), nrow(predict_args_fit))
-  expect_equal(std_args_fit, predict_args_fit)
-  
-  expect_equal(nrow(std_args_add), nrow(predict_args_add))
-  expect_equal(std_args_add, predict_args_add)
+  expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, draws = 100),
+               "`tidybayes`*")
+  expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, draws = 100),
+               "`tidybayes`*")
 })
-
