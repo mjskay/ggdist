@@ -172,11 +172,4 @@ test_that("[add_]fitted_samples throws an error when nsamples is called instead 
                "`tidybayes`.*")
 })
 
-test_that("[add_]fitted_samples throws an error when draws is called instead of n in rstanarm", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
-  
-  expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, draws = 100),
-               "`tidybayes`*")
-  expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, draws = 100),
-               "`tidybayes`*")
-})
+# rstanarm doesn't have a draws method for fitted samples
