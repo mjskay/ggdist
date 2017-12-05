@@ -125,6 +125,15 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
   expect_equal(ref %>% select(-sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = NULL))
 })
 
+test_that("[add_]fitted_samples throws an when dpars is called instead of auxpars on brms models with auxpars", {
+  m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
+  
+  expect_error(fitted_samples(m_hp_sigma, mtcars_tbl, dpars = "sigma"),
+               "`tidybayes`.*")
+  expect_error(add_fitted_samples(mtcars_tbl, m_hp_sigma, dpars = "sigma"),
+               "`tidybayes`.*")
+})
+
 
 test_that("[add_]fitted_samples works on brms models with categorical outcomes (response scale)", {
   m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
