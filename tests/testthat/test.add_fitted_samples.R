@@ -176,9 +176,9 @@ test_that("[add_]fitted_samples throws an error when nsamples is called instead 
   m_hp = readRDS("models.brms.m_hp.rds")
   
   expect_error(m_hp %>% fitted_samples(newdata = mtcars_tbl, nsamples = 100),
-               "`tidybayes`.*")
+               ".See the documentation for additional details.")
   expect_error(m_hp %>% add_fitted_samples(newdata = mtcars_tbl, nsamples = 100),
-               "`tidybayes`.*")
+               ".See the documentation for additional details.")
 })
 
 # rstanarm doesn't have a draws method for fitted samples
@@ -187,16 +187,16 @@ test_that("[add_]predicted_samples throws an error when re.form is called instea
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
   expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, re.form = NULL),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
   expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, re.form = NULL),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
 })
 
 test_that("[add_]predicted_samples throws an error when transform is called instead of scale in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
   expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, transform = TRUE),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
   expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, transform = TRUE),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
 })

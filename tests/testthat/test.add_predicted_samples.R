@@ -97,26 +97,26 @@ test_that("[add_]predicted_samples throws an error when nsamples is called inste
   m_hp = readRDS("models.brms.m_hp.rds")
 
   expect_error(m_hp %>% predicted_samples(newdata = mtcars_tbl, nsamples = 100),
-               "`tidybayes`.*")
+               ".See the documentation for additional details.")
   expect_error(m_hp %>% add_predicted_samples(newdata = mtcars_tbl, nsamples = 100),
-               "`tidybayes`.*")
+               ".See the documentation for additional details.")
 })
 
 test_that("[add_]predicted_samples throws an error when draws is called instead of n in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
   expect_error(m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, draws = 100),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
   expect_error(m_hp_wt %>% add_predicted_samples(newdata = mtcars_tbl, draws = 100),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
 })
 
 test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
   expect_error(m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, re.form = NULL),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
   expect_error(m_hp_wt %>% add_predicted_samples(newdata = mtcars_tbl, re.form = NULL),
-               "`tidybayes`*")
+               ".See the documentation for additional details.")
 })
 
