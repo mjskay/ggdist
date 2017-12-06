@@ -129,9 +129,9 @@ test_that("[add_]fitted_samples throws an when dpars is called instead of auxpar
   m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
   
   expect_error(fitted_samples(m_hp_sigma, mtcars_tbl, dpars = "sigma"),
-               ".See the documentation for additional details.")
+               "`dpars.*.See the documentation for additional details.")
   expect_error(add_fitted_samples(mtcars_tbl, m_hp_sigma, dpars = "sigma"),
-               ".See the documentation for additional details.")
+               "`dpars.*.See the documentation for additional details.")
 })
 
 
@@ -176,9 +176,9 @@ test_that("[add_]fitted_samples throws an error when nsamples is called instead 
   m_hp = readRDS("models.brms.m_hp.rds")
   
   expect_error(m_hp %>% fitted_samples(newdata = mtcars_tbl, nsamples = 100),
-               ".See the documentation for additional details.")
+               "`nsamples.*.See the documentation for additional details.")
   expect_error(m_hp %>% add_fitted_samples(newdata = mtcars_tbl, nsamples = 100),
-               ".See the documentation for additional details.")
+               "`nsamples.*.See the documentation for additional details.")
 })
 
 # rstanarm doesn't have a draws method for fitted samples
@@ -187,16 +187,16 @@ test_that("[add_]predicted_samples throws an error when re.form is called instea
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
   expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, re.form = NULL),
-               ".See the documentation for additional details.")
+               "`re.form.*.See the documentation for additional details.")
   expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, re.form = NULL),
-               ".See the documentation for additional details.")
+               "`re.form.*.See the documentation for additional details.")
 })
 
 test_that("[add_]predicted_samples throws an error when transform is called instead of scale in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
   expect_error(m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, transform = TRUE),
-               ".See the documentation for additional details.")
+               "`transform.*.See the documentation for additional details.")
   expect_error(m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, transform = TRUE),
-               ".See the documentation for additional details.")
+               "`transform.*.See the documentation for additional details.")
 })
