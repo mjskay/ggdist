@@ -147,7 +147,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
   }
   
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]predicted_samples", re_formula = "re.form", scale = "transform"
+    names(list(...)), "[add_]fitted_samples", re_formula = "re.form", scale = "transform"
   )
   
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
