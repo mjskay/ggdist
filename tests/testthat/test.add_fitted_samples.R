@@ -129,9 +129,9 @@ test_that("[add_]fitted_samples throws an when dpars is called instead of auxpar
   m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
   
   expect_error(fitted_samples(m_hp_sigma, mtcars_tbl, dpars = "sigma"),
-               "`tidybayes`.*")
+               ".See the documentation for additional details.")
   expect_error(add_fitted_samples(mtcars_tbl, m_hp_sigma, dpars = "sigma"),
-               "`tidybayes`.*")
+               ".See the documentation for additional details.")
 })
 
 
