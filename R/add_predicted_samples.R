@@ -126,15 +126,9 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
   
-  if (hasArg(draws)) { # See https://github.com/mjskay/tidybayes/issues/70
-    stop("`tidybayes` has standardized some arguments for [add_]predicted_samples",
-         " Please use `n` rather than `draws`. See the documentation for",
-         " more details.")
-  } else if (hasArg(re.form)) {
-    stop("`tidybayes` has standardized some arguments for [add_]predicted_samples",
-         " Please use `re_formula` rather than `re.form`. See the documentation for",
-         " more details.")
-  }
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]predicted_samples", n = "draws", re_formula = "re.form"
+  )
   
   fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
     draws = n, re.form = re_formula, is_brms = FALSE
@@ -152,15 +146,9 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
   
-  if (hasArg(re.form)) {
-    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
-         " Please use `re_formula` rather than `re.form`. See the documentation for",
-         " more details.")
-  } else if (hasArg(transform)) {
-    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
-         " Please use `scale` rather than `transform`. See the documentation for",
-         " more details.")
-  }
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]predicted_samples", re_formula = "re.form", scale = "transform"
+  )
   
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
     category = category, re.form = re_formula, transform = transform, is_brms = FALSE
@@ -181,17 +169,11 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
-  # testfind
   
   stop_on_non_generic_arg_(
     names(list(...)), "[add_]predicted_samples", n = "nsamples"
   )
-  # if (hasArg(nsamples)) {
-  #   stop("`tidybayes` has standardized some arguments for [add_]predicted_samples.",
-  #        " Please use `n` rather than `nsamples`. See the documentation for",
-  #        " more details.", call. = FALSE)
-  # }
-  
+
   fitted_predicted_samples_brmsfit_(predict, model, newdata, var, ...,
     nsamples = n, re_formula = re_formula
   )
@@ -208,16 +190,10 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
-
-  if(hasArg(nsamples)) {
-    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
-         " Please use `n` rather than `nsamples`. See the documentation for",
-         " more details.")  
-  } else if (hasArg(dpars)) {
-    stop("`tidybayes` has standardized some arguments for [add_]fitted_samples",
-         " Please use `auxpars` rather than `dpars`. See the documentation for",
-         " more details.") 
-  }
+  
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]fitted_samples", n = "nsamples", auxpars = "dpars"
+  )
   
   # get the names of distributional regression parameters to include
   dpars = if (is_true(auxpars)) {
