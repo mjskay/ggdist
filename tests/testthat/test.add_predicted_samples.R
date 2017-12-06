@@ -96,27 +96,41 @@ test_that("[add_]predicted_samples works on a simple brms model", {
 test_that("[add_]predicted_samples throws an error when nsamples is called instead of n in brms", {
   m_hp = readRDS("models.brms.m_hp.rds")
 
-  expect_error(m_hp %>% predicted_samples(newdata = mtcars_tbl, nsamples = 100),
-               ".See the documentation for additional details.")
-  expect_error(m_hp %>% add_predicted_samples(newdata = mtcars_tbl, nsamples = 100),
-               ".See the documentation for additional details.")
+  expect_error(
+    m_hp %>% predicted_samples(newdata = mtcars_tbl, nsamples = 100),
+    "`nsamples.*.`n`.*.See the documentation for additional details."
+  )
+  expect_error(
+    m_hp %>% add_predicted_samples(newdata = mtcars_tbl, nsamples = 100),
+    "`nsamples.*.`n`.*.See the documentation for additional details."
+  )
 })
 
 test_that("[add_]predicted_samples throws an error when draws is called instead of n in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
-  expect_error(m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, draws = 100),
-               ".See the documentation for additional details.")
-  expect_error(m_hp_wt %>% add_predicted_samples(newdata = mtcars_tbl, draws = 100),
-               ".See the documentation for additional details.")
+  expect_error(
+    m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, draws = 100),
+    "`draws.*.`n`.*.See the documentation for additional details."
+  )
+  expect_error(
+    m_hp_wt %>% add_predicted_samples(newdata = mtcars_tbl, draws = 100),
+    "`draws.*.`n`.*.See the documentation for additional details."
+  )
 })
 
 test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
   
-  expect_error(m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, re.form = NULL),
-               ".See the documentation for additional details.")
-  expect_error(m_hp_wt %>% add_predicted_samples(newdata = mtcars_tbl, re.form = NULL),
-               ".See the documentation for additional details.")
+  expect_error(
+    m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, re.form = NULL),
+    "`re.form.*.`re_formula`.*.See the documentation for additional details."
+  )
+  expect_error(
+    m_hp_wt %>% add_predicted_samples(newdata = mtcars_tbl, re.form = NULL),
+    "`re.form.*.`re_formula`.*.See the documentation for additional details."
+  )
 })
+
+
 
