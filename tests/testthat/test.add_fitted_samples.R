@@ -125,6 +125,19 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
   expect_equal(ref %>% select(-sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = NULL))
 })
 
+test_that("[add_]fitted_samples throws an when dpars is called instead of auxpars on brms models with auxpars", {
+  m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
+  
+  expect_error(
+    fitted_samples(m_hp_sigma, mtcars_tbl, dpars = "sigma"),
+    "`dpars.*.`auxpars`.*.See the documentation for additional details."
+  )
+  expect_error(
+    add_fitted_samples(mtcars_tbl, m_hp_sigma, dpars = "sigma"),
+    "`dpars.*.`auxpars`.*.See the documentation for additional details."
+  )
+})
+
 
 test_that("[add_]fitted_samples works on brms models with categorical outcomes (response scale)", {
   m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
@@ -161,4 +174,45 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
 
   expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl, scale = "linear"))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"))
+})
+
+test_that("[add_]fitted_samples throws an error when nsamples is called instead of n in brms", {
+  m_hp = readRDS("models.brms.m_hp.rds")
+  
+  expect_error(
+    m_hp %>% fitted_samples(newdata = mtcars_tbl, nsamples = 100),
+    "`nsamples.*.`n`.*.See the documentation for additional details."
+  )
+  expect_error(
+    m_hp %>% add_fitted_samples(newdata = mtcars_tbl, nsamples = 100),
+    "`nsamples.*.`n`.*.See the documentation for additional details."
+  )
+})
+
+# rstanarm doesn't have a draws method for fitted samples
+
+test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
+  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  
+  expect_error(
+    m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, re.form = NULL),
+    "`re.form.*.`re_formula`.*.See the documentation for additional details."
+  )
+  expect_error(
+    m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, re.form = NULL),
+    "`re.form.*.`re_formula`.*.See the documentation for additional details."
+  )
+})
+
+test_that("[add_]predicted_samples throws an error when transform is called instead of scale in rstanarm", {
+  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  
+  expect_error(
+    m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, transform = TRUE),
+    "`transform.*.`scale`.*.See the documentation for additional details."
+  )
+  expect_error(
+    m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, transform = TRUE), 
+    "`transform.*.`scale`.*.See the documentation for additional details."
+  )
 })

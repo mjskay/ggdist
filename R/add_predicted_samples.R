@@ -125,7 +125,11 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("rstantools", quietly = TRUE)) {
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
-
+  
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]predicted_samples", n = "draws", re_formula = "re.form"
+  )
+  
   fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
     draws = n, re.form = re_formula, is_brms = FALSE
   )
@@ -141,7 +145,11 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
-
+  
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]fitted_samples", re_formula = "re.form", scale = "transform"
+  )
+  
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
     category = category, re.form = re_formula, transform = transform, is_brms = FALSE
   )
@@ -161,6 +169,10 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
+  
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]predicted_samples", n = "nsamples"
+  )
 
   fitted_predicted_samples_brmsfit_(predict, model, newdata, var, ...,
     nsamples = n, re_formula = re_formula
@@ -178,7 +190,11 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
-
+  
+  stop_on_non_generic_arg_(
+    names(list(...)), "[add_]fitted_samples", n = "nsamples", auxpars = "dpars"
+  )
+  
   # get the names of distributional regression parameters to include
   dpars = if (is_true(auxpars)) {
     names(model$formula$pforms)
@@ -187,16 +203,18 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   } else {
     auxpars
   }
-
+  
   # missing names default to the same name used for the parameter in the model
   missing_names = is.null(names(dpars))
   names(dpars)[missing_names] = dpars[missing_names]
 
   # get the samples for the primary parameter first so we can stick the other estimates onto it
+
   samples = fitted_predicted_samples_brmsfit_(
     fitted, model, newdata, var, ...,
     category = category, nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale
   )
+
 
   for (i in seq_along(dpars)) {
     varname = names(dpars)[[i]]
@@ -265,4 +283,23 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
     inner_join(fits_preds_df, by = ".row") %>%
     select(-!!sym(var), !!sym(var)) %>%
     group_by(!!!syms(groups))
+}
+
+stop_on_non_generic_arg_ <- function(parent_dot_args_names, method_type, ...) {
+  if (any(parent_dot_args_names %in% list(...))) {
+    non_generic_names_passed = parent_dot_args_names[parent_dot_args_names %in% list(...)]
+    
+    stop(
+      paste(
+        c("`", non_generic_names_passed[1], 
+          "` is not supported in `",
+          method_type,
+          "`. Please use the generic argument `", 
+          names(list(...))[list(...) %in% non_generic_names_passed[1]],
+          "`. See the documentation for additional details."
+          ), 
+        sep = ""
+      )
+    )
+  }
 }
