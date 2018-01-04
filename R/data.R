@@ -25,12 +25,3 @@
 #' "Ranking visualizations of correlation using weber's law."
 #' \emph{IEEE transactions on visualization and computer graphics} 20.12 (2014): 1943-1952.
 NULL
-
-#' Test data with five groups
-#'
-#' Test data generated from a hierarchical model with normally-distributed errors and 5 groups (A, B, C, D, and E).
-#'
-#' @name ABC
-#' @docType data
-#' @keywords datasets internal
-NULL
