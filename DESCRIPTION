@@ -41,7 +41,7 @@ Suggests:
     vdiffr,
     rstan,
     runjags,
-    rstanarm,
+    rstanarm (>= 2.17.2),
     rstantools,
     emmeans,
     broom (>= 0.4.3),
