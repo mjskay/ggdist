@@ -283,7 +283,24 @@ parse_variable_spec = function(variable_spec) {
 #' @keywords manip
 #' @examples
 #'
-#' ##TODO
+#' library(magrittr)
+#' library(ggplot2)
+#'
+#' data(RankCorr)
+#'
+#' RankCorr %>%
+#'   spread_samples(b[i, j])
+#'
+#' RankCorr %>%
+#'   spread_samples(b[i, j], tau[i], u_tau[i])
+#'
+#'
+#' RankCorr %>%
+#'   gather_samples(b[i, j], tau[i], u_tau[i])
+#'
+#' RankCorr %>%
+#'   gather_samples(tau[i], typical_r) %>%
+#'   mean_qi()
 #'
 #' @aliases extract_samples tidy_samples
 #' @importFrom lazyeval lazy_dots

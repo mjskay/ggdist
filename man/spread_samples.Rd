@@ -197,7 +197,24 @@ Would return a tidy data frame with parameters starting with `b_` and having one
 }
 \examples{
 
-##TODO
+library(magrittr)
+library(ggplot2)
+
+data(RankCorr)
+
+RankCorr \%>\%
+  spread_samples(b[i, j])
+
+RankCorr \%>\%
+  spread_samples(b[i, j], tau[i], u_tau[i])
+
+
+RankCorr \%>\%
+  gather_samples(b[i, j], tau[i], u_tau[i])
+
+RankCorr \%>\%
+  gather_samples(tau[i], typical_r) \%>\%
+  mean_qi()
 
 }
 \seealso{
