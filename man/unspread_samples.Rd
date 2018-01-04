@@ -42,7 +42,25 @@ a data frame whose column names are parameters with indices in them.
 }
 \examples{
 
-##TODO
+library(magrittr)
+data(RankCorr)
+
+# We can use unspread_samples to allow us to manipulate samples with tidybayes and then transform the samples
+# into a form we can use with packages like bayesplot.
+# Here we subset b[i,j] to just values of i in 1:3 and j == 1, then plot with bayesplot
+RankCorr \%>\%
+  spread_samples(b[i,j]) \%>\%
+  filter(i \%in\% 1:3, j == 1) \%>\%
+  unspread_samples(b[i,j], drop_indices = TRUE) \%>\%
+  bayesplot::mcmc_areas()
+
+# As another example, we could use compare_levels to plot all pairwise comparisons of b[i,1] for i in 1:3
+RankCorr \%>\%
+  spread_samples(b[i,j]) \%>\%
+  filter(i \%in\% 1:3, j == 1) \%>\%
+  compare_levels(b, by = i) \%>\%
+  unspread_samples(b[i], drop_indices = TRUE) \%>\%
+  bayesplot::mcmc_areas()
 
 }
 \seealso{
