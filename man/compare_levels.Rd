@@ -77,7 +77,25 @@ first apply \code{\link{relevel}} to \code{by} to set the control
 }
 \examples{
 
-##TODO
+library(magrittr)
+library(ggplot2)
+
+data(RankCorr)
+
+# Let's do all pairwise comparisons of b[i,1] for i in 1:3:
+RankCorr \%>\%
+  spread_samples(b[i,j]) \%>\%
+  filter(i \%in\% 1:3, j == 1) \%>\%
+  compare_levels(b, by = i) \%>\%
+  mean_qi()
+
+# Or let's plot all comparisons against the first level (control):
+RankCorr \%>\%
+  spread_samples(b[i,j]) \%>\%
+  filter(j == 1) \%>\%
+  compare_levels(b, by = i, comparison = control) \%>\%
+  ggplot(aes(x = b, y = i)) +
+  geom_halfeyeh()
 
 }
 \seealso{
