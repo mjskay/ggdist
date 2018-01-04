@@ -33,7 +33,7 @@ rstanarm.m_cyl = stan_glmer(mpg ~ (1|cyl), data = mtcars_tbl, chains = 1, iter =
 saveRDS(rstanarm.m_cyl, "tests/testthat/models.rstanarm.m_cyl.rds", compress = FALSE)
 
 
-brms.m_cyl_mpg = brm(ordered(cyl) ~ mpg, data = mtcars_tbl, chains = 1, iter = 500,
-  family = cumulative("logit"), threshold = "flexible",
+brms.m_cyl_mpg = brm(ordered(paste0("c", cyl)) ~ mpg, data = mtcars_tbl, chains = 1, iter = 500,
+  family = cumulative("logit"),
   prior = prior(normal(0,1), class = b))
 saveRDS(brms.m_cyl_mpg, "tests/testthat/models.brms.m_cyl_mpg.rds", compress = FALSE)

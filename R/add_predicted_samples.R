@@ -125,11 +125,11 @@ predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("rstantools", quietly = TRUE)) {
     stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
   }
-  
+
   stop_on_non_generic_arg_(
     names(list(...)), "[add_]predicted_samples", n = "draws", re_formula = "re.form"
   )
-  
+
   fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
     draws = n, re.form = re_formula, is_brms = FALSE
   )
@@ -145,11 +145,11 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
   }
-  
+
   stop_on_non_generic_arg_(
     names(list(...)), "[add_]fitted_samples", re_formula = "re.form", scale = "transform"
   )
-  
+
   samples = fitted_predicted_samples_brmsfit_(rstanarm::posterior_linpred, model, newdata, var, ...,
     category = category, re.form = re_formula, transform = transform, is_brms = FALSE
   )
@@ -169,7 +169,7 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
-  
+
   stop_on_non_generic_arg_(
     names(list(...)), "[add_]predicted_samples", n = "nsamples"
   )
@@ -190,11 +190,11 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
   }
-  
+
   stop_on_non_generic_arg_(
     names(list(...)), "[add_]fitted_samples", n = "nsamples", auxpars = "dpars"
   )
-  
+
   # get the names of distributional regression parameters to include
   dpars = if (is_true(auxpars)) {
     names(model$formula$pforms)
@@ -203,7 +203,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   } else {
     auxpars
   }
-  
+
   # missing names default to the same name used for the parameter in the model
   missing_names = is.null(names(dpars))
   names(dpars)[missing_names] = dpars[missing_names]
@@ -250,11 +250,9 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
   groups = union(colnames(newdata), ".row")
 
   if (ndim(fits_preds) == 3) {
-    #3 dimensions implies a categorical outcome, we must determine the category names
-    #however, with summary = FALSE brms does not provide category names, so we'll grab them
-    #by fitting just one row without it
-    category_names = dimnames(f_fitted_predicted(model, newdata = newdata[1, ], ...))[[3]]
-    column_format[[3]] = category_names
+    #3 dimensions implies a categorical outcome, add a column for it
+    # N.B.: at some point getting category names to work would be nice, but may be kind of brittle
+    column_format[[3]] = NA
     names(column_format)[[3]] = category
     groups %<>% union(category)
   }
@@ -273,7 +271,10 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
   } else {
     fits_preds_df$.iteration = as.integer(fits_preds_df$.iteration)
   }
-
+  if (ndim(fits_preds) == 3) {
+    #3 dimensions implies a categorical outcome
+    fits_preds_df[[category]] = as.integer(fits_preds_df[[category]])
+  }
 
   newdata %>%
     mutate(
@@ -288,16 +289,16 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
 stop_on_non_generic_arg_ <- function(parent_dot_args_names, method_type, ...) {
   if (any(parent_dot_args_names %in% list(...))) {
     non_generic_names_passed = parent_dot_args_names[parent_dot_args_names %in% list(...)]
-    
+
     stop(
       paste(
-        c("`", non_generic_names_passed[1], 
+        c("`", non_generic_names_passed[1],
           "` is not supported in `",
           method_type,
-          "`. Please use the generic argument `", 
+          "`. Please use the generic argument `",
           names(list(...))[list(...) %in% non_generic_names_passed[1]],
           "`. See the documentation for additional details."
-          ), 
+          ),
         sep = ""
       )
     )

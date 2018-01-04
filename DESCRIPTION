@@ -49,7 +49,7 @@ Suggests:
     MCMCglmm,
     bayesplot,
     modelr,
-    brms,
+    brms (>= 2.0.1),
     cowplot
 License: GPL (>= 3)
 BugReports: https://github.com/mjskay/tidybayes/issues/new

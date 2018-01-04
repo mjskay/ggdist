@@ -127,7 +127,7 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
 
 test_that("[add_]fitted_samples throws an when dpars is called instead of auxpars on brms models with auxpars", {
   m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
-  
+
   expect_error(
     fitted_samples(m_hp_sigma, mtcars_tbl, dpars = "sigma"),
     "`dpars.*.`auxpars`.*.See the documentation for additional details."
@@ -142,13 +142,13 @@ test_that("[add_]fitted_samples throws an when dpars is called instead of auxpar
 test_that("[add_]fitted_samples works on brms models with categorical outcomes (response scale)", {
   m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
 
-  category_names = dimnames(fitted(m_cyl_mpg, mtcars_tbl, summary = TRUE))[[3]]
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE) %>%
-    array2df(list(.iteration = NA, .row = NA, category = category_names), label.x = "estimate") %>%
+    array2df(list(.iteration = NA, .row = NA, category = NA), label.x = "estimate") %>%
     mutate(
       .chain = as.integer(NA),
       .row = as.integer(.row),
-      .iteration = as.integer(.iteration)
+      .iteration = as.integer(.iteration),
+      category = as.integer(category)
     )
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
@@ -161,13 +161,13 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
 test_that("[add_]fitted_samples works on brms models with categorical outcomes (linear scale)", {
   m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
 
-  category_names = dimnames(fitted(m_cyl_mpg, mtcars_tbl, summary = TRUE, scale = "linear"))[[3]]
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
-    array2df(list(.iteration = NA, .row = NA, category = category_names), label.x = "estimate") %>%
+    array2df(list(.iteration = NA, .row = NA, category = NA), label.x = "estimate") %>%
     mutate(
       .chain = as.integer(NA),
       .row = as.integer(.row),
-      .iteration = as.integer(.iteration)
+      .iteration = as.integer(.iteration),
+      category = as.integer(category)
     )
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
@@ -178,7 +178,7 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
 
 test_that("[add_]fitted_samples throws an error when nsamples is called instead of n in brms", {
   m_hp = readRDS("models.brms.m_hp.rds")
-  
+
   expect_error(
     m_hp %>% fitted_samples(newdata = mtcars_tbl, nsamples = 100),
     "`nsamples.*.`n`.*.See the documentation for additional details."
@@ -193,7 +193,7 @@ test_that("[add_]fitted_samples throws an error when nsamples is called instead 
 
 test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
-  
+
   expect_error(
     m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, re.form = NULL),
     "`re.form.*.`re_formula`.*.See the documentation for additional details."
@@ -206,13 +206,13 @@ test_that("[add_]predicted_samples throws an error when re.form is called instea
 
 test_that("[add_]predicted_samples throws an error when transform is called instead of scale in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
-  
+
   expect_error(
     m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, transform = TRUE),
     "`transform.*.`scale`.*.See the documentation for additional details."
   )
   expect_error(
-    m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, transform = TRUE), 
+    m_hp_wt %>% add_fitted_samples(newdata = mtcars_tbl, transform = TRUE),
     "`transform.*.`scale`.*.See the documentation for additional details."
   )
 })
