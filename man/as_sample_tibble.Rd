@@ -64,7 +64,12 @@ with an implementation of \code{\link[coda]{as.mcmc.list}})
 }
 \examples{
 
-##TODO
+library(magrittr)
+
+data(line, package = "coda")
+
+line \%>\%
+  as_sample_tibble()
 
 }
 \seealso{

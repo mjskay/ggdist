@@ -34,7 +34,12 @@
 #' @keywords manip
 #' @examples
 #'
-#' ##TODO
+#' library(magrittr)
+#'
+#' data(line, package = "coda")
+#'
+#' line %>%
+#'   as_sample_tibble()
 #'
 #' @aliases as_sample_data_frame
 #' @importFrom purrr map_df
