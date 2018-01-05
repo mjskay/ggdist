@@ -1,3 +1,4 @@
+
 tidybayes: Bayesian analysis + tidy data + geoms
 ================================================
 
@@ -5,7 +6,9 @@ tidybayes: Bayesian analysis + tidy data + geoms
 
 ![Preview of tidybayes plots](man/figures/preview.png)
 
-[Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) data frames (one observation per row) are particularly convenient for use in a variety of R data manipulation and visualization packages. However, when using MCMC / Bayesian samplers like JAGS or Stan in R, we often have to translate this data into a form the sampler understands, and then after running the model, translate the resulting sample into a more tidy format for use with other R functions. `tidybayes` aims to simplify these two common (often tedious) operations:
+`tidybayes` is an R package that aims to make it easy to integrate popular Bayesian modelling methods into a tidy data + ggplot workflow.
+
+[Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) data frames (one observation per row) are particularly convenient for use in a variety of R data manipulation and visualization packages. However, when using MCMC / Bayesian samplers like JAGS or Stan in R, we often have to translate this data into a form the sampler understands, and then after running the model, translate the resulting sample (or predictions) into a more tidy format for use with other R functions. `tidybayes` aims to simplify these two common (often tedious) operations:
 
 -   **Composing data** for use with the sampler. This often means translating data from a `data.frame` into a `list` , making sure `factors` are encoded as numerical data, adding variables to store the length of indices, etc. This package helps automate these operations using the `compose_data` function, which automatically handles data types like `numeric`, `logical`, `factor`, and `ordinal`, and allows easy extensions for converting other datatypes into a format the sampler understands by providing your own implementation of the generic `as_data_list`.
 
@@ -81,7 +84,7 @@ ABC %>%
   ylab("condition")
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-2-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 A hierarchical model of this data might estimate an overall mean across the conditions (`overall_mean`), the standard deviation of the condition means (`condition_mean_sd`), the mean within each condition (`condition_mean[condition]`) and the standard deviation of the responses given a condition mean (`response_sd`):
 
@@ -175,7 +178,7 @@ m %>%
   geom_eyeh()
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 Or one can employ the similar "half-eye" plot:
 
@@ -186,7 +189,7 @@ m %>%
   geom_halfeyeh()
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ### Plotting posteriors as quantile dotplots
 
@@ -202,7 +205,7 @@ m %>%
   scale_y_continuous(breaks = NULL)
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
 
@@ -255,7 +258,7 @@ bind_rows(linear_estimates, bayes_estimates) %>%
   geom_pointrangeh(position = position_dodgev(height = .3))
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 Shrinkage towards the overall mean is visible in the Bayesian estimates.
 
@@ -267,7 +270,7 @@ bind_rows(linear_estimates, bayes_estimates) %>%
   dotwhisker::dwplot()
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 ### Posterior prediction and complex custom plots
 
@@ -290,7 +293,7 @@ m %>%
   geom_point(aes(x = response), data = ABC)
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
 This plot shows 66% and 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
 
@@ -316,7 +319,7 @@ mtcars %>%
   scale_fill_brewer()
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
 `stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5))` is one of several shortcut geoms that simplify common combinations of `tidybayes` functions and `ggplot` goems. It is roughly equivalent to the following:
 
@@ -349,7 +352,7 @@ mtcars %>%
   facet_wrap(~ am)                                  # facet by am
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 Or, if you would like overplotted posterior fit lines, you can instead use `tidybayes::add_fitted_samples` to get samples from fit lines (instead of predictions), select some reasonable number of them (say `n = 100`), and then plot them:
 
@@ -363,7 +366,7 @@ mtcars %>%
   facet_wrap(~ am)
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-20-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-20-1.png)
 
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
 

@@ -252,19 +252,19 @@ intervals for each estimate (these will be spread over rows). Internally it uses
 #&gt; 1 0.01612787 -1.941554 2.037887  0.95</div><div class='input'>
 <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 3 x 4
-#&gt;            x  conf.low conf.high .prob
-#&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 0.05485238 -0.653223 0.7534504  0.50
-#&gt; 2 0.05485238 -1.241260 1.3417387  0.80
-#&gt; 3 0.05485238 -1.991564 1.9059114  0.95</div><div class='input'>
+#&gt;        x conf.low conf.high .prob
+#&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 0.0549   -0.653     0.753 0.500
+#&gt; 2 0.0549   -1.24      1.34  0.800
+#&gt; 3 0.0549   -1.99      1.91  0.950</div><div class='input'>
 <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>),
     <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
   ) <span class='kw'>%&gt;%</span>
   <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='no'>y</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 7
-#&gt;             x     x.low   x.high        y     y.low   y.high .prob
-#&gt;         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -0.05057431 -2.012529 1.934141 1.983618 -1.946229 5.947635  0.95</div><div class='input'>
+#&gt;         x x.low x.high     y y.low y.high .prob
+#&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -0.0506 -2.01   1.93  1.98 -1.95   5.95 0.950</div><div class='input'>
 <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>),
     <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"a"</span>
@@ -275,29 +275,29 @@ intervals for each estimate (these will be spread over rows). Internally it uses
   ) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>group</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>mean_qi</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 6 x 5
-#&gt; # Groups:   group [2]
-#&gt;    group           x   conf.low conf.high .prob
-#&gt;   &lt;fctr&gt;       &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1      a -0.03216818 -0.7068560 0.6359334  0.50
-#&gt; 2      b  2.06895811  0.7585137 3.4402338  0.50
-#&gt; 3      a -0.03216818 -1.2736052 1.2286259  0.80
-#&gt; 4      b  2.06895811 -0.5592370 4.4784121  0.80
-#&gt; 5      a -0.03216818 -1.9982773 1.8399354  0.95
-#&gt; 6      b  2.06895811 -1.7545141 5.9103260  0.95</div><div class='input'>
+#&gt; # Groups: group [2]
+#&gt;   group        x conf.low conf.high .prob
+#&gt;   &lt;fctr&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 a      -0.0322   -0.707     0.636 0.500
+#&gt; 2 b       2.07      0.759     3.44  0.500
+#&gt; 3 a      -0.0322   -1.27      1.23  0.800
+#&gt; 4 b       2.07     -0.559     4.48  0.800
+#&gt; 5 a      -0.0322   -2.00      1.84  0.950
+#&gt; 6 b       2.07     -1.75      5.91  0.950</div><div class='input'>
 <span class='no'>multimodal_samples</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fu'>rnorm</span>(<span class='fl'>5000</span>, <span class='fl'>0</span>, <span class='fl'>1</span>), <span class='fu'>rnorm</span>(<span class='fl'>2500</span>, <span class='fl'>4</span>, <span class='fl'>1</span>))
   )
 
 <span class='no'>multimodal_samples</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>mode_hdi</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 3 x 4
-#&gt;             x  conf.low conf.high .prob
-#&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -0.06628626 -1.334062  1.375498  0.66
-#&gt; 2 -0.06628626  3.488457  4.482790  0.66
-#&gt; 3 -0.06628626 -1.719262  5.500183  0.95</div><div class='input'>
+#&gt;         x conf.low conf.high .prob
+#&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -0.0663    -1.33      1.38 0.660
+#&gt; 2 -0.0663     3.49      4.48 0.660
+#&gt; 3 -0.0663    -1.72      5.50 0.950</div><div class='input'>
 <span class='no'>multimodal_samples</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>0</span>)) +
-  <span class='fu'><a href='geom_halfeyeh.html'>geom_halfeyeh</a></span>(<span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mode_hdih</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'><a href='geom_halfeyeh.html'>geom_halfeyeh</a></span>(<span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mode_hdih</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
