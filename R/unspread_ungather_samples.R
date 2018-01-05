@@ -37,8 +37,8 @@ globalVariables(c("..index_values"))
 #'
 #' data(RankCorr, package = "tidybayes")
 #'
-#' # We can use unspread_samples to allow us to manipulate samples with tidybayes and then transform the samples
-#' # into a form we can use with packages like bayesplot.
+#' # We can use unspread_samples to allow us to manipulate samples with tidybayes
+#' # and then transform the samples into a form we can use with packages like bayesplot.
 #' # Here we subset b[i,j] to just values of i in 1:3 and j == 1, then plot with bayesplot
 #' RankCorr %>%
 #'   spread_samples(b[i,j]) %>%
@@ -46,7 +46,8 @@ globalVariables(c("..index_values"))
 #'   unspread_samples(b[i,j], drop_indices = TRUE) %>%
 #'   bayesplot::mcmc_areas()
 #'
-#' # As another example, we could use compare_levels to plot all pairwise comparisons of b[i,1] for i in 1:3
+#' # As another example, we could use compare_levels to plot all pairwise comparisons
+#' # of b[i,1] for i in 1:3
 #' RankCorr %>%
 #'   spread_samples(b[i,j]) %>%
 #'   filter(i %in% 1:3, j == 1) %>%

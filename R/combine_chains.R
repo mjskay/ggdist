@@ -3,6 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c(".chain"))
+
 
 #' Combine the chain and iteration columns of tidy samples
 #'
@@ -48,7 +52,7 @@
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom dplyr mutate pull
-#' @importFrom rlang enquo
+#' @importFrom rlang enquo :=
 #' @export
 combine_chains = function(samples, chain = .chain, iteration = .iteration, into = NULL) {
   chain = enquo(chain)

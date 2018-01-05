@@ -10,6 +10,8 @@
 ^\.travis\.yml$
 ^README.Rmd$
 ^README_files$
+^temp.*.Rmd$
+^temp.*.nb.html$
 ^.lintr$
 ^docs$
 ^_pkgdown\.yml$
