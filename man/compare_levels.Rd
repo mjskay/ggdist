@@ -80,7 +80,7 @@ first apply \code{\link{relevel}} to \code{by} to set the control
 library(magrittr)
 library(ggplot2)
 
-data(RankCorr)
+data(RankCorr, package = "tidybayes")
 
 # Let's do all pairwise comparisons of b[i,1] for i in 1:3:
 RankCorr \%>\%

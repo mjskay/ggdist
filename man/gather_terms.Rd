@@ -66,7 +66,8 @@ Is roughly equivalent to:
 \examples{
 \dontrun{
 library(dplyr)
-data(RankCorr)
+
+data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
   spread_samples(b[i,v], tau[i]) \%>\%

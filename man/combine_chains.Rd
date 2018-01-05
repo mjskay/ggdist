@@ -32,8 +32,10 @@ showing multiple iterations where you do not care about differences among chains
 }
 \examples{
 
+library(magrittr)
 library(coda)
-data(line)
+
+data(line, package = "coda")
 
 # The `line` posterior has two chains with 200 iterations each:
 line \%>\%

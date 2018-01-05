@@ -94,7 +94,8 @@ The horizontal form, \code{geom_eyeh()}, is equivalent to \code{geom_violinh() +
 
 library(magrittr)
 library(ggplot2)
-data(RankCorr)
+
+data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
   spread_samples(u_tau[i]) \%>\%

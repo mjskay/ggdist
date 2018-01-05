@@ -200,7 +200,7 @@ Would return a tidy data frame with parameters starting with `b_` and having one
 library(magrittr)
 library(ggplot2)
 
-data(RankCorr)
+data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
   spread_samples(b[i, j])

@@ -34,7 +34,8 @@ globalVariables(c("..index_values"))
 #' @examples
 #'
 #' library(magrittr)
-#' data(RankCorr)
+#'
+#' data(RankCorr, package = "tidybayes")
 #'
 #' # We can use unspread_samples to allow us to manipulate samples with tidybayes and then transform the samples
 #' # into a form we can use with packages like bayesplot.

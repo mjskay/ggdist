@@ -81,7 +81,8 @@ intervals.
 
 library(magrittr)
 library(ggplot2)
-data(RankCorr)
+
+data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
   spread_samples(u_tau[i]) \%>\%

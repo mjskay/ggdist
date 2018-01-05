@@ -286,7 +286,7 @@ parse_variable_spec = function(variable_spec) {
 #' library(magrittr)
 #' library(ggplot2)
 #'
-#' data(RankCorr)
+#' data(RankCorr, package = "tidybayes")
 #'
 #' RankCorr %>%
 #'   spread_samples(b[i, j])

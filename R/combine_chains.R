@@ -28,8 +28,10 @@
 #' @keywords manip
 #' @examples
 #'
+#' library(magrittr)
 #' library(coda)
-#' data(line)
+#'
+#' data(line, package = "coda")
 #'
 #' # The `line` posterior has two chains with 200 iterations each:
 #' line %>%

@@ -56,7 +56,8 @@ its default aesthetics are \code{aes(xmin = conf.low, xmax = conf.high, color = 
 
 library(magrittr)
 library(ggplot2)
-data(RankCorr)
+
+data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
   spread_samples(u_tau[i]) \%>\%
