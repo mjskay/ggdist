@@ -42,7 +42,7 @@ a data frame whose column names are parameters with indices in them.
 }
 \examples{
 
-library(magrittr)
+library(dplyr)
 
 data(RankCorr, package = "tidybayes")
 

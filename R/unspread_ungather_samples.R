@@ -33,7 +33,7 @@ globalVariables(c("..index_values"))
 #' @keywords manip
 #' @examples
 #'
-#' library(magrittr)
+#' library(dplyr)
 #'
 #' data(RankCorr, package = "tidybayes")
 #'

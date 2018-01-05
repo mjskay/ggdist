@@ -97,7 +97,7 @@ comparison_types = within(list(), {
 #' @keywords manip
 #' @examples
 #'
-#' library(magrittr)
+#' library(dplyr)
 #' library(ggplot2)
 #'
 #' data(RankCorr, package = "tidybayes")

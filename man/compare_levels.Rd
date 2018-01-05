@@ -77,7 +77,7 @@ first apply \code{\link{relevel}} to \code{by} to set the control
 }
 \examples{
 
-library(magrittr)
+library(dplyr)
 library(ggplot2)
 
 data(RankCorr, package = "tidybayes")
