@@ -148,7 +148,7 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
       .chain = as.integer(NA),
       .row = as.integer(.row),
       .iteration = as.integer(.iteration),
-      category = as.integer(category)
+      category = factor(category)
     )
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
@@ -167,7 +167,7 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
       .chain = as.integer(NA),
       .row = as.integer(.row),
       .iteration = as.integer(.iteration),
-      category = as.integer(category)
+      category = factor(category)
     )
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")

@@ -272,8 +272,8 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
     fits_preds_df$.iteration = as.integer(fits_preds_df$.iteration)
   }
   if (ndim(fits_preds) == 3) {
-    #3 dimensions implies a categorical outcome
-    fits_preds_df[[category]] = as.integer(fits_preds_df[[category]])
+    #3 dimensions implies a categorical outcome -> make category column be factor
+    fits_preds_df[[category]] = factor(fits_preds_df[[category]])
   }
 
   newdata %>%

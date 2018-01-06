@@ -476,7 +476,7 @@ Consider this ordinal regression model:
 m_cyl = brm(ordered(cyl) ~ mpg, data = mtcars, family = cumulative)
 ```
 
-`add_fitted_samples` will include a `category` column containing the estimated probability that the response is in that category. For example, here is the fit for the first row in the dataset:
+`add_fitted_samples` will include a `category` column, and `estimate` will contain the estimated probability that the response is in that category. For example, here is the fit for the first row in the dataset:
 
 ```{r}
 data_frame(mpg = 21) %>%
