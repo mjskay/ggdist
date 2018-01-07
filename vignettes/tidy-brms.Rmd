@@ -24,7 +24,7 @@ img {
 
 ## Introduction
   
-This vignette describes how to use the `tidybayes` package to extract [tidy data](http://dx.doi.org/10.18637/jss.v059.i10) data frames of samples of parameters, fits, and predictions from `brms::brm`. For a more general introduction to `tidybayes` and its use on general-purpose sampling languages (like Stan and JAGS), see <code>[vignette("tidybayes")](tidybayes.html)</code>.
+This vignette describes how to use the `tidybayes` package to extract [tidy](http://dx.doi.org/10.18637/jss.v059.i10) data frames of samples of parameters, fits, and predictions from `brms::brm`. For a more general introduction to `tidybayes` and its use on general-purpose sampling languages (like Stan and JAGS), see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
 
 ## Setup
@@ -136,7 +136,7 @@ Here, `b_Intercept` is the global mean, and the `r_condition` parameters are off
 - `r_condition[D,Intercept]`
 - `r_condition[E,Intercept]`
 
-We might want a data frame where each row is a sample from either `r_condition[A,Intercept]`, `r_condition[B,Intercept]`, `...[C,...]`, `...[D,...]`, or `...[E,...]`, and where we have columns indexing which iteration of the sampler the sample came from and which condition (`A` to `E`) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.
+We might want a data frame where each row is a sample from either `r_condition[A,Intercept]`, `r_condition[B,Intercept]`, `...[C,...]`, `...[D,...]`, or `...[E,...]`, and where we have columns indexing which iteration of the sampler the row came from and which condition (`A` to `E`) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.
 
 The workhorse of `tidybayes` is the `spread_samples` function, which does this extraction for us. It includes a simple specification format that we can use to extract parameters and their indices into tidy-format data frames.
 
@@ -150,7 +150,7 @@ We can provide `spread_samples` with a column specification like this:
 
 `r_condition[condition,term]`
 
-Where `condition` corresponds `D` and `term` corresponds to `Intercept`. There is nothing too magical about what `spread_samples` does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the `sep` argument). It lets you assign columns to the resulting indices in order. So `r_condition[D,Intercept]` has indices `D` and `Intercept`, and `spread_samples` lets us extract these indices as columns in the resulting tidy data frame of samples of `r_condition`:
+Where `condition` corresponds to `D` and `term` corresponds to `Intercept`. There is nothing too magical about what `spread_samples` does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the `sep` argument). It lets you assign columns to the resulting indices in order. So `r_condition[D,Intercept]` has indices `D` and `Intercept`, and `spread_samples` lets us extract these indices as columns in the resulting tidy data frame of samples of `r_condition`:
 
 ```{r}
 m %>%
@@ -188,7 +188,7 @@ __Note:__ If you have used `spread_samples` with raw samples from Stan or JAGS, 
 
 `tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
 
-For example, we might gather the samples corresponding to the overall mean and standard deviation of observations:
+For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:
 
 ```{r}
 m %>%
@@ -276,7 +276,7 @@ m %>%
 
 ## Plotting point estimates and intervals
 
-Plotting means and intervals is straightforward using the "pointrange" or "pointrangeh" geoms:
+Plotting point estimates and with one interval is straightforward using the `ggplot2::geom_pointrange` or `ggstance::geom_pointrangeh` geoms:
 
 ```{r}
 m %>%
@@ -309,7 +309,7 @@ m %>%
 
 ## Posterior fits
 
-Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_samples`, which is analogous to `fitted.brmsfit` or `brms::posterior_linpred` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of samples of posterior fits:
+Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_samples`, which is analogous to `brms::fitted.brmsfit` or `brms::posterior_linpred` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of samples of posterior fits:
 
 ```{r}
 ABC %>%
@@ -319,7 +319,7 @@ ABC %>%
 ```
 *(10 rows of `r nrow(ABC %>% data_grid(condition) %>% add_fitted_samples(m))`)*
 
-To plot this example, we'll also show the use `stat_pointintervalh` instead of `geom_pointintervalh`, which does the summarizing of samples into estimates and intervals within ggplot:
+To plot this example, we'll also show the use of `stat_pointintervalh` instead of `geom_pointintervalh`, which summarizes samples into estimates and intervals within ggplot:
 
 ```{r}
 ABC %>%
@@ -331,7 +331,7 @@ ABC %>%
 
 ## Posterior predictions
 
-Where `add_fitted_samples` is analogous to `fitted.brmsfit` (or `brms::posterior_linpred`), `add_predicted_samples` is analogous to `predict.brmsfit` (`brms::posterior_predict`), giving samples from the posterior predictive distribution.
+Where `add_fitted_samples` is analogous to `brms::fitted.brmsfit` (or `brms::posterior_linpred`), `add_predicted_samples` is analogous to `brms::predict.brmsfit` (`brms::posterior_predict`), giving samples from the posterior predictive distribution.
 
 Here is an example of posterior predictive distributions plotted using `ggridges::geom_density_ridges`:
 
@@ -388,7 +388,7 @@ We can draw fit curves with probability bands:
 ```{r}
 mtcars %>%
   group_by(cyl) %>%
-  data_grid(hp = seq_range(hp, n = 51), am) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
   add_fitted_samples(m_mpg) %>%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
   stat_lineribbon(aes(y = estimate)) +
@@ -401,7 +401,7 @@ Or we can sample a reasonable number of fit lines (say 100) and overplot them:
 ```{r}
 mtcars %>%
   group_by(cyl) %>%
-  data_grid(hp = seq_range(hp, n = 51), am) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
   add_fitted_samples(m_mpg, n = 100) %>%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
   geom_line(aes(y = estimate, group = paste(cyl, .iteration)), alpha = 0.25) +
@@ -413,7 +413,7 @@ Or, for posterior predictions (instead of fits), we can go back to probability b
 ```{r}
 mtcars %>%
   group_by(cyl) %>%
-  data_grid(hp = seq_range(hp, n = 51)) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_samples(m_mpg) %>%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
   stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
@@ -468,7 +468,7 @@ m %>%
 
 ## Ordinal and multinomial models
 
-The `fitted.brmsfit` function for ordinal and multinomial regression models in brms returns multiple estimates for each sample: one for each outcome category (in contrast to `rstanarm::stan_polr` models, which return samples from the latent linear predictor). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal and multinomial `brms` models, `add_fitted_samples` adds an additional column called `category` and a separate row containing the estimate for each category is output for every sample and predictor. 
+The `brms::fitted.brmsfit` function for ordinal and multinomial regression models in brms returns multiple estimates for each sample: one for each outcome category (in contrast to `rstanarm::stan_polr` models, which return samples from the latent linear predictor). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal and multinomial `brms` models, `add_fitted_samples` adds an additional column called `category` and a separate row containing the estimate for each category is output for every sample and predictor. 
 
 Consider this ordinal regression model:
 

@@ -343,7 +343,7 @@ Now we will use `modelr::data_grid`, `tidybayes::add_predicted_samples`, and `ti
 
 ```{r}
 mtcars %>%
-  data_grid(hp = seq_range(hp, n = 100)) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_samples(m_mpg) %>%
   ggplot(aes(x = hp)) +
   stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5)) +
@@ -361,7 +361,7 @@ mtcars %>%
   stat_summary(aes(y = pred), fun.y = median, geom = "line", color = "red", size = 1.25)
 ```
 
-Because this is all tidy data, if you wanted to build a model with interactions among different categorical variables (say a different curve for automatic and manula transmissions), you can easily generate predictions faceted over that variable (say, different curves for different transmission types). Then you could use the existing faceting features built in to ggplot to plot them.
+Because this is all tidy data, if you wanted to build a model with interactions among different categorical variables (say a different curve for automatic and manual transmissions), you can easily generate predictions faceted over that variable (say, different curves for different transmission types). Then you could use the existing faceting features built in to ggplot to plot them.
 
 Such a model might be:
 

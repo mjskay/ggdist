@@ -343,7 +343,7 @@ m %>%
 
 ### Interval estimates with posterior densities ("half-eye plots"): `geom_halfeyeh`
 
-If you prefer densities over violins, you can use `geom_halfeyeh` (the vertical version, not yet available, will be called `geom_helfeye`). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):
+If you prefer densities over violins, you can use `geom_halfeyeh` (the vertical version, not yet available, will be called `geom_halfeye`). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):
 
 ```{r}
 m %>%
@@ -374,7 +374,7 @@ m %>%
   geom_pointintervalh()
 ```
 
-Just as `geom_pointrangeh` includes `xmin = conf.low` and `xmax = conf.high` as default aesthetics, it also includes 
+Just as `geom_pointintervalh` includes `xmin = conf.low` and `xmax = conf.high` as default aesthetics, it also includes 
 `size = -.prob` to facilitate exactly this usage. This, the above can be simplified to:
 
 ```{r}
@@ -504,7 +504,7 @@ ABC %>%
 
 ## Comparing levels of a factor
 
-If we wish compare the values of `condition_mean` across conditions, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences, though this can be changed using the `comparison = ` parameter:
+`compare_levels` allows us to compare the value of some variable across levels of some factor. By default it computes all pairwise differences, though this can be changed using the `comparison = ` parameter:
 
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
@@ -518,7 +518,7 @@ m %>%
 
 ## Gathering all parameter names into a single column: `gather_samples` and `gather_terms`
 
-We might also prefer all parameter names to be in a single column (long-format) instead of as column names. There are three methods for obtaining long-format data frames with `tidybayes`, whose use depends on where and how in the data processing chain you might want to transform into long-format: `gather_samples`, `gather_terms`, and `as_sample_tibble`.
+We might also prefer all parameter names to be in a single column (long-format) instead of as column names. There are two methods for obtaining long-format data frames with `tidybayes`, whose use depends on where and how in the data processing chain you might want to transform into long-format: `gather_samples` and `gather_terms`. There are also two methods for wide (or semi-wide) format data frame, `spread_samples` (described previously) and `as_sample_tibble`.
 
 `gather_samples` is the counterpart to `spread_samples`, except it puts all parameter names into a `term` column and samples into an `estimate` column (for compatibility with `broom::tidy`):
 
@@ -530,7 +530,7 @@ m %>%
 
 Note that `condition = NA` for the `overall_mean` row, because it does not have an index with that name in the specification passed to `gather_samples`.
 
-While this works well if we do not need to perform computations that involve multiple columns, the wide format returned by `spread_samples` is very useful for computations that involve multiple columns names, such as the calculation of the `condition_offset` above. If we want to make intermediate computations on the format returned by `spread_samples` and *then* gather parameters into one column, we can use `gather_terms`, which will gather all non-grouped terms that do not start with `"."`:
+While this works well if we do not need to perform computations that involve multiple columns, the semi-wide format returned by `spread_samples` is very useful for computations that involve multiple columns names, such as the calculation of the `condition_offset` above. If we want to make intermediate computations on the format returned by `spread_samples` and *then* gather parameters into one column, we can use `gather_terms`, which will gather all non-grouped terms that do not start with `"."`:
 
 ```{r}
 m %>%
@@ -631,9 +631,9 @@ Observe the shrinkage towards the overall mean in the Bayesian model compared to
 
 ### Compatibility with `bayesplot` and other non-tidy packages using `unspread_samples` and `ungather_samples`
 
-Function from other packages might expect samples in the form of a data frame or matrix with parameters as columns and samples as rows. That is the format returned by `as_sample_tibble`, but not by `gather_samples` or `spread_samples`, which split indices from parameters out into columns. 
+Functions from other packages might expect samples in the form of a data frame or matrix with parameters as columns and samples as rows. That is the format returned by `as_sample_tibble`, but not by `gather_samples` or `spread_samples`, which split indices from parameters out into columns. 
 
-It may be desirable to use the `spread_samples` or `gather_samples` functions to transform your samples in some way, and then convert them *back* into the sample $\times$ parameter format to pass them into functions from `bayesplot` or other packages like it. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples` to return a data frame with parameter names that include indices in them as columns and samples as rows.
+It may be desirable to use the `spread_samples` or `gather_samples` functions to transform your samples in some way, and then convert them *back* into the sample $\times$ parameter format to pass them into functions from other packages, like `bayesplot`. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples` to return a data frame with parameter column names that include indices in them and samples as rows.
 
 As an example, let's re-do the previous example of `compare_levels`, but use `bayesplot::mcmc_hist` to plot the results instead of `geom_eyeh`. First, the result of `compare_levels` looks like this:
 
