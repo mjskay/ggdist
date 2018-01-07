@@ -16,7 +16,7 @@ test_that("combine_chains works on a simple example", {
   ref = line %>%
     as_sample_tibble() %>%
     mutate(
-      .iteration = as.integer((.chain - 1) * max(.iteration) + .iteration),
+      .iteration = as.integer(.iteration + (.chain - 1) * max(.iteration)),
       .chain = as.integer(NA)
     )
 

@@ -108,7 +108,7 @@ test_that("[add_]predicted_samples throws an error when nsamples is called inste
 
 test_that("[add_]predicted_samples throws an error when draws is called instead of n in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
-  
+
   expect_error(
     m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, draws = 100),
     "`draws.*.`n`.*.See the documentation for additional details."
@@ -121,7 +121,7 @@ test_that("[add_]predicted_samples throws an error when draws is called instead 
 
 test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
-  
+
   expect_error(
     m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, re.form = NULL),
     "`re.form.*.`re_formula`.*.See the documentation for additional details."
@@ -131,6 +131,3 @@ test_that("[add_]predicted_samples throws an error when re.form is called instea
     "`re.form.*.`re_formula`.*.See the documentation for additional details."
   )
 })
-
-
-
