@@ -181,7 +181,6 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
 
 #' @rdname add_predicted_samples
 #' @importFrom rlang is_true is_false is_empty
-#' @importFrom brms parse_bf
 #' @importFrom purrr map
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
@@ -199,7 +198,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
 
   # get the names of distributional regression parameters to include
   dpars = if (is_true(auxpars)) {
-    names(parse_bf(model$formula)$dpar) %>%
+    names(brms::parse_bf(model$formula)$dpar) %>%
       .[. != "mu"]      #mu is the primary parameter, filter it out
                         #TODO: find a non-hacky solution to this
   } else if (is_false(auxpars)) {
