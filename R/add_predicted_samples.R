@@ -180,7 +180,9 @@ predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL
 }
 
 #' @rdname add_predicted_samples
-#' @importFrom rlang is_true is_false
+#' @importFrom rlang is_true is_false is_empty
+#' @importFrom brms parse_bf
+#' @importFrom purrr map
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
   category = "category", auxpars = TRUE, scale = c("response", "linear")
@@ -197,19 +199,30 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
 
   # get the names of distributional regression parameters to include
   dpars = if (is_true(auxpars)) {
-    names(model$formula$pforms)
+    names(parse_bf(model$formula)$dpar) %>%
+      .[. != "mu"]      #mu is the primary parameter, filter it out
+                        #TODO: find a non-hacky solution to this
   } else if (is_false(auxpars)) {
     NULL
   } else {
     auxpars
   }
+  if (is_empty(dpars)) {
+    # the above conditions might return an empty vector, which does not play well with the code below
+    # (if there are no dpars, it is expected that dpars is NULL)
+    dpars = NULL
+  }
 
   # missing names default to the same name used for the parameter in the model
-  missing_names = is.null(names(dpars))
-  names(dpars)[missing_names] = dpars[missing_names]
+  if (is.null(names(dpars))) {
+    names(dpars) = dpars
+  } else {
+    missing_names = is.na(names(dpars))
+    names(dpars)[missing_names] = dpars[missing_names]
+  }
+
 
   # get the samples for the primary parameter first so we can stick the other estimates onto it
-
   samples = fitted_predicted_samples_brmsfit_(
     fitted, model, newdata, var, ...,
     category = category, nsamples = n, re_formula = re_formula, dpar = NULL, scale = scale

@@ -125,6 +125,7 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
   expect_equal(ref %>% select(-sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = NULL))
 })
 
+
 test_that("[add_]fitted_samples throws an when dpars is called instead of auxpars on brms models with auxpars", {
   m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
 
@@ -136,6 +137,66 @@ test_that("[add_]fitted_samples throws an when dpars is called instead of auxpar
     add_fitted_samples(mtcars_tbl, m_hp_sigma, dpars = "sigma"),
     "`dpars.*.`auxpars`.*.See the documentation for additional details."
   )
+})
+
+
+test_that("[add_]fitted_samples works on simple brms models with nlpars", {
+  m_nlpar = readRDS("models.brms.m_nlpar.rds")
+  df_nlpar = as_data_frame(m_nlpar$data)
+
+  fits = fitted(m_nlpar, df_nlpar, summary = FALSE) %>%
+    as.data.frame() %>%
+    set_names(seq_len(ncol(.))) %>%
+    mutate(
+      .chain = as.integer(NA),
+      .iteration = seq_len(n())
+    ) %>%
+    gather(.row, estimate, -.chain, -.iteration) %>%
+    as_data_frame()
+
+  ref = df_nlpar %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(fits, by = ".row") %>%
+    mutate(.row = as.integer(.row))
+
+  expect_equal(ref, fitted_samples(m_nlpar, df_nlpar))
+  expect_equal(ref, add_fitted_samples(df_nlpar, m_nlpar))
+  expect_equal(ref, add_fitted_samples(df_nlpar, m_nlpar, auxpars = FALSE))
+})
+
+
+test_that("[add_]fitted_samples works on simple brms models with multiple dpars", {
+  m_dpars = readRDS("models.brms.m_dpars.rds")
+  df_dpars = as_data_frame(m_dpars$data)
+
+  fits = fitted(m_dpars, df_dpars, summary = FALSE) %>%
+    as.data.frame() %>%
+    set_names(seq_len(ncol(.))) %>%
+    mutate(
+      .chain = as.integer(NA),
+      .iteration = seq_len(n())
+    ) %>%
+    gather(.row, estimate, -.chain, -.iteration) %>%
+    as_data_frame()
+
+  fits$mu1 = fitted(m_dpars, df_dpars, summary = FALSE, dpar = "mu1") %>%
+    as.data.frame() %>%
+    gather(.row, mu1) %$%
+    mu1
+
+  fits$mu2 = fitted(m_dpars, df_dpars, summary = FALSE, dpar = "mu2") %>%
+    as.data.frame() %>%
+    gather(.row, mu2) %$%
+    mu2
+
+  ref = df_dpars %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(fits, by = ".row") %>%
+    mutate(.row = as.integer(.row))
+
+  expect_equal(ref, fitted_samples(m_dpars, df_dpars))
+  expect_equal(ref, add_fitted_samples(df_dpars, m_dpars))
+  expect_equal(ref %>% select(-mu1, -mu2), add_fitted_samples(df_dpars, m_dpars, auxpars = FALSE))
 })
 
 
@@ -175,6 +236,7 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
   expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl, scale = "linear"))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"))
 })
+
 
 test_that("[add_]fitted_samples throws an error when nsamples is called instead of n in brms", {
   m_hp = readRDS("models.brms.m_hp.rds")
