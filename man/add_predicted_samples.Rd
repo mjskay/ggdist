@@ -123,7 +123,6 @@ library(ggplot2)
 library(dplyr)
 library(rstanarm)
 library(modelr)
-library(tidybayes)
 
 theme_set(theme_light())
 

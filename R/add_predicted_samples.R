@@ -77,7 +77,6 @@ globalVariables(c(".iteration", ".pred"))
 #' library(dplyr)
 #' library(rstanarm)
 #' library(modelr)
-#' library(tidybayes)
 #'
 #' theme_set(theme_light())
 #'
