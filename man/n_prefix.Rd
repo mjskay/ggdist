@@ -29,6 +29,25 @@ Generates a function for generating names of index columns for factors in
 \code{\link{compose_data}} by prefixing a character vector to the original
 column name.
 }
+\examples{
+
+library(magrittr)
+
+df = data.frame(
+  plot = factor(paste0("p", rep(1:8, times = 2))),
+  site = factor(paste0("s", rep(1:4, each = 2, times = 2)))
+)
+
+# without changing `.n_name`, compose_data() will prefix indices
+# with "n" by default
+df \%>\%
+  compose_data()
+
+# you can use n_prefix() to define a different prefix (e.g. "N"):
+df \%>\%
+  compose_data(.n_name = n_prefix("N"))
+
+}
 \seealso{
 The \code{.n_name} argument of \code{\link{compose_data}}.
 }

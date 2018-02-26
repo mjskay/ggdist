@@ -234,10 +234,17 @@ as_data_list.data_list = function(object, name="", ...) {
 #'   site = factor(paste0("s", rep(1:4, each = 2, times = 2)))
 #' )
 #'
+#' # without changing `.n_name`, compose_data() will prefix indices
+#' # with "n" by default
 #' df %>%
 #'   compose_data()
 #'
-#' # turns site into a nested index: site[p] gives the site for plot p
+#' # you can use n_prefix() to define a different prefix (e.g. "N"):
+#' df %>%
+#'   compose_data(.n_name = n_prefix("N"))
+#'
+#' # If you have nesting, you may want a nested index, which can be generated using x_at_y()
+#' # Here, site[p] will give the site for plot p
 #' df %>%
 #'   compose_data(site = x_at_y(site, plot))
 #'
@@ -294,6 +301,24 @@ compose_data = function(..., .n_name = n_prefix("n")) {
 #' number of levels in \code{df$foo}.
 #'
 #' @seealso The \code{.n_name} argument of \code{\link{compose_data}}.
+#'
+#' @examples
+#'
+#' library(magrittr)
+#'
+#' df = data.frame(
+#'   plot = factor(paste0("p", rep(1:8, times = 2))),
+#'   site = factor(paste0("s", rep(1:4, each = 2, times = 2)))
+#' )
+#'
+#' # without changing `.n_name`, compose_data() will prefix indices
+#' # with "n" by default
+#' df %>%
+#'   compose_data()
+#'
+#' # you can use n_prefix() to define a different prefix (e.g. "N"):
+#' df %>%
+#'   compose_data(.n_name = n_prefix("N"))
 #'
 #' @export
 n_prefix = function(prefix) {
