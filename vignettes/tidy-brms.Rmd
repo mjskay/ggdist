@@ -503,6 +503,3 @@ plot_grid(ncol = 1, align = "v",
   fit_plot
 )
 ```
-
-
-

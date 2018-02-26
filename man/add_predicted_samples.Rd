@@ -119,7 +119,37 @@ are the preferred spellings.
 }
 \examples{
 
-##TODO
+library(ggplot2)
+library(dplyr)
+library(rstanarm)
+library(modelr)
+library(tidybayes)
+
+theme_set(theme_light())
+
+m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars,
+  # 1 chain / few iterations just so example runs quickly
+  # do not use in practice
+  chains = 1, iter = 500)
+
+# sample 100 fit lines from the posterior and overplot them
+mtcars \%>\%
+  group_by(cyl) \%>\%
+  data_grid(hp = seq_range(hp, n = 101)) \%>\%
+  add_fitted_samples(m_mpg, n = 100) \%>\%
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  geom_line(aes(y = estimate, group = paste(cyl, .iteration)), alpha = 0.25) +
+  geom_point(data = mtcars)
+
+#plot posterior predictive intervals
+mtcars \%>\%
+  group_by(cyl) \%>\%
+  data_grid(hp = seq_range(hp, n = 101)) \%>\%
+  add_predicted_samples(m_mpg) \%>\%
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer(palette = "Greys")
 
 }
 \seealso{
