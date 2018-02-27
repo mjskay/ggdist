@@ -43,6 +43,7 @@ in a consistent format: a data frame of bins suitable for use with
 \code{histogram_bins} computes a density histogram using \code{\link{hist}}.
 }
 \examples{
+\donttest{
 
 library(ggplot2)
 library(dplyr)
@@ -70,6 +71,7 @@ mtcars \%>\%
   geom_point(aes(x = hp, y = mpg, color = ordered(cyl)), data = mtcars) +
   scale_alpha_continuous(range = c(0, 0.75))
 
+}
 }
 \seealso{
 See \code{\link{add_predicted_samples}} and \code{\link{stat_lineribbon}} for a better approach. This

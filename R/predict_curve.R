@@ -161,6 +161,7 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' function may be deprecated in the future.
 #' @keywords manip
 #' @examples
+#' \donttest{
 #'
 #' library(ggplot2)
 #' library(dplyr)
@@ -188,6 +189,7 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #'   geom_point(aes(x = hp, y = mpg, color = ordered(cyl)), data = mtcars) +
 #'   scale_alpha_continuous(range = c(0, 0.75))
 #'
+#' }
 #' @importFrom stats density
 #' @export
 density_bins = function(x, n = 101, ...) {
