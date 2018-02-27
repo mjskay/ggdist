@@ -226,21 +226,7 @@ of the generic function <code>as_constructor</code>.</p>
 <span class='no'>m</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/rstan/topics/stan'>stan</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>stan_code</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='compose_data.html'>compose_data</a></span>(<span class='no'>ABC</span>), <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>adapt_delta</span><span class='kw'>=</span><span class='fl'>0.99</span>),
   <span class='co'># 1 chain / few iterations just so example runs quickly</span>
   <span class='co'># do not use in practice</span>
-  <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)</div><div class='output co'>#&gt; In file included from C:/R/R-3.4.2/library/BH/include/boost/config.hpp:39:0,
-#&gt;                  from C:/R/R-3.4.2/library/BH/include/boost/math/tools/config.hpp:13,
-#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/core/var.hpp:7,
-#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/core/gevv_vvv_vari.hpp:5,
-#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/core.hpp:12,
-#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/mat.hpp:4,
-#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math.hpp:4,
-#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/src/stan/model/model_header.hpp:4,
-#&gt;                  from filef57466f312b6.cpp:8:
-#&gt; C:/R/R-3.4.2/library/BH/include/boost/config/compiler/gcc.hpp:186:0: warning: "BOOST_NO_CXX11_RVALUE_REFERENCES" redefined
-#&gt;  #  define BOOST_NO_CXX11_RVALUE_REFERENCES
-#&gt;  ^
-#&gt; &lt;command-line&gt;:0:0: note: this is the location of the previous definition
-#&gt; cc1plus.exe: warning: unrecognized command line option "-Wno-ignored-attributes"
-#&gt; 
+  <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)</div><div class='output co'>#&gt; 
 #&gt; SAMPLING FOR MODEL 'dd2cc433974aea50803799100a5d323d' NOW (CHAIN 1).
 #&gt; 
 #&gt; Gradient evaluation took 0 seconds
@@ -261,9 +247,9 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.232 seconds (Warm-up)
-#&gt;                0.136 seconds (Sampling)
-#&gt;                0.368 seconds (Total)
+#&gt;  Elapsed Time: 0.1 seconds (Warm-up)
+#&gt;                0.132 seconds (Sampling)
+#&gt;                0.232 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='co'># without using recover_types(), the `condition` column returned by spread_samples()</span>
 <span class='co'># will be an integer:</span>
