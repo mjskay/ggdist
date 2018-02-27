@@ -103,10 +103,10 @@ apply_prototypes = function(...) {
 #'     condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
 #'   }
 #'   model {
-#'     response_sd ~ cauchy(0, 1);         // => half-cauchy(0, 1)
-#'     condition_mean_sd ~ cauchy(0, 1);   // => half-cauchy(0, 1)
+#'     response_sd ~ cauchy(0, 1);       // => half-cauchy(0, 1)
+#'     condition_mean_sd ~ cauchy(0, 1); // => half-cauchy(0, 1)
 #'     overall_mean ~ normal(0, 5);
-#'     condition_zoffset ~ normal(0, 1);   // => condition_mean ~ normal(overall_mean, condition_mean_sd)
+#'     condition_zoffset ~ normal(0, 1); //=> condition_mean ~ normal(overall_mean, condition_mean_sd)
 #'     for (i in 1:n) {
 #'       response[i] ~ normal(condition_mean[condition[i]], response_sd);
 #'     }
@@ -118,13 +118,15 @@ apply_prototypes = function(...) {
 #'   # do not use in practice
 #'   chains = 1, iter = 500)
 #'
-#' # without using recover_types(), the `condition` column returned by spread_samples() will be an integer:
+#' # without using recover_types(), the `condition` column returned by spread_samples()
+#' # will be an integer:
 #' m %>%
 #'   spread_samples(condition_mean[condition]) %>%
 #'   mean_qi()
 #'
-#' # If we apply recover_types() first, subsequent calls to other tidybayes functions will automatically
-#' # back-convert factors so that they are labeled with their original levels (assuming the same name is used)
+#' # If we apply recover_types() first, subsequent calls to other tidybayes functions will
+#' # automatically back-convert factors so that they are labeled with their original levels
+#' # (assuming the same name is used)
 #' m %<>% recover_types(ABC)
 #'
 #' # now the `condition` column with be a factor with levels "A", "B", "C", ...
