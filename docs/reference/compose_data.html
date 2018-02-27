@@ -203,6 +203,8 @@ the implementations of <code>as_data_list.numeric</code>,
   <span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>paste0</span>(<span class='st'>"s"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>)))
 )
 
+<span class='co'># without changing `.n_name`, compose_data() will prefix indices</span>
+<span class='co'># with "n" by default</span>
 <span class='no'>df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>compose_data</span>()</div><div class='output co'>#&gt; $plot
 #&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
@@ -219,7 +221,25 @@ the implementations of <code>as_data_list.numeric</code>,
 #&gt; $n
 #&gt; [1] 16
 #&gt; </div><div class='input'>
-<span class='co'># turns site into a nested index: site[p] gives the site for plot p</span>
+<span class='co'># you can use n_prefix() to define a different prefix (e.g. "N"):</span>
+<span class='no'>df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>compose_data</span>(<span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'><a href='n_prefix.html'>n_prefix</a></span>(<span class='st'>"N"</span>))</div><div class='output co'>#&gt; $plot
+#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+#&gt; 
+#&gt; $N_plot
+#&gt; [1] 8
+#&gt; 
+#&gt; $site
+#&gt;  [1] 1 1 2 2 3 3 4 4 1 1 2 2 3 3 4 4
+#&gt; 
+#&gt; $N_site
+#&gt; [1] 4
+#&gt; 
+#&gt; $N
+#&gt; [1] 16
+#&gt; </div><div class='input'>
+<span class='co'># If you have nesting, you may want a nested index, which can be generated using x_at_y()</span>
+<span class='co'># Here, site[p] will give the site for plot p</span>
 <span class='no'>df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>compose_data</span>(<span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'><a href='x_at_y.html'>x_at_y</a></span>(<span class='no'>site</span>, <span class='no'>plot</span>))</div><div class='output co'>#&gt; $plot
 #&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8

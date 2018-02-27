@@ -88,7 +88,7 @@
       <h1>Extracting and visualizing tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-01-05</h4>
+            <h4 class="date">2018-02-27</h4>
           </div>
 
     
@@ -105,7 +105,7 @@ img {
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette describes how to use the <code>tidybayes</code> package to extract <a href="http://dx.doi.org/10.18637/jss.v059.i10">tidy data</a> data frames of samples of parameters, fits, and predictions from <code>rstanarm</code>. For a more general introduction to <code>tidybayes</code> and its use on general-purpose sampling languages (like Stan and JAGS), see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
+<p>This vignette describes how to use the <code>tidybayes</code> package to extract <a href="http://dx.doi.org/10.18637/jss.v059.i10">tidy</a> data frames of samples of parameters, fits, and predictions from <code>rstanarm</code>. For a more general introduction to <code>tidybayes</code> and its use on general-purpose sampling languages (like Stan and JAGS), see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
@@ -227,7 +227,7 @@ ABC =
 <li><code>b[(Intercept) condition:D]</code></li>
 <li><code>b[(Intercept) condition:E]</code></li>
 </ul>
-<p>We might want a data frame where each row is a sample from either <code>b[(Intercept) condition:A]</code>, <code>b[(Intercept) condition:B]</code>, <code>...:C]</code>, <code>...:D]</code>, or <code>...:E]</code>, and where we have columns indexing which iteration of the sampler the sample came from and which condition (<code>A</code> to <code>E</code>) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.</p>
+<p>We might want a data frame where each row is a sample from either <code>b[(Intercept) condition:A]</code>, <code>b[(Intercept) condition:B]</code>, <code>...:C]</code>, <code>...:D]</code>, or <code>...:E]</code>, and where we have columns indexing which iteration of the sampler the row came from and which condition (<code>A</code> to <code>E</code>) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge samples with the original data to plot data and estimates.</p>
 <p>The workhorse of <code>tidybayes</code> is the <code>spread_samples</code> function, which does this extraction for us. It includes a simple specification format that we can use to extract parameters and their indices into tidy-format data frames.</p>
 <div id="gathering-parameter-indices-into-a-separate-column-in-a-tidy-format-data-frame" class="section level3">
 <h3 class="hasAnchor">
@@ -341,7 +341,7 @@ ABC =
 <h3 class="hasAnchor">
 <a href="#with-simple-parameters" class="anchor"></a>With simple parameters</h3>
 <p><code>tidybayes</code> provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi]</code>, for example, <code>mean_qi</code>, <code>median_qi</code>, <code>mode_hdi</code>, and so on. The first name (before the <code>_</code>) indicates the type of point estimate, and the second name indicates the type of interval. <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the <code>point_interval</code> function.</p>
-<p>For example, we might gather the samples corresponding to the overall mean and standard deviation of observations:</p>
+<p>For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
@@ -474,7 +474,7 @@ ABC =
 <div id="plotting-point-estimates-and-intervals" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotting-point-estimates-and-intervals" class="anchor"></a>Plotting point estimates and intervals</h2>
-<p>Plotting means and intervals is straightforward using the “pointrange” or “pointrangeh” geoms:</p>
+<p>Plotting point estimates and with one interval is straightforward using the <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange">ggplot2::geom_pointrange</a></code> or <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/geom_linerangeh">ggstance::geom_pointrangeh</a></code> geoms:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
@@ -539,7 +539,7 @@ ABC =
 ##  9 A             1     NA          9   0.457 
 ## 10 A             1     NA         10  -0.0262</code></pre>
 <p><em>(10 rows of 20000)</em></p>
-<p>To plot this example, we’ll also show the use <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which does the summarizing of samples into estimates and intervals within ggplot:</p>
+<p>To plot this example, we’ll also show the use of <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which summarizes samples into estimates and intervals within ggplot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) <span class="op">%&gt;%</span>
@@ -594,7 +594,7 @@ ABC <span class="op">%&gt;%</span>
 <p>We can draw fit curves with probability bands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">51</span>), am) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">51</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m_mpg) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw">ordered</span>(cyl))) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate)) <span class="op">+</span>
@@ -604,7 +604,7 @@ ABC <span class="op">%&gt;%</span>
 <p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">51</span>), am) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m_mpg, <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw">ordered</span>(cyl))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">group =</span> <span class="kw">paste</span>(cyl, .iteration)), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>
@@ -613,7 +613,7 @@ ABC <span class="op">%&gt;%</span>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">51</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_predicted_samples</a></span>(m_mpg) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw">ordered</span>(cyl))) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>

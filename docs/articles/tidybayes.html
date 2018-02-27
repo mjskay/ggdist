@@ -88,7 +88,7 @@
       <h1>Using tidy data with Bayesian samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-01-05</h4>
+            <h4 class="date">2018-02-27</h4>
           </div>
 
     
@@ -259,7 +259,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Fri Jan 05 23:33:55 2018.
+## Samples were drawn using NUTS(diag_e) at Tue Feb 27 11:25:22 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -274,24 +274,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">extract</span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] -0.133 -0.352 -0.191 0.901 0.206 ...
+##  $ overall_mean     : num [1:4000(1d)] -0.359 -0.269 1.787 0.844 0.562 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] 0.46422 0.30568 0.6382 -0.52689 -0.00761 ...
+##  $ condition_zoffset: num [1:4000, 1:5] 0.348 0.21 -1.158 -0.428 -0.197 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.517 0.604 0.704 0.653 0.562 ...
+##  $ response_sd      : num [1:4000(1d)] 0.614 0.618 0.613 0.61 0.581 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.294 1.833 0.868 0.879 1.225 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 2.1 1.36 1.75 1.41 2.03 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.468 0.209 0.363 0.438 0.197 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.3701 0.0166 -0.2361 0.2409 0.1611 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -0.678 2.739 -4.316 -6.136 2.849 ...
+##  $ lp__             : num [1:4000(1d)] 3.083 1.576 -0.643 3.062 2.553 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -482,7 +482,7 @@ model {
 <h3 class="hasAnchor">
 <a href="#interval-estimates-with-posterior-densities-half-eye-plots-geom_halfeyeh" class="anchor"></a>Interval estimates with posterior densities (“half-eye plots”): <code>geom_halfeyeh</code>
 </h3>
-<p>If you prefer densities over violins, you can use <code>geom_halfeyeh</code> (the vertical version, not yet available, will be called <code>geom_helfeye</code>). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):</p>
+<p>If you prefer densities over violins, you can use <code>geom_halfeyeh</code> (the vertical version, not yet available, will be called <code>geom_halfeye</code>). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
@@ -523,7 +523,7 @@ model {
     <span class="dt">size =</span> <span class="op">-</span>.prob)) <span class="op">+</span><span class="st">               </span><span class="co"># smaller probability interval =&gt; thicker line</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
-<p>Just as <code>geom_pointrangeh</code> includes <code>xmin = conf.low</code> and <code>xmax = conf.high</code> as default aesthetics, it also includes <code>size = -.prob</code> to facilitate exactly this usage. This, the above can be simplified to:</p>
+<p>Just as <code>geom_pointintervalh</code> includes <code>xmin = conf.low</code> and <code>xmax = conf.high</code> as default aesthetics, it also includes <code>size = -.prob</code> to facilitate exactly this usage. This, the above can be simplified to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
@@ -652,7 +652,7 @@ ABC <span class="op">%&gt;%</span>
 <div id="comparing-levels-of-a-factor" class="section level2">
 <h2 class="hasAnchor">
 <a href="#comparing-levels-of-a-factor" class="anchor"></a>Comparing levels of a factor</h2>
-<p>If we wish compare the values of <code>condition_mean</code> across conditions, <code>compare_levels</code> facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences, though this can be changed using the <code>comparison =</code> parameter:</p>
+<p><code>compare_levels</code> allows us to compare the value of some variable across levels of some factor. By default it computes all pairwise differences, though this can be changed using the <code>comparison =</code> parameter:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
 m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
@@ -665,7 +665,7 @@ m <span class="op">%&gt;%</span>
 <h2 class="hasAnchor">
 <a href="#gathering-all-parameter-names-into-a-single-column-gather_samples-and-gather_terms" class="anchor"></a>Gathering all parameter names into a single column: <code>gather_samples</code> and <code>gather_terms</code>
 </h2>
-<p>We might also prefer all parameter names to be in a single column (long-format) instead of as column names. There are three methods for obtaining long-format data frames with <code>tidybayes</code>, whose use depends on where and how in the data processing chain you might want to transform into long-format: <code>gather_samples</code>, <code>gather_terms</code>, and <code>as_sample_tibble</code>.</p>
+<p>We might also prefer all parameter names to be in a single column (long-format) instead of as column names. There are two methods for obtaining long-format data frames with <code>tidybayes</code>, whose use depends on where and how in the data processing chain you might want to transform into long-format: <code>gather_samples</code> and <code>gather_terms</code>. There are also two methods for wide (or semi-wide) format data frame, <code>spread_samples</code> (described previously) and <code>as_sample_tibble</code>.</p>
 <p><code>gather_samples</code> is the counterpart to <code>spread_samples</code>, except it puts all parameter names into a <code>term</code> column and samples into an <code>estimate</code> column (for compatibility with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">gather_samples</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span>
@@ -681,7 +681,7 @@ m <span class="op">%&gt;%</span>
 ## 5 condition_mean E           -0.893   -1.24     -0.544 0.950
 ## 6 overall_mean   &lt;NA&gt;         0.587   -0.587     1.69  0.950</code></pre>
 <p>Note that <code>condition = NA</code> for the <code>overall_mean</code> row, because it does not have an index with that name in the specification passed to <code>gather_samples</code>.</p>
-<p>While this works well if we do not need to perform computations that involve multiple columns, the wide format returned by <code>spread_samples</code> is very useful for computations that involve multiple columns names, such as the calculation of the <code>condition_offset</code> above. If we want to make intermediate computations on the format returned by <code>spread_samples</code> and <em>then</em> gather parameters into one column, we can use <code>gather_terms</code>, which will gather all non-grouped terms that do not start with <code>"."</code>:</p>
+<p>While this works well if we do not need to perform computations that involve multiple columns, the semi-wide format returned by <code>spread_samples</code> is very useful for computations that involve multiple columns names, such as the calculation of the <code>condition_offset</code> above. If we want to make intermediate computations on the format returned by <code>spread_samples</code> and <em>then</em> gather parameters into one column, we can use <code>gather_terms</code>, which will gather all non-grouped terms that do not start with <code>"."</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_offset =</span> condition_mean <span class="op">-</span><span class="st"> </span>overall_mean) <span class="op">%&gt;%</span>
@@ -826,8 +826,8 @@ bayes_estimates</code></pre></div>
 <h3 class="hasAnchor">
 <a href="#compatibility-with-bayesplot-and-other-non-tidy-packages-using-unspread_samples-and-ungather_samples" class="anchor"></a>Compatibility with <code>bayesplot</code> and other non-tidy packages using <code>unspread_samples</code> and <code>ungather_samples</code>
 </h3>
-<p>Function from other packages might expect samples in the form of a data frame or matrix with parameters as columns and samples as rows. That is the format returned by <code>as_sample_tibble</code>, but not by <code>gather_samples</code> or <code>spread_samples</code>, which split indices from parameters out into columns.</p>
-<p>It may be desirable to use the <code>spread_samples</code> or <code>gather_samples</code> functions to transform your samples in some way, and then convert them <em>back</em> into the sample <span class="math inline">\(\times\)</span> parameter format to pass them into functions from <code>bayesplot</code> or other packages like it. The <code>unspread_samples</code> and <code>ungather_samples</code> functions invert <code>spread_samples</code> and <code>gather_samples</code> to return a data frame with parameter names that include indices in them as columns and samples as rows.</p>
+<p>Functions from other packages might expect samples in the form of a data frame or matrix with parameters as columns and samples as rows. That is the format returned by <code>as_sample_tibble</code>, but not by <code>gather_samples</code> or <code>spread_samples</code>, which split indices from parameters out into columns.</p>
+<p>It may be desirable to use the <code>spread_samples</code> or <code>gather_samples</code> functions to transform your samples in some way, and then convert them <em>back</em> into the sample <span class="math inline">\(\times\)</span> parameter format to pass them into functions from other packages, like <code>bayesplot</code>. The <code>unspread_samples</code> and <code>ungather_samples</code> functions invert <code>spread_samples</code> and <code>gather_samples</code> to return a data frame with parameter column names that include indices in them and samples as rows.</p>
 <p>As an example, let’s re-do the previous example of <code>compare_levels</code>, but use <code><a href="http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-distributions">bayesplot::mcmc_hist</a></code> to plot the results instead of <code>geom_eyeh</code>. First, the result of <code>compare_levels</code> looks like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>

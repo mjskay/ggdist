@@ -180,8 +180,121 @@ of the generic function <code>as_constructor</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-##TODO
+<span class='fu'>library</span>(<span class='no'>dplyr</span>)
+<span class='fu'>library</span>(<span class='no'>magrittr</span>)
+<span class='fu'>library</span>(<span class='no'>rstan</span>)
 
+<span class='co'># Here's an example dataset with a categorical predictor (`condition`) with several levels:</span>
+<span class='fu'>set.seed</span>(<span class='fl'>5</span>)
+<span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>
+<span class='no'>n_condition</span> <span class='kw'>=</span> <span class='fl'>5</span>
+<span class='no'>ABC</span> <span class='kw'>=</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(
+    <span class='kw'>condition</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fu'>c</span>(<span class='st'>"A"</span>,<span class='st'>"B"</span>,<span class='st'>"C"</span>,<span class='st'>"D"</span>,<span class='st'>"E"</span>), <span class='no'>n</span>),
+    <span class='kw'>response</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='no'>n</span> * <span class='fl'>5</span>, <span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,-<span class='fl'>1</span>), <span class='fl'>0.5</span>)
+  )
+
+<span class='co'># We'll fit the following model to it:</span>
+<span class='no'>stan_code</span> <span class='kw'>=</span> <span class='st'>"
+  data {
+    int&lt;lower=1&gt; n;
+    int&lt;lower=1&gt; n_condition;
+    int&lt;lower=1, upper=n_condition&gt; condition[n];
+    real response[n];
+  }
+  parameters {
+    real overall_mean;
+    vector[n_condition] condition_zoffset;
+    real&lt;lower=0&gt; response_sd;
+    real&lt;lower=0&gt; condition_mean_sd;
+  }
+  transformed parameters {
+    vector[n_condition] condition_mean;
+    condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
+  }
+  model {
+    response_sd ~ cauchy(0, 1);       // =&gt; half-cauchy(0, 1)
+    condition_mean_sd ~ cauchy(0, 1); // =&gt; half-cauchy(0, 1)
+    overall_mean ~ normal(0, 5);
+    condition_zoffset ~ normal(0, 1); //=&gt; condition_mean ~ normal(overall_mean, condition_mean_sd)
+    for (i in 1:n) {
+      response[i] ~ normal(condition_mean[condition[i]], response_sd);
+    }
+  }
+  "</span>
+
+<span class='no'>m</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/rstan/topics/stan'>stan</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>stan_code</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='compose_data.html'>compose_data</a></span>(<span class='no'>ABC</span>), <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>adapt_delta</span><span class='kw'>=</span><span class='fl'>0.99</span>),
+  <span class='co'># 1 chain / few iterations just so example runs quickly</span>
+  <span class='co'># do not use in practice</span>
+  <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)</div><div class='output co'>#&gt; In file included from C:/R/R-3.4.2/library/BH/include/boost/config.hpp:39:0,
+#&gt;                  from C:/R/R-3.4.2/library/BH/include/boost/math/tools/config.hpp:13,
+#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/core/var.hpp:7,
+#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/core/gevv_vvv_vari.hpp:5,
+#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/core.hpp:12,
+#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math/rev/mat.hpp:4,
+#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/stan/math.hpp:4,
+#&gt;                  from C:/R/R-3.4.2/library/StanHeaders/include/src/stan/model/model_header.hpp:4,
+#&gt;                  from filef57466f312b6.cpp:8:
+#&gt; C:/R/R-3.4.2/library/BH/include/boost/config/compiler/gcc.hpp:186:0: warning: "BOOST_NO_CXX11_RVALUE_REFERENCES" redefined
+#&gt;  #  define BOOST_NO_CXX11_RVALUE_REFERENCES
+#&gt;  ^
+#&gt; &lt;command-line&gt;:0:0: note: this is the location of the previous definition
+#&gt; cc1plus.exe: warning: unrecognized command line option "-Wno-ignored-attributes"
+#&gt; 
+#&gt; SAMPLING FOR MODEL 'dd2cc433974aea50803799100a5d323d' NOW (CHAIN 1).
+#&gt; 
+#&gt; Gradient evaluation took 0 seconds
+#&gt; 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Adjust your expectations accordingly!
+#&gt; 
+#&gt; 
+#&gt; Iteration:   1 / 500 [  0%]  (Warmup)
+#&gt; Iteration:  50 / 500 [ 10%]  (Warmup)
+#&gt; Iteration: 100 / 500 [ 20%]  (Warmup)
+#&gt; Iteration: 150 / 500 [ 30%]  (Warmup)
+#&gt; Iteration: 200 / 500 [ 40%]  (Warmup)
+#&gt; Iteration: 250 / 500 [ 50%]  (Warmup)
+#&gt; Iteration: 251 / 500 [ 50%]  (Sampling)
+#&gt; Iteration: 300 / 500 [ 60%]  (Sampling)
+#&gt; Iteration: 350 / 500 [ 70%]  (Sampling)
+#&gt; Iteration: 400 / 500 [ 80%]  (Sampling)
+#&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
+#&gt; Iteration: 500 / 500 [100%]  (Sampling)
+#&gt; 
+#&gt;  Elapsed Time: 0.232 seconds (Warm-up)
+#&gt;                0.136 seconds (Sampling)
+#&gt;                0.368 seconds (Total)
+#&gt; </div><div class='input'>
+<span class='co'># without using recover_types(), the `condition` column returned by spread_samples()</span>
+<span class='co'># will be an integer:</span>
+<span class='no'>m</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
+#&gt; # Groups: condition [5]
+#&gt;   condition condition_mean conf.low conf.high .prob
+#&gt;       &lt;int&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1         1          0.199   -0.124     0.628 0.950
+#&gt; 2         2          0.996    0.653     1.33  0.950
+#&gt; 3         3          1.83     1.45      2.21  0.950
+#&gt; 4         4          1.03     0.658     1.39  0.950
+#&gt; 5         5         -0.883   -1.22     -0.534 0.950</div><div class='input'>
+<span class='co'># If we apply recover_types() first, subsequent calls to other tidybayes functions will</span>
+<span class='co'># automatically back-convert factors so that they are labeled with their original levels</span>
+<span class='co'># (assuming the same name is used)</span>
+<span class='no'>m</span> <span class='kw'>%&lt;&gt;%</span> <span class='fu'>recover_types</span>(<span class='no'>ABC</span>)
+
+<span class='co'># now the `condition` column with be a factor with levels "A", "B", "C", ...</span>
+<span class='no'>m</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
+#&gt; # Groups: condition [5]
+#&gt;   condition condition_mean conf.low conf.high .prob
+#&gt;   &lt;fctr&gt;             &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 A                  0.199   -0.124     0.628 0.950
+#&gt; 2 B                  0.996    0.653     1.33  0.950
+#&gt; 3 C                  1.83     1.45      2.21  0.950
+#&gt; 4 D                  1.03     0.658     1.39  0.950
+#&gt; 5 E                 -0.883   -1.22     -0.534 0.950</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
