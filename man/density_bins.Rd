@@ -44,12 +44,36 @@ in a consistent format: a data frame of bins suitable for use with
 }
 \examples{
 
-##TODO
+library(ggplot2)
+library(dplyr)
+library(rstanarm)
+library(modelr)
+
+theme_set(theme_light())
+
+m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars,
+  # 1 chain / few iterations just so example runs quickly
+  # do not use in practice
+  chains = 1, iter = 500)
+
+step = 1
+mtcars \%>\%
+  group_by(cyl) \%>\%
+  data_grid(hp = seq_range(hp, by = step)) \%>\%
+  add_predicted_samples(m_mpg) \%>\%
+  do(density_bins(.$pred)) \%>\%
+  ggplot() +
+  geom_rect(aes(
+    xmin = hp - step/2, ymin = lower, ymax = upper, xmax = hp + step/2,
+    fill = ordered(cyl), alpha = density
+  )) +
+  geom_point(aes(x = hp, y = mpg, color = ordered(cyl)), data = mtcars) +
+  scale_alpha_continuous(range = c(0, 0.75))
 
 }
 \seealso{
-See \code{\link{predict_curve}} and the shortcut
-\code{\link{predict_curve_density}}.
+See \code{\link{add_predicted_samples}} and \code{\link{stat_lineribbon}} for a better approach. This
+function may be deprecated in the future.
 }
 \author{
 Matthew Kay

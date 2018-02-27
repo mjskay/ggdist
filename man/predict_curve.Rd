@@ -3,7 +3,7 @@
 \name{predict_curve}
 \alias{predict_curve}
 \alias{predict_curve_density}
-\title{Prediction curves for arbitrary functions of posteriors}
+\title{Deprecated: Prediction curves for arbitrary functions of posteriors}
 \usage{
 predict_curve(data, formula, summary = median, ...)
 
@@ -55,12 +55,14 @@ density_bins} will have columns \code{lhs.mid}, \code{lhs.lower},
 \code{lhs.upper}, and \code{lhs.density} in place of \code{lhs}.
 }
 \description{
-Generates a prediction curve (or a density for a prediction curve) given an
-expression based on columns of a data frame (as might be obtained using
-spread_samples) combined with arbitrary other predictors. Obeys groups
-applied by group_by.
+Deprecated function for generating prediction curves (or a density for a
+prediction curve).
 }
 \details{
+\strong{This function is deprecated.} Use \code{\link[modelr]{data_grid}} combined
+with \code{\link{point_interval}} or \code{\link[dplyr]{do}} and
+\code{\link{density_bins}} instead.
+
 The function generates a predictive curve given some posterior samples
 (\code{data}), an expression (\code{formula}), and a set of variables
 defining the curve (\code{...}). For every group in \code{data} (if it is a
@@ -83,7 +85,7 @@ curve.
 }
 \examples{
 
-##TODO
+# Deprecated; see examples for density_bins
 
 }
 \seealso{

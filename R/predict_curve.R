@@ -5,12 +5,14 @@
 
 
 
-#' Prediction curves for arbitrary functions of posteriors
+#' Deprecated: Prediction curves for arbitrary functions of posteriors
 #'
-#' Generates a prediction curve (or a density for a prediction curve) given an
-#' expression based on columns of a data frame (as might be obtained using
-#' spread_samples) combined with arbitrary other predictors. Obeys groups
-#' applied by group_by.
+#' Deprecated function for generating prediction curves (or a density for a
+#' prediction curve).
+#'
+#' \strong{This function is deprecated.} Use \code{\link[modelr]{data_grid}} combined
+#' with \code{\link{point_interval}} or \code{\link[dplyr]{do}} and
+#' \code{\link{density_bins}} instead.
 #'
 #' The function generates a predictive curve given some posterior samples
 #' (\code{data}), an expression (\code{formula}), and a set of variables
@@ -68,12 +70,13 @@
 #' so the data frame returned by \code{predict_curve} with \code{summary =
 #' density_bins} will have columns \code{lhs.mid}, \code{lhs.lower},
 #' \code{lhs.upper}, and \code{lhs.density} in place of \code{lhs}.
+#'
 #' @author Matthew Kay
 #' @seealso See \code{\link{density_bins}}.
 #' @keywords manip
 #' @examples
 #'
-#' ##TODO
+#' # Deprecated; see examples for density_bins
 #'
 #' @importFrom plyr ldply
 #' @importFrom stats median
@@ -82,7 +85,7 @@
 predict_curve = function(data, formula, summary = median, ...) {
   .Deprecated("density_bins",
     paste("predict_curve and predict_curve_density will be removed in a future version;",
-      "use modelr::expand and dplyr::do with tidybayes::density_bins / histogram_bins instead."))
+      "use modelr::data_grid + point_interval, or modelr::data_grid + dplyr::do + density_bins instead."))
 
   #get response name and formula to generate response
   response_name = formula[[2]]         # nolint
@@ -154,12 +157,36 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' each bin} \item{upper}{Upper endpoint of each bin} \item{density}{Density
 #' estimate of the bin}
 #' @author Matthew Kay
-#' @seealso See \code{\link{predict_curve}} and the shortcut
-#' \code{\link{predict_curve_density}}.
+#' @seealso See \code{\link{add_predicted_samples}} and \code{\link{stat_lineribbon}} for a better approach. This
+#' function may be deprecated in the future.
 #' @keywords manip
 #' @examples
 #'
-#' ##TODO
+#' library(ggplot2)
+#' library(dplyr)
+#' library(rstanarm)
+#' library(modelr)
+#'
+#' theme_set(theme_light())
+#'
+#' m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars,
+#'   # 1 chain / few iterations just so example runs quickly
+#'   # do not use in practice
+#'   chains = 1, iter = 500)
+#'
+#' step = 1
+#' mtcars %>%
+#'   group_by(cyl) %>%
+#'   data_grid(hp = seq_range(hp, by = step)) %>%
+#'   add_predicted_samples(m_mpg) %>%
+#'   do(density_bins(.$pred)) %>%
+#'   ggplot() +
+#'   geom_rect(aes(
+#'     xmin = hp - step/2, ymin = lower, ymax = upper, xmax = hp + step/2,
+#'     fill = ordered(cyl), alpha = density
+#'   )) +
+#'   geom_point(aes(x = hp, y = mpg, color = ordered(cyl)), data = mtcars) +
+#'   scale_alpha_continuous(range = c(0, 0.75))
 #'
 #' @importFrom stats density
 #' @export
