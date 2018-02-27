@@ -58,6 +58,7 @@ Additional data types can be supported by providing a custom implementation
 of the generic function \code{as_constructor}.
 }
 \examples{
+\donttest{
 
 library(dplyr)
 library(magrittr)
@@ -123,6 +124,7 @@ m \%>\%
   spread_samples(condition_mean[condition]) \%>\%
   mean_qi()
 
+}
 }
 \seealso{
 \code{\link{spread_samples}}, \code{\link{gather_samples}}, \code{\link{compose_data}}.

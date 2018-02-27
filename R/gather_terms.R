@@ -64,6 +64,7 @@ globalVariables(c("term", "estimate"))
 #' @seealso \code{\link{spread_samples}}, \code{\link{as_sample_tibble}}.
 #' @keywords manip
 #' @examples
+#' \donttest{
 #'
 #' library(dplyr)
 #'
@@ -80,6 +81,7 @@ globalVariables(c("term", "estimate"))
 #'   gather_terms() %>%
 #'   mean_qi()
 #'
+#' }
 #' @importFrom stringi stri_detect_regex
 #' @importFrom magrittr %>%
 #' @importFrom purrr map

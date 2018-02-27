@@ -72,6 +72,7 @@ globalVariables(c(".iteration", ".pred"))
 #' @seealso \code{\link{spread_samples}}
 #' @keywords manip
 #' @examples
+#' \donttest{
 #'
 #' library(ggplot2)
 #' library(dplyr)
@@ -104,6 +105,7 @@ globalVariables(c(".iteration", ".pred"))
 #'   geom_point(data = mtcars) +
 #'   scale_fill_brewer(palette = "Greys")
 #'
+#' }
 #' @importFrom magrittr %>%
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate sample_n ungroup group_by

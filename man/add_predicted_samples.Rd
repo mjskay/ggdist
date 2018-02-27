@@ -118,6 +118,7 @@ Given equal choice between the two, \code{add_fitted_samples} and \code{add_pred
 are the preferred spellings.
 }
 \examples{
+\donttest{
 
 library(ggplot2)
 library(dplyr)
@@ -150,6 +151,7 @@ mtcars \%>\%
   geom_point(data = mtcars) +
   scale_fill_brewer(palette = "Greys")
 
+}
 }
 \seealso{
 \code{\link{spread_samples}}

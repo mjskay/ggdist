@@ -69,6 +69,7 @@ apply_prototypes = function(...) {
 #' @seealso \code{\link{spread_samples}}, \code{\link{gather_samples}}, \code{\link{compose_data}}.
 #' @keywords manip
 #' @examples
+#' \donttest{
 #'
 #' library(dplyr)
 #' library(magrittr)
@@ -134,6 +135,7 @@ apply_prototypes = function(...) {
 #'   spread_samples(condition_mean[condition]) %>%
 #'   mean_qi()
 #'
+#' }
 #' @export
 recover_types = function(model, ...) {
   if (!is.list(attr(model, "constructors"))) {

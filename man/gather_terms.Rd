@@ -64,6 +64,7 @@ Is roughly equivalent to:
 }
 }
 \examples{
+\donttest{
 
 library(dplyr)
 
@@ -80,6 +81,7 @@ RankCorr \%>\%
   gather_terms() \%>\%
   mean_qi()
 
+}
 }
 \seealso{
 \code{\link{spread_samples}}, \code{\link{as_sample_tibble}}.

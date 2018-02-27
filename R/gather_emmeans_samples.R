@@ -41,7 +41,43 @@ gather_lsmeans_samples = function(...) {
 #' @keywords manip
 #' @examples
 #'
-#' ##TODO
+#' library(dplyr)
+#' library(magrittr)
+#' library(rstanarm)
+#' library(emmeans)
+#'
+#' # Here's an example dataset with a categorical predictor (`condition`) with several levels:
+#' set.seed(5)
+#' n = 10
+#' n_condition = 5
+#' ABC =
+#'   data_frame(
+#'     condition = rep(c("A","B","C","D","E"), n),
+#'     response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
+#'   )
+#'
+#' m = stan_glm(response ~ condition, data = ABC,
+#'   # 1 chain / few iterations just so example runs quickly
+#'   # do not use in practice
+#'   chains = 1, iter = 500)
+#'
+#' # Once we've fit the model, we can use emmeans() (and functions
+#' # from that package) to get whatever marginal estimates we want.
+#' # For example, we can get estimated marginal means by condition:
+#' m %>%
+#'   emmeans(~ condition) %>%
+#'   gather_emmeans_samples() %>%
+#'   mean_qi()
+#'
+#' # or we could get pairwise differences:
+#' m %>%
+#'   emmeans( ~ condition) %>%
+#'   contrast(method = "pairwise") %>%
+#'   gather_emmeans_samples() %>%
+#'   mean_qi()
+#'
+#' # see the documentation of emmeans() for more examples of types of
+#' # contrasts supported by that packge.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom purrr map_dfr
