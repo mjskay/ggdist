@@ -141,7 +141,7 @@ mtcars \%>\%
   geom_line(aes(y = estimate, group = paste(cyl, .iteration)), alpha = 0.25) +
   geom_point(data = mtcars)
 
-#plot posterior predictive intervals
+# plot posterior predictive intervals
 mtcars \%>\%
   group_by(cyl) \%>\%
   data_grid(hp = seq_range(hp, n = 101)) \%>\%
