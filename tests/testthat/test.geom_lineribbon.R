@@ -30,6 +30,7 @@ test_that("one-group lineribbons work", {
   p = ggplot(df, aes(x = x, y = y))
 
   expect_doppelganger("one-group lineribbon", p + stat_lineribbon(.prob = c(.50, .75, .90)) + scale_fill_brewer())
+  expect_doppelganger("one-group lineribbon (reverse order)", p + stat_lineribbon(.prob = c(.90, .75, .50)) + scale_fill_brewer())
 })
 
 test_that("two-group lineribbons work", {

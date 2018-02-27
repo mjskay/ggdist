@@ -121,6 +121,25 @@ GeomInterval <- ggproto("GeomInterval", Geom,
   required_aes = c("x", "y", "ymin", "ymax"),
 
   draw_panel = function(data, panel_scales, coord) {
-    GeomLinerange$draw_panel(data, panel_scales, coord)
+    # draw all the intervals
+    interval_grobs = data %>%
+      dlply("group", function(d) {
+        group_grobs = list(GeomLinerange$draw_panel(d, panel_scales, coord))
+        list(
+          width = d %$% mean(abs(ymax - ymin)),
+          grobs = group_grobs
+        )
+      })
+
+    # this is a slightly hackish approach to getting the draw order correct for the common
+    # use case of fit lines / curves: draw the intervals in order from largest mean width to
+    # smallest mean width, so that the widest intervals are on the bottom.
+    interval_grobs = interval_grobs[order(-map_dbl(interval_grobs, "width"))] %>%
+      map("grobs") %>%
+      reduce(c)
+
+    ggname("geom_interval",
+      gTree(children = do.call(gList, interval_grobs))
+    )
   }
 )
