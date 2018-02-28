@@ -10,12 +10,16 @@ library(vdiffr)
 
 context("geom_interval")
 
-test_that("horizontal grouped intervals work", {
-  data(RankCorr, package = "tidybayes")
+# use a subset of RankCorr so tests are faster
+data(RankCorr, package = "tidybayes")
+RankCorr_s = RankCorr[1:100,]
+RankCorr_u_tau = RankCorr_s %>%
+  spread_samples(u_tau[i]) %>%
+  filter(i %in% 1:3)
 
-  forward_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
-    mean_qi(.prob = c(.5, .8, .95, .99)) %>%
+test_that("horizontal grouped intervals work", {
+  forward_plot = RankCorr_u_tau %>%
+    mean_qi(.prob = c(.5, .75, .90)) %>%
     ggplot(aes(y = i, x = u_tau)) +
     geom_intervalh() +
     scale_color_brewer()
@@ -23,38 +27,32 @@ test_that("horizontal grouped intervals work", {
   expect_doppelganger("grouped intervals (h)", forward_plot)
 
 
-  stat_forward_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
+  stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(y = i, x = u_tau)) +
-    stat_intervalh(.prob = c(.5, .8, .95, .99)) +
+    stat_intervalh(.prob = c(.5, .75, .90)) +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (h, stat)", stat_forward_plot)
 
-  reverse_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
-    mean_qi(.prob = c(.99, .95, .8, .5)) %>%
+  reverse_plot = RankCorr_u_tau %>%
+    mean_qi(.prob = c(.90, .75, .5)) %>%
     ggplot(aes(y = i, x = u_tau)) +
     geom_intervalh() +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (h, reverse order)", reverse_plot)
 
-  stat_reverse_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
+  stat_reverse_plot = RankCorr_u_tau %>%
     ggplot(aes(y = i, x = u_tau)) +
-    stat_intervalh(.prob = c(.99, .95, .8, .5)) +
+    stat_intervalh(.prob = c(.90, .75, .5)) +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (h, stat, reverse order)", stat_reverse_plot)
 })
 
 test_that("grouped intervals work", {
-  data(RankCorr, package = "tidybayes")
-
-  forward_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
-    mean_qi(.prob = c(.5, .8, .95, .99)) %>%
+  forward_plot = RankCorr_u_tau %>%
+    mean_qi(.prob = c(.5, .75, .90)) %>%
     ggplot(aes(x = i, y = u_tau)) +
     geom_interval() +
     scale_color_brewer()
@@ -62,27 +60,24 @@ test_that("grouped intervals work", {
   expect_doppelganger("grouped intervals", forward_plot)
 
 
-  stat_forward_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
+  stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
-    stat_interval(.prob = c(.5, .8, .95, .99)) +
+    stat_interval(.prob = c(.5, .75, .90)) +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (stat)", stat_forward_plot)
 
-  reverse_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
-    mean_qi(.prob = c(.99, .95, .8, .5)) %>%
+  reverse_plot = RankCorr_u_tau %>%
+    mean_qi(.prob = c(.90, .75, .5)) %>%
     ggplot(aes(x = i, y = u_tau)) +
     geom_interval() +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (reverse order)", reverse_plot)
 
-  stat_reverse_plot = RankCorr %>%
-    spread_samples(u_tau[i]) %>%
+  stat_reverse_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
-    stat_interval(.prob = c(.99, .95, .8, .5)) +
+    stat_interval(.prob = c(.90, .75, .5)) +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (stat, reverse order)", stat_reverse_plot)

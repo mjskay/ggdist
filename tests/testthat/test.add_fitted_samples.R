@@ -66,6 +66,8 @@ test_that("[add_]fitted_samples works on an rstanarm model with grouped newdata"
 
 
 test_that("[add_]fitted_samples works on brms models without auxpars", {
+  skip_on_cran()  # brms::predict(..., summary = FALSE) currently slow, so skip on CRAN
+
   m_hp = readRDS("models.brms.m_hp.rds")
 
   fits = fitted(m_hp, mtcars_tbl, summary = FALSE) %>%
@@ -90,6 +92,8 @@ test_that("[add_]fitted_samples works on brms models without auxpars", {
 
 
 test_that("[add_]fitted_samples works on brms models with auxpars", {
+  skip_on_cran()  # brms::fitted(..., summary = FALSE) currently slow, so skip on CRAN
+
   m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
 
   fits = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE) %>%
@@ -138,6 +142,8 @@ test_that("[add_]fitted_samples throws an when dpars is called instead of auxpar
 
 
 test_that("[add_]fitted_samples works on simple brms models with nlpars", {
+  skip_on_cran()  # brms::fitted(..., summary = FALSE) currently slow, so skip on CRAN
+
   m_nlpar = readRDS("models.brms.m_nlpar.rds")
   df_nlpar = as_data_frame(m_nlpar$data)
 
@@ -163,6 +169,8 @@ test_that("[add_]fitted_samples works on simple brms models with nlpars", {
 
 
 test_that("[add_]fitted_samples works on simple brms models with multiple dpars", {
+  skip_on_cran()  # brms::fitted(..., summary = FALSE) currently slow, so skip on CRAN
+
   m_dpars = readRDS("models.brms.m_dpars.rds")
   df_dpars = as_data_frame(m_dpars$data)
 
