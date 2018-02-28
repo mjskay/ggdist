@@ -65,15 +65,21 @@ as_sample_tibble.default = function(model) {
 #' @export
 as_sample_tibble.mcmc.list = function(model) {
   n = nrow(model[[1]])
-  map_df(seq_along(model), function(chain)
-    bind_cols(
-      tibble(
-        .chain = chain,
-        .iteration = seq_len(n)
-      ),
-      as_tibble(model[[chain]])
+  map_dfr(seq_along(model), function(chain)
+    #putting tibble() or as_tibble() in here makes this slower, so we put it outside
+    #after all the chains have been combined
+    data.frame(
+      .chain = chain,
+      .iteration = seq_len(n),
+      # the implementation of as.data.frame for mcmc objects takes ~ twice as long as as.matrix (!!),
+      # so using as.matrix here speeds things up considerably for large samples
+      as.matrix(model[[chain]]),
+
+      check.names = FALSE,
+      stringsAsFactors = FALSE
     )
-  )
+  ) %>%
+    as_tibble()
 }
 
 #' @rdname as_sample_tibble

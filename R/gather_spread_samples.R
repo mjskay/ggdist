@@ -443,9 +443,22 @@ spread_samples_long_ = function(model, variable_names, index_names, regex = FALS
       ifelse(. == "", paste0(".drop", seq_along(.)), .)
     index_names = index_names[index_names != ""]
 
-    samples[, c(".chain", ".iteration", variable_names)] %>%
-      #make long format for the variables we want to split
-      gather_(".variable", ".value", variable_names) %>%
+    # Make long format data frame of the variables we want to split.
+    # The following code chunk is approximately equivalent to this:
+    #
+    #   long_samples = samples[, c(".chain", ".iteration", variable_names)] %>%
+    #     gather_(".variable", ".value", variable_names)
+    #
+    # but takes half as long to run (makes a difference with large samples):
+    long_samples = samples[,c(".chain",".iteration")] %>%
+      cbind(map_dfr(variable_names, function(variable_name) data.frame(
+        .variable = variable_name,
+        .value = samples[[variable_name]],
+
+        stringsAsFactors = FALSE
+      )))
+
+    long_samples %>%
       #next, split indices in variable names into columns
       separate_(".variable", c(".variable", ".indices"), sep = "\\[|\\]") %>%
       separate_(".indices", temp_index_names, sep = index_sep_regex,
