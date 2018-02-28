@@ -3,8 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
-library(tidybayes)
 suppressWarnings(suppressMessages({
   library(bindrcpp)
   library(dplyr)

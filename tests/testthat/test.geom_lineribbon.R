@@ -3,11 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
 import::from(dplyr, `%>%`, inner_join, data_frame, group_by_all, do, bind_rows, arrange)
 import::from(purrr, map_df)
 library(tidyr)
-library(tidybayes)
 library(vdiffr)
 
 context("geom_lineribbon")

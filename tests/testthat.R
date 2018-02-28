@@ -2,4 +2,6 @@
 Sys.setenv("R_TESTS" = "")
 
 library(testthat)
+library(tidybayes)
+
 test_check("tidybayes")

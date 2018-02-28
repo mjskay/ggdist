@@ -3,10 +3,8 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
-library(tidybayes)
-
 context("prototype constructors")
+
 
 test_that("factor prototypes convert correctly", {
   constructor = tidybayes:::as_constructor.factor(factor(c("a", "b", "c")))

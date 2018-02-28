@@ -3,14 +3,13 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
 import::from(plyr, ldply, llply, .)
 import::from(dplyr, `%>%`)
 import::from(tibble, as_tibble)
 library(tidyr)
-library(tidybayes)
 
 context("compare_levels")
+
 
 ff_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
 

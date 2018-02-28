@@ -3,13 +3,12 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
 import::from(dplyr, `%>%`, inner_join, data_frame)
 import::from(purrr, map_df)
 library(tidyr)
-library(tidybayes)
 
 context("gather_samples")
+
 
 test_that("regular expressions for parameter names work on non-indexed parameters", {
   data(RankCorr, package = "tidybayes")

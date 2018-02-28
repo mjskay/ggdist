@@ -3,12 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
 import::from(dplyr, `%>%`, mutate)
 library(tidyr)
-library(tidybayes)
 
 context("combine_chains")
+
 
 test_that("combine_chains works on a simple example", {
   data(line, package = "coda")

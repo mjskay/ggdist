@@ -3,12 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
 import::from(dplyr, `%>%`, group_by)
 library(tidyr)
-library(tidybayes)
 
 context("gather_terms")
+
 
 test_that("gather_terms works on the results of as_sample_tibble", {
   data(RankCorr, package = "tidybayes")

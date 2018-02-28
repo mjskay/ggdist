@@ -3,12 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
-library(tidybayes)
 import::from(magrittr, `%$%`)
 import::from(purrr, map_df)
 
 context("x_at_y")
+
 
 get_nested_data = function() {
   data.frame(

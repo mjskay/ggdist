@@ -3,13 +3,12 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
 import::from(dplyr, `%>%`, inner_join, data_frame)
 import::from(purrr, map_df)
 library(tidyr)
-library(tidybayes)
 
 context("ungather_samples")
+
 
 test_that("ungather_samples works on a simple parameter with no indices", {
   data(RankCorr, package = "tidybayes")

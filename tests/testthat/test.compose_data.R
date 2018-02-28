@@ -3,11 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
-library(tidybayes)
 import::from(dplyr, transmute)
 
 context("compose_data")
+
 
 get_nested_data = function() {
   data.frame(

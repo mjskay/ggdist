@@ -3,11 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
 library(dplyr)
 library(purrr)
 library(tidyr)
-library(tidybayes)
 library(vdiffr)
 
 context("geom_interval")

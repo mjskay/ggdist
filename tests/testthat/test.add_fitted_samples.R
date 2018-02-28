@@ -3,13 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-library(testthat)
-library(tidybayes)
 suppressWarnings(suppressMessages({
   library(bindrcpp)
   library(dplyr)
   library(tidyr)
-  library(ggplot2)
   library(rstan)
   library(brms)
   library(arrayhelpers)
