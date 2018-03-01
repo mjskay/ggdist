@@ -72,9 +72,14 @@ marginalizing over grouping factors by specifying new levels of a factor in \cod
 \code{\link[brms]{brm}}, you must also pass \code{allow_new_levels = TRUE} here to include new levels (see
 \code{\link[brms]{predict.brmsfit}}).}
 
-\item{category}{For ordinal and multinomial models, the name of the column to put the category names
-into in the resulting data frame. For these models, multiple sets of rows will be returned per prediction,
-one for each category.}
+\item{category}{For \emph{some} ordinal and multinomial models (notably, \code{\link[brms]{brm}} models but
+\emph{not} \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per estimate for
+\code{fitted_samples}, one for each category. The \code{category} argument specifies the name of the column
+to put the category names into in the resulting data frame. The fact that multiple rows per response are
+returned only for some model types reflects the fact that tidybayes takes the approach of tidying whatever
+output is given to us, and the output from different modeling functions differ on this point. See
+\code{vignette("tidy-brms")} and \code{vignette("tidy-rstanarm")} for examples of dealing with output
+from ordinal models using both approaches.}
 
 \item{auxpars}{For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
 parameters be included in the output? Valid only for models that support auxiliary parameters,

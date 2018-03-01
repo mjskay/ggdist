@@ -526,8 +526,7 @@ esoph %>%
   within(levels(category) <- levels(esoph$tobgp)) %>%
   ggplot(aes(x = agegp, y = estimate, color = category)) +
   stat_pointinterval(position = position_dodge(width = .4), .prob = c(.66, .95), show.legend = TRUE) +
-  scale_size_continuous(guide = FALSE) +
-  scale_fill_brewer(palette = "Greys")
+  scale_size_continuous(guide = FALSE)
 ```
 
 This output should be very similar to the output from the corresponding `m_esoph_rs` model in `vignette("tidy-rstanarm")` (modulo different priors), though brms does more of the work for us to produce it than `rstanarm` does.
