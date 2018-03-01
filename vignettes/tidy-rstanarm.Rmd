@@ -495,9 +495,9 @@ data(esoph)
 m_esoph_rs = stan_polr(tobgp ~ agegp, data = esoph, prior = R2(0.25), prior_counts = dirichlet(1))
 ```
 
-The `rstanarm::posterior_linpred` function for ordinal regression models in rstanarm returns only the link-level prediction for each sample (in contrast to `brms::fitted.brmsfit`, which returns one estimate per category for ordinal models, see the ordinal regression examples in `vignette("tidy-brms")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal `rstanarm` models, `add_fitted_samples` just returns the link-level estimate (**Note: setting `scale = "response"` for such models will not usually make sense). 
+The `rstanarm::posterior_linpred` function for ordinal regression models in rstanarm returns only the link-level prediction for each sample (in contrast to `brms::fitted.brmsfit`, which returns one estimate per category for ordinal models, see the ordinal regression examples in `vignette("tidy-brms")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal `rstanarm` models, `add_fitted_samples` just returns the link-level estimate (**Note**: setting `scale = "response"` for such models will not usually make sense). 
 
-For example, here is a plot of the latent estimate:
+For example, here is a plot of the link-level fit:
 
 ```{r}
 esoph %>%
