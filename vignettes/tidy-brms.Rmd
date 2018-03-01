@@ -466,9 +466,11 @@ m %>%
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
 
-## Ordinal and multinomial models
+## Ordinal models
 
 The `brms::fitted.brmsfit` function for ordinal and multinomial regression models in brms returns multiple estimates for each sample: one for each outcome category (in contrast to `rstanarm::stan_polr` models, which return samples from the latent linear predictor). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal and multinomial `brms` models, `add_fitted_samples` adds an additional column called `category` and a separate row containing the estimate for each category is output for every sample and predictor. 
+
+### Ordinal model with continuous predictor
 
 Consider this ordinal regression model:
 
@@ -503,3 +505,29 @@ plot_grid(ncol = 1, align = "v",
   fit_plot
 )
 ```
+
+### Ordinal model with categorical predictor
+
+Here's an ordinal model with a categorical predictor:
+
+```{r}
+data(esoph)
+m_esoph_brm = brm(tobgp ~ agegp, data = esoph, family = cumulative())
+```
+
+Then we can plot predicted probabilities for each outcome category within each level of the predictor:
+
+```{r}
+esoph %>%
+  data_grid(agegp) %>%
+  add_fitted_samples(m_esoph_brm) %>%
+  # brms does not keep the category labels,
+  # but we can recover them from the original data
+  within(levels(category) <- levels(esoph$tobgp)) %>%
+  ggplot(aes(x = agegp, y = estimate, color = category)) +
+  stat_pointinterval(position = position_dodge(width = .4), .prob = c(.66, .95), show.legend = TRUE) +
+  scale_size_continuous(guide = FALSE) +
+  scale_fill_brewer(palette = "Greys")
+```
+
+This output should be very similar to the output from the corresponding `m_esoph_rs` model in `vignette("tidy-rstanarm")` (modulo different priors), though brms does more of the work for us to produce it than `rstanarm` does.

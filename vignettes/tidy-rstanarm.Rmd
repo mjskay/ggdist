@@ -35,6 +35,7 @@ The following libraries are required to run this vignette:
 library(magrittr)
 library(dplyr)
 library(tidyr)
+library(purrr)
 library(modelr)
 library(tidybayes)
 library(ggplot2)
@@ -42,6 +43,7 @@ library(ggstance)
 library(ggridges)
 library(rstan)
 library(rstanarm)
+import::from(boot, inv.logit)
 ```
 
 These options help Stan run faster:
@@ -480,3 +482,98 @@ m %>%
   geom_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
+
+
+## Ordinal models
+
+### Ordinal model with categorical predictor
+
+Here's an ordinal model with a categorical predictor:
+
+```{r}
+data(esoph)
+m_esoph_rs = stan_polr(tobgp ~ agegp, data = esoph, prior = R2(0.25), prior_counts = dirichlet(1))
+```
+
+The `rstanarm::posterior_linpred` function for ordinal regression models in rstanarm returns only the link-level prediction for each sample (in contrast to `brms::fitted.brmsfit`, which returns one estimate per category for ordinal models, see the ordinal regression examples in `vignette("tidy-brms")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal `rstanarm` models, `add_fitted_samples` just returns the link-level estimate (**Note: setting `scale = "response"` for such models will not usually make sense). 
+
+For example, here is a plot of the latent estimate:
+
+```{r}
+esoph %>%
+  data_grid(agegp) %>%
+  add_fitted_samples(m_esoph_rs, scale = "linear") %>%
+  ggplot(aes(x = as.numeric(agegp), y = estimate)) +
+  stat_lineribbon(alpha = 0.5) +
+  scale_fill_brewer(palette = "Greys")
+```
+
+This can be hard to interpret. To turn this into predicted probabilities on a per-category basis, we have to use the fact that an ordinal logistic regression defines the probability of an outcome in category $j$ **or less** as:
+
+$$
+\textrm{logit}\left[Pr(Y\le j)\right] = \alpha_j - \beta x
+$$
+
+Thus, the probability of category $j$ is:
+
+$$
+\begin{align}
+Pr(Y = j) &= Pr(Y \le j) - Pr(Y \le j - 1)\\
+&= \textrm{logit}^{-1}(\alpha_j - \beta x) - \textrm{logit}^{-1}(\alpha_{j-1} - \beta x)
+\end{align}
+$$
+
+To derive these values, we need two things:
+
+- The $\alpha_j$ values. These are threshold parameters estimated by the model. For convenience, if there are $k$ levels, we will take $\alpha_k = +\infty$, since the probability of being in the top level or below it is 1.
+
+- The $\beta x$ values. These are just the `estimate` column returned by `add_fitted_samples`.
+
+The thresholds in `rstanarm` are coefficients with names containing `|`, indicating which categories they are thresholds between. We can see those parameters in the list of parameters in the model:
+
+```{r}
+parameters(m_esoph_rs)
+```
+
+We can extract those automatically by using the `regex = TRUE` argument to `gather_samples` to find all parameters containing a `|` character. We will then use `summarise_all(list)` to turn these thresholds into a list column, and add a final threshold equal to $+\infty$ (to represent the highest category):
+
+```{r}
+thresholds = m_esoph_rs %>%
+  gather_samples(`.*[|].*`, regex = TRUE) %>%
+  # combine_chains is necessary because add_fitted_samples does not distinguish chains
+  combine_chains() %>%
+  group_by(.chain, .iteration) %>%
+  select(.chain, .iteration, threshold = estimate) %>%
+  summarise_all(list) %>%
+  mutate(threshold = map(threshold, ~ c(., Inf)))
+
+head(thresholds, 10)
+```
+
+For example, the threshold vector from one row of this data frame (i.e., from one draw from the posterior) looks like this:
+
+```{r}
+thresholds[1,]$threshold
+```
+
+We can combine those thresholds (the $\alpha_j$ values from the above formula) with the `estimate` from `add_fitted_samples` ($\beta x$ from the above formula) to calculate per-category probabilities:
+
+```{r}
+esoph %>%
+  data_grid(agegp) %>%
+  add_fitted_samples(m_esoph_rs, scale = "linear") %>%
+  inner_join(thresholds, by = c(".chain", ".iteration")) %>%
+  mutate(`P(Y = category)` = map2(threshold, estimate, function(alpha, beta_x)
+      # this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)
+      inv.logit(alpha - beta_x) - 
+      inv.logit(lag(alpha, default = -Inf) - beta_x)
+    )) %>%
+  mutate(category = list(levels(esoph$tobgp))) %>%
+  unnest() %>%
+  ggplot(aes(x = agegp, y = `P(Y = category)`, color = category)) +
+  stat_pointinterval(position = position_dodge(width = .4), .prob = c(.66, .95), show.legend = TRUE) +
+  scale_size_continuous(guide = FALSE) +
+  scale_fill_brewer(palette = "Greys")
+```
+
+This output should be very similar to the output from the corresponding `m_esoph_brm` model in `vignette("tidy-brms")` (modulo different priors), though it takes a bit more work to produce in `rstanarm` compared to `brms`.
