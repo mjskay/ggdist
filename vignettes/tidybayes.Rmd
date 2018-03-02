@@ -62,6 +62,8 @@ library(emmeans)
 library(broom)
 library(rstan)
 library(rstanarm)
+library(brms)
+library(modelr)
 library(bayesplot)
 library(tidybayes)
 ```
@@ -396,6 +398,23 @@ m %>%
 ```
 
 
+### Plotting posteriors as quantile dotplots
+
+Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating [quantile dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):
+
+```{r}
+m %>%
+  spread_samples(condition_mean[condition]) %>%
+  do(data_frame(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
+  ggplot(aes(x = condition_mean)) +
+  geom_dotplot(binwidth = .04) +
+  facet_grid(fct_rev(condition) ~ .) +
+  scale_y_continuous(breaks = NULL)
+```
+
+The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
+
+
 ### Alternative estimates and intervals: mean, median, mode; qi, hdi
 
 The `point_interval` family of functions follow the naming scheme `[mean|median|mode]_[qi|hdi][h|]`, and all work in the same way as `mean_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. 
@@ -576,6 +595,42 @@ m %>%
 *(10 rows of `r nrow(spread_samples(m, condition_mean[condition]))`)*
 
 This result is equivalent in this case to `spread_samples(c(condition_mean, condition_zoffset)[condition])`, but does not require us to list each parameter explicitly---this can be useful, for example, in models with naming schemes like `b_[some name]` for coefficients.
+
+
+## Drawing fit curves with uncertainty
+
+To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset using `brm`:
+
+```{r, results = "hide", message = FALSE, warning = FALSE}
+m_mpg = brm(mpg ~ hp * cyl, data = mtcars)
+```
+
+We can draw fit curves with probability bands using `tidybayes::add_fitted_samples` and `tidybayes::stat_lineribbon`:
+
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
+  add_fitted_samples(m_mpg) %>%
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  stat_lineribbon(aes(y = estimate)) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer(palette = "Greys")
+```
+
+Or we can sample a reasonable number of fit lines (say 100) and overplot them:
+
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
+  add_fitted_samples(m_mpg, n = 100) %>%
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  geom_line(aes(y = estimate, group = paste(cyl, .iteration)), alpha = 0.25) +
+  geom_point(data = mtcars)
+```
+
+For more exmples of curve-drawing (including posterior predictions), see `vignette("tidy-brms")` or `vignette("tidy-rstanarm")`.
 
 
 ## Compatibility with other packages
