@@ -34,6 +34,7 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(magrittr)
 library(dplyr)
+library(forcats)
 library(tidyr)
 library(purrr)
 library(modelr)

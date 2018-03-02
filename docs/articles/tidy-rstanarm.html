@@ -88,7 +88,7 @@
       <h1>Extracting and visualizing tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-02-28</h4>
+            <h4 class="date">2018-03-01</h4>
           </div>
 
     
@@ -113,6 +113,7 @@ img {
 <p>The following libraries are required to run this vignette:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
 <span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(forcats)
 <span class="kw">library</span>(tidyr)
 <span class="kw">library</span>(purrr)
 <span class="kw">library</span>(modelr)
@@ -518,6 +519,17 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>() </code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
 </div>
+<div id="intervals-with-densities" class="section level2">
+<h2 class="hasAnchor">
+<a href="#intervals-with-densities" class="anchor"></a>Intervals with densities</h2>
+<p>To see the density along with the intervals, we can use <code>geom_eyeh</code> (horizontal “eye plots”, which combine intervals with violin plots), or <code>geom_halfeyeh</code> (horizontal interval + density plots):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() </code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
+</div>
 <div id="posterior-fits" class="section level2">
 <h2 class="hasAnchor">
 <a href="#posterior-fits" class="anchor"></a>Posterior fits</h2>
@@ -547,7 +559,22 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> condition)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>))</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
+</div>
+<div id="quantile-dotplots" class="section level2">
+<h2 class="hasAnchor">
+<a href="#quantile-dotplots" class="anchor"></a>Quantile dotplots</h2>
+<p>Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating <a href="https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md">quantile dotplots</a>, which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">do</span>(<span class="kw">data_frame</span>(<span class="dt">estimate =</span> <span class="kw">quantile</span>(.<span class="op">$</span>estimate, <span class="kw">ppoints</span>(<span class="dv">100</span>)))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_dotplot</span>(<span class="dt">binwidth =</span> .<span class="dv">04</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(<span class="kw">fct_rev</span>(condition) <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="ot">NULL</span>)</code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p>The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.</p>
 </div>
 <div id="posterior-predictions" class="section level2">
 <h2 class="hasAnchor">
@@ -560,7 +587,7 @@ ABC =
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred, <span class="dt">y =</span> condition)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_density_ridges</span>()</code></pre></div>
 <pre><code>## Picking joint bandwidth of 0.1</code></pre>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
 <p>We could also use <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/stat_interval">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span>
@@ -569,7 +596,7 @@ ABC =
 <span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
 <p>Altogether, data, posterior predictions, and estimates of the means:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid =<span class="st"> </span>ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(condition)
@@ -586,7 +613,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate), <span class="dt">data =</span> fits, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="op">-</span><span class="fl">0.2</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
 </div>
 <div id="fitprediction-curves" class="section level2">
 <h2 class="hasAnchor">
@@ -602,7 +629,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
 <p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -611,7 +638,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw">ordered</span>(cyl))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">group =</span> <span class="kw">paste</span>(cyl, .iteration)), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-34-1.png" width="576"></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -621,7 +648,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>), <span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-35-1.png" width="576"></p>
 <p>This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
@@ -632,7 +659,7 @@ ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-34-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-36-1.png" width="576"></p>
 </div>
 <div id="comparing-levels-of-a-factor" class="section level2">
 <h2 class="hasAnchor">
@@ -645,7 +672,7 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(b, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-35-1.png" width="672"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-37-1.png" width="672"></p>
 <p>If you prefer “caterpillar” plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
 m <span class="op">%&gt;%</span>
@@ -656,7 +683,7 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> b)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>) </code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-36-1.png" width="672"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-38-1.png" width="672"></p>
 </div>
 <div id="ordinal-models" class="section level2">
 <h2 class="hasAnchor">
@@ -667,15 +694,15 @@ m <span class="op">%&gt;%</span>
 <p>Here’s an ordinal model with a categorical predictor:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(esoph)
 m_esoph_rs =<span class="st"> </span><span class="kw">stan_polr</span>(tobgp <span class="op">~</span><span class="st"> </span>agegp, <span class="dt">data =</span> esoph, <span class="dt">prior =</span> <span class="kw">R2</span>(<span class="fl">0.25</span>), <span class="dt">prior_counts =</span> <span class="kw">dirichlet</span>(<span class="dv">1</span>))</code></pre></div>
-<p>The <code><a href="http://www.rdocumentation.org/packages/rstanarm/topics/posterior_linpred.stanreg">rstanarm::posterior_linpred</a></code> function for ordinal regression models in rstanarm returns only the link-level prediction for each sample (in contrast to <code><a href="http://www.rdocumentation.org/packages/brms/topics/fitted.brmsfit">brms::fitted.brmsfit</a></code>, which returns one estimate per category for ordinal models, see the ordinal regression examples in <code><a href="../articles/tidy-brms.html">vignette("tidy-brms")</a></code>). The philosophy of <code>tidybayes</code> is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal <code>rstanarm</code> models, <code>add_fitted_samples</code> just returns the link-level estimate (**Note: setting <code>scale = "response"</code> for such models will not usually make sense).</p>
-<p>For example, here is a plot of the latent estimate:</p>
+<p>The <code><a href="http://www.rdocumentation.org/packages/rstanarm/topics/posterior_linpred.stanreg">rstanarm::posterior_linpred</a></code> function for ordinal regression models in rstanarm returns only the link-level prediction for each sample (in contrast to <code><a href="http://www.rdocumentation.org/packages/brms/topics/fitted.brmsfit">brms::fitted.brmsfit</a></code>, which returns one estimate per category for ordinal models, see the ordinal regression examples in <code><a href="../articles/tidy-brms.html">vignette("tidy-brms")</a></code>). The philosophy of <code>tidybayes</code> is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal <code>rstanarm</code> models, <code>add_fitted_samples</code> just returns the link-level estimate (<strong>Note</strong>: setting <code>scale = "response"</code> for such models will not usually make sense).</p>
+<p>For example, here is a plot of the link-level fit:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">esoph <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(agegp) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m_esoph_rs, <span class="dt">scale =</span> <span class="st">"linear"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.numeric</span>(agegp), <span class="dt">y =</span> estimate)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-38-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-40-1.png" width="576"></p>
 <p>This can be hard to interpret. To turn this into predicted probabilities on a per-category basis, we have to use the fact that an ordinal logistic regression defines the probability of an outcome in category <span class="math inline">\(j\)</span> <strong>or less</strong> as:</p>
 <p><span class="math display">\[
 \textrm{logit}\left[Pr(Y\le j)\right] = \alpha_j - \beta x
@@ -741,7 +768,7 @@ Pr(Y = j) &amp;= Pr(Y \le j) - Pr(Y \le j - 1)\\
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> .<span class="dv">4</span>), <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">66</span>, .<span class="dv">95</span>), <span class="dt">show.legend =</span> <span class="ot">TRUE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-42-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-44-1.png" width="576"></p>
 <p>This output should be very similar to the output from the corresponding <code>m_esoph_brm</code> model in <code><a href="../articles/tidy-brms.html">vignette("tidy-brms")</a></code> (modulo different priors), though it takes a bit more work to produce in <code>rstanarm</code> compared to <code>brms</code>.</p>
 </div>
 </div>
@@ -762,7 +789,9 @@ Pr(Y = j) &amp;= Pr(Y \le j) - Pr(Y \le j - 1)\\
       <li><a href="#combining-variables-with-different-indices-in-a-single-tidy-format-data-frame">Combining variables with different indices in a single tidy format data frame</a></li>
       <li><a href="#plotting-point-estimates-and-intervals">Plotting point estimates and intervals</a></li>
       <li><a href="#interval-estimates-with-multiple-probability-levels">Interval estimates with multiple probability levels</a></li>
+      <li><a href="#intervals-with-densities">Intervals with densities</a></li>
       <li><a href="#posterior-fits">Posterior fits</a></li>
+      <li><a href="#quantile-dotplots">Quantile dotplots</a></li>
       <li><a href="#posterior-predictions">Posterior predictions</a></li>
       <li><a href="#fitprediction-curves">Fit/prediction curves</a></li>
       <li><a href="#comparing-levels-of-a-factor">Comparing levels of a factor</a></li>
