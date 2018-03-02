@@ -17,7 +17,7 @@ p.caption {
 }
 
 h1, .h1 {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: bold;
 }
 
@@ -25,6 +25,17 @@ h1 small, .h1 small {
   font-size: 70%;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+img#tidybayes_logo {
+  width: 80px;
+  margin-top: -26px;
+}
+
+@media (max-width: 1200px) {
+  img#tidybayes_logo {
+    display: none;
+  }
 }
 
 h2, .h2 {

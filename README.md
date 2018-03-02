@@ -1,6 +1,6 @@
 
-tidybayes: Bayesian analysis + tidy data + geoms
-================================================
+tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="man/figures/logo.png" align="right" />
+=====================================================================================================================
 
 [![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 
