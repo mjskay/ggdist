@@ -41,7 +41,7 @@
 <li>
   <a href="/index.html">
     <span class="fa fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -53,7 +53,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -70,7 +70,7 @@
 <li>
   <a href="https://github.com/mjskay/tidybayes">
     <span class="fa fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -81,17 +81,17 @@
 </div>
 <!--/.navbar -->
 
-      
+
       </header><div class="row">
   <div class="col-md-9">
-    
 
-    
-    
+
+
+
 <div class="contents">
 <div id="tidybayes-bayesian-analysis-tidy-data-geoms" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#tidybayes-bayesian-analysis-tidy-data-geoms" class="anchor"></a>tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="reference/figures/logo.png" align="right">
+<a href="#tidybayes-bayesian-analysis-tidy-data-geoms" class="anchor"></a>tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="reference/figures/logo.svg" align="right">
 </h1></div>
 
 <div class="figure">
@@ -347,7 +347,7 @@ bayes_estimates</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 <p><code><a href="reference/stat_lineribbon.html">stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5))</a></code> is one of several shortcut geoms that simplify common combinations of <code>tidybayes</code> functions and <code>ggplot</code> goems. It is roughly equivalent to the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">stat_summary</span>(
-    <span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">fill =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_rev">fct_rev</a></span>(<span class="kw">ordered</span>(...prob..)), <span class="dt">group =</span> <span class="op">-</span>...prob..), 
+    <span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">fill =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_rev">fct_rev</a></span>(<span class="kw">ordered</span>(...prob..)), <span class="dt">group =</span> <span class="op">-</span>...prob..),
     <span class="dt">geom =</span> <span class="st">"ribbon"</span>, <span class="dt">fun.data =</span> median_qi, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">99</span>, .<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))
   ) <span class="op">+</span>
 <span class="st">  </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">fun.y =</span> median, <span class="dt">geom =</span> <span class="st">"line"</span>, <span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="fl">1.25</span>)</code></pre></div>
