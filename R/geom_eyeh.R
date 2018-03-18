@@ -23,7 +23,7 @@ geom_eyeh = function(
   fun.data = point.interval,
   fun.args = list(),
   .prob = c(.95, .66),
-  color = NULL, size = NULL, fatten.interval = NULL, fatten.point = NULL
+  color = NULL, size = NULL, size_domain = NULL, size_range = NULL, fatten_point = NULL
 ) {
 
   #build violin plot
@@ -39,8 +39,9 @@ geom_eyeh = function(
     list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
-    {if (!is.null(fatten.interval)) modifyList(., list(fatten.interval = fatten.interval)) else .} %>%
-    {if (!is.null(fatten.point)) modifyList(., list(fatten.point = fatten.point)) else .}
+    {if (!is.null(size_domain)) modifyList(., list(size_domain = size_domain)) else .} %>%
+    {if (!is.null(size_range)) modifyList(., list(size_range = size_range)) else .} %>%
+    {if (!is.null(fatten_point)) modifyList(., list(fatten_point = fatten_point)) else .}
 
   interval = do.call(stat_pointintervalh, interval.args)
 

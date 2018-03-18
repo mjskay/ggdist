@@ -192,7 +192,7 @@ print(m, pars = c("overall_mean", "condition_mean_sd", "condition_mean", "respon
 Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:
 
 ```{r}
-str(extract(m))
+str(rstan::extract(m))
 ```
 
 There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).
@@ -387,14 +387,14 @@ m %>%
   geom_pointintervalh()
 ```
 
-Just as the `point_interval` functions can generate an arbitrary number of intervals per estimate, so too can `geom_pointrangeh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `fatten.interval =` to make it legible). Here it is with 3:
+Just as the `point_interval` functions can generate an arbitrary number of intervals per estimate, so too can `geom_pointrangeh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `size_range =`, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:
 
 ```{r}
 m %>%
   spread_samples(condition_mean[condition]) %>%
   mean_qi(.prob = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_pointintervalh(fatten.interval = .25)
+  geom_pointintervalh(size_range = c(0.5, 2))
 ```
 
 

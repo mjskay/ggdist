@@ -52,10 +52,15 @@
 #' @param point.interval Alias for \code{fun.data}
 #' @param fun.args Optional arguments passed to \code{fun.data}.
 #' @param .prob The \code{.prob} argument passed to \code{fun.data}.
-#' @param fatten.interval A multiplicative factor used to adjust the size of the interval
-#' lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
-#' default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.
-#' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
+#' @param size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
+#' sizes drawn according to \code{size_range} (see the documentation for that parameter, below.)
+#' @param size_range This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
+#' settings of \code{\link{scale_size_continuous}}, which give sizes with a range of \code{c(1, 6)}. The
+#' \code{size_domain} value indicates the input domain of raw size values (typically this should be equal to the value
+#' of the \code{range} parameter of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
+#' the desired output range of the size values (the min and max of the actual sizes used to draw intervals).
+#' @param fatten_point A multiplicative factor used to adjust the size of the point relative to the size of the
+#' thickest line.
 #' @param color Passed to \code{\link{stat_pointinterval}}. Color of the point
 #' estimate and credible interval.
 #' @param size Passed to \code{\link{stat_pointinterval}}. Line weight of the point
@@ -100,7 +105,7 @@ geom_eye = function(
   fun.data = point.interval,
   fun.args = list(),
   .prob = c(.95, .66),
-  color = NULL, size = NULL, fatten.interval = NULL, fatten.point = NULL
+  color = NULL, size = NULL, size_domain = NULL, size_range = NULL, fatten_point = NULL
 ) {
 
   #build violin plot
@@ -116,8 +121,9 @@ geom_eye = function(
     list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
-    {if (!is.null(fatten.interval)) modifyList(., list(fatten.interval = fatten.interval)) else .} %>%
-    {if (!is.null(fatten.point)) modifyList(., list(fatten.point = fatten.point)) else .}
+    {if (!is.null(size_domain)) modifyList(., list(size_domain = size_domain)) else .} %>%
+    {if (!is.null(size_range)) modifyList(., list(size_range = size_range)) else .} %>%
+    {if (!is.null(fatten_point)) modifyList(., list(fatten_point = fatten_point)) else .}
 
   interval = do.call(stat_pointinterval, interval.args)
 

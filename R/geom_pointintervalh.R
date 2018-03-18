@@ -16,8 +16,9 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 geom_pointintervalh <- function(mapping = NULL, data = NULL,
   stat = "identity", position = "identity",
   ...,
-  fatten.interval = 0.15,
-  fatten.point = 1.8,
+  size_domain = c(1, 6),
+  size_range = c(0.6, 1.4),
+  fatten_point = 1.8,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE) {
@@ -31,8 +32,9 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      fatten.point = fatten.point,
-      fatten.interval = fatten.interval,
+      size_domain = size_domain,
+      size_range = size_range,
+      fatten_point = fatten_point,
       na.rm = na.rm,
       ...
     )
@@ -71,14 +73,25 @@ GeomPointintervalh <- ggproto("GeomPointintervalh", Geom,
 
   required_aes = c("x", "y", "xmin", "xmax"),
 
-  draw_panel = function(data, panel_scales, coord, fatten.point = 1.8, fatten.interval = 0.15) {
-    if (is.null(data$x))
-      return(GeomLinerangeh$draw_panel(transform(data, size = (3 + size) * fatten.interval), panel_scales, coord)) # nolint
+  draw_panel = function(
+      data, panel_scales, coord, size_domain = c(1, 6), size_range = c(0.6, 1.4), fatten_point = 1.8
+    ) {
+
+    line_data = transform(data,
+      size = pmax(
+        (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
+        (size_range[[2]] - size_range[[1]]) + size_range[[1]],
+        0)
+    )
+
+    if (is.null(data$x)) {
+      return(GeomLinerangeh$draw_panel(line_data, panel_scales, coord))
+    }
 
     ggname("geom_pointintervalh",
       gTree(children = gList(
-        GeomLinerangeh$draw_panel(transform(data, size = (3 + size) * fatten.interval), panel_scales, coord), # nolint
-        GeomPoint$draw_panel(transform(data, size = fatten.point * (3 + size) * fatten.interval), panel_scales, coord) # nolint
+        GeomLinerangeh$draw_panel(line_data, panel_scales, coord),
+        GeomPoint$draw_panel(transform(line_data, size = size * fatten_point), panel_scales, coord)
       ))
     )
   }

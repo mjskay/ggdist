@@ -1,4 +1,4 @@
-# A geom_pointrangeh but with sensible defaults for displaying multiple intervals
+# A geom_pointrange but with sensible defaults for displaying multiple intervals
 #
 # Author: mjskay
 ###############################################################################
@@ -38,10 +38,15 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #' @param stat The statistical transformation to use on the data for this layer.
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}.
-#' @param fatten.interval A multiplicative factor used to adjust the size of the interval
-#' lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
-#' default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.
-#' @param fatten.point A multiplicate factor used to adjust the size of the point relative to the largest line.
+#' @param size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
+#' sizes drawn according to \code{size_range} (see the documentation for that parameter, below.)
+#' @param size_range This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
+#' settings of \code{\link{scale_size_continuous}}, which give sizes with a range of \code{c(1, 6)}. The
+#' \code{size_domain} value indicates the input domain of raw size values (typically this should be equal to the value
+#' of the \code{range} parameter of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
+#' the desired output range of the size values (the min and max of the actual sizes used to draw intervals).
+#' @param fatten_point A multiplicative factor used to adjust the size of the point relative to the size of the
+#' thickest line.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 #' values are silently removed.
 #' @param show.legend Should this later be included in the legends? Default is \code{FALSE}, unlike most geoms,
@@ -78,8 +83,9 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 geom_pointinterval <- function(mapping = NULL, data = NULL,
   stat = "identity", position = "identity",
   ...,
-  fatten.interval = 0.15,
-  fatten.point = 1.8,
+  size_domain = c(1, 6),
+  size_range = c(0.6, 1.4),
+  fatten_point = 1.8,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE) {
@@ -93,8 +99,9 @@ geom_pointinterval <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      fatten.point = fatten.point,
-      fatten.interval = fatten.interval,
+      size_domain = size_domain,
+      size_range = size_range,
+      fatten_point = fatten_point,
       na.rm = na.rm,
       ...
     )
@@ -139,14 +146,25 @@ GeomPointinterval <- ggproto("GeomPointinterval", Geom,
 
   required_aes = c("x", "y", "ymin", "ymax"),
 
-  draw_panel = function(data, panel_scales, coord, fatten.point = 1.8, fatten.interval = 0.15) {
-    if (is.null(data$x))
-      return(GeomLinerange$draw_panel(transform(data, size = (3 + size) * fatten.interval), panel_scales, coord))
+  draw_panel = function(
+      data, panel_scales, coord, size_domain = c(1, 6), size_range = c(0.6, 1.4), fatten_point = 1.8
+    ) {
+
+    line_data = transform(data,
+      size = pmax(
+        (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
+        (size_range[[2]] - size_range[[1]]) + size_range[[1]],
+        0)
+    )
+
+    if (is.null(data$y)) {
+      return(GeomLinerange$draw_panel(line_data, panel_scales, coord))
+    }
 
     ggname("geom_pointinterval",
       gTree(children = gList(
-        GeomLinerange$draw_panel(transform(data, size = (3 + size) * fatten.interval), panel_scales, coord),
-        GeomPoint$draw_panel(transform(data, size = fatten.point * (3 + size) * fatten.interval), panel_scales, coord)
+        GeomLinerange$draw_panel(line_data, panel_scales, coord),
+        GeomPoint$draw_panel(transform(line_data, size = size * fatten_point), panel_scales, coord)
       ))
     )
   }

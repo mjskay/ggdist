@@ -7,8 +7,8 @@
 geom_halfeyeh(mapping = NULL, data = NULL, position = position_dodgev(),
   trim = TRUE, scale = "area", fill = NULL, density.color = NA, ...,
   point.interval = mean_qih, fun.data = point.interval, fun.args = list(),
-  .prob = c(0.95, 0.66), color = NULL, size = NULL,
-  fatten.interval = NULL, fatten.point = NULL)
+  .prob = c(0.95, 0.66), color = NULL, size = NULL, size_domain = NULL,
+  size_range = NULL, fatten_point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -55,11 +55,17 @@ estimate and credible interval.}
 \item{size}{Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
 estimate and credible interval.}
 
-\item{fatten.interval}{A multiplicative factor used to adjust the size of the interval
-lines (line size will be \code{(size + 3) * fatten.interval}. The default decreases the line size, because the
-default range of \code{\link{scale_size_continuous}} has an upper end of 6, which is quite large.}
+\item{size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes drawn according to \code{size_range} (see the documentation for that parameter, below.)}
 
-\item{fatten.point}{A multiplicate factor used to adjust the size of the point relative to the largest line.}
+\item{size_range}{This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
+settings of \code{\link{scale_size_continuous}}, which give sizes with a range of \code{c(1, 6)}. The
+\code{size_domain} value indicates the input domain of raw size values (typically this should be equal to the value
+of the \code{range} parameter of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
+the desired output range of the size values (the min and max of the actual sizes used to draw intervals).}
+
+\item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest line.}
 }
 \description{
 Generates a combination geom_density_ridges and geom_pointrangeh (using stat_summaryh)
