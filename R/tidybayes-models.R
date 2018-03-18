@@ -20,7 +20,7 @@
 #'
 #' \itemize{
 #'   \item \code{\link[rstan:stan]{rstan}} models
-#'   \item \code{\link[runjags:run.jags]{runjags}} models
+#'   \item \code{\link[runjags]{runjags}} models
 #'   \item \code{\link[brms]{brm}} models
 #'   \item \code{\link[rstanarm:rstanarm-package]{rstanarm}} models
 #'   \item \code{\link[MCMCglmm]{MCMCglmm}} models
@@ -42,8 +42,8 @@
 #'
 #' If you install the \href{https://github.com/mjskay/tidybayes.rethinking}{tidybayes.rethinking} package, models from
 #' the \href{https://github.com/rmcelreath/rethinking}{rethinking} package are also supported. Note that in
-#' \code{tidybayes.rethinking}, \code{\link[tidybayes.rethinking]{tidy_link}} takes the place of
-#' \code{\link{add_fitted_samples}} and \code{\link[tidybayes.rethinking]{tidy_sim}} takes the place of
+#' \code{tidybayes.rethinking}, \code{tidy_link} takes the place of
+#' \code{\link{add_fitted_samples}} and \code{tidy_sim} takes the place of
 #' \code{\link{add_predicted_samples}}.
 #'
 #'
