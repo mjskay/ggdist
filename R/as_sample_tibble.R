@@ -19,13 +19,8 @@
 #'
 #' \code{as_sample_data_frame} is an alias.
 #'
-#' @param model A supported Bayesian model fit / MCMC object. Currently
-#' supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-#' \code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rstanarm]{stanreg-objects}},
-#' \code{\link[brms]{brm}}, and anything with its own \code{\link[coda]{as.mcmc.list}} implementation.
-#' If you install the \code{tidybayes.rethinking} package (available at
-#' \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
-#' \code{map2stan} models from the \code{rethinking} package are also supported.
+#' @param model A supported Bayesian model fit / MCMC object. See \code{\link{tidybayes-models}} for a list of supported
+#' models.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
 #' \code{.iteration} column, and one column for every parameter in \code{model}.
 #' @author Matthew Kay

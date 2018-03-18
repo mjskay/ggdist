@@ -49,13 +49,13 @@ fitted_samples(model, newdata, var = "estimate", ..., n = NULL,
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
 generate predictions from the data used to fit the model.}
 
-\item{model}{A supported Bayesian model fit / MCMC object that can provide fits and predictions. Currently
-supported models include \code{\link[rstanarm]{stanreg-objects}} (e.g. \code{rstanarm} models) and
-\code{\link[brms]{brm}} models. While other functions in this package (like \code{\link{spread_samples}})
-support a wider range of models, to work with \code{add_fitted_samples} and \code{add_predicted_samples}
-a model must provide an interface for generating predictions, thus more generic Bayesian modeling interfaces
-like \code{runjags} and \code{rstan} are not directly supported for these functions (only wrappers around
-those languages that provide predictions, like \code{rstanarm} and \code{brm}, are supported here).}
+\item{model}{A supported Bayesian model fit / MCMC object that can provide fits and predictions. Supported models
+are listed in the second section of \code{\link{tidybayes-models}}: \emph{Models Supporting Prediction}. While other
+functions in this package (like \code{\link{spread_samples}}) support a wider range of models, to work with
+\code{add_fitted_samples} and \code{add_predicted_samples} a model must provide an interface for generating
+predictions, thus more generic Bayesian modeling interfaces like \code{runjags} and \code{rstan} are not directly
+supported for these functions (only wrappers around those languages that provide predictions, like \code{rstanarm}
+and \code{brm}, are supported here).}
 
 \item{var}{The name of the output column for the predictions (default \code{"pred"}) or fits
 (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).}
