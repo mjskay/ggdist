@@ -44,7 +44,7 @@ library(ggstance)
 library(ggridges)
 library(rstan)
 library(rstanarm)
-import::from(boot, inv.logit)
+import::from(LaplacesDemon, invlogit)
 ```
 
 These options help Stan run faster:
@@ -599,8 +599,8 @@ esoph %>%
   inner_join(thresholds, by = c(".chain", ".iteration")) %>%
   mutate(`P(Y = category)` = map2(threshold, estimate, function(alpha, beta_x)
       # this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)
-      inv.logit(alpha - beta_x) - 
-      inv.logit(lag(alpha, default = -Inf) - beta_x)
+      invlogit(alpha - beta_x) - 
+      invlogit(lag(alpha, default = -Inf) - beta_x)
     )) %>%
   mutate(category = list(levels(esoph$tobgp))) %>%
   unnest() %>%
