@@ -88,7 +88,7 @@
       <h1>Extracting and visualizing tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-03-02</h4>
+            <h4 class="date">2018-03-18</h4>
           </div>
 
     
@@ -123,7 +123,7 @@ img {
 <span class="kw">library</span>(ggridges)
 <span class="kw">library</span>(rstan)
 <span class="kw">library</span>(rstanarm)
-import<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/import/topics/importfunctions">from</a></span>(boot, inv.logit)</code></pre></div>
+import<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/import/topics/importfunctions">from</a></span>(LaplacesDemon, invlogit)</code></pre></div>
 <p>These options help Stan run faster:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rstan_options</span>(<span class="dt">auto_write =</span> <span class="ot">TRUE</span>)
 <span class="kw">options</span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/parallel/topics/detectCores">detectCores</a></span>())</code></pre></div>
@@ -759,8 +759,8 @@ Pr(Y = j) &amp;= Pr(Y \le j) - Pr(Y \le j - 1)\\
 <span class="st">  </span><span class="kw">inner_join</span>(thresholds, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">".chain"</span>, <span class="st">".iteration"</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">P(Y = category)</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map2</span>(threshold, estimate, <span class="cf">function</span>(alpha, beta_x)
       <span class="co"># this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)</span>
-      <span class="kw">inv.logit</span>(alpha <span class="op">-</span><span class="st"> </span>beta_x) <span class="op">-</span><span class="st"> </span>
-<span class="st">      </span><span class="kw">inv.logit</span>(<span class="kw">lag</span>(alpha, <span class="dt">default =</span> <span class="op">-</span><span class="ot">Inf</span>) <span class="op">-</span><span class="st"> </span>beta_x)
+      <span class="kw">invlogit</span>(alpha <span class="op">-</span><span class="st"> </span>beta_x) <span class="op">-</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">invlogit</span>(<span class="kw">lag</span>(alpha, <span class="dt">default =</span> <span class="op">-</span><span class="ot">Inf</span>) <span class="op">-</span><span class="st"> </span>beta_x)
     )) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">category =</span> <span class="kw">list</span>(<span class="kw">levels</span>(esoph<span class="op">$</span>tobgp))) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span>

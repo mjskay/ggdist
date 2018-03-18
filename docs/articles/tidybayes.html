@@ -88,7 +88,7 @@
       <h1>Using tidy data with Bayesian samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-03-02</h4>
+            <h4 class="date">2018-03-18</h4>
           </div>
 
     
@@ -123,6 +123,7 @@ img {
 <h3 class="hasAnchor">
 <a href="#supported-model-types" class="anchor"></a>Supported model types</h3>
 <p><code>tidybayes</code> aims to support a variety of models. Currently supported models include <a href="https://cran.r-project.org/package=rstan">rstan</a>, <a href="https://cran.r-project.org/package=coda">coda::mcmc and coda::mcmc.list</a>, <a href="https://cran.r-project.org/package=runjags">runjags</a>, <a href="https://cran.r-project.org/package=rstanarm">rstanarm</a>, <a href="https://cran.r-project.org/package=brms">brms</a>, <a href="https://cran.r-project.org/package=MCMCglmm">MCMCglmm</a>, and anything with its own <code>as.mcmc.list</code> implementation. If you install the <a href="https://github.com/mjskay/tidybayes.rethinking">tidybayes.rethinking</a> package, models from the <a href="https://github.com/rmcelreath/rethinking">rethinking</a> package are also supported.</p>
+<p>For an up-to-date list of supported models, see <code><a href="../reference/tidybayes-models.html">?"tidybayes-models"</a></code>.</p>
 </div>
 </div>
 <div id="setup" class="section level2">
@@ -261,7 +262,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Fri Mar 02 00:34:49 2018.
+## Samples were drawn using NUTS(diag_e) at Sun Mar 18 00:40:29 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -274,26 +275,26 @@ model {
 <h3 class="hasAnchor">
 <a href="#extracting-parameter-indices-into-a-separate-column-in-a-tidy-format-data-frame" class="anchor"></a>Extracting parameter indices into a separate column in a tidy format data frame</h3>
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">extract</span>(m))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 1.162 0.44 0.417 0.765 0.743 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.356 -0.433 0.158 0.179 0.277 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -1.3315 -0.1178 -0.0424 -0.5337 -1.2308 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.0852 0.3179 0.0186 -0.2891 -0.1574 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.561 0.448 0.497 0.592 0.503 ...
+##  $ response_sd      : num [1:4000(1d)] 0.575 0.756 0.521 0.566 0.549 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.687 0.855 1.418 1.694 0.598 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.771 1.963 1.034 0.859 1.339 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.24704 0.33878 0.3567 -0.13916 0.00609 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.2051 0.1908 0.1772 -0.0696 0.0666 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -2.789 -4.267 0.311 2.195 -3.415 ...
+##  $ lp__             : num [1:4000(1d)] 3.108 -1.273 -0.629 -2.656 3.013 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -532,12 +533,13 @@ model {
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
-<p>Just as the <code>point_interval</code> functions can generate an arbitrary number of intervals per estimate, so too can <code>geom_pointrangeh</code> draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of <code>fatten.interval =</code> to make it legible). Here it is with 3:</p>
+<p>Just as the <code>point_interval</code> functions can generate an arbitrary number of intervals per estimate, so too can <code>geom_pointrangeh</code> draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of <code>size_range =</code>, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">fatten.interval =</span> .<span class="dv">25</span>)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">size_range =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">2</span>))</code></pre></div>
+<pre><code>## Warning: Ignoring unknown parameters: size_range</code></pre>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
 </div>
 <div id="plotting-posteriors-as-quantile-dotplots" class="section level3">
