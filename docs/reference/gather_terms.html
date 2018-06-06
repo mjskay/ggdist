@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gather terms from a tidy data frame of parameter samples into a single column � gather_terms • tidybayes</title>
+<title>Gather terms from a tidy data frame of parameter samples into a single column — gather_terms • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,30 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Gather terms from a tidy data frame of parameter samples into a single column — gather_terms" />
+
+<meta property="og:description" content="Given a data frame such as might be returned by as_sample_tibble or spread_samples,
+gather terms and their estimates from that data frame into a term and estimate column." />
+
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -34,16 +51,14 @@
 <![endif]-->
 
 
-<!-- Google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-93322-5', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'UA-93322-5');
 </script>
 
   </head>
@@ -59,18 +74,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidybayes</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.12.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../articles/tidybayes.html">Get Started</a>
+  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -100,6 +119,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,20 +127,24 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Gather terms from a tidy data frame of parameter samples into a single column</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_terms.R'><code>R/gather_terms.R</code></a></small>
+    <div class="hidden name"><code>gather_terms.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Given a data frame such as might be returned by as_sample_tibble or spread_samples,
 gather terms and their estimates from that data frame into a term and estimate column.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>gather_terms</span>(<span class='no'>data</span>, <span class='kw'>ignore_columns</span> <span class='kw'>=</span> <span class='st'>"^\\..*"</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -154,7 +178,8 @@ and <code>"value"</code> in order to be consistent with the naming scheme of <co
          <code>".iteration"</code> on chain number <code>".chain"</code></p></li>
 <li><p>column <code>"b"</code>: value of <code>"b[i,v]"</code> for iteration number
          <code>".iteration"</code> on chain number <code>".chain"</code></p></li>
-</ul><p><code>gather_terms(data)</code> on that data frame would return a grouped
+</ul>
+    <p><code>gather_terms(data)</code> on that data frame would return a grouped
 data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number</p></li>
 <li><p>column <code>".iteration"</code>: the interation number</p></li>
@@ -165,15 +190,17 @@ data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
          repeated for every value of <code>"v"</code>) or <code>"b[i,v]"</code> (when <code>"term"</code> is
          <code>"b"</code>) for iteration number <code>".iteration"</code> on chain number <code>".chain"</code></p></li>
 </ul>
-    <p>In this example, this call:</p><pre>gather_terms(data)</pre>
-    <p>Is roughly equivalent to:</p><pre>data %&gt;%
+    <p>In this example, this call:</p>
+<pre>gather_terms(data)</pre>
+    <p>Is roughly equivalent to:</p>
+<pre>data %&gt;%
   gather(term, estimate, -c(.chain, .iteration, i, v)) %&gt;%
   group_by(term, add = TRUE)
 </pre>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p>
+    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -186,38 +213,38 @@ data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>v</span>], <span class='no'>tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 144 x 7
-#&gt; # Groups: i, v, term [144]
+#&gt; # Groups:   i, v, term [144]
 #&gt;        i     v term  estimate conf.low conf.high .prob
 #&gt;    &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1     1     1 b      -1.08    -1.25      -0.905 0.950
-#&gt;  2     1     1 tau     6.03     5.07       7.14  0.950
-#&gt;  3     1     2 b      -1.83    -2.08      -1.54  0.950
-#&gt;  4     1     2 tau     6.03     5.07       7.14  0.950
-#&gt;  5     1     3 b       0.173    0.0349     0.317 0.950
-#&gt;  6     1     3 tau     6.03     5.07       7.14  0.950
-#&gt;  7     1     4 b      -0.0988  -0.342      0.141 0.950
-#&gt;  8     1     4 tau     6.03     5.07       7.14  0.950
-#&gt;  9     2     1 b      -0.734   -1.03      -0.435 0.950
-#&gt; 10     2     1 tau     3.38     2.41       4.58  0.950
+#&gt;  1     1     1 b      -1.08    -1.25      -0.905  0.95
+#&gt;  2     1     1 tau     6.03     5.07       7.14   0.95
+#&gt;  3     1     2 b      -1.83    -2.08      -1.54   0.95
+#&gt;  4     1     2 tau     6.03     5.07       7.14   0.95
+#&gt;  5     1     3 b       0.173    0.0349     0.317  0.95
+#&gt;  6     1     3 tau     6.03     5.07       7.14   0.95
+#&gt;  7     1     4 b      -0.0988  -0.342      0.141  0.95
+#&gt;  8     1     4 tau     6.03     5.07       7.14   0.95
+#&gt;  9     2     1 b      -0.734   -1.03      -0.435  0.95
+#&gt; 10     2     1 tau     3.38     2.41       4.58   0.95
 #&gt; # ... with 134 more rows</div><div class='input'>
 <span class='co'># the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='as_sample_tibble.html'>as_sample_tibble</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; |=================================                     | 61% ~1 s remaining     |==================================                    | 63% ~1 s remaining     |===================================                   | 66% ~1 s remaining     |====================================                  | 68% ~1 s remaining     |=====================================                 | 70% ~1 s remaining     |======================================                | 72% ~1 s remaining     |=======================================               | 73% ~1 s remaining     |========================================              | 75% ~1 s remaining     |=========================================             | 77% ~1 s remaining     |==========================================            | 79% ~1 s remaining     |===========================================           | 81% ~1 s remaining     |============================================          | 83% ~1 s remaining     |=============================================         | 85% ~0 s remaining     |==============================================        | 86% ~0 s remaining     |===============================================       | 88% ~0 s remaining     |================================================      | 90% ~0 s remaining     |=================================================     | 92% ~0 s remaining     |===================================================   | 95% ~0 s remaining     |====================================================  | 97% ~0 s remaining     |===================================================== | 99% ~0 s remaining     </div><div class='output co'>#&gt; # A tibble: 235 x 5
-#&gt; # Groups: term [235]
+  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 235 x 5
+#&gt; # Groups:   term [235]
 #&gt;    term    estimate conf.low conf.high .prob
 #&gt;    &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1 b[1,1]   -1.08    -1.25      -0.905 0.950
-#&gt;  2 b[1,2]   -1.83    -2.08      -1.54  0.950
-#&gt;  3 b[1,3]    0.173    0.0349     0.317 0.950
-#&gt;  4 b[1,4]   -0.0988  -0.342      0.141 0.950
-#&gt;  5 b[10,1]  -0.497   -0.677     -0.309 0.950
-#&gt;  6 b[10,2]  -1.71    -1.99      -1.42  0.950
-#&gt;  7 b[10,3]   0.0344  -0.114      0.187 0.950
-#&gt;  8 b[10,4]   0.328    0.0751     0.574 0.950
-#&gt;  9 b[11,1]  -1.19    -1.37      -1.01  0.950
-#&gt; 10 b[11,2]  -2.39    -2.65      -2.13  0.950
+#&gt;  1 b[1,1]   -1.08    -1.25      -0.905  0.95
+#&gt;  2 b[1,2]   -1.83    -2.08      -1.54   0.95
+#&gt;  3 b[1,3]    0.173    0.0349     0.317  0.95
+#&gt;  4 b[1,4]   -0.0988  -0.342      0.141  0.95
+#&gt;  5 b[10,1]  -0.497   -0.677     -0.309  0.95
+#&gt;  6 b[10,2]  -1.71    -1.99      -1.42   0.95
+#&gt;  7 b[10,3]   0.0344  -0.114      0.187  0.95
+#&gt;  8 b[10,4]   0.328    0.0751     0.574  0.95
+#&gt;  9 b[11,1]  -1.19    -1.37      -1.01   0.95
+#&gt; 10 b[11,2]  -2.39    -2.65      -2.13   0.95
 #&gt; # ... with 225 more rows</div><div class='input'>
 </div></pre>
   </div>
@@ -248,11 +275,14 @@ Matthew Kay
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

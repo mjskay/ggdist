@@ -1,8 +1,11 @@
-urls:
-  reference: http://mjskay.github.io/tidybayes/reference
-  article: http://mjskay.github.io/tidybayes/articles
+pandoc: 1.19.2.1
+pkgdown: 1.1.0
+pkgdown_sha: ~
 articles:
   tidy-brms: tidy-brms.html
   tidy-rstanarm: tidy-rstanarm.html
   tidybayes: tidybayes.html
+urls:
+  reference: http://mjskay.github.io/tidybayes/reference
+  article: http://mjskay.github.io/tidybayes/articles
 

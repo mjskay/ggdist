@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get samples from a model as a tibble � as_sample_tibble • tidybayes</title>
+<title>Get samples from a model as a tibble — as_sample_tibble • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,32 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Get samples from a model as a tibble — as_sample_tibble" />
+
+<meta property="og:description" content="Extract samples from an MCMC fit into a wide-format data frame with a
+.chain and .iteration column, as well as all terms
+as columns. Generally speaking not as useful as spread_samples or
+gather_samples and is mainly used interally (see `Details`)" />
+
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -34,16 +53,14 @@
 <![endif]-->
 
 
-<!-- Google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-93322-5', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'UA-93322-5');
 </script>
 
   </head>
@@ -59,18 +76,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidybayes</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.12.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../articles/tidybayes.html">Get Started</a>
+  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -100,6 +121,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,18 +129,22 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get samples from a model as a tibble</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/as_sample_tibble.R'><code>R/as_sample_tibble.R</code></a></small>
+    <div class="hidden name"><code>as_sample_tibble.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Extract samples from an MCMC fit into a wide-format data frame with a
 <code>.chain</code> and <code>.iteration</code> column, as well as all terms
 as columns. Generally speaking not as useful as <code><a href='spread_samples.html'>spread_samples</a></code> or
 <code><a href='spread_samples.html'>gather_samples</a></code> and is mainly used interally (see `Details`)</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
 
@@ -148,7 +174,7 @@ as columns. Generally speaking not as useful as <code><a href='spread_samples.ht
 <span class='co'># S3 method for MCMCglmm</span>
 <span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -169,13 +195,13 @@ models.</p></td>
 However, to provide support for new models in those functions,
 you must provide an implementation of this function, <em>or</em> an implementaiton
 of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code> (<code>as_sample_tibble</code> should work on any model
-with an implementation of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code>)
-    <code>as_sample_data_frame</code> is an alias.</p>
+with an implementation of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code>)</p>
+<p><code>as_sample_data_frame</code> is an alias.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>, which use this function
-internally and provides a friendly interface for extracting tidy data frames from model fits.</p>
+    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>, which use this function
+internally and provides a friendly interface for extracting tidy data frames from model fits.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -228,11 +254,14 @@ Matthew Kay
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

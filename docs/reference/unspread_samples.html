@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Turn tidy data frames of parameters from a Bayesian model back into untidy data � unspread_samples • tidybayes</title>
+<title>Turn tidy data frames of parameters from a Bayesian model back into untidy data — unspread_samples • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,30 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Turn tidy data frames of parameters from a Bayesian model back into untidy data — unspread_samples" />
+
+<meta property="og:description" content="Inverse operations of spread_samples and gather_samples, giving
+results that look like as_sample_tibble." />
+
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -34,16 +51,14 @@
 <![endif]-->
 
 
-<!-- Google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-93322-5', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'UA-93322-5');
 </script>
 
   </head>
@@ -59,18 +74,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidybayes</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.12.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../articles/tidybayes.html">Get Started</a>
+  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -100,6 +119,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,16 +127,20 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Turn tidy data frames of parameters from a Bayesian model back into untidy data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/unspread_ungather_samples.R'><code>R/unspread_ungather_samples.R</code></a></small>
+    <div class="hidden name"><code>unspread_samples.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Inverse operations of <code><a href='spread_samples.html'>spread_samples</a></code> and <code><a href='spread_samples.html'>gather_samples</a></code>, giving
 results that look like <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>unspread_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>),
   <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
@@ -124,7 +148,7 @@ results that look like <code><a href='as_sample_tibble.html'>as_sample_tibble</a
 <span class='fu'>ungather_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>term</span> <span class='kw'>=</span> <span class='st'>"term"</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>,
   <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -169,7 +193,7 @@ a data frame whose column names are parameters with indices in them.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='spread_samples.html'>gather_samples</a></code>, <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p>
+    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='spread_samples.html'>gather_samples</a></code>, <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -185,7 +209,7 @@ a data frame whose column names are parameters with indices in them.</p>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>unspread_samples</span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_samples-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_samples-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># As another example, we could use compare_levels to plot all pairwise comparisons</span>
 <span class='co'># of b[i,1] for i in 1:3</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
@@ -193,7 +217,7 @@ a data frame whose column names are parameters with indices in them.</p>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='compare_levels.html'>compare_levels</a></span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>unspread_samples</span>(<span class='no'>b</span>[<span class='no'>i</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_samples-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_samples-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -223,11 +247,14 @@ Matthew Kay
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

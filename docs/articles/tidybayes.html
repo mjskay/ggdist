@@ -8,24 +8,25 @@
 <title>Using tidy data with Bayesian samplers • tidybayes</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="Using tidy data with Bayesian samplers">
+<meta property="og:description" content="">
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png">
+<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-93322-5', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'UA-93322-5');
 </script>
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -34,18 +35,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidybayes</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.12.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../articles/tidybayes.html">Get Started</a>
+  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -83,17 +88,20 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Using tidy data with Bayesian samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-03-18</h4>
-          </div>
+            <h4 class="date">2018-06-06</h4>
+      
+      <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
+      <div class="hidden name"><code>tidybayes.Rmd</code></div>
+
+    </div>
 
     
     
-<div class="contents">
 <style type="text/css">
 .kable-table table {
   margin-left: 0;
@@ -262,7 +270,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Sun Mar 18 00:40:29 2018.
+## Samples were drawn using NUTS(diag_e) at Wed Jun 06 16:41:13 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -277,24 +285,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.356 -0.433 0.158 0.179 0.277 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.426 0.434 0.999 -0.187 0.68 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.0852 0.3179 0.0186 -0.2891 -0.1574 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.65 -0.0714 -0.6229 0.1873 -0.5535 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.575 0.756 0.521 0.566 0.549 ...
+##  $ response_sd      : num [1:4000(1d)] 0.536 0.604 0.543 0.487 0.556 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.771 1.963 1.034 0.859 1.339 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 0.649 1.429 1.073 1.223 0.612 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.2051 0.1908 0.1772 -0.0696 0.0666 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.00431 0.33213 0.33026 0.04252 0.34143 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 3.108 -1.273 -0.629 -2.656 3.013 ...
+##  $ lp__             : num [1:4000(1d)] -0.723 -1.417 1.901 2.488 -3.583 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -303,7 +311,7 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 4
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##    .chain .iteration condition condition_mean
 ##     &lt;int&gt;      &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt;
 ##  1      1          1         1        -0.0488
@@ -328,9 +336,9 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 4
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##    .chain .iteration condition condition_mean
-##     &lt;int&gt;      &lt;int&gt; &lt;fctr&gt;             &lt;dbl&gt;
+##     &lt;int&gt;      &lt;int&gt; &lt;fct&gt;              &lt;dbl&gt;
 ##  1      1          1 A                -0.0488
 ##  2      1          1 B                 1.19  
 ##  3      1          1 C                 1.90  
@@ -378,18 +386,18 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, response_sd) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(overall_mean, response_sd)</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
-##   overall_mean overall_mean.low overall_mean.high response_sd response_sd.low response_sd.hi~ .prob
-##          &lt;dbl&gt;            &lt;dbl&gt;             &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;           &lt;dbl&gt; &lt;dbl&gt;
-## 1        0.587           -0.587              1.69       0.561           0.453           0.700 0.950</code></pre>
+##   overall_mean overall_mean.low overall_mean.hi~ response_sd response_sd.low response_sd.high .prob
+##          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+## 1        0.587           -0.587             1.69       0.561           0.453            0.700  0.95</code></pre>
 <p><code>mean_qi</code> summarizes each input column using its mean. If there are multiple columns to summarise, each gets its own <code>x.high</code> and <code>x.low</code> column (for each column <code>x</code>) corresponding to the bounds of the <code>.prob</code>% interval. If there is only one column, the names <code>conf.low</code> and <code>conf.high</code> are used for the interval bounds; this is for compatibility with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>.</p>
 <p>We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, <code>mean_qi</code> will use every column that is not a grouping column or a special column (one that starts with <code>.</code>, like <code>.chain</code> or <code>.iteration</code>). Thus in the above example, <code>overall_mean</code> and <code>response_sd</code> are redundant arguments to <code>mean_qi</code> because they are also the only columns we gathered from the model. So we can simplify the previous code to the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, response_sd) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
-##   overall_mean overall_mean.low overall_mean.high response_sd response_sd.low response_sd.hi~ .prob
-##          &lt;dbl&gt;            &lt;dbl&gt;             &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;           &lt;dbl&gt; &lt;dbl&gt;
-## 1        0.587           -0.587              1.69       0.561           0.453           0.700 0.950</code></pre>
+##   overall_mean overall_mean.low overall_mean.hi~ response_sd response_sd.low response_sd.high .prob
+##          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+## 1        0.587           -0.587             1.69       0.561           0.453            0.700  0.95</code></pre>
 </div>
 <div id="with-indexed-parameters" class="section level3">
 <h3 class="hasAnchor">
@@ -399,28 +407,28 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##   condition condition_mean conf.low conf.high .prob
-##   &lt;fctr&gt;             &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                  0.193   -0.137     0.548 0.950
-## 2 B                  1.01     0.656     1.35  0.950
-## 3 C                  1.84     1.49      2.18  0.950
-## 4 D                  1.01     0.654     1.37  0.950
-## 5 E                 -0.893   -1.24     -0.544 0.950</code></pre>
+##   &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 A                  0.193   -0.137     0.548  0.95
+## 2 B                  1.01     0.656     1.35   0.95
+## 3 C                  1.84     1.49      2.18   0.95
+## 4 D                  1.01     0.654     1.37   0.95
+## 5 E                 -0.893   -1.24     -0.544  0.95</code></pre>
 <p>How did <code>mean_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means it groups by <code>condition</code>. <code>mean_qi</code> respects groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>mean_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>condition_mean</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(condition) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># this line not necessary (done automatically by spread_samples)</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(condition_mean)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##   condition condition_mean conf.low conf.high .prob
-##   &lt;fctr&gt;             &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                  0.193   -0.137     0.548 0.950
-## 2 B                  1.01     0.656     1.35  0.950
-## 3 C                  1.84     1.49      2.18  0.950
-## 4 D                  1.01     0.654     1.37  0.950
-## 5 E                 -0.893   -1.24     -0.544 0.950</code></pre>
+##   &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 A                  0.193   -0.137     0.548  0.95
+## 2 B                  1.01     0.656     1.35   0.95
+## 3 C                  1.84     1.49      2.18   0.95
+## 4 D                  1.01     0.654     1.37   0.95
+## 5 E                 -0.893   -1.24     -0.544  0.95</code></pre>
 <p>When given only a single column, <code>mean_qi</code> will use the names <code>conf.low</code> and <code>conf.high</code> for the lower and upper ends of the intervals, in order to be consistent with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>.</p>
 </div>
 </div>
@@ -500,24 +508,24 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))</code></pre></div>
 <pre><code>## # A tibble: 15 x 5
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##    condition condition_mean conf.low conf.high .prob
-##    &lt;fctr&gt;             &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 A                  0.193  -0.137      0.548 0.950
-##  2 B                  1.01    0.656      1.35  0.950
-##  3 C                  1.84    1.49       2.18  0.950
-##  4 D                  1.01    0.654      1.37  0.950
-##  5 E                 -0.893  -1.24      -0.544 0.950
-##  6 A                  0.193  -0.0238     0.411 0.800
-##  7 B                  1.01    0.784      1.23  0.800
-##  8 C                  1.84    1.61       2.06  0.800
-##  9 D                  1.01    0.787      1.24  0.800
-## 10 E                 -0.893  -1.12      -0.665 0.800
-## 11 A                  0.193   0.0751     0.307 0.500
-## 12 B                  1.01    0.890      1.12  0.500
-## 13 C                  1.84    1.72       1.96  0.500
-## 14 D                  1.01    0.893      1.13  0.500
-## 15 E                 -0.893  -1.02      -0.769 0.500</code></pre>
+##    &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 A                  0.193  -0.137      0.548  0.95
+##  2 B                  1.01    0.656      1.35   0.95
+##  3 C                  1.84    1.49       2.18   0.95
+##  4 D                  1.01    0.654      1.37   0.95
+##  5 E                 -0.893  -1.24      -0.544  0.95
+##  6 A                  0.193  -0.0238     0.411  0.8 
+##  7 B                  1.01    0.784      1.23   0.8 
+##  8 C                  1.84    1.61       2.06   0.8 
+##  9 D                  1.01    0.787      1.24   0.8 
+## 10 E                 -0.893  -1.12      -0.665  0.8 
+## 11 A                  0.193   0.0751     0.307  0.5 
+## 12 B                  1.01    0.890      1.12   0.5 
+## 13 C                  1.84    1.72       1.96   0.5 
+## 14 D                  1.01    0.893      1.13   0.5 
+## 15 E                 -0.893  -1.02      -0.769  0.5</code></pre>
 <p>The results are in a tidy format: one row per index (<code>condition</code>) and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
@@ -539,13 +547,12 @@ model {
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">size_range =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">2</span>))</code></pre></div>
-<pre><code>## Warning: Ignoring unknown parameters: size_range</code></pre>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
 </div>
 <div id="plotting-posteriors-as-quantile-dotplots" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plotting-posteriors-as-quantile-dotplots" class="anchor"></a>Plotting posteriors as quantile dotplots</h3>
-<p>Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating <a href="https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md">quantile dotplots</a>, which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):</p>
+<p>Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating <a href="https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.html">quantile dotplots</a>, which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">do</span>(<span class="kw">data_frame</span>(<span class="dt">condition_mean =</span> <span class="kw">quantile</span>(.<span class="op">$</span>condition_mean, <span class="kw">ppoints</span>(<span class="dv">100</span>)))) <span class="op">%&gt;%</span>
@@ -571,8 +578,8 @@ multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
 <pre><code>## # A tibble: 2 x 4
 ##           x conf.low conf.high .prob
 ##       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 -0.000854    -1.53      1.60 0.800
-## 2 -0.000854     3.03      4.98 0.800</code></pre>
+## 1 -0.000854    -1.53      1.60   0.8
+## 2 -0.000854     3.03      4.98   0.8</code></pre>
 <p>This is easier to see when plotted:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">multimodal_samples <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x)) <span class="op">+</span>
@@ -593,9 +600,9 @@ multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##    .chain .iteration overall_mean condition condition_mean
-##     &lt;int&gt;      &lt;int&gt;        &lt;dbl&gt; &lt;fctr&gt;             &lt;dbl&gt;
+##     &lt;int&gt;      &lt;int&gt;        &lt;dbl&gt; &lt;fct&gt;              &lt;dbl&gt;
 ##  1      1          1        0.810 A                -0.0488
 ##  2      1          1        0.810 B                 1.19  
 ##  3      1          1        0.810 C                 1.90  
@@ -613,14 +620,14 @@ multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_offset =</span> condition_mean <span class="op">-</span><span class="st"> </span>overall_mean) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(condition_offset)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##   condition condition_offset conf.low conf.high .prob
-##   &lt;fctr&gt;               &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                   -0.393  -1.59       0.803 0.950
-## 2 B                    0.419  -0.756      1.62  0.950
-## 3 C                    1.25    0.0928     2.47  0.950
-## 4 D                    0.426  -0.737      1.63  0.950
-## 5 E                   -1.48   -2.65      -0.301 0.950</code></pre>
+##   &lt;fct&gt;                &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 A                   -0.393  -1.59       0.803  0.95
+## 2 B                    0.419  -0.756      1.62   0.95
+## 3 C                    1.25    0.0928     2.47   0.95
+## 4 D                    0.426  -0.737      1.63   0.95
+## 5 E                   -1.48   -2.65      -0.301  0.95</code></pre>
 </div>
 <div id="posterior-predictions" class="section level2">
 <h2 class="hasAnchor">
@@ -689,15 +696,15 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">gather_samples</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 6 x 6
-## # Groups: term, condition [6]
+## # Groups:   term, condition [6]
 ##   term           condition estimate conf.low conf.high .prob
-##   &lt;chr&gt;          &lt;fctr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 condition_mean A            0.193   -0.137     0.548 0.950
-## 2 condition_mean B            1.01     0.656     1.35  0.950
-## 3 condition_mean C            1.84     1.49      2.18  0.950
-## 4 condition_mean D            1.01     0.654     1.37  0.950
-## 5 condition_mean E           -0.893   -1.24     -0.544 0.950
-## 6 overall_mean   &lt;NA&gt;         0.587   -0.587     1.69  0.950</code></pre>
+##   &lt;chr&gt;          &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 condition_mean A            0.193   -0.137     0.548  0.95
+## 2 condition_mean B            1.01     0.656     1.35   0.95
+## 3 condition_mean C            1.84     1.49      2.18   0.95
+## 4 condition_mean D            1.01     0.654     1.37   0.95
+## 5 condition_mean E           -0.893   -1.24     -0.544  0.95
+## 6 overall_mean   &lt;NA&gt;         0.587   -0.587     1.69   0.95</code></pre>
 <p>Note that <code>condition = NA</code> for the <code>overall_mean</code> row, because it does not have an index with that name in the specification passed to <code>gather_samples</code>.</p>
 <p>While this works well if we do not need to perform computations that involve multiple columns, the semi-wide format returned by <code>spread_samples</code> is very useful for computations that involve multiple columns names, such as the calculation of the <code>condition_offset</code> above. If we want to make intermediate computations on the format returned by <code>spread_samples</code> and <em>then</em> gather parameters into one column, we can use <code>gather_terms</code>, which will gather all non-grouped terms that do not start with <code>"."</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
@@ -706,43 +713,46 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/gather_terms.html">gather_terms</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 15 x 6
-## # Groups: condition, term [15]
+## # Groups:   condition, term [15]
 ##    condition term             estimate conf.low conf.high .prob
-##    &lt;fctr&gt;    &lt;chr&gt;               &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 A         condition_mean      0.193  -0.137      0.548 0.950
-##  2 A         condition_offset   -0.393  -1.59       0.803 0.950
-##  3 A         overall_mean        0.587  -0.587      1.69  0.950
-##  4 B         condition_mean      1.01    0.656      1.35  0.950
-##  5 B         condition_offset    0.419  -0.756      1.62  0.950
-##  6 B         overall_mean        0.587  -0.587      1.69  0.950
-##  7 C         condition_mean      1.84    1.49       2.18  0.950
-##  8 C         condition_offset    1.25    0.0928     2.47  0.950
-##  9 C         overall_mean        0.587  -0.587      1.69  0.950
-## 10 D         condition_mean      1.01    0.654      1.37  0.950
-## 11 D         condition_offset    0.426  -0.737      1.63  0.950
-## 12 D         overall_mean        0.587  -0.587      1.69  0.950
-## 13 E         condition_mean     -0.893  -1.24      -0.544 0.950
-## 14 E         condition_offset   -1.48   -2.65      -0.301 0.950
-## 15 E         overall_mean        0.587  -0.587      1.69  0.950</code></pre>
+##    &lt;fct&gt;     &lt;chr&gt;               &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 A         condition_mean      0.193  -0.137      0.548  0.95
+##  2 A         condition_offset   -0.393  -1.59       0.803  0.95
+##  3 A         overall_mean        0.587  -0.587      1.69   0.95
+##  4 B         condition_mean      1.01    0.656      1.35   0.95
+##  5 B         condition_offset    0.419  -0.756      1.62   0.95
+##  6 B         overall_mean        0.587  -0.587      1.69   0.95
+##  7 C         condition_mean      1.84    1.49       2.18   0.95
+##  8 C         condition_offset    1.25    0.0928     2.47   0.95
+##  9 C         overall_mean        0.587  -0.587      1.69   0.95
+## 10 D         condition_mean      1.01    0.654      1.37   0.95
+## 11 D         condition_offset    0.426  -0.737      1.63   0.95
+## 12 D         overall_mean        0.587  -0.587      1.69   0.95
+## 13 E         condition_mean     -0.893  -1.24      -0.544  0.95
+## 14 E         condition_offset   -1.48   -2.65      -0.301  0.95
+## 15 E         overall_mean        0.587  -0.587      1.69   0.95</code></pre>
 <p>Note how <code>overall_mean</code> is now repeated here for each condition, because we have performed the gather after spreading parameters across columns.</p>
 <p>Finally, if we want raw parameter names as columns names instead of having indices split out as their own column names, we can use <code>as_sample_tibble</code>. Generally speaking this should not be necessary, but is provided as a common method for generating data frames from many types of Bayesian models, and is used internally by <code>gather_samples</code> and <code>spread_samples</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/as_sample_tibble.html">as_sample_tibble</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 16
-##    .chain .iter~ overa~ `condit~ `condit~ `con~ `condi~ `con~ resp~ cond~ `condi~ `con~ `con~ `con~
-##     &lt;int&gt;  &lt;int&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1      1      1  0.810  -0.743    0.330  0.941  0.131  -1.46 0.582 1.16  -0.0488 1.19   1.90 0.962
-##  2      1      2  0.762  -0.441    0.239  0.941  0.281  -1.44 0.596 1.29   0.193  1.07   1.97 1.12 
-##  3      1      3  0.689  -0.358    0.0563 0.751  0.399  -1.29 0.556 1.19   0.263  0.756  1.58 1.16 
-##  4      1      4  0.845  -0.564    0.277  0.573  0.0116 -1.14 0.581 1.57  -0.0423 1.28   1.75 0.864
-##  5      1      5  0.626  -0.234    0.225  0.976  0.284  -1.22 0.617 1.09   0.371  0.873  1.69 0.938
-##  6      1      6  0.431  -0.0670   1.04   1.74   0.782  -1.78 0.535 0.780  0.379  1.24   1.79 1.04 
-##  7      1      7  0.475  -0.658    0.553  1.75   0.620  -1.34 0.556 0.959 -0.156  1.01   2.16 1.07 
-##  8      1      8  0.542  -0.409    0.680  1.74   0.818  -2.66 0.489 0.668  0.269  0.997  1.70 1.09 
-##  9      1      9  1.24   -0.730   -0.387  0.717 -0.0867 -2.92 0.608 0.753  0.695  0.953  1.78 1.18 
-## 10      1     10  1.14   -0.690   -0.265  0.805 -0.107  -3.06 0.630 0.854  0.552  0.916  1.83 1.05 
-## # ... with 2 more variables: `condition_mean[5]` &lt;dbl&gt;, lp__ &lt;dbl&gt;</code></pre>
+##    .chain .iteration overall_mean `condition_zoffset[1~ `condition_zoffset[2~ `condition_zoffset[3~
+##     &lt;int&gt;      &lt;int&gt;        &lt;dbl&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;
+##  1      1          1        0.810               -0.743                 0.330                  0.941
+##  2      1          2        0.762               -0.441                 0.239                  0.941
+##  3      1          3        0.689               -0.358                 0.0563                 0.751
+##  4      1          4        0.845               -0.564                 0.277                  0.573
+##  5      1          5        0.626               -0.234                 0.225                  0.976
+##  6      1          6        0.431               -0.0670                1.04                   1.74 
+##  7      1          7        0.475               -0.658                 0.553                  1.75 
+##  8      1          8        0.542               -0.409                 0.680                  1.74 
+##  9      1          9        1.24                -0.730                -0.387                  0.717
+## 10      1         10        1.14                -0.690                -0.265                  0.805
+## # ... with 10 more variables: `condition_zoffset[4]` &lt;dbl&gt;, `condition_zoffset[5]` &lt;dbl&gt;,
+## #   response_sd &lt;dbl&gt;, condition_mean_sd &lt;dbl&gt;, `condition_mean[1]` &lt;dbl&gt;,
+## #   `condition_mean[2]` &lt;dbl&gt;, `condition_mean[3]` &lt;dbl&gt;, `condition_mean[4]` &lt;dbl&gt;,
+## #   `condition_mean[5]` &lt;dbl&gt;, lp__ &lt;dbl&gt;</code></pre>
 <p><em>(10 rows of 4000)</em></p>
 <p>Combining <code>as_sample_tibble</code> with <code>gather_terms</code> also allows us to derive similar output to <code>ggmcmc::ggs</code>, if desired:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
@@ -750,7 +760,7 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/gather_terms.html">gather_terms</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 4
-## # Groups: term [1]
+## # Groups:   term [1]
 ##    .chain .iteration term         estimate
 ##     &lt;int&gt;      &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;
 ##  1      1          1 overall_mean    0.810
@@ -774,9 +784,9 @@ m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">condition_.*</span><span class="st">`</span>[condition], <span class="dt">regex =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##    .chain .iteration condition condition_mean condition_zoffset
-##     &lt;int&gt;      &lt;int&gt; &lt;fctr&gt;             &lt;dbl&gt;             &lt;dbl&gt;
+##     &lt;int&gt;      &lt;int&gt; &lt;fct&gt;              &lt;dbl&gt;             &lt;dbl&gt;
 ##  1      1          1 A                -0.0488            -0.743
 ##  2      1          1 B                 1.19               0.330
 ##  3      1          1 C                 1.90               0.941
@@ -795,7 +805,7 @@ m <span class="op">%&gt;%</span>
 <a href="#drawing-fit-curves-with-uncertainty" class="anchor"></a>Drawing fit curves with uncertainty</h2>
 <p>To demonstrate drawing fit curves with uncertainty, let’s fit a slightly naive model to part of the <code>mtcars</code> dataset using <code>brm</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_mpg =<span class="st"> </span><span class="kw">brm</span>(mpg <span class="op">~</span><span class="st"> </span>hp <span class="op">*</span><span class="st"> </span>cyl, <span class="dt">data =</span> mtcars)</code></pre></div>
-<p>We can draw fit curves with probability bands using <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/add_predicted_samples">tidybayes::add_fitted_samples</a></code> and <code><a href="http://www.rdocumentation.org/packages/tidybayes/topics/stat_lineribbon">tidybayes::stat_lineribbon</a></code>:</p>
+<p>We can draw fit curves with probability bands using <code><a href="../reference/add_predicted_samples.html">tidybayes::add_fitted_samples</a></code> and <code><a href="../reference/stat_lineribbon.html">tidybayes::stat_lineribbon</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span>
@@ -845,14 +855,14 @@ linear_estimates</code></pre></div>
 
 bayes_estimates</code></pre></div>
 <pre><code>## # A tibble: 5 x 6
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##   condition estimate conf.low conf.high .prob model
-##   &lt;fctr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
-## 1 A            0.193   -0.137     0.548 0.950 Bayes
-## 2 B            1.01     0.656     1.35  0.950 Bayes
-## 3 C            1.84     1.49      2.18  0.950 Bayes
-## 4 D            1.01     0.654     1.37  0.950 Bayes
-## 5 E           -0.893   -1.24     -0.544 0.950 Bayes</code></pre>
+##   &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1 A            0.193   -0.137     0.548  0.95 Bayes
+## 2 B            1.01     0.656     1.35   0.95 Bayes
+## 3 C            1.84     1.49      2.18   0.95 Bayes
+## 4 D            1.01     0.654     1.37   0.95 Bayes
+## 5 E           -0.893   -1.24     -0.544  0.95 Bayes</code></pre>
 <p>Because the <code>point_interval</code> functions use the same column names for <code>conf.low</code> and <code>conf.high</code> as <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> does, the column names for the columns we need to make the comparison (<code>condition</code>, <code>estimate</code>, <code>conf.low</code>, and <code>conf.high</code>) all line up easily. This makes it simple to combine the two tidy data frame together using <code>bind_rows</code>, and plot them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">fct_rev</span>(condition)) <span class="op">%&gt;%</span>
@@ -878,9 +888,9 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(condition_mean, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 4
-## # Groups: condition [1]
+## # Groups:   condition [1]
 ##    .chain .iteration condition condition_mean
-##     &lt;int&gt;      &lt;int&gt; &lt;fctr&gt;             &lt;dbl&gt;
+##     &lt;int&gt;      &lt;int&gt; &lt;fct&gt;              &lt;dbl&gt;
 ##  1      1          1 B - A              1.24 
 ##  2      1          2 B - A              0.877
 ##  3      1          3 B - A              0.493
@@ -899,18 +909,21 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw"><a href="../reference/unspread_samples.html">unspread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
 <pre><code>## # A tibble: 10 x 12
-##    .chain .iteration `condi~ `condi~ `condi~ `condi~ `conditi~ `condi~ `condi~ `cond~ `cond~ `cond~
-##     &lt;int&gt;      &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-##  1      1          1   1.24     1.95   0.706   1.01    -0.230   -0.937  -0.830  -2.07  -2.78  -1.84
-##  2      1          2   0.877    1.78   0.905   0.931    0.0539  -0.851  -1.28   -2.16  -3.07  -2.22
-##  3      1          3   0.493    1.32   0.827   0.901    0.409   -0.418  -1.11   -1.61  -2.43  -2.02
-##  4      1          4   1.32     1.79   0.466   0.906   -0.418   -0.884  -0.907  -2.23  -2.70  -1.81
-##  5      1          5   0.502    1.32   0.822   0.567    0.0650  -0.757  -1.08   -1.58  -2.40  -1.65
-##  6      1          6   0.864    1.41   0.544   0.662   -0.202   -0.746  -1.34   -2.20  -2.75  -2.00
-##  7      1          7   1.16     2.31   1.15    1.23     0.0643  -1.09   -0.651  -1.81  -2.96  -1.88
-##  8      1          8   0.728    1.44   0.707   0.820    0.0921  -0.615  -1.51   -2.23  -2.94  -2.33
-##  9      1          9   0.258    1.09   0.831   0.484    0.226   -0.605  -1.65   -1.91  -2.74  -2.13
-## 10      1         10   0.363    1.28   0.914   0.498    0.135   -0.780  -2.03   -2.39  -3.31  -2.53</code></pre>
+##    .chain .iteration `condition_mean[B ~ `condition_mean[C ~ `condition_mean[C ~ `condition_mean[D~
+##     &lt;int&gt;      &lt;int&gt;               &lt;dbl&gt;               &lt;dbl&gt;               &lt;dbl&gt;              &lt;dbl&gt;
+##  1      1          1               1.24                 1.95               0.706              1.01 
+##  2      1          2               0.877                1.78               0.905              0.931
+##  3      1          3               0.493                1.32               0.827              0.901
+##  4      1          4               1.32                 1.79               0.466              0.906
+##  5      1          5               0.502                1.32               0.822              0.567
+##  6      1          6               0.864                1.41               0.544              0.662
+##  7      1          7               1.16                 2.31               1.15               1.23 
+##  8      1          8               0.728                1.44               0.707              0.820
+##  9      1          9               0.258                1.09               0.831              0.484
+## 10      1         10               0.363                1.28               0.914              0.498
+## # ... with 6 more variables: `condition_mean[D - B]` &lt;dbl&gt;, `condition_mean[D - C]` &lt;dbl&gt;,
+## #   `condition_mean[E - A]` &lt;dbl&gt;, `condition_mean[E - B]` &lt;dbl&gt;, `condition_mean[E - C]` &lt;dbl&gt;,
+## #   `condition_mean[E - D]` &lt;dbl&gt;</code></pre>
 <p><em>(10 rows of 4000)</em></p>
 <p>We can pass that into <code><a href="http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals">bayesplot::mcmc_areas</a></code> directly. The <code>drop_indices = TRUE</code> parameter to <code>unspread_samples</code> indicates that <code>.chain</code> and <code>.iteration</code> should not be included in the output:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
@@ -933,14 +946,14 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_samples.html">gather_emmeans_samples</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
-## # Groups: condition [5]
+## # Groups:   condition [5]
 ##   condition estimate conf.low conf.high .prob
-##   &lt;fctr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A            0.197   -0.146     0.548 0.950
-## 2 B            1.01     0.654     1.37  0.950
-## 3 C            1.86     1.51      2.20  0.950
-## 4 D            1.02     0.657     1.37  0.950
-## 5 E           -0.935   -1.28     -0.585 0.950</code></pre>
+##   &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 A            0.197   -0.146     0.548  0.95
+## 2 B            1.01     0.654     1.37   0.95
+## 3 C            1.86     1.51      2.20   0.95
+## 4 D            1.02     0.657     1.37   0.95
+## 5 E           -0.935   -1.28     -0.585  0.95</code></pre>
 <p>Or <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> with <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/contrast">emmeans::contrast</a></code> to do all pairwise comparisons:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
@@ -948,19 +961,19 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_samples.html">gather_emmeans_samples</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
-## # Groups: contrast [10]
+## # Groups:   contrast [10]
 ##    contrast estimate conf.low conf.high .prob
-##    &lt;fctr&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 A - B    -0.814     -1.30     -0.317 0.950
-##  2 A - C    -1.67      -2.14     -1.17  0.950
-##  3 A - D    -0.822     -1.32     -0.327 0.950
-##  4 A - E     1.13       0.652     1.60  0.950
-##  5 B - C    -0.853     -1.34     -0.364 0.950
-##  6 B - D    -0.00788   -0.492     0.486 0.950
-##  7 B - E     1.95       1.48      2.42  0.950
-##  8 C - D     0.845      0.335     1.33  0.950
-##  9 C - E     2.80       2.29      3.30  0.950
-## 10 D - E     1.95       1.46      2.45  0.950</code></pre>
+##    &lt;fct&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 A - B    -0.814     -1.30     -0.317  0.95
+##  2 A - C    -1.67      -2.14     -1.17   0.95
+##  3 A - D    -0.822     -1.32     -0.327  0.95
+##  4 A - E     1.13       0.652     1.60   0.95
+##  5 B - C    -0.853     -1.34     -0.364  0.95
+##  6 B - D    -0.00788   -0.492     0.486  0.95
+##  7 B - E     1.95       1.48      2.42   0.95
+##  8 C - D     0.845      0.335     1.33   0.95
+##  9 C - E     2.80       2.29      3.30   0.95
+## 10 D - E     1.95       1.46      2.45   0.95</code></pre>
 <p>See <code>?pairwise.emmc</code> for a list of the numerous contrast types supported by <code>emmeans</code>.</p>
 <p>As before, we can plot the results instead of using a table:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
@@ -970,7 +983,6 @@ bayes_estimates</code></pre></div>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> contrast)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-57-1.png" width="576"></p>
-</div>
 </div>
 </div>
   </div>
@@ -1006,11 +1018,13 @@ bayes_estimates</code></pre></div>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

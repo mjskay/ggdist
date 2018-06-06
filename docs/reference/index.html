@@ -18,13 +18,27 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Function reference" />
+
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -34,16 +48,14 @@
 <![endif]-->
 
 
-<!-- Google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-93322-5', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'UA-93322-5');
 </script>
 
   </head>
@@ -59,18 +71,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidybayes</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.12.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../articles/tidybayes.html">Get Started</a>
+  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -100,6 +116,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,197 +124,193 @@
       
       </header>
 
-      <div class="row">
-  <div class="col-md-9">
+<div class="row">
+  <div class="contents col-md-9">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.12.0.000002</small>
-      </h1>
+      <h1>Reference</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    <table class="ref-index">
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <colgroup>
+      
+      <col class="alias" />
+      <col class="title" />
+    </colgroup>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="add_predicted_samples.html">add_predicted_samples</a></code> <code><a href="add_predicted_samples.html">add_fitted_samples</a></code> <code><a href="add_predicted_samples.html">predicted_samples</a></code> <code><a href="add_predicted_samples.html">fitted_samples</a></code> </p>
-          </td>
-          <td><p>Add samples from the posterior fit or posterior prediction of a model to a data frame</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="as_sample_tibble.html">as_sample_tibble</a></code> <code><a href="as_sample_tibble.html">as_sample_data_frame</a></code> </p>
-          </td>
-          <td><p>Get samples from a model as a tibble</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="combine_chains.html">combine_chains</a></code> </p>
-          </td>
-          <td><p>Combine the chain and iteration columns of tidy samples</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="compare_levels.html">compare_levels</a></code> </p>
-          </td>
-          <td><p>Compare the value of some variable extracted from a Bayesian posterior
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="add_predicted_samples.html">add_predicted_samples()</a></code> <code><a href="add_predicted_samples.html">add_fitted_samples()</a></code> <code><a href="add_predicted_samples.html">predicted_samples()</a></code> <code><a href="add_predicted_samples.html">fitted_samples()</a></code> </p>
+        </td>
+        <td><p>Add samples from the posterior fit or posterior prediction of a model to a data frame</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="as_sample_tibble.html">as_sample_tibble()</a></code> <code><a href="as_sample_tibble.html">as_sample_data_frame()</a></code> </p>
+        </td>
+        <td><p>Get samples from a model as a tibble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="combine_chains.html">combine_chains()</a></code> </p>
+        </td>
+        <td><p>Combine the chain and iteration columns of tidy samples</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="compare_levels.html">compare_levels()</a></code> </p>
+        </td>
+        <td><p>Compare the value of some variable extracted from a Bayesian posterior
 sample for different levels of a factor</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="compose_data.html">compose_data</a></code> </p>
-          </td>
-          <td><p>Compose data for input into a Bayesian sampler</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="data_list.html">data_list</a></code> <code><a href="data_list.html">as_data_list</a></code> </p>
-          </td>
-          <td><p>Data lists for input into a Bayesian sampler</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="density_bins.html">density_bins</a></code> <code><a href="density_bins.html">histogram_bins</a></code> </p>
-          </td>
-          <td><p>Density bins as data frames suitable for use with predict_curve</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="gather_emmeans_samples.html">gather_emmeans_samples</a></code> </p>
-          </td>
-          <td><p>Extract tidy samples of estimated marginal means (emmeans/lsmeans) from a Bayesian model fit</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="gather_terms.html">gather_terms</a></code> </p>
-          </td>
-          <td><p>Gather terms from a tidy data frame of parameter samples into a single column</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="geom_eye.html">geom_eye</a></code> <code><a href="geom_eye.html">geom_eyeh</a></code> </p>
-          </td>
-          <td><p>Eye plots of densities with point estimates and intervals (ggplot geom)</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="geom_halfeyeh.html">geom_halfeyeh</a></code> </p>
-          </td>
-          <td><p>Half-eye plots of densities with point estimates and intervals (ggplot geom)</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="geom_interval.html">geom_interval</a></code> <code><a href="geom_interval.html">geom_intervalh</a></code> </p>
-          </td>
-          <td><p>Multiple probability interval plots (ggplot geom)</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="geom_lineribbon.html">geom_lineribbon</a></code> </p>
-          </td>
-          <td><p>Line + multiple probability ribbon plots (ggplot geom)</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="geom_pointinterval.html">geom_pointinterval</a></code> <code><a href="geom_pointinterval.html">geom_pointintervalh</a></code> </p>
-          </td>
-          <td><p>Point estimate + multiple probability interval plots (ggplot geom)</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="n_prefix.html">n_prefix</a></code> </p>
-          </td>
-          <td><p>Prefix function generator for composing index columns</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="parameters.html">parameters</a></code> </p>
-          </td>
-          <td><p>Get the names of the parameters in a fitted Bayesian model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="point_interval.html">point_interval</a></code> <code><a href="point_interval.html">point_intervalh</a></code> <code><a href="point_interval.html">qi</a></code> <code><a href="point_interval.html">hdi</a></code> <code><a href="point_interval.html">mean_qi</a></code> <code><a href="point_interval.html">mean_qih</a></code> <code><a href="point_interval.html">median_qi</a></code> <code><a href="point_interval.html">median_qih</a></code> <code><a href="point_interval.html">mode_qi</a></code> <code><a href="point_interval.html">mode_qih</a></code> <code><a href="point_interval.html">mean_hdi</a></code> <code><a href="point_interval.html">mean_hdih</a></code> <code><a href="point_interval.html">median_hdi</a></code> <code><a href="point_interval.html">median_hdih</a></code> <code><a href="point_interval.html">mode_hdi</a></code> <code><a href="point_interval.html">mode_hdih</a></code> </p>
-          </td>
-          <td><p>Point and interval estimates for tidy sample data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="predict_curve.html">predict_curve</a></code> <code><a href="predict_curve.html">predict_curve_density</a></code> </p>
-          </td>
-          <td><p>Deprecated: Prediction curves for arbitrary functions of posteriors</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="recover_types.html">recover_types</a></code> </p>
-          </td>
-          <td><p>Decorate a model fit or samples with data types recovered from the input data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="spread_samples.html">spread_samples</a></code> <code><a href="spread_samples.html">gather_samples</a></code> </p>
-          </td>
-          <td><p>Extract samples of parameters in a Bayesian model fit into a tidy data format</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="stat_interval.html">stat_interval</a></code> <code><a href="stat_interval.html">stat_intervalh</a></code> </p>
-          </td>
-          <td><p>Multiple probability interval plots (ggplot stat)</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="stat_lineribbon.html">stat_lineribbon</a></code> </p>
-          </td>
-          <td><p>Line + multiple probability ribbon stat for ggplot</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="stat_pointinterval.html">stat_pointinterval</a></code> <code><a href="stat_pointinterval.html">stat_pointintervalh</a></code> </p>
-          </td>
-          <td><p>Point estimate + multiple probability interval plots (ggplot stat)</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="tidybayes-deprecated.html">tidybayes-deprecated</a></code> </p>
-          </td>
-          <td><p>Deprecated functions in tidybayes</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="tidybayes-models.html">tidybayes-models</a></code> </p>
-          </td>
-          <td><p>Models supported by tidybayes</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="unspread_samples.html">unspread_samples</a></code> <code><a href="unspread_samples.html">ungather_samples</a></code> </p>
-          </td>
-          <td><p>Turn tidy data frames of parameters from a Bayesian model back into untidy data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="x_at_y.html">x_at_y</a></code> </p>
-          </td>
-          <td><p>Generate lookup vectors for composing nested indices</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="compose_data.html">compose_data()</a></code> </p>
+        </td>
+        <td><p>Compose data for input into a Bayesian sampler</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="data_list.html">data_list()</a></code> <code><a href="data_list.html">as_data_list()</a></code> </p>
+        </td>
+        <td><p>Data lists for input into a Bayesian sampler</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="density_bins.html">density_bins()</a></code> <code><a href="density_bins.html">histogram_bins()</a></code> </p>
+        </td>
+        <td><p>Density bins as data frames suitable for use with predict_curve</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gather_emmeans_samples.html">gather_emmeans_samples()</a></code> </p>
+        </td>
+        <td><p>Extract tidy samples of estimated marginal means (emmeans/lsmeans) from a Bayesian model fit</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gather_terms.html">gather_terms()</a></code> </p>
+        </td>
+        <td><p>Gather terms from a tidy data frame of parameter samples into a single column</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="geom_eye.html">geom_eye()</a></code> <code><a href="geom_eye.html">geom_eyeh()</a></code> </p>
+        </td>
+        <td><p>Eye plots of densities with point estimates and intervals (ggplot geom)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="geom_halfeyeh.html">geom_halfeyeh()</a></code> </p>
+        </td>
+        <td><p>Half-eye plots of densities with point estimates and intervals (ggplot geom)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="geom_interval.html">geom_interval()</a></code> <code><a href="geom_interval.html">geom_intervalh()</a></code> </p>
+        </td>
+        <td><p>Multiple probability interval plots (ggplot geom)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="geom_lineribbon.html">geom_lineribbon()</a></code> </p>
+        </td>
+        <td><p>Line + multiple probability ribbon plots (ggplot geom)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="geom_pointinterval.html">geom_pointinterval()</a></code> <code><a href="geom_pointinterval.html">geom_pointintervalh()</a></code> </p>
+        </td>
+        <td><p>Point estimate + multiple probability interval plots (ggplot geom)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="n_prefix.html">n_prefix()</a></code> </p>
+        </td>
+        <td><p>Prefix function generator for composing index columns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="parameters.html">parameters()</a></code> </p>
+        </td>
+        <td><p>Get the names of the parameters in a fitted Bayesian model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="point_interval.html">point_interval()</a></code> <code><a href="point_interval.html">point_intervalh()</a></code> <code><a href="point_interval.html">qi()</a></code> <code><a href="point_interval.html">hdi()</a></code> <code><a href="point_interval.html">mean_qi()</a></code> <code><a href="point_interval.html">mean_qih()</a></code> <code><a href="point_interval.html">median_qi()</a></code> <code><a href="point_interval.html">median_qih()</a></code> <code><a href="point_interval.html">mode_qi()</a></code> <code><a href="point_interval.html">mode_qih()</a></code> <code><a href="point_interval.html">mean_hdi()</a></code> <code><a href="point_interval.html">mean_hdih()</a></code> <code><a href="point_interval.html">median_hdi()</a></code> <code><a href="point_interval.html">median_hdih()</a></code> <code><a href="point_interval.html">mode_hdi()</a></code> <code><a href="point_interval.html">mode_hdih()</a></code> </p>
+        </td>
+        <td><p>Point and interval estimates for tidy sample data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="predict_curve.html">predict_curve()</a></code> <code><a href="predict_curve.html">predict_curve_density()</a></code> </p>
+        </td>
+        <td><p>Deprecated: Prediction curves for arbitrary functions of posteriors</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="recover_types.html">recover_types()</a></code> </p>
+        </td>
+        <td><p>Decorate a model fit or samples with data types recovered from the input data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spread_samples.html">spread_samples()</a></code> <code><a href="spread_samples.html">gather_samples()</a></code> </p>
+        </td>
+        <td><p>Extract samples of parameters in a Bayesian model fit into a tidy data format</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="stat_interval.html">stat_interval()</a></code> <code><a href="stat_interval.html">stat_intervalh()</a></code> </p>
+        </td>
+        <td><p>Multiple probability interval plots (ggplot stat)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="stat_lineribbon.html">stat_lineribbon()</a></code> </p>
+        </td>
+        <td><p>Line + multiple probability ribbon stat for ggplot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="stat_pointinterval.html">stat_pointinterval()</a></code> <code><a href="stat_pointinterval.html">stat_pointintervalh()</a></code> </p>
+        </td>
+        <td><p>Point estimate + multiple probability interval plots (ggplot stat)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tidybayes-deprecated.html">tidybayes-deprecated</a></code> </p>
+        </td>
+        <td><p>Deprecated functions in tidybayes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tidybayes-models.html">tidybayes-models</a></code> </p>
+        </td>
+        <td><p>Models supported by tidybayes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="unspread_samples.html">unspread_samples()</a></code> <code><a href="unspread_samples.html">ungather_samples()</a></code> </p>
+        </td>
+        <td><p>Turn tidy data frames of parameters from a Bayesian model back into untidy data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="x_at_y.html">x_at_y()</a></code> </p>
+        </td>
+        <td><p>Generate lookup vectors for composing nested indices</p></td>
+      </tr>
+    </tbody>
+    </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -314,11 +327,14 @@ sample for different levels of a factor</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

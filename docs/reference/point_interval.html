@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point and interval estimates for tidy sample data � point_interval • tidybayes</title>
+<title>Point and interval estimates for tidy sample data — point_interval • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,31 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Point and interval estimates for tidy sample data — point_interval" />
+
+<meta property="og:description" content="Translates samples in a (possibly grouped) data frame into a point and
+interval estimate (or set of point and interval estimates, if there are
+multiple groups in a grouped data frame)." />
+
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -34,16 +52,14 @@
 <![endif]-->
 
 
-<!-- Google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93322-5"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-93322-5', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'UA-93322-5');
 </script>
 
   </head>
@@ -59,18 +75,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidybayes</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.12.0.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../articles/tidybayes.html">Get Started</a>
+  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -100,6 +120,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,17 +128,21 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Point and interval estimates for tidy sample data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/point_interval.R'><code>R/point_interval.R</code></a></small>
+    <div class="hidden name"><code>point_interval.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Translates samples in a (possibly grouped) data frame into a point and
 interval estimate (or set of point and interval estimates, if there are
 multiple groups in a grouped data frame).</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>,
   <span class='kw'>.broom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -160,7 +185,7 @@ multiple groups in a grouped data frame).</p>
 
 <span class='fu'>mode_hdih</span>(<span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -230,12 +255,12 @@ to be easily used to plot intervals in ggplot using methods like
 behave identically to the function without the h, except that when passed a vector,
 they return a data frame with <code>x</code>/<code>xmin</code>/<code>xmax</code> instead of
 <code>y</code>/<code>ymin</code>/<code>ymax</code>. This allows them to be used as values of the
-<code>fun.data = </code> argument of <code>stat_summaryh</code>.
-    <code>mean_qi</code>, <code>mode_qi</code>, etc are short forms for
-<code>point_interval(..., .point = mean, .interval = qi)</code>, etc.
-    <code>qi</code> yields the quantile interval (also known as the percentile interval or
-equi-tailed interval) as a 1x2 matrix.
-    <code>hdi</code> yields the highest-density interval(s) (also known as the highest posterior
+<code>fun.data = </code> argument of <code>stat_summaryh</code>.</p>
+<p><code>mean_qi</code>, <code>mode_qi</code>, etc are short forms for
+<code>point_interval(..., .point = mean, .interval = qi)</code>, etc.</p>
+<p><code>qi</code> yields the quantile interval (also known as the percentile interval or
+equi-tailed interval) as a 1x2 matrix.</p>
+<p><code>hdi</code> yields the highest-density interval(s) (also known as the highest posterior
 density interval). <em>Note:</em> If the distribution is multimodal, <code>hdi</code> may return multiple
 intervals for each estimate (these will be spread over rows). Internally it uses <code><a href='http://www.rdocumentation.org/packages/HDInterval/topics/hdi'>hdi</a></code>.</p>
     
@@ -254,9 +279,9 @@ intervals for each estimate (these will be spread over rows). Internally it uses
   <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 3 x 4
 #&gt;        x conf.low conf.high .prob
 #&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 0.0549   -0.653     0.753 0.500
-#&gt; 2 0.0549   -1.24      1.34  0.800
-#&gt; 3 0.0549   -1.99      1.91  0.950</div><div class='input'>
+#&gt; 1 0.0549   -0.653     0.753  0.5 
+#&gt; 2 0.0549   -1.24      1.34   0.8 
+#&gt; 3 0.0549   -1.99      1.91   0.95</div><div class='input'>
 <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>),
     <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
@@ -264,7 +289,7 @@ intervals for each estimate (these will be spread over rows). Internally it uses
   <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='no'>y</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 7
 #&gt;         x x.low x.high     y y.low y.high .prob
 #&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -0.0506 -2.01   1.93  1.98 -1.95   5.95 0.950</div><div class='input'>
+#&gt; 1 -0.0506 -2.01   1.93  1.98 -1.95   5.95  0.95</div><div class='input'>
 <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>),
     <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"a"</span>
@@ -275,15 +300,15 @@ intervals for each estimate (these will be spread over rows). Internally it uses
   ) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>group</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>mean_qi</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 6 x 5
-#&gt; # Groups: group [2]
-#&gt;   group        x conf.low conf.high .prob
-#&gt;   &lt;fctr&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 a      -0.0322   -0.707     0.636 0.500
-#&gt; 2 b       2.07      0.759     3.44  0.500
-#&gt; 3 a      -0.0322   -1.27      1.23  0.800
-#&gt; 4 b       2.07     -0.559     4.48  0.800
-#&gt; 5 a      -0.0322   -2.00      1.84  0.950
-#&gt; 6 b       2.07     -1.75      5.91  0.950</div><div class='input'>
+#&gt; # Groups:   group [2]
+#&gt;   group       x conf.low conf.high .prob
+#&gt;   &lt;fct&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 a     -0.0322   -0.707     0.636  0.5 
+#&gt; 2 b      2.07      0.759     3.44   0.5 
+#&gt; 3 a     -0.0322   -1.27      1.23   0.8 
+#&gt; 4 b      2.07     -0.559     4.48   0.8 
+#&gt; 5 a     -0.0322   -2.00      1.84   0.95
+#&gt; 6 b      2.07     -1.75      5.91   0.95</div><div class='input'>
 <span class='no'>multimodal_samples</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fu'>rnorm</span>(<span class='fl'>5000</span>, <span class='fl'>0</span>, <span class='fl'>1</span>), <span class='fu'>rnorm</span>(<span class='fl'>2500</span>, <span class='fl'>4</span>, <span class='fl'>1</span>))
   )
@@ -292,12 +317,12 @@ intervals for each estimate (these will be spread over rows). Internally it uses
   <span class='fu'>mode_hdi</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 3 x 4
 #&gt;         x conf.low conf.high .prob
 #&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -0.0663    -1.33      1.38 0.660
-#&gt; 2 -0.0663     3.49      4.48 0.660
-#&gt; 3 -0.0663    -1.72      5.50 0.950</div><div class='input'>
+#&gt; 1 -0.0663    -1.33      1.38  0.66
+#&gt; 2 -0.0663     3.49      4.48  0.66
+#&gt; 3 -0.0663    -1.72      5.50  0.95</div><div class='input'>
 <span class='no'>multimodal_samples</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>0</span>)) +
-  <span class='fu'><a href='geom_halfeyeh.html'>geom_halfeyeh</a></span>(<span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mode_hdih</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'><a href='geom_halfeyeh.html'>geom_halfeyeh</a></span>(<span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mode_hdih</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -323,11 +348,14 @@ Matthew Kay
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
