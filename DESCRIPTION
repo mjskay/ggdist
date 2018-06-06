@@ -50,7 +50,8 @@ Suggests:
     bayesplot,
     modelr,
     brms (>= 2.0.1),
-    cowplot
+    cowplot,
+    covr
 License: GPL (>= 3)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: https://github.com/mjskay/tidybayes

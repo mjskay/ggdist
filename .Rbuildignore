@@ -18,3 +18,4 @@
 ^build_test_models.R$
 ^pkgdown/.*$
 ^pkgdown$
+^codecov\.yml$
