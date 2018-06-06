@@ -24,11 +24,13 @@ tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="m
 
 -   **Comparing a variable across levels of a factor**, which often means first generating pairs of levels of a factor (according to some desired set of comparisons) and then computing a function over the value of the comparison variable for those pairs of levels. Assuming your data is in the format returned by `spread_samples`, the `compare_levels` function allows comparison across levels to be made easily.
 
-Finally, `tidybayes` aims to fit into common workflows through compatibility with other packages:
+Finally, `tidybayes` aims to fit into common workflows through **compatibility with other packages**:
 
--   **Compatibility with other tidy packages**. Default column names in the output have also been chosen for compatibility with `broom::tidy`, which makes comparison with estimates from non-Bayesian models straightforward.
+-   Default column names in the output have also been chosen for compatibility with `broom::tidy`, which makes comparison with estimates from non-Bayesian models straightforward.
 
--   **Compatibility with non-tidy packages**. The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples`, aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`). The `gather_emmeans_samples` function turns the output from `emmeans::emmeans` (formerly `lsmeans`) into long-format data frames (when applied to supported model types, like `MCMCglmm` and `rstanarm` models).
+-   The `unspread_samples` and `ungather_samples` functions invert `spread_samples` and `gather_samples`, aiding compatiblity with other Bayesian plotting packages (notably `bayesplot`).
+
+-   The `gather_emmeans_samples` function turns the output from `emmeans::emmeans` (formerly `lsmeans`) into long-format data frames (when applied to supported model types, like `MCMCglmm` and `rstanarm` models).
 
 Supported model types
 ---------------------
