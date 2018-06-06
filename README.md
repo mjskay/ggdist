@@ -2,7 +2,7 @@
 tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
 =====================================================================================================================
 
-[![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
+[![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes) [![Coverage status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
 
 ![Preview of tidybayes plots](man/figures/preview.png)
 
