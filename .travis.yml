@@ -27,7 +27,7 @@ before_install:
 # for waiting on output so that hopefully the build is not cancelled.
 # See https://github.com/travis-ci/travis-ci/issues/3849
 install:
-  - travis_wait 60 R -e 'devtools::install_deps(dep = T)'
+  - travis_wait 60 "R -e 'devtools::install_deps(dep = T)'"
 
 after_success:
   - Rscript -e 'covr::codecov()
