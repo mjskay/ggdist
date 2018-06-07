@@ -1,6 +1,6 @@
 language: r
 r: release
-sudo: FALSE
+sudo: false
 cache: packages
 
 warnings_are_errors: TRUE
@@ -22,6 +22,12 @@ before_install:
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
   - sed -i.bak "s/ g++/ ${CXX}${CLANG_EXTRA_ARG}/" ~/.R/Makevars
   - sed -i.bak "s/O[0-3]/O$CXX_OLEVEL/" ~/.R/Makevars
+
+# Installing deps currently is timing out, so we'll override the default 10 minute timeout
+# for waiting on output so that hopefully the build is not cancelled.
+# See https://github.com/travis-ci/travis-ci/issues/3849
+install:
+  - travis_wait 60 R -e 'devtools::install_deps(dep = T)'
 
 after_success:
   - Rscript -e 'covr::codecov()
