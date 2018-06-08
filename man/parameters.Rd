@@ -10,13 +10,8 @@ parameters(model)
 \method{parameters}{default}(model)
 }
 \arguments{
-\item{model}{A supported Bayesian model fit / MCMC object. Currently
-supported models include \code{\link[coda]{mcmc}}, \code{\link[coda]{mcmc.list}},
-\code{\link[runjags]{runjags}}, \code{\link[rstan]{stanfit}}, \code{\link[rstanarm]{stanreg-objects}},
-\code{\link[brms]{brm}}, and anything with its own \code{\link[coda]{as.mcmc.list}} implementation.
-If you install the \code{tidybayes.rethinking} package (available at
-\url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
-\code{map2stan} models from the \code{rethinking} package are also supported.}
+\item{model}{A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects; 
+for a full list of supported models, see \link{tidybayes-models}.}
 }
 \value{
 A character vector of parameter names in the fitted model.
