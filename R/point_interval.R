@@ -126,15 +126,16 @@ point_interval = function(.data, ..., .prob=.95, .point = mean, .interval = qi, 
 #' @rdname point_interval
 #' @export
 point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) {
+  data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
 
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
     # do not start with "."
-    col_exprs = names(.data) %>%
+    col_exprs = names(data) %>%
       map(as.name) %>%
       #don't aggregate groups because we aggregate within these
-      setdiff(groups(.data)) %>%
+      setdiff(groups(data)) %>%
       #don't aggregate columns that start with "." because these are special columns (such
       #as .chain or .iteration)
       discard(~ stri_startswith_fixed(.x, ".")) %>%
@@ -152,8 +153,8 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
     # the generated column names for consistency with tidy() in broom
 
     map_df(.prob, function(p) {
-      do(.data, {
-        col_samples = eval_tidy(col_exprs[[1]], .data)
+      do(data, {
+        col_samples = eval_tidy(col_exprs[[1]], .)
         interval = .interval(col_samples, .prob = p)
         data_frame(
           .point(col_samples),
@@ -173,7 +174,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
     # multiple columns provided => generate unique names for each one
 
     map_df(.prob, function(p) {
-      do(.data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
+      do(data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
         col_samples = eval_tidy(col_expr, .)
         interval = .interval(col_samples, .prob = p)
 
@@ -209,10 +210,12 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
 #' @importFrom dplyr rename
 #' @export
 point_interval.numeric = function(.data, ..., .prob = .95, .point = mean, .interval = qi, .broom = FALSE) {
+  data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
+  
   result = map_df(.prob, function(p) {
-    interval = .interval(.data, .prob = p)
+    interval = .interval(data, .prob = p)
     data.frame(
-      y = .point(.data),
+      y = .point(data),
       ymin = interval[, 1],
       ymax = interval[, 2],
       .prob = p
