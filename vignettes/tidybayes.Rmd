@@ -45,7 +45,16 @@ There are a few core ideas that run through the `tidybayes` API that should (hop
 
 ### Supported model types
 
-`tidybayes` aims to support a variety of models. Currently supported models include [rstan](https://cran.r-project.org/package=rstan), [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda), [runjags](https://cran.r-project.org/package=runjags), [rstanarm](https://cran.r-project.org/package=rstanarm), [brms](https://cran.r-project.org/package=brms), [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
+`tidybayes` aims to support a variety of models with a uniform interface. Currently supported models include 
+[rstan](https://cran.r-project.org/package=rstan),
+[brms](https://cran.r-project.org/package=brms), 
+[rstanarm](https://cran.r-project.org/package=rstanarm), 
+[runjags](https://cran.r-project.org/package=runjags),
+[rjags](https://cran.r-project.org/package=rjags), 
+[jagsUI](https://cran.r-project.org/package=jagsUI), 
+[coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda),
+[MCMCglmm](https://cran.r-project.org/package=MCMCglmm), 
+and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
 
 For an up-to-date list of supported models, see `?"tidybayes-models"`.
 

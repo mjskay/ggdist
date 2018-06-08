@@ -31,6 +31,11 @@
 #'   \item Any object with an implementation of \code{\link[coda]{as.mcmc.list}}. For a list of those available in your
 #'     environment, run \code{methods(as.mcmc.list)}
 #' }
+#' 
+#' If you install the \code{tidybayes.rethinking} package (available at
+#' \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
+#' \code{map2stan} models from the \code{rethinking} package are also supported.
+#'
 #'
 #' @section Models Supporting Prediction:
 #'
