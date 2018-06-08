@@ -13,14 +13,16 @@ context("as_sample_tibble")
 test_that("as_sample_tibble works with runjags", {
   skip_if_not_installed("runjags")
 
-  runjags.options(inits.warning = FALSE, nodata.warning = FALSE)
+  runjags::runjags.options(inits.warning = FALSE, nodata.warning = FALSE)
   # run.jags has some progress output I can't seem to turn off, hence capture.output
-  # also it seems to break if not run in the global environment (!!), hence evalq
-  capture.output(m <- evalq(run.jags(
+  # also it seems to break w.r.t. n.chains if not run in the global environment with n.chains set(!!), 
+  # hence all this evalq garbage and such
+  n.chains <<- 2
+  capture.output(m <- evalq(runjags::run.jags(
     model = "model { a ~ dnorm(0,1); for(i in 1:2) {b[i] ~ dnorm(0,1)} }",
     n.chains = 2,
     monitor = c("a", "b"),
-    burnin = 100,
+    adapt = 100,
     sample = 100,
     silent.jags = TRUE,
     summarise = FALSE
@@ -41,8 +43,8 @@ test_that("as_sample_tibble works with rjags", {
   skip_if_not_installed("rjags")
   
   # coda.samples has some progress output I can't seem to turn off, hence capture.output
-  capture.output(m <- coda.samples(
-    jags.model(
+  capture.output(m <- rjags::coda.samples(
+    rjags::jags.model(
       textConnection("model { a ~ dnorm(0,1); for(i in 1:2) {b[i] ~ dnorm(0,1)} }"),
       n.chains = 2,
       n.adapt = 100,
@@ -67,7 +69,7 @@ test_that("as_sample_tibble works with jagsUI", {
   
   # this test model is kind of dumb because jagsUI doesn't seem to allow you to not input data
   # (and I was feeling lazy when modifying the test models for runjags / rjags to work with this API)
-  m = jags(
+  m = jagsUI::jags(
     data = list(y = c(-1,0,1)),
     model.file = textConnection("model { for (j in 1:3) { y[j] ~ dnorm(a, 1) } a ~ dnorm(0,1); for(i in 1:2) {b[i] ~ dnorm(0,1)} }"),
     n.chains = 2,
