@@ -1,0 +1,88 @@
+# Tests for as_sample_tibble
+#
+# Author: mjskay
+###############################################################################
+
+library(magrittr)
+library(coda)
+import::from(dplyr, as_tibble, select)
+
+context("as_sample_tibble")
+
+
+test_that("as_sample_tibble works with runjags", {
+  skip_if_not_installed("runjags")
+
+  runjags.options(inits.warning = FALSE, nodata.warning = FALSE)
+  # run.jags has some progress output I can't seem to turn off, hence capture.output
+  # also it seems to break if not run in the global environment (!!), hence evalq
+  capture.output(m <- evalq(run.jags(
+    model = "model { a ~ dnorm(0,1); for(i in 1:2) {b[i] ~ dnorm(0,1)} }",
+    n.chains = 2,
+    monitor = c("a", "b"),
+    burnin = 100,
+    sample = 100,
+    silent.jags = TRUE,
+    summarise = FALSE
+  ), globalenv()))
+  
+  samples = as.mcmc.list(m)
+  samples_tidy = 
+    rbind(
+      data.frame(.chain = 1L, .iteration = 1:100L, samples[[1]], check.names = FALSE),
+      data.frame(.chain = 2L, .iteration = 1:100L, samples[[2]], check.names = FALSE)
+    ) %>%
+    as_tibble()
+  
+  expect_equal(as_sample_tibble(m), samples_tidy)
+})
+
+test_that("as_sample_tibble works with rjags", {
+  skip_if_not_installed("rjags")
+  
+  # coda.samples has some progress output I can't seem to turn off, hence capture.output
+  capture.output(m <- coda.samples(
+    jags.model(
+      textConnection("model { a ~ dnorm(0,1); for(i in 1:2) {b[i] ~ dnorm(0,1)} }"),
+      n.chains = 2,
+      n.adapt = 100,
+      quiet = TRUE
+    ),
+    variable.names = c("a", "b"),
+    n.iter = 100
+  ))
+  
+  samples_tidy = 
+    rbind(
+      data.frame(.chain = 1L, .iteration = 1:100L, m[[1]], check.names = FALSE),
+      data.frame(.chain = 2L, .iteration = 1:100L, m[[2]], check.names = FALSE)
+    ) %>%
+    as_tibble()
+  
+  expect_equal(as_sample_tibble(m), samples_tidy)
+})
+
+test_that("as_sample_tibble works with jagsUI", {
+  skip_if_not_installed("jagsUI")
+  
+  # this test model is kind of dumb because jagsUI doesn't seem to allow you to not input data
+  # (and I was feeling lazy when modifying the test models for runjags / rjags to work with this API)
+  m = jags(
+    data = list(y = c(-1,0,1)),
+    model.file = textConnection("model { for (j in 1:3) { y[j] ~ dnorm(a, 1) } a ~ dnorm(0,1); for(i in 1:2) {b[i] ~ dnorm(0,1)} }"),
+    n.chains = 2,
+    n.adapt = 100,
+    parameters.to.save = c("a", "b"),
+    n.iter = 100,
+    verbose = FALSE
+  )
+  
+  samples_tidy = 
+    rbind(
+      data.frame(.chain = 1L, .iteration = 1:100L, m$samples[[1]], check.names = FALSE),
+      data.frame(.chain = 2L, .iteration = 1:100L, m$samples[[2]], check.names = FALSE)
+    ) %>%
+    as_tibble()
+  
+  expect_equal(as_sample_tibble(m), samples_tidy)
+})

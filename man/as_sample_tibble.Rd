@@ -9,6 +9,7 @@
 \alias{as_sample_tibble.stanfit}
 \alias{as_sample_tibble.stanreg}
 \alias{as_sample_tibble.runjags}
+\alias{as_sample_tibble.jagsUI}
 \alias{as_sample_tibble.brmsfit}
 \alias{as_sample_tibble.matrix}
 \alias{as_sample_tibble.MCMCglmm}
@@ -27,6 +28,8 @@ as_sample_data_frame(model)
 \method{as_sample_tibble}{stanreg}(model)
 
 \method{as_sample_tibble}{runjags}(model)
+
+\method{as_sample_tibble}{jagsUI}(model)
 
 \method{as_sample_tibble}{brmsfit}(model)
 

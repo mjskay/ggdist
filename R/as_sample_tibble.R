@@ -111,6 +111,15 @@ as_sample_tibble.runjags = function(model) {
 
 #' @rdname as_sample_tibble
 #' @export
+as_sample_tibble.jagsUI = function(model) {
+  if (!requireNamespace("jagsUI", quietly = TRUE)) {
+    stop("The `jagsUI` package is needed for `as_sample_tibble` to support `jagsUI` objects.", call. = FALSE)
+  }
+  as_sample_tibble(model$samples)
+}
+
+#' @rdname as_sample_tibble
+#' @export
 as_sample_tibble.brmsfit = function(model) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects.", call. = FALSE)
