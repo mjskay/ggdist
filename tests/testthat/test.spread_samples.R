@@ -5,6 +5,7 @@
 
 import::from(plyr, ldply, .)  #TODO: drop remaining ldplys from this file
 import::from(dplyr, `%>%`, inner_join, data_frame)
+import::from(lazyeval, lazy)
 library(tidyr)
 
 context("spread_samples")
@@ -24,6 +25,38 @@ RankCorr_i = recover_types(RankCorr_s, list(i = factor(i_labels)))
 i_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
 j_labels = c("A", "B", "C", "D")
 RankCorr_ij = recover_types(RankCorr_s, list(i = factor(i_labels), j = factor(j_labels)))
+
+
+# tests for helpers ==========================================================
+
+test_that("all_names works on various expressions", {
+  expect_equal(all_names(quote(a + b + c[i, j] + 1)), c("a","b","c","i","j"))
+
+  invalid_expr = quote(a + b)
+  invalid_expr[[3]] = list() #replace `b` with a list object
+  expect_error(all_names(invalid_expr), "Don't know how to handle type `list`")
+})
+
+
+test_that("parse_variable_spec rejects incorrect usage of `|`", {
+  expect_error(parse_variable_spec(lazy(a | b | c)),
+    "Left-hand side of `|` cannot contain `|`")
+  expect_error(parse_variable_spec(lazy(a | cbind(b, c))),
+    "Right-hand side of `|` must be exactly one name")
+})
+
+
+
+# tests for spread_samples ===================================================
+
+test_that("spread_samples correctly rejects missing parameters", {
+  data("RankCorr", package = "tidybayes")
+
+  expect_error(spread_samples(RankCorr, c(a, b)),
+    "No parameters found matching spec: c\\(a,b\\)")
+  expect_error(spread_samples(RankCorr, a[b]),
+    "No parameters found matching spec: c\\(a\\)\\[b\\]")
+})
 
 
 test_that("spread_samples works on a simple parameter with no indices", {

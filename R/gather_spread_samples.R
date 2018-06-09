@@ -11,13 +11,13 @@ globalVariables(c(".."))
 # DEPRECATED NAMES FOR spread_samples
 #' @export
 extract_samples = function(...) {
-  .Deprecated("spread_samples")
-  spread_samples(...)
+  .Deprecated("spread_samples")  # nocov
+  spread_samples(...)            # nocov
 }
 #' @export
 tidy_samples = function(...) {
-  .Deprecated("spread_samples")
-  spread_samples(...)
+  .Deprecated("spread_samples")  # nocov
+  spread_samples(...)            # nocov
 }
 
 
@@ -38,7 +38,7 @@ all_names <- function(x) {
     children <- lapply(x[-1], all_names)
     unique(unlist(children))
   } else {
-    stop("Don't know how to handle type ", typeof(x),
+    stop("Don't know how to handle type `", typeof(x), "`",
       call. = FALSE)
   }
 }
@@ -265,7 +265,7 @@ parse_variable_spec = function(variable_spec) {
 #'
 #' Would return a tidy data frame with parameters starting with `b_` and having one index.
 #'
-#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects; 
+#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ... Expressions in the form of
 #' \code{variable_name[index_1, index_2, ...] | wide_index}. See `Details`.

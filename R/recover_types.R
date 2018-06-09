@@ -15,8 +15,8 @@ as_constructor.logical = function(x) as.logical
 
 #' @export
 apply_prototypes = function(...) {
-  .Deprecated("recover_types")
-  recover_types(...)
+  .Deprecated("recover_types")  # nocov
+  recover_types(...)            # nocov
 }
 
 #' Decorate a model fit or samples with data types recovered from the input data
@@ -53,7 +53,7 @@ apply_prototypes = function(...) {
 #' Additional data types can be supported by providing a custom implementation
 #' of the generic function \code{as_constructor}.
 #'
-#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects; 
+#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ...  Lists (or data frames) providing data prototypes used to convert
 #' columns returned by \code{\link{spread_samples}} and \code{\link{gather_samples}} back into useful data types.
