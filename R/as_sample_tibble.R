@@ -53,7 +53,7 @@ as_sample_data_frame = as_sample_tibble
 #' @rdname as_sample_tibble
 #' @export
 as_sample_tibble.default = function(model) {
-  as_sample_tibble(as.mcmc.list(model))  # nolint
+  as_sample_tibble(as.mcmc.list(model))
 }
 
 #' @rdname as_sample_tibble
@@ -81,7 +81,7 @@ as_sample_tibble.mcmc.list = function(model) {
 #' @export
 as_sample_tibble.stanfit = function(model) {
   if (!requireNamespace("rstan", quietly = TRUE)) {
-    stop("The `rstan` package is needed for `as_sample_tibble` to support `stanfit` objects.", call. = FALSE)
+    stop("The `rstan` package is needed for `as_sample_tibble` to support `stanfit` objects.", call. = FALSE) # nocov
   }
   as_sample_tibble(rstan::As.mcmc.list(model))
 }
@@ -89,8 +89,8 @@ as_sample_tibble.stanfit = function(model) {
 #' @rdname as_sample_tibble
 #' @export
 as_sample_tibble.stanreg = function(model) {
-  if (!requireNamespace("rstan", quietly = TRUE)) {
-    stop("The `rstan` package is needed for `as_sample_tibble` to support `stanreg` objects.", call. = FALSE)
+  if (!requireNamespace("rstanarm", quietly = TRUE)) {
+    stop("The `rstanarm` package is needed for `as_sample_tibble` to support `stanreg` objects.", call. = FALSE) # nocov
   }
   #stanreg objects have more info provided for parameter names than the underlying stanfit,
   #so we dont' just do as_sample_tibble(model$stanfit)
@@ -104,7 +104,7 @@ as_sample_tibble.stanreg = function(model) {
 #' @export
 as_sample_tibble.runjags = function(model) {
   if (!requireNamespace("runjags", quietly = TRUE)) {
-    stop("The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects.", call. = FALSE)
+    stop("The `runjags` package is needed for `as_sample_tibble` to support `runjags` objects.", call. = FALSE) # nocov
   }
   as_sample_tibble(as.mcmc.list(model)) # nolint
 }
@@ -113,7 +113,7 @@ as_sample_tibble.runjags = function(model) {
 #' @export
 as_sample_tibble.jagsUI = function(model) {
   if (!requireNamespace("jagsUI", quietly = TRUE)) {
-    stop("The `jagsUI` package is needed for `as_sample_tibble` to support `jagsUI` objects.", call. = FALSE)
+    stop("The `jagsUI` package is needed for `as_sample_tibble` to support `jagsUI` objects.", call. = FALSE) # nocov
   }
   as_sample_tibble(model$samples)
 }
@@ -122,7 +122,7 @@ as_sample_tibble.jagsUI = function(model) {
 #' @export
 as_sample_tibble.brmsfit = function(model) {
   if (!requireNamespace("brms", quietly = TRUE)) {
-    stop("The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects.", call. = FALSE)
+    stop("The `brms` package is needed for `as_sample_tibble` to support `brmsfit` objects.", call. = FALSE) # nocov
   }
   as_sample_tibble(brms::as.mcmc(model))
 }
@@ -131,7 +131,7 @@ as_sample_tibble.brmsfit = function(model) {
 #' @export
 as_sample_tibble.matrix = function(model) {
   if (length(dim(model)) == 2) {
-    # assume matrix indexed by [interations, variables]
+    # assume matrix indexed by [iterations, variables]
     as_sample_tibble(as.mcmc.list(as.mcmc(model))) # nolint
   } else {
     stop("Matrix must have only 2 dimensions (first being the sample, second the variable).")

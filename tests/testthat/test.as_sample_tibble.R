@@ -6,9 +6,44 @@
 library(magrittr)
 library(coda)
 import::from(dplyr, as_tibble, select)
+import::from(tibble, as_tibble, add_column)
 
 context("as_sample_tibble")
 
+
+test_that("as_sample_tibble works with brms", {
+  skip_if_not_installed("brms")
+  
+  # we use a model with random effects here because they include parameters with multiple dimensions
+  m_ranef = readRDS("models.brms.m_ranef.rds")
+  
+  samples_tidy = 
+    brms::posterior_samples(m_ranef, add_chain = TRUE) %>% 
+    select(.chain = chain, .iteration = iter, everything()) %>% 
+    mutate(
+      .chain = as.integer(.chain),
+      .iteration = as.integer(.iteration - min(.iteration) + 1)
+    ) %>%
+    as_tibble()
+
+  expect_equal(as_sample_tibble(m_ranef), samples_tidy)
+})
+
+test_that("as_sample_tibble works with rstanarm", {
+  skip_if_not_installed("rstanarm")
+  
+  # we use a model with random effects here because they include parameters with multiple dimensions
+  m_ranef = readRDS("models.rstanarm.m_ranef.rds")
+  
+  chain_1 = as_tibble(as.array(m_ranef)[,1,]) %>%
+    add_column(.chain = 1L, .iteration = 1L:nrow(.), .before = 1)
+  chain_2 = as_tibble(as.array(m_ranef)[,2,]) %>%
+    add_column(.chain = 2L, .iteration = 1L:nrow(.), .before = 1)
+  samples_tidy = 
+    bind_rows(chain_1, chain_2)
+
+  expect_equal(as_sample_tibble(m_ranef), samples_tidy)
+})
 
 test_that("as_sample_tibble works with runjags", {
   skip_if_not_installed("runjags")

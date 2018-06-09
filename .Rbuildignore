@@ -19,3 +19,4 @@
 ^pkgdown/.*$
 ^pkgdown$
 ^codecov\.yml$
+^\.covrignore$

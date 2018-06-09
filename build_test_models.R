@@ -71,3 +71,37 @@ brms.m_dpars <- brm(
   warmup = 150, iter = 200, chains = 2
 )
 saveRDS(brms.m_dpars, "tests/testthat/models.brms.m_dpars.rds", compress = FALSE)
+
+
+# brms model with random intercept
+set.seed(3932)
+ranef_data = data_frame(
+  group = rep(c("a","b","c","d","e"), each = 10),
+  group_mean = rep(rnorm(5), each = 10),
+  x = rep(1:10, 5),
+  y = rnorm(50, group_mean + x)
+)
+brms.m_ranef = brm(
+  y ~ x + (1|group) + 0 + intercept,
+  data = ranef_data,
+  prior = c(
+    prior(normal(0, 1), class = b),
+    prior(student_t(3, 0, 4), class = sd),
+    prior(student_t(3, 0, 4), class = sigma)
+  ),
+  control = list(adapt_delta = 0.85),
+  warmup = 150, iter = 200, chains = 2
+)
+saveRDS(brms.m_ranef, "tests/testthat/models.brms.m_ranef.rds", compress = FALSE)
+
+
+#rstanarm model with random intercept
+rstanarm.m_ranef = stan_glmer(
+  y ~ x + (1|group),
+  data = ranef_data,
+  warmup = 150, iter = 200, chains = 2
+)
+saveRDS(rstanarm.m_ranef, "tests/testthat/models.rstanarm.m_ranef.rds", compress = FALSE)
+
+
+
