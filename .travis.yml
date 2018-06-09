@@ -6,7 +6,7 @@ cache: packages
 warnings_are_errors: TRUE
 
 r_build_args: '--no-build-vignettes'
-r_check_args: '--ignore-vignettes --run-dont-test'
+r_check_args: '--ignore-vignettes'
 
 env:
   global:
