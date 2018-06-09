@@ -24,7 +24,7 @@ mtcars_tbl = mtcars %>%
 
 test_that("[add_]fitted_samples throws an error on unsupported models", {
   data("RankCorr", package = "tidybayes")
-  
+
   expect_error(fitted_samples(RankCorr, data.frame()),
     'Models of type "matrix" are not currently supported by `fitted_samples`')
   expect_error(add_fitted_samples(data.frame(), RankCorr),
@@ -33,7 +33,7 @@ test_that("[add_]fitted_samples throws an error on unsupported models", {
 
 
 test_that("[add_]fitted_samples works on a simple rstanarm model", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
@@ -51,7 +51,7 @@ test_that("[add_]fitted_samples works on a simple rstanarm model", {
 
   expect_equal(ref, fitted_samples(m_hp_wt, mtcars_tbl))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_wt))
-  
+
   #subsetting to test the `n` argument
   set.seed(1234)
   iterations = sample(ref$.iteration, 10)
@@ -65,7 +65,7 @@ test_that("[add_]fitted_samples works on a simple rstanarm model", {
 })
 
 test_that("[add_]fitted_samples works on an rstanarm model with grouped newdata", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
@@ -87,7 +87,7 @@ test_that("[add_]fitted_samples works on an rstanarm model with grouped newdata"
 
 
 test_that("[add_]fitted_samples works on brms models without auxpars", {
-  m_hp = readRDS("models.brms.m_hp.rds")
+  m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   fits = fitted(m_hp, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
@@ -111,7 +111,7 @@ test_that("[add_]fitted_samples works on brms models without auxpars", {
 
 
 test_that("[add_]fitted_samples works on brms models with auxpars", {
-  m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
+  m_hp_sigma = readRDS("../models/models.brms.m_hp_sigma.rds")
 
   fits = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
@@ -146,7 +146,7 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
 
 
 test_that("[add_]fitted_samples throws an error when dpars is called instead of auxpars on brms models with auxpars", {
-  m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
+  m_hp_sigma = readRDS("../models/models.brms.m_hp_sigma.rds")
 
   expect_error(
     fitted_samples(m_hp_sigma, mtcars_tbl, dpars = "sigma"),
@@ -160,7 +160,7 @@ test_that("[add_]fitted_samples throws an error when dpars is called instead of 
 
 
 test_that("[add_]fitted_samples works on simple brms models with nlpars", {
-  m_nlpar = readRDS("models.brms.m_nlpar.rds")
+  m_nlpar = readRDS("../models/models.brms.m_nlpar.rds")
   df_nlpar = as_data_frame(m_nlpar$data)
 
   fits = fitted(m_nlpar, df_nlpar, summary = FALSE) %>%
@@ -185,7 +185,7 @@ test_that("[add_]fitted_samples works on simple brms models with nlpars", {
 
 
 test_that("[add_]fitted_samples works on simple brms models with multiple dpars", {
-  m_dpars = readRDS("models.brms.m_dpars.rds")
+  m_dpars = readRDS("../models/models.brms.m_dpars.rds")
   df_dpars = as_data_frame(m_dpars$data)
 
   fits = fitted(m_dpars, df_dpars, summary = FALSE) %>%
@@ -220,7 +220,7 @@ test_that("[add_]fitted_samples works on simple brms models with multiple dpars"
 
 
 test_that("[add_]fitted_samples works on brms models with categorical outcomes (response scale)", {
-  m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
+  m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE) %>%
     array2df(list(.iteration = NA, .row = NA, category = NA), label.x = "estimate") %>%
@@ -239,7 +239,7 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
 
 
 test_that("[add_]fitted_samples works on brms models with categorical outcomes (linear scale)", {
-  m_cyl_mpg = readRDS("models.brms.m_cyl_mpg.rds")
+  m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
     array2df(list(.iteration = NA, .row = NA, category = NA), label.x = "estimate") %>%
@@ -258,7 +258,7 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
 
 
 test_that("[add_]fitted_samples throws an error when nsamples is called instead of n in brms", {
-  m_hp = readRDS("models.brms.m_hp.rds")
+  m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   expect_error(
     m_hp %>% fitted_samples(newdata = mtcars_tbl, nsamples = 100),
@@ -273,7 +273,7 @@ test_that("[add_]fitted_samples throws an error when nsamples is called instead 
 # rstanarm doesn't have a draws method for fitted samples
 
 test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(
     m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, re.form = NULL),
@@ -286,7 +286,7 @@ test_that("[add_]predicted_samples throws an error when re.form is called instea
 })
 
 test_that("[add_]predicted_samples throws an error when transform is called instead of scale in rstanarm", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(
     m_hp_wt %>% fitted_samples(newdata = mtcars_tbl, transform = TRUE),

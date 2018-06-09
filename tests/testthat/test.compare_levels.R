@@ -39,6 +39,7 @@ test_that("pairwise level comparison works", {
     as_tibble()
 
   expect_equal(compare_levels(samples, tau, by = ff, comparison = pairwise), ref)
+  expect_equal(compare_levels(samples, tau, by = ff, comparison = "pairwise"), ref)
 })
 
 test_that("ordered level comparison works", {
@@ -54,6 +55,7 @@ test_that("ordered level comparison works", {
     as_tibble()
 
   expect_equal(compare_levels(samples, tau, by = ff, comparison = ordered), ref)
+  expect_equal(compare_levels(samples, tau, by = ff, comparison = "ordered"), ref)
 })
 
 test_that("control level comparison works", {

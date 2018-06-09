@@ -36,10 +36,10 @@ test_that("two-parameter eye plots work", {
   expect_doppelganger("two-parameter (factor) vertical eye", p + geom_eye())
 
   p = ggplot(df, aes(x = x, y = y_int))
-  expect_doppelganger("two-parameter (numeric) horizontal eye", p + geom_eyeh())
-  expect_doppelganger("two-parameter (numeric) horizontal half-eye", p + geom_halfeyeh())
+  expect_doppelganger("two-parameter (numeric) horizontal eye", p + geom_eyeh(fatten_point = 3))
+  expect_doppelganger("two-parameter (numeric) horizontal half-eye", p + geom_halfeyeh(fatten_point = 3))
 
   p = ggplot(df, aes(x = y_int, y = x))
-  expect_doppelganger("two-parameter (numeric) vertical eye", p + geom_eye())
+  expect_doppelganger("two-parameter (numeric) vertical eye", p + geom_eye(fatten_point = 3))
 
 })

@@ -130,12 +130,8 @@ as_sample_tibble.brmsfit = function(model) {
 #' @rdname as_sample_tibble
 #' @export
 as_sample_tibble.matrix = function(model) {
-  if (length(dim(model)) == 2) {
-    # assume matrix indexed by [iterations, variables]
-    as_sample_tibble(as.mcmc.list(as.mcmc(model))) # nolint
-  } else {
-    stop("Matrix must have only 2 dimensions (first being the sample, second the variable).")
-  }
+  # assume matrix indexed by [iterations, variables]
+  as_sample_tibble(as.mcmc.list(as.mcmc(model))) # nolint
 }
 
 #' @rdname as_sample_tibble

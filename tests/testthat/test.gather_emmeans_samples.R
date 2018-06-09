@@ -21,7 +21,7 @@ mtcars_tbl = mtcars %>%
 
 
 test_that("gather_emmeans_samples works on a simple rstanarm model", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   estimate_grid = list(hp = c(100, 110), wt = 0)
 

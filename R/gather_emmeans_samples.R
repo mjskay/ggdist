@@ -10,8 +10,8 @@
 #' @usage NULL
 #' @export
 gather_lsmeans_samples = function(...) {
-  .Deprecated("gather_emmeans_samples")
-  gather_emmeans_samples(...)
+  .Deprecated("gather_emmeans_samples")  # nocov
+  gather_emmeans_samples(...)            # nocov
 }
 
 

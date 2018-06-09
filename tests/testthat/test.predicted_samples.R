@@ -24,7 +24,7 @@ mtcars_tbl = mtcars %>%
 
 test_that("[add_]predicted_samples throws an error on unsupported models", {
   data("RankCorr", package = "tidybayes")
-  
+
   expect_error(predicted_samples(RankCorr, data.frame()),
     'Models of type "matrix" are not currently supported by `predicted_samples`')
   expect_error(add_predicted_samples(data.frame(), RankCorr),
@@ -33,7 +33,7 @@ test_that("[add_]predicted_samples throws an error on unsupported models", {
 
 
 test_that("[add_]predicted_samples and basic arguments works on a simple rstanarm model", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   preds = posterior_predict(m_hp_wt, mtcars_tbl, draws = 100, seed = 123) %>%
     as.data.frame() %>%
@@ -55,7 +55,7 @@ test_that("[add_]predicted_samples and basic arguments works on a simple rstanar
 
 
 test_that("[add_]predicted_samples and basic arguments works on an rstanarm model with random effects", {
-  m_cyl = readRDS("models.rstanarm.m_cyl.rds")
+  m_cyl = readRDS("../models/models.rstanarm.m_cyl.rds")
 
   preds = posterior_predict(m_cyl, mtcars_tbl, draws = 100, seed = 123) %>%
     as.data.frame() %>%
@@ -77,7 +77,7 @@ test_that("[add_]predicted_samples and basic arguments works on an rstanarm mode
 
 
 test_that("[add_]predicted_samples works on a simple brms model", {
-  m_hp = readRDS("models.brms.m_hp.rds")
+  m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   set.seed(123)
   preds = predict(m_hp, mtcars_tbl, summary = FALSE) %>%
@@ -102,7 +102,7 @@ test_that("[add_]predicted_samples works on a simple brms model", {
 })
 
 test_that("[add_]predicted_samples throws an error when nsamples is called instead of n in brms", {
-  m_hp = readRDS("models.brms.m_hp.rds")
+  m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   expect_error(
     m_hp %>% predicted_samples(newdata = mtcars_tbl, nsamples = 100),
@@ -115,7 +115,7 @@ test_that("[add_]predicted_samples throws an error when nsamples is called inste
 })
 
 test_that("[add_]predicted_samples throws an error when draws is called instead of n in rstanarm", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(
     m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, draws = 100),
@@ -128,7 +128,7 @@ test_that("[add_]predicted_samples throws an error when draws is called instead 
 })
 
 test_that("[add_]predicted_samples throws an error when re.form is called instead of re_formula in rstanarm", {
-  m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(
     m_hp_wt %>% predicted_samples(newdata = mtcars_tbl, re.form = NULL),
