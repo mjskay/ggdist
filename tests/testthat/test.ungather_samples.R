@@ -59,3 +59,9 @@ test_that("ungather_samples(drop_indices = TRUE) drops indices", {
 
   expect_equal(result[, order(names(result))], ref[, order(names(ref))])
 })
+
+
+test_that("ungather_samples does not support wide indexing syntax (`|`)", {
+  expect_error(ungather_samples(data.frame(), b[i ,j] | i),
+    'ungather_samples does not support the wide indexing syntax \\(`\\|`\\).')
+})

@@ -59,3 +59,9 @@ test_that("unspread_samples(drop_indices = TRUE) drops indices", {
 
   expect_equal(result[, order(names(result))], ref[, order(names(ref))])
 })
+
+
+test_that("unspread_samples does not support wide indexing syntax (`|`)", {
+  expect_error(unspread_samples(data.frame(), b[i ,j] | i),
+    'unspread_samples does not support the wide indexing syntax \\(`\\|`\\).')
+})
