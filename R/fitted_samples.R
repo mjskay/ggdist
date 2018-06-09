@@ -11,7 +11,7 @@ globalVariables(c(".iteration"))
 #' @rdname add_predicted_samples
 #' @export
 add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = FALSE, scale = c("response", "linear")
 ) {
   fitted_samples(model, newdata, var, ..., n = n, re_formula = re_formula,
     category = category, auxpars = auxpars, scale = scale)
@@ -20,7 +20,7 @@ add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL, r
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = FALSE, scale = c("response", "linear")
 ) {
   UseMethod("fitted_samples")
 }
@@ -34,7 +34,7 @@ fitted_samples.default = function(model, newdata, ...) {
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = FALSE, scale = c("response", "linear")
 ) {
   transform = match.arg(scale) == "response"
 
@@ -64,7 +64,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
 #' @importFrom purrr map
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = TRUE, scale = c("response", "linear")
+  category = "category", auxpars = FALSE, scale = c("response", "linear")
 ) {
   scale = match.arg(scale)
 
@@ -78,9 +78,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
 
   # get the names of distributional regression parameters to include
   dpars = if (is_true(auxpars)) {
-    names(brms::parse_bf(model$formula)$dpar) %>%
-      .[. != "mu"]      #mu is the primary parameter, filter it out
-                        #TODO: find a non-hacky solution to this
+    names(brms::parse_bf(model$formula)$dpar)
   } else if (is_false(auxpars)) {
     NULL
   } else {

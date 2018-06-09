@@ -104,9 +104,9 @@ test_that("[add_]fitted_samples works on brms models without auxpars", {
     inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
-  expect_equal(ref, fitted_samples(m_hp, mtcars_tbl))
-  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp))
-  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp, auxpars = FALSE))
+  expect_equal(fitted_samples(m_hp, mtcars_tbl), ref)
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp), ref)
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp, auxpars = FALSE), ref)
 })
 
 
@@ -123,7 +123,12 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
     gather(.row, estimate, -.chain, -.iteration) %>%
     as_data_frame()
 
-  fits$sigma = fits_sigma = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE, dpar = "sigma") %>%
+  fits$mu = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE, dpar = "mu") %>%
+    as.data.frame() %>%
+    gather(.row, mu) %$%
+    mu
+
+  fits$sigma = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE, dpar = "sigma") %>%
     as.data.frame() %>%
     gather(.row, sigma) %$%
     sigma
@@ -133,15 +138,13 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
     inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
-  fitted_samples(m_hp_sigma, mtcars_tbl, auxpars = FALSE)
-
-  expect_equal(ref, fitted_samples(m_hp_sigma, mtcars_tbl))
-  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_sigma))
-  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = TRUE))
-  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = "sigma"))
-  expect_equal(ref %>% select(-sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = FALSE))
-  expect_equal(ref %>% select(-sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = NULL))
-  expect_equal(ref %>% mutate(s1 = sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = list("sigma", s1 = "sigma")))
+  expect_equal(fitted_samples(m_hp_sigma, mtcars_tbl, auxpars = TRUE), ref)
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = TRUE), ref)
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = "sigma"), select(ref, -mu))
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = "mu"), select(ref, -sigma))
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = FALSE), select(ref, -sigma, -mu))
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = NULL), select(ref, -sigma, -mu))
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = list("mu", "sigma", s1 = "sigma")), mutate(ref, s1 = sigma))
 })
 
 
@@ -178,9 +181,9 @@ test_that("[add_]fitted_samples works on simple brms models with nlpars", {
     inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
-  expect_equal(ref, fitted_samples(m_nlpar, df_nlpar))
-  expect_equal(ref, add_fitted_samples(df_nlpar, m_nlpar))
-  expect_equal(ref, add_fitted_samples(df_nlpar, m_nlpar, auxpars = FALSE))
+  expect_equal(fitted_samples(m_nlpar, df_nlpar), ref)
+  expect_equal(add_fitted_samples(df_nlpar, m_nlpar), ref)
+  expect_equal(add_fitted_samples(df_nlpar, m_nlpar, auxpars = FALSE), ref)
 })
 
 
@@ -213,9 +216,9 @@ test_that("[add_]fitted_samples works on simple brms models with multiple dpars"
     inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
-  expect_equal(ref, fitted_samples(m_dpars, df_dpars))
-  expect_equal(ref, add_fitted_samples(df_dpars, m_dpars))
-  expect_equal(ref %>% select(-mu1, -mu2), add_fitted_samples(df_dpars, m_dpars, auxpars = FALSE))
+  expect_equal(fitted_samples(m_dpars, df_dpars, auxpars = TRUE), ref)
+  expect_equal(add_fitted_samples(df_dpars, m_dpars, auxpars = list("mu1", "mu2")), ref)
+  expect_equal(add_fitted_samples(df_dpars, m_dpars, auxpars = FALSE), select(ref, -mu1, -mu2))
 })
 
 
@@ -233,8 +236,8 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
 
-  expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl))
-  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg))
+  expect_equal(fitted_samples(m_cyl_mpg, mtcars_tbl), ref)
+  expect_equal(add_fitted_samples(mtcars_tbl, m_cyl_mpg), ref)
 })
 
 
@@ -252,9 +255,28 @@ test_that("[add_]fitted_samples works on brms models with categorical outcomes (
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
 
-  expect_equal(ref, fitted_samples(m_cyl_mpg, mtcars_tbl, scale = "linear"))
-  expect_equal(ref, add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"))
+  expect_equal(fitted_samples(m_cyl_mpg, mtcars_tbl, scale = "linear"), ref)
+  expect_equal(add_fitted_samples(mtcars_tbl, m_cyl_mpg, scale = "linear"), ref)
 })
+
+
+# test_that("[add_]fitted_samples allows extraction of auxpars on brms models with categorical outcomes", {
+#   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
+#
+#   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
+#     array2df(list(.iteration = NA, .row = NA, category = NA), label.x = "estimate") %>%
+#     mutate(
+#       .chain = as.integer(NA),
+#       .row = as.integer(.row),
+#       .iteration = as.integer(.iteration),
+#       category = factor(category)
+#     )
+#
+#   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
+#
+#   expect_equal(fitted_samples(m_cyl_mpg, mtcars_tbl, auxpars = TRUE), ref)
+#   expect_equal(add_fitted_samples(mtcars_tbl, m_cyl_mpg, auxpars = TRUE), ref)
+# })
 
 
 test_that("[add_]fitted_samples throws an error when nsamples is called instead of n in brms", {
