@@ -108,10 +108,21 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
 
   for (i in seq_along(dpars)) {
     varname = names(dpars)[[i]]
-    samples[[varname]] = fitted_predicted_samples_brmsfit_(
+    dpar_fitted_samples = fitted_predicted_samples_brmsfit_(
       fitted, model, newdata, var = ".estimate", ...,
       category = category, nsamples = n, re_formula = re_formula, dpar = dpars[[i]], scale = scale
-    )[[".estimate"]]
+    )
+
+    if (nrow(dpar_fitted_samples) == nrow(samples)) {
+      samples[[varname]] = dpar_fitted_samples[[".estimate"]]
+    } else {
+      # in some models (such as ordinal models) the tidy samples from the dpars can have fewer rows than
+      # the estimate if the estimate is on the response scale and the dpars are not. Stop in this case.
+      stop(
+        'Different number of rows in fitted samples for dpar "', dpars[[i]], '" and the estimate. This\n',
+        'can happen in ordinal and categorical models when scale = "response". Try scale = "linear" instead.'
+      )
+    }
   }
 
   samples
