@@ -158,15 +158,15 @@ fitted_samples.default = function(model, newdata, ...) {
 #' @rdname add_predicted_samples
 #' @export
 predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
-  if (!requireNamespace("rstantools", quietly = TRUE)) {
-    stop("The `rstantools` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE)
+  if (!requireNamespace("rstanarm", quietly = TRUE)) {
+    stop("The `rstanarm` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE) # nocov
   }
 
   stop_on_non_generic_arg_(
     names(list(...)), "[add_]predicted_samples", n = "draws", re_formula = "re.form"
   )
 
-  fitted_predicted_samples_brmsfit_(rstantools::posterior_predict, model, newdata, var, ...,
+  fitted_predicted_samples_brmsfit_(rstanarm::posterior_predict, model, newdata, var, ...,
     draws = n, re.form = re_formula, is_brms = FALSE
   )
 }
@@ -179,7 +179,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
   transform = match.arg(scale) == "response"
 
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
-    stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE)
+    stop("The `rstanarm` package is needed for `fitted_samples` to support `stanreg` objects.", call. = FALSE) # nocov
   }
 
   stop_on_non_generic_arg_(
@@ -203,7 +203,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
 #' @export
 predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
-    stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE)
+    stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE) # nocov
   }
 
   stop_on_non_generic_arg_(
@@ -225,7 +225,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   scale = match.arg(scale)
 
   if (!requireNamespace("brms", quietly = TRUE)) {
-    stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE)
+    stop("The `brms` package is needed for `fitted_samples` to support `brmsfit` objects.", call. = FALSE) # nocov
   }
 
   stop_on_non_generic_arg_(
@@ -252,7 +252,7 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   if (is.null(names(dpars))) {
     names(dpars) = dpars
   } else {
-    missing_names = is.na(names(dpars))
+    missing_names = is.na(names(dpars)) | names(dpars) == ""
     names(dpars)[missing_names] = dpars[missing_names]
   }
 
@@ -309,16 +309,16 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
 
   #rstanarm does something weird that prevents array2df from properly seeing .row and .iteration as numerics,
   #so we have to convert them manually from factors. While we're at it, we should also make sure they are integers.
-  if (is.factor(fits_preds_df$.row) || is.character(fits_preds_df$.row)) {
-    fits_preds_df$.row = as.integer(as.character(fits_preds_df$.row))
-  } else {
-    fits_preds_df$.row = as.integer(fits_preds_df$.row)
+  if (is.factor(fits_preds_df$.row)) {
+    fits_preds_df$.row = as.character(fits_preds_df$.row)
   }
-  if (is.factor(fits_preds_df$.iteration) || is.character(fits_preds_df$.iteration)) {
-    fits_preds_df$.iteration = as.integer(as.character(fits_preds_df$.iteration))
-  } else {
-    fits_preds_df$.iteration = as.integer(fits_preds_df$.iteration)
+  fits_preds_df$.row = as.integer(fits_preds_df$.row)
+
+  if (is.factor(fits_preds_df$.iteration)) {
+    fits_preds_df$.iteration = as.character(fits_preds_df$.iteration)
   }
+  fits_preds_df$.iteration = as.integer(fits_preds_df$.iteration)
+
   if (ndim(fits_preds) == 3) {
     #3 dimensions implies a categorical outcome -> make category column be factor
     fits_preds_df[[category]] = factor(fits_preds_df[[category]])

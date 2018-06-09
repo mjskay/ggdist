@@ -1,4 +1,4 @@
-# Tests for predicted_samples
+# Tests for [add_]predicted_samples
 #
 # Author: mjskay
 ###############################################################################
@@ -20,6 +20,16 @@ context("predicted_samples")
 mtcars_tbl = mtcars %>%
   set_rownames(seq_len(nrow(.))) %>%
   as_data_frame()
+
+
+test_that("[add_]predicted_samples throws an error on unsupported models", {
+  data("RankCorr", package = "tidybayes")
+  
+  expect_error(predicted_samples(RankCorr, data.frame()),
+    'Models of type "matrix" are not currently supported by `predicted_samples`')
+  expect_error(add_predicted_samples(data.frame(), RankCorr),
+    'Models of type "matrix" are not currently supported by `predicted_samples`')
+})
 
 
 test_that("[add_]predicted_samples and basic arguments works on a simple rstanarm model", {

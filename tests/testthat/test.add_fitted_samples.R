@@ -1,4 +1,4 @@
-# Tests for fitted_samples
+# Tests for [add_]fitted_samples
 #
 # Author: mjskay
 ###############################################################################
@@ -22,6 +22,16 @@ mtcars_tbl = mtcars %>%
   as_data_frame()
 
 
+test_that("[add_]fitted_samples throws an error on unsupported models", {
+  data("RankCorr", package = "tidybayes")
+  
+  expect_error(fitted_samples(RankCorr, data.frame()),
+    'Models of type "matrix" are not currently supported by `fitted_samples`')
+  expect_error(add_fitted_samples(data.frame(), RankCorr),
+    'Models of type "matrix" are not currently supported by `fitted_samples`')
+})
+
+
 test_that("[add_]fitted_samples works on a simple rstanarm model", {
   m_hp_wt = readRDS("models.rstanarm.m_hp_wt.rds")
 
@@ -41,6 +51,17 @@ test_that("[add_]fitted_samples works on a simple rstanarm model", {
 
   expect_equal(ref, fitted_samples(m_hp_wt, mtcars_tbl))
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_wt))
+  
+  #subsetting to test the `n` argument
+  set.seed(1234)
+  iterations = sample(ref$.iteration, 10)
+  filtered_ref = ref %>%
+    filter(.iteration %in% iterations)
+
+  set.seed(1234)
+  expect_equal(fitted_samples(m_hp_wt, mtcars_tbl, n = 10), filtered_ref)
+  set.seed(1234)
+  expect_equal(add_fitted_samples(mtcars_tbl, m_hp_wt, n = 10), filtered_ref)
 })
 
 test_that("[add_]fitted_samples works on an rstanarm model with grouped newdata", {
@@ -120,10 +141,11 @@ test_that("[add_]fitted_samples works on brms models with auxpars", {
   expect_equal(ref, add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = "sigma"))
   expect_equal(ref %>% select(-sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = FALSE))
   expect_equal(ref %>% select(-sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = NULL))
+  expect_equal(ref %>% mutate(s1 = sigma), add_fitted_samples(mtcars_tbl, m_hp_sigma, auxpars = list("sigma", s1 = "sigma")))
 })
 
 
-test_that("[add_]fitted_samples throws an when dpars is called instead of auxpars on brms models with auxpars", {
+test_that("[add_]fitted_samples throws an error when dpars is called instead of auxpars on brms models with auxpars", {
   m_hp_sigma = readRDS("models.brms.m_hp_sigma.rds")
 
   expect_error(
