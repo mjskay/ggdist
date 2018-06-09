@@ -24,4 +24,4 @@ before_install:
   - sed -i.bak "s/O[0-3]/O$CXX_OLEVEL/" ~/.R/Makevars
 
 after_success:
-  - Rscript -e 'covr::codecov()
+  - Rscript -e 'covr::codecov()'
