@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Turn tidy data frames of parameters from a Bayesian model back into untidy data — unspread_samples • tidybayes</title>
+<title>Turn tidy data frames of parameters from a Bayesian model back into untidy data — ungather_samples • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,7 +32,7 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Turn tidy data frames of parameters from a Bayesian model back into untidy data — unspread_samples" />
+<meta property="og:title" content="Turn tidy data frames of parameters from a Bayesian model back into untidy data — ungather_samples" />
 
 <meta property="og:description" content="Inverse operations of spread_samples and gather_samples, giving
 results that look like as_sample_tibble." />
@@ -131,7 +131,7 @@ results that look like as_sample_tibble." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Turn tidy data frames of parameters from a Bayesian model back into untidy data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/unspread_ungather_samples.R'><code>R/unspread_ungather_samples.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/ungather_samples.R'><code>R/ungather_samples.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/unspread_samples.R'><code>R/unspread_samples.R</code></a></small>
     <div class="hidden name"><code>unspread_samples.Rd</code></div>
     </div>
 
@@ -142,11 +142,11 @@ results that look like <code><a href='as_sample_tibble.html'>as_sample_tibble</a
     
     </div>
 
-    <pre class="usage"><span class='fu'>unspread_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>),
-  <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>ungather_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>term</span> <span class='kw'>=</span> <span class='st'>"term"</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>,
+  <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>ungather_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>term</span> <span class='kw'>=</span> <span class='st'>"term"</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>,
-  <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>unspread_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>),
+  <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,6 +161,14 @@ results that look like <code><a href='as_sample_tibble.html'>as_sample_tibble</a
 <code>variable_name[index_1, index_2, ...]</code>. See <code><a href='spread_samples.html'>spread_samples</a></code>.</p></td>
     </tr>
     <tr>
+      <th>term</th>
+      <td><p>The name of the column in <code>data</code> that contains the names of parameters from the model.</p></td>
+    </tr>
+    <tr>
+      <th>estimate</th>
+      <td><p>The name of the column in <code>data</code> that contains the samples of the parameters.</p></td>
+    </tr>
+    <tr>
       <th>indices</th>
       <td><p>Character vector of column names in <code>data</code> that
 should be treated as indices of chain/iteration. The default is <code>c(".chain",".iteration")</code>,
@@ -170,14 +178,6 @@ which are the same names used for chain/iteration indices returned by
     <tr>
       <th>drop_indices</th>
       <td><p>Drop the columns specified by <code>indices</code> from the resulting data frame. Default <code>FALSE</code>.</p></td>
-    </tr>
-    <tr>
-      <th>term</th>
-      <td><p>The name of the column in <code>data</code> that contains the names of parameters from the model.</p></td>
-    </tr>
-    <tr>
-      <th>estimate</th>
-      <td><p>The name of the column in <code>data</code> that contains the samples of the parameters.</p></td>
     </tr>
     </table>
     

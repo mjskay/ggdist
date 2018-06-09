@@ -150,15 +150,20 @@ do not.</p>
 <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>, and <code><a href='spread_samples.html'>gather_samples</a></code>. These models include:</p>
 <ul>
 <li><p><code><a href='http://www.rdocumentation.org/packages/rstan/topics/stan'>rstan</a></code> models</p></li>
-<li><p><code><a href='http://www.rdocumentation.org/packages/runjags/topics/runjags'>runjags</a></code> models</p></li>
 <li><p><code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code> models</p></li>
 <li><p><code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/rstanarm-package'>rstanarm</a></code> models</p></li>
+<li><p><code><a href='http://www.rdocumentation.org/packages/runjags/topics/runjags'>runjags</a></code> models</p></li>
+<li><p><code><a href='http://www.rdocumentation.org/packages/rjags/topics/jags.model'>jags.model</a></code> models, if sampled using <code><a href='http://www.rdocumentation.org/packages/rjags/topics/coda.samples'>coda.samples</a></code></p></li>
+<li><p><code><a href='http://www.rdocumentation.org/packages/jagsUI/topics/jags'>jags</a></code> models</p></li>
 <li><p><code><a href='http://www.rdocumentation.org/packages/MCMCglmm/topics/MCMCglmm'>MCMCglmm</a></code> models</p></li>
-<li><p><code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc'>mcmc</a></code> and <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>mcmc.list</a></code> objects, which are output by several of model
+<li><p><code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc'>mcmc</a></code> and <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>mcmc.list</a></code> objects, which are output by several model
     types.</p></li>
 <li><p>Any object with an implementation of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code>. For a list of those available in your
     environment, run <code>methods(as.mcmc.list)</code></p></li>
 </ul>
+    <p>If you install the <code>tidybayes.rethinking</code> package (available at
+<a href='https://github.com/mjskay/tidybayes.rethinking'>https://github.com/mjskay/tidybayes.rethinking</a>), <code>map</code> and
+<code>map2stan</code> models from the <code>rethinking</code> package are also supported.</p>
     
     <h2 class="hasAnchor" id="models-supporting-prediction"><a class="anchor" href="#models-supporting-prediction"></a>Models Supporting Prediction</h2>
 

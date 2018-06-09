@@ -93,7 +93,7 @@
       <h1>Extracting and visualizing tidy samples from brms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-06-06</h4>
+            <h4 class="date">2018-06-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-brms.Rmd"><code>vignettes/tidy-brms.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-brms.Rmd</code></div>
@@ -193,15 +193,15 @@ ABC =
 ## Group-Level Effects: 
 ## ~condition (Number of levels: 5) 
 ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sd(Intercept)     1.16      0.41     0.61     2.15       1071 1.00
+## sd(Intercept)     1.18      0.43     0.62     2.31        777 1.01
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept     0.49      0.47    -0.49     1.40        998 1.01
+## Intercept     0.51      0.48    -0.45     1.50        635 1.01
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma     0.56      0.06     0.46     0.69       1635 1.00
+## sigma     0.56      0.06     0.46     0.70       1759 1.00
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -241,16 +241,16 @@ ABC =
 ## # Groups:   condition, term [5]
 ##    .chain .iteration condition term      r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1 A         Intercept      -1.46 
-##  2      1          1 B         Intercept      -0.678
-##  3      1          1 C         Intercept       0.477
-##  4      1          1 D         Intercept      -0.289
-##  5      1          1 E         Intercept      -2.36 
-##  6      1          2 A         Intercept      -1.22 
-##  7      1          2 B         Intercept      -0.656
-##  8      1          2 C         Intercept       0.266
-##  9      1          2 D         Intercept      -0.523
-## 10      1          2 E         Intercept      -2.48</code></pre>
+##  1      1          1 A         Intercept      -0.494
+##  2      1          1 B         Intercept       0.357
+##  3      1          1 C         Intercept       1.25 
+##  4      1          1 D         Intercept       0.109
+##  5      1          1 E         Intercept      -1.48 
+##  6      1          2 A         Intercept      -0.756
+##  7      1          2 B         Intercept       0.588
+##  8      1          2 C         Intercept       1.10 
+##  9      1          2 D         Intercept       0.407
+## 10      1          2 E         Intercept      -1.59</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>We can choose whatever names we want for the index columns; e.g.:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
@@ -260,16 +260,16 @@ ABC =
 ## # Groups:   c, t [5]
 ##    .chain .iteration c     t         r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1 A     Intercept      -1.46 
-##  2      1          1 B     Intercept      -0.678
-##  3      1          1 C     Intercept       0.477
-##  4      1          1 D     Intercept      -0.289
-##  5      1          1 E     Intercept      -2.36 
-##  6      1          2 A     Intercept      -1.22 
-##  7      1          2 B     Intercept      -0.656
-##  8      1          2 C     Intercept       0.266
-##  9      1          2 D     Intercept      -0.523
-## 10      1          2 E     Intercept      -2.48</code></pre>
+##  1      1          1 A     Intercept      -0.494
+##  2      1          1 B     Intercept       0.357
+##  3      1          1 C     Intercept       1.25 
+##  4      1          1 D     Intercept       0.109
+##  5      1          1 E     Intercept      -1.48 
+##  6      1          2 A     Intercept      -0.756
+##  7      1          2 B     Intercept       0.588
+##  8      1          2 C     Intercept       1.10 
+##  9      1          2 D     Intercept       0.407
+## 10      1          2 E     Intercept      -1.59</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>But the more descriptive and less cryptic names from the previous example are probably preferable.</p>
 <p>In this particular model, there is only one term (<code>Intercept</code>), thus we could omit that index altogether to just get each <code>condition</code> and the value of <code>r_condition</code> for that condition:</p>
@@ -280,16 +280,16 @@ ABC =
 ## # Groups:   condition [5]
 ##    .chain .iteration condition r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1 A              -1.46 
-##  2      1          1 B              -0.678
-##  3      1          1 C               0.477
-##  4      1          1 D              -0.289
-##  5      1          1 E              -2.36 
-##  6      1          2 A              -1.22 
-##  7      1          2 B              -0.656
-##  8      1          2 C               0.266
-##  9      1          2 D              -0.523
-## 10      1          2 E              -2.48</code></pre>
+##  1      1          1 A              -0.494
+##  2      1          1 B               0.357
+##  3      1          1 C               1.25 
+##  4      1          1 D               0.109
+##  5      1          1 E              -1.48 
+##  6      1          2 A              -0.756
+##  7      1          2 B               0.588
+##  8      1          2 C               1.10 
+##  9      1          2 D               0.407
+## 10      1          2 E              -1.59</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p><strong>Note:</strong> If you have used <code>spread_samples</code> with raw samples from Stan or JAGS, you may be used to using <code>recover_types</code> before <code>spread_samples</code> to get index column values back (e.g. if the index was a factor). This is not necessary when using <code>spread_samples</code> on <code>rstanarm</code> models, because those models already contain that information in their parameter names. For more on <code>recover_types</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
@@ -308,16 +308,16 @@ ABC =
 <pre><code>## # A tibble: 10 x 4
 ##    .chain .iteration b_Intercept sigma
 ##     &lt;int&gt;      &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt;
-##  1      1          1       1.48  0.538
-##  2      1          2       1.47  0.535
-##  3      1          3      -1.41  0.563
-##  4      1          4      -1.42  0.564
-##  5      1          5      -1.41  0.598
-##  6      1          6      -1.05  0.556
-##  7      1          7      -1.48  0.718
-##  8      1          8      -0.452 0.502
-##  9      1          9      -0.389 0.550
-## 10      1         10      -0.325 0.525</code></pre>
+##  1      1          1       0.668 0.547
+##  2      1          2       0.587 0.555
+##  3      1          3       0.712 0.549
+##  4      1          4       0.819 0.625
+##  5      1          5       0.463 0.643
+##  6      1          6       0.535 0.599
+##  7      1          7       0.532 0.604
+##  8      1          8       0.476 0.594
+##  9      1          9       0.408 0.577
+## 10      1         10       0.486 0.590</code></pre>
 <p><em>(10 rows of 4000)</em></p>
 <p>Like with <code>r_condition[condition,term]</code>, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply <code>mean_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
@@ -326,7 +326,7 @@ ABC =
 <pre><code>## # A tibble: 1 x 7
 ##   b_Intercept b_Intercept.low b_Intercept.high sigma sigma.low sigma.high .prob
 ##         &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1       0.493          -0.492             1.40 0.560     0.456      0.688  0.95</code></pre>
+## 1       0.512          -0.451             1.50 0.563     0.463      0.696  0.95</code></pre>
 <p>We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, <code>mean_qi</code> will use every column that is not a grouping column or a special column (one that starts with <code>.</code>, like <code>.chain</code> or <code>.iteration</code>). Thus in the above example, <code>b_Intercept</code> and <code>sigma</code> are redundant arguments to <code>mean_qi</code> because they are also the only columns we gathered from the model. So we can simplify this to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span>
@@ -334,7 +334,7 @@ ABC =
 <pre><code>## # A tibble: 1 x 7
 ##   b_Intercept b_Intercept.low b_Intercept.high sigma sigma.low sigma.high .prob
 ##         &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1       0.493          -0.492             1.40 0.560     0.456      0.688  0.95</code></pre>
+## 1       0.512          -0.451             1.50 0.563     0.463      0.696  0.95</code></pre>
 <p>If you would rather have a long-format list of intervals, use <code>gather_samples</code> instead:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">gather_samples</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span>
@@ -343,8 +343,8 @@ ABC =
 ## # Groups:   term [2]
 ##   term        estimate conf.low conf.high .prob
 ##   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 b_Intercept    0.493   -0.492     1.40   0.95
-## 2 sigma          0.560    0.456     0.688  0.95</code></pre>
+## 1 b_Intercept    0.512   -0.451     1.50   0.95
+## 2 sigma          0.563    0.463     0.696  0.95</code></pre>
 <p>The <code>conf.low</code> and <code>conf.high</code> naming scheme is used when <code>mean_qi</code> summarizes a single column in order to be consistent with the output of <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>. This makes it easier to compare output from <code>tidybayes</code> to other models supported by <code>broom</code>.</p>
 <p>For more on <code>gather_samples</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
@@ -359,11 +359,11 @@ ABC =
 ## # Groups:   condition [5]
 ##   condition r_condition conf.low conf.high .prob
 ##   &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A              -0.301   -1.29      0.706  0.95
-## 2 B               0.509   -0.426     1.53   0.95
-## 3 C               1.34     0.398     2.36   0.95
-## 4 D               0.521   -0.420     1.54   0.95
-## 5 E              -1.39    -2.32     -0.395  0.95</code></pre>
+## 1 A              -0.322   -1.35      0.659  0.95
+## 2 B               0.484   -0.522     1.50   0.95
+## 3 C               1.32     0.291     2.34   0.95
+## 4 D               0.504   -0.526     1.50   0.95
+## 5 E              -1.40    -2.42     -0.414  0.95</code></pre>
 <p>How did <code>mean_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_samples</code> groups its results by <code>condition</code>. <code>mean_qi</code> respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>mean_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>r_condition</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(r_condition[condition,]) <span class="op">%&gt;%</span>
@@ -373,11 +373,11 @@ ABC =
 ## # Groups:   condition [5]
 ##   condition r_condition conf.low conf.high .prob
 ##   &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A              -0.301   -1.29      0.706  0.95
-## 2 B               0.509   -0.426     1.53   0.95
-## 3 C               1.34     0.398     2.36   0.95
-## 4 D               0.521   -0.420     1.54   0.95
-## 5 E              -1.39    -2.32     -0.395  0.95</code></pre>
+## 1 A              -0.322   -1.35      0.659  0.95
+## 2 B               0.484   -0.522     1.50   0.95
+## 3 C               1.32     0.291     2.34   0.95
+## 4 D               0.504   -0.526     1.50   0.95
+## 5 E              -1.40    -2.42     -0.414  0.95</code></pre>
 </div>
 </div>
 <div id="combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="section level2">
@@ -392,16 +392,16 @@ ABC =
 ## # Groups:   condition [5]
 ##    .chain .iteration b_Intercept condition r_condition
 ##     &lt;int&gt;      &lt;int&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1        1.48 A              -1.46 
-##  2      1          1        1.48 B              -0.678
-##  3      1          1        1.48 C               0.477
-##  4      1          1        1.48 D              -0.289
-##  5      1          1        1.48 E              -2.36 
-##  6      1          2        1.47 A              -1.22 
-##  7      1          2        1.47 B              -0.656
-##  8      1          2        1.47 C               0.266
-##  9      1          2        1.47 D              -0.523
-## 10      1          2        1.47 E              -2.48</code></pre>
+##  1      1          1       0.668 A              -0.494
+##  2      1          1       0.668 B               0.357
+##  3      1          1       0.668 C               1.25 
+##  4      1          1       0.668 D               0.109
+##  5      1          1       0.668 E              -1.48 
+##  6      1          2       0.587 A              -0.756
+##  7      1          2       0.587 B               0.588
+##  8      1          2       0.587 C               1.10 
+##  9      1          2       0.587 D               0.407
+## 10      1          2       0.587 E              -1.59</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>Within each sample, <code>b_Intercept</code> is repeated as necessary to correspond to every index of <code>r_condition</code>. Thus, the <code>mutate</code> function from dplyr can be used to find their sum, <code>condition_mean</code> (which is the estimated mean for each condition):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
@@ -412,11 +412,11 @@ ABC =
 ## # Groups:   condition [5]
 ##   condition condition_mean conf.low conf.high .prob
 ##   &lt;chr&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                  0.193   -0.140     0.542  0.95
-## 2 B                  1.00     0.668     1.33   0.95
-## 3 C                  1.83     1.49      2.16   0.95
-## 4 D                  1.01     0.649     1.36   0.95
-## 5 E                 -0.894   -1.23     -0.557  0.95</code></pre>
+## 1 A                  0.190   -0.151     0.530  0.95
+## 2 B                  0.996    0.648     1.35   0.95
+## 3 C                  1.83     1.48      2.18   0.95
+## 4 D                  1.02     0.683     1.35   0.95
+## 5 E                 -0.892   -1.25     -0.544  0.95</code></pre>
 <p><code>mean_qi</code> uses tidy evaluation (see <code>vignette("tidy-evaluation", package = "rlang")</code>), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>mean_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b_Intercept, r_condition[condition,]) <span class="op">%&gt;%</span>
@@ -425,11 +425,11 @@ ABC =
 ## # Groups:   condition [5]
 ##   condition condition_mean conf.low conf.high .prob
 ##   &lt;chr&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                  0.193   -0.140     0.542  0.95
-## 2 B                  1.00     0.668     1.33   0.95
-## 3 C                  1.83     1.49      2.16   0.95
-## 4 D                  1.01     0.649     1.36   0.95
-## 5 E                 -0.894   -1.23     -0.557  0.95</code></pre>
+## 1 A                  0.190   -0.151     0.530  0.95
+## 2 B                  0.996    0.648     1.35   0.95
+## 3 C                  1.83     1.48      2.18   0.95
+## 4 D                  1.02     0.683     1.35   0.95
+## 5 E                 -0.892   -1.25     -0.544  0.95</code></pre>
 </div>
 <div id="plotting-point-estimates-and-intervals" class="section level2">
 <h2 class="hasAnchor">
@@ -453,21 +453,21 @@ ABC =
 ## # Groups:   condition [5]
 ##    condition condition_mean conf.low conf.high .prob
 ##    &lt;chr&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 A                  0.193  -0.140      0.542  0.95
-##  2 B                  1.00    0.668      1.33   0.95
-##  3 C                  1.83    1.49       2.16   0.95
-##  4 D                  1.01    0.649      1.36   0.95
-##  5 E                 -0.894  -1.23      -0.557  0.95
-##  6 A                  0.193  -0.0240     0.418  0.8 
-##  7 B                  1.00    0.784      1.22   0.8 
-##  8 C                  1.83    1.61       2.05   0.8 
-##  9 D                  1.01    0.794      1.24   0.8 
-## 10 E                 -0.894  -1.11      -0.669  0.8 
-## 11 A                  0.193   0.0767     0.308  0.5 
-## 12 B                  1.00    0.891      1.11   0.5 
+##  1 A                  0.190  -0.151      0.530  0.95
+##  2 B                  0.996   0.648      1.35   0.95
+##  3 C                  1.83    1.48       2.18   0.95
+##  4 D                  1.02    0.683      1.35   0.95
+##  5 E                 -0.892  -1.25      -0.544  0.95
+##  6 A                  0.190  -0.0297     0.416  0.8 
+##  7 B                  0.996   0.776      1.22   0.8 
+##  8 C                  1.83    1.61       2.06   0.8 
+##  9 D                  1.02    0.797      1.23   0.8 
+## 10 E                 -0.892  -1.11      -0.669  0.8 
+## 11 A                  0.190   0.0702     0.309  0.5 
+## 12 B                  0.996   0.880      1.11   0.5 
 ## 13 C                  1.83    1.72       1.95   0.5 
-## 14 D                  1.01    0.897      1.13   0.5 
-## 15 E                 -0.894  -1.01      -0.779  0.5</code></pre>
+## 14 D                  1.02    0.904      1.13   0.5 
+## 15 E                 -0.892  -1.01      -0.775  0.5</code></pre>
 <p>The results are in a tidy format: one row per group and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The <code>geom_pointintervalh</code> geom, provided by tidybayes, is a shorthand for a <code>geom_pointrangeh</code> with <code>xmin</code>, <code>xmax</code>, and <code>size</code> set appropriately based on the <code>conf.low</code>, <code>conf.high</code>, and <code>.prob</code> columns in the data to produce plots of estimates with multiple probability levels:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b_Intercept, r_condition[condition,]) <span class="op">%&gt;%</span>
@@ -499,16 +499,16 @@ ABC =
 ## # Groups:   condition, .row [1]
 ##    condition  .row .chain .iteration estimate
 ##    &lt;chr&gt;     &lt;int&gt;  &lt;int&gt;      &lt;int&gt;    &lt;dbl&gt;
-##  1 A             1     NA          1   0.0142
-##  2 A             1     NA          2   0.253 
-##  3 A             1     NA          3   0.361 
-##  4 A             1     NA          4   0.106 
-##  5 A             1     NA          5   0.372 
-##  6 A             1     NA          6  -0.115 
-##  7 A             1     NA          7   0.153 
-##  8 A             1     NA          8   0.0630
-##  9 A             1     NA          9   0.239 
-## 10 A             1     NA         10   0.461</code></pre>
+##  1 A             1     NA          1   0.175 
+##  2 A             1     NA          2  -0.169 
+##  3 A             1     NA          3   0.226 
+##  4 A             1     NA          4   0.212 
+##  5 A             1     NA          5   0.114 
+##  6 A             1     NA          6   0.411 
+##  7 A             1     NA          7   0.439 
+##  8 A             1     NA          8  -0.105 
+##  9 A             1     NA          9   0.0245
+## 10 A             1     NA         10   0.0289</code></pre>
 <p><em>(10 rows of 20000)</em></p>
 <p>To plot this example, we’ll also show the use of <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which summarizes samples into estimates and intervals within ggplot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ABC <span class="op">%&gt;%</span>
@@ -661,9 +661,9 @@ m <span class="op">%&gt;%</span>
 ## # Groups:   mpg, .row, category [3]
 ##     mpg  .row category estimate  conf.low conf.high .prob
 ##   &lt;dbl&gt; &lt;int&gt; &lt;fct&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1    21     1 1          0.302  0.0491       0.682   0.95
-## 2    21     1 2          0.684  0.307        0.950   0.95
-## 3    21     1 3          0.0135 0.0000112    0.0867  0.95</code></pre>
+## 1    21     1 1          0.307  0.0475       0.708   0.95
+## 2    21     1 2          0.680  0.279        0.950   0.95
+## 3    21     1 3          0.0131 0.0000153    0.0823  0.95</code></pre>
 <p>We could plot fit lines for estimated probabilities against the dataset:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_plot =<span class="st"> </span>mtcars <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> cyl, <span class="dt">color =</span> <span class="kw">ordered</span>(cyl))) <span class="op">+</span>

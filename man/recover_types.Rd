@@ -8,7 +8,7 @@
 recover_types(model, ...)
 }
 \arguments{
-\item{model}{A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects; 
+\item{model}{A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
 for a full list of supported models, see \link{tidybayes-models}.}
 
 \item{...}{Lists (or data frames) providing data prototypes used to convert

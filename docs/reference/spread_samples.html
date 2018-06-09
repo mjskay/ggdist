@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract samples of parameters in a Bayesian model fit into a tidy data format — spread_samples • tidybayes</title>
+<title>Extract samples of parameters in a Bayesian model fit into a tidy data format — gather_samples • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,7 +32,7 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Extract samples of parameters in a Bayesian model fit into a tidy data format — spread_samples" />
+<meta property="og:title" content="Extract samples of parameters in a Bayesian model fit into a tidy data format — gather_samples" />
 
 <meta property="og:description" content="Extract samples from a Bayesian/MCMC sampler for a variable with the given named
 indices into one of two types of long-format data frames." />
@@ -131,7 +131,7 @@ indices into one of two types of long-format data frames." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract samples of parameters in a Bayesian model fit into a tidy data format</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_spread_samples.R'><code>R/gather_spread_samples.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_samples.R'><code>R/gather_samples.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/spread_samples.R'><code>R/spread_samples.R</code></a></small>
     <div class="hidden name"><code>spread_samples.Rd</code></div>
     </div>
 
@@ -142,22 +142,17 @@ indices into one of two types of long-format data frames.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>spread_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>)
+    <pre class="usage"><span class='fu'>gather_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>)
 
-<span class='fu'>gather_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>)</pre>
+<span class='fu'>spread_samples</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>A supported Bayesian model fit / MCMC object. Currently
-supported models include <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc'>mcmc</a></code>, <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>mcmc.list</a></code>,
-<code><a href='http://www.rdocumentation.org/packages/runjags/topics/runjags'>runjags</a></code>, <code><a href='http://www.rdocumentation.org/packages/rstan/topics/stanfit-class'>stanfit</a></code>, <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stanreg-objects'>stanreg-objects</a></code>,
-<code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code>, and anything with its own <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code> implementation.
-If you install the <code>tidybayes.rethinking</code> package (available at
-<a href='https://github.com/mjskay/tidybayes.rethinking'>https://github.com/mjskay/tidybayes.rethinking</a>), <code>map</code> and
-<code>map2stan</code> models from the <code>rethinking</code> package are also supported.</p></td>
+      <td><p>A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
+for a full list of supported models, see <a href='tidybayes-models.html'>tidybayes-models</a>.</p></td>
     </tr>
     <tr>
       <th>...</th>

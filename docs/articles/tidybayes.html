@@ -93,7 +93,7 @@
       <h1>Using tidy data with Bayesian samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-06-06</h4>
+            <h4 class="date">2018-06-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes.Rmd</code></div>
@@ -122,7 +122,7 @@ img {
 <ol style="list-style-type: decimal">
 <li><p><strong>Tidy data does not always mean all parameter names as values</strong>. In contrast to the <code>ggmcmc</code> library (which translates sampler results into a data frame with a <code>Parameter</code> and <code>value</code> column), the <code>spread_samples</code> function in <code>tidybayes</code> produces in data frames where the columns are named after parameters and (in some cases) indices of those parameters, as automatically as possible and using a syntax as close to the same way you would refer to those variables in the sampler’s language as possible. A similar function to <code>ggmcmc</code>’s approach is also provided in <code>gather_samples</code>, since sometimes you <em>do</em> want parameter names as values in a column. The goal is for <code>tidybayes</code> to do the tedious work of figuring out how to make a data frame look the way you need it to, including turning parameters with indices like <code>"b[1,2]"</code> and the like into tidy data for you.</p></li>
 <li><p><strong>Fit into the tidyverse and broom</strong>. <code>tidybayes</code> methods fit into a workflow familiar to users of the <code>tidyverse</code> (<code>dplyr</code>, <code>tidyr</code>, <code>ggplot2</code>, etc), and the <code>tidy</code> function from the <code>broom</code> package, which means fitting into the pipe (<code>%&gt;%</code>) workflow, using and respecting grouped data frames (thus <code>spread_samples</code> and <code>gather_samples</code> return results already grouped by parameter indices, and methods like <code>mean_qi</code> calculate estimates and intervals for parameters and groups simultaneously), using the same output column names that the <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> function does where possible, and not reinventing too much of the wheel if it is already made easy by functions provided by existing <code>tidyverse</code> packages (unless it makes for much clearer code for a common idiom).</p></li>
-<li><p><strong>Focus on composable operations and plotting primitives, not monolithic plots and operations</strong>. Several other packages (notably <code>bayesplot</code> and <code>ggmcmc</code>) already provide an excellent variety of pre-made methods for plotting Bayesian results. <code>tidybayes</code> shies away from duplicating this functionality. Instead, it focuses on providing composable operations for generating and manipulating Bayesian samples in a tidy data format, and graphical primitives for <code>ggplot</code> that allow you to build custom plots easily. Most simply, where <code>bayesplot</code> and <code>ggmcmc</code> tend to have functions with many options that return a full ggplot object, <code>tidybayes</code> tends towards providing primitives (like <code>geom</code>s) that you can compose and combine into your own custom plots. I believe both approaches have their place—monoliths can be useful for beginners—but I think that <a href="http://blog.mjskay.com/2017/11/05/i-don-t-want-your-monolithic-ggplot-function/">composable operations tend to be more flexible and useful over the long term, and are more in the spirit of ggplot</a>.</p></li>
+<li><p><strong>Focus on composable operations and plotting primitives, not monolithic plots and operations</strong>. Several other packages (notably <code>bayesplot</code> and <code>ggmcmc</code>) already provide an excellent variety of pre-made methods for plotting Bayesian results. <code>tidybayes</code> shies away from duplicating this functionality. Instead, it focuses on providing composable operations for generating and manipulating Bayesian samples in a tidy data format, and graphical primitives for <code>ggplot</code> that allow you to build custom plots easily. Most simply, where <code>bayesplot</code> and <code>ggmcmc</code> tend to have functions with many options that return a full ggplot object, <code>tidybayes</code> tends towards providing primitives (like <code>geom</code>s) that you can compose and combine into your own custom plots. I believe both approaches have their place: pre-made functions are especially useful for common, quick operations that don’t need customization (like many diagnostic plots), while composable operations tend to be useful for more complex custom plots (in <a href="http://blog.mjskay.com/2017/11/05/i-don-t-want-your-monolithic-ggplot-function/">my opinion</a>).</p></li>
 <li><p><strong>Sensible defaults make life easy.</strong> But options (and the data being tidy in the first place) make it easy to go your own way when you need to.</p></li>
 <li><p><strong>Variable names in models should be descriptive, not cryptic</strong>. This principle implies avoiding cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to use variables like <code>J</code> to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like <code>j</code> to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like <code>n_participant</code> for the size of the group and <code>participant</code> (or a mnemonic shortform like <code>p</code>) for specific elements. In functions where names are auto-generated (like <code>compose_data</code>), <code>tidybayes</code> will (by default) assume you want these sorts of more descriptive names; however, you can always override the default naming scheme.</p></li>
 </ol>
@@ -130,7 +130,7 @@ img {
 <div id="supported-model-types" class="section level3">
 <h3 class="hasAnchor">
 <a href="#supported-model-types" class="anchor"></a>Supported model types</h3>
-<p><code>tidybayes</code> aims to support a variety of models. Currently supported models include <a href="https://cran.r-project.org/package=rstan">rstan</a>, <a href="https://cran.r-project.org/package=coda">coda::mcmc and coda::mcmc.list</a>, <a href="https://cran.r-project.org/package=runjags">runjags</a>, <a href="https://cran.r-project.org/package=rstanarm">rstanarm</a>, <a href="https://cran.r-project.org/package=brms">brms</a>, <a href="https://cran.r-project.org/package=MCMCglmm">MCMCglmm</a>, and anything with its own <code>as.mcmc.list</code> implementation. If you install the <a href="https://github.com/mjskay/tidybayes.rethinking">tidybayes.rethinking</a> package, models from the <a href="https://github.com/rmcelreath/rethinking">rethinking</a> package are also supported.</p>
+<p><code>tidybayes</code> aims to support a variety of models with a uniform interface. Currently supported models include <a href="https://cran.r-project.org/package=rstan">rstan</a>, <a href="https://cran.r-project.org/package=brms">brms</a>, <a href="https://cran.r-project.org/package=rstanarm">rstanarm</a>, <a href="https://cran.r-project.org/package=runjags">runjags</a>, <a href="https://cran.r-project.org/package=rjags">rjags</a>, <a href="https://cran.r-project.org/package=jagsUI">jagsUI</a>, <a href="https://cran.r-project.org/package=coda">coda::mcmc and coda::mcmc.list</a>, <a href="https://cran.r-project.org/package=MCMCglmm">MCMCglmm</a>, and anything with its own <code>as.mcmc.list</code> implementation. If you install the <a href="https://github.com/mjskay/tidybayes.rethinking">tidybayes.rethinking</a> package, models from the <a href="https://github.com/rmcelreath/rethinking">rethinking</a> package are also supported.</p>
 <p>For an up-to-date list of supported models, see <code><a href="../reference/tidybayes-models.html">?"tidybayes-models"</a></code>.</p>
 </div>
 </div>
@@ -270,7 +270,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Wed Jun 06 16:58:44 2018.
+## Samples were drawn using NUTS(diag_e) at Sat Jun 09 16:55:36 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -285,24 +285,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.9451 1.4123 0.7296 0.4951 0.0608 ...
+##  $ overall_mean     : num [1:4000(1d)] 1.242 0.454 1.273 0.328 -0.153 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.897 -0.756 -0.619 -0.405 0.252 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -1.071 -0.233 -0.763 -0.481 0.901 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.502 0.535 0.527 0.61 0.577 ...
+##  $ response_sd      : num [1:4000(1d)] 0.548 0.7 0.503 0.544 0.586 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.942 1.686 0.732 1.292 1.602 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 0.946 0.88 1.104 0.821 0.626 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.1001 0.1376 0.2768 -0.0284 0.464 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.2283 0.2498 0.4302 -0.0668 0.4109 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 1.13177 2.8577 1.93511 1.32389 0.00907 ...
+##  $ lp__             : num [1:4000(1d)] 0.353 -1.509 -1.807 -2.106 -5.077 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -876,9 +876,9 @@ bayes_estimates</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-50-1.png" width="576"></p>
 <p>Observe the shrinkage towards the overall mean in the Bayesian model compared to the OLS model.</p>
 </div>
-<div id="compatibility-with-bayesplot-and-other-non-tidy-packages-using-unspread_samples-and-ungather_samples" class="section level3">
+<div id="compatibility-with-bayesplot-using-unspread_samples-and-ungather_samples" class="section level3">
 <h3 class="hasAnchor">
-<a href="#compatibility-with-bayesplot-and-other-non-tidy-packages-using-unspread_samples-and-ungather_samples" class="anchor"></a>Compatibility with <code>bayesplot</code> and other non-tidy packages using <code>unspread_samples</code> and <code>ungather_samples</code>
+<a href="#compatibility-with-bayesplot-using-unspread_samples-and-ungather_samples" class="anchor"></a>Compatibility with <code>bayesplot</code> using <code>unspread_samples</code> and <code>ungather_samples</code>
 </h3>
 <p>Functions from other packages might expect samples in the form of a data frame or matrix with parameters as columns and samples as rows. That is the format returned by <code>as_sample_tibble</code>, but not by <code>gather_samples</code> or <code>spread_samples</code>, which split indices from parameters out into columns.</p>
 <p>It may be desirable to use the <code>spread_samples</code> or <code>gather_samples</code> functions to transform your samples in some way, and then convert them <em>back</em> into the sample <span class="math inline">\(\times\)</span> parameter format to pass them into functions from other packages, like <code>bayesplot</code>. The <code>unspread_samples</code> and <code>ungather_samples</code> functions invert <code>spread_samples</code> and <code>gather_samples</code> to return a data frame with parameter column names that include indices in them and samples as rows.</p>
