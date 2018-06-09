@@ -57,13 +57,13 @@ globalVariables(c(".iteration", ".pred"))
 #' output is given to us, and the output from different modeling functions differ on this point. See
 #' \code{vignette("tidy-brms")} and \code{vignette("tidy-rstanarm")} for examples of dealing with output
 #' from ordinal models using both approaches.
-#' @param auxpars For \code{fitted_samples} and \code{add_fitted_samples}: Should auxiliary
-#' parameters be included in the output? Valid only for models that support auxiliary parameters,
-#' (such as submodels for variance parameters as in \code{brm}). If \code{TRUE}, auxiliary
+#' @param dpar For \code{fitted_samples} and \code{add_fitted_samples}: Should distributional regression
+#' parameters be included in the output? Valid only for models that support distributional regression parameters,
+#' such as submodels for variance parameters (as in \code{brm}). If \code{TRUE}, distributional regression
 #' parameters are included in the output as additional columns named after each parameter
 #' (alternative names can be provided using a list or named vector, e.g. \code{c(sigma.hat = "sigma")}
 #' would output the \code{"sigma"} parameter from a model as a column named \code{"sigma.hat"}).
-#' If \code{FALSE}, auxiliary parameters are not included.
+#' If \code{FALSE} (the default), distributional regression parameters are not included.
 #' @param scale Either \code{"response"} or \code{"linear"}. If \code{"response"}, results are returned
 #' on the scale of the response variable. If \code{"linear"}, fitted values are returned on the scale of
 #' the linear predictor.

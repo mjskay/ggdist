@@ -11,16 +11,16 @@ globalVariables(c(".iteration"))
 #' @rdname add_predicted_samples
 #' @export
 add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = FALSE, scale = c("response", "linear")
+  category = "category", dpar = FALSE, scale = c("response", "linear")
 ) {
   fitted_samples(model, newdata, var, ..., n = n, re_formula = re_formula,
-    category = category, auxpars = auxpars, scale = scale)
+    category = category, dpar = dpar, scale = scale)
 }
 
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = FALSE, scale = c("response", "linear")
+  category = "category", dpar = FALSE, scale = c("response", "linear")
 ) {
   UseMethod("fitted_samples")
 }
@@ -34,7 +34,7 @@ fitted_samples.default = function(model, newdata, ...) {
 #' @rdname add_predicted_samples
 #' @export
 fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = FALSE, scale = c("response", "linear")
+  category = "category", dpar = FALSE, scale = c("response", "linear")
 ) {
   transform = match.arg(scale) == "response"
 
@@ -64,7 +64,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
 #' @importFrom purrr map
 #' @export
 fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NULL, re_formula = NULL,
-  category = "category", auxpars = FALSE, scale = c("response", "linear")
+  category = "category", dpar = FALSE, scale = c("response", "linear")
 ) {
   scale = match.arg(scale)
 
@@ -73,16 +73,16 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
   }
 
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]fitted_samples", n = "nsamples", auxpars = "dpars"
+    names(list(...)), "[add_]fitted_samples", n = "nsamples", dpar = "dpars"
   )
 
   # get the names of distributional regression parameters to include
-  dpars = if (is_true(auxpars)) {
+  dpars = if (is_true(dpar)) {
     names(brms::parse_bf(model$formula)$dpar)
-  } else if (is_false(auxpars)) {
+  } else if (is_false(dpar)) {
     NULL
   } else {
-    auxpars
+    dpar
   }
   if (is_empty(dpars)) {
     # the above conditions might return an empty vector, which does not play well with the code below
@@ -108,10 +108,9 @@ fitted_samples.brmsfit = function(model, newdata, var = "estimate", ..., n = NUL
 
   for (i in seq_along(dpars)) {
     varname = names(dpars)[[i]]
-    dpar = dpars[[i]]
     samples[[varname]] = fitted_predicted_samples_brmsfit_(
       fitted, model, newdata, var = ".estimate", ...,
-      category = category, nsamples = n, re_formula = re_formula, dpar = dpar, scale = scale
+      category = category, nsamples = n, re_formula = re_formula, dpar = dpars[[i]], scale = scale
     )[[".estimate"]]
   }
 
