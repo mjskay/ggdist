@@ -1,4 +1,4 @@
-# spread_samples and gather_samples (used to be "extract_samples" or "tidy_samples")
+# spread_samples (used to be "extract_samples" or "tidy_samples")
 #
 # Author: mjskay
 ###############################################################################
@@ -8,12 +8,14 @@
 globalVariables(c(".."))
 
 
-# DEPRECATED NAMES FOR spread_samples
+# deprecated names for spread_samples --------------------------------------
+
 #' @export
 extract_samples = function(...) {
   .Deprecated("spread_samples")  # nocov
   spread_samples(...)            # nocov
 }
+
 #' @export
 tidy_samples = function(...) {
   .Deprecated("spread_samples")  # nocov
@@ -21,84 +23,7 @@ tidy_samples = function(...) {
 }
 
 
-# get all variable names from an expression
-# based on http://adv-r.had.co.nz/dsl.html
-all_names <- function(x) {
-  if (is.atomic(x)) {
-    NULL
-  } else if (is.name(x)) {
-    name = as.character(x)
-    if (name == "") {
-      NULL
-    }
-    else {
-      name
-    }
-  } else if (is.call(x) || is.pairlist(x)) {
-    children <- lapply(x[-1], all_names)
-    unique(unlist(children))
-  } else {
-    stop("Don't know how to handle type `", typeof(x), "`",
-      call. = FALSE)
-  }
-}
-
-#parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
-#into a list with three elements:
-# 1. A vector of variable names
-# 2. A vector of index names (or NULL if none)
-# 3. The name of the wide index (or NULL if none)
-#' @importFrom stats setNames
-#' @importFrom purrr reduce map map2
-#' @importFrom rlang set_names
-parse_variable_spec = function(variable_spec) {
-  names = all_names(variable_spec$expr)
-  #specs for each bare variable name in the spec expression
-  names_spec = names %>%
-    set_names() %>%
-    map(function(name) list(name, NULL, NULL))
-
-
-  c_function = function(...) {
-    reduce(list(...), function(spec1, spec2) map2(spec1, spec2, base::c))
-  }
-
-  spec_env = c(
-    names_spec,
-    list(
-      c = c_function,
-      cbind = c_function,
-
-      `[` = function(spec, ...) {
-        index_names = as.character(substitute(list(...))[-1])
-
-        list(
-          spec[[1]],
-          c(spec[[2]], index_names),
-          spec[[3]]
-        )
-      },
-
-      `|` = function(spec, by) {
-        wide_index_name = by[[1]]
-        if (!is.null(spec[[3]])) {
-          stop("Left-hand side of `|` cannot contain `|`")
-        }
-        if (length(wide_index_name) != 1) {
-          stop("Right-hand side of `|` must be exactly one name")
-        }
-
-        list(
-          spec[[1]],
-          spec[[2]],
-          wide_index_name
-        )
-      }
-    )
-  )
-
-  lazy_eval(variable_spec, spec_env)
-}
+# spread_samples ----------------------------------------------------------
 
 #' Extract samples of parameters in a Bayesian model fit into a tidy data format
 #'
@@ -323,6 +248,7 @@ spread_samples = function(model, ..., regex = FALSE, sep = "[, ]") {
     }) %>%
     group_by_(.dots = groups_)
 }
+
 #' @import dplyr
 #' @importFrom tidyr spread_
 #' @importFrom lazyeval lazy_eval
@@ -377,7 +303,6 @@ spread_samples_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
     samples
   }
 }
-
 
 #' @importFrom tidyr spread_ separate_ gather_
 #' @import stringi
@@ -469,23 +394,83 @@ spread_samples_long_ = function(model, variable_names, index_names, regex = FALS
 }
 
 
-#' @rdname spread_samples
-#' @importFrom dplyr bind_rows
-#' @export
-gather_samples = function(model, ..., regex = FALSE, sep = "[, ]") {
-  tidysamples = lapply(lazy_dots(...), function(variable_spec) {
-    model %>%
-      spread_samples_(variable_spec, regex = regex, sep = sep) %>%
-      gather_terms()
-  })
+# helpers -----------------------------------------------------------------
 
-  #get the groups from all the samples --- when we bind them together,
-  #the grouping information is not always retained, so we'll have to recreate
-  #the full set of groups from all the data frames after we bind them
-  groups_ = tidysamples %>%
-    map(groups) %>%
-    reduce(union)
+# get all variable names from an expression
+# based on http://adv-r.had.co.nz/dsl.html
+all_names <- function(x) {
+  if (is.atomic(x)) {
+    NULL
+  } else if (is.name(x)) {
+    name = as.character(x)
+    if (name == "") {
+      NULL
+    }
+    else {
+      name
+    }
+  } else if (is.call(x) || is.pairlist(x)) {
+    children <- lapply(x[-1], all_names)
+    unique(unlist(children))
+  } else {
+    stop("Don't know how to handle type `", typeof(x), "`",
+      call. = FALSE)
+  }
+}
 
-  bind_rows(tidysamples) %>%
-    group_by_(.dots = groups_)
+#parse a variable spec in the form variable_name[index_name_1, index_name_2, ..] | wide_index
+#into a list with three elements:
+# 1. A vector of variable names
+# 2. A vector of index names (or NULL if none)
+# 3. The name of the wide index (or NULL if none)
+#' @importFrom stats setNames
+#' @importFrom purrr reduce map map2
+#' @importFrom rlang set_names
+parse_variable_spec = function(variable_spec) {
+  names = all_names(variable_spec$expr)
+  #specs for each bare variable name in the spec expression
+  names_spec = names %>%
+    set_names() %>%
+    map(function(name) list(name, NULL, NULL))
+
+
+  c_function = function(...) {
+    reduce(list(...), function(spec1, spec2) map2(spec1, spec2, base::c))
+  }
+
+  spec_env = c(
+    names_spec,
+    list(
+      c = c_function,
+      cbind = c_function,
+
+      `[` = function(spec, ...) {
+        index_names = as.character(substitute(list(...))[-1])
+
+        list(
+          spec[[1]],
+          c(spec[[2]], index_names),
+          spec[[3]]
+        )
+      },
+
+      `|` = function(spec, by) {
+        wide_index_name = by[[1]]
+        if (!is.null(spec[[3]])) {
+          stop("Left-hand side of `|` cannot contain `|`")
+        }
+        if (length(wide_index_name) != 1) {
+          stop("Right-hand side of `|` must be exactly one name")
+        }
+
+        list(
+          spec[[1]],
+          spec[[2]],
+          wide_index_name
+        )
+      }
+    )
+  )
+
+  lazy_eval(variable_spec, spec_env)
 }
