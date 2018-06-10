@@ -270,7 +270,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Sat Jun 09 16:55:36 2018.
+## Samples were drawn using NUTS(diag_e) at Sat Jun 09 21:26:53 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -285,24 +285,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 1.242 0.454 1.273 0.328 -0.153 ...
+##  $ overall_mean     : num [1:4000(1d)] 2.3108 0.0439 0.7224 0.3078 -0.5599 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -1.071 -0.233 -0.763 -0.481 0.901 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.9357 0.4573 -0.377 0.0639 0.4422 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.548 0.7 0.503 0.544 0.586 ...
+##  $ response_sd      : num [1:4000(1d)] 0.604 0.562 0.499 0.536 0.419 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.946 0.88 1.104 0.821 0.626 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 2.06 1.11 1.28 1.16 1.35 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.2283 0.2498 0.4302 -0.0668 0.4109 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.382 0.55 0.239 0.382 0.037 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 0.353 -1.509 -1.807 -2.106 -5.077 ...
+##  $ lp__             : num [1:4000(1d)] -2.091 -0.204 0.383 -1.596 -2.443 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>

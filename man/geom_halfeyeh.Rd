@@ -4,11 +4,12 @@
 \alias{geom_halfeyeh}
 \title{Half-eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
-geom_halfeyeh(mapping = NULL, data = NULL, position = position_dodgev(),
-  trim = TRUE, scale = "area", fill = NULL, density.color = NA, ...,
-  point.interval = mean_qih, fun.data = point.interval, fun.args = list(),
-  .prob = c(0.95, 0.66), color = NULL, size = NULL, size_domain = NULL,
-  size_range = NULL, fatten_point = NULL)
+geom_halfeyeh(mapping = NULL, data = NULL, position = "identity",
+  trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
+  density.color = NA, ..., point.interval = mean_qih,
+  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
+  color = NULL, size = NULL, size_domain = NULL, size_range = NULL,
+  fatten_point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -29,6 +30,9 @@ don't trim the tails.}
 densities have the same area (before trimming the tails).  If "count", areas
 are scaled proportionally to the number of observations. If "width", all
 densities have the same maximum width/height.}
+
+\item{relative_scale}{A relative scaling factor to determine how much of the available
+space densities are scaled to fill: if \code{1}, all available space is filled.}
 
 \item{fill}{Fill color of the density.}
 

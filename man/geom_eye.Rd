@@ -5,17 +5,19 @@
 \alias{geom_eyeh}
 \title{Eye plots of densities with point estimates and intervals (ggplot geom)}
 \usage{
-geom_eye(mapping = NULL, data = NULL, position = "dodge", trim = TRUE,
-  scale = "area", fill = NULL, violin.color = NA, ...,
-  point.interval = mean_qi, fun.data = point.interval, fun.args = list(),
-  .prob = c(0.95, 0.66), color = NULL, size = NULL, size_domain = NULL,
-  size_range = NULL, fatten_point = NULL)
+geom_eye(mapping = NULL, data = NULL, position = "identity",
+  trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
+  violin.color = NA, ..., point.interval = mean_qi,
+  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
+  color = NULL, size = NULL, size_domain = NULL, size_range = NULL,
+  fatten_point = NULL)
 
-geom_eyeh(mapping = NULL, data = NULL, position = position_dodgev(),
-  trim = TRUE, scale = "area", fill = NULL, violin.color = NA, ...,
-  point.interval = mean_qih, fun.data = point.interval, fun.args = list(),
-  .prob = c(0.95, 0.66), color = NULL, size = NULL, size_domain = NULL,
-  size_range = NULL, fatten_point = NULL)
+geom_eyeh(mapping = NULL, data = NULL, position = "identity",
+  trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
+  violin.color = NA, ..., point.interval = mean_qih,
+  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
+  color = NULL, size = NULL, size_domain = NULL, size_range = NULL,
+  fatten_point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -36,6 +38,9 @@ don't trim the tails.}
 violins have the same area (before trimming the tails).  If "count", areas
 are scaled proportionally to the number of observations. If "width", all
 violins have the same maximum width.}
+
+\item{relative_scale}{A relative scaling factor to determine how much of the available
+space densities are scaled to fill: if \code{1}, all available space is filled.}
 
 \item{fill}{Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. Fill color of the violin.}
 

@@ -143,11 +143,11 @@ or the posterior predictions of the model to the data frame in a long format.</p
     </div>
 
     <pre class="usage"><span class='fu'>add_fitted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='co'># S3 method for default</span>
@@ -155,12 +155,12 @@ or the posterior predictions of the model to the data frame in a long format.</p
 
 <span class='co'># S3 method for stanreg</span>
 <span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='co'># S3 method for brmsfit</span>
 <span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>auxpars</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='fu'>add_predicted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -233,14 +233,14 @@ output is given to us, and the output from different modeling functions differ o
 from ordinal models using both approaches.</p></td>
     </tr>
     <tr>
-      <th>auxpars</th>
-      <td><p>For <code>fitted_samples</code> and <code>add_fitted_samples</code>: Should auxiliary
-parameters be included in the output? Valid only for models that support auxiliary parameters,
-(such as submodels for variance parameters as in <code>brm</code>). If <code>TRUE</code>, auxiliary
+      <th>dpar</th>
+      <td><p>For <code>fitted_samples</code> and <code>add_fitted_samples</code>: Should distributional regression
+parameters be included in the output? Valid only for models that support distributional regression parameters,
+such as submodels for variance parameters (as in <code>brm</code>). If <code>TRUE</code>, distributional regression
 parameters are included in the output as additional columns named after each parameter
 (alternative names can be provided using a list or named vector, e.g. <code>c(sigma.hat = "sigma")</code>
 would output the <code>"sigma"</code> parameter from a model as a column named <code>"sigma.hat"</code>).
-If <code>FALSE</code>, auxiliary parameters are not included.</p></td>
+If <code>FALSE</code> (the default), distributional regression parameters are not included.</p></td>
     </tr>
     <tr>
       <th>scale</th>
@@ -315,9 +315,9 @@ are the preferred spellings.</p>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.082 seconds (Warm-up)
-#&gt;                0.1 seconds (Sampling)
-#&gt;                0.182 seconds (Total)
+#&gt;  Elapsed Time: 0.116 seconds (Warm-up)
+#&gt;                0.111 seconds (Sampling)
+#&gt;                0.227 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='co'># sample 100 fit lines from the posterior and overplot them</span>
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>

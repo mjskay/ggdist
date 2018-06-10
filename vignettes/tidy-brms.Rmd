@@ -469,6 +469,69 @@ mtcars %>%
   facet_grid(. ~ cyl)
 ```
 
+### Estimates of distributional regression parameters
+
+`brm` also allows us to set up submodels for parameters of the response distribution *other than* the location (e.g., mean). For example, we can allow a variance parameter, such as the standard deviation, to also be some function of the predictors.
+
+This approach can be helpful in cases of non-constant variance (also called _hetereoskedasticity_ by folks who like obfuscation via Latin). E.g., imagine two groups, each with different mean response _and variance_:
+
+```{r}
+set.seed(1234)
+AB = data_frame(
+  group = rep(c("a", "b"), each = 20),
+  response = rnorm(40, mean = rep(c(1, 5), each = 20), sd = rep(c(1, 3), each = 20))
+)
+
+AB %>%
+  ggplot(aes(x = response, y = group)) +
+  geom_point()
+```
+
+Here is a model that lets the mean _and standard deviation_ of `response` be dependent on `group`:
+
+```{r}
+m_ab = brm(
+  bf(
+    response ~ group,
+    sigma ~ group
+  ),
+  data = AB
+)
+```
+
+We can plot the mean of `response` and posterior predictions, as usual:
+
+```{r}
+grid = AB %>%
+  data_grid(group)
+
+fits = grid %>%
+  add_fitted_samples(m_ab)
+
+preds = grid %>%
+  add_predicted_samples(m_ab)
+
+AB %>%
+  ggplot(aes(x = response, y = group)) +
+  geom_halfeyeh(aes(x = estimate), relative_scale = 0.7, position = position_nudge(y = 0.1), data = fits) +
+  stat_intervalh(aes(x = pred), data = preds) +
+  geom_point(data = AB) +
+  scale_color_brewer()
+```
+
+This shows estimates of the mean in each group (black intervals and the density plots) and posterior predictive intervals (blue).
+
+The predictive intervals in group `b` are larger than in group `a` because the model estimates a different standard deviation for each group. We can see how estimates for the corresponding distributional parameter, `sigma`, changes by extracting it using the `dpar` argument to `add_fitted_samples`:
+
+```{r}
+grid %>%
+  add_fitted_samples(m_ab, dpar = TRUE) %>%
+  ggplot(aes(x = sigma, y = group)) +
+  geom_halfeyeh() +
+  geom_vline(xintercept = 0, linetype = "dashed")
+```
+
+By setting `dpar = TRUE`, all distributional parameters are added as additional columns in the result of `add_fitted_samples`; if you only want a specific parameter, you can specify it (or a list of just the parameters you want). In the above model, `dpar = TRUE` is equivalent to `dpar = list("mu", "sigma")`.
 
 
 ## Comparing levels of a factor
