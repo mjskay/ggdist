@@ -102,7 +102,7 @@ as_data_list.numeric = function(object, name = "",
   ...) {
   data = data_list(if (scalar_as_array) as.array(object) else object)
   if (name == "") {
-    warning("No name provided for value ", deparse0(object))
+    warning("No name provided for value `", deparse0(object), "`")
   }
   names(data) = name
   data

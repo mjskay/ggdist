@@ -499,7 +499,7 @@ m_ab = brm(
 )
 ```
 
-We can plot the mean of `response` and posterior predictions, as usual:
+We can plot the estimated mean of `response` alongside posterior predictive intervals and the data:
 
 ```{r}
 grid = AB %>%
