@@ -39,6 +39,8 @@
 #' violins have the same area (before trimming the tails).  If "count", areas
 #' are scaled proportionally to the number of observations. If "width", all
 #' violins have the same maximum width.
+#' @param relative_scale A relative scaling factor to determine how much of the available
+#' space densities are scaled to fill: if \code{1}, all available space is filled.
 #' @param fill Passed to \code{\link{geom_violin}} / \code{\link{geom_violinh}}. Fill color of the violin.
 #' @param violin.color Passed as the \code{color} argument of \code{\link{geom_violin}} / \code{\link{geom_violinh}}.
 #' The default, \code{NA}, suppresses the violin outline. Set to another value to set the violin outline color
@@ -96,7 +98,7 @@ geom_eye = function(
   mapping = NULL, data = NULL,
 
   #violin properties
-  position = "dodge", trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
+  position = "identity", trim = TRUE, scale = "area", relative_scale = 1, fill = NULL, violin.color = NA,
 
   ...,
 
@@ -111,14 +113,14 @@ geom_eye = function(
   #build violin plot
   violin.args = list(
       mapping = mapping, data = data, position = position, trim = trim, scale = scale,
-      fill = fill, color = violin.color
+      relative_scale = relative_scale, fill = fill, color = violin.color
     ) %>%
     discard(is.null)
   violin = do.call(geom_grouped_violin, violin.args)
 
   #build interval annotations
   interval.args =
-    list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
+    list(mapping = mapping, position = position, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
     {if (!is.null(size_domain)) modifyList(., list(size_domain = size_domain)) else .} %>%

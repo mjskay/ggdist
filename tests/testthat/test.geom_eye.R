@@ -29,11 +29,11 @@ test_that("two-parameter eye plots work", {
     rbind(data.frame(x = rnorm(1000, 1), y = "b", y_int = 2))
 
   p = ggplot(df, aes(x = x, y = y))
-  expect_doppelganger("two-parameter (factor) horizontal eye", p + geom_eyeh())
-  expect_doppelganger("two-parameter (factor) horizontal half-eye", p + geom_halfeyeh())
+  expect_doppelganger("two-parameter (factor) horizontal eye", p + geom_eyeh(relative_scale = 0.5))
+  expect_doppelganger("two-parameter (factor) horizontal half-eye", p + geom_halfeyeh(relative_scale = 0.5))
 
   p = ggplot(df, aes(x = y, y = x))
-  expect_doppelganger("two-parameter (factor) vertical eye", p + geom_eye())
+  expect_doppelganger("two-parameter (factor) vertical eye", p + geom_eye(relative_scale = 0.5))
 
   p = ggplot(df, aes(x = x, y = y_int))
   expect_doppelganger("two-parameter (numeric) horizontal eye", p + geom_eyeh(fatten_point = 3))

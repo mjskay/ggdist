@@ -17,6 +17,7 @@ geom_grouped_violinh = function(mapping = NULL, data = NULL,
   ...,
   trim = TRUE,
   scale = "area",
+  relative_scale = 1,
   side = "both",
   na.rm = FALSE,
   show.legend = NA,
@@ -32,6 +33,7 @@ geom_grouped_violinh = function(mapping = NULL, data = NULL,
     params = list(
       trim = trim,
       scale = scale,
+      relative_scale = relative_scale,
       side = side,
       na.rm = na.rm,
       ...
@@ -43,11 +45,11 @@ GeomGroupedViolinh = ggproto("GeomGroupedViolinh", GeomViolinh,
   default_aes = aes(weight = 1, colour = NA, fill = "gray65", size = 0,
     alpha = NA, linetype = "solid"),
 
-  extra_params = c("na.rm", "side"),
+  extra_params = c("na.rm", "side", "relative_scale"),
 
   setup_data = function(data, params) {
     data$width <- data$width %||%
-      params$width %||% (resolution(data$y, FALSE) * 0.9)
+      params$width %||% (resolution(data$y, FALSE) * 0.9 * params$relative_scale)
 
     # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
     switch(params$side,
@@ -79,6 +81,7 @@ stat_grouped_xdensity = function(mapping = NULL, data = NULL,
   kernel = "gaussian",
   trim = TRUE,
   scale = "area",
+  relative_scale = 1,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE) {
@@ -98,6 +101,7 @@ stat_grouped_xdensity = function(mapping = NULL, data = NULL,
       kernel = kernel,
       trim = trim,
       scale = scale,
+      relative_scale = relative_scale,
       na.rm = na.rm,
       ...
     )

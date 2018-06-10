@@ -8,6 +8,7 @@
 
 #' @importFrom ggplot2 StatYdensity ggproto_parent
 #' @importFrom plyr ddply
+#' @importFrom rlang %||%
 
 
 geom_grouped_violin = function(mapping = NULL, data = NULL,
@@ -15,6 +16,8 @@ geom_grouped_violin = function(mapping = NULL, data = NULL,
   ...,
   trim = TRUE,
   scale = "area",
+  relative_scale = 1,
+  side = "both",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE) {
@@ -29,6 +32,8 @@ geom_grouped_violin = function(mapping = NULL, data = NULL,
     params = list(
       trim = trim,
       scale = scale,
+      relative_scale = relative_scale,
+      side = side,
       na.rm = na.rm,
       ...
     )
@@ -38,6 +43,25 @@ geom_grouped_violin = function(mapping = NULL, data = NULL,
 GeomGroupedViolin = ggproto("GeomGroupedViolin", GeomViolin,
   default_aes = aes(weight = 1, colour = NA, fill = "gray65", size = 0,
     alpha = NA, linetype = "solid"),
+
+  extra_params = c("na.rm", "side", "relative_scale"),
+
+  setup_data = function(data, params) {
+    data$width <- data$width %||%
+      params$width %||% (resolution(data$x, FALSE) * 0.9 * params$relative_scale)
+
+    # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
+    switch(params$side,
+      right = plyr::ddply(data, "group", transform,
+        xmin = x,
+        xmax = x + width
+      ),
+      both = plyr::ddply(data, "group", transform,
+        xmin = x - width / 2,
+        xmax = x + width / 2
+      )
+    )
+  },
 
   draw_group = function(self, data, ...) {
     grobs = dlply(data, "x", function(d) ggproto_parent(GeomViolin, self)$draw_group(d, ...))
@@ -56,6 +80,7 @@ stat_grouped_ydensity = function(mapping = NULL, data = NULL,
   kernel = "gaussian",
   trim = TRUE,
   scale = "area",
+  relative_scale = 1,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE) {
@@ -75,6 +100,7 @@ stat_grouped_ydensity = function(mapping = NULL, data = NULL,
       kernel = kernel,
       trim = trim,
       scale = scale,
+      relative_scale = relative_scale,
       na.rm = na.rm,
       ...
     )

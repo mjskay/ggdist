@@ -14,7 +14,7 @@ geom_eyeh = function(
   mapping = NULL, data = NULL,
 
   #violin properties
-  position = position_dodgev(), trim = TRUE, scale = "area", fill = NULL, violin.color = NA,
+  position = "identity", trim = TRUE, scale = "area", relative_scale = 1, fill = NULL, violin.color = NA,
 
   ...,
 
@@ -29,14 +29,14 @@ geom_eyeh = function(
   #build violin plot
   violin.args = list(
       mapping = mapping, data = data, position = position, trim = trim, scale = scale,
-      fill = fill, color = violin.color
+      relative_scale = relative_scale, fill = fill, color = violin.color
     ) %>%
     discard(is.null)
   violin = do.call(geom_grouped_violinh, violin.args)
 
   #build interval annotations
   interval.args =
-    list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
+    list(mapping = mapping, position = position, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
     {if (!is.null(size_domain)) modifyList(., list(size_domain = size_domain)) else .} %>%

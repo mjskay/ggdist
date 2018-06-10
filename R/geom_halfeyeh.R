@@ -35,6 +35,8 @@
 #' densities have the same area (before trimming the tails).  If "count", areas
 #' are scaled proportionally to the number of observations. If "width", all
 #' densities have the same maximum width/height.
+#' @param relative_scale A relative scaling factor to determine how much of the available
+#' space densities are scaled to fill: if \code{1}, all available space is filled.
 #' @param fill Fill color of the density.
 #' @param density.color Outline color of the density.
 #' The default, \code{NA}, suppresses the density outline. Set to another value to set the density outline color
@@ -87,7 +89,7 @@ geom_halfeyeh = function(
   mapping = NULL, data = NULL,
 
   #density properties
-  position = position_dodgev(), trim = TRUE, scale = "area", fill = NULL, density.color = NA,
+  position = "identity", trim = TRUE, scale = "area", relative_scale = 1, fill = NULL, density.color = NA,
 
   ...,
 
@@ -101,15 +103,15 @@ geom_halfeyeh = function(
 
   #build violin plot
   density.args = list(
-      mapping = mapping, data = data, position = position, trim = trim, scale = scale, side = "top",
-      fill = fill, color = density.color
+      mapping = mapping, data = data, position = position, trim = trim, scale = scale,
+      relative_scale = relative_scale, side = "top", fill = fill, color = density.color
     ) %>%
     discard(is.null)
   dens = do.call(geom_grouped_violinh, density.args)
 
   #build interval annotations
   interval.args =
-    list(mapping = mapping, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
+    list(mapping = mapping, position = position, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
     {if (!is.null(size_domain)) modifyList(., list(size_domain = size_domain)) else .} %>%
