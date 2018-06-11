@@ -11,7 +11,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
   ...,
   point_interval = mean_qi,
   fun.data = NULL,
-  .prob = .95,
+  .prob = c(.66, .95),
   fun.args = list(),
   na.rm = FALSE,
   show.legend = FALSE,
@@ -57,7 +57,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
 
 #' @importFrom plyr defaults
 StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
-  compute_panel = function(data, scales, fun.data = mean_qih, .prob = .95,
+  compute_panel = function(data, scales, fun.data = mean_qih, .prob = c(.66, .95),
     fun.args = list(), na.rm = FALSE
   ) {
 

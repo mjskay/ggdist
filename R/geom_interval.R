@@ -64,7 +64,6 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #'   geom_interval() +
 #'   scale_color_brewer()
 #'
-#' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2
 #' @export
 geom_interval <- function(mapping = NULL, data = NULL,

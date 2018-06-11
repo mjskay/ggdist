@@ -10,7 +10,6 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 
 
 #' @rdname geom_pointinterval
-#' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2
 #' @export
 geom_pointintervalh <- function(mapping = NULL, data = NULL,
@@ -61,7 +60,6 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
 #' @rdname tidybayes-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom ggstance GeomLinerangeh
 #' @importFrom grid grobName gTree gList
 #' @import ggplot2
 #' @export
@@ -85,12 +83,12 @@ GeomPointintervalh <- ggproto("GeomPointintervalh", Geom,
     )
 
     if (is.null(data$x)) {
-      return(GeomLinerangeh$draw_panel(line_data, panel_scales, coord))
+      return(GeomIntervalh$draw_panel(line_data, panel_scales, coord))
     }
 
     ggname("geom_pointintervalh",
       gTree(children = gList(
-        GeomLinerangeh$draw_panel(line_data, panel_scales, coord),
+        GeomIntervalh$draw_panel(line_data, panel_scales, coord),
         GeomPoint$draw_panel(transform(line_data, size = size * fatten_point), panel_scales, coord)
       ))
     )

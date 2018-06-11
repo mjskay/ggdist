@@ -22,7 +22,7 @@ geom_eyeh = function(
   point_interval = mean_qi,
   fun.data = NULL,
   fun.args = list(),
-  .prob = c(.95, .66),
+  .prob = c(.66, .95),
   color = NULL, size = NULL, size_domain = NULL, size_range = NULL, fatten_point = NULL
 ) {
 

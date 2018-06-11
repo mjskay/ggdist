@@ -7,13 +7,13 @@
 \usage{
 stat_pointinterval(mapping = NULL, data = NULL, geom = "pointinterval",
   position = "identity", ..., point_interval = mean_qi, fun.data = NULL,
-  .prob = 0.95, fun.args = list(), na.rm = FALSE, show.legend = FALSE,
-  inherit.aes = TRUE)
+  .prob = c(0.66, 0.95), fun.args = list(), na.rm = FALSE,
+  show.legend = FALSE, inherit.aes = TRUE)
 
 stat_pointintervalh(mapping = NULL, data = NULL, geom = "pointintervalh",
   position = "identity", ..., point_interval = mean_qi, fun.data = NULL,
-  .prob = 0.95, fun.args = list(), na.rm = FALSE, show.legend = FALSE,
-  inherit.aes = TRUE)
+  .prob = c(0.66, 0.95), fun.args = list(), na.rm = FALSE,
+  show.legend = FALSE, inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with

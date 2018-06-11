@@ -56,7 +56,6 @@ geom_intervalh <- function(mapping = NULL, data = NULL,
 #' @format NULL
 #' @usage NULL
 #' @import ggplot2
-#' @importFrom ggstance GeomLinerangeh
 #' @export
 GeomIntervalh <- ggproto("GeomIntervalh", Geom,
   default_aes = aes(colour = "black", size = 4, linetype = 1, shape = 19,

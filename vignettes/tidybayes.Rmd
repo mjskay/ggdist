@@ -319,7 +319,7 @@ m %>%
 
 ### Using `stat_pointinterval`/`stat_pointintervalh`
 
-Rather than summarizing the posterior before calling ggplot, we could also use `stat_pointinterval` / `stat_pointintervalh` to perform the summary within ggplot.
+Rather than summarizing the posterior before calling ggplot, we could also use `stat_pointinterval` / `stat_pointintervalh` to perform the summary within ggplot:
 
 ```{r}
 m %>%
@@ -327,6 +327,8 @@ m %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
   stat_pointintervalh()
 ```
+
+These functions have `.prob = c(.66, .95)` by default (showing 66% and 95% intervals), but this can be changed by passing a `.prob` argument to `stat_pointinterval` / `stat_pointintervalh`.
 
 #### A note on functions ending in `h`
 
@@ -691,8 +693,8 @@ Comptability with `tidy` also gives compatibility with `dotwhisker::dwplot`:
 
 ```{r, warning = FALSE}
 bind_rows(linear_estimates, bayes_estimates) %>%
-    rename(term = condition) %>%
-    dotwhisker::dwplot()
+  rename(term = condition) %>%
+  dotwhisker::dwplot()
 ```
 
 Observe the shrinkage towards the overall mean in the Bayesian model compared to the OLS model.

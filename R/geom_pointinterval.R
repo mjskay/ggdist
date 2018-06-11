@@ -77,7 +77,6 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #'   ggplot(aes(x = i, y = u_tau)) +
 #'   geom_pointinterval()
 #'
-#' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2
 #' @export
 geom_pointinterval <- function(mapping = NULL, data = NULL,
@@ -158,12 +157,12 @@ GeomPointinterval <- ggproto("GeomPointinterval", Geom,
     )
 
     if (is.null(data$y)) {
-      return(GeomLinerange$draw_panel(line_data, panel_scales, coord))
+      return(GeomInterval$draw_panel(line_data, panel_scales, coord))
     }
 
     ggname("geom_pointinterval",
       gTree(children = gList(
-        GeomLinerange$draw_panel(line_data, panel_scales, coord),
+        GeomInterval$draw_panel(line_data, panel_scales, coord),
         GeomPoint$draw_panel(transform(line_data, size = size * fatten_point), panel_scales, coord)
       ))
     )

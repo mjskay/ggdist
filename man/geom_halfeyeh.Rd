@@ -7,7 +7,7 @@
 geom_halfeyeh(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
   density.color = NA, ..., point_interval = mean_qi, fun.data = NULL,
-  fun.args = list(), .prob = c(0.95, 0.66), color = NULL, size = NULL,
+  fun.args = list(), .prob = c(0.66, 0.95), color = NULL, size = NULL,
   size_domain = NULL, size_range = NULL, fatten_point = NULL)
 }
 \arguments{
