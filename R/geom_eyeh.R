@@ -19,12 +19,14 @@ geom_eyeh = function(
   ...,
 
   #stat_summaryh properties
-  point.interval = mean_qih,
-  fun.data = point.interval,
+  point_interval = mean_qi,
+  fun.data = NULL,
   fun.args = list(),
   .prob = c(.95, .66),
   color = NULL, size = NULL, size_domain = NULL, size_range = NULL, fatten_point = NULL
 ) {
+
+  fun.data = fun.data %||% horizontal_aes(point_interval)
 
   #build violin plot
   violin.args = list(

@@ -26,13 +26,19 @@ test_that("horizontal grouped intervals work", {
 
   expect_doppelganger("grouped intervals (h)", forward_plot)
 
-
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(y = i, x = u_tau)) +
     stat_intervalh(.prob = c(.5, .75, .90)) +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (h, stat)", stat_forward_plot)
+
+  stat_forward_plot_mode_hdi = RankCorr_u_tau %>%
+    ggplot(aes(y = i, x = u_tau)) +
+    stat_intervalh(.prob = c(.5, .75, .90), point_interval = mode_hdi) +
+    scale_color_brewer()
+
+  expect_doppelganger("grouped intervals (h, stat, mode_hdi)", stat_forward_plot_mode_hdi)
 
   reverse_plot = RankCorr_u_tau %>%
     mean_qi(.prob = c(.90, .75, .5)) %>%
@@ -59,13 +65,19 @@ test_that("grouped intervals work", {
 
   expect_doppelganger("grouped intervals", forward_plot)
 
-
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
     stat_interval(.prob = c(.5, .75, .90)) +
     scale_color_brewer()
 
   expect_doppelganger("grouped intervals (stat)", stat_forward_plot)
+
+  stat_forward_plot_mode_hdi = RankCorr_u_tau %>%
+    ggplot(aes(x = i, y = u_tau)) +
+    stat_interval(.prob = c(.5, .75, .90), point_interval = mode_hdi) +
+    scale_color_brewer()
+
+  expect_doppelganger("grouped intervals (stat, mode_hdi)", stat_forward_plot_mode_hdi)
 
   reverse_plot = RankCorr_u_tau %>%
     mean_qi(.prob = c(.90, .75, .5)) %>%

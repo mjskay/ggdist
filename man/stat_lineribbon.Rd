@@ -5,9 +5,9 @@
 \title{Line + multiple probability ribbon stat for ggplot}
 \usage{
 stat_lineribbon(mapping = NULL, data = NULL, geom = "lineribbon",
-  position = "identity", ..., point.interval = median_qi,
-  fun.data = point.interval, .prob = c(0.5, 0.8, 0.95), fun.args = list(),
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+  position = "identity", ..., point_interval = median_qi, fun.data = NULL,
+  .prob = c(0.5, 0.8, 0.95), fun.args = list(), na.rm = FALSE,
+  show.legend = NA, inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -24,10 +24,14 @@ the plot defaults.}
 
 \item{...}{Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.}
 
-\item{point.interval}{Alias for \code{fun.data}}
+\item{point_interval}{A function that when given a vector should
+return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
+\code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+will be converted into the \code{y}-based aesthetics. See the \code{point_interval} family of functions.}
 
-\item{fun.data}{A function that is given a vector and should return a data frame with variables \code{y}, \code{ymin}
-and \code{ymax}. See the \code{point_interval} family of functions.}
+\item{fun.data}{Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
+Note: if the summary function is passed using \code{fun.data}, \code{x}-based aesthetics
+are not converted to the correct form automatically.}
 
 \item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
 

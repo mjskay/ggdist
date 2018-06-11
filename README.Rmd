@@ -367,7 +367,7 @@ mtcars %>%
 ```{r, eval=FALSE}
   stat_summary(
     aes(y = pred, fill = forcats::fct_rev(ordered(...prob..)), group = -...prob..), 
-    geom = "ribbon", fun.data = median_qi, fun.args = list(.prob = c(.99, .95, .8, .5))
+    geom = "ribbon", point_interval = median_qi, fun.args = list(.prob = c(.99, .95, .8, .5))
   ) +
   stat_summary(aes(y = pred), fun.y = median, geom = "line", color = "red", size = 1.25)
 ```

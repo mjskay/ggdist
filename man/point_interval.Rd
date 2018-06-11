@@ -80,7 +80,7 @@ value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.}
 (\code{.prob}) and returns a two-element vector representing the lower and upper
 bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}}
 
-\item{.broom}{When \code{TRUE} and only a single estimate is to be output, use the
+\item{.broom}{When \code{TRUE} and only a single column / vector is to be summarised, use the
 name \code{conf.low} for the lower end of the interval and \code{conf.high} for the
 upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
 \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
@@ -99,10 +99,15 @@ columns (or expressions derived from columns) of \code{.data}, on which
 the point and interval estimates are derived. Column expressions are processed
 using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
 
-For a column named \code{x},
-the resulting data frame will have columns \code{x} (the point estimate),
-\code{x.low} (the lower end of the interval), \code{x.high} (the upper
-end of the interval), and \code{.prob}.
+For a column named \code{x}, the resulting data frame will have a column
+named \code{x} containing its point estimate. If there is a single
+column to be summarized and \code{.broom} is \code{TRUE}, the output will
+also contain columns \code{conf.low} (the lower end of the interval),
+\code{conf.high} (the upper end of the interval).
+Otherwise, for every summarized column \code{x}, the output will contain
+\code{x.low} (the lower end of the interval) and \code{x.high} (the upper
+end of the interval). Finally, the output will have a \code{.prob} column
+containing the' probability for the interval on each output row.
 
 If \code{.data} includes groups (see e.g. \code{\link[dplyr]{group_by}}),
 the points and intervals are calculated within the groups.
@@ -120,7 +125,11 @@ The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{mean_qih})
 behave identically to the function without the h, except that when passed a vector,
 they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 \code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
-\code{fun.data = } argument of \code{stat_summaryh}.
+\code{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
+functions are not necessary if you use the \code{point_interval}
+argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
+\code{\link{stat_pointintervalh}}, \code{\link{geom_halfeyeh}}, etc), as
+these automatically adjust the function output to match their required aesthetics.
 
 \code{mean_qi}, \code{mode_qi}, etc are short forms for
 \code{point_interval(..., .point = mean, .interval = qi)}, etc.

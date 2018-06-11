@@ -20,6 +20,14 @@ test_that("one-parameter eye plots work", {
 
   p = ggplot(df, aes(x = y, y = x))
   expect_doppelganger("one-parameter vertical eye", p + geom_eye())
+
+  p = ggplot(df, aes(x = x, y = y))
+  expect_doppelganger("one-parameter horizontal eye (mode_hdi)", p + geom_eyeh(point_interval = mode_hdi))
+  expect_doppelganger("one-parameter horizontal half-eye (mode_hdi)", p + geom_halfeyeh(point_interval = mode_hdi))
+
+  p = ggplot(df, aes(x = y, y = x))
+  expect_doppelganger("one-parameter vertical eye (mode_hdi)", p + geom_eye(point_interval = mode_hdi))
+
 })
 
 

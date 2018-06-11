@@ -330,7 +330,9 @@ m %>%
 
 #### A note on functions ending in `h`
 
-`tidybayes` follows the naming convention established by `ggstance` for horizontal versions of `geom`s and summary functions. It includes horizontal versions of all `point_interval` functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with `h`. When calling `stat_pointintervalh` (the horizontal version of `stat_pointinterval`), we must use the horizontal versions of the `point_interval` functions, like `mean_qih` in the above example. This is because `mean_qi` returns a data frame with `y`, `ymin`, and `ymax` columns when passed a vector (making it suitable for `stat_pointinterval` or `stat_summary`), and `mean_qih` returns a data frame with `x`, `xmin`, and `xmax` columns when passed a vector (making it suitable for `stat_pointintervalh` or `stat_summaryh`).
+`tidybayes` follows the naming convention established by `ggstance` for horizontal versions of `geom`s and summary functions. It includes horizontal versions of all `point_interval` functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with `h`. 
+
+When using `point_interval` family functions with geoms and stats defined by packages _other than of `tidybayes`_, you may need to use the horizontal versions of the `point_interval` functions, like `mean_qih` (e.g. in the `fun.data` argument of `ggstance::stat_summaryh`). This is because `mean_qi` returns a data frame with `y`, `ymin`, and `ymax` columns when passed a vector (making it suitable for `ggplot2::stat_summary`), and `mean_qih` returns a data frame with `x`, `xmin`, and `xmax` columns when passed a vector (making it suitable for `ggstance::stat_summaryh`). __You do not need to use these functions with tidybayes stats and geoms__; the `point_interval` argument to tidybayes stats and geoms (like `stat_pointinterval` and `stat_pointintervalh`) will automatically convert output of summary functions to the correct aesthetics.
 
 ### Interval estimates with posterior violins ("eye plots"): `geom_eye` and `geom_eyeh`
 
@@ -452,9 +454,9 @@ This is easier to see when plotted:
 multimodal_samples %>%
   ggplot(aes(x = x)) +
   stat_density(fill = "gray75") +
-  stat_pointintervalh(aes(y = -0.05), fun.data = median_qih, .prob = c(.95, .80)) +
+  stat_pointintervalh(aes(y = -0.05), point_interval = median_qi, .prob = c(.95, .80)) +
   annotate("text", label = "median, 80% and 95% quantile intervals", x = 6, y = -0.05, hjust = 0, vjust = 0.3) +
-  stat_pointintervalh(aes(y = -0.025), fun.data = mode_hdih, .prob = c(.95, .80)) +
+  stat_pointintervalh(aes(y = -0.025), point_interval = mode_hdi, .prob = c(.95, .80)) +
   annotate("text", label = "mode, 80% and 95% highest-density intervals", x = 6, y = -0.025, hjust = 0, vjust = 0.3) +
   xlim(-3.5, 14.5)
 ```

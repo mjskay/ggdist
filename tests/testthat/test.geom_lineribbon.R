@@ -29,23 +29,26 @@ test_that("one-group stat_lineribbons work", {
 
   expect_doppelganger("one-group stat_lineribbon", p + stat_lineribbon(.prob = c(.50, .75, .90)) + scale_fill_brewer())
   expect_doppelganger("one-group stat_lineribbon (reverse order)", p + stat_lineribbon(.prob = c(.90, .75, .50)) + scale_fill_brewer())
+
+  expect_doppelganger("one-group stat_lineribbon (mean_qi)",
+    p + stat_lineribbon(.prob = c(.50, .75, .90), point_interval = mean_qi) + scale_fill_brewer())
 })
 
 test_that("one-group geom_lineribbons work", {
   df = make_line_data()
-  
-  expect_doppelganger("one-group geom_lineribbon", df %>% 
-      group_by(x, g) %>% 
-      mode_qi(y, .prob = c(.50, .75, .90)) %>% 
-      ggplot(aes(x = x, y = y)) + 
-      geom_lineribbon() + 
+
+  expect_doppelganger("one-group geom_lineribbon", df %>%
+      group_by(x, g) %>%
+      mode_qi(y, .prob = c(.50, .75, .90)) %>%
+      ggplot(aes(x = x, y = y)) +
+      geom_lineribbon() +
       scale_fill_brewer()
     )
-  expect_doppelganger("one-group geom_lineribbon (reverse order)", df %>% 
-      group_by(x, g) %>% 
-      mean_hdi(y, .prob = c(.50, .75, .90)) %>% 
-      ggplot(aes(x = x, y = y)) + 
-      geom_lineribbon() + 
+  expect_doppelganger("one-group geom_lineribbon (reverse order)", df %>%
+      group_by(x, g) %>%
+      mean_hdi(y, .prob = c(.50, .75, .90)) %>%
+      ggplot(aes(x = x, y = y)) +
+      geom_lineribbon() +
       scale_fill_brewer()
   )
 })

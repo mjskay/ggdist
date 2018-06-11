@@ -25,9 +25,13 @@ globalVariables(c("...prob.."))
 #' \code{geom_lineribbon} and \code{stat_lineribbon}.
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.
-#' @param fun.data A function that is given a vector and should return a data frame with variables \code{y}, \code{ymin}
-#' and \code{ymax}. See the \code{point_interval} family of functions.
-#' @param point.interval Alias for \code{fun.data}
+#' @param point_interval A function that when given a vector should
+#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
+#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+#'   will be converted into the \code{y}-based aesthetics. See the \code{point_interval} family of functions.
+#' @param fun.data Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
+#'   Note: if the summary function is passed using \code{fun.data}, \code{x}-based aesthetics
+#'   are not converted to the correct form automatically.
 #' @param .prob The \code{.prob} argument passed to \code{fun.data}.
 #' @param fun.args Other optional arguments passed to \code{fun.data}.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
@@ -57,8 +61,8 @@ globalVariables(c("...prob.."))
 stat_lineribbon <- function(mapping = NULL, data = NULL,
   geom = "lineribbon", position = "identity",
   ...,
-  point.interval = median_qi,
-  fun.data = point.interval,
+  point_interval = median_qi,
+  fun.data = NULL,
   .prob = c(.5, .8, .95),
   fun.args = list(),
   na.rm = FALSE,
@@ -68,6 +72,8 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
   # Probs are drawn on top of each other in order by geom_lineribbon, so we have to sort in decreasing order
   # to make sure the largest interval is not drawn last (over-writing all other intervals)
   .prob %<>% sort()
+
+  fun.data = fun.data %||% vertical_aes(point_interval)
 
   l = layer(
     data = data,

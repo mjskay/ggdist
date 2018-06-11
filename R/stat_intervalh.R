@@ -9,8 +9,8 @@
 stat_intervalh <- function(mapping = NULL, data = NULL,
   geom = "intervalh", position = "identity",
   ...,
-  point.interval = mean_qih,
-  fun.data = point.interval,
+  point_interval = mean_qi,
+  fun.data = NULL,
   .prob = c(.95, .8, .5),
   fun.args = list(),
   na.rm = FALSE,
@@ -20,6 +20,8 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
   # Probs are drawn on top of each other in order by geom_intervalh, so we have to sort in decreasing order
   # to make sure the largest interval is not drawn last (over-writing all other intervals)
   .prob %<>% sort(decreasing = TRUE)
+
+  fun.data = fun.data %||% horizontal_aes(point_interval)
 
   l = layer(
     data = data,

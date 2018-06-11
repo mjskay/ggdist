@@ -8,7 +8,7 @@ library(purrr)
 library(tidyr)
 library(vdiffr)
 
-context("geom_interval")
+context("geom_pointinterval")
 
 # use a subset of RankCorr so tests are faster
 data(RankCorr, package = "tidybayes")
@@ -25,12 +25,17 @@ test_that("horizontal grouped pointintervals work", {
 
   expect_doppelganger("grouped pointintervals (h)", forward_plot)
 
-
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(y = i, x = u_tau)) +
     stat_pointintervalh(.prob = c(.66, .95))
 
   expect_doppelganger("grouped pointintervals (h, stat)", stat_forward_plot)
+
+  stat_forward_plot_mode_hdi = RankCorr_u_tau %>%
+    ggplot(aes(y = i, x = u_tau)) +
+    stat_pointintervalh(.prob = c(.66, .95), point_interval = mode_hdi)
+
+  expect_doppelganger("grouped pointintervals (h, stat, mode_hdi)", stat_forward_plot_mode_hdi)
 
   reverse_plot = RankCorr_u_tau %>%
     mode_hdi(.prob = c(.66, .95)) %>%
@@ -46,7 +51,7 @@ test_that("horizontal grouped pointintervals work", {
   expect_doppelganger("grouped pointintervals (h, stat, reverse order)", stat_reverse_plot)
 })
 
-test_that("grouped intervals work", {
+test_that("grouped pointintervals work", {
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.prob = c(.66, .95)) %>%
     ggplot(aes(x = i, y = u_tau)) +
@@ -54,12 +59,17 @@ test_that("grouped intervals work", {
 
   expect_doppelganger("grouped pointintervals", forward_plot)
 
-
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
     stat_pointinterval(.prob = c(.66, .95))
 
   expect_doppelganger("grouped pointintervals (stat)", stat_forward_plot)
+
+  stat_forward_plot_mode_hdi = RankCorr_u_tau %>%
+    ggplot(aes(x = i, y = u_tau)) +
+    stat_pointinterval(.prob = c(.66, .95), point_interval = mode_hdi)
+
+  expect_doppelganger("grouped pointintervals (stat, mode_hdi)", stat_forward_plot_mode_hdi)
 
   reverse_plot = RankCorr_u_tau %>%
     mean_qi(.prob = c(.66, .95)) %>%

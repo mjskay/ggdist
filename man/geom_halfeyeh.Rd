@@ -6,10 +6,9 @@
 \usage{
 geom_halfeyeh(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
-  density.color = NA, ..., point.interval = mean_qih,
-  fun.data = point.interval, fun.args = list(), .prob = c(0.95, 0.66),
-  color = NULL, size = NULL, size_domain = NULL, size_range = NULL,
-  fatten_point = NULL)
+  density.color = NA, ..., point_interval = mean_qi, fun.data = NULL,
+  fun.args = list(), .prob = c(0.95, 0.66), color = NULL, size = NULL,
+  size_domain = NULL, size_range = NULL, fatten_point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -43,11 +42,15 @@ mapping.}
 
 \item{...}{Currently unused.}
 
-\item{point.interval}{Alias for \code{fun.data}}
+\item{point_interval}{A function that when given a vector should
+return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
+\code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+will be converted into the \code{x}-based aesthetics \code{geom_halfeyeh}.
+See the \code{point_interval} family of functions.}
 
-\item{fun.data}{A function that is given a vector and should
-return a data frame with variables \code{x}, \code{xmin} and \code{xmax}
-and \code{.prob}. See the \code{point_interval} family of functions.}
+\item{fun.data}{Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
+Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
+are not converted to the correct form automatically.}
 
 \item{fun.args}{Optional arguments passed to \code{fun.data}.}
 

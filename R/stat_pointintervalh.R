@@ -9,14 +9,16 @@
 stat_pointintervalh <- function(mapping = NULL, data = NULL,
   geom = "pointintervalh", position = "identity",
   ...,
-  point.interval = mean_qih,
-  fun.data = point.interval,
+  point_interval = mean_qi,
+  fun.data = NULL,
   .prob = .95,
   fun.args = list(),
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE
 ) {
+
+  fun.data = fun.data %||% horizontal_aes(point_interval)
 
   l = layer(
     data = data,
