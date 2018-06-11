@@ -154,17 +154,15 @@ preferred here).</p>
 
     <pre class="usage"><span class='fu'>geom_eye</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>relative_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>,
-  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>),
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='fu'>geom_eyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>relative_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>mean_qih</span>,
-  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>),
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.95</span>, <span class='fl'>0.66</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -219,15 +217,18 @@ mapping.</p></td>
       <td><p>Currently unused.</p></td>
     </tr>
     <tr>
-      <th>point.interval</th>
-      <td><p>Alias for <code>fun.data</code></p></td>
+      <th>point_interval</th>
+      <td><p>A function that when given a vector should
+return a data frame with variables <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>.prob</code>; or
+<code>x</code>, <code>xmin</code>, <code>xmax</code>, and <code>.prob</code>. <strong>Either is acceptable</strong>: output
+will be converted into the <code>y</code>-based aesthetics for <code>geom_eye</code> and the
+<code>x</code>-based aesthetics for <code>geom_eyeh</code>. See the <code>point_interval</code> family of functions.</p></td>
     </tr>
     <tr>
       <th>fun.data</th>
-      <td><p>A function that is given a vector and should
-return a data frame with variables <code>y</code>, <code>ymin</code> and <code>ymax</code>
-(<code>x</code>, <code>xmin</code> and <code>xmax</code> for <code>stat_pointintervalh</code>),
-and <code>.prob</code>. See the <code>point_interval</code> family of functions.</p></td>
+      <td><p>Similar to <code>point_interval</code>, for compatibility with <code>stat_summary</code>.
+Note: if the summary function is passed using <code>fun.data</code>, the <code>x</code> and <code>y</code>-based aesthetics
+are not converted to the correct form automatically.</p></td>
     </tr>
     <tr>
       <th>fun.args</th>

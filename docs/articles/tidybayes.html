@@ -93,7 +93,7 @@
       <h1>Using tidy data with Bayesian samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-06-09</h4>
+            <h4 class="date">2018-06-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes.Rmd</code></div>
@@ -270,7 +270,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Sat Jun 09 21:26:53 2018.
+## Samples were drawn using NUTS(diag_e) at Mon Jun 11 00:35:01 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -285,24 +285,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 2.3108 0.0439 0.7224 0.3078 -0.5599 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.826 0.913 1.618 0.445 1.363 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.9357 0.4573 -0.377 0.0639 0.4422 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.746 -0.707 -1.875 -0.2 -1.032 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.604 0.562 0.499 0.536 0.419 ...
+##  $ response_sd      : num [1:4000(1d)] 0.586 0.472 0.418 0.556 0.563 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 2.06 1.11 1.28 1.16 1.35 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 0.615 1.002 0.8 0.714 1.598 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.382 0.55 0.239 0.382 0.037 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.367 0.204 0.119 0.301 -0.286 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -2.091 -0.204 0.383 -1.596 -2.443 ...
+##  $ lp__             : num [1:4000(1d)] -1.775 -0.272 -4.658 -0.247 -1.136 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -468,7 +468,8 @@ model {
 <h4 class="hasAnchor">
 <a href="#a-note-on-functions-ending-in-h" class="anchor"></a>A note on functions ending in <code>h</code>
 </h4>
-<p><code>tidybayes</code> follows the naming convention established by <code>ggstance</code> for horizontal versions of <code>geom</code>s and summary functions. It includes horizontal versions of all <code>point_interval</code> functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with <code>h</code>. When calling <code>stat_pointintervalh</code> (the horizontal version of <code>stat_pointinterval</code>), we must use the horizontal versions of the <code>point_interval</code> functions, like <code>mean_qih</code> in the above example. This is because <code>mean_qi</code> returns a data frame with <code>y</code>, <code>ymin</code>, and <code>ymax</code> columns when passed a vector (making it suitable for <code>stat_pointinterval</code> or <code>stat_summary</code>), and <code>mean_qih</code> returns a data frame with <code>x</code>, <code>xmin</code>, and <code>xmax</code> columns when passed a vector (making it suitable for <code>stat_pointintervalh</code> or <code>stat_summaryh</code>).</p>
+<p><code>tidybayes</code> follows the naming convention established by <code>ggstance</code> for horizontal versions of <code>geom</code>s and summary functions. It includes horizontal versions of all <code>point_interval</code> functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with <code>h</code>.</p>
+<p>When using <code>point_interval</code> family functions with geoms and stats defined by packages <em>other than of <code>tidybayes</code></em>, you may need to use the horizontal versions of the <code>point_interval</code> functions, like <code>mean_qih</code> (e.g. in the <code>fun.data</code> argument of <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/stat_summaryh">ggstance::stat_summaryh</a></code>). This is because <code>mean_qi</code> returns a data frame with <code>y</code>, <code>ymin</code>, and <code>ymax</code> columns when passed a vector (making it suitable for <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/stat_summary">ggplot2::stat_summary</a></code>), and <code>mean_qih</code> returns a data frame with <code>x</code>, <code>xmin</code>, and <code>xmax</code> columns when passed a vector (making it suitable for <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/stat_summaryh">ggstance::stat_summaryh</a></code>). <strong>You do not need to use these functions with tidybayes stats and geoms</strong>; the <code>point_interval</code> argument to tidybayes stats and geoms (like <code>stat_pointinterval</code> and <code>stat_pointintervalh</code>) will automatically convert output of summary functions to the correct aesthetics.</p>
 </div>
 </div>
 <div id="interval-estimates-with-posterior-violins-eye-plots-geom_eye-and-geom_eyeh" class="section level3">
@@ -584,9 +585,9 @@ multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">multimodal_samples <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">stat_density</span>(<span class="dt">fill =</span> <span class="st">"gray75"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="op">-</span><span class="fl">0.05</span>), <span class="dt">fun.data =</span> median_qih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">80</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="op">-</span><span class="fl">0.05</span>), <span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">80</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">annotate</span>(<span class="st">"text"</span>, <span class="dt">label =</span> <span class="st">"median, 80% and 95% quantile intervals"</span>, <span class="dt">x =</span> <span class="dv">6</span>, <span class="dt">y =</span> <span class="op">-</span><span class="fl">0.05</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="fl">0.3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="op">-</span><span class="fl">0.025</span>), <span class="dt">fun.data =</span> mode_hdih, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">80</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="op">-</span><span class="fl">0.025</span>), <span class="dt">point_interval =</span> mode_hdi, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">80</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">annotate</span>(<span class="st">"text"</span>, <span class="dt">label =</span> <span class="st">"mode, 80% and 95% highest-density intervals"</span>, <span class="dt">x =</span> <span class="dv">6</span>, <span class="dt">y =</span> <span class="op">-</span><span class="fl">0.025</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="fl">0.3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">xlim</span>(<span class="op">-</span><span class="fl">3.5</span>, <span class="fl">14.5</span>)</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-31-1.png" width="768"></p>

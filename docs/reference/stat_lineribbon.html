@@ -147,9 +147,9 @@ frames of samples, and will perform the summarization using a <code><a href='poi
     </div>
 
     <pre class="usage"><span class='fu'>stat_lineribbon</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"lineribbon"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>point.interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
-  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>point.interval</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.5</span>, <span class='fl'>0.8</span>, <span class='fl'>0.95</span>), <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.5</span>, <span class='fl'>0.8</span>, <span class='fl'>0.95</span>), <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -179,13 +179,17 @@ the plot defaults.</p></td>
       <td><p>Other arguments passed to <code>layer</code>. They may also be parameters to the paired geom.</p></td>
     </tr>
     <tr>
-      <th>point.interval</th>
-      <td><p>Alias for <code>fun.data</code></p></td>
+      <th>point_interval</th>
+      <td><p>A function that when given a vector should
+return a data frame with variables <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>.prob</code>; or
+<code>x</code>, <code>xmin</code>, <code>xmax</code>, and <code>.prob</code>. <strong>Either is acceptable</strong>: output
+will be converted into the <code>y</code>-based aesthetics. See the <code>point_interval</code> family of functions.</p></td>
     </tr>
     <tr>
       <th>fun.data</th>
-      <td><p>A function that is given a vector and should return a data frame with variables <code>y</code>, <code>ymin</code>
-and <code>ymax</code>. See the <code>point_interval</code> family of functions.</p></td>
+      <td><p>Similar to <code>point_interval</code>, for compatibility with <code>stat_summary</code>.
+Note: if the summary function is passed using <code>fun.data</code>, <code>x</code>-based aesthetics
+are not converted to the correct form automatically.</p></td>
     </tr>
     <tr>
       <th>.prob</th>

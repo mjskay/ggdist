@@ -219,7 +219,7 @@ bound of an interval; e.g. <code>qi</code>, <code>hdi</code></p></td>
     </tr>
     <tr>
       <th>.broom</th>
-      <td><p>When <code>TRUE</code> and only a single estimate is to be output, use the
+      <td><p>When <code>TRUE</code> and only a single column / vector is to be summarised, use the
 name <code>conf.low</code> for the lower end of the interval and <code>conf.high</code> for the
 upper end for consistency with <code><a href='http://www.rdocumentation.org/packages/broom/topics/tidy'>tidy</a></code> in the broom package. If
 <code>.data</code> is a vector and this is <code>TRUE</code>, this will also set the column name
@@ -237,10 +237,15 @@ of the point estimate to <code>estimate</code>.</p></td>
 columns (or expressions derived from columns) of <code>.data</code>, on which
 the point and interval estimates are derived. Column expressions are processed
 using the tidy evaluation framework (see <code><a href='http://www.rdocumentation.org/packages/rlang/topics/eval_tidy'>eval_tidy</a></code>).</p>
-<p>For a column named <code>x</code>,
-the resulting data frame will have columns <code>x</code> (the point estimate),
-<code>x.low</code> (the lower end of the interval), <code>x.high</code> (the upper
-end of the interval), and <code>.prob</code>.</p>
+<p>For a column named <code>x</code>, the resulting data frame will have a column
+named <code>x</code> containing its point estimate. If there is a single
+column to be summarized and <code>.broom</code> is <code>TRUE</code>, the output will
+also contain columns <code>conf.low</code> (the lower end of the interval),
+<code>conf.high</code> (the upper end of the interval).
+Otherwise, for every summarized column <code>x</code>, the output will contain
+<code>x.low</code> (the lower end of the interval) and <code>x.high</code> (the upper
+end of the interval). Finally, the output will have a <code>.prob</code> column
+containing the' probability for the interval on each output row.</p>
 <p>If <code>.data</code> includes groups (see e.g. <code><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></code>),
 the points and intervals are calculated within the groups.</p>
 <p>If <code>.data</code> is a vector, <code>...</code> is ignored and the result is a
@@ -255,7 +260,11 @@ to be easily used to plot intervals in ggplot using methods like
 behave identically to the function without the h, except that when passed a vector,
 they return a data frame with <code>x</code>/<code>xmin</code>/<code>xmax</code> instead of
 <code>y</code>/<code>ymin</code>/<code>ymax</code>. This allows them to be used as values of the
-<code>fun.data = </code> argument of <code>stat_summaryh</code>.</p>
+<code>fun.data = </code> argument of <code>stat_summaryh</code>. <strong>Note:</strong> these
+functions are not necessary if you use the <code>point_interval</code>
+argument of <code>stat</code>s and <code>geom</code>s in the <code>tidybayes</code> package (e.g.
+<code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>, <code><a href='geom_halfeyeh.html'>geom_halfeyeh</a></code>, etc), as
+these automatically adjust the function output to match their required aesthetics.</p>
 <p><code>mean_qi</code>, <code>mode_qi</code>, etc are short forms for
 <code>point_interval(..., .point = mean, .interval = qi)</code>, etc.</p>
 <p><code>qi</code> yields the quantile interval (also known as the percentile interval or
