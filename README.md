@@ -35,7 +35,7 @@ Finally, `tidybayes` aims to fit into common workflows through **compatibility w
 Supported model types
 ---------------------
 
-`tidybayes` aims to support a variety of models with a uniform interface. Currently supported models include [rstan](https://cran.r-project.org/package=rstan), [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda), [runjags](https://cran.r-project.org/package=runjags), [rstanarm](https://cran.r-project.org/package=rstanarm), [brms](https://cran.r-project.org/package=brms), [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
+`tidybayes` aims to support a variety of models with a uniform interface. Currently supported models include [rstan](https://cran.r-project.org/package=rstan), [brms](https://cran.r-project.org/package=brms), [rstanarm](https://cran.r-project.org/package=rstanarm), [runjags](https://cran.r-project.org/package=runjags), [rjags](https://cran.r-project.org/package=rjags), [jagsUI](https://cran.r-project.org/package=jagsUI), [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda), [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
 
 Installation
 ------------
@@ -328,7 +328,7 @@ mtcars %>%
 ``` r
   stat_summary(
     aes(y = pred, fill = forcats::fct_rev(ordered(...prob..)), group = -...prob..), 
-    geom = "ribbon", fun.data = median_qi, fun.args = list(.prob = c(.99, .95, .8, .5))
+    geom = "ribbon", point_interval = median_qi, fun.args = list(.prob = c(.99, .95, .8, .5))
   ) +
   stat_summary(aes(y = pred), fun.y = median, geom = "line", color = "red", size = 1.25)
 ```

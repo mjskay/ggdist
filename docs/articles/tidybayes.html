@@ -270,7 +270,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Mon Jun 11 00:35:01 2018.
+## Samples were drawn using NUTS(diag_e) at Mon Jun 11 19:55:46 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -285,24 +285,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.826 0.913 1.618 0.445 1.363 ...
+##  $ overall_mean     : num [1:4000(1d)] 1.066 0.978 1.496 0.303 0.804 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.746 -0.707 -1.875 -0.2 -1.032 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.4545 -0.7047 -0.5114 -0.0464 -0.8521 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.586 0.472 0.418 0.556 0.563 ...
+##  $ response_sd      : num [1:4000(1d)] 0.593 0.516 0.578 0.606 0.471 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.615 1.002 0.8 0.714 1.598 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 0.955 0.858 1.619 1.24 0.763 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.367 0.204 0.119 0.301 -0.286 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.632 0.373 0.668 0.246 0.153 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -1.775 -0.272 -4.658 -0.247 -1.136 ...
+##  $ lp__             : num [1:4000(1d)] -6.092 -0.231 0.277 2.746 0.55 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -458,12 +458,13 @@ model {
 <h3 class="hasAnchor">
 <a href="#using-stat_pointintervalstat_pointintervalh" class="anchor"></a>Using <code>stat_pointinterval</code>/<code>stat_pointintervalh</code>
 </h3>
-<p>Rather than summarizing the posterior before calling ggplot, we could also use <code>stat_pointinterval</code> / <code>stat_pointintervalh</code> to perform the summary within ggplot.</p>
+<p>Rather than summarizing the posterior before calling ggplot, we could also use <code>stat_pointinterval</code> / <code>stat_pointintervalh</code> to perform the summary within ggplot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-20-1.png" width="576"></p>
+<p>These functions have <code>.prob = c(.66, .95)</code> by default (showing 66% and 95% intervals), but this can be changed by passing a <code>.prob</code> argument to <code>stat_pointinterval</code> / <code>stat_pointintervalh</code>.</p>
 <div id="a-note-on-functions-ending-in-h" class="section level4">
 <h4 class="hasAnchor">
 <a href="#a-note-on-functions-ending-in-h" class="anchor"></a>A note on functions ending in <code>h</code>
@@ -872,8 +873,8 @@ bayes_estimates</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-49-1.png" width="576"></p>
 <p>Comptability with <code>tidy</code> also gives compatibility with <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">rename</span>(<span class="dt">term =</span> condition) <span class="op">%&gt;%</span>
-<span class="st">    </span>dotwhisker<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dwplot</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">term =</span> condition) <span class="op">%&gt;%</span>
+<span class="st">  </span>dotwhisker<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dwplot</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-50-1.png" width="576"></p>
 <p>Observe the shrinkage towards the overall mean in the Bayesian model compared to the OLS model.</p>
 </div>
