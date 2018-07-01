@@ -93,7 +93,7 @@
       <h1>Extracting and visualizing tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-06-11</h4>
+            <h4 class="date">2018-07-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-rstanarm.Rmd"><code>vignettes/tidy-rstanarm.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-rstanarm.Rmd</code></div>
@@ -351,7 +351,7 @@ ABC =
 <div id="with-simple-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-simple-parameters" class="anchor"></a>With simple parameters</h3>
-<p><code>tidybayes</code> provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi]</code>, for example, <code>mean_qi</code>, <code>median_qi</code>, <code>mode_hdi</code>, and so on. The first name (before the <code>_</code>) indicates the type of point estimate, and the second name indicates the type of interval. <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the <code>point_interval</code> function.</p>
+<p><code>tidybayes</code> provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme <code>[median|mean|mode]_[qi|hdi]</code>, for example, <code>median_qi</code>, <code>mean_qi</code>, <code>mode_hdi</code>, and so on. The first name (before the <code>_</code>) indicates the type of point estimate, and the second name indicates the type of interval. <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the <code>point_interval</code> function.</p>
 <p>For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) <span class="op">%&gt;%</span>
@@ -370,64 +370,64 @@ ABC =
 ##  9      1          9         0.786 0.533
 ## 10      1         10         1.07  0.490</code></pre>
 <p><em>(10 rows of 4000)</em></p>
-<p>Like with <code>b[term,group]</code>, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply <code>mean_qi</code>:</p>
+<p>Like with <code>b[term,group]</code>, this gives us a tidy data frame. If we want the median and 95% quantile interval of the parameters, we can apply <code>median_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma)</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   `(Intercept)` `(Intercept).low` `(Intercept).high` sigma sigma.low sigma.high .prob
 ##           &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1         0.646            -0.368               1.73 0.567     0.460      0.695  0.95</code></pre>
-<p>We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, <code>mean_qi</code> will use every column that is not a grouping column or a special column (one that starts with <code>.</code>, like <code>.chain</code> or <code>.iteration</code>). Thus in the above example, <code>(Intercept)</code> and <code>sigma</code> are redundant arguments to <code>mean_qi</code> because they are also the only columns we gathered from the model. So we can simplify this to:</p>
+## 1         0.650            -0.368               1.73 0.562     0.460      0.695  0.95</code></pre>
+<p>We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, <code>median_qi</code> will use every column that is not a grouping column or a special column (one that starts with <code>.</code>, like <code>.chain</code> or <code>.iteration</code>). Thus in the above example, <code>(Intercept)</code> and <code>sigma</code> are redundant arguments to <code>median_qi</code> because they are also the only columns we gathered from the model. So we can simplify this to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   `(Intercept)` `(Intercept).low` `(Intercept).high` sigma sigma.low sigma.high .prob
 ##           &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1         0.646            -0.368               1.73 0.567     0.460      0.695  0.95</code></pre>
+## 1         0.650            -0.368               1.73 0.562     0.460      0.695  0.95</code></pre>
 <p>If you would rather have a long-format list of intervals, use <code>gather_samples</code> instead:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">gather_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ## # Groups:   term [2]
 ##   term        estimate conf.low conf.high .prob
 ##   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 (Intercept)    0.646   -0.368     1.73   0.95
-## 2 sigma          0.567    0.460     0.695  0.95</code></pre>
-<p>The <code>conf.low</code> and <code>conf.high</code> naming scheme is used when <code>mean_qi</code> summarizes a single column in order to be consistent with the output of <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>. This makes it easier to compare output from <code>tidybayes</code> to other models supported by <code>broom</code>.</p>
+## 1 (Intercept)    0.650   -0.368     1.73   0.95
+## 2 sigma          0.562    0.460     0.695  0.95</code></pre>
+<p>The <code>conf.low</code> and <code>conf.high</code> naming scheme is used when <code>median_qi</code> summarizes a single column in order to be consistent with the output of <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>. This makes it easier to compare output from <code>tidybayes</code> to other models supported by <code>broom</code>.</p>
 <p>For more on <code>gather_samples</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
 <div id="with-indexed-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-indexed-parameters" class="anchor"></a>With indexed parameters</h3>
-<p>When we have a parameter with one or more indices, such as <code>b</code>, we can apply <code>mean_qi</code> (or other functions in the <code>point_estimate</code> family) as we did before:</p>
+<p>When we have a parameter with one or more indices, such as <code>b</code>, we can apply <code>median_qi</code> (or other functions in the <code>point_estimate</code> family) as we did before:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   group [5]
 ##   group            b conf.low conf.high .prob
 ##   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 condition:A -0.447   -1.53      0.595  0.95
-## 2 condition:B  0.353   -0.707     1.37   0.95
+## 1 condition:A -0.441   -1.53      0.595  0.95
+## 2 condition:B  0.354   -0.707     1.37   0.95
 ## 3 condition:C  1.18     0.106     2.22   0.95
-## 4 condition:D  0.370   -0.713     1.42   0.95
+## 4 condition:D  0.374   -0.713     1.42   0.95
 ## 5 condition:E -1.52    -2.66     -0.493  0.95</code></pre>
-<p>How did <code>mean_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_samples</code> groups its results by <code>group</code>. <code>mean_qi</code> respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>mean_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>b</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
+<p>How did <code>median_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_samples</code> groups its results by <code>group</code>. <code>median_qi</code> respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>median_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>b</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># this line not necessary (done by spread_samples)</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(b)                <span class="co"># b is not necessary (it is the only non-group column)</span></code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(b)                <span class="co"># b is not necessary (it is the only non-group column)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   group [5]
 ##   group            b conf.low conf.high .prob
 ##   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 condition:A -0.447   -1.53      0.595  0.95
-## 2 condition:B  0.353   -0.707     1.37   0.95
+## 1 condition:A -0.441   -1.53      0.595  0.95
+## 2 condition:B  0.354   -0.707     1.37   0.95
 ## 3 condition:C  1.18     0.106     2.22   0.95
-## 4 condition:D  0.370   -0.713     1.42   0.95
+## 4 condition:D  0.374   -0.713     1.42   0.95
 ## 5 condition:E -1.52    -2.66     -0.493  0.95</code></pre>
 </div>
 </div>
@@ -458,29 +458,29 @@ ABC =
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(condition_mean)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(condition_mean)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   group [5]
 ##   group       condition_mean conf.low conf.high .prob
 ##   &lt;chr&gt;                &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 condition:A          0.199   -0.150     0.549  0.95
-## 2 condition:B          0.999    0.644     1.35   0.95
+## 1 condition:A          0.202   -0.150     0.549  0.95
+## 2 condition:B          0.998    0.644     1.35   0.95
 ## 3 condition:C          1.83     1.47      2.20   0.95
 ## 4 condition:D          1.02     0.664     1.37   0.95
-## 5 condition:E         -0.877   -1.24     -0.512  0.95</code></pre>
-<p><code>mean_qi</code> uses tidy evaluation (see <code>vignette("tidy-evaluation", package = "rlang")</code>), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>mean_qi</code>:</p>
+## 5 condition:E         -0.876   -1.24     -0.512  0.95</code></pre>
+<p><code>median_qi</code> uses tidy evaluation (see <code>vignette("tidy-evaluation", package = "rlang")</code>), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>median_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   group [5]
 ##   group       condition_mean conf.low conf.high .prob
 ##   &lt;chr&gt;                &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 condition:A          0.199   -0.150     0.549  0.95
-## 2 condition:B          0.999    0.644     1.35   0.95
+## 1 condition:A          0.202   -0.150     0.549  0.95
+## 2 condition:B          0.998    0.644     1.35   0.95
 ## 3 condition:C          1.83     1.47      2.20   0.95
 ## 4 condition:D          1.02     0.664     1.37   0.95
-## 5 condition:E         -0.877   -1.24     -0.512  0.95</code></pre>
+## 5 condition:E         -0.876   -1.24     -0.512  0.95</code></pre>
 </div>
 <div id="plotting-point-estimates-and-intervals" class="section level2">
 <h2 class="hasAnchor">
@@ -488,7 +488,7 @@ ABC =
 <p>Plotting point estimates and with one interval is straightforward using the <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange">ggplot2::geom_pointrange</a></code> or <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/geom_linerangeh">ggstance::geom_pointrangeh</a></code> geoms:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_pointrangeh</span>()</code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
@@ -496,33 +496,33 @@ ABC =
 <div id="interval-estimates-with-multiple-probability-levels" class="section level2">
 <h2 class="hasAnchor">
 <a href="#interval-estimates-with-multiple-probability-levels" class="anchor"></a>Interval estimates with multiple probability levels</h2>
-<p><code>mean_qi</code> and its sister functions can also produce an arbitrary number of probability intervals by setting the <code>.prob =</code> argument:</p>
+<p><code>median_qi</code> and its sister functions can also produce an arbitrary number of probability intervals by setting the <code>.prob =</code> argument:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))</code></pre></div>
 <pre><code>## # A tibble: 15 x 5
 ## # Groups:   group [5]
 ##    group       condition_mean conf.low conf.high .prob
 ##    &lt;chr&gt;                &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 condition:A          0.199  -0.150      0.549  0.95
-##  2 condition:B          0.999   0.644      1.35   0.95
+##  1 condition:A          0.202  -0.150      0.549  0.95
+##  2 condition:B          0.998   0.644      1.35   0.95
 ##  3 condition:C          1.83    1.47       2.20   0.95
 ##  4 condition:D          1.02    0.664      1.37   0.95
-##  5 condition:E         -0.877  -1.24      -0.512  0.95
-##  6 condition:A          0.199  -0.0311     0.425  0.8 
-##  7 condition:B          0.999   0.779      1.23   0.8 
+##  5 condition:E         -0.876  -1.24      -0.512  0.95
+##  6 condition:A          0.202  -0.0311     0.425  0.8 
+##  7 condition:B          0.998   0.779      1.23   0.8 
 ##  8 condition:C          1.83    1.60       2.06   0.8 
 ##  9 condition:D          1.02    0.787      1.24   0.8 
-## 10 condition:E         -0.877  -1.11      -0.646  0.8 
-## 11 condition:A          0.199   0.0807     0.316  0.5 
-## 12 condition:B          0.999   0.879      1.12   0.5 
+## 10 condition:E         -0.876  -1.11      -0.646  0.8 
+## 11 condition:A          0.202   0.0807     0.316  0.5 
+## 12 condition:B          0.998   0.879      1.12   0.5 
 ## 13 condition:C          1.83    1.71       1.95   0.5 
 ## 14 condition:D          1.02    0.899      1.13   0.5 
-## 15 condition:E         -0.877  -0.999     -0.754  0.5</code></pre>
+## 15 condition:E         -0.876  -0.999     -0.754  0.5</code></pre>
 <p>The results are in a tidy format: one row per group and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The <code>geom_pointintervalh</code> geom, provided by tidybayes, is a shorthand for a <code>geom_pointrangeh</code> with <code>xmin</code>, <code>xmax</code>, and <code>size</code> set appropriately based on the <code>conf.low</code>, <code>conf.high</code>, and <code>.prob</code> columns in the data to produce plots of estimates with multiple probability levels:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>() </code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>

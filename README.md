@@ -18,7 +18,7 @@ tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="m
 
 -   **Extracting tidy fits and predictions** from models. For models like those provided by `rstanarm` and `brms`, `tidybayes` provides a tidy analog of the `fitted` and `predict` functions, called `add_fitted_samples` and `add_predicted_samples`. These functions are modeled after the `modelr::add_predictions` function, and turn a grid of predictions into a long-format data frame of samples from either the fits or predictions from a model. These functions make it straightforward to generate arbitrary fit lines from a model.
 
--   **Summarizing posterior distributions** from models. The `point_interval` family of functions (`mean_qi`, `median_qi`, `mode_hdi`, etc) are methods for generating estimates and intervals that are designed with tidy workflows in mind. They can generate estimates plus an arbitrary number of probability intervals *from* tidy data frames of samples, they *return* tidy data frames, and they **respect data frame groups**.
+-   **Summarizing posterior distributions** from models. The `point_interval` family of functions (`median_qi`, `mean_qi`, `mode_hdi`, etc) are methods for generating estimates and intervals that are designed with tidy workflows in mind. They can generate estimates plus an arbitrary number of probability intervals *from* tidy data frames of samples, they *return* tidy data frames, and they **respect data frame groups**.
 
 -   **Visualizing posteriors**. The focus on tidy data makes the output from tidybayes easy to visualize using `ggplot`. Existing `geom`s (like `geom_pointrange` and `geom_linerange`) can give useful output, but `tidybayes` also includes several geoms to simplify common combinations of `stats` and `geoms` with sensible defaults suitable for visualizing posterior estimates and intervals (`geom_pointinterval`, `geom_pointintervalh`, `stat_pointinterval`, `stat_pointintervalh`), visualizing densities with point estimates and intervals ("eye plots", `geom_eye` and `geom_eyeh`; or "half-eye plots", `geom_halfeyeh`), and visualizing fit lines with an arbitrary number of uncertainty bands (`geom_lineribbon` and `stat_lineribbon`). Combining the base-R `quantile` function with `geom_dotplot` also facilitates the contruction of quantile dotplots of posteriors (see example in this document).
 
@@ -171,7 +171,7 @@ The condition numbers are automatically turned back into text ("A", "B", "C", ..
 
 ### Plotting posteriors as eye plots: `geom_eye` / `geom_eyeh`
 
-Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the `tidybayes::geom_eyeh` geom (horizontal version of `tidybayes::geom_eye`), which combines a violin plot of the posterior density, mean, and 95% quantile interval to give an "eye plot" of the posterior. The point and interval types are customizable using the `point_interval` family of functions. A "half-eye" plot (non-mirrored density) is also available as `tidybayes::geom_halfeyeh`.
+Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the `tidybayes::geom_eyeh` geom (horizontal version of `tidybayes::geom_eye`), which combines a violin plot of the posterior density, median, 66% and 95% quantile interval to give an "eye plot" of the posterior. The point and interval types are customizable using the `point_interval` family of functions. A "half-eye" plot (non-mirrored density) is also available as `tidybayes::geom_halfeyeh`.
 
 ``` r
 m %>%
@@ -213,7 +213,7 @@ The idea is to get away from thinking about the posterior as indicating one cano
 
 ### Model comparison via compatibility with `broom`
 
-The output of the `tidybayes::mean_qi` function (and other `point_interval` functions) is compatible with `broom::tidy`, so we can compare parameter estimates easily to models supported by `broom`.
+The output of the `tidybayes::median_qi` function (and other `point_interval` functions) is compatible with `broom::tidy`, so we can compare parameter estimates easily to models supported by `broom`.
 
 For example, let's compare to ordinary least squares (OLS) regression:
 
@@ -234,23 +234,23 @@ linear_estimates
 | D         |   1.0271794|   0.173236|   45|   0.6782642|   1.3760946| OLS   |
 | E         |  -0.9352260|   0.173236|   45|  -1.2841411|  -0.5863108| OLS   |
 
-The output from `mean_qi` when given a single parameter uses `conf.low` and `conf.high` for interval names so that it lines up with `tidy`:
+The output from `median_qi` when given a single parameter uses `conf.low` and `conf.high` for interval names so that it lines up with `tidy`:
 
 ``` r
 bayes_estimates = m %>%
   spread_samples(condition_mean[condition]) %>%
-  mean_qi(estimate = condition_mean) %>%
+  median_qi(estimate = condition_mean) %>%
   mutate(model = "Bayes")
 bayes_estimates
 ```
 
 | condition |    estimate|    conf.low|   conf.high|  .prob| model |
 |:----------|-----------:|-----------:|-----------:|------:|:------|
-| A         |   0.1932542|  -0.1374798|   0.5480979|   0.95| Bayes |
-| B         |   1.0054696|   0.6559603|   1.3464413|   0.95| Bayes |
-| C         |   1.8387243|   1.4854153|   2.1840286|   0.95| Bayes |
-| D         |   1.0128392|   0.6541362|   1.3738020|   0.95| Bayes |
-| E         |  -0.8927952|  -1.2404690|  -0.5443226|   0.95| Bayes |
+| A         |   0.1911702|  -0.1374798|   0.5480979|   0.95| Bayes |
+| B         |   1.0044480|   0.6559603|   1.3464413|   0.95| Bayes |
+| C         |   1.8398608|   1.4854153|   2.1840286|   0.95| Bayes |
+| D         |   1.0112651|   0.6541362|   1.3738020|   0.95| Bayes |
+| E         |  -0.8938598|  -1.2404690|  -0.5443226|   0.95| Bayes |
 
 This makes it easy to bind the two estimates together and plot them:
 
@@ -276,7 +276,7 @@ bind_rows(linear_estimates, bayes_estimates) %>%
 
 ### Posterior prediction and complex custom plots
 
-The tidy data format returned by `spread_samples` also facilitates additional computation on parameters followed by the construction of more complex custom plots. For example, we can generate posterior predictions easily, and use the `.prob` argument (passed intervally to `mean_qi`) to generate any number of intervals from the posterior predictions, then plot them alongside parameter estimates and the data:
+The tidy data format returned by `spread_samples` also facilitates additional computation on parameters followed by the construction of more complex custom plots. For example, we can generate posterior predictions easily, and use the `.prob` argument (passed internally to `median_qi`) to generate any number of intervals from the posterior predictions, then plot them alongside parameter estimates and the data:
 
 ``` r
 m %>%
@@ -288,7 +288,7 @@ m %>%
   stat_intervalh(aes(x = pred), .prob = c(.5, .8, .95)) +
   scale_color_brewer() +
   
-  # mean and quantile intervals of condition mean
+  # median and quantile intervals of condition mean
   stat_pointintervalh(aes(x = condition_mean), .prob = c(.66, .95), position = position_nudge(y = -0.2)) +
   
   # data
@@ -297,7 +297,7 @@ m %>%
 
 ![](README_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
-This plot shows 66% and 95% quantile credible intervals of posterior mean for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
+This plot shows 66% and 95% quantile credible intervals of posterior median for each condition (point + black line); 95%, 80%, and 50% posterior predictive intervals (blue); and the data.
 
 ### Fit curves
 

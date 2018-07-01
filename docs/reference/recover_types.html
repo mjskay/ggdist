@@ -263,7 +263,7 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/stan/math/rev/mat.hpp:4,
 #&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/stan/math.hpp:4,
 #&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/src/stan/model/model_header.hpp:4,
-#&gt;                  from file74a8306c7e06.cpp:8:
+#&gt;                  from file3818772b4fa.cpp:8:
 #&gt; C:/R/R-3.5.0/library/BH/include/boost/config/compiler/gcc.hpp:186:0: warning: "BOOST_NO_CXX11_RVALUE_REFERENCES" redefined
 #&gt;  #  define BOOST_NO_CXX11_RVALUE_REFERENCES
 #&gt;  ^
@@ -289,23 +289,23 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.121 seconds (Warm-up)
-#&gt;                0.153 seconds (Sampling)
-#&gt;                0.274 seconds (Total)
+#&gt;  Elapsed Time: 0.125 seconds (Warm-up)
+#&gt;                0.144 seconds (Sampling)
+#&gt;                0.269 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='co'># without using recover_types(), the `condition` column returned by spread_samples()</span>
 <span class='co'># will be an integer:</span>
 <span class='no'>m</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
 #&gt; # Groups:   condition [5]
 #&gt;   condition condition_mean conf.low conf.high .prob
 #&gt;       &lt;int&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
 #&gt; 1         1          0.199   -0.124     0.628  0.95
-#&gt; 2         2          0.996    0.653     1.33   0.95
-#&gt; 3         3          1.83     1.45      2.21   0.95
-#&gt; 4         4          1.03     0.658     1.39   0.95
-#&gt; 5         5         -0.883   -1.22     -0.534  0.95</div><div class='input'>
+#&gt; 2         2          0.993    0.653     1.33   0.95
+#&gt; 3         3          1.82     1.45      2.21   0.95
+#&gt; 4         4          1.02     0.658     1.39   0.95
+#&gt; 5         5         -0.879   -1.22     -0.534  0.95</div><div class='input'>
 <span class='co'># If we apply recover_types() first, subsequent calls to other tidybayes functions will</span>
 <span class='co'># automatically back-convert factors so that they are labeled with their original levels</span>
 <span class='co'># (assuming the same name is used)</span>
@@ -314,15 +314,15 @@ of the generic function <code>as_constructor</code>.</p>
 <span class='co'># now the `condition` column with be a factor with levels "A", "B", "C", ...</span>
 <span class='no'>m</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
 #&gt; # Groups:   condition [5]
 #&gt;   condition condition_mean conf.low conf.high .prob
 #&gt;   &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
 #&gt; 1 A                  0.199   -0.124     0.628  0.95
-#&gt; 2 B                  0.996    0.653     1.33   0.95
-#&gt; 3 C                  1.83     1.45      2.21   0.95
-#&gt; 4 D                  1.03     0.658     1.39   0.95
-#&gt; 5 E                 -0.883   -1.22     -0.534  0.95</div><div class='input'>
+#&gt; 2 B                  0.993    0.653     1.33   0.95
+#&gt; 3 C                  1.82     1.45      2.21   0.95
+#&gt; 4 D                  1.02     0.658     1.39   0.95
+#&gt; 5 E                 -0.879   -1.22     -0.534  0.95</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

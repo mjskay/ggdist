@@ -212,38 +212,38 @@ data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>v</span>], <span class='no'>tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 144 x 7
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 144 x 7
 #&gt; # Groups:   i, v, term [144]
 #&gt;        i     v term  estimate conf.low conf.high .prob
 #&gt;    &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1     1     1 b      -1.08    -1.25      -0.905  0.95
-#&gt;  2     1     1 tau     6.03     5.07       7.14   0.95
-#&gt;  3     1     2 b      -1.83    -2.08      -1.54   0.95
-#&gt;  4     1     2 tau     6.03     5.07       7.14   0.95
-#&gt;  5     1     3 b       0.173    0.0349     0.317  0.95
-#&gt;  6     1     3 tau     6.03     5.07       7.14   0.95
-#&gt;  7     1     4 b      -0.0988  -0.342      0.141  0.95
-#&gt;  8     1     4 tau     6.03     5.07       7.14   0.95
-#&gt;  9     2     1 b      -0.734   -1.03      -0.435  0.95
-#&gt; 10     2     1 tau     3.38     2.41       4.58   0.95
+#&gt;  1     1     1 b      -1.07    -1.25      -0.905  0.95
+#&gt;  2     1     1 tau     5.99     5.07       7.14   0.95
+#&gt;  3     1     2 b      -1.82    -2.08      -1.54   0.95
+#&gt;  4     1     2 tau     5.99     5.07       7.14   0.95
+#&gt;  5     1     3 b       0.174    0.0349     0.317  0.95
+#&gt;  6     1     3 tau     5.99     5.07       7.14   0.95
+#&gt;  7     1     4 b      -0.0992  -0.342      0.141  0.95
+#&gt;  8     1     4 tau     5.99     5.07       7.14   0.95
+#&gt;  9     2     1 b      -0.735   -1.03      -0.435  0.95
+#&gt; 10     2     1 tau     3.35     2.41       4.58   0.95
 #&gt; # ... with 134 more rows</div><div class='input'>
 <span class='co'># the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='as_sample_tibble.html'>as_sample_tibble</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 235 x 5
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 235 x 5
 #&gt; # Groups:   term [235]
 #&gt;    term    estimate conf.low conf.high .prob
 #&gt;    &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1 b[1,1]   -1.08    -1.25      -0.905  0.95
-#&gt;  2 b[1,2]   -1.83    -2.08      -1.54   0.95
-#&gt;  3 b[1,3]    0.173    0.0349     0.317  0.95
-#&gt;  4 b[1,4]   -0.0988  -0.342      0.141  0.95
-#&gt;  5 b[10,1]  -0.497   -0.677     -0.309  0.95
-#&gt;  6 b[10,2]  -1.71    -1.99      -1.42   0.95
-#&gt;  7 b[10,3]   0.0344  -0.114      0.187  0.95
-#&gt;  8 b[10,4]   0.328    0.0751     0.574  0.95
-#&gt;  9 b[11,1]  -1.19    -1.37      -1.01   0.95
+#&gt;  1 b[1,1]   -1.07    -1.25      -0.905  0.95
+#&gt;  2 b[1,2]   -1.82    -2.08      -1.54   0.95
+#&gt;  3 b[1,3]    0.174    0.0349     0.317  0.95
+#&gt;  4 b[1,4]   -0.0992  -0.342      0.141  0.95
+#&gt;  5 b[10,1]  -0.502   -0.677     -0.309  0.95
+#&gt;  6 b[10,2]  -1.70    -1.99      -1.42   0.95
+#&gt;  7 b[10,3]   0.0343  -0.114      0.187  0.95
+#&gt;  8 b[10,4]   0.330    0.0751     0.574  0.95
+#&gt;  9 b[11,1]  -1.20    -1.37      -1.01   0.95
 #&gt; 10 b[11,2]  -2.39    -2.65      -2.13   0.95
 #&gt; # ... with 225 more rows</div><div class='input'>
 </div></pre>

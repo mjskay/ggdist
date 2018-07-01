@@ -361,29 +361,29 @@ columns with nicer names. For example:</p>
 #&gt; # ... with 107,990 more rows</div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_samples</span>(<span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>typical_r</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 19 x 6
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 19 x 6
 #&gt; # Groups:   i, term [19]
 #&gt;        i term      estimate conf.low conf.high .prob
 #&gt;    &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1     1 tau          6.03     5.07      7.14   0.95
-#&gt;  2     2 tau          3.38     2.41      4.58   0.95
-#&gt;  3     3 tau          3.65     2.68      4.86   0.95
-#&gt;  4     4 tau          6.66     5.46      8.01   0.95
+#&gt;  1     1 tau          5.99     5.07      7.14   0.95
+#&gt;  2     2 tau          3.35     2.41      4.58   0.95
+#&gt;  3     3 tau          3.61     2.68      4.86   0.95
+#&gt;  4     4 tau          6.63     5.46      8.01   0.95
 #&gt;  5     5 tau          5.13     4.25      6.03   0.95
 #&gt;  6     6 tau          6.40     5.36      7.45   0.95
-#&gt;  7     7 tau          7.89     6.63      9.28   0.95
-#&gt;  8     8 tau          6.44     5.29      7.65   0.95
-#&gt;  9     9 tau          2.68     1.84      3.72   0.95
+#&gt;  7     7 tau          7.86     6.63      9.28   0.95
+#&gt;  8     8 tau          6.42     5.29      7.65   0.95
+#&gt;  9     9 tau          2.65     1.84      3.72   0.95
 #&gt; 10    10 tau          6.10     4.99      7.32   0.95
 #&gt; 11    11 tau          5.93     4.93      6.99   0.95
-#&gt; 12    12 tau          7.26     6.07      8.52   0.95
+#&gt; 12    12 tau          7.25     6.07      8.52   0.95
 #&gt; 13    13 tau          4.35     3.62      5.14   0.95
-#&gt; 14    14 tau          3.80     2.79      4.89   0.95
-#&gt; 15    15 tau          4.19     3.46      4.95   0.95
-#&gt; 16    16 tau          3.92     2.70      5.37   0.95
-#&gt; 17    17 tau          3.22     2.67      3.84   0.95
-#&gt; 18    18 tau          3.83     2.97      4.76   0.95
-#&gt; 19    NA typical_r    0.557    0.313     0.787  0.95</div><div class='input'>
+#&gt; 14    14 tau          3.77     2.79      4.89   0.95
+#&gt; 15    15 tau          4.18     3.46      4.95   0.95
+#&gt; 16    16 tau          3.88     2.70      5.37   0.95
+#&gt; 17    17 tau          3.21     2.67      3.84   0.95
+#&gt; 18    18 tau          3.82     2.97      4.76   0.95
+#&gt; 19    NA typical_r    0.558    0.313     0.787  0.95</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

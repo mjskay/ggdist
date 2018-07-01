@@ -93,7 +93,7 @@
       <h1>Using tidy data with Bayesian samplers</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-06-11</h4>
+            <h4 class="date">2018-07-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes.Rmd</code></div>
@@ -121,7 +121,7 @@ img {
 <p>There are a few core ideas that run through the <code>tidybayes</code> API that should (hopefully) make it easy to use:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Tidy data does not always mean all parameter names as values</strong>. In contrast to the <code>ggmcmc</code> library (which translates sampler results into a data frame with a <code>Parameter</code> and <code>value</code> column), the <code>spread_samples</code> function in <code>tidybayes</code> produces in data frames where the columns are named after parameters and (in some cases) indices of those parameters, as automatically as possible and using a syntax as close to the same way you would refer to those variables in the sampler’s language as possible. A similar function to <code>ggmcmc</code>’s approach is also provided in <code>gather_samples</code>, since sometimes you <em>do</em> want parameter names as values in a column. The goal is for <code>tidybayes</code> to do the tedious work of figuring out how to make a data frame look the way you need it to, including turning parameters with indices like <code>"b[1,2]"</code> and the like into tidy data for you.</p></li>
-<li><p><strong>Fit into the tidyverse and broom</strong>. <code>tidybayes</code> methods fit into a workflow familiar to users of the <code>tidyverse</code> (<code>dplyr</code>, <code>tidyr</code>, <code>ggplot2</code>, etc), and the <code>tidy</code> function from the <code>broom</code> package, which means fitting into the pipe (<code>%&gt;%</code>) workflow, using and respecting grouped data frames (thus <code>spread_samples</code> and <code>gather_samples</code> return results already grouped by parameter indices, and methods like <code>mean_qi</code> calculate estimates and intervals for parameters and groups simultaneously), using the same output column names that the <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> function does where possible, and not reinventing too much of the wheel if it is already made easy by functions provided by existing <code>tidyverse</code> packages (unless it makes for much clearer code for a common idiom).</p></li>
+<li><p><strong>Fit into the tidyverse and broom</strong>. <code>tidybayes</code> methods fit into a workflow familiar to users of the <code>tidyverse</code> (<code>dplyr</code>, <code>tidyr</code>, <code>ggplot2</code>, etc), and the <code>tidy</code> function from the <code>broom</code> package, which means fitting into the pipe (<code>%&gt;%</code>) workflow, using and respecting grouped data frames (thus <code>spread_samples</code> and <code>gather_samples</code> return results already grouped by parameter indices, and methods like <code>median_qi</code> calculate estimates and intervals for parameters and groups simultaneously), using the same output column names that the <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> function does where possible, and not reinventing too much of the wheel if it is already made easy by functions provided by existing <code>tidyverse</code> packages (unless it makes for much clearer code for a common idiom).</p></li>
 <li><p><strong>Focus on composable operations and plotting primitives, not monolithic plots and operations</strong>. Several other packages (notably <code>bayesplot</code> and <code>ggmcmc</code>) already provide an excellent variety of pre-made methods for plotting Bayesian results. <code>tidybayes</code> shies away from duplicating this functionality. Instead, it focuses on providing composable operations for generating and manipulating Bayesian samples in a tidy data format, and graphical primitives for <code>ggplot</code> that allow you to build custom plots easily. Most simply, where <code>bayesplot</code> and <code>ggmcmc</code> tend to have functions with many options that return a full ggplot object, <code>tidybayes</code> tends towards providing primitives (like <code>geom</code>s) that you can compose and combine into your own custom plots. I believe both approaches have their place: pre-made functions are especially useful for common, quick operations that don’t need customization (like many diagnostic plots), while composable operations tend to be useful for more complex custom plots (in <a href="http://blog.mjskay.com/2017/11/05/i-don-t-want-your-monolithic-ggplot-function/">my opinion</a>).</p></li>
 <li><p><strong>Sensible defaults make life easy.</strong> But options (and the data being tidy in the first place) make it easy to go your own way when you need to.</p></li>
 <li><p><strong>Variable names in models should be descriptive, not cryptic</strong>. This principle implies avoiding cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to use variables like <code>J</code> to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like <code>j</code> to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like <code>n_participant</code> for the size of the group and <code>participant</code> (or a mnemonic shortform like <code>p</code>) for specific elements. In functions where names are auto-generated (like <code>compose_data</code>), <code>tidybayes</code> will (by default) assume you want these sorts of more descriptive names; however, you can always override the default naming scheme.</p></li>
@@ -270,7 +270,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Mon Jun 11 19:55:46 2018.
+## Samples were drawn using NUTS(diag_e) at Sun Jul 01 19:44:29 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -285,24 +285,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the samples out in a tidy format! The default methods in Stan for extracting samples from the data do so in a nested format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 1.066 0.978 1.496 0.303 0.804 ...
+##  $ overall_mean     : num [1:4000(1d)] 1.827 0.999 1.002 0.941 1.044 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.4545 -0.7047 -0.5114 -0.0464 -0.8521 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -1.437 -0.623 -1.307 -0.751 -0.974 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.593 0.516 0.578 0.606 0.471 ...
+##  $ response_sd      : num [1:4000(1d)] 0.471 0.543 0.673 0.48 0.66 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.955 0.858 1.619 1.24 0.763 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.312 1.073 0.538 0.865 1.052 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.632 0.373 0.668 0.246 0.153 ...
+##  $ condition_mean   : num [1:4000, 1:5] -0.0575 0.3303 0.2988 0.2912 0.0195 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -6.092 -0.231 0.277 2.746 0.55 ...
+##  $ lp__             : num [1:4000(1d)] -5.155 1.901 -8.365 0.221 -0.482 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting samples as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -355,14 +355,14 @@ model {
 <p>Now we can omit the <code>recover_types</code> call before subsequent calls to <code>spread_samples</code>.</p>
 </div>
 </div>
-<div id="point-estimates-and-intervals-with-the-point_interval-functions-meanmedianmode_qihdi" class="section level2">
+<div id="point-estimates-and-intervals-with-the-point_interval-functions-medianmeanmode_qihdi" class="section level2">
 <h2 class="hasAnchor">
-<a href="#point-estimates-and-intervals-with-the-point_interval-functions-meanmedianmode_qihdi" class="anchor"></a>Point estimates and intervals with the <code>point_interval</code> functions: <code>[mean|median|mode]_[qi|hdi]</code>
+<a href="#point-estimates-and-intervals-with-the-point_interval-functions-medianmeanmode_qihdi" class="anchor"></a>Point estimates and intervals with the <code>point_interval</code> functions: <code>[median|mean|mode]_[qi|hdi]</code>
 </h2>
 <div id="with-simple-parameters-wide-format" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-simple-parameters-wide-format" class="anchor"></a>With simple parameters, wide format</h3>
-<p><code>tidybayes</code> provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi]</code>, for example, <code>mean_qi</code>, <code>median_qi</code>, <code>mode_hdi</code>, and so on. The first name (before the <code>_</code>) indicates the type of point estimate, and the second name indicates the type of interval. <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest density interval. Custom estimates or intervals can also be applied using the <code>point_interval</code> function.</p>
+<p><code>tidybayes</code> provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme <code>[median|mean|mode]_[qi|hdi]</code>, for example, <code>median_qi</code>, <code>mean_qi</code>, <code>mode_hdi</code>, and so on. The first name (before the <code>_</code>) indicates the type of point estimate, and the second name indicates the type of interval. <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest density interval. Custom estimates or intervals can also be applied using the <code>point_interval</code> function.</p>
 <p>For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, response_sd) <span class="op">%&gt;%</span>
@@ -381,55 +381,55 @@ model {
 ##  9      1          9        1.24        0.608
 ## 10      1         10        1.14        0.630</code></pre>
 <p><em>(10 rows of 4000)</em></p>
-<p>Like with <code>condition_mean[condition]</code>, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply <code>mean_qi</code>:</p>
+<p>Like with <code>condition_mean[condition]</code>, this gives us a tidy data frame. If we want the median and 95% quantile interval of the parameters, we can apply <code>median_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, response_sd) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(overall_mean, response_sd)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(overall_mean, response_sd)</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   overall_mean overall_mean.low overall_mean.hi~ response_sd response_sd.low response_sd.high .prob
 ##          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-## 1        0.587           -0.587             1.69       0.561           0.453            0.700  0.95</code></pre>
-<p><code>mean_qi</code> summarizes each input column using its mean. If there are multiple columns to summarise, each gets its own <code>x.high</code> and <code>x.low</code> column (for each column <code>x</code>) corresponding to the bounds of the <code>.prob</code>% interval. If there is only one column, the names <code>conf.low</code> and <code>conf.high</code> are used for the interval bounds; this is for compatibility with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>.</p>
-<p>We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, <code>mean_qi</code> will use every column that is not a grouping column or a special column (one that starts with <code>.</code>, like <code>.chain</code> or <code>.iteration</code>). Thus in the above example, <code>overall_mean</code> and <code>response_sd</code> are redundant arguments to <code>mean_qi</code> because they are also the only columns we gathered from the model. So we can simplify the previous code to the following:</p>
+## 1        0.586           -0.587             1.69       0.556           0.453            0.700  0.95</code></pre>
+<p><code>median_qi</code> summarizes each input column using its median. If there are multiple columns to summarise, each gets its own <code>x.high</code> and <code>x.low</code> column (for each column <code>x</code>) corresponding to the bounds of the <code>.prob</code>% interval. If there is only one column, the names <code>conf.low</code> and <code>conf.high</code> are used for the interval bounds; this is for compatibility with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>.</p>
+<p>We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, <code>median_qi</code> will use every column that is not a grouping column or a special column (one that starts with <code>.</code>, like <code>.chain</code> or <code>.iteration</code>). Thus in the above example, <code>overall_mean</code> and <code>response_sd</code> are redundant arguments to <code>median_qi</code> because they are also the only columns we gathered from the model. So we can simplify the previous code to the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, response_sd) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   overall_mean overall_mean.low overall_mean.hi~ response_sd response_sd.low response_sd.high .prob
 ##          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-## 1        0.587           -0.587             1.69       0.561           0.453            0.700  0.95</code></pre>
+## 1        0.586           -0.587             1.69       0.556           0.453            0.700  0.95</code></pre>
 </div>
 <div id="with-indexed-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-indexed-parameters" class="anchor"></a>With indexed parameters</h3>
-<p>When we have a parameter with one or more indices, such as <code>condition_mean</code>, we can apply <code>mean_qi</code> (or other functions in the <code>point_estimate</code> family) as we did before:</p>
+<p>When we have a parameter with one or more indices, such as <code>condition_mean</code>, we can apply <code>median_qi</code> (or other functions in the <code>point_estimate</code> family) as we did before:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   condition [5]
 ##   condition condition_mean conf.low conf.high .prob
 ##   &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                  0.193   -0.137     0.548  0.95
-## 2 B                  1.01     0.656     1.35   0.95
+## 1 A                  0.191   -0.137     0.548  0.95
+## 2 B                  1.00     0.656     1.35   0.95
 ## 3 C                  1.84     1.49      2.18   0.95
 ## 4 D                  1.01     0.654     1.37   0.95
-## 5 E                 -0.893   -1.24     -0.544  0.95</code></pre>
-<p>How did <code>mean_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means it groups by <code>condition</code>. <code>mean_qi</code> respects groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>mean_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>condition_mean</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
+## 5 E                 -0.894   -1.24     -0.544  0.95</code></pre>
+<p>How did <code>median_qi</code> know what to aggregate? Data frames returned by <code>spread_samples</code> are automatically grouped by all index variables you pass to it; in this case, that means it groups by <code>condition</code>. <code>median_qi</code> respects groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to <code>median_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>condition_mean</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(condition) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># this line not necessary (done automatically by spread_samples)</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(condition_mean)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(condition_mean)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   condition [5]
 ##   condition condition_mean conf.low conf.high .prob
 ##   &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                  0.193   -0.137     0.548  0.95
-## 2 B                  1.01     0.656     1.35   0.95
+## 1 A                  0.191   -0.137     0.548  0.95
+## 2 B                  1.00     0.656     1.35   0.95
 ## 3 C                  1.84     1.49      2.18   0.95
 ## 4 D                  1.01     0.654     1.37   0.95
-## 5 E                 -0.893   -1.24     -0.544  0.95</code></pre>
-<p>When given only a single column, <code>mean_qi</code> will use the names <code>conf.low</code> and <code>conf.high</code> for the lower and upper ends of the intervals, in order to be consistent with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>.</p>
+## 5 E                 -0.894   -1.24     -0.544  0.95</code></pre>
+<p>When given only a single column, <code>median_qi</code> will use the names <code>conf.low</code> and <code>conf.high</code> for the lower and upper ends of the intervals, in order to be consistent with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>.</p>
 </div>
 </div>
 <div id="plotting-point-estimates-and-intervals" class="section level2">
@@ -439,17 +439,17 @@ model {
 <h3 class="hasAnchor">
 <a href="#using-geom_pointintervalgeom_pointintervalh" class="anchor"></a>Using <code>geom_pointinterval</code>/<code>geom_pointintervalh</code>
 </h3>
-<p>Plotting means and intervals is straightforward using the <code>pointinterval</code> geom (or its horizontal version, <code>pointintervalh</code>), which are a modified versions of <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange">ggplot2::geom_pointrange</a></code> and <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/geom_linerangeh">ggstance::geom_pointrangeh</a></code> with sensible defaults for multiple intervals (functionality we will use later):</p>
+<p>Plotting medians and intervals is straightforward using the <code>pointinterval</code> geom (or its horizontal version, <code>pointintervalh</code>), which are a modified versions of <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange">ggplot2::geom_pointrange</a></code> and <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/geom_linerangeh">ggstance::geom_pointrangeh</a></code> with sensible defaults for multiple intervals (functionality we will use later):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> conf.low, <span class="dt">xmax =</span> conf.high)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-18-1.png" width="576"></p>
 <p><code>geom_pointintervalh</code> includes <code>xmin = conf.low</code> and <code>xmax = conf.high</code> in its default aesthetics, so these can be omitted:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-19-1.png" width="576"></p>
@@ -470,7 +470,7 @@ model {
 <a href="#a-note-on-functions-ending-in-h" class="anchor"></a>A note on functions ending in <code>h</code>
 </h4>
 <p><code>tidybayes</code> follows the naming convention established by <code>ggstance</code> for horizontal versions of <code>geom</code>s and summary functions. It includes horizontal versions of all <code>point_interval</code> functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with <code>h</code>.</p>
-<p>When using <code>point_interval</code> family functions with geoms and stats defined by packages <em>other than of <code>tidybayes</code></em>, you may need to use the horizontal versions of the <code>point_interval</code> functions, like <code>mean_qih</code> (e.g. in the <code>fun.data</code> argument of <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/stat_summaryh">ggstance::stat_summaryh</a></code>). This is because <code>mean_qi</code> returns a data frame with <code>y</code>, <code>ymin</code>, and <code>ymax</code> columns when passed a vector (making it suitable for <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/stat_summary">ggplot2::stat_summary</a></code>), and <code>mean_qih</code> returns a data frame with <code>x</code>, <code>xmin</code>, and <code>xmax</code> columns when passed a vector (making it suitable for <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/stat_summaryh">ggstance::stat_summaryh</a></code>). <strong>You do not need to use these functions with tidybayes stats and geoms</strong>; the <code>point_interval</code> argument to tidybayes stats and geoms (like <code>stat_pointinterval</code> and <code>stat_pointintervalh</code>) will automatically convert output of summary functions to the correct aesthetics.</p>
+<p>When using <code>point_interval</code> family functions with geoms and stats defined by packages <em>other than of <code>tidybayes</code></em>, you may need to use the horizontal versions of the <code>point_interval</code> functions, like <code>median_qih</code> (e.g. in the <code>fun.data</code> argument of <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/stat_summaryh">ggstance::stat_summaryh</a></code>). This is because <code>median_qi</code> returns a data frame with <code>y</code>, <code>ymin</code>, and <code>ymax</code> columns when passed a vector (making it suitable for <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/stat_summary">ggplot2::stat_summary</a></code>), and <code>median_qih</code> returns a data frame with <code>x</code>, <code>xmin</code>, and <code>xmax</code> columns when passed a vector (making it suitable for <code><a href="http://www.rdocumentation.org/packages/ggstance/topics/stat_summaryh">ggstance::stat_summaryh</a></code>). <strong>You do not need to use these functions with tidybayes stats and geoms</strong>; the <code>point_interval</code> argument to tidybayes stats and geoms (like <code>stat_pointinterval</code> and <code>stat_pointintervalh</code>) will automatically convert output of summary functions to the correct aesthetics.</p>
 </div>
 </div>
 <div id="interval-estimates-with-posterior-violins-eye-plots-geom_eye-and-geom_eyeh" class="section level3">
@@ -505,33 +505,33 @@ model {
 <div id="interval-estimates-with-multiple-probability-levels-the--prob-argument" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interval-estimates-with-multiple-probability-levels-the--prob-argument" class="anchor"></a>Interval estimates with multiple probability levels: the <code>.prob =</code> argument</h3>
-<p><code>mean_qi</code> and its sister functions can also produce an arbitrary number of probability intervals by setting the <code>.prob =</code> argument:</p>
+<p><code>median_qi</code> and its sister functions can also produce an arbitrary number of probability intervals by setting the <code>.prob =</code> argument:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))</code></pre></div>
 <pre><code>## # A tibble: 15 x 5
 ## # Groups:   condition [5]
 ##    condition condition_mean conf.low conf.high .prob
 ##    &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 A                  0.193  -0.137      0.548  0.95
-##  2 B                  1.01    0.656      1.35   0.95
+##  1 A                  0.191  -0.137      0.548  0.95
+##  2 B                  1.00    0.656      1.35   0.95
 ##  3 C                  1.84    1.49       2.18   0.95
 ##  4 D                  1.01    0.654      1.37   0.95
-##  5 E                 -0.893  -1.24      -0.544  0.95
-##  6 A                  0.193  -0.0238     0.411  0.8 
-##  7 B                  1.01    0.784      1.23   0.8 
+##  5 E                 -0.894  -1.24      -0.544  0.95
+##  6 A                  0.191  -0.0238     0.411  0.8 
+##  7 B                  1.00    0.784      1.23   0.8 
 ##  8 C                  1.84    1.61       2.06   0.8 
 ##  9 D                  1.01    0.787      1.24   0.8 
-## 10 E                 -0.893  -1.12      -0.665  0.8 
-## 11 A                  0.193   0.0751     0.307  0.5 
-## 12 B                  1.01    0.890      1.12   0.5 
+## 10 E                 -0.894  -1.12      -0.665  0.8 
+## 11 A                  0.191   0.0751     0.307  0.5 
+## 12 B                  1.00    0.890      1.12   0.5 
 ## 13 C                  1.84    1.72       1.96   0.5 
 ## 14 D                  1.01    0.893      1.13   0.5 
-## 15 E                 -0.893  -1.02      -0.769  0.5</code></pre>
+## 15 E                 -0.894  -1.02      -0.769  0.5</code></pre>
 <p>The results are in a tidy format: one row per index (<code>condition</code>) and probability level (<code>.prob</code>). This facilitates plotting. For example, assigning <code>-.prob</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean, 
     <span class="dt">size =</span> <span class="op">-</span>.prob)) <span class="op">+</span><span class="st">               </span><span class="co"># smaller probability interval =&gt; thicker line</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
@@ -539,14 +539,14 @@ model {
 <p>Just as <code>geom_pointintervalh</code> includes <code>xmin = conf.low</code> and <code>xmax = conf.high</code> as default aesthetics, it also includes <code>size = -.prob</code> to facilitate exactly this usage. This, the above can be simplified to:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
 <p>Just as the <code>point_interval</code> functions can generate an arbitrary number of intervals per estimate, so too can <code>geom_pointrangeh</code> draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of <code>size_range =</code>, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> condition_mean)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>(<span class="dt">size_range =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">2</span>))</code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
@@ -565,10 +565,10 @@ model {
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
 <p>The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.</p>
 </div>
-<div id="alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="section level3">
+<div id="alternative-estimates-and-intervals-median-mean-mode-qi-hdi" class="section level3">
 <h3 class="hasAnchor">
-<a href="#alternative-estimates-and-intervals-mean-median-mode-qi-hdi" class="anchor"></a>Alternative estimates and intervals: mean, median, mode; qi, hdi</h3>
-<p>The <code>point_interval</code> family of functions follow the naming scheme <code>[mean|median|mode]_[qi|hdi][h|]</code>, and all work in the same way as <code>mean_qi</code>: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (mean, median, or mode) and interval (qi or hdi). <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. These can be used in any combination desired.</p>
+<a href="#alternative-estimates-and-intervals-median-mean-mode-qi-hdi" class="anchor"></a>Alternative estimates and intervals: median, mean, mode; qi, hdi</h3>
+<p>The <code>point_interval</code> family of functions follow the naming scheme <code>[median|mean|mode]_[qi|hdi][h|]</code>, and all work in the same way as <code>median_qi</code>: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point estimate (median, mean, or mode) and interval (qi or hdi). <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. These can be used in any combination desired.</p>
 <p>The <code>*_hdi</code> functions have an additional difference: In the case of multimodal distributions, they may return multiple intervals for each probability level. Here are some samples from a multimodal normal mixture:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
 multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
@@ -616,20 +616,20 @@ multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
 ##  9      1          2        0.762 D                 1.12  
 ## 10      1          2        0.762 E                -1.09</code></pre>
 <p><em>(10 rows of 20000)</em></p>
-<p>Within each sample, <code>overall_mean</code> is repeated as necessary to correspond to every index of <code>condition_mean</code>. Thus, the <code>mutate</code> function from dplyr can be used to take the differences over all rows, then we can summarize with <code>mean_qi</code>:</p>
+<p>Within each sample, <code>overall_mean</code> is repeated as necessary to correspond to every index of <code>condition_mean</code>. Thus, the <code>mutate</code> function from dplyr can be used to take the differences over all rows, then we can summarize with <code>median_qi</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_offset =</span> condition_mean <span class="op">-</span><span class="st"> </span>overall_mean) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(condition_offset)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(condition_offset)</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   condition [5]
 ##   condition condition_offset conf.low conf.high .prob
 ##   &lt;fct&gt;                &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A                   -0.393  -1.59       0.803  0.95
-## 2 B                    0.419  -0.756      1.62   0.95
-## 3 C                    1.25    0.0928     2.47   0.95
-## 4 D                    0.426  -0.737      1.63   0.95
-## 5 E                   -1.48   -2.65      -0.301  0.95</code></pre>
+## 1 A                   -0.398  -1.59       0.803  0.95
+## 2 B                    0.408  -0.756      1.62   0.95
+## 3 C                    1.24    0.0928     2.47   0.95
+## 4 D                    0.416  -0.737      1.63   0.95
+## 5 E                   -1.47   -2.65      -0.301  0.95</code></pre>
 </div>
 <div id="posterior-predictions" class="section level2">
 <h2 class="hasAnchor">
@@ -646,7 +646,7 @@ multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition], response_sd) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_rep =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), condition_mean, response_sd)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(y_rep, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(y_rep, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">fct_rev</span>(condition), <span class="dt">x =</span> y_rep)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="../reference/geom_interval.html">geom_intervalh</a></span>() <span class="op">+</span><span class="st"> </span><span class="co">#auto-sets aes(xmin = conf.low, xmax = conf.high, color = fct_rev(ordered(.prob)))</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) <span class="op">+</span>
@@ -662,10 +662,10 @@ multimodal_samples =<span class="st"> </span><span class="kw">data_frame</span>(
 
 reps =<span class="st"> </span>samples <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_rep =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), condition_mean, response_sd)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(y_rep, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(y_rep, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">8</span>, .<span class="dv">5</span>))
 
 parameters =<span class="st"> </span>samples <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(condition_mean, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>))
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(condition_mean, <span class="dt">.prob =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">66</span>))
 
 ABC <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition)) <span class="op">+</span>
@@ -696,43 +696,43 @@ m <span class="op">%&gt;%</span>
 <p><code>gather_samples</code> is the counterpart to <code>spread_samples</code>, except it puts all parameter names into a <code>term</code> column and samples into an <code>estimate</code> column (for compatibility with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">gather_samples</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 6 x 6
 ## # Groups:   term, condition [6]
 ##   term           condition estimate conf.low conf.high .prob
 ##   &lt;chr&gt;          &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 condition_mean A            0.193   -0.137     0.548  0.95
-## 2 condition_mean B            1.01     0.656     1.35   0.95
+## 1 condition_mean A            0.191   -0.137     0.548  0.95
+## 2 condition_mean B            1.00     0.656     1.35   0.95
 ## 3 condition_mean C            1.84     1.49      2.18   0.95
 ## 4 condition_mean D            1.01     0.654     1.37   0.95
-## 5 condition_mean E           -0.893   -1.24     -0.544  0.95
-## 6 overall_mean   &lt;NA&gt;         0.587   -0.587     1.69   0.95</code></pre>
+## 5 condition_mean E           -0.894   -1.24     -0.544  0.95
+## 6 overall_mean   &lt;NA&gt;         0.586   -0.587     1.69   0.95</code></pre>
 <p>Note that <code>condition = NA</code> for the <code>overall_mean</code> row, because it does not have an index with that name in the specification passed to <code>gather_samples</code>.</p>
 <p>While this works well if we do not need to perform computations that involve multiple columns, the semi-wide format returned by <code>spread_samples</code> is very useful for computations that involve multiple columns names, such as the calculation of the <code>condition_offset</code> above. If we want to make intermediate computations on the format returned by <code>spread_samples</code> and <em>then</em> gather parameters into one column, we can use <code>gather_terms</code>, which will gather all non-grouped terms that do not start with <code>"."</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_offset =</span> condition_mean <span class="op">-</span><span class="st"> </span>overall_mean) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/gather_terms.html">gather_terms</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 15 x 6
 ## # Groups:   condition, term [15]
 ##    condition term             estimate conf.low conf.high .prob
 ##    &lt;fct&gt;     &lt;chr&gt;               &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 A         condition_mean      0.193  -0.137      0.548  0.95
-##  2 A         condition_offset   -0.393  -1.59       0.803  0.95
-##  3 A         overall_mean        0.587  -0.587      1.69   0.95
-##  4 B         condition_mean      1.01    0.656      1.35   0.95
-##  5 B         condition_offset    0.419  -0.756      1.62   0.95
-##  6 B         overall_mean        0.587  -0.587      1.69   0.95
+##  1 A         condition_mean      0.191  -0.137      0.548  0.95
+##  2 A         condition_offset   -0.398  -1.59       0.803  0.95
+##  3 A         overall_mean        0.586  -0.587      1.69   0.95
+##  4 B         condition_mean      1.00    0.656      1.35   0.95
+##  5 B         condition_offset    0.408  -0.756      1.62   0.95
+##  6 B         overall_mean        0.586  -0.587      1.69   0.95
 ##  7 C         condition_mean      1.84    1.49       2.18   0.95
-##  8 C         condition_offset    1.25    0.0928     2.47   0.95
-##  9 C         overall_mean        0.587  -0.587      1.69   0.95
+##  8 C         condition_offset    1.24    0.0928     2.47   0.95
+##  9 C         overall_mean        0.586  -0.587      1.69   0.95
 ## 10 D         condition_mean      1.01    0.654      1.37   0.95
-## 11 D         condition_offset    0.426  -0.737      1.63   0.95
-## 12 D         overall_mean        0.587  -0.587      1.69   0.95
-## 13 E         condition_mean     -0.893  -1.24      -0.544  0.95
-## 14 E         condition_offset   -1.48   -2.65      -0.301  0.95
-## 15 E         overall_mean        0.587  -0.587      1.69   0.95</code></pre>
+## 11 D         condition_offset    0.416  -0.737      1.63   0.95
+## 12 D         overall_mean        0.586  -0.587      1.69   0.95
+## 13 E         condition_mean     -0.894  -1.24      -0.544  0.95
+## 14 E         condition_offset   -1.47   -2.65      -0.301  0.95
+## 15 E         overall_mean        0.586  -0.587      1.69   0.95</code></pre>
 <p>Note how <code>overall_mean</code> is now repeated here for each condition, because we have performed the gather after spreading parameters across columns.</p>
 <p>Finally, if we want raw parameter names as columns names instead of having indices split out as their own column names, we can use <code>as_sample_tibble</code>. Generally speaking this should not be necessary, but is provided as a common method for generating data frames from many types of Bayesian models, and is used internally by <code>gather_samples</code> and <code>spread_samples</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m <span class="op">%&gt;%</span>
@@ -834,7 +834,7 @@ m <span class="op">%&gt;%</span>
 <div id="compatibility-of-point_interval-with-broomtidy-and-dotwhiskerdwplot-a-model-comparison-example" class="section level3">
 <h3 class="hasAnchor">
 <a href="#compatibility-of-point_interval-with-broomtidy-and-dotwhiskerdwplot-a-model-comparison-example" class="anchor"></a>Compatibility of <code>point_interval</code> with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> and <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>: A model comparison example</h3>
-<p>Because <code>mean_qi</code> and the <code>point_interval</code> family of functions use a similar naming scheme to that of <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>, it is easy to compare results against models supported by <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>. For example, let’s compare our model’s estimates of conditional means against an ordinary least squares (OLS) regression:</p>
+<p>Because <code>median_qi</code> and the <code>point_interval</code> family of functions use a similar naming scheme to that of <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>, it is easy to compare results against models supported by <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>. For example, let’s compare our model’s estimates of conditional means against an ordinary least squares (OLS) regression:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_linear =<span class="st"> </span><span class="kw">lm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC)</code></pre></div>
 <p>Combining <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code>, we can generate tidy-format estimates of conditional means from the above model:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">linear_estimates =<span class="st"> </span>m_linear <span class="op">%&gt;%</span><span class="st"> </span>
@@ -852,7 +852,7 @@ linear_estimates</code></pre></div>
 <p>We can derive corresponding estimates from our model:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bayes_estimates =<span class="st"> </span>m <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/spread_samples.html">spread_samples</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>(<span class="dt">estimate =</span> condition_mean) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">estimate =</span> condition_mean) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="st">"Bayes"</span>)
 
 bayes_estimates</code></pre></div>
@@ -860,11 +860,11 @@ bayes_estimates</code></pre></div>
 ## # Groups:   condition [5]
 ##   condition estimate conf.low conf.high .prob model
 ##   &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
-## 1 A            0.193   -0.137     0.548  0.95 Bayes
-## 2 B            1.01     0.656     1.35   0.95 Bayes
+## 1 A            0.191   -0.137     0.548  0.95 Bayes
+## 2 B            1.00     0.656     1.35   0.95 Bayes
 ## 3 C            1.84     1.49      2.18   0.95 Bayes
 ## 4 D            1.01     0.654     1.37   0.95 Bayes
-## 5 E           -0.893   -1.24     -0.544  0.95 Bayes</code></pre>
+## 5 E           -0.894   -1.24     -0.544  0.95 Bayes</code></pre>
 <p>Because the <code>point_interval</code> functions use the same column names for <code>conf.low</code> and <code>conf.high</code> as <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> does, the column names for the columns we need to make the comparison (<code>condition</code>, <code>estimate</code>, <code>conf.low</code>, and <code>conf.high</code>) all line up easily. This makes it simple to combine the two tidy data frame together using <code>bind_rows</code>, and plot them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(linear_estimates, bayes_estimates) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">fct_rev</span>(condition)) <span class="op">%&gt;%</span>
@@ -946,36 +946,36 @@ bayes_estimates</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_samples.html">gather_emmeans_samples</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ## # Groups:   condition [5]
 ##   condition estimate conf.low conf.high .prob
 ##   &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 A            0.197   -0.146     0.548  0.95
+## 1 A            0.196   -0.146     0.548  0.95
 ## 2 B            1.01     0.654     1.37   0.95
-## 3 C            1.86     1.51      2.20   0.95
+## 3 C            1.87     1.51      2.20   0.95
 ## 4 D            1.02     0.657     1.37   0.95
-## 5 E           -0.935   -1.28     -0.585  0.95</code></pre>
+## 5 E           -0.936   -1.28     -0.585  0.95</code></pre>
 <p>Or <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> with <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/contrast">emmeans::contrast</a></code> to do all pairwise comparisons:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_samples.html">gather_emmeans_samples</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">mean_qi</a></span>()</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ## # Groups:   contrast [10]
 ##    contrast estimate conf.low conf.high .prob
 ##    &lt;fct&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 A - B    -0.814     -1.30     -0.317  0.95
+##  1 A - B    -0.816     -1.30     -0.317  0.95
 ##  2 A - C    -1.67      -2.14     -1.17   0.95
-##  3 A - D    -0.822     -1.32     -0.327  0.95
+##  3 A - D    -0.827     -1.32     -0.327  0.95
 ##  4 A - E     1.13       0.652     1.60   0.95
-##  5 B - C    -0.853     -1.34     -0.364  0.95
-##  6 B - D    -0.00788   -0.492     0.486  0.95
+##  5 B - C    -0.854     -1.34     -0.364  0.95
+##  6 B - D    -0.00966   -0.492     0.486  0.95
 ##  7 B - E     1.95       1.48      2.42   0.95
 ##  8 C - D     0.845      0.335     1.33   0.95
 ##  9 C - E     2.80       2.29      3.30   0.95
-## 10 D - E     1.95       1.46      2.45   0.95</code></pre>
+## 10 D - E     1.96       1.46      2.45   0.95</code></pre>
 <p>See <code>?pairwise.emmc</code> for a list of the numerous contrast types supported by <code>emmeans</code>.</p>
 <p>As before, we can plot the results instead of using a table:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_rst <span class="op">%&gt;%</span>
@@ -999,7 +999,7 @@ bayes_estimates</code></pre></div>
       <li><a href="#example-dataset">Example dataset</a></li>
       <li><a href="#using-compose_data-to-prepare-a-data-frame-for-the-sampler">Using <code>compose_data</code> to prepare a data frame for the sampler</a></li>
       <li><a href="#extracting-samples-from-a-fit-in-tidy-format-using-spread_samples">Extracting samples from a fit in tidy-format using <code>spread_samples</code></a></li>
-      <li><a href="#point-estimates-and-intervals-with-the-point_interval-functions-meanmedianmode_qihdi">Point estimates and intervals with the <code>point_interval</code> functions: <code>[mean|median|mode]_[qi|hdi]</code></a></li>
+      <li><a href="#point-estimates-and-intervals-with-the-point_interval-functions-medianmeanmode_qihdi">Point estimates and intervals with the <code>point_interval</code> functions: <code>[median|mean|mode]_[qi|hdi]</code></a></li>
       <li><a href="#plotting-point-estimates-and-intervals">Plotting point estimates and intervals</a></li>
       <li><a href="#combining-variables-with-different-indices-in-a-single-tidy-format-data-frame">Combining variables with different indices in a single tidy format data frame</a></li>
       <li><a href="#posterior-predictions">Posterior predictions</a></li>

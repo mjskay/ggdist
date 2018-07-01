@@ -150,7 +150,7 @@ violin plot; hence "half-eye" for this plot.</p>
 
     <pre class="usage"><span class='fu'>geom_halfeyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>relative_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>density.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>mean_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>density.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
@@ -265,7 +265,7 @@ used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
 a density plot, point estimate, and credible interval. <code>geom_halfeyeh()</code> is
 equivalent to <code>geom_density_ridges() + stat_summaryh()</code> with some reasonable
-defaults, including color choices and the use of mean with 95% quantile
+defaults, including color choices and the use of median with 95% and 66% quantile
 intervals.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

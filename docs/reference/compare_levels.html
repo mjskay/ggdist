@@ -251,13 +251,13 @@ first apply <code>relevel</code> to <code>by</code> to set the control
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>compare_levels</span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>mean_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 3 x 5
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 3 x 5
 #&gt; # Groups:   i [3]
 #&gt;   i         b  conf.low conf.high .prob
 #&gt;   &lt;fct&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 2 - 1 0.344 -0.000723     0.698  0.95
-#&gt; 2 3 - 1 0.741  0.420        1.07   0.95
-#&gt; 3 3 - 2 0.397 -0.0221       0.812  0.95</div><div class='input'>
+#&gt; 1 2 - 1 0.347 -0.000723     0.698  0.95
+#&gt; 2 3 - 1 0.744  0.420        1.07   0.95
+#&gt; 3 3 - 2 0.395 -0.0221       0.812  0.95</div><div class='input'>
 <span class='co'># Or let's plot all comparisons against the first level (control):</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
