@@ -21,13 +21,13 @@
 \alias{mode_hdih}
 \title{Point and interval estimates for tidy sample data}
 \usage{
-point_interval(.data, ..., .prob = 0.95, .point = mean, .interval = qi,
+point_interval(.data, ..., .prob = 0.95, .point = median, .interval = qi,
   .broom = TRUE)
 
-\method{point_interval}{default}(.data, ..., .prob = 0.95, .point = mean,
+\method{point_interval}{default}(.data, ..., .prob = 0.95, .point = median,
   .interval = qi, .broom = TRUE)
 
-\method{point_interval}{numeric}(.data, ..., .prob = 0.95, .point = mean,
+\method{point_interval}{numeric}(.data, ..., .prob = 0.95, .point = median,
   .interval = qi, .broom = FALSE)
 
 point_intervalh(...)
@@ -117,11 +117,11 @@ data frame with one row per value of \code{.prob} and three columns:
 \code{y} (the point estimate), \code{ymin} (the lower end of the interval),
 \code{ymax} (the upper end of the interval), and \code{.prob}, the probability
 corresponding to the interval. This behavior allows \code{point_interval}
-and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
+and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 to be easily used to plot intervals in ggplot using methods like
 \code{\link{geom_eye}}, \code{\link{geom_eyeh}}, or \code{\link{stat_summary}}.
 
-The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{mean_qih})
+The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih})
 behave identically to the function without the h, except that when passed a vector,
 they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 \code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
@@ -131,8 +131,8 @@ argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
 \code{\link{stat_pointintervalh}}, \code{\link{geom_halfeyeh}}, etc), as
 these automatically adjust the function output to match their required aesthetics.
 
-\code{mean_qi}, \code{mode_qi}, etc are short forms for
-\code{point_interval(..., .point = mean, .interval = qi)}, etc.
+\code{median_qi}, \code{mode_hdi}, etc are short forms for
+\code{point_interval(..., .point = median, .interval = qi)}, etc.
 
 \code{qi} yields the quantile interval (also known as the percentile interval or
 equi-tailed interval) as a 1x2 matrix.
@@ -149,7 +149,7 @@ library(ggplot2)
 set.seed(123)
 
 rnorm(1000) \%>\%
-  mean_qi()
+  median_qi()
 
 data.frame(x = rnorm(1000)) \%>\%
   median_qi(x, .prob = c(.50, .80, .95))
@@ -169,7 +169,7 @@ data.frame(
     group = "b")
   ) \%>\%
   group_by(group) \%>\%
-  mean_qi(.prob = c(.50, .80, .95))
+  median_qi(.prob = c(.50, .80, .95))
 
 multimodal_samples = data.frame(
     x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))

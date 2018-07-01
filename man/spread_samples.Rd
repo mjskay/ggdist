@@ -209,7 +209,7 @@ RankCorr \%>\%
 
 RankCorr \%>\%
   gather_samples(tau[i], typical_r) \%>\%
-  mean_qi()
+  median_qi()
 
 }
 \seealso{

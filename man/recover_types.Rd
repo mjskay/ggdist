@@ -107,7 +107,7 @@ m = stan(model_code = stan_code, data = compose_data(ABC), control = list(adapt_
 # will be an integer:
 m \%>\%
   spread_samples(condition_mean[condition]) \%>\%
-  mean_qi()
+  median_qi()
 
 # If we apply recover_types() first, subsequent calls to other tidybayes functions will
 # automatically back-convert factors so that they are labeled with their original levels
@@ -117,7 +117,7 @@ m \%<>\% recover_types(ABC)
 # now the `condition` column with be a factor with levels "A", "B", "C", ...
 m \%>\%
   spread_samples(condition_mean[condition]) \%>\%
-  mean_qi()
+  median_qi()
 
 }
 }

@@ -6,12 +6,12 @@
 \title{Point estimate + multiple probability interval plots (ggplot stat)}
 \usage{
 stat_pointinterval(mapping = NULL, data = NULL, geom = "pointinterval",
-  position = "identity", ..., point_interval = mean_qi, fun.data = NULL,
+  position = "identity", ..., point_interval = median_qi, fun.data = NULL,
   .prob = c(0.66, 0.95), fun.args = list(), na.rm = FALSE,
   show.legend = FALSE, inherit.aes = TRUE)
 
 stat_pointintervalh(mapping = NULL, data = NULL, geom = "pointintervalh",
-  position = "identity", ..., point_interval = mean_qi, fun.data = NULL,
+  position = "identity", ..., point_interval = median_qi, fun.data = NULL,
   .prob = c(0.66, 0.95), fun.args = list(), na.rm = FALSE,
   show.legend = FALSE, inherit.aes = TRUE)
 }

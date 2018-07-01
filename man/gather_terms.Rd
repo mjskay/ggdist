@@ -73,13 +73,13 @@ data(RankCorr, package = "tidybayes")
 RankCorr \%>\%
   spread_samples(b[i,v], tau[i]) \%>\%
   gather_terms() \%>\%
-  mean_qi()
+  median_qi()
 
 # the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)
 RankCorr \%>\%
   as_sample_tibble() \%>\%
   gather_terms() \%>\%
-  mean_qi()
+  median_qi()
 
 }
 }

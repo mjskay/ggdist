@@ -6,7 +6,7 @@
 \usage{
 geom_halfeyeh(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
-  density.color = NA, ..., point_interval = mean_qi, fun.data = NULL,
+  density.color = NA, ..., point_interval = median_qi, fun.data = NULL,
   fun.args = list(), .prob = c(0.66, 0.95), color = NULL, size = NULL,
   size_domain = NULL, size_range = NULL, fatten_point = NULL)
 }
@@ -87,7 +87,7 @@ used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
 a density plot, point estimate, and credible interval. \code{geom_halfeyeh()} is
 equivalent to \code{geom_density_ridges() + stat_summaryh()} with some reasonable
-defaults, including color choices and the use of mean with 95\% quantile
+defaults, including color choices and the use of median with 95\% and 66\% quantile
 intervals.
 }
 \examples{

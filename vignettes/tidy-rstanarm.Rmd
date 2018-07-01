@@ -204,7 +204,7 @@ __Note:__ If you have used `spread_samples` with raw samples from Stan or JAGS, 
 
 ### With simple parameters
 
-`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[mean|median|mode]_[qi|hdi]`, for example, `mean_qi`, `median_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
+`tidybayes` provides a family of functions for generating point estimates and intervals from samples in a tidy format. These functions follow the naming scheme `[median|mean|mode]_[qi|hdi]`, for example, `median_qi`, `mean_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point estimate, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom estimates or intervals can also be applied using the `point_interval` function.
 
 For example, we might extract the samples corresponding to the overall mean and standard deviation of observations:
 
@@ -215,20 +215,20 @@ m %>%
 ```
 *(10 rows of `r nrow(spread_samples(m, sigma))`)*
 
-Like with `b[term,group]`, this gives us a tidy data frame. If we want the mean and 95% quantile interval of the parameters, we can apply `mean_qi`:
+Like with `b[term,group]`, this gives us a tidy data frame. If we want the median and 95% quantile interval of the parameters, we can apply `median_qi`:
 
 ```{r}
 m %>%
   spread_samples(`(Intercept)`, sigma) %>%
-  mean_qi(`(Intercept)`, sigma)
+  median_qi(`(Intercept)`, sigma)
 ```
 
-We can specify the columns we want to get means and intervals from, as above, or if we omit the list of columns, `mean_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `(Intercept)` and `sigma` are redundant arguments to `mean_qi` because they are also the only columns we gathered from the model. So we can simplify this to:
+We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, `median_qi` will use every column that is not a grouping column or a special column (one that starts with `.`, like `.chain` or `.iteration`). Thus in the above example, `(Intercept)` and `sigma` are redundant arguments to `median_qi` because they are also the only columns we gathered from the model. So we can simplify this to:
 
 ```{r}
 m %>%
   spread_samples(`(Intercept)`, sigma) %>%
-  mean_qi()
+  median_qi()
 ```
 
 If you would rather have a long-format list of intervals, use `gather_samples` instead:
@@ -236,30 +236,30 @@ If you would rather have a long-format list of intervals, use `gather_samples` i
 ```{r}
 m %>%
   gather_samples(`(Intercept)`, sigma) %>%
-  mean_qi()
+  median_qi()
 ```
 
-The `conf.low` and `conf.high` naming scheme is used when `mean_qi` summarizes a single column in order to be consistent with the output of `broom::tidy`. This makes it easier to compare output from `tidybayes` to other models supported by `broom`.
+The `conf.low` and `conf.high` naming scheme is used when `median_qi` summarizes a single column in order to be consistent with the output of `broom::tidy`. This makes it easier to compare output from `tidybayes` to other models supported by `broom`.
 
 For more on `gather_samples`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
 ### With indexed parameters
 
-When we have a parameter with one or more indices, such as `b`, we can apply `mean_qi` (or other functions in the `point_estimate` family) as we did before:
+When we have a parameter with one or more indices, such as `b`, we can apply `median_qi` (or other functions in the `point_estimate` family) as we did before:
 
 ```{r}
 m %>%
   spread_samples(b[,group]) %>%
-  mean_qi()
+  median_qi()
 ```
 
-How did `mean_qi` know what to aggregate? Data frames returned by `spread_samples` are automatically grouped by all index variables you pass to it; in this case, that means `spread_samples` groups its results by `group`. `mean_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `mean_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
+How did `median_qi` know what to aggregate? Data frames returned by `spread_samples` are automatically grouped by all index variables you pass to it; in this case, that means `spread_samples` groups its results by `group`. `median_qi` respects those groups, and calculates the estimates and intervals within all groups. Then, because no columns were passed to `median_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
 
 ```{r}
 m %>%
   spread_samples(b[,group]) %>%
   group_by(group) %>%       # this line not necessary (done by spread_samples)
-  mean_qi(b)                # b is not necessary (it is the only non-group column)
+  median_qi(b)                # b is not necessary (it is the only non-group column)
 ```
 
 ## Combining variables with different indices in a single tidy format data frame
@@ -281,15 +281,15 @@ Within each sample, `(Intercept)` is repeated as necessary to correspond to ever
 m %>%
   spread_samples(`(Intercept)`, b[,group]) %>%
   mutate(condition_mean = `(Intercept)` + b) %>%
-  mean_qi(condition_mean)
+  median_qi(condition_mean)
 ```
 
-`mean_qi` uses tidy evaluation (see `vignette("tidy-evaluation", package = "rlang")`), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of `condition_mean` from `mutate` into `mean_qi`:
+`median_qi` uses tidy evaluation (see `vignette("tidy-evaluation", package = "rlang")`), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of `condition_mean` from `mutate` into `median_qi`:
 
 ```{r}
 m %>%
   spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b)
+  median_qi(condition_mean = `(Intercept)` + b)
 ```
 
 ## Plotting point estimates and intervals
@@ -299,7 +299,7 @@ Plotting point estimates and with one interval is straightforward using the `ggp
 ```{r}
 m %>%
   spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b) %>%
+  median_qi(condition_mean = `(Intercept)` + b) %>%
   ggplot(aes(y = group, x = condition_mean, xmin = conf.low, xmax = conf.high)) +
   geom_pointrangeh()
 ```
@@ -307,12 +307,12 @@ m %>%
 
 ## Interval estimates with multiple probability levels
 
-`mean_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `.prob =` argument:
+`median_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `.prob =` argument:
 
 ```{r}
 m %>%
   spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .8, .5))
+  median_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .8, .5))
 ```
 
 The results are in a tidy format: one row per group and probability level (`.prob`). This facilitates plotting. For example, assigning `-.prob` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom, provided by tidybayes, is a shorthand for a `geom_pointrangeh` with `xmin`, `xmax`, and `size` set appropriately based on the `conf.low`, `conf.high`, and `.prob` columns in the data to produce plots of estimates with multiple probability levels:
@@ -320,7 +320,7 @@ The results are in a tidy format: one row per group and probability level (`.pro
 ```{r}
 m %>%
   spread_samples(`(Intercept)`, b[,group]) %>%
-  mean_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .66)) %>%
+  median_qi(condition_mean = `(Intercept)` + b, .prob = c(.95, .66)) %>%
   ggplot(aes(y = group, x = condition_mean)) +
   geom_pointintervalh() 
 ```

@@ -57,14 +57,14 @@ m = stan_glm(response ~ condition, data = ABC,
 m \%>\%
   emmeans(~ condition) \%>\%
   gather_emmeans_samples() \%>\%
-  mean_qi()
+  median_qi()
 
 # or we could get pairwise differences:
 m \%>\%
   emmeans( ~ condition) \%>\%
   contrast(method = "pairwise") \%>\%
   gather_emmeans_samples() \%>\%
-  mean_qi()
+  median_qi()
 
 # see the documentation of emmeans() for more examples of types of
 # contrasts supported by that packge.

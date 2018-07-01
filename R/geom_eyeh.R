@@ -19,7 +19,7 @@ geom_eyeh = function(
   ...,
 
   #stat_summaryh properties
-  point_interval = mean_qi,
+  point_interval = median_qi,
   fun.data = NULL,
   fun.args = list(),
   .prob = c(.66, .95),

@@ -20,8 +20,8 @@
 #' a violin plot, point estimate, and credible interval.
 #'
 #' The vertical form, \code{geom_eye}, is equivalent to  \code{geom_violin() + stat_pointinterval()}
-#' with some reasonable defaults, including color choices and the use of mean with 95\%
-#' and 6\% quantile intervals.
+#' with some reasonable defaults, including color choices and the use of median with 95\%
+#' and 66\% quantile intervals.
 #'
 #' The horizontal form, \code{geom_eyeh()}, is equivalent to \code{geom_violinh() + stat_pointintervalh()}.
 #'
@@ -107,7 +107,7 @@ geom_eye = function(
   ...,
 
   #stat_summaryh properties
-  point_interval = mean_qi,
+  point_interval = median_qi,
   fun.data = NULL,
   fun.args = list(),
   .prob = c(.66, .95),

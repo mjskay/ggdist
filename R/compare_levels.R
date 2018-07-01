@@ -107,7 +107,7 @@ comparison_types = within(list(), {
 #'   spread_samples(b[i,j]) %>%
 #'   filter(i %in% 1:3, j == 1) %>%
 #'   compare_levels(b, by = i) %>%
-#'   mean_qi()
+#'   median_qi()
 #'
 #' # Or let's plot all comparisons against the first level (control):
 #' RankCorr %>%

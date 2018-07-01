@@ -18,7 +18,7 @@
 #' distributions in Bayesian inference. This instantiation is a combination of
 #' a density plot, point estimate, and credible interval. \code{geom_halfeyeh()} is
 #' equivalent to \code{geom_density_ridges() + stat_summaryh()} with some reasonable
-#' defaults, including color choices and the use of mean with 95\% quantile
+#' defaults, including color choices and the use of median with 95\% and 66\% quantile
 #' intervals.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
@@ -98,7 +98,7 @@ geom_halfeyeh = function(
   ...,
 
   #stat_summaryh properties
-  point_interval = mean_qi,
+  point_interval = median_qi,
   fun.data = NULL,
   fun.args = list(),
   .prob = c(.66, .95),

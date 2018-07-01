@@ -220,7 +220,7 @@ tidy_samples = function(...) {
 #'
 #' RankCorr %>%
 #'   gather_samples(tau[i], typical_r) %>%
-#'   mean_qi()
+#'   median_qi()
 #'
 #' @aliases extract_samples tidy_samples
 #' @importFrom lazyeval lazy_dots

@@ -25,7 +25,7 @@ get_samples = function() {
   })
 }
 
-test_that("mean_qi works on a grouped variable", {
+test_that("median_qi works on a grouped variable", {
   samples = get_samples()
 
   ref = samples %>%
@@ -33,16 +33,16 @@ test_that("mean_qi works on a grouped variable", {
     summarise(
       tau.lower = quantile(tau, .025),
       tau.upper = quantile(tau, .975),
-      tau = mean(tau)
+      tau = median(tau)
     )
 
   result.broom = samples %>%
     group_by(ff) %>%
-    mean_qi(tau)
+    median_qi(tau)
 
   result = samples %>%
     group_by(ff) %>%
-    mean_qi(tau, .broom = FALSE)
+    median_qi(tau, .broom = FALSE)
 
   expect_equal(result.broom$tau, ref$tau)
   expect_equal(result.broom$conf.low, ref$tau.lower)

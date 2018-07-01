@@ -118,7 +118,7 @@ apply_prototypes = function(...) {
 #' # will be an integer:
 #' m %>%
 #'   spread_samples(condition_mean[condition]) %>%
-#'   mean_qi()
+#'   median_qi()
 #'
 #' # If we apply recover_types() first, subsequent calls to other tidybayes functions will
 #' # automatically back-convert factors so that they are labeled with their original levels
@@ -128,7 +128,7 @@ apply_prototypes = function(...) {
 #' # now the `condition` column with be a factor with levels "A", "B", "C", ...
 #' m %>%
 #'   spread_samples(condition_mean[condition]) %>%
-#'   mean_qi()
+#'   median_qi()
 #'
 #' }
 #' @export

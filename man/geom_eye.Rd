@@ -7,13 +7,13 @@
 \usage{
 geom_eye(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
-  violin.color = NA, ..., point_interval = mean_qi, fun.data = NULL,
+  violin.color = NA, ..., point_interval = median_qi, fun.data = NULL,
   fun.args = list(), .prob = c(0.66, 0.95), color = NULL, size = NULL,
   size_domain = NULL, size_range = NULL, fatten_point = NULL)
 
 geom_eyeh(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
-  violin.color = NA, ..., point_interval = mean_qi, fun.data = NULL,
+  violin.color = NA, ..., point_interval = median_qi, fun.data = NULL,
   fun.args = list(), .prob = c(0.66, 0.95), color = NULL, size = NULL,
   size_domain = NULL, size_range = NULL, fatten_point = NULL)
 }
@@ -97,8 +97,8 @@ distributions in Bayesian inference. This instantiation is a combination of
 a violin plot, point estimate, and credible interval.
 
 The vertical form, \code{geom_eye}, is equivalent to  \code{geom_violin() + stat_pointinterval()}
-with some reasonable defaults, including color choices and the use of mean with 95\%
-and 6\% quantile intervals.
+with some reasonable defaults, including color choices and the use of median with 95\%
+and 66\% quantile intervals.
 
 The horizontal form, \code{geom_eyeh()}, is equivalent to \code{geom_violinh() + stat_pointintervalh()}.
 }

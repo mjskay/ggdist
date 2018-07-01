@@ -69,7 +69,7 @@ globalVariables(c("...prob.."))
 stat_pointinterval <- function(mapping = NULL, data = NULL,
   geom = "pointinterval", position = "identity",
   ...,
-  point_interval = mean_qi,
+  point_interval = median_qi,
   fun.data = NULL,
   .prob = c(.66, .95),
   fun.args = list(),
@@ -117,7 +117,7 @@ stat_pointinterval <- function(mapping = NULL, data = NULL,
 
 #' @importFrom plyr defaults
 StatPointinterval <- ggproto("StatPointinterval", StatSummary,
-  compute_panel = function(data, scales, fun.data = mean_qi, .prob = c(.66, .95),
+  compute_panel = function(data, scales, fun.data = median_qi, .prob = c(.66, .95),
     fun.args = list(), na.rm = FALSE
   ) {
 

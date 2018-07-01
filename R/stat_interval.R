@@ -71,7 +71,7 @@ globalVariables(c("...prob.."))
 stat_interval <- function(mapping = NULL, data = NULL,
   geom = "interval", position = "identity",
   ...,
-  point_interval = mean_qi,
+  point_interval = median_qi,
   fun.data = NULL,
   .prob = c(.50, .80, .95),
   fun.args = list(),

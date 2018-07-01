@@ -9,7 +9,7 @@
 stat_pointintervalh <- function(mapping = NULL, data = NULL,
   geom = "pointintervalh", position = "identity",
   ...,
-  point_interval = mean_qi,
+  point_interval = median_qi,
   fun.data = NULL,
   .prob = c(.66, .95),
   fun.args = list(),
@@ -57,7 +57,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
 
 #' @importFrom plyr defaults
 StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
-  compute_panel = function(data, scales, fun.data = mean_qih, .prob = c(.66, .95),
+  compute_panel = function(data, scales, fun.data = median_qih, .prob = c(.66, .95),
     fun.args = list(), na.rm = FALSE
   ) {
 

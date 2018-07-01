@@ -37,11 +37,11 @@ globalVariables(c("y", "ymin", "ymax"))
 #' \code{y} (the point estimate), \code{ymin} (the lower end of the interval),
 #' \code{ymax} (the upper end of the interval), and \code{.prob}, the probability
 #' corresponding to the interval. This behavior allows \code{point_interval}
-#' and its derived functions (like \code{mean_qi}, \code{median_qi}, etc)
+#' and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 #' to be easily used to plot intervals in ggplot using methods like
 #' \code{\link{geom_eye}}, \code{\link{geom_eyeh}}, or \code{\link{stat_summary}}.
 #'
-#' The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{mean_qih})
+#' The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih})
 #' behave identically to the function without the h, except that when passed a vector,
 #' they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 #' \code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
@@ -51,8 +51,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' \code{\link{stat_pointintervalh}}, \code{\link{geom_halfeyeh}}, etc), as
 #' these automatically adjust the function output to match their required aesthetics.
 #'
-#' \code{mean_qi}, \code{mode_qi}, etc are short forms for
-#' \code{point_interval(..., .point = mean, .interval = qi)}, etc.
+#' \code{median_qi}, \code{mode_hdi}, etc are short forms for
+#' \code{point_interval(..., .point = median, .interval = qi)}, etc.
 #'
 #' \code{qi} yields the quantile interval (also known as the percentile interval or
 #' equi-tailed interval) as a 1x2 matrix.
@@ -90,7 +90,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' set.seed(123)
 #'
 #' rnorm(1000) %>%
-#'   mean_qi()
+#'   median_qi()
 #'
 #' data.frame(x = rnorm(1000)) %>%
 #'   median_qi(x, .prob = c(.50, .80, .95))
@@ -110,7 +110,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'     group = "b")
 #'   ) %>%
 #'   group_by(group) %>%
-#'   mean_qi(.prob = c(.50, .80, .95))
+#'   median_qi(.prob = c(.50, .80, .95))
 #'
 #' multimodal_samples = data.frame(
 #'     x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))
@@ -128,13 +128,13 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @importFrom stringi stri_startswith_fixed
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
-point_interval = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) {
+point_interval = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE) {
   UseMethod("point_interval")
 }
 
 #' @rdname point_interval
 #' @export
-point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interval = qi, .broom = TRUE) {
+point_interval.default = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
 
@@ -218,7 +218,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = mean, .interva
 #' @rdname point_interval
 #' @importFrom dplyr rename
 #' @export
-point_interval.numeric = function(.data, ..., .prob = .95, .point = mean, .interval = qi, .broom = FALSE) {
+point_interval.numeric = function(.data, ..., .prob = .95, .point = median, .interval = qi, .broom = FALSE) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
 
   result = map_df(.prob, function(p) {
