@@ -626,4 +626,22 @@ esoph %>%
   scale_size_continuous(guide = FALSE)
 ```
 
+It is hard to see the changes in categories in the above plot; let's try something that gives a better gist of the distribution within each year:
+
+```{r fig.height = 2.25, fig.width = 8}
+esoph %>%
+  data_grid(agegp) %>%
+  add_fitted_samples(m_esoph_brm) %>%
+  within(levels(category) <- levels(esoph$tobgp)) %>%
+  ggplot(aes(x = estimate, y = category)) +
+  stat_summaryh(fun.x = median, geom = "barh", fill = "gray75", width = 1, color = "white") +
+  stat_pointintervalh() +
+  coord_cartesian(expand = FALSE) +
+  facet_grid(. ~ agegp, switch = "x") +
+  theme_classic() +
+  theme(strip.background = element_blank(), strip.placement = "outside") +
+  ggtitle("P(tobacco consumption category | age group)") +
+  xlab("age group")
+```
+
 This output should be very similar to the output from the corresponding `m_esoph_rs` model in `vignette("tidy-rstanarm")` (modulo different priors), though brms does more of the work for us to produce it than `rstanarm` does.

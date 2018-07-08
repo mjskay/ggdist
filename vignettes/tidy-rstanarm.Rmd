@@ -610,4 +610,29 @@ esoph %>%
   scale_fill_brewer(palette = "Greys")
 ```
 
+It is hard to see the changes in categories in the above plot; let's try something that gives a better gist of the distribution within each year:
+
+```{r fig.height = 2.25, fig.width = 8}
+esoph %>%
+  data_grid(agegp) %>%
+  add_fitted_samples(m_esoph_rs, scale = "linear") %>%
+  inner_join(thresholds, by = c(".chain", ".iteration")) %>%
+  mutate(`P(Y = category)` = map2(threshold, estimate, function(alpha, beta_x)
+      # this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)
+      invlogit(alpha - beta_x) - 
+      invlogit(lag(alpha, default = -Inf) - beta_x)
+    )) %>%
+  mutate(category = list(levels(esoph$tobgp))) %>%
+  unnest() %>%
+  ggplot(aes(x = `P(Y = category)`, y = category)) +
+  stat_summaryh(fun.x = median, geom = "barh", fill = "gray75", width = 1, color = "white") +
+  stat_pointintervalh() +
+  coord_cartesian(expand = FALSE) +
+  facet_grid(. ~ agegp, switch = "x") +
+  theme_classic() +
+  theme(strip.background = element_blank(), strip.placement = "outside") +
+  ggtitle("P(tobacco consumption category | age group)") +
+  xlab("age group")
+```
+
 This output should be very similar to the output from the corresponding `m_esoph_brm` model in `vignette("tidy-brms")` (modulo different priors), though it takes a bit more work to produce in `rstanarm` compared to `brms`.

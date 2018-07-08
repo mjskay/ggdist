@@ -93,7 +93,7 @@
       <h1>Extracting and visualizing tidy samples from rstanarm</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-07-01</h4>
+            <h4 class="date">2018-07-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-rstanarm.Rmd"><code>vignettes/tidy-rstanarm.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-rstanarm.Rmd</code></div>
@@ -777,6 +777,28 @@ Pr(Y = j) &amp;= Pr(Y \le j) - Pr(Y \le j - 1)\\
 <span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-44-1.png" width="576"></p>
+<p>It is hard to see the changes in categories in the above plot; let’s try something that gives a better gist of the distribution within each year:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">esoph <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(agegp) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_predicted_samples.html">add_fitted_samples</a></span>(m_esoph_rs, <span class="dt">scale =</span> <span class="st">"linear"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">inner_join</span>(thresholds, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">".chain"</span>, <span class="st">".iteration"</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">P(Y = category)</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map2</span>(threshold, estimate, <span class="cf">function</span>(alpha, beta_x)
+      <span class="co"># this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)</span>
+      <span class="kw">invlogit</span>(alpha <span class="op">-</span><span class="st"> </span>beta_x) <span class="op">-</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">invlogit</span>(<span class="kw">lag</span>(alpha, <span class="dt">default =</span> <span class="op">-</span><span class="ot">Inf</span>) <span class="op">-</span><span class="st"> </span>beta_x)
+    )) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">category =</span> <span class="kw">list</span>(<span class="kw">levels</span>(esoph<span class="op">$</span>tobgp))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="st">`</span><span class="dt">P(Y = category)</span><span class="st">`</span>, <span class="dt">y =</span> category)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="dt">fun.x =</span> median, <span class="dt">geom =</span> <span class="st">"barh"</span>, <span class="dt">fill =</span> <span class="st">"gray75"</span>, <span class="dt">width =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">expand =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>agegp, <span class="dt">switch =</span> <span class="st">"x"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_classic</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.placement =</span> <span class="st">"outside"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"P(tobacco consumption category | age group)"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">"age group"</span>)</code></pre></div>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-45-1.png" width="768"></p>
 <p>This output should be very similar to the output from the corresponding <code>m_esoph_brm</code> model in <code><a href="../articles/tidy-brms.html">vignette("tidy-brms")</a></code> (modulo different priors), though it takes a bit more work to produce in <code>rstanarm</code> compared to <code>brms</code>.</p>
 </div>
 </div>
