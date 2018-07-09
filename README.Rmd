@@ -6,8 +6,10 @@ output:
 
 # tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
 
-[![Build Status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
+[![Build status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 [![Coverage status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
+[![CRAN status](http://www.r-pkg.org/badges/version/tidybayes)](https://github.com/mjskay/tidybayes/milestone/1)
+[![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)
 
 ![Preview of tidybayes plots](man/figures/preview.png)
 
@@ -414,3 +416,8 @@ See `vignette("tidybayes")` for a variety of additional examples and more explan
 I welcome feedback, suggestions, issues, and contributions! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [dev](https://github.com/mjskay/tidybayes/tree/dev) branch.
 
 `tidybayes` grew out of helper functions I wrote to make my own analysis pipelines tidier. Over time it has expanded to cover more use cases I have encountered, but I would love to make it cover more!
+
+## Citing `tidybayes`
+
+Matthew Kay (`r format(Sys.Date(), "%Y")`). _tidybayes: Tidy Data and Geoms for MCMC/Bayesian Samplers_. R package version `r getNamespaceVersion("tidybayes")`, <https://mjskay.github.io/tidybayes/>.
+DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
