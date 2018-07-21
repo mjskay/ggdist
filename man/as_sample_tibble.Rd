@@ -13,7 +13,7 @@
 \alias{as_sample_tibble.brmsfit}
 \alias{as_sample_tibble.matrix}
 \alias{as_sample_tibble.MCMCglmm}
-\title{Get samples from a model as a tibble}
+\title{Get a sample of draws from a model as a tibble}
 \usage{
 as_sample_tibble(model)
 
@@ -38,16 +38,16 @@ as_sample_data_frame(model)
 \method{as_sample_tibble}{MCMCglmm}(model)
 }
 \arguments{
-\item{model}{A supported Bayesian model fit / MCMC object. See \code{\link{tidybayes-models}} for a list of supported
+\item{model}{A supported Bayesian model fit object. See \code{\link{tidybayes-models}} for a list of supported
 models.}
 }
 \value{
 A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
-\code{.iteration} column, and one column for every parameter in \code{model}.
+\code{.iteration} column, \code{.draw} column, and one column for every parameter in \code{model}.
 }
 \description{
-Extract samples from an MCMC fit into a wide-format data frame with a
-\code{.chain} and \code{.iteration} column, as well as all terms
+Extract draws from a Bayesian fit into a wide-format data frame with a
+\code{.chain}, \code{.iteration}, and \code{.draw} column, as well as all variables
 as columns. Generally speaking not as useful as \code{\link{spread_samples}} or
 \code{\link{gather_samples}} and is mainly used interally (see `Details`)
 }

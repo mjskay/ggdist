@@ -4,10 +4,10 @@
 ###############################################################################
 
 
-#' Get samples from a model as a tibble
+#' Get a sample of draws from a model as a tibble
 #'
-#' Extract samples from an MCMC fit into a wide-format data frame with a
-#' \code{.chain} and \code{.iteration} column, as well as all terms
+#' Extract draws from a Bayesian fit into a wide-format data frame with a
+#' \code{.chain}, \code{.iteration}, and \code{.draw} column, as well as all variables
 #' as columns. Generally speaking not as useful as \code{\link{spread_samples}} or
 #' \code{\link{gather_samples}} and is mainly used interally (see `Details`)
 #'
@@ -19,10 +19,10 @@
 #'
 #' \code{as_sample_data_frame} is an alias.
 #'
-#' @param model A supported Bayesian model fit / MCMC object. See \code{\link{tidybayes-models}} for a list of supported
+#' @param model A supported Bayesian model fit object. See \code{\link{tidybayes-models}} for a list of supported
 #' models.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
-#' \code{.iteration} column, and one column for every parameter in \code{model}.
+#' \code{.iteration} column, \code{.draw} column, and one column for every parameter in \code{model}.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function
 #' internally and provides a friendly interface for extracting tidy data frames from model fits.
@@ -59,13 +59,15 @@ as_sample_tibble.default = function(model) {
 #' @rdname as_sample_tibble
 #' @export
 as_sample_tibble.mcmc.list = function(model) {
-  n = nrow(model[[1]])
-  map_dfr(seq_along(model), function(chain)
+  map_dfr(seq_along(model), function(chain) {
     #putting tibble() or as_tibble() in here makes this slower, so we put it outside
     #after all the chains have been combined
+    n = nrow(model[[chain]])
+    iteration = seq_len(n)
     data.frame(
       .chain = chain,
-      .iteration = seq_len(n),
+      .iteration = iteration,
+      .draw = draw_from_chain_and_iteration(chain, iteration),
       # the implementation of as.data.frame for mcmc objects takes ~ twice as long as as.matrix (!!),
       # so using as.matrix here speeds things up considerably for large samples
       as.matrix(model[[chain]]),
@@ -73,7 +75,7 @@ as_sample_tibble.mcmc.list = function(model) {
       check.names = FALSE,
       stringsAsFactors = FALSE
     )
-  ) %>%
+  }) %>%
     as_tibble()
 }
 
@@ -155,4 +157,13 @@ as_sample_tibble.MCMCglmm = function(model) {
     list() %>%
     c(other_samples) %>%
     reduce(inner_join, by = c(".chain", ".iteration"))
+}
+
+
+
+# utility functions for as_sample_tibble ----------------------------------
+
+draw_from_chain_and_iteration = function(chain, iteration) {
+  max_iteration = max(iteration)
+  as.integer(ifelse(is.na(chain), 0, chain - 1) * max_iteration + iteration)
 }

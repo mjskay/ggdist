@@ -14,7 +14,7 @@ test_that("gather_terms works on the results of as_sample_tibble", {
 
   ref = RankCorr %>%
     as_sample_tibble() %>%
-    gather(term, estimate, -.chain, -.iteration) %>%
+    gather(term, estimate, -.chain, -.iteration, -.draw) %>%
     group_by(term, add = TRUE)
 
   result = RankCorr %>%

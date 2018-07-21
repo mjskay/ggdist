@@ -67,6 +67,7 @@ combine_chains = function(samples, chain = .chain, iteration = .iteration, into 
   max_iteration = samples %>%
     pull(!!iteration) %>%
     max()
+
   samples %<>% mutate(
     !!into_col := as.integer(ifelse(is.na(!!chain), 0, (!!chain) - 1) * (!!max_iteration) + !!iteration)
   )

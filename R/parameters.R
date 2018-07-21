@@ -14,7 +14,7 @@
 #' to construct calls to \code{\link{spread_samples}} or \code{\link{gather_samples}}
 #' in order to extract samples in a tidy format.
 #'
-#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects; 
+#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @return A character vector of parameter names in the fitted model.
 #' @author Matthew Kay
@@ -39,5 +39,5 @@ parameters.default = function(model) {
   model %>%
     as_sample_tibble() %>%
     names() %>%
-    setdiff(c(".chain", ".iteration"))
+    setdiff(c(".chain", ".iteration", ".draw"))
 }

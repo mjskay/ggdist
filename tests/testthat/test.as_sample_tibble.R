@@ -24,9 +24,11 @@ test_that("as_sample_tibble works with brms", {
     select(.chain = chain, .iteration = iter, everything()) %>%
     mutate(
       .chain = as.integer(.chain),
-      .iteration = as.integer(.iteration - min(.iteration) + 1)
+      .iteration = as.integer(.iteration - min(.iteration) + 1),
+      .draw = as.integer((.chain - 1) * max(.iteration) + .iteration)
     ) %>%
-    as_tibble()
+    as_tibble() %>%
+    select(.chain, .iteration, .draw, everything())
 
   expect_equal(as_sample_tibble(m_ranef), samples_tidy)
 })
@@ -40,9 +42,9 @@ test_that("as_sample_tibble works with rstanarm", {
   m_ranef = readRDS("../models/models.rstanarm.m_ranef.rds")
 
   chain_1 = as_tibble(as.array(m_ranef)[,1,]) %>%
-    add_column(.chain = 1L, .iteration = 1L:nrow(.), .before = 1)
+    add_column(.chain = 1L, .iteration = 1L:nrow(.), .draw = 1L:nrow(.), .before = 1)
   chain_2 = as_tibble(as.array(m_ranef)[,2,]) %>%
-    add_column(.chain = 2L, .iteration = 1L:nrow(.), .before = 1)
+    add_column(.chain = 2L, .iteration = 1L:nrow(.), .draw = (nrow(.) + 1L):(2L * nrow(.)), .before = 1)
   samples_tidy =
     bind_rows(chain_1, chain_2)
 
@@ -59,9 +61,9 @@ test_that("as_sample_tibble works with rstan", {
   m_ABC = readRDS("../models/models.rstan.m_ABC.rds")
 
   chain_1 = as_tibble(as.array(m_ABC)[,1,]) %>%
-    add_column(.chain = 1L, .iteration = 1L:nrow(.), .before = 1)
+    add_column(.chain = 1L, .iteration = 1L:nrow(.), .draw = 1L:nrow(.), .before = 1)
   chain_2 = as_tibble(as.array(m_ABC)[,2,]) %>%
-    add_column(.chain = 2L, .iteration = 1L:nrow(.), .before = 1)
+    add_column(.chain = 2L, .iteration = 1L:nrow(.), .draw = (nrow(.) + 1L):(2L * nrow(.)), .before = 1)
   samples_tidy =
     bind_rows(chain_1, chain_2)
 
@@ -91,8 +93,8 @@ test_that("as_sample_tibble works with runjags", {
   samples = as.mcmc.list(m)
   samples_tidy =
     rbind(
-      data.frame(.chain = 1L, .iteration = 1:100L, samples[[1]], check.names = FALSE),
-      data.frame(.chain = 2L, .iteration = 1:100L, samples[[2]], check.names = FALSE)
+      data.frame(.chain = 1L, .iteration = 1:100L, .draw = 1:100L, samples[[1]], check.names = FALSE),
+      data.frame(.chain = 2L, .iteration = 1:100L, .draw = 101:200L, samples[[2]], check.names = FALSE)
     ) %>%
     as_tibble()
 
@@ -116,8 +118,8 @@ test_that("as_sample_tibble works with rjags", {
 
   samples_tidy =
     rbind(
-      data.frame(.chain = 1L, .iteration = 1:100L, m[[1]], check.names = FALSE),
-      data.frame(.chain = 2L, .iteration = 1:100L, m[[2]], check.names = FALSE)
+      data.frame(.chain = 1L, .iteration = 1:100L, .draw = 1:100L, m[[1]], check.names = FALSE),
+      data.frame(.chain = 2L, .iteration = 1:100L, .draw = 101:200L, m[[2]], check.names = FALSE)
     ) %>%
     as_tibble()
 
@@ -141,8 +143,8 @@ test_that("as_sample_tibble works with jagsUI", {
 
   samples_tidy =
     rbind(
-      data.frame(.chain = 1L, .iteration = 1:100L, m$samples[[1]], check.names = FALSE),
-      data.frame(.chain = 2L, .iteration = 1:100L, m$samples[[2]], check.names = FALSE)
+      data.frame(.chain = 1L, .iteration = 1:100L, .draw = 1:100L, m$samples[[1]], check.names = FALSE),
+      data.frame(.chain = 2L, .iteration = 1:100L, .draw = 101:200L, m$samples[[2]], check.names = FALSE)
     ) %>%
     as_tibble()
 
