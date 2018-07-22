@@ -64,6 +64,8 @@ to_broom_names = function(x) {
     .upper = "conf.high"
   )
 
+  # this approach, while possibly a little odd seeming, ensures that
+  # group names in grouped data frams are also changed
   select_all(x, ~ lookup[.] %||% .)
 }
 
