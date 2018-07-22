@@ -42,38 +42,43 @@
 #' @keywords manip
 #' @examples
 #'
-#' ## TODO
+#' library(magrittr)
+#'
+#' data(line, package = "coda")
+#'
+#' line %>%
+#'   gather_draws(alpha, beta, sigma) %>%
+#'   median_qi() %>%
+#'   to_broom_names()
 #'
 #' @name tidy-format-translators
+#' @importFrom dplyr select_all
+#' @importFrom rlang %||%
 #' @export
 to_broom_names = function(x) {
-  plyr::rename(x,
-    c(
-      .variable = "term",
-      .value = "estimate",
-      .prediction = ".fitted",
-      .lower = "conf.low",
-      .upper = "conf.high"
-    ),
-    warn_missing = FALSE,
-    warn_duplicated = FALSE
+  lookup = c(
+    .variable = "term",
+    .value = "estimate",
+    .prediction = ".fitted",
+    .lower = "conf.low",
+    .upper = "conf.high"
   )
+
+  select_all(x, ~ lookup[.] %||% .)
 }
 
 #' @rdname tidy-format-translators
 #' @export
 from_broom_names = function(x) {
-  plyr::rename(x,
-    c(
-      term = ".variable",
-      estimate = ".value",
-      .fitted = ".prediction",
-      conf.low = ".lower",
-      conf.high = ".upper"
-    ),
-    warn_missing = FALSE,
-    warn_duplicated = FALSE
+  lookup = c(
+    term = ".variable",
+    estimate = ".value",
+    .fitted = ".prediction",
+    conf.low = ".lower",
+    conf.high = ".upper"
   )
+
+  select_all(x, ~ lookup[.] %||% .)
 }
 
 
@@ -81,30 +86,26 @@ from_broom_names = function(x) {
 # to_ggmcmc_names / from_ggmcmc_names -------------------------------------
 
 to_ggmcmc_names = function(x) {
-  plyr::rename(x,
-    c(
-      .chain = "Chain",
-      .iteration = "Iteration",
-      .variable = "Parameter",
-      .value = "value"
-    ),
-    warn_missing = FALSE,
-    warn_duplicated = FALSE
+  lookup = c(
+    .chain = "Chain",
+    .iteration = "Iteration",
+    .variable = "Parameter",
+    .value = "value"
   )
+
+  select_all(x, ~ lookup[.] %||% .)
 }
 
 #' @rdname tidy-format-translators
 #' @export
 from_ggmcmc_names = function(x) {
-  plyr::rename(x,
-    c(
-      Chain = ".chain",
-      Iteration = ".iteration",
-      Parameter = ".variable",
-      value = ".value"
-    ),
-    warn_missing = FALSE,
-    warn_duplicated = FALSE
+  lookup = c(
+    Chain = ".chain",
+    Iteration = ".iteration",
+    Parameter = ".variable",
+    value = ".value"
   )
+
+  select_all(x, ~ lookup[.] %||% .)
 }
 

@@ -49,7 +49,14 @@ prefixed with \code{from_} translate from that format back to the tidybayes form
 }
 \examples{
 
-## TODO
+library(magrittr)
+
+data(line, package = "coda")
+
+line \%>\%
+  gather_draws(alpha, beta, sigma) \%>\%
+  median_qi() \%>\%
+  to_broom_names()
 
 }
 \author{
