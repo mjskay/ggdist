@@ -11,8 +11,8 @@
 #' @usage NULL
 #' @export
 gather_samples = function(...) {
-  .Deprecated("gather_draws")    # nocov
-  gather_draws(...)              # nocov
+  .Deprecated("gather_draws")        # nocov
+  to_broom_names(gather_draws(...))  # nocov
 }
 
 
@@ -26,7 +26,7 @@ gather_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
   tidysamples = lapply(lazy_dots(...), function(variable_spec) {
     model %>%
       spread_draws_(variable_spec, regex = regex, sep = sep) %>%
-      gather_terms()
+      gather_variables()
   })
 
   #get the groups from all the samples --- when we bind them together,

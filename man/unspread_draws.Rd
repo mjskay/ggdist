@@ -5,7 +5,7 @@
 \alias{unspread_draws}
 \title{Turn tidy data frames of variables from a Bayesian model back into untidy data}
 \usage{
-ungather_draws(data, ..., term = "term", estimate = "estimate",
+ungather_draws(data, ..., variable = ".variable", value = ".value",
   indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE)
 
 unspread_draws(data, ..., indices = c(".chain", ".iteration", ".draw"),
@@ -17,9 +17,9 @@ unspread_draws(data, ..., indices = c(".chain", ".iteration", ".draw"),
 \item{...}{Expressions in the form of
 \code{variable_name[dimension_1, dimension_2, ...]}. See \code{\link{spread_draws}}.}
 
-\item{term}{The name of the column in \code{data} that contains the names of variables from the model.}
+\item{variable}{The name of the column in \code{data} that contains the names of variables from the model.}
 
-\item{estimate}{The name of the column in \code{data} that contains the samples of the variables.}
+\item{value}{The name of the column in \code{data} that contains the samples of the variables.}
 
 \item{indices}{Character vector of column names in \code{data} that
 should be treated as indices of draws. The default is \code{c(".chain",".iteration",".draw")},

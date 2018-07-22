@@ -66,7 +66,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @param ... Bare column names or expressions that, when evaluated in the context of
 #' \code{.data}, represent samples to summarise. If this is empty, then by default all
 #' columns that are not group columns or start with \code{"."} (e.g. \code{".chain"}
-#' or \code{".iteration"}) will be summarised.
+#' or \code{".iteration"}, \code{".draw"}) will be summarised.
 #' @param .prob vector of probabilities to use for generating intervals. If multiple
 #' probabilities are provided, multiple rows per group are generated, each with
 #' a different probabilty interval (and value of the corresponding \code{.prob} column).
@@ -146,7 +146,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
       #don't aggregate groups because we aggregate within these
       setdiff(groups(data)) %>%
       #don't aggregate columns that start with "." because these are special columns (such
-      #as .chain or .iteration)
+      #as .chain or .iteration or .draw)
       discard(~ stri_startswith_fixed(.x, ".")) %>%
       map(as_quosure) %>%
       quos_auto_name()
@@ -192,7 +192,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
             "You are summarizing a multimodal distribution using a method that returns multiple intervals",
             "(such as `hdi`), but you are attempting to generate intervals for multiple columns in wide format.",
             "To use a multiple-interval method like `hdi` on distributions that are multi-modal, you can",
-            "only summarize one column at a time. You might try using `gather_terms` to put all your samples",
+            "only summarize one column at a time. You might try using `gather_variables` to put all your samples",
             "into a single column before summarizing them, or use an interval type (such as `qi`) that always",
             "returns exactly one interval per probability level."
           ))

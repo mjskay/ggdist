@@ -13,7 +13,7 @@ context("gather_draws")
 test_that("regular expressions for parameter names work on non-indexed parameters", {
   data(RankCorr, package = "tidybayes")
 
-  ref = gather_draws(RankCorr, typical_r)
+  ref = RankCorr %>% spread_draws(typical_r) %>% gather_variables()
 
   expect_equal(gather_draws(RankCorr, `typical..`, regex = TRUE), ref)
 })
@@ -21,7 +21,7 @@ test_that("regular expressions for parameter names work on non-indexed parameter
 test_that("regular expressions for parameter names work on indexed parameters", {
   data(RankCorr, package = "tidybayes")
 
-  ref = gather_draws(RankCorr, c(tau, u_tau)[i])
+  ref = RankCorr %>% spread_draws(c(tau, u_tau)[i]) %>% gather_variables()
 
   expect_equal(gather_draws(RankCorr, `.*tau`[i], regex = TRUE), ref)
 })

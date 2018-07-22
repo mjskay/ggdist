@@ -29,9 +29,10 @@ test_that("gather_emmeans_draws works on a simple rstanarm model", {
     as.data.frame() %>%
     mutate(
       .chain = as.integer(NA),
-      .iteration = seq_len(n())
+      .iteration = as.integer(NA),
+      .draw = seq_len(n())
     ) %>%
-    gather(.row, estimate, -.chain, -.iteration) %>%
+    gather(.row, .value, -.chain, -.iteration, -.draw) %>%
     as_data_frame()
 
   ref = as_data_frame(estimate_grid) %>%
@@ -40,13 +41,11 @@ test_that("gather_emmeans_draws works on a simple rstanarm model", {
     select(-.row)
 
   # recover_data for stanreg objects seems to require the data to be in the same environment as in the
-  # call that created the model (here, the global environment). So we'll put mtcars_tbl there temporarily.
-  old_global_mtcars_tbl = .GlobalEnv[["mtcars_tbl"]]
-  .GlobalEnv[["mtcars_tbl"]] = mtcars_tbl
+  # call that created the model (here, the global environment).
+  # So we'll specify mtcars_tbl manually using `data =`
   result = m_hp_wt %>%
-    ref_grid(estimate_grid) %>%
+    ref_grid(estimate_grid, data = mtcars_tbl) %>%
     gather_emmeans_draws()
-  .GlobalEnv[["mtcars_tbl"]] = old_global_mtcars_tbl
 
   expect_equal(ref, result)
 })

@@ -11,7 +11,7 @@ context("tidy format translators")
 test_that("basic translators work", {
   result = line %>%
     gather_draws(alpha, beta, sigma) %>%
-    from_broom_names() %>%
+    from_broom_names() %>% #TODO: drop once names are fixed
     to_ggmcmc_names()
 
   expect_equal(names(result), c("Chain", "Iteration", ".draw", "Parameter", "value"))

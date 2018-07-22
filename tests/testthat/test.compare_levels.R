@@ -20,6 +20,7 @@ get_samples = function() {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr)),
+      .draw = seq_len(nrow(RankCorr)),
       ff = ff_labels[i],
       tau = RankCorr[, paste0("tau[", i, "]")]
     )
@@ -39,6 +40,7 @@ test_that("pairwise level comparison works", {
     as_tibble()
 
   expect_equal(compare_levels(samples, tau, by = ff, comparison = pairwise), ref)
+  expect_equal(group_vars(compare_levels(samples, tau, by = ff, comparison = pairwise)), "ff")
   expect_equal(compare_levels(samples, tau, by = ff, comparison = "pairwise"), ref)
 })
 

@@ -66,3 +66,18 @@ test_that("ungather_draws does not support wide dimension syntax (`|`)", {
   expect_error(ungather_draws(data.frame(), b[i ,j] | i),
     'ungather_draws does not support the wide dimension syntax \\(`\\|`\\).')
 })
+
+test_that("ungather_draws works with user-specified names", {
+  data(line, package = "coda")
+
+  ref = line %>%
+    as_sample_tibble()
+
+  result = line %>%
+    gather_draws(alpha, beta, sigma) %>%
+    to_broom_names() %>%
+    ungather_draws(alpha, beta, sigma, variable = "term", value = "estimate")
+
+  expect_equal(result, ref)
+})
+

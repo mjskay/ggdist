@@ -3,12 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c("default"))
 
+# comparison types --------------------------------------------------------
 
-#COMPARISON TYPES
 comparison_types = within(list(), {
   ordered = function(x) {
     l = levels(x)
@@ -33,16 +30,19 @@ comparison_types = within(list(), {
 })
 
 
+
+# compare_levels ----------------------------------------------------------
+
 #' Compare the value of some variable extracted from a Bayesian posterior
 #' sample for different levels of a factor
 #'
-#' Given a posterior sample from a Bayesian sampler in long format (e.g. as
-#' returned by spread_draws), compare the value of a variable in that sample
+#' Given a posterior sample from a Bayesian model in long format (e.g. as
+#' returned by \code{\link{spread_draws}}), compare the value of a variable in that sample
 #' across different paired combinations of levels of a factor.
 #'
 #' This function simplifies conducting comparisons across levels of some
 #' variable returned from a Bayesian sample. It applies \code{fun} to all
-#' samples of \code{variable} for each pair of levels of \code{by} as selected
+#' values of \code{variable} for each pair of levels of \code{by} as selected
 #' by \code{comparison}. By default, all pairwise comparisons are generated if
 #' \code{by} is an unordered \code{factor} and ordered comparisons are made if
 #' \code{by} is \code{ordered}.
@@ -83,7 +83,7 @@ comparison_types = within(list(), {
 #' should be treated as indices when making the comparison (i.e. values of
 #' \code{variable} within each level of \code{by} will be compared at each
 #' unique combination of levels of \code{indices}). Columns in \code{indices}
-#' not found in \code{samples} are ignored. The default is \code{c(".chain",".iteration")},
+#' not found in \code{samples} are ignored. The default is \code{c(".chain",".iteration",".draw")},
 #' which are the same names used for chain/iteration indices variables returned by
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using \code{compare_levels}
 #' with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
@@ -117,23 +117,18 @@ comparison_types = within(list(), {
 #'   ggplot(aes(x = b, y = i)) +
 #'   geom_halfeyeh()
 #'
-#' @export
-compare_levels = function(samples, variable, by, fun=`-`, comparison = default, indices = c(".chain", ".iteration")) {
-  eval(bquote(compare_levels_(samples,
-    .(deparse0(substitute(variable))),
-    .(deparse0(substitute(by))),
-    .(substitute(fun)),
-    .(substitute(comparison),
-      .(indices))
-  )))
-}
-
+#' @importFrom tidyselect vars_pull
 #' @importFrom plyr ldply
 #' @importFrom tidyr spread_
 #' @importFrom dplyr one_of
 #' @importFrom tibble as_tibble
-#' @importFrom rlang sym
-compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default, indices = c(".chain", ".iteration")) {
+#' @importFrom rlang sym quo_name eval_tidy
+compare_levels = function(samples, variable, by, fun=`-`, comparison = "default", indices = c(".chain", ".iteration", ".draw")) {
+  variable = vars_pull(names(samples), !!enquo(variable))
+  by = vars_pull(names(samples), !!enquo(by))
+  fun = enquo(fun)
+  comparison = enquo(comparison)
+
   #drop unused levels from "by" column
   samples[[by]] = factor(samples[[by]])
 
@@ -145,8 +140,8 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default,
   samples_wide = spread_(samples, by, variable)
 
   # determine a pretty function name
-  fun_language = substitute(fun)
-  fun_name = if (is.name(fun_language)) deparse0(fun_language) else ":"
+  fun_name = if (is.name(fun[[2]])) quo_name(fun) else ":"
+  fun = eval_tidy(fun)
 
   #get a version of the samples data frame without columns representing
   #the levels we are comparing by (these columns will be included
@@ -155,9 +150,8 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default,
   samples_wide_no_levels = select(samples_wide, -one_of(by_levels))
 
   #get list of pairs of levels to compare
-  comparison = substitute(comparison)
-  if (is.character(comparison)) comparison = as.name(comparison)
-  comparison_function = eval(comparison, comparison_types)
+  if (is.character(comparison[[2]])) comparison = as.name(comparison[[2]])
+  comparison_function = eval_tidy(comparison, comparison_types)
   comparison_levels =
     if (is.list(comparison_function)) comparison_function
   else comparison_function(samples[[by]])
@@ -167,8 +161,8 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default,
     comparison = if (is.language(levels.)) {
       #user-supplied quoted expressions are evaluated within the data frame
       data.frame(
-        by = deparse0(levels.),
-        variable = eval(levels., samples_wide)
+        by = quo_name(levels.),
+        variable = eval_tidy(levels., samples_wide)
       )
     }
     else {
@@ -178,8 +172,9 @@ compare_levels_ = function(samples, variable, by, fun=`-`, comparison = default,
         variable = fun(samples_wide[[levels.[[1]]]], samples_wide[[levels.[[2]]]])
       )
     }
+
     names(comparison) = c(by, variable)
     cbind(samples_wide_no_levels, comparison)
   }) %>%
-    group_by(!!sym(by))
+    group_by_at(by)
 }

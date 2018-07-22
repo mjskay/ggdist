@@ -67,7 +67,7 @@ that contains samples to summarize.}
 \item{...}{Bare column names or expressions that, when evaluated in the context of
 \code{.data}, represent samples to summarise. If this is empty, then by default all
 columns that are not group columns or start with \code{"."} (e.g. \code{".chain"}
-or \code{".iteration"}) will be summarised.}
+or \code{".iteration"}, \code{".draw"}) will be summarised.}
 
 \item{.prob}{vector of probabilities to use for generating intervals. If multiple
 probabilities are provided, multiple rows per group are generated, each with

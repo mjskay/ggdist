@@ -33,6 +33,7 @@ Imports:
     forcats,
     HDInterval,
     arrayhelpers,
+    tidyselect,
     magrittr
 Suggests:
     knitr,

@@ -5,8 +5,8 @@
 \title{Compare the value of some variable extracted from a Bayesian posterior
 sample for different levels of a factor}
 \usage{
-compare_levels(samples, variable, by, fun = `-`, comparison = default,
-  indices = c(".chain", ".iteration"))
+compare_levels(samples, variable, by, fun = `-`, comparison = "default",
+  indices = c(".chain", ".iteration", ".draw"))
 }
 \arguments{
 \item{samples}{Long-format \code{data.frame} of samples such as returned by
@@ -41,7 +41,7 @@ include more than two levels or other columns in \code{samples}.}
 should be treated as indices when making the comparison (i.e. values of
 \code{variable} within each level of \code{by} will be compared at each
 unique combination of levels of \code{indices}). Columns in \code{indices}
-not found in \code{samples} are ignored. The default is \code{c(".chain",".iteration")},
+not found in \code{samples} are ignored. The default is \code{c(".chain",".iteration",".draw")},
 which are the same names used for chain/iteration indices variables returned by
 \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using \code{compare_levels}
 with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
@@ -54,14 +54,14 @@ comparison of pairs of levels of \code{by} in \code{samples}, and
 \code{variable} contains the result of that comparison.
 }
 \description{
-Given a posterior sample from a Bayesian sampler in long format (e.g. as
-returned by spread_draws), compare the value of a variable in that sample
+Given a posterior sample from a Bayesian model in long format (e.g. as
+returned by \code{\link{spread_draws}}), compare the value of a variable in that sample
 across different paired combinations of levels of a factor.
 }
 \details{
 This function simplifies conducting comparisons across levels of some
 variable returned from a Bayesian sample. It applies \code{fun} to all
-samples of \code{variable} for each pair of levels of \code{by} as selected
+values of \code{variable} for each pair of levels of \code{by} as selected
 by \code{comparison}. By default, all pairwise comparisons are generated if
 \code{by} is an unordered \code{factor} and ordered comparisons are made if
 \code{by} is \code{ordered}.

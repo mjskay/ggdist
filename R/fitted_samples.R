@@ -3,11 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c(".iteration"))
-
-
 #' @rdname add_predicted_samples
 #' @export
 add_fitted_samples = function(newdata, model, var = "estimate", ..., n = NULL, re_formula = NULL,
@@ -52,8 +47,7 @@ fitted_samples.stanreg = function(model, newdata, var = "estimate", ..., n = NUL
   # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
   if (!is.null(n)) {
     iterations = sample(samples$.iteration, n)
-    samples %>%
-      filter(.iteration %in% !!iterations)
+    samples[samples[[".iteration"]] %in% iterations,]
   } else {
     samples
   }

@@ -15,7 +15,7 @@ globalVariables(c("..dimension_values"))
 #' @format NULL
 #' @usage NULL
 #' @export
-unspread_draws = function(...) {
+unspread_samples = function(...) {
   .Deprecated("unspread_draws")     # nocov
   unspread_draws(...)               # nocov
 }
@@ -39,8 +39,8 @@ unspread_draws = function(...) {
 #' which are the same names used for chain, iteration, and draw indices returned by
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
 #' @param drop_indices Drop the columns specified by \code{.draw_indices} from the resulting data frame. Default \code{FALSE}.
-#' @param term The name of the column in \code{data} that contains the names of variables from the model.
-#' @param estimate The name of the column in \code{data} that contains the samples of the variables.
+#' @param variable The name of the column in \code{data} that contains the names of variables from the model.
+#' @param value The name of the column in \code{data} that contains the samples of the variables.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{as_sample_tibble}}.
@@ -123,9 +123,9 @@ unspread_draws_ = function(data, variable_spec, indices = c(".chain", ".iteratio
   map(variable_names, function(variable_name) {
     data_distinct %>%
       select(!!c(indices, variable_name, "..dimension_values")) %>%
-      mutate(..term = paste0(variable_name, "[", ..dimension_values, "]")) %>%
+      mutate(..variable = paste0(variable_name, "[", ..dimension_values, "]")) %>%
       select(-..dimension_values) %>%
-      spread_("..term", variable_name)
+      spread_("..variable", variable_name)
   }) %>%
     reduce(inner_join, by = indices)
 }

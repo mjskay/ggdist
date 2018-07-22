@@ -44,10 +44,9 @@ all dimensions used on the variables you specify.
 
 The difference between \code{spread_draws} is that names of variables in the model will
 be spread across the data frame as column names, whereas \code{gather_draws} will
-gather variables into a single column named \code{"term"} and place values of variables into a
-column named \code{"estimate"}. The \code{"term"} and \code{"estimate"} naming scheme
-is used in order to be consistent with output from the \code{\link[broom]{tidy}} function
-in the broom package, to make it easier to use tidybayes with broom for model comparison.
+gather variables into a single column named \code{".variable"} and place values of variables into a
+column named \code{".value"}. To use naming schemes from other packages (such as \code{broom}), consider passing
+results through functions like \code{\link{to_broom_names}} or \code{\link{to_ggmcmc_names}}.
 
 For example, \code{spread_draws(fit, a[i], b[i,v])} might return a grouped
 data frame (grouped by \code{i} and \code{v}), with:
@@ -72,10 +71,10 @@ data frame (grouped by \code{i} and \code{v}), with:
    \item column \code{".draw"}: the draw number
    \item column \code{"i"}: value in \code{1:5}
    \item column \code{"v"}: value in \code{1:10}, or \code{NA}
-     if \code{"term"} is \code{"a"}.
-   \item column \code{"term"}: value in \code{c("a", "b")}.
-   \item column \code{"estimate"}: value of \code{"a[i]"} (when \code{"term"} is \code{"a"})
-     or \code{"b[i,v]"} (when \code{"term"} is \code{"b"}) for draw \code{".draw"}
+     if \code{".variable"} is \code{"a"}.
+   \item column \code{".variable"}: value in \code{c("a", "b")}.
+   \item column \code{".value"}: value of \code{"a[i]"} (when \code{".variable"} is \code{"a"})
+     or \code{"b[i,v]"} (when \code{".variable"} is \code{"b"}) for draw \code{".draw"}
  }
 
 \code{spread_draws} and \code{gather_draws} can use type information

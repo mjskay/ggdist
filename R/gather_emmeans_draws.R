@@ -20,21 +20,25 @@ gather_lsmeans_samples = function(...) {
 #' @usage NULL
 #' @export
 gather_emmeans_samples = function(...) {
-  .Deprecated("gather_emmeans_draws")  # nocov
-  gather_emmeans_draws(...)            # nocov
+  .Deprecated("gather_emmeans_draws")                # nocov
+  gather_emmeans_draws(..., value = "estimate") %>%  # nocov
+    mutate(                                          # nocov
+      .chain = as.integer(NA),                       # nocov
+      .iteration = .draw                             # nocov
+    )                                                # nocov
 }
 
 
 
 # gather_emmeans_draws -----------------------------
 
-#' Extract tidy data frame of draws of posterior distributions of marginal means (emmeans/lsmeans) from
+#' Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from
 #' a Bayesian model fit.
 #'
 #' Extract draws from the result of a call to \code{\link[emmeans]{emmeans}} (formerly \code{lsmeans})
 #' or \code{\link[emmeans]{ref_grid}} applied to a Bayesian model.
 #'
-#' \code{\link[emmeans]{emmeans}} provides a convenient syntax for generating marginal estimates from a model,
+#' \code{\link[emmeans]{emmeans}} provides a convenient syntax for generating draws from "estimated marginal means" from a model,
 #' and can be applied to various Bayesian models, like \code{\link[rstanarm]{stanreg-objects}} and
 #' \code{\link[MCMCglmm]{MCMCglmm}}. Given a \code{\link[emmeans]{ref_grid}} object as returned by functions like
 #' \code{\link[emmeans]{ref_grid}} or \code{\link[emmeans]{emmeans}} applied to a Bayesian model,
@@ -43,10 +47,10 @@ gather_emmeans_samples = function(...) {
 #'
 #' @param object An \code{emmGrid} object such as returned by
 #' \code{\link[emmeans]{ref_grid}} or \code{\link[emmeans]{emmeans}}.
+#' @param value The name of the output column to use to contain the values of draws. Defaults to \code{".value"}.
 #'
 #' @return A tidy data frame of draws. The columns of the reference grid are returned as-is, with an
-#' additional column called \code{estimate} containing draws from the marginal estimates (the name \code{estimate} is
-#' used for compatibility with \code{\link{gather_draws}} and \code{\link[broom]{tidy}}). The resulting data
+#' additional column called \code{.value} (by default) containing marginal draws. The resulting data
 #' frame is grouped by the columns from the reference grid to make use of summary functions like
 #' \code{\link{point_interval}} straightforward.
 #'
@@ -76,8 +80,8 @@ gather_emmeans_samples = function(...) {
 #'   chains = 1, iter = 500)
 #'
 #' # Once we've fit the model, we can use emmeans() (and functions
-#' # from that package) to get whatever marginal estimates we want.
-#' # For example, we can get estimated marginal means by condition:
+#' # from that package) to get whatever marginal distributions we want.
+#' # For example, we can get marginal means by condition:
 #' m %>%
 #'   emmeans(~ condition) %>%
 #'   gather_emmeans_draws() %>%
@@ -97,11 +101,11 @@ gather_emmeans_samples = function(...) {
 #' @importFrom tibble as_tibble
 #' @importFrom rlang syms
 #' @export
-gather_emmeans_draws = function(object) {
+gather_emmeans_draws = function(object, value = ".value") {
   grid = as_tibble(object@grid)
 
   # this matrix will have n_iterations rows and nrow(grid) columns,
-  # where mat[, i] is the posterior estimate for grid[i, ]
+  # where mat[, i] is the posterior distribution for grid[i, ]
   mat = object@post.beta %*% t(object@linfct)
 
   draws = map_dfr(seq_len(nrow(grid)), function(i) {
@@ -112,12 +116,15 @@ gather_emmeans_draws = function(object) {
     cbind(
       grid[i, ],
       .chain = as.integer(NA),
-      .iteration = seq_along(post),
-      estimate = post
+      .iteration = as.integer(NA),
+      .draw = seq_along(post),
+      .value = post
     )
   })
 
+  names(draws)[names(draws) == ".value"] = value
+
   draws[, setdiff(names(draws), c(".wgt.", ".offset."))] %>%
     as_tibble() %>%
-    group_by(!!!syms(setdiff(names(.), c(".chain", ".iteration", "estimate"))))
+    group_by_at(setdiff(names(.), c(".chain", ".iteration", ".draw", value)))
 }

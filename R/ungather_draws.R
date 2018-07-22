@@ -15,9 +15,9 @@ globalVariables(c("..dimension_values"))
 #' @format NULL
 #' @usage NULL
 #' @export
-ungather_samples = function(...) {
-  .Deprecated("ungather_draws")     # nocov
-  ungather_draws(...)               # nocov
+ungather_samples = function(..., term = "term", estimate = "estimate") {
+  .Deprecated("ungather_draws")                           # nocov
+  ungather_draws(..., variable = term, value = estimate)  # nocov
 }
 
 
@@ -25,12 +25,18 @@ ungather_samples = function(...) {
 #' @rdname unspread_draws
 #' @export
 ungather_draws = function(
-  data, ..., term = "term", estimate = "estimate", indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE
+  data, ..., variable = ".variable", value = ".value", indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE
 ) {
 
+  variable_specs = lazy_dots(...)
+
+  if (length(variable_specs) == 0) {
+    stop("You must supply at least one variable to ungather.")
+  }
+
   result =
-    map(lazy_dots(...), function(variable_spec) {
-      ungather_draws_(data, variable_spec, term = term, estimate = estimate, indices = indices)
+    map(variable_specs, function(variable_spec) {
+      ungather_draws_(data, variable_spec, variable = variable, value = value, indices = indices)
     }) %>%
     reduce(inner_join, by = indices) %>%
     as_tibble()
@@ -44,7 +50,7 @@ ungather_draws = function(
 }
 
 ungather_draws_ = function(
-  data, variable_spec, term = "term", estimate = "estimate", indices = c(".chain", ".iteration", ".draw")
+  data, variable_spec, variable = ".variable", value = ".value", indices = c(".chain", ".iteration", ".draw")
 ) {
 
   #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
@@ -58,23 +64,29 @@ ungather_draws_ = function(
   }
 
   # filter to desired rows and columns, removing duplicates (which may have been
-  # introduced if `data` was the result of a call to `gather_terms`)
+  # introduced if `data` was the result of a call to `gather_variables`)
   data %<>%
-    filter(.data[[!!term]] %in% !!variable_names) %>%
+    filter(.data[[!!variable]] %in% !!variable_names) %>%
     ungroup() %>%
-    select(!!c(indices, dimension_names, term, estimate)) %>%
+    select_at(c(indices, dimension_names, variable, value)) %>%
     distinct()
 
   if (is.null(dimension_names)) {
-    return(spread_(data, term, estimate))
+    return(spread(data, !!variable, !!value))
   }
 
   data %<>%
     unite(..dimension_values, !!!dimension_names, sep = ",")
 
-  data[[term]] = paste0(data[[term]], "[", data[["..dimension_values"]], "]")
+  data[[variable]] = paste0(data[[variable]], "[", data[["..dimension_values"]], "]")
 
-  data %>%
+  head(data)
+
+  d =data %>%
     select(-..dimension_values) %>%
-    spread_(term, estimate)
+    spread(!!variable, !!value)
+
+  head(d)
+
+  d
 }

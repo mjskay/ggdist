@@ -2,19 +2,20 @@
 % Please edit documentation in R/gather_emmeans_draws.R
 \name{gather_emmeans_draws}
 \alias{gather_emmeans_draws}
-\title{Extract tidy data frame of draws of posterior distributions of marginal means (emmeans/lsmeans) from
+\title{Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from
 a Bayesian model fit.}
 \usage{
-gather_emmeans_draws(object)
+gather_emmeans_draws(object, value = ".value")
 }
 \arguments{
 \item{object}{An \code{emmGrid} object such as returned by
 \code{\link[emmeans]{ref_grid}} or \code{\link[emmeans]{emmeans}}.}
+
+\item{value}{The name of the output column to use to contain the values of draws. Defaults to \code{".value"}.}
 }
 \value{
 A tidy data frame of draws. The columns of the reference grid are returned as-is, with an
-additional column called \code{estimate} containing draws from the marginal estimates (the name \code{estimate} is
-used for compatibility with \code{\link{gather_draws}} and \code{\link[broom]{tidy}}). The resulting data
+additional column called \code{.value} (by default) containing marginal draws. The resulting data
 frame is grouped by the columns from the reference grid to make use of summary functions like
 \code{\link{point_interval}} straightforward.
 }
@@ -23,7 +24,7 @@ Extract draws from the result of a call to \code{\link[emmeans]{emmeans}} (forme
 or \code{\link[emmeans]{ref_grid}} applied to a Bayesian model.
 }
 \details{
-\code{\link[emmeans]{emmeans}} provides a convenient syntax for generating marginal estimates from a model,
+\code{\link[emmeans]{emmeans}} provides a convenient syntax for generating draws from "estimated marginal means" from a model,
 and can be applied to various Bayesian models, like \code{\link[rstanarm]{stanreg-objects}} and
 \code{\link[MCMCglmm]{MCMCglmm}}. Given a \code{\link[emmeans]{ref_grid}} object as returned by functions like
 \code{\link[emmeans]{ref_grid}} or \code{\link[emmeans]{emmeans}} applied to a Bayesian model,
@@ -53,8 +54,8 @@ m = stan_glm(response ~ condition, data = ABC,
   chains = 1, iter = 500)
 
 # Once we've fit the model, we can use emmeans() (and functions
-# from that package) to get whatever marginal estimates we want.
-# For example, we can get estimated marginal means by condition:
+# from that package) to get whatever marginal distributions we want.
+# For example, we can get marginal means by condition:
 m \%>\%
   emmeans(~ condition) \%>\%
   gather_emmeans_draws() \%>\%
