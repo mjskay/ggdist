@@ -23,14 +23,14 @@ apply_prototypes = function(...) {
 #'
 #' Decorate the samples returned from a Bayesian sampler with types for
 #' variable and index data types. Meant to be used before calling
-#' \code{\link{spread_samples}} or \code{\link{gather_samples}} so that the values returned by
+#' \code{\link{spread_draws}} or \code{\link{gather_draws}} so that the values returned by
 #' those functions are translated back into useful data types.
 #'
 #' Each argument in \code{...} specifies a list or data.frame. The \code{model}
 #' is decorated with a list of constructors that can convert a numeric column
 #' into the data types in the lists in \code{...}.
 #'
-#' Then, when \code{\link{spread_samples}} or \code{\link{gather_samples}} is called on the decorated
+#' Then, when \code{\link{spread_draws}} or \code{\link{gather_draws}} is called on the decorated
 #' \code{model}, each list entry with the same name as the variable or an index
 #' in varible_spec is a used as a prototype for that variable or index ---
 #' i.e., its type is taken to be the expected type of that variable or index.
@@ -56,12 +56,12 @@ apply_prototypes = function(...) {
 #' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ...  Lists (or data frames) providing data prototypes used to convert
-#' columns returned by \code{\link{spread_samples}} and \code{\link{gather_samples}} back into useful data types.
+#' columns returned by \code{\link{spread_draws}} and \code{\link{gather_draws}} back into useful data types.
 #' See `Details`.
 #' @return A decorated version of \code{model}.
 #' @author Matthew Kay
 #' @aliases apply_prototypes
-#' @seealso \code{\link{spread_samples}}, \code{\link{gather_samples}}, \code{\link{compose_data}}.
+#' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{compose_data}}.
 #' @keywords manip
 #' @examples
 #' \donttest{
@@ -114,10 +114,10 @@ apply_prototypes = function(...) {
 #'   # do not use in practice
 #'   chains = 1, iter = 500)
 #'
-#' # without using recover_types(), the `condition` column returned by spread_samples()
+#' # without using recover_types(), the `condition` column returned by spread_draws()
 #' # will be an integer:
 #' m %>%
-#'   spread_samples(condition_mean[condition]) %>%
+#'   spread_draws(condition_mean[condition]) %>%
 #'   median_qi()
 #'
 #' # If we apply recover_types() first, subsequent calls to other tidybayes functions will
@@ -127,7 +127,7 @@ apply_prototypes = function(...) {
 #'
 #' # now the `condition` column with be a factor with levels "A", "B", "C", ...
 #' m %>%
-#'   spread_samples(condition_mean[condition]) %>%
+#'   spread_draws(condition_mean[condition]) %>%
 #'   median_qi()
 #'
 #' }

@@ -222,8 +222,8 @@ as_data_list.data_list = function(object, name="", ...) {
 #' containing the value 20. See \code{\link{n_prefix}}.
 #' @return A list where each element is a translated variable as described above.
 #' @author Matthew Kay
-#' @seealso \code{\link{x_at_y}}, \code{\link{spread_samples}},
-#' \code{\link{gather_samples}}.
+#' @seealso \code{\link{x_at_y}}, \code{\link{spread_draws}},
+#' \code{\link{gather_draws}}.
 #' @keywords manip
 #' @examples
 #'

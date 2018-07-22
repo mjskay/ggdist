@@ -97,8 +97,8 @@ df \%>\%
 
 }
 \seealso{
-\code{\link{x_at_y}}, \code{\link{spread_samples}},
-\code{\link{gather_samples}}.
+\code{\link{x_at_y}}, \code{\link{spread_draws}},
+\code{\link{gather_draws}}.
 }
 \author{
 Matthew Kay

@@ -8,7 +8,7 @@ gather_terms(data, ignore_columns = "^\\\\..*")
 }
 \arguments{
 \item{data}{A data frame with parameter/term names spread across columns, such as one returned by
-\code{\link{as_sample_tibble}} or \code{\link{spread_samples}}.}
+\code{\link{as_sample_tibble}} or \code{\link{spread_draws}}.}
 
 \item{ignore_columns}{A regular expression that matches column names to ignore in the gather. The
 default ignores columns that start with \code{"."}.}
@@ -17,7 +17,7 @@ default ignores columns that start with \code{"."}.}
 A data frame.
 }
 \description{
-Given a data frame such as might be returned by as_sample_tibble or spread_samples,
+Given a data frame such as might be returned by as_sample_tibble or spread_draws,
 gather terms and their estimates from that data frame into a term and estimate column.
 }
 \details{
@@ -27,7 +27,7 @@ This function gather every column except grouping columns and those matching the
 This function uses \code{"term"} and \code{"estimate"} instead of names like \code{"parameter"}
 and \code{"value"} in order to be consistent with the naming scheme of \code{\link[broom]{tidy}}.
 
-Imagine a data frame \code{data} as returned by \code{spread_samples(fit, a[i], b[i,v])}, like this:
+Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[i,v])}, like this:
 \itemize{
      \item column \code{".chain"}: the chain number
      \item column \code{".iteration"}: the interation number
@@ -71,7 +71,7 @@ library(dplyr)
 data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
-  spread_samples(b[i,v], tau[i]) \%>\%
+  spread_draws(b[i,v], tau[i]) \%>\%
   gather_terms() \%>\%
   median_qi()
 
@@ -84,7 +84,7 @@ RankCorr \%>\%
 }
 }
 \seealso{
-\code{\link{spread_samples}}, \code{\link{as_sample_tibble}}.
+\code{\link{spread_draws}}, \code{\link{as_sample_tibble}}.
 }
 \author{
 Matthew Kay

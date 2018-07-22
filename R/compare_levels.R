@@ -37,7 +37,7 @@ comparison_types = within(list(), {
 #' sample for different levels of a factor
 #'
 #' Given a posterior sample from a Bayesian sampler in long format (e.g. as
-#' returned by spread_samples), compare the value of a variable in that sample
+#' returned by spread_draws), compare the value of a variable in that sample
 #' across different paired combinations of levels of a factor.
 #'
 #' This function simplifies conducting comparisons across levels of some
@@ -57,7 +57,7 @@ comparison_types = within(list(), {
 #' \code{is.ordered(by)} and \code{pairwise} otherwise.  }
 #'
 #' @param samples Long-format \code{data.frame} of samples such as returned by
-#' \code{\link{spread_samples}} or \code{\link{gather_samples}}.
+#' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
 #' @param variable Bare (unquoted) name of a column in samples representing the
 #' variable to compare across levels.
 #' @param by Bare (unquoted) name of a column in samples that is a
@@ -85,15 +85,15 @@ comparison_types = within(list(), {
 #' unique combination of levels of \code{indices}). Columns in \code{indices}
 #' not found in \code{samples} are ignored. The default is \code{c(".chain",".iteration")},
 #' which are the same names used for chain/iteration indices variables returned by
-#' \code{\link{spread_samples}} or \code{\link{gather_samples}}; thus if you are using \code{compare_levels}
-#' with \code{\link{spread_samples}} or \code{\link{gather_samples}} you generally should not need to change this
+#' \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using \code{compare_levels}
+#' with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
 #' value.
 #' @return A \code{data.frame} with the same columns as \code{samples}, except
 #' that the \code{by} column contains a symbolic representation of the
 #' comparison of pairs of levels of \code{by} in \code{samples}, and
 #' \code{variable} contains the result of that comparison.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_samples}} and \code{\link{gather_samples}}.
+#' @seealso \code{\link{spread_draws}} and \code{\link{gather_draws}}.
 #' @keywords manip
 #' @examples
 #'
@@ -104,14 +104,14 @@ comparison_types = within(list(), {
 #'
 #' # Let's do all pairwise comparisons of b[i,1] for i in 1:3:
 #' RankCorr %>%
-#'   spread_samples(b[i,j]) %>%
+#'   spread_draws(b[i,j]) %>%
 #'   filter(i %in% 1:3, j == 1) %>%
 #'   compare_levels(b, by = i) %>%
 #'   median_qi()
 #'
 #' # Or let's plot all comparisons against the first level (control):
 #' RankCorr %>%
-#'   spread_samples(b[i,j]) %>%
+#'   spread_draws(b[i,j]) %>%
 #'   filter(j == 1) %>%
 #'   compare_levels(b, by = i, comparison = control) %>%
 #'   ggplot(aes(x = b, y = i)) +

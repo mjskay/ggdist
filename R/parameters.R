@@ -11,14 +11,14 @@
 #' supported.
 #'
 #' This function is often useful for inspecting a model interactively in order
-#' to construct calls to \code{\link{spread_samples}} or \code{\link{gather_samples}}
+#' to construct calls to \code{\link{spread_draws}} or \code{\link{gather_draws}}
 #' in order to extract samples in a tidy format.
 #'
 #' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @return A character vector of parameter names in the fitted model.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_samples}}, \code{\link{gather_samples}}.
+#' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}.
 #' @keywords manip
 #' @examples
 #'

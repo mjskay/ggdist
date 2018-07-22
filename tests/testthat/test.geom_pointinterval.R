@@ -14,7 +14,7 @@ context("geom_pointinterval")
 data(RankCorr, package = "tidybayes")
 RankCorr_s = RankCorr[1:100,]
 RankCorr_u_tau = RankCorr_s %>%
-  spread_samples(u_tau[i]) %>%
+  spread_draws(u_tau[i]) %>%
   filter(i %in% 1:3)
 
 test_that("horizontal grouped pointintervals work", {

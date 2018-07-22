@@ -11,7 +11,7 @@ do not.
 
 
 \strong{All supported models} support the base tidybayes sample extraction functions, such as
-\code{\link{as_sample_tibble}}, \code{\link{spread_samples}}, and \code{\link{gather_samples}}. These models include:
+\code{\link{as_sample_tibble}}, \code{\link{spread_draws}}, and \code{\link{gather_draws}}. These models include:
 
 \itemize{
   \item \code{\link[rstan:stan]{rstan}} models

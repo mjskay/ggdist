@@ -15,7 +15,7 @@ globalVariables(c(".chain"))
 #' showing multiple iterations where you do not care about differences among chains.
 #'
 #' @param samples Tidy data frame of samples with columns representing the chain and iteration of each sample, such as
-#' returned by \code{\link{as_sample_tibble}}, \code{\link{spread_samples}}, or \code{\link{gather_samples}}.
+#' returned by \code{\link{as_sample_tibble}}, \code{\link{spread_draws}}, or \code{\link{gather_draws}}.
 #' @param chain Bare name of column in \code{samples} indicating the chain of each row. The default (\code{.chain}) is
 #' the same as returned by other functions in \code{tidybayes}.
 #' @param iteration Bare name of column in \code{samples} indicating the iteration of each row. The default

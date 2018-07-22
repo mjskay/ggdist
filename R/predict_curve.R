@@ -36,7 +36,7 @@
 #'
 #' @param data A \code{\link{data.frame}}, \code{\link{tbl_df}} or
 #' \code{link{grouped_df}} representing posteriors from a Bayesian model as
-#' might be obtained through \code{\link{spread_samples}}. Grouped data frames
+#' might be obtained through \code{\link{spread_draws}}. Grouped data frames
 #' as returned by \code{\link{group_by}} are supported.
 #' @param formula A formula specifying the prediction curve. The left-hand side
 #' of the formula should be a name respresenting the name of the column that

@@ -8,10 +8,10 @@
 #'
 #' Extract draws from a Bayesian fit into a wide-format data frame with a
 #' \code{.chain}, \code{.iteration}, and \code{.draw} column, as well as all variables
-#' as columns. Generally speaking not as useful as \code{\link{spread_samples}} or
-#' \code{\link{gather_samples}} and is mainly used interally (see `Details`)
+#' as columns. Generally speaking not as useful as \code{\link{spread_draws}} or
+#' \code{\link{gather_draws}} and is mainly used interally (see `Details`)
 #'
-#' You will not typically call this directly; instead use \code{\link{spread_samples}} or \code{\link{gather_samples}}.
+#' You will not typically call this directly; instead use \code{\link{spread_draws}} or \code{\link{gather_draws}}.
 #' However, to provide support for new models in those functions,
 #' you must provide an implementation of this function, \emph{or} an implementaiton
 #' of \code{\link[coda]{as.mcmc.list}} (\code{as_sample_tibble} should work on any model
@@ -24,7 +24,7 @@
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
 #' \code{.iteration} column, \code{.draw} column, and one column for every parameter in \code{model}.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_samples}} or \code{\link{gather_samples}}, which use this function
+#' @seealso \code{\link{spread_draws}} or \code{\link{gather_draws}}, which use this function
 #' internally and provides a friendly interface for extracting tidy data frames from model fits.
 #' @keywords manip
 #' @examples

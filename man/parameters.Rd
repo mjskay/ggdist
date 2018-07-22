@@ -23,7 +23,7 @@ supported.
 }
 \details{
 This function is often useful for inspecting a model interactively in order
-to construct calls to \code{\link{spread_samples}} or \code{\link{gather_samples}}
+to construct calls to \code{\link{spread_draws}} or \code{\link{gather_draws}}
 in order to extract samples in a tidy format.
 }
 \examples{
@@ -36,7 +36,7 @@ parameters(RankCorr)
 
 }
 \seealso{
-\code{\link{spread_samples}}, \code{\link{gather_samples}}.
+\code{\link{spread_draws}}, \code{\link{gather_draws}}.
 }
 \author{
 Matthew Kay

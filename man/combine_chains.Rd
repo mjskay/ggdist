@@ -9,7 +9,7 @@ combine_chains(samples, chain = .chain, iteration = .iteration,
 }
 \arguments{
 \item{samples}{Tidy data frame of samples with columns representing the chain and iteration of each sample, such as
-returned by \code{\link{as_sample_tibble}}, \code{\link{spread_samples}}, or \code{\link{gather_samples}}.}
+returned by \code{\link{as_sample_tibble}}, \code{\link{spread_draws}}, or \code{\link{gather_draws}}.}
 
 \item{chain}{Bare name of column in \code{samples} indicating the chain of each row. The default (\code{.chain}) is
 the same as returned by other functions in \code{tidybayes}.}

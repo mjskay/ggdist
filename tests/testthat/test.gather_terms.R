@@ -25,16 +25,16 @@ test_that("gather_terms works on the results of as_sample_tibble", {
 })
 
 
-test_that("gather_terms works on the results of spread_samples with multiple params and indices", {
+test_that("gather_terms works on the results of spread_draws with multiple params and indices", {
   data(RankCorr, package = "tidybayes")
 
   ref = RankCorr %>%
-    spread_samples(b[i, v], tau[i]) %>%
-    gather(term, estimate, -.chain, -.iteration, -i, -v) %>%
+    spread_draws(b[i, v], tau[i]) %>%
+    gather(term, estimate, -.chain, -.iteration, -.draw, -i, -v) %>%
     group_by(term, add = TRUE)
 
   result = RankCorr %>%
-    spread_samples(b[i, v], tau[i]) %>%
+    spread_draws(b[i, v], tau[i]) %>%
     gather_terms()
 
   expect_equal(result, ref)

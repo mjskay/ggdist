@@ -81,13 +81,13 @@ library(ggplot2)
 data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
-  spread_samples(u_tau[i]) \%>\%
+  spread_draws(u_tau[i]) \%>\%
   median_qi(.prob = c(.8, .95)) \%>\%
   ggplot(aes(y = i, x = u_tau)) +
   geom_pointintervalh()
 
 RankCorr \%>\%
-  spread_samples(u_tau[i]) \%>\%
+  spread_draws(u_tau[i]) \%>\%
   median_qi(.prob = c(.8, .95)) \%>\%
   ggplot(aes(x = i, y = u_tau)) +
   geom_pointinterval()

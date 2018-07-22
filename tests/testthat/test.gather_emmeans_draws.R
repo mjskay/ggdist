@@ -1,4 +1,4 @@
-# Tests for gather_emmeans_samples
+# Tests for gather_emmeans_draws
 #
 # Author: mjskay
 ###############################################################################
@@ -11,7 +11,7 @@ suppressWarnings(suppressMessages({
 }))
 import::from(magrittr, set_rownames)
 
-context("gather_emmeans_samples")
+context("gather_emmeans_draws")
 
 
 # data
@@ -20,7 +20,7 @@ mtcars_tbl = mtcars %>%
   as_data_frame()
 
 
-test_that("gather_emmeans_samples works on a simple rstanarm model", {
+test_that("gather_emmeans_draws works on a simple rstanarm model", {
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   estimate_grid = list(hp = c(100, 110), wt = 0)
@@ -45,7 +45,7 @@ test_that("gather_emmeans_samples works on a simple rstanarm model", {
   .GlobalEnv[["mtcars_tbl"]] = mtcars_tbl
   result = m_hp_wt %>%
     ref_grid(estimate_grid) %>%
-    gather_emmeans_samples()
+    gather_emmeans_draws()
   .GlobalEnv[["mtcars_tbl"]] = old_global_mtcars_tbl
 
   expect_equal(ref, result)

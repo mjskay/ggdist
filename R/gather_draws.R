@@ -1,20 +1,31 @@
-# gather_samples
+# gather_draws
 #
 # Author: mjskay
 ###############################################################################
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c(".."))
+
+# deprecated names for gather_draws --------------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+gather_samples = function(...) {
+  .Deprecated("gather_draws")    # nocov
+  gather_draws(...)              # nocov
+}
 
 
-#' @rdname spread_samples
+
+# gather_draws ------------------------------------------------------------
+
+#' @rdname spread_draws
 #' @importFrom dplyr bind_rows
 #' @export
-gather_samples = function(model, ..., regex = FALSE, sep = "[, ]") {
+gather_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
   tidysamples = lapply(lazy_dots(...), function(variable_spec) {
     model %>%
-      spread_samples_(variable_spec, regex = regex, sep = sep) %>%
+      spread_draws_(variable_spec, regex = regex, sep = sep) %>%
       gather_terms()
   })
 

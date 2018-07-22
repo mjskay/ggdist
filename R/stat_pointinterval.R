@@ -56,12 +56,12 @@ globalVariables(c("...prob.."))
 #' data(RankCorr, package = "tidybayes")
 #'
 #' RankCorr %>%
-#'   spread_samples(u_tau[i]) %>%
+#'   spread_draws(u_tau[i]) %>%
 #'   ggplot(aes(y = i, x = u_tau)) +
 #'   stat_pointintervalh(.prob = c(.66, .95))
 #'
 #' RankCorr %>%
-#'   spread_samples(u_tau[i]) %>%
+#'   spread_draws(u_tau[i]) %>%
 #'   ggplot(aes(x = i, y = u_tau)) +
 #'   stat_pointinterval(.prob = c(.66, .95))
 #'

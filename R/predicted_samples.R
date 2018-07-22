@@ -33,7 +33,7 @@ globalVariables(c(".iteration", ".pred"))
 #' generate predictions from the data used to fit the model.
 #' @param model A supported Bayesian model fit / MCMC object that can provide fits and predictions. Supported models
 #' are listed in the second section of \link{tidybayes-models}: \emph{Models Supporting Prediction}. While other
-#' functions in this package (like \code{\link{spread_samples}}) support a wider range of models, to work with
+#' functions in this package (like \code{\link{spread_draws}}) support a wider range of models, to work with
 #' \code{add_fitted_samples} and \code{add_predicted_samples} a model must provide an interface for generating
 #' predictions, thus more generic Bayesian modeling interfaces like \code{runjags} and \code{rstan} are not directly
 #' supported for these functions (only wrappers around those languages that provide predictions, like \code{rstanarm}
@@ -74,7 +74,7 @@ globalVariables(c(".iteration", ".pred"))
 #' sample from the posterior predictive distribution). For convenience, the resulting data
 #' frame comes grouped by the original input rows.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_samples}}
+#' @seealso \code{\link{spread_draws}}
 #' @keywords manip
 #' @examples
 #' \donttest{

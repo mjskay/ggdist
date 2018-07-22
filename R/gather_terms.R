@@ -10,7 +10,7 @@ globalVariables(c("term", "estimate"))
 
 #' Gather terms from a tidy data frame of parameter samples into a single column
 #'
-#' Given a data frame such as might be returned by as_sample_tibble or spread_samples,
+#' Given a data frame such as might be returned by as_sample_tibble or spread_draws,
 #' gather terms and their estimates from that data frame into a term and estimate column.
 #'
 #' This function gather every column except grouping columns and those matching the regular expression
@@ -19,7 +19,7 @@ globalVariables(c("term", "estimate"))
 #' This function uses \code{"term"} and \code{"estimate"} instead of names like \code{"parameter"}
 #' and \code{"value"} in order to be consistent with the naming scheme of \code{\link[broom]{tidy}}.
 #'
-#' Imagine a data frame \code{data} as returned by \code{spread_samples(fit, a[i], b[i,v])}, like this:
+#' Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[i,v])}, like this:
 #' \itemize{
 #'      \item column \code{".chain"}: the chain number
 #'      \item column \code{".iteration"}: the interation number
@@ -56,12 +56,12 @@ globalVariables(c("term", "estimate"))
 #' }
 #'
 #' @param data A data frame with parameter/term names spread across columns, such as one returned by
-#' \code{\link{as_sample_tibble}} or \code{\link{spread_samples}}.
+#' \code{\link{as_sample_tibble}} or \code{\link{spread_draws}}.
 #' @param ignore_columns A regular expression that matches column names to ignore in the gather. The
 #' default ignores columns that start with \code{"."}.
 #' @return A data frame.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_samples}}, \code{\link{as_sample_tibble}}.
+#' @seealso \code{\link{spread_draws}}, \code{\link{as_sample_tibble}}.
 #' @keywords manip
 #' @examples
 #' \donttest{
@@ -71,7 +71,7 @@ globalVariables(c("term", "estimate"))
 #' data(RankCorr, package = "tidybayes")
 #'
 #' RankCorr %>%
-#'   spread_samples(b[i,v], tau[i]) %>%
+#'   spread_draws(b[i,v], tau[i]) %>%
 #'   gather_terms() %>%
 #'   median_qi()
 #'

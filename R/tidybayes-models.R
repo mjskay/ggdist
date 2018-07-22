@@ -16,7 +16,7 @@
 #' @section All Supported Models:
 #'
 #' \strong{All supported models} support the base tidybayes sample extraction functions, such as
-#' \code{\link{as_sample_tibble}}, \code{\link{spread_samples}}, and \code{\link{gather_samples}}. These models include:
+#' \code{\link{as_sample_tibble}}, \code{\link{spread_draws}}, and \code{\link{gather_draws}}. These models include:
 #'
 #' \itemize{
 #'   \item \code{\link[rstan:stan]{rstan}} models
@@ -31,7 +31,7 @@
 #'   \item Any object with an implementation of \code{\link[coda]{as.mcmc.list}}. For a list of those available in your
 #'     environment, run \code{methods(as.mcmc.list)}
 #' }
-#' 
+#'
 #' If you install the \code{tidybayes.rethinking} package (available at
 #' \url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
 #' \code{map2stan} models from the \code{rethinking} package are also supported.

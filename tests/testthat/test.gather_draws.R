@@ -1,4 +1,4 @@
-# Tests for gather_samples
+# Tests for gather_draws
 #
 # Author: mjskay
 ###############################################################################
@@ -7,21 +7,21 @@ import::from(dplyr, `%>%`, inner_join, data_frame)
 import::from(purrr, map_df)
 library(tidyr)
 
-context("gather_samples")
+context("gather_draws")
 
 
 test_that("regular expressions for parameter names work on non-indexed parameters", {
   data(RankCorr, package = "tidybayes")
 
-  ref = gather_samples(RankCorr, typical_r)
+  ref = gather_draws(RankCorr, typical_r)
 
-  expect_equal(gather_samples(RankCorr, `typical..`, regex = TRUE), ref)
+  expect_equal(gather_draws(RankCorr, `typical..`, regex = TRUE), ref)
 })
 
 test_that("regular expressions for parameter names work on indexed parameters", {
   data(RankCorr, package = "tidybayes")
 
-  ref = gather_samples(RankCorr, c(tau, u_tau)[i])
+  ref = gather_draws(RankCorr, c(tau, u_tau)[i])
 
-  expect_equal(gather_samples(RankCorr, `.*tau`[i], regex = TRUE), ref)
+  expect_equal(gather_draws(RankCorr, `.*tau`[i], regex = TRUE), ref)
 })

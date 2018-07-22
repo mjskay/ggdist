@@ -98,7 +98,7 @@ library(ggplot2)
 data(RankCorr, package = "tidybayes")
 
 RankCorr \%>\%
-  spread_samples(u_tau[i]) \%>\%
+  spread_draws(u_tau[i]) \%>\%
   ggplot(aes(y = i, x = u_tau)) +
   geom_halfeyeh()
 
