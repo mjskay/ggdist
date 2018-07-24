@@ -67,6 +67,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' \code{.data}, represent draws to summarise. If this is empty, then by default all
 #' columns that are not group columns and which are not in \code{.exclude} (by default
 #' \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.
+#' This can be list columns.
 #' @param .prob vector of probabilities to use for generating intervals. If multiple
 #' probabilities are provided, multiple rows per group are generated, each with
 #' a different probabilty interval (and value of the corresponding \code{.prob} column).
@@ -126,7 +127,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   geom_halfeyeh(fun.data = mode_hdih, .prob = c(.66, .95))
 #'
-#' @importFrom purrr map_dfr map map2 discard
+#' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars
 #' @importFrom stringi stri_startswith_fixed
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
@@ -152,7 +153,9 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
       #don't aggregate groups because we aggregate within these
       setdiff(group_vars(data)) %>%
       setdiff(.exclude) %>%
-      syms() %>%
+      # have to use quos here because lists of symbols don't work correctly with iwalk() for some reason
+      # (the simpler version of this line would be `syms() %>%`)
+      map(~ quo(!!sym(.))) %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
@@ -194,37 +197,47 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
       data
     })
   } else {
-    # multiple columns provided => generate unique names for each one
-    # TODO: support list columns below as well, then document
-    map_dfr(.prob, function(p) {
-      do(data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
-        col_draws = eval_tidy(col_expr, .)
-        interval = .interval(col_draws, .prob = p)
+    iwalk(col_exprs, function(col_expr, col_name) {
+      data[[col_name]] <<- eval_tidy(col_expr, data)
+    })
 
-        if (nrow(interval) > 1) {
-          stop(paste(
+    # if the values we are going to summarise are not already list columns, make them into list columns
+    # (making them list columns first is faster than anything else I've tried)
+    if (!all(map_lgl(data[,names(col_exprs)], is.list))) {
+      data = summarise_at(data, names(col_exprs), list)
+    }
+
+    map_dfr(.prob, function(p) {
+      for (col_name in names(col_exprs)) {
+        draws = data[[col_name]]
+        data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
+
+        data[[col_name]] = map_dbl(draws, .point)
+
+        intervals = map(draws, .interval, .prob = p)
+
+        # can't use map_dbl here because sometimes (e.g. with hdi) these can
+        # return multiple intervals, which we need to check for (since it is
+        # not possible to support in this format).
+        lower = map(intervals, ~ .[, 1])
+        upper = map(intervals, ~ .[, 2])
+        if (any(map_dbl(lower, length) > 1) || any(map_dbl(upper, length) > 1)) {
+          stop(
             "You are summarizing a multimodal distribution using a method that returns multiple intervals",
             "(such as `hdi`), but you are attempting to generate intervals for multiple columns in wide format.",
             "To use a multiple-interval method like `hdi` on distributions that are multi-modal, you can",
             "only summarize one column at a time. You might try using `gather_variables` to put all your draws",
             "into a single column before summarizing them, or use an interval type (such as `qi`) that always",
             "returns exactly one interval per probability level."
-          ))
+          )
         }
+        data[[paste0(col_name, ".low")]] = unlist(lower)
+        data[[paste0(col_name, ".high")]] = unlist(upper)
+      }
 
-        data_frame(
-          .point(col_draws),
-          interval[, 1],
-          interval[, 2]
-        ) %>%
-          set_names(c(
-            col_name,
-            paste0(col_name, ".low"),
-            paste0(col_name, ".high")
-          ))
-      }))) %>% mutate(
-        .prob = p
-      )
+      data[[".prob"]] = p
+
+      data
     })
   }
 }

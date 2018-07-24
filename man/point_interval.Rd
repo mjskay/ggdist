@@ -69,7 +69,8 @@ that contains draws to summarize.}
 \item{...}{Bare column names or expressions that, when evaluated in the context of
 \code{.data}, represent draws to summarise. If this is empty, then by default all
 columns that are not group columns and which are not in \code{.exclude} (by default
-\code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.}
+\code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.
+This can be list columns.}
 
 \item{.prob}{vector of probabilities to use for generating intervals. If multiple
 probabilities are provided, multiple rows per group are generated, each with

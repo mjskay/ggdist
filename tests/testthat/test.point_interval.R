@@ -126,7 +126,13 @@ test_that("mean_qi works on multiple probs with groups", {
     group_by(ff) %>%
     mean_qi(tau, .prob = c(.5, .95))
 
+  result_list = samples %>%
+    group_by(ff) %>%
+    summarise_at("tau", list) %>%
+    mean_qi(tau, .prob = c(.5, .95))
+
   expect_equal(as.data.frame(result), as.data.frame(ref))
+  expect_equal(as.data.frame(result_list), as.data.frame(ref))
 })
 
 test_that("mean_qi works on multiple probs with multiple vars", {
@@ -165,7 +171,13 @@ test_that("mean_qi works on multiple probs with multiple vars", {
     group_by(ff) %>%
     mean_qi(tau, tau2, .prob = c(.5, .95))
 
+  result_list = samples %>%
+    group_by(ff) %>%
+    summarise_at(c("tau", "tau2"), list) %>%
+    mean_qi(tau, tau2, .prob = c(.5, .95))
+
   expect_equal(as.data.frame(result), as.data.frame(ref))
+  expect_equal(as.data.frame(result_list), as.data.frame(ref))
 })
 
 test_that("mean_qi correctly identifies the desired columns when ... is empty", {
