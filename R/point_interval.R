@@ -183,8 +183,11 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
       data[[col_name]] = map_dbl(draws, .point)
 
       intervals = map(draws, .interval, .prob = p)
-      data[["conf.low"]] = map_dbl(intervals, ~ .[, 1])
-      data[["conf.high"]] = map_dbl(intervals, ~ .[, 2])
+      # can't use map_dbl here because sometimes (e.g. with hdi) these can
+      # return multiple intervals, hence map() here and unnest() below
+      data[["conf.low"]] = map(intervals, ~ .[, 1])
+      data[["conf.high"]] = map(intervals, ~ .[, 2])
+      data = unnest(data, conf.low, conf.high)
 
       data[[".prob"]] = p
 

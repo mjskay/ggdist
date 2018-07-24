@@ -182,3 +182,21 @@ test_that("mean_qi correctly identifies the desired columns when ... is empty", 
 
   expect_equal(mean_qi(testdf, .x, y), mean_qi(testdf))
 })
+
+test_that("multiple-response intervals work", {
+  set.seed(1234)
+  dd = data_frame(
+    x = c(rnorm(1000), rnorm(1000, mean = 5))
+  )
+
+  ref = dd %>%
+    summarise(
+      conf.low = list(hdi(x, .prob = .5)[, 1]),
+      conf.high = list(hdi(x, .prob = .5)[, 2]),
+      x = mean(x),
+      .prob = .5
+    ) %>%
+    unnest()
+
+  expect_equal(mean_hdi(dd, x, .prob = .5), ref)
+})
