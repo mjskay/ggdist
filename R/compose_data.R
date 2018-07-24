@@ -4,10 +4,10 @@
 ###############################################################################
 
 
-#' Data lists for input into a Bayesian sampler
+#' Data lists for input into Bayesian models
 #'
 #' Functions used by \code{\link{compose_data}} to create lists of data suitable for
-#' input into a Bayesian sampler. \strong{These functions typically should not be called directly}
+#' input into a Bayesian modeling function. \strong{These functions typically should not be called directly}
 #' (instead use \code{\link{compose_data}}), but are exposed for the rare cases in which
 #' you may need to provide your own conversion routines for a data type not already
 #' supported (see `Details`).
@@ -62,7 +62,7 @@
 #'
 #' # Typically these functions should not be used directly.
 #' # See the compose_data function for examples of how to translate
-#' # data in lists for input to Bayesian samplers.
+#' # data in lists for input to Bayesian modeling functions.
 #'
 #' @name data_list
 #' @export
@@ -159,10 +159,10 @@ as_data_list.data_list = function(object, name="", ...) {
   object
 }
 
-#' Compose data for input into a Bayesian sampler
+#' Compose data for input into a Bayesian model
 #'
-#' Compose data into a list suitable to be passed into an MCMC sampler (JAGS,
-#' BUGS, etc).
+#' Compose data into a list suitable to be passed into a Bayesian model (JAGS,
+#' BUGS, Stan, etc).
 #'
 #'
 #' This function recursively translates each argument into list elements using

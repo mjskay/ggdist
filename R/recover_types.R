@@ -21,7 +21,7 @@ apply_prototypes = function(...) {
 
 #' Decorate a model fit or samples with data types recovered from the input data
 #'
-#' Decorate the samples returned from a Bayesian sampler with types for
+#' Decorate the samples returned from a Bayesian model with types for
 #' variable and index data types. Meant to be used before calling
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}} so that the values returned by
 #' those functions are translated back into useful data types.
@@ -53,7 +53,7 @@ apply_prototypes = function(...) {
 #' Additional data types can be supported by providing a custom implementation
 #' of the generic function \code{as_constructor}.
 #'
-#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
+#' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ...  Lists (or data frames) providing data prototypes used to convert
 #' columns returned by \code{\link{spread_draws}} and \code{\link{gather_draws}} back into useful data types.

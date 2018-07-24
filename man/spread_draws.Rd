@@ -10,7 +10,7 @@ gather_draws(model, ..., regex = FALSE, sep = "[, ]")
 spread_draws(model, ..., regex = FALSE, sep = "[, ]")
 }
 \arguments{
-\item{model}{A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
+\item{model}{A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 for a full list of supported models, see \link{tidybayes-models}.}
 
 \item{...}{Expressions in the form of

@@ -2,7 +2,7 @@
 % Please edit documentation in R/compose_data.R
 \name{compose_data}
 \alias{compose_data}
-\title{Compose data for input into a Bayesian sampler}
+\title{Compose data for input into a Bayesian model}
 \usage{
 compose_data(..., .n_name = n_prefix("n"))
 }
@@ -27,8 +27,8 @@ containing the value 20. See \code{\link{n_prefix}}.}
 A list where each element is a translated variable as described above.
 }
 \description{
-Compose data into a list suitable to be passed into an MCMC sampler (JAGS,
-BUGS, etc).
+Compose data into a list suitable to be passed into a Bayesian model (JAGS,
+BUGS, Stan, etc).
 }
 \details{
 This function recursively translates each argument into list elements using

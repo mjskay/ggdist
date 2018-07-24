@@ -8,7 +8,7 @@
 recover_types(model, ...)
 }
 \arguments{
-\item{model}{A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
+\item{model}{A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 for a full list of supported models, see \link{tidybayes-models}.}
 
 \item{...}{Lists (or data frames) providing data prototypes used to convert
@@ -19,7 +19,7 @@ See `Details`.}
 A decorated version of \code{model}.
 }
 \description{
-Decorate the samples returned from a Bayesian sampler with types for
+Decorate the samples returned from a Bayesian model with types for
 variable and index data types. Meant to be used before calling
 \code{\link{spread_draws}} or \code{\link{gather_draws}} so that the values returned by
 those functions are translated back into useful data types.

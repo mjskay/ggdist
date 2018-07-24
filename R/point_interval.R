@@ -126,7 +126,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   geom_halfeyeh(fun.data = mode_hdih, .prob = c(.66, .95))
 #'
-#' @importFrom purrr map_df map map2 discard
+#' @importFrom purrr map_dfr map map2 discard
 #' @importFrom dplyr do bind_cols group_vars
 #' @importFrom stringi stri_startswith_fixed
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
@@ -164,29 +164,36 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
   if (length(col_exprs) == 1 && .broom) {
     # only one column provided => summarise that column and use "conf.low" and "conf.high" as
     # the generated column names for consistency with tidy() in broom
+    col_expr = col_exprs[[1]]
+    col_name = names(col_exprs)
 
-    map_df(.prob, function(p) {
-      do(data, {
-        col_draws = eval_tidy(col_exprs[[1]], .)
-        interval = .interval(col_draws, .prob = p)
-        data_frame(
-          .point(col_draws),
-          interval[, 1],
-          interval[, 2],
-          p
-        ) %>%
-          set_names(c(
-            names(col_exprs),
-            "conf.low",
-            "conf.high",
-            ".prob"
-          ))
-      })
+    # evaluate the expression that will result in the draws we want to summarise
+    data[[col_name]] = eval_tidy(col_expr, data)
+
+    # if the value we are going to summarise is not already a list column, make it into a list column
+    # (making it a list column first is faster than anything else I've tried)
+    if (is.list(data[[col_name]])) {
+      draws = data[[col_name]]
+    } else {
+      data = summarise_at(data, col_name, list)
+      draws = data[[col_name]]
+    }
+
+    map_dfr(.prob, function(p) {
+      data[[col_name]] = map_dbl(draws, .point)
+
+      intervals = map(draws, .interval, .prob = p)
+      data[["conf.low"]] = map_dbl(intervals, ~ .[, 1])
+      data[["conf.high"]] = map_dbl(intervals, ~ .[, 2])
+
+      data[[".prob"]] = p
+
+      data
     })
   } else {
     # multiple columns provided => generate unique names for each one
-
-    map_df(.prob, function(p) {
+    # TODO: support list columns below as well, then document
+    map_dfr(.prob, function(p) {
       do(data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
         col_draws = eval_tidy(col_expr, .)
         interval = .interval(col_draws, .prob = p)
@@ -227,7 +234,7 @@ point_interval.numeric = function(.data, ..., .prob = .95, .point = median, .int
 ) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
 
-  result = map_df(.prob, function(p) {
+  result = map_dfr(.prob, function(p) {
     interval = .interval(data, .prob = p)
     data.frame(
       y = .point(data),

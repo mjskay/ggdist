@@ -203,7 +203,7 @@ spread_samples = function(...) {
 #'
 #' Would return a tidy data frame with variables starting with `b_` and having one dimension.
 #'
-#' @param model A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
+#' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ... Expressions in the form of
 #' \code{variable_name[dimension_1, dimension_2, ...] | wide_dimension}. See `Details`.

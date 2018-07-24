@@ -11,7 +11,7 @@
 \alias{as_data_list.list}
 \alias{as_data_list.data.frame}
 \alias{as_data_list.data_list}
-\title{Data lists for input into a Bayesian sampler}
+\title{Data lists for input into Bayesian models}
 \usage{
 data_list(...)
 
@@ -63,7 +63,7 @@ is a translated variable as described above.
 }
 \description{
 Functions used by \code{\link{compose_data}} to create lists of data suitable for
-input into a Bayesian sampler. \strong{These functions typically should not be called directly}
+input into a Bayesian modeling function. \strong{These functions typically should not be called directly}
 (instead use \code{\link{compose_data}}), but are exposed for the rare cases in which
 you may need to provide your own conversion routines for a data type not already
 supported (see `Details`).
@@ -99,7 +99,7 @@ etc for examples.
 
 # Typically these functions should not be used directly.
 # See the compose_data function for examples of how to translate
-# data in lists for input to Bayesian samplers.
+# data in lists for input to Bayesian modeling functions.
 
 }
 \seealso{
