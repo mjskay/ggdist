@@ -18,7 +18,7 @@ histogram_bins(x, n = 30, breaks = n, ...)
 \code{\link{hist}}.}
 
 \item{breaks}{Used to set bins for \code{histogram_bins}. Can be number of bins (by default it is set to the value
-of \code{n}) or a method for setting bins. See the \code{breaks} parameter of \code{\link{hist}}.}
+of \code{n}) or a method for setting bins. See the \code{breaks} argument of \code{\link{hist}}.}
 }
 \value{
 A data frame representing bins and their densities with the

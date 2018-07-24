@@ -9,7 +9,7 @@
 globalVariables(c("...prob.."))
 
 
-#' Point estimate + multiple probability interval plots (ggplot stat)
+#' Point summary + multiple probability interval plots (ggplot stat)
 #'
 #' A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and
 #' \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} with sensible defaults.
@@ -26,7 +26,7 @@ globalVariables(c("...prob.."))
 #' @param geom Use to override the default connection between
 #' \code{geom_pointinterval}/\code{geom_pointintervalh} and \code{stat_pointinterval}/\code{stat_pointintervalh}.
 #' @param position The position adjustment to use for overlapping points on this layer.
-#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.
+#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
 #' @param point_interval A function that when given a vector should
 #'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
 #'   \code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
@@ -45,9 +45,9 @@ globalVariables(c("...prob.."))
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
 #' default plot specification, e.g. borders.
 #' @seealso See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
-#' for use on estimates and intervals that have already been summarized using a \code{\link{point_interval}} function.
+#' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
 #' See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
-#' point estimates.
+#' point summaries.
 #' @examples
 #'
 #' library(magrittr)

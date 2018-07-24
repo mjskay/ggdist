@@ -24,7 +24,7 @@ globalVariables(c("...prob.."))
 #' @param geom Use to override the default connection between
 #' \code{geom_lineribbon} and \code{stat_lineribbon}.
 #' @param position The position adjustment to use for overlapping points on this layer.
-#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.
+#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
 #' @param point_interval A function that when given a vector should
 #'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
 #'   \code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
@@ -41,9 +41,9 @@ globalVariables(c("...prob.."))
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
 #' default plot specification, e.g. borders.
-#' @seealso See \code{\link{geom_lineribbon}} for the geom version, intended for use on estimates/intervals that have
+#' @seealso See \code{\link{geom_lineribbon}} for the geom version, intended for use on points and intervals that have
 #' already been summarized using a \code{\link{point_interval}} function. See \code{\link{stat_pointinterval}} /
-#' \code{\link{stat_pointintervalh}} for a similar stat intended for point estimates and intervals.
+#' \code{\link{stat_pointintervalh}} for a similar stat intended for point summaries and intervals.
 #' @examples
 #'
 #' library(dplyr)

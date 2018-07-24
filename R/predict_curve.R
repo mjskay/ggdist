@@ -31,7 +31,7 @@
 #' Given a summary function like \code{\link{density_bins}}, this function will
 #' produce a predictive distribution for each point on the curve.
 #' \code{predict_curve_density} is a shorthand for such a call, with a
-#' convenient parameter for adjusting the number of bins per point on the
+#' convenient argument for adjusting the number of bins per point on the
 #' curve.
 #'
 #' @param data A \code{\link{data.frame}}, \code{\link{tbl_df}} or
@@ -149,7 +149,7 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' @param x A numeric vector
 #' @param n Number of bins
 #' @param breaks Used to set bins for \code{histogram_bins}. Can be number of bins (by default it is set to the value
-#' of \code{n}) or a method for setting bins. See the \code{breaks} parameter of \code{\link{hist}}.
+#' of \code{n}) or a method for setting bins. See the \code{breaks} argument of \code{\link{hist}}.
 #' @param ...  Additional arguments passed to \code{\link{density}} or
 #' \code{\link{hist}}.
 #' @return A data frame representing bins and their densities with the

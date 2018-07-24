@@ -43,7 +43,7 @@ models.}
 }
 \value{
 A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
-\code{.iteration} column, \code{.draw} column, and one column for every parameter in \code{model}.
+\code{.iteration} column, \code{.draw} column, and one column for every variable in \code{model}.
 }
 \description{
 Extract draws from a Bayesian fit into a wide-format data frame with a

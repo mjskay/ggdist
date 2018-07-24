@@ -22,7 +22,7 @@
 #' @param model A supported Bayesian model fit object. See \code{\link{tidybayes-models}} for a list of supported
 #' models.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
-#' \code{.iteration} column, \code{.draw} column, and one column for every parameter in \code{model}.
+#' \code{.iteration} column, \code{.draw} column, and one column for every variable in \code{model}.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_draws}} or \code{\link{gather_draws}}, which use this function
 #' internally and provides a friendly interface for extracting tidy data frames from model fits.
@@ -94,9 +94,9 @@ as_sample_tibble.stanreg = function(model) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `as_sample_tibble` to support `stanreg` objects.", call. = FALSE) # nocov
   }
-  #stanreg objects have more info provided for parameter names than the underlying stanfit,
+  #stanreg objects have more info provided for variable names than the underlying stanfit,
   #so we dont' just do as_sample_tibble(model$stanfit)
-  sample_matrix = as.array(model) #[iteration, chain, parameter]
+  sample_matrix = as.array(model) #[iteration, chain, variable]
   n_chain = dim(sample_matrix)[[2]]
   mcmc_list = as.mcmc.list(lapply(seq_len(n_chain), function(chain) as.mcmc(sample_matrix[, chain, ]))) # nolint
   as_sample_tibble(mcmc_list)

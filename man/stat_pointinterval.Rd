@@ -3,7 +3,7 @@
 \name{stat_pointinterval}
 \alias{stat_pointinterval}
 \alias{stat_pointintervalh}
-\title{Point estimate + multiple probability interval plots (ggplot stat)}
+\title{Point summary + multiple probability interval plots (ggplot stat)}
 \usage{
 stat_pointinterval(mapping = NULL, data = NULL, geom = "pointinterval",
   position = "identity", ..., point_interval = median_qi, fun.data = NULL,
@@ -28,7 +28,7 @@ the plot defaults.}
 
 \item{position}{The position adjustment to use for overlapping points on this layer.}
 
-\item{...}{Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.}
+\item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.}
 
 \item{point_interval}{A function that when given a vector should
 return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
@@ -82,7 +82,7 @@ RankCorr \%>\%
 }
 \seealso{
 See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
-for use on estimates and intervals that have already been summarized using a \code{\link{point_interval}} function.
+for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
 See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
-point estimates.
+point summaries.
 }

@@ -26,7 +26,7 @@ globalVariables(c("...prob.."))
 #' @param geom Use to override the default connection between
 #' \code{geom_interval}/\code{geom_interval} and \code{stat_interval}/\code{stat_intervalh}.
 #' @param position The position adjustment to use for overlapping points on this layer.
-#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.
+#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
 #' @param point_interval A function that when given a vector should
 #'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
 #'   \code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
@@ -47,7 +47,7 @@ globalVariables(c("...prob.."))
 #' @seealso See \code{\link{geom_interval}} / \code{\link{geom_intervalh}} for the geom versions, intended for use on
 #' intervals that have already been summarized using a \code{\link{point_interval}} function.
 #' See \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}} for a similar stat intended for
-#' point estimates and intervals.
+#' point summaries and intervals.
 #' @examples
 #'
 #' library(magrittr)

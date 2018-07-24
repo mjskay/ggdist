@@ -80,7 +80,7 @@ on the curve.
 Given a summary function like \code{\link{density_bins}}, this function will
 produce a predictive distribution for each point on the curve.
 \code{predict_curve_density} is a shorthand for such a call, with a
-convenient parameter for adjusting the number of bins per point on the
+convenient argument for adjusting the number of bins per point on the
 curve.
 }
 \examples{

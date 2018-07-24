@@ -73,7 +73,7 @@ marginalizing over grouping factors by specifying new levels of a factor in \cod
 \code{\link[brms]{predict.brmsfit}}).}
 
 \item{category}{For \emph{some} ordinal and multinomial models (notably, \code{\link[brms]{brm}} models but
-\emph{not} \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per estimate for
+\emph{not} \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per input row for
 \code{fitted_draws}, one for each category. The \code{category} argument specifies the name of the column
 to put the category names into in the resulting data frame. The fact that multiple rows per response are
 returned only for some model types reflects the fact that tidybayes takes the approach of tidying whatever
@@ -148,7 +148,7 @@ mtcars \%>\%
   data_grid(hp = seq_range(hp, n = 101)) \%>\%
   add_fitted_draws(m_mpg, n = 100) \%>\%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  geom_line(aes(y = estimate, group = paste(cyl, .draw)), alpha = 0.25) +
+  geom_line(aes(y = .value, group = paste(cyl, .draw)), alpha = 0.25) +
   geom_point(data = mtcars)
 
 # plot posterior predictive intervals
@@ -157,7 +157,7 @@ mtcars \%>\%
   data_grid(hp = seq_range(hp, n = 101)) \%>\%
   add_predicted_draws(m_mpg) \%>\%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  stat_lineribbon(aes(y = prediction), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
+  stat_lineribbon(aes(y = .prediction), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
   geom_point(data = mtcars) +
   scale_fill_brewer(palette = "Greys")
 

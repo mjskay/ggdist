@@ -38,9 +38,9 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
 #' default plot specification, e.g. borders.
 #' @author Matthew Kay
-#' @seealso See \code{\link{stat_lineribbon}} for a version that does summarizing of samples into estimate and intervals
+#' @seealso See \code{\link{stat_lineribbon}} for a version that does summarizing of samples into points and intervals
 #' within ggplot. See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for a similar geom intended
-#' for point estimates and intervals. See \code{\link{geom_ribbon}} and \code{\link{geom_line}} for the geoms this is
+#' for point summaries and intervals. See \code{\link{geom_ribbon}} and \code{\link{geom_line}} for the geoms this is
 #' based on.
 #' @keywords manip
 #' @examples

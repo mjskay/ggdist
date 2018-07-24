@@ -124,7 +124,7 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
   }
 
 
-  # get the draws for the primary parameter first so we can stick the other estimates onto it
+  # get the draws for the primary parameter first so we can stick the other values onto it
   draws = fitted_predicted_draws_brmsfit_(
     fitted, model, newdata, output_name = value, ...,
     category = category, re_formula = re_formula, dpar = NULL, scale = scale

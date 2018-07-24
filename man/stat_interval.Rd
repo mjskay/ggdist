@@ -28,7 +28,7 @@ the plot defaults.}
 
 \item{position}{The position adjustment to use for overlapping points on this layer.}
 
-\item{...}{Other arguments passed to \code{\link{layer}}. They may also be parameters to the paired geom.}
+\item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.}
 
 \item{point_interval}{A function that when given a vector should
 return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
@@ -86,5 +86,5 @@ RankCorr \%>\%
 See \code{\link{geom_interval}} / \code{\link{geom_intervalh}} for the geom versions, intended for use on
 intervals that have already been summarized using a \code{\link{point_interval}} function.
 See \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}} for a similar stat intended for
-point estimates and intervals.
+point summaries and intervals.
 }

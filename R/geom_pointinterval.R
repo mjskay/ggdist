@@ -9,7 +9,7 @@
 globalVariables(c("conf.low", "conf.high", ".prob"))
 
 
-#' Point estimate + multiple probability interval plots (ggplot geom)
+#' Point + multiple probability interval plots (ggplot geom)
 #'
 #' Modified versions of \code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} with default aesthetics
 #' designed for use with output from \code{\link{point_interval}}.
@@ -40,11 +40,11 @@ globalVariables(c("conf.low", "conf.high", ".prob"))
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}.
 #' @param size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
-#' sizes drawn according to \code{size_range} (see the documentation for that parameter, below.)
+#' sizes drawn according to \code{size_range} (see the documentation for that argument, below.)
 #' @param size_range This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
 #' settings of \code{\link{scale_size_continuous}}, which give sizes with a range of \code{c(1, 6)}. The
 #' \code{size_domain} value indicates the input domain of raw size values (typically this should be equal to the value
-#' of the \code{range} parameter of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
+#' of the \code{range} argument of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
 #' the desired output range of the size values (the min and max of the actual sizes used to draw intervals).
 #' @param fatten_point A multiplicative factor used to adjust the size of the point relative to the size of the
 #' thickest line.

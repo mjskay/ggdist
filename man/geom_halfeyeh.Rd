@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_halfeyeh.R
 \name{geom_halfeyeh}
 \alias{geom_halfeyeh}
-\title{Half-eye plots of densities with point estimates and intervals (ggplot geom)}
+\title{Half-eye plots of densities with point and interval summaries (ggplot geom)}
 \usage{
 geom_halfeyeh(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
@@ -18,7 +18,7 @@ layer level if you are overriding the plot defaults.}
 \item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
-\item{position}{Passed to \code{\link{geom_density_ridges}}. The position adjustment
+\item{position}{The position adjustment
 to use for overlapping points on this layer.}
 
 \item{trim}{If \code{TRUE} (default),
@@ -57,38 +57,39 @@ are not converted to the correct form automatically.}
 \item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
 
 \item{color}{Passed to \code{\link{stat_pointintervalh}}. Color of the point
-estimate and credible interval.}
+summary and uncertainty interval.}
 
 \item{size}{Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
-estimate and credible interval.}
+summary and uncertainty interval.}
 
 \item{size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
-sizes drawn according to \code{size_range} (see the documentation for that parameter, below.)}
+sizes drawn according to \code{size_range} (see the documentation for that argument, below.)}
 
 \item{size_range}{This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
 settings of \code{\link{scale_size_continuous}}, which give sizes with a range of \code{c(1, 6)}. The
 \code{size_domain} value indicates the input domain of raw size values (typically this should be equal to the value
-of the \code{range} parameter of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
+of the \code{range} argument of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
 the desired output range of the size values (the min and max of the actual sizes used to draw intervals).}
 
 \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest line.}
 }
 \description{
-Generates a combination geom_density_ridges and geom_pointrangeh (using stat_summaryh)
-representing the density, point estimates, and credible interval. Useful
-for representing posterior estimates from Bayesian samplers; in that context
-the mirrored verison is variously called an eye plot, a raindrop plot, or a
+Generates a combination of a density and \code{\link{stat_pointintervalh}}
+representing the density, point summary, and uncertainty intervals
+for draws from a distribution. Useful for representing posteriors from Bayesian models;
+in that context the mirrored version is variously called an eye plot, a raindrop plot,
 violin plot; hence "half-eye" for this plot.
 }
 \details{
-A half-eye plot is a compact visual summary of the distribution of some samples,
+A half-eye plot is a compact visual summary of the distribution of a sample,
 used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
-a density plot, point estimate, and credible interval. \code{geom_halfeyeh()} is
-equivalent to \code{geom_density_ridges() + stat_summaryh()} with some reasonable
-defaults, including color choices and the use of median with 95\% and 66\% quantile
-intervals.
+a density plot, point summary, and one or more uncertainty intervals.
+
+\code{geom_halfeyeh()} is roughly equivalent to \code{geom_density_ridges() + stat_pointintervalh()}
+with some reasonable defaults, including color choices and the use of median with 95\%
+and 66\% quantile intervals.
 }
 \examples{
 

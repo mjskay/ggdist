@@ -8,19 +8,19 @@
 globalVariables(c("y", "ymin", "ymax"))
 
 
-#' Point and interval estimates for tidy sample data
+#' Point and interval summaries for tidy data frames of draws from distributions
 #'
-#' Translates samples in a (possibly grouped) data frame into a point and
-#' interval estimate (or set of point and interval estimates, if there are
+#' Translates draws from distributions in a (possibly grouped) data frame into point and
+#' interval summaries (or set of point and interval summaries, if there are
 #' multiple groups in a grouped data frame).
 #'
 #' If \code{.data} is a data frame, then \code{...} is a list of bare names of
 #' columns (or expressions derived from columns) of \code{.data}, on which
-#' the point and interval estimates are derived. Column expressions are processed
+#' the point and interval summaries are derived. Column expressions are processed
 #' using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
 #'
 #' For a column named \code{x}, the resulting data frame will have a column
-#' named \code{x} containing its point estimate. If there is a single
+#' named \code{x} containing its point summary. If there is a single
 #' column to be summarized and \code{.broom} is \code{TRUE}, the output will
 #' also contain columns \code{conf.low} (the lower end of the interval),
 #' \code{conf.high} (the upper end of the interval).
@@ -34,7 +34,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' If \code{.data} is a vector, \code{...} is ignored and the result is a
 #' data frame with one row per value of \code{.prob} and three columns:
-#' \code{y} (the point estimate), \code{ymin} (the lower end of the interval),
+#' \code{y} (the point summary), \code{ymin} (the lower end of the interval),
 #' \code{ymax} (the upper end of the interval), and \code{.prob}, the probability
 #' corresponding to the interval. This behavior allows \code{point_interval}
 #' and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
@@ -59,27 +59,27 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' \code{hdi} yields the highest-density interval(s) (also known as the highest posterior
 #' density interval). \emph{Note:} If the distribution is multimodal, \code{hdi} may return multiple
-#' intervals for each estimate (these will be spread over rows). Internally it uses \code{\link[HDInterval]{hdi}}.
+#' intervals for each probability level (these will be spread over rows). Internally it uses \code{\link[HDInterval]{hdi}}.
 #'
 #' @param .data Data frame (or grouped data frame as returned by \code{\link{group_by}})
-#' that contains samples to summarize.
+#' that contains draws to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
-#' \code{.data}, represent samples to summarise. If this is empty, then by default all
+#' \code{.data}, represent draws to summarise. If this is empty, then by default all
 #' columns that are not group columns and which are not in \code{.exclude} (by default
 #' \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.
 #' @param .prob vector of probabilities to use for generating intervals. If multiple
 #' probabilities are provided, multiple rows per group are generated, each with
 #' a different probabilty interval (and value of the corresponding \code{.prob} column).
-#' @param .point Point estimate function, which takes a vector and returns a single
+#' @param .point Point summary function, which takes a vector and returns a single
 #' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
-#' @param .interval Interval estimate function, which takes a vector and a probability
+#' @param .interval Interval function, which takes a vector and a probability
 #' (\code{.prob}) and returns a two-element vector representing the lower and upper
 #' bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}
 #' @param .broom When \code{TRUE} and only a single column / vector is to be summarised, use the
 #' name \code{conf.low} for the lower end of the interval and \code{conf.high} for the
 #' upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
 #' \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
-#' of the point estimate to \code{estimate}.
+#' of the point summary to \code{estimate}.
 #' @param .exclude A character vector of names of columns to be excluded from summarisation
 #' if no column names are specified to be summarised. Default ignores several meta-data column
 #' names used in tidybayes.
@@ -115,14 +115,14 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   group_by(group) %>%
 #'   median_qi(.prob = c(.50, .80, .95))
 #'
-#' multimodal_samples = data.frame(
+#' multimodal_draws = data.frame(
 #'     x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))
 #'   )
 #'
-#' multimodal_samples %>%
+#' multimodal_draws %>%
 #'   mode_hdi(.prob = c(.66, .95))
 #'
-#' multimodal_samples %>%
+#' multimodal_draws %>%
 #'   ggplot(aes(x = x, y = 0)) +
 #'   geom_halfeyeh(fun.data = mode_hdih, .prob = c(.66, .95))
 #'
@@ -157,7 +157,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
 
     if (length(col_exprs) == 0) {
       #still nothing to aggregate? not sure what the user wants
-      stop("No columns found to calculate point and interval estimates for.")
+      stop("No columns found to calculate point and interval summaries for.")
     }
   }
 
@@ -167,10 +167,10 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
 
     map_df(.prob, function(p) {
       do(data, {
-        col_samples = eval_tidy(col_exprs[[1]], .)
-        interval = .interval(col_samples, .prob = p)
+        col_draws = eval_tidy(col_exprs[[1]], .)
+        interval = .interval(col_draws, .prob = p)
         data_frame(
-          .point(col_samples),
+          .point(col_draws),
           interval[, 1],
           interval[, 2],
           p
@@ -188,22 +188,22 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
 
     map_df(.prob, function(p) {
       do(data, bind_cols(map2(col_exprs, names(col_exprs), function(col_expr, col_name) {
-        col_samples = eval_tidy(col_expr, .)
-        interval = .interval(col_samples, .prob = p)
+        col_draws = eval_tidy(col_expr, .)
+        interval = .interval(col_draws, .prob = p)
 
         if (nrow(interval) > 1) {
           stop(paste(
             "You are summarizing a multimodal distribution using a method that returns multiple intervals",
             "(such as `hdi`), but you are attempting to generate intervals for multiple columns in wide format.",
             "To use a multiple-interval method like `hdi` on distributions that are multi-modal, you can",
-            "only summarize one column at a time. You might try using `gather_variables` to put all your samples",
+            "only summarize one column at a time. You might try using `gather_variables` to put all your draws",
             "into a single column before summarizing them, or use an interval type (such as `qi`) that always",
             "returns exactly one interval per probability level."
           ))
         }
 
         data_frame(
-          .point(col_samples),
+          .point(col_draws),
           interval[, 1],
           interval[, 2]
         ) %>%

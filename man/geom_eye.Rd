@@ -3,7 +3,7 @@
 \name{geom_eye}
 \alias{geom_eye}
 \alias{geom_eyeh}
-\title{Eye plots of densities with point estimates and intervals (ggplot geom)}
+\title{Eye plots of densities with point and interval summaries (ggplot geom)}
 \usage{
 geom_eye(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
@@ -64,18 +64,18 @@ are not converted to the correct form automatically.}
 \item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
 
 \item{color}{Passed to \code{\link{stat_pointinterval}}. Color of the point
-estimate and credible interval.}
+summary and uncertainty interval.}
 
 \item{size}{Passed to \code{\link{stat_pointinterval}}. Line weight of the point
-estimate and credible interval.}
+summary and uncertainty interval.}
 
 \item{size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
-sizes drawn according to \code{size_range} (see the documentation for that parameter, below.)}
+sizes drawn according to \code{size_range} (see the documentation for that argument, below.)}
 
 \item{size_range}{This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
 settings of \code{\link{scale_size_continuous}}, which give sizes with a range of \code{c(1, 6)}. The
 \code{size_domain} value indicates the input domain of raw size values (typically this should be equal to the value
-of the \code{range} parameter of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
+of the \code{range} argument of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
 the desired output range of the size values (the min and max of the actual sizes used to draw intervals).}
 
 \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
@@ -84,17 +84,17 @@ thickest line.}
 \description{
 Generates a combination \code{\link{geom_violin}} and \code{\link{stat_pointinterval}}
 (for \code{geom_eye}) or \code{\link{geom_violinh}} and \code{\link{stat_pointintervalh}}
-(for \code{geom_eyeh}) representing the density, point estimates, and uncertainty intervals
-for some samples. Useful for representing posterior estimates from Bayesian samplers;
+(for \code{geom_eyeh}) representing the density, point summary, and uncertainty intervals
+for draws from a distribution. Useful for representing posteriors from Bayesian models;
 in that context this is variously called an eye plot, a raindrop plot, or a violin plot
 (though violin plot is also applied to plots of data, hence its use is not
 preferred here).
 }
 \details{
-An eye plot is a compact visual summary of the distribution of some samples,
+An eye plot is a compact visual summary of the distribution of a sample,
 used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
-a violin plot, point estimate, and credible interval.
+a violin plot, point summary, and one or more uncertainty intervals.
 
 The vertical form, \code{geom_eye}, is equivalent to  \code{geom_violin() + stat_pointinterval()}
 with some reasonable defaults, including color choices and the use of median with 95\%

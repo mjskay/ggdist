@@ -3,7 +3,7 @@
 \name{geom_pointinterval}
 \alias{geom_pointinterval}
 \alias{geom_pointintervalh}
-\title{Point estimate + multiple probability interval plots (ggplot geom)}
+\title{Point + multiple probability interval plots (ggplot geom)}
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., size_domain = c(1, 6), size_range = c(0.6,
@@ -30,12 +30,12 @@ the plot defaults.}
 \item{...}{Other arguments passed to \code{\link{layer}}.}
 
 \item{size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
-sizes drawn according to \code{size_range} (see the documentation for that parameter, below.)}
+sizes drawn according to \code{size_range} (see the documentation for that argument, below.)}
 
 \item{size_range}{This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
 settings of \code{\link{scale_size_continuous}}, which give sizes with a range of \code{c(1, 6)}. The
 \code{size_domain} value indicates the input domain of raw size values (typically this should be equal to the value
-of the \code{range} parameter of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
+of the \code{range} argument of the \code{\link{scale_size_continuous}} function), and \code{size_range} indicates
 the desired output range of the size values (the min and max of the actual sizes used to draw intervals).}
 
 \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
