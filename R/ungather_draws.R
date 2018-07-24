@@ -22,6 +22,7 @@ ungather_samples = function(..., term = "term", estimate = "estimate", indices =
 
 
 
+#' @importFrom tidyr spread
 #' @rdname unspread_draws
 #' @export
 ungather_draws = function(
@@ -80,13 +81,7 @@ ungather_draws_ = function(
 
   data[[variable]] = paste0(data[[variable]], "[", data[["..dimension_values"]], "]")
 
-  head(data)
-
-  d =data %>%
+  data %>%
     select(-..dimension_values) %>%
     spread(!!variable, !!value)
-
-  head(d)
-
-  d
 }

@@ -4,12 +4,15 @@
 \alias{tidy-format-translators}
 \alias{to_broom_names}
 \alias{from_broom_names}
+\alias{to_ggmcmc_names}
 \alias{from_ggmcmc_names}
 \title{Translate between different tidy data frame formats}
 \usage{
 to_broom_names(x)
 
 from_broom_names(x)
+
+to_ggmcmc_names(x)
 
 from_ggmcmc_names(x)
 }

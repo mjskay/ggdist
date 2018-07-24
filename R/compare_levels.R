@@ -123,6 +123,7 @@ comparison_types = within(list(), {
 #' @importFrom dplyr one_of
 #' @importFrom tibble as_tibble
 #' @importFrom rlang sym quo_name eval_tidy
+#' @export
 compare_levels = function(data, variable, by, fun=`-`, comparison = "default", draw_indices = c(".chain", ".iteration", ".draw")) {
   variable = vars_pull(names(data), !!enquo(variable))
   by = vars_pull(names(data), !!enquo(by))

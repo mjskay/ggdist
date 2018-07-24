@@ -69,6 +69,7 @@ to_broom_names = function(x) {
   select_all(x, ~ lookup[.] %||% .)
 }
 
+
 #' @rdname tidy-format-translators
 #' @export
 from_broom_names = function(x) {
@@ -87,6 +88,8 @@ from_broom_names = function(x) {
 
 # to_ggmcmc_names / from_ggmcmc_names -------------------------------------
 
+#' @rdname tidy-format-translators
+#' @export
 to_ggmcmc_names = function(x) {
   lookup = c(
     .chain = "Chain",
