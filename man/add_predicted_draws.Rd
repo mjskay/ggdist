@@ -15,21 +15,21 @@
 of a model to a data frame}
 \usage{
 add_fitted_draws(newdata, model, value = ".value", ..., n = NULL,
-  re_formula = NULL, category = "category", dpar = FALSE,
+  re_formula = NULL, category = ".category", dpar = FALSE,
   scale = c("response", "linear"))
 
 fitted_draws(model, newdata, value = ".value", ..., n = NULL,
-  re_formula = NULL, category = "category", dpar = FALSE,
+  re_formula = NULL, category = ".category", dpar = FALSE,
   scale = c("response", "linear"))
 
 \method{fitted_draws}{default}(model, newdata, ...)
 
 \method{fitted_draws}{stanreg}(model, newdata, value = ".value", ...,
-  n = NULL, re_formula = NULL, category = "category", dpar = FALSE,
+  n = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
   scale = c("response", "linear"))
 
 \method{fitted_draws}{brmsfit}(model, newdata, value = ".value", ...,
-  n = NULL, re_formula = NULL, category = "category", dpar = FALSE,
+  n = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
   scale = c("response", "linear"))
 
 add_predicted_draws(newdata, model, prediction = ".prediction", ...,
@@ -75,10 +75,10 @@ marginalizing over grouping factors by specifying new levels of a factor in \cod
 \item{category}{For \emph{some} ordinal and multinomial models (notably, \code{\link[brms]{brm}} models but
 \emph{not} \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per input row for
 \code{fitted_draws}, one for each category. The \code{category} argument specifies the name of the column
-to put the category names into in the resulting data frame. The fact that multiple rows per response are
-returned only for some model types reflects the fact that tidybayes takes the approach of tidying whatever
-output is given to us, and the output from different modeling functions differ on this point. See
-\code{vignette("tidy-brms")} and \code{vignette("tidy-rstanarm")} for examples of dealing with output
+to put the category names into in the resulting data frame (default: \code{".category"}). The fact that multiple
+rows per response are returned only for some model types reflects the fact that tidybayes takes the approach of
+tidying whatever output is given to us, and the output from different modeling functions differ on this point.
+See \code{vignette("tidy-brms")} and \code{vignette("tidy-rstanarm")} for examples of dealing with output
 from ordinal models using both approaches.}
 
 \item{dpar}{For \code{fitted_draws} and \code{add_fitted_draws}: Should distributional regression

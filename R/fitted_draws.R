@@ -37,7 +37,7 @@ add_fitted_samples = function(newdata, model, ...) {
 #' @rdname add_predicted_draws
 #' @export
 add_fitted_draws = function(newdata, model, value = ".value", ..., n = NULL, re_formula = NULL,
-  category = "category", dpar = FALSE, scale = c("response", "linear")
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
   fitted_draws(model, newdata, value, ..., n = n, re_formula = re_formula,
     category = category, dpar = dpar, scale = scale)
@@ -46,7 +46,7 @@ add_fitted_draws = function(newdata, model, value = ".value", ..., n = NULL, re_
 #' @rdname add_predicted_draws
 #' @export
 fitted_draws = function(model, newdata, value = ".value", ..., n = NULL, re_formula = NULL,
-  category = "category", dpar = FALSE, scale = c("response", "linear")
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
   UseMethod("fitted_draws")
 }
@@ -60,7 +60,7 @@ fitted_draws.default = function(model, newdata, ...) {
 #' @rdname add_predicted_draws
 #' @export
 fitted_draws.stanreg = function(model, newdata, value = ".value", ..., n = NULL, re_formula = NULL,
-  category = "category", dpar = FALSE, scale = c("response", "linear")
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
   transform = match.arg(scale) == "response"
 
@@ -89,7 +89,7 @@ fitted_draws.stanreg = function(model, newdata, value = ".value", ..., n = NULL,
 #' @importFrom purrr map
 #' @export
 fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL, re_formula = NULL,
-  category = "category", dpar = FALSE, scale = c("response", "linear")
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
   scale = match.arg(scale)
 
@@ -146,7 +146,7 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
       # In this case, we have to do a join to line things up (and in particular, a left join so that
       # rows from the linear predictor data frame are not dropped).
       join_cols = names(draws) %>%
-        intersect(c(".row", ".draw", "category")) %>%
+        intersect(c(".row", ".draw", category)) %>%
         intersect(names(dpar_fitted_draws))
 
       dpar_fitted_draws %<>%

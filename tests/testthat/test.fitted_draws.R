@@ -220,19 +220,20 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (re
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE) %>%
-    array2df(list(.draw = NA, .row = NA, category = NA), label.x = ".value") %>%
+    array2df(list(.draw = NA, .row = NA, .category = NA), label.x = ".value") %>%
     mutate(
       .chain = as.integer(NA),
       .iteration = as.integer(NA),
       .row = as.integer(.row),
       .draw = as.integer(.draw),
-      category = factor(category)
+      .category = factor(.category)
     )
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
 
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg), ref)
+  expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg, category = "foo"), rename(ref, foo = .category))
 })
 
 
@@ -240,13 +241,13 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (li
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
-    array2df(list(.draw = NA, .row = NA, category = NA), label.x = ".value") %>%
+    array2df(list(.draw = NA, .row = NA, .category = NA), label.x = ".value") %>%
     mutate(
       .chain = as.integer(NA),
       .iteration = as.integer(NA),
       .row = as.integer(.row),
       .draw = as.integer(.draw),
-      category = factor(category)
+      .category = factor(.category)
     )
 
   ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
@@ -260,7 +261,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
-    array2df(list(.draw = NA, .row = NA, category = NA), label.x = ".value")
+    array2df(list(.draw = NA, .row = NA, .category = NA), label.x = ".value")
 
   mu_fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear", dpar = "mu") %>%
     array2df(list(.draw = NA, .row = NA), label.x = "mu")
@@ -273,7 +274,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
       .iteration = as.integer(NA),
       .row = as.integer(.row),
       .draw = as.integer(.draw),
-      category = factor(category)
+      .category = factor(.category)
     )
 
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl, scale = "linear", dpar = TRUE), ref)
@@ -285,7 +286,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "response") %>%
-    array2df(list(.draw = NA, .row = NA, category = NA), label.x = ".value")
+    array2df(list(.draw = NA, .row = NA, .category = NA), label.x = ".value")
 
   mu_fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "response", dpar = "mu") %>%
     array2df(list(.draw = NA, .row = NA), label.x = "mu")
@@ -298,7 +299,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
       .iteration = as.integer(NA),
       .row = as.integer(.row),
       .draw = as.integer(.draw),
-      category = factor(category)
+      .category = factor(.category)
     )
 
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl, scale = "response", dpar = TRUE), ref)
