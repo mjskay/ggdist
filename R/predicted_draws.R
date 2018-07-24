@@ -1,48 +1,76 @@
-# [add_]predicted_samples
+# [add_]predicted_draws
 #
 # Author: mjskay
 ###############################################################################
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c(".iteration", ".pred"))
 
 
-#' Add samples from the posterior fit or posterior prediction of a model to a data frame
+# deprecated names for [add_]predicted_draws ----------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+predicted_samples = function(...) {
+  .Deprecated("predicted_draws")                  # nocov
+  predicted_samples_(...)                         # nocov
+}
+predicted_samples_ = function(model, newdata, var = "pred", ...) {
+  combine_chains_for_deprecated_(predicted_draws( # nocov
+    model, newdata, prediction = var, ...         # nocov
+  ))                                              # nocov
+}
+
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+add_predicted_samples = function(newdata, model, ...) {
+  .Deprecated("add_predicted_draws")              # nocov
+  predicted_samples_(model, newdata, ...)         # nocov
+}
+
+
+
+# [add_]predicted_draws ---------------------------------------------------
+
+#' Add draws from (possibly transformed) posterior linear predictors (the "fit") or from posterior predictions
+#' of a model to a data frame
 #'
-#' Given a data frame and a model, adds samples from the posterior fit (aka the linear/link-level predictor)
-#' or the posterior predictions of the model to the data frame in a long format.
+#' Given a data frame and a model, adds draws from the posterior "fit" (aka the linear/link-level predictor)
+#' or from the posterior predictions of the model to the data frame in a long format.
 #'
-#' \code{add_fitted_samples} adds samples from the posterior linear predictor (or the "link") to
+#' \code{add_fitted_draws} adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to
 #' the data. It corresponds to \code{\link[rstanarm]{posterior_linpred}} in \code{rstanarm} or
 #' \code{\link[brms]{fitted.brmsfit}} in \code{brms}.
 #'
-#' \code{add_predicted_samples} adds samples from the posterior prediction to
+#' \code{add_predicted_draws} adds draws from posterior predictions to
 #' the data. It corresponds to \code{\link[rstanarm]{posterior_predict}} in \code{rstanarm} or
 #' \code{\link[brms]{predict.brmsfit}} in \code{brms}.
 #'
-#' \code{add_fitted_samples} and \code{fitted_samples} are alternate spellings of the
+#' \code{add_fitted_draws} and \code{fitted_draws} are alternate spellings of the
 #' same function with opposite order of the first two arguments to facilitate use in data
 #' processing pipelines that start either with a data frame or a model. Similarly,
-#' \code{add_predicted_samples} and \code{predicted_samples} are alternate spellings.
+#' \code{add_predicted_draws} and \code{predicted_draws} are alternate spellings.
 #'
-#' Given equal choice between the two, \code{add_fitted_samples} and \code{add_predicted_samples}
+#' Given equal choice between the two, \code{add_fitted_draws} and \code{add_predicted_draws}
 #' are the preferred spellings.
 #'
 #' @param newdata Data frame to generate predictions from. If omitted, most model types will
 #' generate predictions from the data used to fit the model.
-#' @param model A supported Bayesian model fit / MCMC object that can provide fits and predictions. Supported models
+#' @param model A supported Bayesian model fit that can provide fits and predictions. Supported models
 #' are listed in the second section of \link{tidybayes-models}: \emph{Models Supporting Prediction}. While other
 #' functions in this package (like \code{\link{spread_draws}}) support a wider range of models, to work with
-#' \code{add_fitted_samples} and \code{add_predicted_samples} a model must provide an interface for generating
+#' \code{add_fitted_draws} and \code{add_predicted_draws} a model must provide an interface for generating
 #' predictions, thus more generic Bayesian modeling interfaces like \code{runjags} and \code{rstan} are not directly
 #' supported for these functions (only wrappers around those languages that provide predictions, like \code{rstanarm}
 #' and \code{brm}, are supported here).
-#' @param var The name of the output column for the predictions (default \code{"pred"}) or fits
-#' (default \code{"estimate"}, for compatibility with \code{\link[broom]{tidy}}).
+#' @param value The name of the output column for \cote{fitted_draws}; default \code{".value"}.
+#' @param prediction The name of the output column for \code{predicted_draws}; default \code{".prediction"}.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
-#' @param n The number of samples per prediction / fit to return.
+#' @param n The number of draws per prediction / fit to return.
 #' @param re_formula formula containing group-level effects to be considered in the prediction.
 #' If \code{NULL} (default), include all group-level effects; if \code{NA}, include no group-level effects.
 #' Some model types (such as \code{\link[brms]{brm}} and \code{\link[rstanarm]{stanreg-objects}}) allow
@@ -51,13 +79,13 @@ globalVariables(c(".iteration", ".pred"))
 #' \code{\link[brms]{predict.brmsfit}}).
 #' @param category For \emph{some} ordinal and multinomial models (notably, \code{\link[brms]{brm}} models but
 #' \emph{not} \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per estimate for
-#' \code{fitted_samples}, one for each category. The \code{category} argument specifies the name of the column
+#' \code{fitted_draws}, one for each category. The \code{category} argument specifies the name of the column
 #' to put the category names into in the resulting data frame. The fact that multiple rows per response are
 #' returned only for some model types reflects the fact that tidybayes takes the approach of tidying whatever
 #' output is given to us, and the output from different modeling functions differ on this point. See
 #' \code{vignette("tidy-brms")} and \code{vignette("tidy-rstanarm")} for examples of dealing with output
 #' from ordinal models using both approaches.
-#' @param dpar For \code{fitted_samples} and \code{add_fitted_samples}: Should distributional regression
+#' @param dpar For \code{fitted_draws} and \code{add_fitted_draws}: Should distributional regression
 #' parameters be included in the output? Valid only for models that support distributional regression parameters,
 #' such as submodels for variance parameters (as in \code{brm}). If \code{TRUE}, distributional regression
 #' parameters are included in the output as additional columns named after each parameter
@@ -69,10 +97,13 @@ globalVariables(c(".iteration", ".pred"))
 #' the linear predictor.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
 #' factor grouping rows from the input \code{newdata}), \code{.chain} column (the chain
-#' each sample came from, or \code{NA} if the model does not provide chain information),
-#' \code{.iteration} column (the iteration the sample came from), and \code{.pred} column (a
-#' sample from the posterior predictive distribution). For convenience, the resulting data
-#' frame comes grouped by the original input rows.
+#' each draw came from, or \code{NA} if the model does not provide chain information),
+#' \code{.iteration} column (the iteration the draw came from, or \code{NA} if the model does
+#' not provide iteration information), and a \code{.draw} column (a unique index corresponding to each draw
+#' from the distribution). In addition, \code{fitted_draws} includes a column with its name specified by
+#' the \code{value} argument (default is \code{.value}) containing draws from the (transformed) linear predictor,
+#' and \code{predicted_draws} contains a \code{.prediction} column containing draws from the posterior predictive
+#' distribution. For convenience, the resulting data frame comes grouped by the original input rows.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_draws}}
 #' @keywords manip
@@ -91,22 +122,22 @@ globalVariables(c(".iteration", ".pred"))
 #'   # do not use in practice
 #'   chains = 1, iter = 500)
 #'
-#' # sample 100 fit lines from the posterior and overplot them
+#' # draw 100 fit lines from the posterior and overplot them
 #' mtcars %>%
 #'   group_by(cyl) %>%
 #'   data_grid(hp = seq_range(hp, n = 101)) %>%
-#'   add_fitted_samples(m_mpg, n = 100) %>%
+#'   add_fitted_draws(m_mpg, n = 100) %>%
 #'   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-#'   geom_line(aes(y = estimate, group = paste(cyl, .iteration)), alpha = 0.25) +
+#'   geom_line(aes(y = estimate, group = paste(cyl, .draw)), alpha = 0.25) +
 #'   geom_point(data = mtcars)
 #'
 #' # plot posterior predictive intervals
 #' mtcars %>%
 #'   group_by(cyl) %>%
 #'   data_grid(hp = seq_range(hp, n = 101)) %>%
-#'   add_predicted_samples(m_mpg) %>%
+#'   add_predicted_draws(m_mpg) %>%
 #'   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-#'   stat_lineribbon(aes(y = pred), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
+#'   stat_lineribbon(aes(y = prediction), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
 #'   geom_point(data = mtcars) +
 #'   scale_fill_brewer(palette = "Greys")
 #'
@@ -116,63 +147,63 @@ globalVariables(c(".iteration", ".pred"))
 #' @importFrom dplyr mutate sample_n ungroup group_by
 #' @importFrom stats fitted predict
 #' @export
-add_predicted_samples = function(newdata, model, var = "pred", ..., n = NULL, re_formula = NULL) {
-  predicted_samples(model, newdata, var, ..., n = n, re_formula = re_formula)
+add_predicted_draws = function(newdata, model, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
+  predicted_draws(model, newdata, prediction, ..., n = n, re_formula = re_formula)
 }
 
-#' @rdname add_predicted_samples
+#' @rdname add_predicted_draws
 #' @export
-predicted_samples = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
-  UseMethod("predicted_samples")
+predicted_draws = function(model, newdata, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
+  UseMethod("predicted_draws")
 }
 
-#' @rdname add_predicted_samples
+#' @rdname add_predicted_draws
 #' @export
-predicted_samples.default = function(model, newdata, ...) {
-  stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `predicted_samples`"))
+predicted_draws.default = function(model, newdata, ...) {
+  stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `predicted_draws`"))
 }
 
-#' @rdname add_predicted_samples
+#' @rdname add_predicted_draws
 #' @export
-predicted_samples.stanreg = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
+predicted_draws.stanreg = function(model, newdata, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
-    stop("The `rstanarm` package is needed for `predicted_samples` to support `stanreg` objects.", call. = FALSE) # nocov
+    stop("The `rstanarm` package is needed for `predicted_draws` to support `stanreg` objects.", call. = FALSE) # nocov
   }
 
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]predicted_samples", n = "draws", re_formula = "re.form"
+    names(list(...)), "[add_]predicted_draws", n = "draws", re_formula = "re.form"
   )
 
-  fitted_predicted_samples_brmsfit_(rstanarm::posterior_predict, model, newdata, var, ...,
+  fitted_predicted_draws_brmsfit_(rstanarm::posterior_predict, model, newdata, output_name = prediction, ...,
     draws = n, re.form = re_formula, is_brms = FALSE
   )
 }
 
-#' @rdname add_predicted_samples
+#' @rdname add_predicted_draws
 #' @export
-predicted_samples.brmsfit = function(model, newdata, var = "pred", ..., n = NULL, re_formula = NULL) {
+predicted_draws.brmsfit = function(model, newdata, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
-    stop("The `brms` package is needed for `predicted_samples` to support `brmsfit` objects.", call. = FALSE) # nocov
+    stop("The `brms` package is needed for `predicted_draws` to support `brmsfit` objects.", call. = FALSE) # nocov
   }
 
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]predicted_samples", n = "nsamples"
+    names(list(...)), "[add_]predicted_draws", n = "nsamples"
   )
 
-  fitted_predicted_samples_brmsfit_(predict, model, newdata, var, ...,
+  fitted_predicted_draws_brmsfit_(predict, model, newdata, output_name = prediction, ...,
     nsamples = n, re_formula = re_formula
   )
 }
 
 
 #' @importFrom arrayhelpers array2df ndim
-fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata, var, category, ...,
+fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, output_name, category, ...,
   is_brms = TRUE, summary = NULL #summary is ignored, we change it ourselves
 ) {
   newdata %<>% ungroup()
 
   column_format = list(
-    .iteration = NA,        #NA here means numeric
+    .draw = NA,        #NA here means numeric
     .row = NA
   )
 
@@ -193,19 +224,19 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
     groups %<>% union(category)
   }
 
-  fits_preds_df = array2df(fits_preds, column_format, label.x = var)
+  fits_preds_df = array2df(fits_preds, column_format, label.x = output_name)
 
-  #rstanarm does something weird that prevents array2df from properly seeing .row and .iteration as numerics,
+  #rstanarm does something weird that prevents array2df from properly seeing .row and .draw as numerics,
   #so we have to convert them manually from factors. While we're at it, we should also make sure they are integers.
   if (is.factor(fits_preds_df$.row)) {
     fits_preds_df$.row = as.character(fits_preds_df$.row)
   }
   fits_preds_df$.row = as.integer(fits_preds_df$.row)
 
-  if (is.factor(fits_preds_df$.iteration)) {
-    fits_preds_df$.iteration = as.character(fits_preds_df$.iteration)
+  if (is.factor(fits_preds_df$.draw)) {
+    fits_preds_df$.draw = as.character(fits_preds_df$.draw)
   }
-  fits_preds_df$.iteration = as.integer(fits_preds_df$.iteration)
+  fits_preds_df$.draw = as.integer(fits_preds_df$.draw)
 
   if (ndim(fits_preds) == 3) {
     #3 dimensions implies a categorical outcome -> make category column be factor
@@ -215,10 +246,11 @@ fitted_predicted_samples_brmsfit_ = function(f_fitted_predicted, model, newdata,
   newdata %>%
     mutate(
       .row = seq_len(n()),
-      .chain = as.integer(NA)
+      .chain = as.integer(NA),
+      .iteration = as.integer(NA)
     ) %>%
     inner_join(fits_preds_df, by = ".row") %>%
-    select(-!!sym(var), !!sym(var)) %>%
+    select(-!!sym(output_name), !!sym(output_name)) %>%
     group_by(!!!syms(groups))
 }
 

@@ -16,3 +16,10 @@ deparse0 = function(expr, width.cutoff = 500, ...) {
 escape_regex <- function(string) {
   str_replace_all(string, "(\\W)", "\\\\\\1")
 }
+
+combine_chains_for_deprecated_ = function(x) {
+  x$.chain = as.integer(NA)
+  x$.iteration = x$.draw
+  x$.draw = NULL
+  x
+}

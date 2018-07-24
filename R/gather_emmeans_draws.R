@@ -12,7 +12,7 @@
 #' @export
 gather_lsmeans_samples = function(...) {
   .Deprecated("gather_emmeans_draws")  # nocov
-  gather_emmeans_draws(...)            # nocov
+  combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
 }
 
 #' @rdname tidybayes-deprecated
@@ -21,11 +21,7 @@ gather_lsmeans_samples = function(...) {
 #' @export
 gather_emmeans_samples = function(...) {
   .Deprecated("gather_emmeans_draws")                # nocov
-  gather_emmeans_draws(..., value = "estimate") %>%  # nocov
-    mutate(                                          # nocov
-      .chain = as.integer(NA),                       # nocov
-      .iteration = .draw                             # nocov
-    )                                                # nocov
+  combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
 }
 
 

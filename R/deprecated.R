@@ -34,6 +34,16 @@
 #'   \emph{draws} is more correct terminology than \emph{samples} for describing multiple
 #'   realizations from a posterior distribution.
 #'
+#'   \item \code{fitted_samples} / \code{add_fitted_samples} are deprecated names for
+#'   \code{\link{fitted_draws}} / \code{\link{add_fitted_draws}}.
+#'   \emph{draws} is more correct terminology than \emph{samples} for describing multiple
+#'   realizations from a distribution.
+#'
+#'   \item \code{predicted_samples} / \code{add_predicted_samples} are deprecated names for
+#'   \code{\link{predicted_draws}} / \code{\link{add_predicted_draws}}.
+#'   \emph{draws} is more correct terminology than \emph{samples} for describing multiple
+#'   realizations from a distribution.
+#'
 #'   \item \code{gather_lsmeans_samples} and \code{gather_emmeans_samples} are deprecated aliases
 #'   for \code{\link{gather_emmeans_draws}}. The new name (estimated marginal means) is more
 #'   appropriate for Bayesian models than the old name (least-squares means), and reflects the
