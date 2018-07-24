@@ -233,11 +233,12 @@ spread_samples = function(...) {
 #'
 #' RankCorr %>%
 #'   gather_draws(tau[i], typical_r) %>%
+#'   summarise_at(".value", list)
 #'   median_qi()
 #'
 #' @importFrom lazyeval lazy_dots
 #' @importFrom purrr reduce
-#' @importFrom dplyr inner_join
+#' @importFrom dplyr inner_join group_by_at
 #' @rdname spread_draws
 #' @export
 spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
@@ -250,7 +251,7 @@ spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
   #first data frame in a join is retained), so we'll have to recreate
   #the full set of groups from all the data frames after we join them
   groups_ = tidysamples %>%
-    map(groups) %>%
+    map(group_vars) %>%
     reduce(union)
 
   tidysamples %>%
@@ -258,7 +259,7 @@ spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
       by_ = intersect(names(tidysamples1), names(tidysamples2))
       inner_join(tidysamples1, tidysamples2, by = by_)
     }) %>%
-    group_by_(.dots = groups_)
+    group_by_at(groups_)
 }
 
 #' @import dplyr
@@ -306,7 +307,7 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
       #specified as a dimension; therefore before we can modify it we have to
       #remove it from the grouping columns on this table (mutate does not
       #allow you to modify grouping columns)
-      group_by_(.dots = setdiff(groups(.), "..")) %>%
+      group_by_at(setdiff(group_vars(.), "..")) %>%
       mutate(.. = paste0(variable_names, ".", ..)) %>%
       spread_("..", variable_names)
   }
@@ -401,7 +402,7 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
       #drop the columns that correpond to blank dimensions in the original spec
       select(-starts_with(".drop")) %>%
       #group by the desired dimensions so that we return a pre-grouped data frame to the user
-      group_by_(.dots = dimension_names)
+      group_by_at(dimension_names)
   }
 }
 

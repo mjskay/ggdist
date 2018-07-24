@@ -20,7 +20,7 @@ gather_samples = function(...) {
 # gather_draws ------------------------------------------------------------
 
 #' @rdname spread_draws
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows group_by_at
 #' @export
 gather_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
   tidysamples = lapply(lazy_dots(...), function(variable_spec) {
@@ -33,9 +33,9 @@ gather_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
   #the grouping information is not always retained, so we'll have to recreate
   #the full set of groups from all the data frames after we bind them
   groups_ = tidysamples %>%
-    map(groups) %>%
+    map(group_vars) %>%
     reduce(union)
 
   bind_rows(tidysamples) %>%
-    group_by_(.dots = groups_)
+    group_by_at(groups_)
 }

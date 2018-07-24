@@ -98,11 +98,13 @@ gather_terms = function(...) {
 #' @importFrom dplyr group_vars
 #' @export
 gather_variables = function(data, exclude = c(".chain", ".iteration", ".draw", ".row")) {
+  groups_ = group_vars(data)
+
   # get a list of the names of columns that are explicitly excluded or
   # which are grouping columns (these are dimensions from the spec)
   special_columns = names(data) %>%
     intersect(exclude) %>%
-    union(group_vars(data))
+    union(groups_)
 
   # translate that list into quoted negations of those column names
   # so we can exclude them from the gather()
@@ -112,5 +114,5 @@ gather_variables = function(data, exclude = c(".chain", ".iteration", ".draw", "
 
   data %>%
     gather(".variable", ".value", !!!columns_excluded_from_gather) %>%
-    group_by_at(".variable", add = TRUE)
+    group_by_at(c(groups_, ".variable"), add = TRUE)
 }

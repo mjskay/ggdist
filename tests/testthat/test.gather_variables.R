@@ -22,6 +22,7 @@ test_that("gather_variables works on the results of as_sample_tibble", {
     gather_variables()
 
   expect_equal(result, ref)
+  expect_equal(group_vars(result), group_vars(ref))
 })
 
 
@@ -31,11 +32,12 @@ test_that("gather_variables works on the results of spread_draws with multiple v
   ref = RankCorr %>%
     spread_draws(b[i, v], tau[i]) %>%
     gather(.variable, .value, -.chain, -.iteration, -.draw, -i, -v) %>%
-    group_by(.variable, add = TRUE)
+    group_by(i, v, .variable)
 
   result = RankCorr %>%
     spread_draws(b[i, v], tau[i]) %>%
     gather_variables()
 
   expect_equal(result, ref)
+  expect_equal(group_vars(result), group_vars(ref))
 })
