@@ -50,8 +50,9 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
     inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
-  expect_equal(ref, fitted_draws(m_hp_wt, mtcars_tbl))
-  expect_equal(ref, add_fitted_draws(mtcars_tbl, m_hp_wt))
+  expect_equal(fitted_draws(m_hp_wt, mtcars_tbl), ref)
+  expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt), ref)
+  expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt, value = "foo"), rename(ref, foo = .value))
 
   #subsetting to test the `n` argument
   set.seed(1234)
@@ -83,8 +84,8 @@ test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", 
     inner_join(fits, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
-  expect_equal(ref, fitted_draws(m_hp_wt, group_by(mtcars_tbl, hp)))
-  expect_equal(ref, add_fitted_draws(mtcars_tbl, m_hp_wt))
+  expect_equal(fitted_draws(m_hp_wt, group_by(mtcars_tbl, hp)), ref)
+  expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt), ref)
 })
 
 
@@ -110,6 +111,7 @@ test_that("[add_]fitted_draws works on brms models without dpar", {
   expect_equal(fitted_draws(m_hp, mtcars_tbl), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp, dpar = FALSE), ref)
+  expect_equal(add_fitted_draws(mtcars_tbl, m_hp, dpar = FALSE, value = "foo"), rename(ref, foo = .value))
 })
 
 

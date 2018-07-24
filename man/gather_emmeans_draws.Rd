@@ -63,6 +63,7 @@ m \%>\%
 
 # or we could get pairwise differences:
 m \%>\%
+  emmeans(~ condition) \%>\%
   contrast(method = "pairwise") \%>\%
   gather_emmeans_draws() \%>\%
   median_qi()

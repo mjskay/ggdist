@@ -66,7 +66,7 @@ add_predicted_samples = function(newdata, model, ...) {
 #' predictions, thus more generic Bayesian modeling interfaces like \code{runjags} and \code{rstan} are not directly
 #' supported for these functions (only wrappers around those languages that provide predictions, like \code{rstanarm}
 #' and \code{brm}, are supported here).
-#' @param value The name of the output column for \cote{fitted_draws}; default \code{".value"}.
+#' @param value The name of the output column for \code{fitted_draws}; default \code{".value"}.
 #' @param prediction The name of the output column for \code{predicted_draws}; default \code{".prediction"}.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.

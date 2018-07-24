@@ -152,7 +152,7 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
       dpar_fitted_draws %<>%
         ungroup() %>%
         select_at(c(join_cols, ".value")) %>%
-        rename(!!varname := .value)
+        rename(!!varname := ".value")
 
       draws %<>% left_join(dpar_fitted_draws, by = join_cols)
 

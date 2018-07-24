@@ -58,7 +58,7 @@ predictions, thus more generic Bayesian modeling interfaces like \code{runjags} 
 supported for these functions (only wrappers around those languages that provide predictions, like \code{rstanarm}
 and \code{brm}, are supported here).}
 
-\item{value}{The name of the output column for \cote{fitted_draws}; default \code{".value"}.}
+\item{value}{The name of the output column for \code{fitted_draws}; default \code{".value"}.}
 
 \item{...}{Additional arguments passed to the underlying prediction method for the type of
 model given.}
