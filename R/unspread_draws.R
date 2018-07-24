@@ -15,9 +15,9 @@ globalVariables(c("..dimension_values"))
 #' @format NULL
 #' @usage NULL
 #' @export
-unspread_samples = function(...) {
+unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
   .Deprecated("unspread_draws")     # nocov
-  unspread_draws(...)               # nocov
+  unspread_draws(..., draw_indices = indices)               # nocov
 }
 
 
@@ -34,11 +34,11 @@ unspread_samples = function(...) {
 #' @param data A tidy data frame of draws, such as one output by \code{spread_draws} or \code{gather_draws}.
 #' @param ... Expressions in the form of
 #' \code{variable_name[dimension_1, dimension_2, ...]}. See \code{\link{spread_draws}}.
-#' @param indices Character vector of column names in \code{data} that
+#' @param draw_indices Character vector of column names in \code{data} that
 #' should be treated as indices of draws. The default is \code{c(".chain",".iteration",".draw")},
 #' which are the same names used for chain, iteration, and draw indices returned by
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
-#' @param drop_indices Drop the columns specified by \code{.draw_indices} from the resulting data frame. Default \code{FALSE}.
+#' @param drop_indices Drop the columns specified by \code{draw_indices} from the resulting data frame. Default \code{FALSE}.
 #' @param variable The name of the column in \code{data} that contains the names of variables from the model.
 #' @param value The name of the column in \code{data} that contains the samples of the variables.
 #' @return A data frame.
@@ -76,23 +76,23 @@ unspread_samples = function(...) {
 #' @importFrom magrittr %<>% %>%
 #' @rdname unspread_draws
 #' @export
-unspread_draws = function(data, ..., indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE) {
+unspread_draws = function(data, ..., draw_indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE) {
   result =
     map(lazy_dots(...), function(variable_spec) {
-      unspread_draws_(data, variable_spec, indices = indices)
+      unspread_draws_(data, variable_spec, draw_indices = draw_indices)
     }) %>%
-    reduce(inner_join, by = indices) %>%
+    reduce(inner_join, by = draw_indices) %>%
     as_tibble()
 
   if (drop_indices) {
     result %>%
-      select(-one_of(indices))
+      select(-one_of(draw_indices))
   } else {
     result
   }
 }
 
-unspread_draws_ = function(data, variable_spec, indices = c(".chain", ".iteration", ".draw")) {
+unspread_draws_ = function(data, variable_spec, draw_indices = c(".chain", ".iteration", ".draw")) {
   #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
   spec = parse_variable_spec(variable_spec)
   variable_names = spec[[1]]
@@ -108,13 +108,13 @@ unspread_draws_ = function(data, variable_spec, indices = c(".chain", ".iteratio
   # will be automatically retained even when we try to select() them out.
   data_subset = data %>%
     ungroup() %>%
-    select(!!c(indices, variable_names, dimension_names))
+    select(!!c(draw_indices, variable_names, dimension_names))
 
   if (is.null(dimension_names)) {
     return(distinct(data_subset))
   }
 
-  # we have to do distinct() here in case a variable had duplicates created for indices of
+  # we have to do distinct() here in case a variable had duplicates created for dimensions of
   # other variables that it does not share; e.g. in the case of spread_draws(a, b[i]) %>% unspread_draws(a)
   data_distinct = data_subset %>%
     unite(..dimension_values, !!!dimension_names, sep = ",") %>%
@@ -122,10 +122,10 @@ unspread_draws_ = function(data, variable_spec, indices = c(".chain", ".iteratio
 
   map(variable_names, function(variable_name) {
     data_distinct %>%
-      select(!!c(indices, variable_name, "..dimension_values")) %>%
+      select(!!c(draw_indices, variable_name, "..dimension_values")) %>%
       mutate(..variable = paste0(variable_name, "[", ..dimension_values, "]")) %>%
       select(-..dimension_values) %>%
       spread_("..variable", variable_name)
   }) %>%
-    reduce(inner_join, by = indices)
+    reduce(inner_join, by = draw_indices)
 }

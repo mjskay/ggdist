@@ -4,14 +4,14 @@
 \alias{gather_variables}
 \title{Gather variables from a tidy data frame of draws from variables into a single column}
 \usage{
-gather_variables(data, ignore_columns = "^\\\\..*")
+gather_variables(data, exclude = c(".chain", ".iteration", ".draw", ".row"))
 }
 \arguments{
 \item{data}{A data frame with variable names spread across columns, such as one returned by
 \code{\link{as_sample_tibble}} or \code{\link{spread_draws}}.}
 
-\item{ignore_columns}{A regular expression that matches column names to ignore in the gather. The
-default ignores columns that start with \code{"."}.}
+\item{exclude}{A character vector of names of columns to be excluded from the gather. Default
+ignores several meta-data column names used in tidybayes.}
 }
 \value{
 A data frame.
@@ -21,8 +21,8 @@ Given a data frame such as might be returned by as_sample_tibble or spread_draws
 gather variables and their values from that data frame into a \code{".variable"} and \code{".value"} column.
 }
 \details{
-This function gathers every column except grouping columns and those matching the regular expression
-\code{ignore_columns} into key/value columns \code{".variable"} and \code{".value"}.
+This function gathers every column except grouping columns and those matching the expression
+\code{exclude} into key/value columns \code{".variable"} and \code{".value"}.
 
 Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[i,v])}, like this:
 \itemize{

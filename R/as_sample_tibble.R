@@ -156,7 +156,7 @@ as_sample_tibble.MCMCglmm = function(model) {
   sol_samples %>%
     list() %>%
     c(other_samples) %>%
-    reduce(inner_join, by = c(".chain", ".iteration"))
+    reduce(inner_join, by = c(".chain", ".iteration", ".draw"))
 }
 
 

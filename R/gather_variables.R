@@ -25,8 +25,8 @@ gather_terms = function(...) {
 #' Given a data frame such as might be returned by as_sample_tibble or spread_draws,
 #' gather variables and their values from that data frame into a \code{".variable"} and \code{".value"} column.
 #'
-#' This function gathers every column except grouping columns and those matching the regular expression
-#' \code{ignore_columns} into key/value columns \code{".variable"} and \code{".value"}.
+#' This function gathers every column except grouping columns and those matching the expression
+#' \code{exclude} into key/value columns \code{".variable"} and \code{".value"}.
 #'
 #' Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[i,v])}, like this:
 #' \itemize{
@@ -66,8 +66,8 @@ gather_terms = function(...) {
 #'
 #' @param data A data frame with variable names spread across columns, such as one returned by
 #' \code{\link{as_sample_tibble}} or \code{\link{spread_draws}}.
-#' @param ignore_columns A regular expression that matches column names to ignore in the gather. The
-#' default ignores columns that start with \code{"."}.
+#' @param exclude A character vector of names of columns to be excluded from the gather. Default
+#' ignores several meta-data column names used in tidybayes.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_draws}}, \code{\link{as_sample_tibble}}.
@@ -95,13 +95,14 @@ gather_terms = function(...) {
 #' @importFrom magrittr %>%
 #' @importFrom purrr map
 #' @importFrom tidyr gather
+#' @importFrom dplyr group_vars
 #' @export
-gather_variables = function(data, ignore_columns = "^\\..*") {
-  # get a list of the names of columns that either start with "." or
-  # which are grouping columns (these are indices from the spec)
-  #  -> e.g. c(".chain", ".iteration", ".draw", "i")
+gather_variables = function(data, exclude = c(".chain", ".iteration", ".draw", ".row")) {
+  # get a list of the names of columns that are explicitly excluded or
+  # which are grouping columns (these are dimensions from the spec)
   special_columns = names(data) %>%
-    {.[stri_detect_regex(., ignore_columns) | . %in% groups(data)]}
+    intersect(exclude) %>%
+    union(group_vars(data))
 
   # translate that list into quoted negations of those column names
   # so we can exclude them from the gather()

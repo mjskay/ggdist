@@ -65,8 +65,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' that contains samples to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
 #' \code{.data}, represent samples to summarise. If this is empty, then by default all
-#' columns that are not group columns or start with \code{"."} (e.g. \code{".chain"}
-#' or \code{".iteration"}, \code{".draw"}) will be summarised.
+#' columns that are not group columns and which are not in \code{.exclude} (by default
+#' \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.
 #' @param .prob vector of probabilities to use for generating intervals. If multiple
 #' probabilities are provided, multiple rows per group are generated, each with
 #' a different probabilty interval (and value of the corresponding \code{.prob} column).
@@ -80,6 +80,9 @@ globalVariables(c("y", "ymin", "ymax"))
 #' upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
 #' \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
 #' of the point estimate to \code{estimate}.
+#' @param .exclude A character vector of names of columns to be excluded from summarisation
+#' if no column names are specified to be summarised. Default ignores several meta-data column
+#' names used in tidybayes.
 #' @param x vector to summarise (for interval functions: \code{qi} and \code{hdi})
 #' @author Matthew Kay
 #' @examples
@@ -124,31 +127,32 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   geom_halfeyeh(fun.data = mode_hdih, .prob = c(.66, .95))
 #'
 #' @importFrom purrr map_df map map2 discard
-#' @importFrom dplyr do bind_cols
+#' @importFrom dplyr do bind_cols group_vars
 #' @importFrom stringi stri_startswith_fixed
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
-point_interval = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE) {
+point_interval = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row")
+) {
   UseMethod("point_interval")
 }
 
 #' @rdname point_interval
 #' @export
-point_interval.default = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE) {
+point_interval.default = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row")
+) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
 
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
-    # do not start with "."
+    # are not in .exclude
     col_exprs = names(data) %>%
-      map(as.name) %>%
       #don't aggregate groups because we aggregate within these
-      setdiff(groups(data)) %>%
-      #don't aggregate columns that start with "." because these are special columns (such
-      #as .chain or .iteration or .draw)
-      discard(~ stri_startswith_fixed(.x, ".")) %>%
-      map(as_quosure) %>%
+      setdiff(group_vars(data)) %>%
+      setdiff(.exclude) %>%
+      syms() %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
@@ -218,7 +222,9 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
 #' @rdname point_interval
 #' @importFrom dplyr rename
 #' @export
-point_interval.numeric = function(.data, ..., .prob = .95, .point = median, .interval = qi, .broom = FALSE) {
+point_interval.numeric = function(.data, ..., .prob = .95, .point = median, .interval = qi, .broom = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row")
+) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
 
   result = map_df(.prob, function(p) {

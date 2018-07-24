@@ -3,13 +3,13 @@
 # Author: mjskay
 ###############################################################################
 
-context("parameters")
+context("get_variables")
 
 
-test_that("basic parameters extraction works", {
+test_that("basic variable extraction works", {
   data(RankCorr, package = "tidybayes")
 
   ref = dimnames(RankCorr)[[2]]
 
-  expect_equal(parameters(RankCorr), ref)
+  expect_equal(get_variables(RankCorr), ref)
 })

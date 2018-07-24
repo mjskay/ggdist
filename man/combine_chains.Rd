@@ -2,20 +2,19 @@
 % Please edit documentation in R/combine_chains.R
 \name{combine_chains}
 \alias{combine_chains}
-\title{Combine the chain and iteration columns of tidy samples}
+\title{Combine the chain and iteration columns of tidy data frames of draws}
 \usage{
-combine_chains(samples, chain = .chain, iteration = .iteration,
-  into = NULL)
+combine_chains(data, chain = .chain, iteration = .iteration,
+  into = ".draw")
 }
 \arguments{
-\item{samples}{Tidy data frame of samples with columns representing the chain and iteration of each sample, such as
-returned by \code{\link{as_sample_tibble}}, \code{\link{spread_draws}}, or \code{\link{gather_draws}}.}
+\item{data}{Tidy data frame of draws with columns representing the chain and iteration of each draw.}
 
-\item{chain}{Bare name of column in \code{samples} indicating the chain of each row. The default (\code{.chain}) is
-the same as returned by other functions in \code{tidybayes}.}
+\item{chain}{Bare name of column in \code{data} indicating the chain of each row. The default (\code{.chain}) is
+the same as used by other functions in \code{tidybayes}.}
 
-\item{iteration}{Bare name of column in \code{samples} indicating the iteration of each row. The default
-(\code{.iteration}) is the same as returned by other functions in \code{tidybayes}.}
+\item{iteration}{Bare name of column in \code{data} indicating the iteration of each row. The default
+(\code{.iteration}) is the same as used by other functions in \code{tidybayes}.}
 
 \item{into}{Name (as a character vector) of the column to combine chains into. The default, \code{NULL}, replaces the
 \code{chain} column with \code{NA}s and writes the combined chain iteration numbers into \code{iteration}. If
@@ -23,12 +22,13 @@ provided, \code{chain} and \code{iteration} will not be modified, and the combin
 into a new column named \code{into}.}
 }
 \value{
-A data frame of tidy samples with a combined iteration column
+A data frame of tidy draws with a combined iteration column
 }
 \description{
-Combines the chain and iteration columns of a tidy data frame of samples from a Bayesian model fit by renumbering
-iterations to ensure that the iteration column alone can uniquely identify each draw. Can be useful for making plots
-showing multiple iterations where you do not care about differences among chains.
+Combines the chain and iteration columns of a tidy data frame of draws from a Bayesian model fit into a new column
+that can uniquely identify each draw. Generally speaking \strong{not needed for pure tidybayes code}, as tidybayes
+functions now automatically include a \code{.draw} column, but can be useful when interacting with packages that
+do not provide such a column.
 }
 \examples{
 
@@ -42,9 +42,7 @@ line \%>\%
   as_sample_tibble() \%>\%
   summary()
 
-# combine_chains combines the chains, giving 400 iterations with
-# `.chain = NA` (to indicate that the chains were combined, as opposed to
-# this being 400 iterations from one chain).
+# combine_chains combines the chain and iteration column into the .draw column.
 line \%>\%
   as_sample_tibble() \%>\%
   combine_chains() \%>\%

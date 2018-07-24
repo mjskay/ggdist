@@ -2,20 +2,20 @@
 % Please edit documentation in R/compare_levels.R
 \name{compare_levels}
 \alias{compare_levels}
-\title{Compare the value of some variable extracted from a Bayesian posterior
-sample for different levels of a factor}
+\title{Compare the value of draws of some variable from a Bayesian model for
+different levels of a factor}
 \usage{
-compare_levels(samples, variable, by, fun = `-`, comparison = "default",
-  indices = c(".chain", ".iteration", ".draw"))
+compare_levels(data, variable, by, fun = `-`, comparison = "default",
+  draw_indices = c(".chain", ".iteration", ".draw"))
 }
 \arguments{
-\item{samples}{Long-format \code{data.frame} of samples such as returned by
+\item{data}{Long-format \code{data.frame} of draws such as returned by
 \code{\link{spread_draws}} or \code{\link{gather_draws}}.}
 
-\item{variable}{Bare (unquoted) name of a column in samples representing the
+\item{variable}{Bare (unquoted) name of a column in data representing the
 variable to compare across levels.}
 
-\item{by}{Bare (unquoted) name of a column in samples that is a
+\item{by}{Bare (unquoted) name of a column in data that is a
 \code{factor} or \code{ordered}. The value of \code{variable} will be
 compared across pairs of levels of this \code{factor}.}
 
@@ -35,32 +35,32 @@ the comparisons to make, e.g.: \code{list(c("a", "b"), c("b", "c"))} or
 \code{"b"} and level \code{"b"} against \code{"c"}. Note that the
 unevaluated expression syntax ignores the \code{fun} argument, can include
 any other functions desired (e.g. variable transformations), and can even
-include more than two levels or other columns in \code{samples}.}
+include more than two levels or other columns in \code{data}.}
 
-\item{indices}{Character vector of column names in \code{samples} that
+\item{draw_indices}{Character vector of column names in \code{data} that
 should be treated as indices when making the comparison (i.e. values of
 \code{variable} within each level of \code{by} will be compared at each
-unique combination of levels of \code{indices}). Columns in \code{indices}
-not found in \code{samples} are ignored. The default is \code{c(".chain",".iteration",".draw")},
-which are the same names used for chain/iteration indices variables returned by
+unique combination of levels of \code{draw_indices}). Columns in \code{draw_indices}
+not found in \code{data} are ignored. The default is \code{c(".chain",".iteration",".draw")},
+which are the same names used for chain/iteration/draw indices returned by
 \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using \code{compare_levels}
 with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
 value.}
 }
 \value{
-A \code{data.frame} with the same columns as \code{samples}, except
+A \code{data.frame} with the same columns as \code{data}, except
 that the \code{by} column contains a symbolic representation of the
-comparison of pairs of levels of \code{by} in \code{samples}, and
+comparison of pairs of levels of \code{by} in \code{data}, and
 \code{variable} contains the result of that comparison.
 }
 \description{
-Given a posterior sample from a Bayesian model in long format (e.g. as
-returned by \code{\link{spread_draws}}), compare the value of a variable in that sample
+Given posterior draws from a Bayesian model in long format (e.g. as
+returned by \code{\link{spread_draws}}), compare the value of a variable in those draws
 across different paired combinations of levels of a factor.
 }
 \details{
 This function simplifies conducting comparisons across levels of some
-variable returned from a Bayesian sample. It applies \code{fun} to all
+variable in a tidy data frame of draws. It applies \code{fun} to all
 values of \code{variable} for each pair of levels of \code{by} as selected
 by \code{comparison}. By default, all pairwise comparisons are generated if
 \code{by} is an unordered \code{factor} and ordered comparisons are made if

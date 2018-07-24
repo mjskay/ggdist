@@ -15,8 +15,7 @@ test_that("combine_chains works on a simple example", {
   ref = line %>%
     as_sample_tibble() %>%
     mutate(
-      .iteration = as.integer(.iteration + (.chain - 1) * max(.iteration)),
-      .chain = as.integer(NA)
+      .draw = as.integer(.iteration + (.chain - 1) * max(.iteration))
     )
 
   line %>%
@@ -30,10 +29,10 @@ test_that("combine_chains works with a named output column", {
 
   ref = line %>%
     as_sample_tibble() %>%
-    mutate(draws = as.integer(.iteration + (.chain - 1) * max(.iteration)))
+    mutate(d = as.integer(.iteration + (.chain - 1) * max(.iteration)))
 
   line %>%
     as_sample_tibble() %>%
-    combine_chains(into = "draws") %>%
+    combine_chains(into = "d") %>%
     expect_equal(ref)
 })

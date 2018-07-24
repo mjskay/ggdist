@@ -37,7 +37,7 @@ Those types are used to translate numeric values of variables back into
 useful values (for example, levels of a factor).
 
 The most common use of \code{recover_types} is to automatically translate
-indices that correspond to levels of a factor in the original data back into
+dimensions of a variable that correspond to levels of a factor in the original data back into
 levels of that factor. The simplest way to do this is to pass in the data
 frame from which the original data came.
 

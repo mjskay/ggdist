@@ -6,9 +6,9 @@
 \title{Turn tidy data frames of variables from a Bayesian model back into untidy data}
 \usage{
 ungather_draws(data, ..., variable = ".variable", value = ".value",
-  indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE)
+  draw_indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE)
 
-unspread_draws(data, ..., indices = c(".chain", ".iteration", ".draw"),
+unspread_draws(data, ..., draw_indices = c(".chain", ".iteration", ".draw"),
   drop_indices = FALSE)
 }
 \arguments{
@@ -21,12 +21,12 @@ unspread_draws(data, ..., indices = c(".chain", ".iteration", ".draw"),
 
 \item{value}{The name of the column in \code{data} that contains the samples of the variables.}
 
-\item{indices}{Character vector of column names in \code{data} that
+\item{draw_indices}{Character vector of column names in \code{data} that
 should be treated as indices of draws. The default is \code{c(".chain",".iteration",".draw")},
 which are the same names used for chain, iteration, and draw indices returned by
 \code{\link{spread_draws}} or \code{\link{gather_draws}}.}
 
-\item{drop_indices}{Drop the columns specified by \code{.draw_indices} from the resulting data frame. Default \code{FALSE}.}
+\item{drop_indices}{Drop the columns specified by \code{draw_indices} from the resulting data frame. Default \code{FALSE}.}
 }
 \value{
 A data frame.

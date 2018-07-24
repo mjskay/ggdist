@@ -22,13 +22,15 @@
 \title{Point and interval estimates for tidy sample data}
 \usage{
 point_interval(.data, ..., .prob = 0.95, .point = median, .interval = qi,
-  .broom = TRUE)
+  .broom = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row"))
 
 \method{point_interval}{default}(.data, ..., .prob = 0.95, .point = median,
-  .interval = qi, .broom = TRUE)
+  .interval = qi, .broom = TRUE, .exclude = c(".chain", ".iteration",
+  ".draw", ".row"))
 
 \method{point_interval}{numeric}(.data, ..., .prob = 0.95, .point = median,
-  .interval = qi, .broom = FALSE)
+  .interval = qi, .broom = FALSE, .exclude = c(".chain", ".iteration",
+  ".draw", ".row"))
 
 point_intervalh(...)
 
@@ -66,8 +68,8 @@ that contains samples to summarize.}
 
 \item{...}{Bare column names or expressions that, when evaluated in the context of
 \code{.data}, represent samples to summarise. If this is empty, then by default all
-columns that are not group columns or start with \code{"."} (e.g. \code{".chain"}
-or \code{".iteration"}, \code{".draw"}) will be summarised.}
+columns that are not group columns and which are not in \code{.exclude} (by default
+\code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.}
 
 \item{.prob}{vector of probabilities to use for generating intervals. If multiple
 probabilities are provided, multiple rows per group are generated, each with
@@ -85,6 +87,10 @@ name \code{conf.low} for the lower end of the interval and \code{conf.high} for 
 upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
 \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
 of the point estimate to \code{estimate}.}
+
+\item{.exclude}{A character vector of names of columns to be excluded from summarisation
+if no column names are specified to be summarised. Default ignores several meta-data column
+names used in tidybayes.}
 
 \item{x}{vector to summarise (for interval functions: \code{qi} and \code{hdi})}
 }

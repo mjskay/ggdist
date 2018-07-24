@@ -15,9 +15,9 @@ globalVariables(c("..dimension_values"))
 #' @format NULL
 #' @usage NULL
 #' @export
-ungather_samples = function(..., term = "term", estimate = "estimate") {
+ungather_samples = function(..., term = "term", estimate = "estimate", indices = c(".chain", ".iteration", ".draw")) {
   .Deprecated("ungather_draws")                           # nocov
-  ungather_draws(..., variable = term, value = estimate)  # nocov
+  ungather_draws(..., variable = term, value = estimate, draw_indices = indices)  # nocov
 }
 
 
@@ -25,7 +25,7 @@ ungather_samples = function(..., term = "term", estimate = "estimate") {
 #' @rdname unspread_draws
 #' @export
 ungather_draws = function(
-  data, ..., variable = ".variable", value = ".value", indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE
+  data, ..., variable = ".variable", value = ".value", draw_indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE
 ) {
 
   variable_specs = lazy_dots(...)
@@ -36,21 +36,21 @@ ungather_draws = function(
 
   result =
     map(variable_specs, function(variable_spec) {
-      ungather_draws_(data, variable_spec, variable = variable, value = value, indices = indices)
+      ungather_draws_(data, variable_spec, variable = variable, value = value, draw_indices = draw_indices)
     }) %>%
-    reduce(inner_join, by = indices) %>%
+    reduce(inner_join, by = draw_indices) %>%
     as_tibble()
 
   if (drop_indices) {
     result %>%
-      select(-one_of(indices))
+      select(-one_of(draw_indices))
   } else {
     result
   }
 }
 
 ungather_draws_ = function(
-  data, variable_spec, variable = ".variable", value = ".value", indices = c(".chain", ".iteration", ".draw")
+  data, variable_spec, variable = ".variable", value = ".value", draw_indices = c(".chain", ".iteration", ".draw")
 ) {
 
   #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
@@ -68,7 +68,7 @@ ungather_draws_ = function(
   data %<>%
     filter(.data[[!!variable]] %in% !!variable_names) %>%
     ungroup() %>%
-    select_at(c(indices, dimension_names, variable, value)) %>%
+    select_at(c(draw_indices, dimension_names, variable, value)) %>%
     distinct()
 
   if (is.null(dimension_names)) {
