@@ -22,15 +22,16 @@
 \title{Point and interval summaries for tidy data frames of draws from distributions}
 \usage{
 point_interval(.data, ..., .width = 0.95, .point = median, .interval = qi,
-  .broom = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row"))
+  .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw",
+  ".row"))
 
 \method{point_interval}{default}(.data, ..., .width = 0.95, .point = median,
-  .interval = qi, .broom = TRUE, .exclude = c(".chain", ".iteration",
-  ".draw", ".row"))
+  .interval = qi, .simple_names = TRUE, .exclude = c(".chain",
+  ".iteration", ".draw", ".row"))
 
 \method{point_interval}{numeric}(.data, ..., .width = 0.95, .point = median,
-  .interval = qi, .broom = FALSE, .exclude = c(".chain", ".iteration",
-  ".draw", ".row"))
+  .interval = qi, .simple_names = FALSE, .exclude = c(".chain",
+  ".iteration", ".draw", ".row"))
 
 point_intervalh(...)
 
@@ -83,11 +84,13 @@ value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.}
 (\code{.width}) and returns a two-element vector representing the lower and upper
 bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}}
 
-\item{.broom}{When \code{TRUE} and only a single column / vector is to be summarised, use the
+\item{.simple_names}{When \code{TRUE} and only a single column / vector is to be summarised, use the
 name \code{.lower} for the lower end of the interval and \code{.upper} for the
-upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
-\code{.data} is a vector and this is \code{TRUE}, this will also set the column name
-of the point summary to \code{estimate}.}
+upper end. If \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
+of the point summary to \code{.value}. When \code{FALSE} and \code{.data} is a data frame,
+names the lower and upper intervals for each column \code{x} \code{x.lower} and \code{x.upper}.
+When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y}, \code{ymin}
+and \code{ymax} (for use with ggplot).}
 
 \item{.exclude}{A character vector of names of columns to be excluded from summarisation
 if no column names are specified to be summarised. Default ignores several meta-data column
@@ -108,7 +111,7 @@ using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
 
 For a column named \code{x}, the resulting data frame will have a column
 named \code{x} containing its point summary. If there is a single
-column to be summarized and \code{.broom} is \code{TRUE}, the output will
+column to be summarized and \code{.simple_names} is \code{TRUE}, the output will
 also contain columns \code{.lower} (the lower end of the interval),
 \code{.upper} (the upper end of the interval).
 Otherwise, for every summarized column \code{x}, the output will contain

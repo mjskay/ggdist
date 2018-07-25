@@ -233,7 +233,6 @@ spread_samples = function(...) {
 #'
 #' RankCorr %>%
 #'   gather_draws(tau[i], typical_r) %>%
-#'   summarise_at(".value", list)
 #'   median_qi()
 #'
 #' @importFrom lazyeval lazy_dots

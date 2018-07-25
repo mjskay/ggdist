@@ -21,7 +21,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' For a column named \code{x}, the resulting data frame will have a column
 #' named \code{x} containing its point summary. If there is a single
-#' column to be summarized and \code{.broom} is \code{TRUE}, the output will
+#' column to be summarized and \code{.simple_names} is \code{TRUE}, the output will
 #' also contain columns \code{.lower} (the lower end of the interval),
 #' \code{.upper} (the upper end of the interval).
 #' Otherwise, for every summarized column \code{x}, the output will contain
@@ -76,11 +76,13 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @param .interval Interval function, which takes a vector and a probability
 #' (\code{.width}) and returns a two-element vector representing the lower and upper
 #' bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}
-#' @param .broom When \code{TRUE} and only a single column / vector is to be summarised, use the
+#' @param .simple_names When \code{TRUE} and only a single column / vector is to be summarised, use the
 #' name \code{.lower} for the lower end of the interval and \code{.upper} for the
-#' upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
-#' \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
-#' of the point summary to \code{estimate}.
+#' upper end. If \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
+#' of the point summary to \code{.value}. When \code{FALSE} and \code{.data} is a data frame,
+#' names the lower and upper intervals for each column \code{x} \code{x.lower} and \code{x.upper}.
+#' When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y}, \code{ymin}
+#' and \code{ymax} (for use with ggplot).
 #' @param .exclude A character vector of names of columns to be excluded from summarisation
 #' if no column names are specified to be summarised. Default ignores several meta-data column
 #' names used in tidybayes.
@@ -133,7 +135,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @importFrom tidyr unnest
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
-point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .broom = TRUE,
+point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
   .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   UseMethod("point_interval")
@@ -141,11 +143,13 @@ point_interval = function(.data, ..., .width = .95, .point = median, .interval =
 
 #' @rdname point_interval
 #' @export
-point_interval.default = function(.data, ..., .width = .95, .point = median, .interval = qi, .broom = TRUE,
+point_interval.default = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
   .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
+  point_name = str_to_lower(quo_name(enquo(.point)))
+  interval_name = str_to_lower(quo_name(enquo(.interval)))
 
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
@@ -165,7 +169,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     }
   }
 
-  if (length(col_exprs) == 1 && .broom) {
+  if (length(col_exprs) == 1 && .simple_names) {
     # only one column provided => summarise that column and use ".lower" and ".upper" as
     # the generated column names for consistency with tidy() in broom
     col_expr = col_exprs[[1]]
@@ -183,7 +187,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       draws = data[[col_name]]
     }
 
-    map_dfr(.width, function(p) {
+    result = map_dfr(.width, function(p) {
       data[[col_name]] = map_dbl(draws, .point)
 
       intervals = map(draws, .interval, .width = p)
@@ -208,7 +212,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       data = summarise_at(data, names(col_exprs), list)
     }
 
-    map_dfr(.width, function(p) {
+    result = map_dfr(.width, function(p) {
       for (col_name in names(col_exprs)) {
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
@@ -241,15 +245,22 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       data
     })
   }
+
+  result[[".point"]] = point_name
+  result[[".interval"]] = interval_name
+
+  result
 }
 
 #' @rdname point_interval
 #' @importFrom dplyr rename
 #' @export
-point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .broom = FALSE,
+point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = FALSE,
   .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
+  point_name = str_to_lower(quo_name(enquo(.point)))
+  interval_name = str_to_lower(quo_name(enquo(.interval)))
 
   result = map_dfr(.width, function(p) {
     interval = .interval(data, .width = p)
@@ -261,9 +272,12 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
     )
   })
 
-  if (.broom) {
+  result[[".point"]] = point_name
+  result[[".interval"]] = interval_name
+
+  if (.simple_names) {
     result %>%
-      rename(estimate = y, .lower = ymin, .upper = ymax)
+      rename(.value = y, .lower = ymin, .upper = ymax)
   }
   else {
     result

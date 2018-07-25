@@ -205,7 +205,6 @@ RankCorr \%>\%
 
 RankCorr \%>\%
   gather_draws(tau[i], typical_r) \%>\%
-  summarise_at(".value", list)
   median_qi()
 
 }
