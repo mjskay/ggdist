@@ -11,7 +11,7 @@
 #' @usage NULL
 #' @export
 gather_lsmeans_samples = function(...) {
-  .Deprecated("gather_emmeans_draws")  # nocov
+  .Deprecated("gather_emmeans_draws", package = "tidybayes") # nocov
   combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
 }
 
@@ -20,7 +20,7 @@ gather_lsmeans_samples = function(...) {
 #' @usage NULL
 #' @export
 gather_emmeans_samples = function(...) {
-  .Deprecated("gather_emmeans_draws")                # nocov
+  .Deprecated("gather_emmeans_draws", package = "tidybayes") # nocov
   combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
 }
 

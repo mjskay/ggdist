@@ -15,7 +15,7 @@ not lists or data frames will have their bare value (passed through
 Each argument is evaluated using \code{eval_tidy} in an environment that
 includes all list items composed so far.}
 
-\item{.n_name}{A function that is used to form index variables (a variable
+\item{.n_name}{A function that is used to form dimension index variables (a variable
 whose value is number of levels in a factor or the length of a data frame in
 \code{...}). For example, if a data frame with 20 rows and a factor \code{"foo"}
 (having 3 levels) is passed to \code{compose_data}, the list returned by

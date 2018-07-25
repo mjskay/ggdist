@@ -21,44 +21,44 @@
 \alias{mode_hdih}
 \title{Point and interval summaries for tidy data frames of draws from distributions}
 \usage{
-point_interval(.data, ..., .prob = 0.95, .point = median, .interval = qi,
+point_interval(.data, ..., .width = 0.95, .point = median, .interval = qi,
   .broom = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row"))
 
-\method{point_interval}{default}(.data, ..., .prob = 0.95, .point = median,
+\method{point_interval}{default}(.data, ..., .width = 0.95, .point = median,
   .interval = qi, .broom = TRUE, .exclude = c(".chain", ".iteration",
   ".draw", ".row"))
 
-\method{point_interval}{numeric}(.data, ..., .prob = 0.95, .point = median,
+\method{point_interval}{numeric}(.data, ..., .width = 0.95, .point = median,
   .interval = qi, .broom = FALSE, .exclude = c(".chain", ".iteration",
   ".draw", ".row"))
 
 point_intervalh(...)
 
-qi(x, .prob = 0.95)
+qi(x, .width = 0.95)
 
-hdi(x, .prob = 0.95)
+hdi(x, .width = 0.95)
 
-mean_qi(.data, ..., .prob = 0.95)
+mean_qi(.data, ..., .width = 0.95)
 
 mean_qih(...)
 
-median_qi(.data, ..., .prob = 0.95)
+median_qi(.data, ..., .width = 0.95)
 
 median_qih(...)
 
-mode_qi(.data, ..., .prob = 0.95)
+mode_qi(.data, ..., .width = 0.95)
 
 mode_qih(...)
 
-mean_hdi(.data, ..., .prob = 0.95)
+mean_hdi(.data, ..., .width = 0.95)
 
 mean_hdih(...)
 
-median_hdi(.data, ..., .prob = 0.95)
+median_hdi(.data, ..., .width = 0.95)
 
 median_hdih(...)
 
-mode_hdi(.data, ..., .prob = 0.95)
+mode_hdi(.data, ..., .width = 0.95)
 
 mode_hdih(...)
 }
@@ -72,19 +72,19 @@ columns that are not group columns and which are not in \code{.exclude} (by defa
 \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.
 This can be list columns.}
 
-\item{.prob}{vector of probabilities to use for generating intervals. If multiple
-probabilities are provided, multiple rows per group are generated, each with
-a different probabilty interval (and value of the corresponding \code{.prob} column).}
+\item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.
+If multiple probabilities are provided, multiple rows per group are generated, each with
+a different probabilty interval (and value of the corresponding \code{.width} column).}
 
 \item{.point}{Point summary function, which takes a vector and returns a single
 value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.}
 
 \item{.interval}{Interval function, which takes a vector and a probability
-(\code{.prob}) and returns a two-element vector representing the lower and upper
+(\code{.width}) and returns a two-element vector representing the lower and upper
 bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}}
 
 \item{.broom}{When \code{TRUE} and only a single column / vector is to be summarised, use the
-name \code{conf.low} for the lower end of the interval and \code{conf.high} for the
+name \code{.lower} for the lower end of the interval and \code{.upper} for the
 upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
 \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
 of the point summary to \code{estimate}.}
@@ -109,20 +109,20 @@ using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
 For a column named \code{x}, the resulting data frame will have a column
 named \code{x} containing its point summary. If there is a single
 column to be summarized and \code{.broom} is \code{TRUE}, the output will
-also contain columns \code{conf.low} (the lower end of the interval),
-\code{conf.high} (the upper end of the interval).
+also contain columns \code{.lower} (the lower end of the interval),
+\code{.upper} (the upper end of the interval).
 Otherwise, for every summarized column \code{x}, the output will contain
-\code{x.low} (the lower end of the interval) and \code{x.high} (the upper
-end of the interval). Finally, the output will have a \code{.prob} column
+\code{x.lower} (the lower end of the interval) and \code{x.upper} (the upper
+end of the interval). Finally, the output will have a \code{.width} column
 containing the' probability for the interval on each output row.
 
 If \code{.data} includes groups (see e.g. \code{\link[dplyr]{group_by}}),
 the points and intervals are calculated within the groups.
 
 If \code{.data} is a vector, \code{...} is ignored and the result is a
-data frame with one row per value of \code{.prob} and three columns:
+data frame with one row per value of \code{.width} and three columns:
 \code{y} (the point summary), \code{ymin} (the lower end of the interval),
-\code{ymax} (the upper end of the interval), and \code{.prob}, the probability
+\code{ymax} (the upper end of the interval), and \code{.width}, the probability
 corresponding to the interval. This behavior allows \code{point_interval}
 and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 to be easily used to plot intervals in ggplot using methods like
@@ -159,7 +159,7 @@ rnorm(1000) \%>\%
   median_qi()
 
 data.frame(x = rnorm(1000)) \%>\%
-  median_qi(x, .prob = c(.50, .80, .95))
+  median_qi(x, .width = c(.50, .80, .95))
 
 data.frame(
     x = rnorm(1000),
@@ -176,18 +176,18 @@ data.frame(
     group = "b")
   ) \%>\%
   group_by(group) \%>\%
-  median_qi(.prob = c(.50, .80, .95))
+  median_qi(.width = c(.50, .80, .95))
 
 multimodal_draws = data.frame(
     x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))
   )
 
 multimodal_draws \%>\%
-  mode_hdi(.prob = c(.66, .95))
+  mode_hdi(.width = c(.66, .95))
 
 multimodal_draws \%>\%
   ggplot(aes(x = x, y = 0)) +
-  geom_halfeyeh(fun.data = mode_hdih, .prob = c(.66, .95))
+  geom_halfeyeh(fun.data = mode_hdih, .width = c(.66, .95))
 
 }
 \author{

@@ -49,15 +49,16 @@
 #' mapping.
 #' @param ...  Currently unused.
 #' @param point_interval A function that when given a vector should
-#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
-#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
+#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
 #'   will be converted into the \code{y}-based aesthetics for \code{geom_eye} and the
 #'   \code{x}-based aesthetics for \code{geom_eyeh}. See the \code{point_interval} family of functions.
 #' @param fun.data Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
 #'   Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
 #'   are not converted to the correct form automatically.
 #' @param fun.args Optional arguments passed to \code{fun.data}.
-#' @param .prob The \code{.prob} argument passed to \code{fun.data}.
+#' @param .width The \code{.width} argument passed to \code{point_interval}.
+#' @param .prob Deprecated. Use \code{.width} instead.
 #' @param size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
 #' sizes drawn according to \code{size_range} (see the documentation for that argument, below.)
 #' @param size_range This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
@@ -111,9 +112,11 @@ geom_eye = function(
   point_interval = median_qi,
   fun.data = NULL,
   fun.args = list(),
-  .prob = c(.66, .95),
+  .width = c(.66, .95),
+  .prob,
   color = NULL, size = NULL, size_domain = NULL, size_range = NULL, fatten_point = NULL
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
 
   fun.data = fun.data %||% vertical_aes(point_interval)
 
@@ -127,7 +130,7 @@ geom_eye = function(
 
   #build interval annotations
   interval.args =
-    list(mapping = mapping, position = position, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
+    list(mapping = mapping, position = position, data = data, fun.data = fun.data, fill = NA, .width = .width, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
     {if (!is.null(size_domain)) modifyList(., list(size_domain = size_domain)) else .} %>%

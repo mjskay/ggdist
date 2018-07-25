@@ -22,20 +22,20 @@ globalVariables(c("y", "ymin", "ymax"))
 #' For a column named \code{x}, the resulting data frame will have a column
 #' named \code{x} containing its point summary. If there is a single
 #' column to be summarized and \code{.broom} is \code{TRUE}, the output will
-#' also contain columns \code{conf.low} (the lower end of the interval),
-#' \code{conf.high} (the upper end of the interval).
+#' also contain columns \code{.lower} (the lower end of the interval),
+#' \code{.upper} (the upper end of the interval).
 #' Otherwise, for every summarized column \code{x}, the output will contain
-#' \code{x.low} (the lower end of the interval) and \code{x.high} (the upper
-#' end of the interval). Finally, the output will have a \code{.prob} column
+#' \code{x.lower} (the lower end of the interval) and \code{x.upper} (the upper
+#' end of the interval). Finally, the output will have a \code{.width} column
 #' containing the' probability for the interval on each output row.
 #'
 #' If \code{.data} includes groups (see e.g. \code{\link[dplyr]{group_by}}),
 #' the points and intervals are calculated within the groups.
 #'
 #' If \code{.data} is a vector, \code{...} is ignored and the result is a
-#' data frame with one row per value of \code{.prob} and three columns:
+#' data frame with one row per value of \code{.width} and three columns:
 #' \code{y} (the point summary), \code{ymin} (the lower end of the interval),
-#' \code{ymax} (the upper end of the interval), and \code{.prob}, the probability
+#' \code{ymax} (the upper end of the interval), and \code{.width}, the probability
 #' corresponding to the interval. This behavior allows \code{point_interval}
 #' and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 #' to be easily used to plot intervals in ggplot using methods like
@@ -68,16 +68,16 @@ globalVariables(c("y", "ymin", "ymax"))
 #' columns that are not group columns and which are not in \code{.exclude} (by default
 #' \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.
 #' This can be list columns.
-#' @param .prob vector of probabilities to use for generating intervals. If multiple
-#' probabilities are provided, multiple rows per group are generated, each with
-#' a different probabilty interval (and value of the corresponding \code{.prob} column).
+#' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
+#' If multiple probabilities are provided, multiple rows per group are generated, each with
+#' a different probabilty interval (and value of the corresponding \code{.width} column).
 #' @param .point Point summary function, which takes a vector and returns a single
 #' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
 #' @param .interval Interval function, which takes a vector and a probability
-#' (\code{.prob}) and returns a two-element vector representing the lower and upper
+#' (\code{.width}) and returns a two-element vector representing the lower and upper
 #' bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}
 #' @param .broom When \code{TRUE} and only a single column / vector is to be summarised, use the
-#' name \code{conf.low} for the lower end of the interval and \code{conf.high} for the
+#' name \code{.lower} for the lower end of the interval and \code{.upper} for the
 #' upper end for consistency with \code{\link[broom]{tidy}} in the broom package. If
 #' \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
 #' of the point summary to \code{estimate}.
@@ -97,7 +97,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   median_qi()
 #'
 #' data.frame(x = rnorm(1000)) %>%
-#'   median_qi(x, .prob = c(.50, .80, .95))
+#'   median_qi(x, .width = c(.50, .80, .95))
 #'
 #' data.frame(
 #'     x = rnorm(1000),
@@ -114,26 +114,26 @@ globalVariables(c("y", "ymin", "ymax"))
 #'     group = "b")
 #'   ) %>%
 #'   group_by(group) %>%
-#'   median_qi(.prob = c(.50, .80, .95))
+#'   median_qi(.width = c(.50, .80, .95))
 #'
 #' multimodal_draws = data.frame(
 #'     x = c(rnorm(5000, 0, 1), rnorm(2500, 4, 1))
 #'   )
 #'
 #' multimodal_draws %>%
-#'   mode_hdi(.prob = c(.66, .95))
+#'   mode_hdi(.width = c(.66, .95))
 #'
 #' multimodal_draws %>%
 #'   ggplot(aes(x = x, y = 0)) +
-#'   geom_halfeyeh(fun.data = mode_hdih, .prob = c(.66, .95))
+#'   geom_halfeyeh(fun.data = mode_hdih, .width = c(.66, .95))
 #'
 #' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
-#' @importFrom dplyr do bind_cols group_vars
+#' @importFrom dplyr do bind_cols group_vars summarise_at
 #' @importFrom stringi stri_startswith_fixed
 #' @importFrom tidyr unnest
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
-point_interval = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE,
+point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .broom = TRUE,
   .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   UseMethod("point_interval")
@@ -141,7 +141,7 @@ point_interval = function(.data, ..., .prob=.95, .point = median, .interval = qi
 
 #' @rdname point_interval
 #' @export
-point_interval.default = function(.data, ..., .prob=.95, .point = median, .interval = qi, .broom = TRUE,
+point_interval.default = function(.data, ..., .width = .95, .point = median, .interval = qi, .broom = TRUE,
   .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
@@ -166,7 +166,7 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
   }
 
   if (length(col_exprs) == 1 && .broom) {
-    # only one column provided => summarise that column and use "conf.low" and "conf.high" as
+    # only one column provided => summarise that column and use ".lower" and ".upper" as
     # the generated column names for consistency with tidy() in broom
     col_expr = col_exprs[[1]]
     col_name = names(col_exprs)
@@ -183,17 +183,17 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
       draws = data[[col_name]]
     }
 
-    map_dfr(.prob, function(p) {
+    map_dfr(.width, function(p) {
       data[[col_name]] = map_dbl(draws, .point)
 
-      intervals = map(draws, .interval, .prob = p)
+      intervals = map(draws, .interval, .width = p)
       # can't use map_dbl here because sometimes (e.g. with hdi) these can
       # return multiple intervals, hence map() here and unnest() below
-      data[["conf.low"]] = map(intervals, ~ .[, 1])
-      data[["conf.high"]] = map(intervals, ~ .[, 2])
-      data = unnest(data, conf.low, conf.high)
+      data[[".lower"]] = map(intervals, ~ .[, 1])
+      data[[".upper"]] = map(intervals, ~ .[, 2])
+      data = unnest(data, .lower, .upper)
 
-      data[[".prob"]] = p
+      data[[".width"]] = p
 
       data
     })
@@ -208,14 +208,14 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
       data = summarise_at(data, names(col_exprs), list)
     }
 
-    map_dfr(.prob, function(p) {
+    map_dfr(.width, function(p) {
       for (col_name in names(col_exprs)) {
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
 
         data[[col_name]] = map_dbl(draws, .point)
 
-        intervals = map(draws, .interval, .prob = p)
+        intervals = map(draws, .interval, .width = p)
 
         # can't use map_dbl here because sometimes (e.g. with hdi) these can
         # return multiple intervals, which we need to check for (since it is
@@ -232,11 +232,11 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
             "returns exactly one interval per probability level."
           )
         }
-        data[[paste0(col_name, ".low")]] = unlist(lower)
-        data[[paste0(col_name, ".high")]] = unlist(upper)
+        data[[paste0(col_name, ".lower")]] = unlist(lower)
+        data[[paste0(col_name, ".upper")]] = unlist(upper)
       }
 
-      data[[".prob"]] = p
+      data[[".width"]] = p
 
       data
     })
@@ -246,24 +246,24 @@ point_interval.default = function(.data, ..., .prob=.95, .point = median, .inter
 #' @rdname point_interval
 #' @importFrom dplyr rename
 #' @export
-point_interval.numeric = function(.data, ..., .prob = .95, .point = median, .interval = qi, .broom = FALSE,
+point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .broom = FALSE,
   .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
 
-  result = map_dfr(.prob, function(p) {
-    interval = .interval(data, .prob = p)
+  result = map_dfr(.width, function(p) {
+    interval = .interval(data, .width = p)
     data.frame(
       y = .point(data),
       ymin = interval[, 1],
       ymax = interval[, 2],
-      .prob = p
+      .width = p
     )
   })
 
   if (.broom) {
     result %>%
-      rename(estimate = y, conf.low = ymin, conf.high = ymax)
+      rename(estimate = y, .lower = ymin, .upper = ymax)
   }
   else {
     result
@@ -277,29 +277,29 @@ point_intervalh = flip_aes(point_interval)
 #' @importFrom stats quantile
 #' @export
 #' @rdname point_interval
-qi = function(x, .prob = .95) {
-  lower_prob = (1 - .prob) / 2
-  upper_prob = (1 + .prob) / 2
+qi = function(x, .width = .95) {
+  lower_prob = (1 - .width) / 2
+  upper_prob = (1 + .width) / 2
   matrix(quantile(x, c(lower_prob, upper_prob)), ncol = 2)
 }
 
 #' @importFrom coda HPDinterval as.mcmc
 #' @export
 #' @rdname point_interval
-hdi = function(x, .prob = .95) {
-  intervals = HDInterval::hdi(density(x), credMass = .prob, allowSplit = TRUE)
+hdi = function(x, .width = .95) {
+  intervals = HDInterval::hdi(density(x), credMass = .width, allowSplit = TRUE)
   if (nrow(intervals) == 1) {
     # the above method tends to be a little conservative on unimodal distributions, so if the
     # result is unimodal, switch to the method below (which will be slightly narrower)
-    intervals = HDInterval::hdi(x, credMass = .prob)
+    intervals = HDInterval::hdi(x, credMass = .width)
   }
   matrix(intervals, ncol = 2)
 }
 
 #' @export
 #' @rdname point_interval
-mean_qi = function(.data, ..., .prob = .95)
-  point_interval(.data, ..., .prob = .prob, .point = mean, .interval = qi)
+mean_qi = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = mean, .interval = qi)
 
 #' @export
 #' @rdname point_interval
@@ -307,8 +307,8 @@ mean_qih = flip_aes(mean_qi)
 
 #' @export
 #' @rdname point_interval
-median_qi = function(.data, ..., .prob = .95)
-  point_interval(.data, ..., .prob = .prob, .point = median, .interval = qi)
+median_qi = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = median, .interval = qi)
 
 #' @export
 #' @rdname point_interval
@@ -317,8 +317,8 @@ median_qih = flip_aes(median_qi)
 #' @importFrom LaplacesDemon Mode
 #' @export
 #' @rdname point_interval
-mode_qi = function(.data, ..., .prob = .95)
-  point_interval(.data, ..., .prob = .prob, .point = Mode, .interval = qi)
+mode_qi = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = Mode, .interval = qi)
 
 #' @export
 #' @rdname point_interval
@@ -326,8 +326,8 @@ mode_qih = flip_aes(mode_qi)
 
 #' @export
 #' @rdname point_interval
-mean_hdi = function(.data, ..., .prob = .95)
-  point_interval(.data, ..., .prob = .prob, .point = mean, .interval = hdi)
+mean_hdi = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = mean, .interval = hdi)
 
 #' @export
 #' @rdname point_interval
@@ -335,8 +335,8 @@ mean_hdih = flip_aes(mean_hdi)
 
 #' @export
 #' @rdname point_interval
-median_hdi = function(.data, ..., .prob = .95)
-  point_interval(.data, ..., .prob = .prob, .point = median, .interval = hdi)
+median_hdi = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = median, .interval = hdi)
 
 #' @export
 #' @rdname point_interval
@@ -345,8 +345,8 @@ median_hdih = flip_aes(median_hdi)
 #' @importFrom LaplacesDemon Mode
 #' @export
 #' @rdname point_interval
-mode_hdi = function(.data, ..., .prob = .95)
-  point_interval(.data, ..., .prob = .prob, .point = Mode, .interval = hdi)
+mode_hdi = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = Mode, .interval = hdi)
 
 #' @export
 #' @rdname point_interval

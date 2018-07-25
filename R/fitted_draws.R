@@ -12,7 +12,7 @@
 #' @usage NULL
 #' @export
 fitted_samples = function(...) {
-  .Deprecated("fitted_draws")                  # nocov
+  .Deprecated("fitted_draws", package = "tidybayes") # nocov
   fitted_samples_(...)                         # nocov
 }
 fitted_samples_ = function(model, newdata, var = "estimate", ...) {
@@ -26,7 +26,7 @@ fitted_samples_ = function(model, newdata, var = "estimate", ...) {
 #' @usage NULL
 #' @export
 add_fitted_samples = function(newdata, model, ...) {
-  .Deprecated("add_fitted_draws")              # nocov
+  .Deprecated("add_fitted_draws", package = "tidybayes") # nocov
   fitted_samples_(model, newdata, ...)         # nocov
 }
 

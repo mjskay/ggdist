@@ -8,14 +8,16 @@
 geom_eye(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
   violin.color = NA, ..., point_interval = median_qi, fun.data = NULL,
-  fun.args = list(), .prob = c(0.66, 0.95), color = NULL, size = NULL,
-  size_domain = NULL, size_range = NULL, fatten_point = NULL)
+  fun.args = list(), .width = c(0.66, 0.95), .prob, color = NULL,
+  size = NULL, size_domain = NULL, size_range = NULL,
+  fatten_point = NULL)
 
 geom_eyeh(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
   violin.color = NA, ..., point_interval = median_qi, fun.data = NULL,
-  fun.args = list(), .prob = c(0.66, 0.95), color = NULL, size = NULL,
-  size_domain = NULL, size_range = NULL, fatten_point = NULL)
+  fun.args = list(), .width = c(0.66, 0.95), .prob, color = NULL,
+  size = NULL, size_domain = NULL, size_range = NULL,
+  fatten_point = NULL)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -50,8 +52,8 @@ mapping.}
 \item{...}{Currently unused.}
 
 \item{point_interval}{A function that when given a vector should
-return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
-\code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
+\code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
 will be converted into the \code{y}-based aesthetics for \code{geom_eye} and the
 \code{x}-based aesthetics for \code{geom_eyeh}. See the \code{point_interval} family of functions.}
 
@@ -61,7 +63,9 @@ are not converted to the correct form automatically.}
 
 \item{fun.args}{Optional arguments passed to \code{fun.data}.}
 
-\item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}.}
+
+\item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{color}{Passed to \code{\link{stat_pointinterval}}. Color of the point
 summary and uncertainty interval.}

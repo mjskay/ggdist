@@ -6,7 +6,7 @@
 
 # Names that should be suppressed from global variable check by codetools
 # Names used broadly should be put in _global_variables.R
-globalVariables(c("...prob.."))
+globalVariables(c("...width.."))
 
 
 #' Point summary + multiple probability interval plots (ggplot stat)
@@ -28,14 +28,15 @@ globalVariables(c("...prob.."))
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
 #' @param point_interval A function that when given a vector should
-#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
-#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
+#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
 #'   will be converted into the \code{y}-based aesthetics for \code{stat_pointinterval} and the
 #'   \code{x}-based aesthetics for \code{stat_pointintervalh}. See the \code{point_interval} family of functions.
 #' @param fun.data Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
 #'   Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
 #'   are not converted to the correct form automatically.
-#' @param .prob The \code{.prob} argument passed to \code{fun.data}.
+#' @param .width The \code{.width} argument passed to \code{point_interval}.
+#' @param .prob Deprecated. Use \code{.width} instead.
 #' @param fun.args Other optional arguments passed to \code{fun.data}.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 #' values are silently removed.
@@ -58,12 +59,12 @@ globalVariables(c("...prob.."))
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%
 #'   ggplot(aes(y = i, x = u_tau)) +
-#'   stat_pointintervalh(.prob = c(.66, .95))
+#'   stat_pointintervalh(.width = c(.66, .95))
 #'
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%
 #'   ggplot(aes(x = i, y = u_tau)) +
-#'   stat_pointinterval(.prob = c(.66, .95))
+#'   stat_pointinterval(.width = c(.66, .95))
 #'
 #' @export
 stat_pointinterval <- function(mapping = NULL, data = NULL,
@@ -71,12 +72,14 @@ stat_pointinterval <- function(mapping = NULL, data = NULL,
   ...,
   point_interval = median_qi,
   fun.data = NULL,
-  .prob = c(.66, .95),
+  .width = c(.66, .95),
+  .prob,
   fun.args = list(),
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
 
   fun.data = fun.data %||% vertical_aes(point_interval)
 
@@ -90,7 +93,7 @@ stat_pointinterval <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     params = list(
       fun.data = fun.data,
-      .prob = .prob,
+      .width = .width,
       fun.args = fun.args,
       na.rm = na.rm,
       ...
@@ -98,7 +101,7 @@ stat_pointinterval <- function(mapping = NULL, data = NULL,
   )
 
   #provide some default computed aesthetics
-  default_computed_aesthetics = aes(size = -...prob..)  # nolint
+  default_computed_aesthetics = aes(size = -...width..)  # nolint
 
   compute_aesthetics = l$compute_aesthetics
   l$compute_aesthetics = function(self, data, plot) {
@@ -117,11 +120,11 @@ stat_pointinterval <- function(mapping = NULL, data = NULL,
 
 #' @importFrom plyr defaults
 StatPointinterval <- ggproto("StatPointinterval", StatSummary,
-  compute_panel = function(data, scales, fun.data = median_qi, .prob = c(.66, .95),
+  compute_panel = function(data, scales, fun.data = median_qi, .width = c(.66, .95),
     fun.args = list(), na.rm = FALSE
   ) {
 
-    fun.args = modifyList(list(.prob = .prob), fun.args)
+    fun.args = modifyList(list(.width = .width), fun.args)
 
     # Function that takes complete data frame as input
     fun.data = match.fun(fun.data)

@@ -50,8 +50,8 @@ this object.}
 \code{as_data_list.data.frame} to ensure that columns from a data frame with
 only one row are still returned as arrays instead of scalars.}
 
-\item{.n_name}{A function that is used to form index variables (a variable
-whose value is the length of a factor or a data frame in \code{...}). For
+\item{.n_name}{A function that is used to form variables storing the number of
+rows in data frames or the number of levels in factors in \code{...}). For
 example, if a factor with \code{name = "foo"} (having three levels) is
 passed in, the list returned will include an element named
 \code{.n_name("foo")}, which by default would be "n_foo", containing the

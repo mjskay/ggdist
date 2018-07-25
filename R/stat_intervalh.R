@@ -11,15 +11,18 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
   ...,
   point_interval = median_qi,
   fun.data = NULL,
-  .prob = c(.50, .80, .95),
+  .width = c(.50, .80, .95),
+  .prob,
   fun.args = list(),
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
+
   # Probs are drawn on top of each other in order by geom_intervalh, so we have to sort in decreasing order
   # to make sure the largest interval is not drawn last (over-writing all other intervals)
-  .prob %<>% sort(decreasing = TRUE)
+  .width %<>% sort(decreasing = TRUE)
 
   fun.data = fun.data %||% horizontal_aes(point_interval)
 
@@ -35,7 +38,7 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     params = list(
       fun.data = fun.data,
-      .prob = .prob,
+      .width = .width,
       fun.args = fun.args,
       na.rm = na.rm,
       ...
@@ -43,7 +46,7 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
   )
 
   #provide some default computed aesthetics
-  default_computed_aesthetics = aes(color = forcats::fct_rev(ordered(...prob..)))  # nolint
+  default_computed_aesthetics = aes(color = forcats::fct_rev(ordered(...width..)))  # nolint
 
   compute_aesthetics = l$compute_aesthetics
   l$compute_aesthetics = function(self, data, plot) {

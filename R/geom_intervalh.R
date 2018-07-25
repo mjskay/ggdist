@@ -4,10 +4,6 @@
 ###############################################################################
 
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c("conf.low", "conf.high", ".prob"))
-
 
 #' @rdname geom_interval
 #' @importFrom ggstance geom_linerangeh GeomLinerangeh
@@ -35,7 +31,7 @@ geom_intervalh <- function(mapping = NULL, data = NULL,
   )
 
   #provide some default computed aesthetics
-  default_computed_aesthetics = aes(xmin = conf.low, xmax = conf.high, color = forcats::fct_rev(ordered(.prob)))
+  default_computed_aesthetics = aes(xmin = .lower, xmax = .upper, color = forcats::fct_rev(ordered(.width)))
 
   compute_aesthetics = l$compute_aesthetics
   l$compute_aesthetics = function(self, data, plot) {

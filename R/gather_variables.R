@@ -12,7 +12,7 @@
 #' @usage NULL
 #' @export
 gather_terms = function(...) {
-  .Deprecated("gather_variables")       # nocov
+  .Deprecated("gather_variables", package = "tidybayes") # nocov
   to_broom_names(gather_variables(...)) # nocov
 }
 

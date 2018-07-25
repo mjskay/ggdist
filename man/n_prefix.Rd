@@ -2,7 +2,7 @@
 % Please edit documentation in R/compose_data.R
 \name{n_prefix}
 \alias{n_prefix}
-\title{Prefix function generator for composing index columns}
+\title{Prefix function generator for composing dimension index columns}
 \usage{
 n_prefix(prefix)
 }
@@ -17,7 +17,8 @@ and returns \code{paste0(prefix, "_", name)}, unless \code{name} is empty, in
 which case it will return \code{prefix}.
 
 \code{n_prefix("n")} is the default method that \code{\link{compose_data}} uses to
-generate column names for factor indices. Under this method, given a data frame
+generate column names for variables storing the number of levels in a factor. Under
+this method, given a data frame
 \code{df} with a factor column \code{"foo"} containing 5 levels, the results of
 \code{compose_data(df)} will include an element named \code{"n"} (the result of
 \code{n_prefix("n")("")}) equal to the number of rows in \code{df} and an element

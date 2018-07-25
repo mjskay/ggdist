@@ -23,3 +23,21 @@ combine_chains_for_deprecated_ = function(x) {
   x$.draw = NULL
   x
 }
+
+.Deprecated_argument_alias = function(new_arg, old_arg, fun = as.character(sys.call(sys.parent()))[1L]) {
+  if (missing(old_arg)) {
+    new_arg
+  } else {
+    new_name = quo_name(enquo(new_arg))
+    old_name = quo_name(enquo(old_arg))
+
+    warning(
+      "In ", fun, "(): The `", old_name, "` argument is a deprecated alias for `",
+      new_name, "`. Use `", new_name, "` instead.",
+      call. = FALSE
+    )
+
+    old_arg
+  }
+}
+

@@ -15,7 +15,7 @@ globalVariables(c(".."))
 #' @usage NULL
 #' @export
 extract_samples = function(...) {
-  .Deprecated("spread_draws")     # nocov
+  .Deprecated("spread_draws", package = "tidybayes") # nocov
   spread_draws(...)               # nocov
 }
 
@@ -24,7 +24,7 @@ extract_samples = function(...) {
 #' @usage NULL
 #' @export
 tidy_samples = function(...) {
-  .Deprecated("spread_draws")    # nocov
+  .Deprecated("spread_draws", package = "tidybayes") # nocov
   spread_draws(...)              # nocov
 }
 
@@ -33,7 +33,7 @@ tidy_samples = function(...) {
 #' @usage NULL
 #' @export
 spread_samples = function(...) {
-  .Deprecated("spread_draws")    # nocov
+  .Deprecated("spread_draws", package = "tidybayes") # nocov
   spread_draws(...)              # nocov
 }
 
@@ -216,7 +216,7 @@ spread_samples = function(...) {
 #' @keywords manip
 #' @examples
 #'
-#' library(magrittr)
+#' library(dplyr)
 #' library(ggplot2)
 #'
 #' data(RankCorr, package = "tidybayes")

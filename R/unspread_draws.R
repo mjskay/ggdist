@@ -16,7 +16,7 @@ globalVariables(c("..dimension_values"))
 #' @usage NULL
 #' @export
 unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
-  .Deprecated("unspread_draws")     # nocov
+  .Deprecated("unspread_draws", package = "tidybayes") # nocov
   unspread_draws(..., draw_indices = indices)               # nocov
 }
 

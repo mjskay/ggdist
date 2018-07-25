@@ -45,11 +45,11 @@ test_that("median_qi works on a grouped variable", {
     median_qi(tau, .broom = FALSE)
 
   expect_equal(result.broom$tau, ref$tau)
-  expect_equal(result.broom$conf.low, ref$tau.lower)
-  expect_equal(result.broom$conf.high, ref$tau.upper)
+  expect_equal(result.broom$.lower, ref$tau.lower)
+  expect_equal(result.broom$.upper, ref$tau.upper)
   expect_equal(result$tau, ref$tau)
-  expect_equal(result$tau.low, ref$tau.lower)
-  expect_equal(result$tau.high, ref$tau.upper)
+  expect_equal(result$tau.lower, ref$tau.lower)
+  expect_equal(result$tau.upper, ref$tau.upper)
 })
 
 test_that("mean_qi works on multiple columns", {
@@ -72,11 +72,11 @@ test_that("mean_qi works on multiple columns", {
     mean_qi(a, b)
 
   expect_equal(result$a, ref$a)
-  expect_equal(result$a.low, ref$a.lower)
-  expect_equal(result$a.high, ref$a.upper)
+  expect_equal(result$a.lower, ref$a.lower)
+  expect_equal(result$a.upper, ref$a.upper)
   expect_equal(result$b, ref$b)
-  expect_equal(result$b.low, ref$b.lower)
-  expect_equal(result$b.high, ref$b.upper)
+  expect_equal(result$b.lower, ref$b.lower)
+  expect_equal(result$b.upper, ref$b.upper)
 })
 
 test_that("mean_qi works on non-95% probs", {
@@ -90,11 +90,11 @@ test_that("mean_qi works on non-95% probs", {
     )
 
   result = samples %>%
-    mean_qi(tau, .prob = .5)
+    mean_qi(tau, .width = .5)
 
   expect_equal(result$tau, ref$tau)
-  expect_equal(result$conf.low, ref$tau.lower)
-  expect_equal(result$conf.high, ref$tau.upper)
+  expect_equal(result$.lower, ref$tau.lower)
+  expect_equal(result$.upper, ref$tau.upper)
 })
 
 test_that("mean_qi works on multiple probs with groups", {
@@ -103,33 +103,33 @@ test_that("mean_qi works on multiple probs with groups", {
   ref95 = samples %>%
     group_by(ff) %>%
     summarise(
-      conf.low = as.vector(quantile(tau, .025)),
-      conf.high = as.vector(quantile(tau, .975)),
+      .lower = as.vector(quantile(tau, .025)),
+      .upper = as.vector(quantile(tau, .975)),
       tau = mean(tau),
-      .prob = .95
+      .width = .95
     ) %>%
-    select(ff, tau, conf.low, conf.high, .prob)
+    select(ff, tau, .lower, .upper, .width)
 
   ref50 = samples %>%
     group_by(ff) %>%
     summarise(
-      conf.low = as.vector(quantile(tau, .25)),
-      conf.high = as.vector(quantile(tau, .75)),
+      .lower = as.vector(quantile(tau, .25)),
+      .upper = as.vector(quantile(tau, .75)),
       tau = mean(tau),
-      .prob = .5
+      .width = .5
     ) %>%
-    select(ff, tau, conf.low, conf.high, .prob)
+    select(ff, tau, .lower, .upper, .width)
 
   ref = bind_rows(ref50, ref95)
 
   result = samples %>%
     group_by(ff) %>%
-    mean_qi(tau, .prob = c(.5, .95))
+    mean_qi(tau, .width = c(.5, .95))
 
   result_list = samples %>%
     group_by(ff) %>%
     summarise_at("tau", list) %>%
-    mean_qi(tau, .prob = c(.5, .95))
+    mean_qi(tau, .width = c(.5, .95))
 
   expect_equal(as.data.frame(result), as.data.frame(ref))
   expect_equal(as.data.frame(result_list), as.data.frame(ref))
@@ -142,39 +142,39 @@ test_that("mean_qi works on multiple probs with multiple vars", {
   ref95 = samples %>%
     group_by(ff) %>%
     summarise(
-      tau.low = as.vector(quantile(tau, .025)),
-      tau.high = as.vector(quantile(tau, .975)),
+      tau.lower = as.vector(quantile(tau, .025)),
+      tau.upper = as.vector(quantile(tau, .975)),
       tau = mean(tau),
-      tau2.low = as.vector(quantile(tau2, .025)),
-      tau2.high = as.vector(quantile(tau2, .975)),
+      tau2.lower = as.vector(quantile(tau2, .025)),
+      tau2.upper = as.vector(quantile(tau2, .975)),
       tau2 = mean(tau2),
-      .prob = .95
+      .width = .95
     ) %>%
-    select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, .prob)
+    select(ff, tau, tau.lower, tau.upper, tau2, tau2.lower, tau2.upper, .width)
 
   ref50 = samples %>%
     group_by(ff) %>%
     summarise(
-      tau.low = as.vector(quantile(tau, .25)),
-      tau.high = as.vector(quantile(tau, .75)),
+      tau.lower = as.vector(quantile(tau, .25)),
+      tau.upper = as.vector(quantile(tau, .75)),
       tau = mean(tau),
-      tau2.low = as.vector(quantile(tau2, .25)),
-      tau2.high = as.vector(quantile(tau2, .75)),
+      tau2.lower = as.vector(quantile(tau2, .25)),
+      tau2.upper = as.vector(quantile(tau2, .75)),
       tau2 = mean(tau2),
-      .prob = .50
+      .width = .50
     ) %>%
-    select(ff, tau, tau.low, tau.high, tau2, tau2.low, tau2.high, .prob)
+    select(ff, tau, tau.lower, tau.upper, tau2, tau2.lower, tau2.upper, .width)
 
   ref = bind_rows(ref50, ref95)
 
   result = samples %>%
     group_by(ff) %>%
-    mean_qi(tau, tau2, .prob = c(.5, .95))
+    mean_qi(tau, tau2, .width = c(.5, .95))
 
   result_list = samples %>%
     group_by(ff) %>%
     summarise_at(c("tau", "tau2"), list) %>%
-    mean_qi(tau, tau2, .prob = c(.5, .95))
+    mean_qi(tau, tau2, .width = c(.5, .95))
 
   expect_equal(as.data.frame(result), as.data.frame(ref))
   expect_equal(as.data.frame(result_list), as.data.frame(ref))
@@ -203,12 +203,12 @@ test_that("multiple-response intervals work", {
 
   ref = dd %>%
     summarise(
-      conf.low = list(hdi(x, .prob = .5)[, 1]),
-      conf.high = list(hdi(x, .prob = .5)[, 2]),
+      .lower = list(hdi(x, .width = .5)[, 1]),
+      .upper = list(hdi(x, .width = .5)[, 2]),
       x = mean(x),
-      .prob = .5
+      .width = .5
     ) %>%
     unnest()
 
-  expect_equal(mean_hdi(dd, x, .prob = .5), ref)
+  expect_equal(mean_hdi(dd, x, .width = .5), ref)
 })

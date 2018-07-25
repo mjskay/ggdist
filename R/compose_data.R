@@ -45,8 +45,8 @@
 #' 1-dimensional array with one element. This is used by
 #' \code{as_data_list.data.frame} to ensure that columns from a data frame with
 #' only one row are still returned as arrays instead of scalars.
-#' @param .n_name A function that is used to form index variables (a variable
-#' whose value is the length of a factor or a data frame in \code{...}). For
+#' @param .n_name A function that is used to form variables storing the number of
+#' rows in data frames or the number of levels in factors in \code{...}). For
 #' example, if a factor with \code{name = "foo"} (having three levels) is
 #' passed in, the list returned will include an element named
 #' \code{.n_name("foo")}, which by default would be "n_foo", containing the
@@ -118,7 +118,7 @@ as_data_list.factor = function(object, name = "", .n_name = n_prefix("n"), ...) 
   data = as_data_list(as.numeric(object), name = name, .n_name = .n_name, ...)
   if (any(table(object) == 0)) {
     warning("Some levels of factor ", deparse0(name),
-      " are unused. This may cause issues if you are using it as an index in a model.")
+      " are unused. This may cause issues if you are using it as the dimension for a variable in a model.")
   }
   data[[.n_name(name)]] = length(levels(object))
   data
@@ -213,7 +213,7 @@ as_data_list.data_list = function(object, name="", ...) {
 #' \code{make.names}) used as the \code{name} argument to \code{as_data_list}.
 #' Each argument is evaluated using \code{eval_tidy} in an environment that
 #' includes all list items composed so far.
-#' @param .n_name A function that is used to form index variables (a variable
+#' @param .n_name A function that is used to form dimension index variables (a variable
 #' whose value is number of levels in a factor or the length of a data frame in
 #' \code{...}). For example, if a data frame with 20 rows and a factor \code{"foo"}
 #' (having 3 levels) is passed to \code{compose_data}, the list returned by
@@ -277,7 +277,7 @@ compose_data = function(..., .n_name = n_prefix("n")) {
 }
 
 
-#' Prefix function generator for composing index columns
+#' Prefix function generator for composing dimension index columns
 #'
 #' Generates a function for generating names of index columns for factors in
 #' \code{\link{compose_data}} by prefixing a character vector to the original
@@ -293,7 +293,8 @@ compose_data = function(..., .n_name = n_prefix("n")) {
 #' which case it will return \code{prefix}.
 #'
 #' \code{n_prefix("n")} is the default method that \code{\link{compose_data}} uses to
-#' generate column names for factor indices. Under this method, given a data frame
+#' generate column names for variables storing the number of levels in a factor. Under
+#' this method, given a data frame
 #' \code{df} with a factor column \code{"foo"} containing 5 levels, the results of
 #' \code{compose_data(df)} will include an element named \code{"n"} (the result of
 #' \code{n_prefix("n")("")}) equal to the number of rows in \code{df} and an element

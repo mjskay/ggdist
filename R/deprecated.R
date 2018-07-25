@@ -65,6 +65,6 @@
 #' @import ggplot2
 #' @export
 ggeye = function(data = NULL, mapping = NULL, ...) {
-  .Deprecated("geom_eyeh")
+  .Deprecated("geom_eyeh", package = "tidybayes")
   ggplot(data = data, mapping = mapping) + geom_eye(...) + coord_flip()
 }

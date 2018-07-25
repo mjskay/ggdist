@@ -83,7 +83,7 @@
 #' @import dplyr
 #' @export
 predict_curve = function(data, formula, summary = median, ...) {
-  .Deprecated("density_bins",
+  .Deprecated("density_bins", package = "tidybayes",
     paste("predict_curve and predict_curve_density will be removed in a future version;",
       "use modelr::data_grid + point_interval, or modelr::data_grid + dplyr::do + density_bins instead."))
 

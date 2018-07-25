@@ -12,7 +12,7 @@
 #' @usage NULL
 #' @export
 predicted_samples = function(...) {
-  .Deprecated("predicted_draws")                  # nocov
+  .Deprecated("predicted_draws", package = "tidybayes") # nocov
   predicted_samples_(...)                         # nocov
 }
 predicted_samples_ = function(model, newdata, var = "pred", ...) {
@@ -27,7 +27,7 @@ predicted_samples_ = function(model, newdata, var = "pred", ...) {
 #' @usage NULL
 #' @export
 add_predicted_samples = function(newdata, model, ...) {
-  .Deprecated("add_predicted_draws")              # nocov
+  .Deprecated("add_predicted_draws", package = "tidybayes") # nocov
   predicted_samples_(model, newdata, ...)         # nocov
 }
 
@@ -137,7 +137,7 @@ add_predicted_samples = function(newdata, model, ...) {
 #'   data_grid(hp = seq_range(hp, n = 101)) %>%
 #'   add_predicted_draws(m_mpg) %>%
 #'   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-#'   stat_lineribbon(aes(y = .prediction), .prob = c(.99, .95, .8, .5), alpha = 0.25) +
+#'   stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), alpha = 0.25) +
 #'   geom_point(data = mtcars) +
 #'   scale_fill_brewer(palette = "Greys")
 #'

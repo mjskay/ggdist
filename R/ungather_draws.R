@@ -16,7 +16,7 @@ globalVariables(c("..dimension_values"))
 #' @usage NULL
 #' @export
 ungather_samples = function(..., term = "term", estimate = "estimate", indices = c(".chain", ".iteration", ".draw")) {
-  .Deprecated("ungather_draws")                           # nocov
+  .Deprecated("ungather_draws", package = "tidybayes") # nocov
   ungather_draws(..., variable = term, value = estimate, draw_indices = indices)  # nocov
 }
 

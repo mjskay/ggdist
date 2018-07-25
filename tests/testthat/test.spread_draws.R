@@ -21,7 +21,7 @@ RankCorr_s = RankCorr[1:10,]
 i_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
 RankCorr_i = recover_types(RankCorr_s, list(i = factor(i_labels)))
 
-# version of RankCorr with i and j indices labeled
+# version of RankCorr with i and j dimensions labeled
 i_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
 j_labels = c("A", "B", "C", "D")
 RankCorr_ij = recover_types(RankCorr_s, list(i = factor(i_labels), j = factor(j_labels)))
@@ -59,7 +59,7 @@ test_that("spread_draws correctly rejects missing variables", {
 })
 
 
-test_that("spread_draws works on a simple variable with no indices", {
+test_that("spread_draws works on a simple variable with no dimensions", {
   ref = data_frame(
     .chain = as.integer(1),
     .iteration = seq_len(nrow(RankCorr_s)),
@@ -71,7 +71,7 @@ test_that("spread_draws works on a simple variable with no indices", {
 })
 
 
-test_that("spread_draws works on two variables with no indices and multiple chains", {
+test_that("spread_draws works on two variables with no dimensions and multiple chains", {
   data(line, package = "coda")
 
   ref = data_frame(
@@ -146,7 +146,7 @@ test_that("spread_draws works on a variable with one named wide index", {
 })
 
 
-test_that("spread_draws works on a variable with two named indices", {
+test_that("spread_draws works on a variable with two named dimensions", {
   ref = ldply(1:4, function(j) {
     ldply(1:18, function(i) {
       data.frame(
@@ -164,7 +164,7 @@ test_that("spread_draws works on a variable with two named indices", {
 })
 
 
-test_that("spread_draws works on a variable with two named indices, one that is wide", {
+test_that("spread_draws works on a variable with two named dimensions, one that is wide", {
   ref = ldply(1:4, function(j) {
     ldply(1:18, function(i) {
       data.frame(
@@ -224,7 +224,7 @@ test_that("spread_draws correctly extracts multiple variables simultaneously", {
     spread_draws(RankCorr_i, c(tau, typical_mu, u_tau)[i]))
 })
 
-test_that("spread_draws correctly extracts multiple variables simultaneously when those variables have no indices", {
+test_that("spread_draws correctly extracts multiple variables simultaneously when those variables have no dimensions", {
   RankCorr_t = RankCorr_s
   dimnames(RankCorr_t)[[2]][[1]] <- "tr2"
 
@@ -244,7 +244,7 @@ test_that("spread_draws multispec syntax joins results correctly", {
   expect_equal(spread_draws(RankCorr_s, typical_r, tau[i], b[i, v]), ref)
 })
 
-test_that("spread_draws multispec with different indices retains grouping information with all indices", {
+test_that("spread_draws multispec with different dimensions retains grouping information with all dimensions", {
   groups_ = RankCorr_s %>%
     spread_draws(typical_r, tau[i], b[i, j]) %>%
     groups() %>%
@@ -259,7 +259,7 @@ test_that("groups from spread_draws retain factor level names", {
   expect_equivalent(attr(samples, "labels")$i, factor(i_labels))
 })
 
-test_that("empty indices are dropped", {
+test_that("empty dimensions are dropped", {
   ref = RankCorr_s %>%
     spread_draws(tau[i]) %>%
     ungroup() %>%
@@ -289,7 +289,7 @@ test_that("empty indices are dropped", {
   expect_equal(spread_draws(RankCorr_s, b[, ]), ref4)
 })
 
-test_that("indices with existing names as strings are made wide as strings with `..`", {
+test_that("dimensions with existing names as strings are made wide as strings with `..`", {
   RankCorr_t = RankCorr_s
   dimnames(RankCorr_t)[[2]][1] = "x[a]"
   dimnames(RankCorr_t)[[2]][2] = "x[b]"

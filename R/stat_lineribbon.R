@@ -6,7 +6,7 @@
 
 # Names that should be suppressed from global variable check by codetools
 # Names used broadly should be put in _global_variables.R
-globalVariables(c("...prob.."))
+globalVariables(c("...width.."))
 
 
 #' Line + multiple probability ribbon stat for ggplot
@@ -26,13 +26,14 @@ globalVariables(c("...prob.."))
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
 #' @param point_interval A function that when given a vector should
-#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
-#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
+#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
 #'   will be converted into the \code{y}-based aesthetics. See the \code{point_interval} family of functions.
 #' @param fun.data Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
 #'   Note: if the summary function is passed using \code{fun.data}, \code{x}-based aesthetics
 #'   are not converted to the correct form automatically.
-#' @param .prob The \code{.prob} argument passed to \code{fun.data}.
+#' @param .width The \code{.width} argument passed to \code{point_interval}.
+#' @param .prob Deprecated. Use \code{.width} instead.
 #' @param fun.args Other optional arguments passed to \code{fun.data}.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 #' values are silently removed.
@@ -63,15 +64,18 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
   ...,
   point_interval = median_qi,
   fun.data = NULL,
-  .prob = c(.5, .8, .95),
+  .width = c(.5, .8, .95),
+  .prob,
   fun.args = list(),
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
+
   # Probs are drawn on top of each other in order by geom_lineribbon, so we have to sort in decreasing order
   # to make sure the largest interval is not drawn last (over-writing all other intervals)
-  .prob %<>% sort()
+  .width %<>% sort()
 
   fun.data = fun.data %||% vertical_aes(point_interval)
 
@@ -87,7 +91,7 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     params = list(
       fun.data = fun.data,
-      .prob = .prob,
+      .width = .width,
       fun.args = fun.args,
       na.rm = na.rm,
       ...
@@ -96,7 +100,7 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
 
   #provide some default computed aesthetics
   default_computed_aesthetics = aes(
-    fill = forcats::fct_rev(ordered(...prob..))  # nolint
+    fill = forcats::fct_rev(ordered(...width..))  # nolint
   )
 
   compute_aesthetics = l$compute_aesthetics

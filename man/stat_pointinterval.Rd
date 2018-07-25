@@ -7,12 +7,12 @@
 \usage{
 stat_pointinterval(mapping = NULL, data = NULL, geom = "pointinterval",
   position = "identity", ..., point_interval = median_qi, fun.data = NULL,
-  .prob = c(0.66, 0.95), fun.args = list(), na.rm = FALSE,
+  .width = c(0.66, 0.95), .prob, fun.args = list(), na.rm = FALSE,
   show.legend = FALSE, inherit.aes = TRUE)
 
 stat_pointintervalh(mapping = NULL, data = NULL, geom = "pointintervalh",
   position = "identity", ..., point_interval = median_qi, fun.data = NULL,
-  .prob = c(0.66, 0.95), fun.args = list(), na.rm = FALSE,
+  .width = c(0.66, 0.95), .prob, fun.args = list(), na.rm = FALSE,
   show.legend = FALSE, inherit.aes = TRUE)
 }
 \arguments{
@@ -31,8 +31,8 @@ the plot defaults.}
 \item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.}
 
 \item{point_interval}{A function that when given a vector should
-return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
-\code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
+\code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
 will be converted into the \code{y}-based aesthetics for \code{stat_pointinterval} and the
 \code{x}-based aesthetics for \code{stat_pointintervalh}. See the \code{point_interval} family of functions.}
 
@@ -40,7 +40,9 @@ will be converted into the \code{y}-based aesthetics for \code{stat_pointinterva
 Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
 are not converted to the correct form automatically.}
 
-\item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}.}
+
+\item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{fun.args}{Other optional arguments passed to \code{fun.data}.}
 
@@ -72,12 +74,12 @@ data(RankCorr, package = "tidybayes")
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
   ggplot(aes(y = i, x = u_tau)) +
-  stat_pointintervalh(.prob = c(.66, .95))
+  stat_pointintervalh(.width = c(.66, .95))
 
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
   ggplot(aes(x = i, y = u_tau)) +
-  stat_pointinterval(.prob = c(.66, .95))
+  stat_pointinterval(.width = c(.66, .95))
 
 }
 \seealso{

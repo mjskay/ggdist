@@ -82,7 +82,7 @@ test_that("as_data_list psses through existing data lists unchanged", {
   expect_equal(data_list(x = 1), as_data_list(data_list(x = 1)))
 })
 
-test_that("compose_data converts character vectors into indices", {
+test_that("compose_data converts character vectors into dimension indices", {
   ref = list(x = array(c(1, 2, 3)), n_x = 3, n = 3)
 
   expect_equal(compose_data(data_frame(x = c("a","b","c"))), ref)
@@ -90,7 +90,7 @@ test_that("compose_data converts character vectors into indices", {
 
 test_that("compose_data warns if there are unused levels in a factor", {
   expect_warning(compose_data(x = factor(c("a","b","c"), levels = c("a","b","c","d"))),
-    'Some levels of factor "x" are unused. This may cause issues if you are using it as an index in a model.')
+    'Some levels of factor "x" are unused. This may cause issues if you are using it as the dimension for a variable in a model.')
 })
 
 test_that("compose_data converts logicals correctly", {

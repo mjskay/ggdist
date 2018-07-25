@@ -11,12 +11,14 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
   ...,
   point_interval = median_qi,
   fun.data = NULL,
-  .prob = c(.66, .95),
+  .width = c(.66, .95),
+  .prob,
   fun.args = list(),
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
 
   fun.data = fun.data %||% horizontal_aes(point_interval)
 
@@ -30,7 +32,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     params = list(
       fun.data = fun.data,
-      .prob = .prob,
+      .width = .width,
       fun.args = fun.args,
       na.rm = na.rm,
       ...
@@ -38,7 +40,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
   )
 
   #provide some default computed aesthetics
-  default_computed_aesthetics = aes(size = -...prob..)  # nolint
+  default_computed_aesthetics = aes(size = -...width..)  # nolint
 
   compute_aesthetics = l$compute_aesthetics
   l$compute_aesthetics = function(self, data, plot) {
@@ -57,11 +59,11 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
 
 #' @importFrom plyr defaults
 StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
-  compute_panel = function(data, scales, fun.data = median_qih, .prob = c(.66, .95),
+  compute_panel = function(data, scales, fun.data = median_qih, .width = c(.66, .95),
     fun.args = list(), na.rm = FALSE
   ) {
 
-    fun.args = modifyList(list(.prob = .prob), fun.args)
+    fun.args = modifyList(list(.width = .width), fun.args)
 
     # Function that takes complete data frame as input
     fun.data = match.fun(fun.data)

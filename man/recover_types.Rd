@@ -20,7 +20,7 @@ A decorated version of \code{model}.
 }
 \description{
 Decorate the samples returned from a Bayesian model with types for
-variable and index data types. Meant to be used before calling
+variable and dimension data types. Meant to be used before calling
 \code{\link{spread_draws}} or \code{\link{gather_draws}} so that the values returned by
 those functions are translated back into useful data types.
 }
@@ -30,9 +30,9 @@ is decorated with a list of constructors that can convert a numeric column
 into the data types in the lists in \code{...}.
 
 Then, when \code{\link{spread_draws}} or \code{\link{gather_draws}} is called on the decorated
-\code{model}, each list entry with the same name as the variable or an index
-in varible_spec is a used as a prototype for that variable or index ---
-i.e., its type is taken to be the expected type of that variable or index.
+\code{model}, each list entry with the same name as the variable or a dimension
+in varible_spec is a used as a prototype for that variable or dimension ---
+i.e., its type is taken to be the expected type of that variable or dimension.
 Those types are used to translate numeric values of variables back into
 useful values (for example, levels of a factor).
 

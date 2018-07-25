@@ -4,10 +4,6 @@
 ###############################################################################
 
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c("conf.low", "conf.high", ".prob"))
-
 
 #' @rdname geom_pointinterval
 #' @import ggplot2
@@ -40,7 +36,7 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
   )
 
   #provide some default computed aesthetics
-  default_computed_aesthetics = aes(xmin = conf.low, xmax = conf.high, size = -.prob)
+  default_computed_aesthetics = aes(xmin = .lower, xmax = .upper, size = -.width)
 
   compute_aesthetics = l$compute_aesthetics
   l$compute_aesthetics = function(self, data, plot) {

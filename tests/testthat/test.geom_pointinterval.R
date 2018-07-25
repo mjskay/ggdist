@@ -19,7 +19,7 @@ RankCorr_u_tau = RankCorr_s %>%
 
 test_that("horizontal grouped pointintervals work", {
   forward_plot = RankCorr_u_tau %>%
-    median_hdi(.prob = c(.66, .95)) %>%
+    median_hdi(.width = c(.66, .95)) %>%
     ggplot(aes(y = i, x = u_tau)) +
     geom_pointintervalh()
 
@@ -27,18 +27,18 @@ test_that("horizontal grouped pointintervals work", {
 
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(y = i, x = u_tau)) +
-    stat_pointintervalh(.prob = c(.66, .95))
+    stat_pointintervalh(.width = c(.66, .95))
 
   expect_doppelganger("grouped pointintervals (h, stat)", stat_forward_plot)
 
   stat_forward_plot_mode_hdi = RankCorr_u_tau %>%
     ggplot(aes(y = i, x = u_tau)) +
-    stat_pointintervalh(.prob = c(.66, .95), point_interval = mode_hdi)
+    stat_pointintervalh(.width = c(.66, .95), point_interval = mode_hdi)
 
   expect_doppelganger("grouped pointintervals (h, stat, mode_hdi)", stat_forward_plot_mode_hdi)
 
   reverse_plot = RankCorr_u_tau %>%
-    mode_hdi(.prob = c(.66, .95)) %>%
+    mode_hdi(.width = c(.66, .95)) %>%
     ggplot(aes(y = i, x = u_tau)) +
     geom_pointintervalh()
 
@@ -46,14 +46,14 @@ test_that("horizontal grouped pointintervals work", {
 
   stat_reverse_plot = RankCorr_u_tau %>%
     ggplot(aes(y = i, x = u_tau)) +
-    stat_pointintervalh(.prob = c(.66, .95))
+    stat_pointintervalh(.width = c(.66, .95))
 
   expect_doppelganger("grouped pointintervals (h, stat, reverse order)", stat_reverse_plot)
 })
 
 test_that("grouped pointintervals work", {
   forward_plot = RankCorr_u_tau %>%
-    mean_qi(.prob = c(.66, .95)) %>%
+    mean_qi(.width = c(.66, .95)) %>%
     ggplot(aes(x = i, y = u_tau)) +
     geom_pointinterval()
 
@@ -61,18 +61,18 @@ test_that("grouped pointintervals work", {
 
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
-    stat_pointinterval(.prob = c(.66, .95))
+    stat_pointinterval(.width = c(.66, .95))
 
   expect_doppelganger("grouped pointintervals (stat)", stat_forward_plot)
 
   stat_forward_plot_mode_hdi = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
-    stat_pointinterval(.prob = c(.66, .95), point_interval = mode_hdi)
+    stat_pointinterval(.width = c(.66, .95), point_interval = mode_hdi)
 
   expect_doppelganger("grouped pointintervals (stat, mode_hdi)", stat_forward_plot_mode_hdi)
 
   reverse_plot = RankCorr_u_tau %>%
-    mean_qi(.prob = c(.66, .95)) %>%
+    mean_qi(.width = c(.66, .95)) %>%
     ggplot(aes(x = i, y = u_tau)) +
     geom_pointinterval()
 
@@ -80,7 +80,7 @@ test_that("grouped pointintervals work", {
 
   stat_reverse_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
-    stat_pointinterval(.prob = c(.66, .95))
+    stat_pointinterval(.width = c(.66, .95))
 
   expect_doppelganger("grouped pointintervals (stat, reverse order)", stat_reverse_plot)
 })

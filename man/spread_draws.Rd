@@ -188,7 +188,7 @@ Would return a tidy data frame with variables starting with `b_` and having one 
 }
 \examples{
 
-library(magrittr)
+library(dplyr)
 library(ggplot2)
 
 data(RankCorr, package = "tidybayes")

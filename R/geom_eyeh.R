@@ -22,9 +22,11 @@ geom_eyeh = function(
   point_interval = median_qi,
   fun.data = NULL,
   fun.args = list(),
-  .prob = c(.66, .95),
+  .width = c(.66, .95),
+  .prob,
   color = NULL, size = NULL, size_domain = NULL, size_range = NULL, fatten_point = NULL
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
 
   fun.data = fun.data %||% horizontal_aes(point_interval)
 
@@ -38,7 +40,7 @@ geom_eyeh = function(
 
   #build interval annotations
   interval.args =
-    list(mapping = mapping, position = position, data = data, fun.data = fun.data, fill = NA, .prob = .prob, fun.args = fun.args) %>%
+    list(mapping = mapping, position = position, data = data, fun.data = fun.data, fill = NA, .width = .width, fun.args = fun.args) %>%
     {if (!is.null(color)) modifyList(., list(color = color)) else .} %>%
     {if (!is.null(size)) modifyList(., list(size = size)) else .} %>%
     {if (!is.null(size_domain)) modifyList(., list(size_domain = size_domain)) else .} %>%

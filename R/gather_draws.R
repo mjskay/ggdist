@@ -11,7 +11,7 @@
 #' @usage NULL
 #' @export
 gather_samples = function(...) {
-  .Deprecated("gather_draws")        # nocov
+  .Deprecated("gather_draws", package = "tidybayes") # nocov
   to_broom_names(gather_draws(...))  # nocov
 }
 

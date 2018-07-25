@@ -6,7 +6,7 @@
 \usage{
 stat_lineribbon(mapping = NULL, data = NULL, geom = "lineribbon",
   position = "identity", ..., point_interval = median_qi, fun.data = NULL,
-  .prob = c(0.5, 0.8, 0.95), fun.args = list(), na.rm = FALSE,
+  .width = c(0.5, 0.8, 0.95), .prob, fun.args = list(), na.rm = FALSE,
   show.legend = NA, inherit.aes = TRUE)
 }
 \arguments{
@@ -25,15 +25,17 @@ the plot defaults.}
 \item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.}
 
 \item{point_interval}{A function that when given a vector should
-return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.prob}; or
-\code{x}, \code{xmin}, \code{xmax}, and \code{.prob}. \strong{Either is acceptable}: output
+return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
+\code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
 will be converted into the \code{y}-based aesthetics. See the \code{point_interval} family of functions.}
 
 \item{fun.data}{Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
 Note: if the summary function is passed using \code{fun.data}, \code{x}-based aesthetics
 are not converted to the correct form automatically.}
 
-\item{.prob}{The \code{.prob} argument passed to \code{fun.data}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}.}
+
+\item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{fun.args}{Other optional arguments passed to \code{fun.data}.}
 
