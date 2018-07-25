@@ -23,18 +23,21 @@
 \alias{ungather_samples}
 \alias{unspread_samples}
 \title{Deprecated functions, arguments, and column names in tidybayes}
+\description{
+Deprecated functions, arguments, and column names and their alternatives are listed below.
+Many of the deprecations are due to a naming scheme overhaul in tidybayes version 1.0.
+}
 \section{Deprecated Functions}{
 
 
-Deprecated functions and their alternatives are listed below. Many of the deprecated
-function names are due to a naming scheme overhaul in tidybayes version 1.0.
-
-Several deprecated versions of functions also use slightly different output
+Several deprecated versions of functions use slightly different output
 formats (e.g., they use names like \code{term} and \code{estimate} where new
 functions use \code{.variable} and \code{.value}; or they set \code{.iteration} even
 when iteration information is not available --- new functions always set \code{.draw}
 but may not set \code{.iteration}), so be careful when upgrading to new function names.
 See `Deprecated Arguments and Column Names`, below, for more information.
+
+Deprecated functions are:
 
 \itemize{
 
@@ -93,7 +96,9 @@ See `Deprecated Arguments and Column Names`, below, for more information.
 
 
 Versions of tidybayes before version 1.0 used a different naming scheme for several
-arguments and output columns:
+arguments and output columns.
+
+Deprectead arguments and column names are:
 
 \itemize{
   \item \code{term} is now \code{.variable}
@@ -110,7 +115,7 @@ arguments and output columns:
 To translate to/from the old naming scheme in output, use \code{\link{to_broom_names}}
 and \code{\link{from_broom_names}}.
 
-Many of these column names were updated in version 1.0 in order to
+Many of these names were updated in version 1.0 in order to
 make terminology more consistent and in order to satisfy these criteria:
 
 \itemize{
