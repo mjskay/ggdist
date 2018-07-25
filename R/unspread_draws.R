@@ -69,7 +69,7 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 #'   unspread_draws(b[i], drop_indices = TRUE) %>%
 #'   bayesplot::mcmc_areas()
 #'
-#' @importFrom lazyeval lazy_dots
+#' @importFrom rlang enquos
 #' @importFrom purrr map reduce
 #' @importFrom dplyr inner_join ungroup select distinct mutate
 #' @importFrom tidyr spread_ unite
@@ -78,7 +78,7 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 #' @export
 unspread_draws = function(data, ..., draw_indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE) {
   result =
-    map(lazy_dots(...), function(variable_spec) {
+    map(enquos(...), function(variable_spec) {
       unspread_draws_(data, variable_spec, draw_indices = draw_indices)
     }) %>%
     reduce(inner_join, by = draw_indices) %>%

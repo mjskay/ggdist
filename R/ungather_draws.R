@@ -29,7 +29,7 @@ ungather_draws = function(
   data, ..., variable = ".variable", value = ".value", draw_indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE
 ) {
 
-  variable_specs = lazy_dots(...)
+  variable_specs = enquos(...)
 
   if (length(variable_specs) == 0) {
     stop("You must supply at least one variable to ungather.")

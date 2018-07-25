@@ -14,7 +14,6 @@ Description: Facilitates composing data for and extracting posterior draws from 
 Depends:
     R (>= 2.10)
 Imports:
-    lazyeval,
     plyr,
     dplyr,
     tidyr,

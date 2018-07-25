@@ -235,13 +235,13 @@ spread_samples = function(...) {
 #'   gather_draws(tau[i], typical_r) %>%
 #'   median_qi()
 #'
-#' @importFrom lazyeval lazy_dots
+#' @importFrom rlang enquos
 #' @importFrom purrr reduce
 #' @importFrom dplyr inner_join group_by_at
 #' @rdname spread_draws
 #' @export
 spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
-  tidysamples = lapply(lazy_dots(...), function(variable_spec) {
+  tidysamples = lapply(enquos(...), function(variable_spec) {
     spread_draws_(model, variable_spec, regex = regex, sep = sep)
   })
 
@@ -263,7 +263,6 @@ spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
 
 #' @import dplyr
 #' @importFrom tidyr spread_
-#' @importFrom lazyeval lazy_eval
 #' @importFrom tibble has_name
 spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
@@ -435,11 +434,10 @@ all_names <- function(x) {
 # 1. A vector of variable names
 # 2. A vector of dimension names (or NULL if none)
 # 3. The name of the wide dimension (or NULL if none)
-#' @importFrom stats setNames
 #' @importFrom purrr reduce map map2
 #' @importFrom rlang set_names
 parse_variable_spec = function(variable_spec) {
-  names = all_names(variable_spec$expr)
+  names = all_names(variable_spec[[2]])
   #specs for each bare variable name in the spec expression
   names_spec = names %>%
     set_names() %>%
@@ -450,8 +448,7 @@ parse_variable_spec = function(variable_spec) {
     reduce(list(...), function(spec1, spec2) map2(spec1, spec2, base::c))
   }
 
-  spec_env = c(
-    names_spec,
+  spec_env = as.environment(c(
     list(
       c = c_function,
       cbind = c_function,
@@ -481,8 +478,9 @@ parse_variable_spec = function(variable_spec) {
           wide_dimension_name
         )
       }
-    )
-  )
+    ),
+    names_spec
+  ))
 
-  lazy_eval(variable_spec, spec_env)
+  eval_tidy(variable_spec, spec_env)
 }

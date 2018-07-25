@@ -5,7 +5,7 @@
 
 import::from(plyr, ldply, .)  #TODO: drop remaining ldplys from this file
 import::from(dplyr, `%>%`, inner_join, data_frame)
-import::from(lazyeval, lazy)
+import::from(rlang, quo)
 library(tidyr)
 
 context("spread_draws")
@@ -39,9 +39,9 @@ test_that("all_names works on various expressions", {
 
 
 test_that("parse_variable_spec rejects incorrect usage of `|`", {
-  expect_error(parse_variable_spec(lazy(a | b | c)),
+  expect_error(parse_variable_spec(quo(a | b | c)),
     "Left-hand side of `|` cannot contain `|`")
-  expect_error(parse_variable_spec(lazy(a | cbind(b, c))),
+  expect_error(parse_variable_spec(quo(a | cbind(b, c))),
     "Right-hand side of `|` must be exactly one name")
 })
 

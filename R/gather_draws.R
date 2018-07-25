@@ -21,9 +21,10 @@ gather_samples = function(...) {
 
 #' @rdname spread_draws
 #' @importFrom dplyr bind_rows group_by_at
+#' @importFrom rlang enquos
 #' @export
 gather_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
-  tidysamples = lapply(lazy_dots(...), function(variable_spec) {
+  tidysamples = lapply(enquos(...), function(variable_spec) {
     model %>%
       spread_draws_(variable_spec, regex = regex, sep = sep) %>%
       gather_variables()
