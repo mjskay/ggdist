@@ -1,5 +1,7 @@
 # Pre-build models used in testing
 # These models can take more time to build than we want to spend for rapid testing, so we pre-build them.
+# We also build them with a small number of iterations because we aren't really interested in the results,
+# just in making sure the data manipulations of draws from the models work.
 #
 # Author: mjskay
 ###############################################################################
@@ -8,6 +10,10 @@ library(dplyr)
 library(magrittr)
 library(rstanarm)
 library(brms)
+library(rstan)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
 
 
 mtcars_tbl = mtcars %>%
@@ -15,25 +21,32 @@ mtcars_tbl = mtcars %>%
   as_data_frame()
 
 
-brms.m_hp = brm(mpg ~ log(hp)*am, data = mtcars_tbl, chains = 1, iter = 1000, family = "lognormal")
+set.seed(94)
+brms.m_hp = brm(mpg ~ log(hp)*am, data = mtcars_tbl, chains = 2, warmup = 950, iter = 1000, family = "lognormal")
 saveRDS(brms.m_hp, "tests/models/models.brms.m_hp.rds", compress = FALSE)
 
+
+set.seed(943)
 brms.m_hp_sigma = brm(
   bf(mpg ~ log(hp), sigma ~ hp),
   prior = c(prior(normal(0, 1), class = b)),
-  data = mtcars_tbl, chains = 1, iter = 4000, family = lognormal
+  data = mtcars_tbl, chains = 2, warmup = 950, iter = 1000, family = lognormal
 )
 saveRDS(brms.m_hp_sigma, "tests/models/models.brms.m_hp_sigma.rds", compress = FALSE)
 
 
-rstanarm.m_hp_wt = stan_glm(mpg ~ hp*wt, data = mtcars_tbl, chains = 1, iter = 500)
+set.seed(9439)
+rstanarm.m_hp_wt = stan_glm(mpg ~ hp*wt, data = mtcars_tbl, chains = 2, warmup = 950, iter = 1000)
 saveRDS(rstanarm.m_hp_wt, "tests/models/models.rstanarm.m_hp_wt.rds", compress = FALSE)
 
-rstanarm.m_cyl = stan_glmer(mpg ~ (1|cyl), data = mtcars_tbl, chains = 1, iter = 1000, warmup = 750)
+
+set.seed(94394)
+rstanarm.m_cyl = stan_glmer(mpg ~ (1|cyl), data = mtcars_tbl, chains = 2, iter = 3000, warmup = 2950)
 saveRDS(rstanarm.m_cyl, "tests/models/models.rstanarm.m_cyl.rds", compress = FALSE)
 
 
-brms.m_cyl_mpg = brm(ordered(paste0("c", cyl)) ~ mpg, data = mtcars_tbl, chains = 1, iter = 500,
+set.seed(943943)
+brms.m_cyl_mpg = brm(ordered(paste0("c", cyl)) ~ mpg, data = mtcars_tbl, chains = 2, iter = 500, warmup = 450,
   family = cumulative("logit"),
   prior = prior(normal(0,1), class = b))
 saveRDS(brms.m_cyl_mpg, "tests/models/models.brms.m_cyl_mpg.rds", compress = FALSE)
@@ -46,7 +59,8 @@ x = rnorm(100)
 y = rnorm(100, mean = b[1] * exp(b[2] * x))
 df_nlpar = data.frame(x, y)
 prior_nlpar = c(prior(normal(1, 2), nlpar = "b1"), prior(normal(0, 2), nlpar = "b2"))
-brms.m_nlpar <- brm(bf(y ~ b1 * exp(b2 * x), b1 + b2 ~ 1, nl = TRUE), data = df_nlpar, prior = prior_nlpar)
+brms.m_nlpar = brm(bf(y ~ b1 * exp(b2 * x), b1 + b2 ~ 1, nl = TRUE), data = df_nlpar, prior = prior_nlpar,
+  chains = 2, warmup = 150, iter = 200)
 saveRDS(brms.m_nlpar, "tests/models/models.brms.m_nlpar.rds", compress = FALSE)
 
 
@@ -64,7 +78,7 @@ df_dpars <- data.frame(
 )
 brms.m_dpars <- brm(
   bf(count ~ Age + (1|visit), mu2 ~ Age), data = df_dpars,
-  family = mixture(gaussian, exponential),
+  family = mixture(gaussian, brms::exponential),
   prior = c(prior(normal(0, 10), Intercept, dpar = mu1),
     prior(normal(0, 1), Intercept, dpar = mu2),
     prior(normal(0, 1), dpar = mu2)),
@@ -89,13 +103,14 @@ brms.m_ranef = brm(
     prior(student_t(3, 0, 4), class = sd),
     prior(student_t(3, 0, 4), class = sigma)
   ),
-  control = list(adapt_delta = 0.85),
-  warmup = 150, iter = 200, chains = 2
+  control = list(adapt_delta = 0.95),
+  warmup = 950, iter = 1000, chains = 2
 )
 saveRDS(brms.m_ranef, "tests/models/models.brms.m_ranef.rds", compress = FALSE)
 
 
 #rstanarm model with random intercept
+set.seed(48431)
 rstanarm.m_ranef = stan_glmer(
   y ~ x + (1|group),
   data = ranef_data,
@@ -105,6 +120,7 @@ saveRDS(rstanarm.m_ranef, "tests/models/models.rstanarm.m_ranef.rds", compress =
 
 
 # Stan models -----------------------------------------------------------------
+set.seed(94302)
 ABC_data = list(
   condition = c(1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1,
     2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2,
@@ -126,7 +142,6 @@ ABC_data = list(
     -1.22828447046022, 0.28111168132151, 0.556495744244286, 1.76987771190241,
     0.637835756966264, -1.03460557791706),
   n = 50)
-
 rstan.m_ABC = stan(model_code = "
   data {
     int<lower=1> n;
@@ -145,12 +160,12 @@ rstan.m_ABC = stan(model_code = "
     condition_mean = overall_mean + condition_zoffset * condition_mean_sd;
   }
   model {
-    response_sd ~ cauchy(0, 1);         // => half-cauchy(0, 1)
-    condition_mean_sd ~ cauchy(0, 1);   // => half-cauchy(0, 1)
+    response_sd ~ exponential(1);
+    condition_mean_sd ~ exponential(1);
     overall_mean ~ normal(0, 5);
     condition_zoffset ~ normal(0, 1);   // => condition_mean ~ normal(overall_mean, condition_mean_sd)
     for (i in 1:n) {
       response[i] ~ normal(condition_mean[condition[i]], response_sd);
     }
-  }", data = ABC_data, control = list(adapt_delta=0.99), warmup = 150, iter = 200, chains = 2)
+  }", data = ABC_data, control = list(adapt_delta=0.99), warmup = 2950, iter = 3000, chains = 2)
 saveRDS(rstan.m_ABC, "tests/models/models.rstan.m_ABC.rds", compress = FALSE)

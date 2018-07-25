@@ -40,7 +40,7 @@ Suggests:
     import,
     testthat,
     vdiffr,
-    rstan,
+    rstan (>= 2.17.0),
     runjags,
     rjags,
     jagsUI,
@@ -52,7 +52,7 @@ Suggests:
     MCMCglmm,
     bayesplot,
     modelr,
-    brms (>= 2.0.1),
+    brms (>= 2.4.0),
     cowplot,
     covr
 License: GPL (>= 3)
