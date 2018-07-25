@@ -40,7 +40,7 @@ test_that("unspread_draws works on a multiple parameters with different dimensio
     unspread_draws(b[i, j], c(u_tau, tau)[i])
 
   ref = RankCorr %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     select(.chain, .iteration, .draw, starts_with("b"), starts_with("tau"), starts_with("u_tau"))
 
   expect_equal(result[, order(names(result))], ref[, order(names(ref))])
@@ -55,7 +55,7 @@ test_that("unspread_draws(drop_indices = TRUE) drops draw indices", {
     unspread_draws(b[i, j], c(u_tau, tau)[i], drop_indices = TRUE)
 
   ref = RankCorr %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     select(starts_with("b"), starts_with("tau"), starts_with("u_tau"))
 
   expect_equal(result[, order(names(result))], ref[, order(names(ref))])

@@ -33,7 +33,7 @@ A data frame.
 }
 \description{
 Inverse operations of \code{\link{spread_draws}} and \code{\link{gather_draws}}, giving
-results that look like \code{\link{as_sample_tibble}}.
+results that look like \code{\link{tidy_draws}}.
 }
 \details{
 These functions take symbolic specifications of variable names and dimensions in the same format as
@@ -66,7 +66,7 @@ RankCorr \%>\%
 
 }
 \seealso{
-\code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{as_sample_tibble}}.
+\code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{tidy_draws}}.
 }
 \author{
 Matthew Kay

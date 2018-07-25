@@ -1,4 +1,4 @@
-# Tests for as_sample_tibble
+# Tests for tidy_draws
 #
 # Author: mjskay
 ###############################################################################
@@ -8,12 +8,12 @@ library(coda)
 import::from(dplyr, as_tibble, select)
 import::from(tibble, as_tibble, add_column)
 
-context("as_sample_tibble")
+context("tidy_draws")
 
 
 
 # brms --------------------------------------------------------------------
-test_that("as_sample_tibble works with brms", {
+test_that("tidy_draws works with brms", {
   skip_if_not_installed("brms")
 
   # we use a model with random effects here because they include parameters with multiple dimensions
@@ -30,12 +30,12 @@ test_that("as_sample_tibble works with brms", {
     as_tibble() %>%
     select(.chain, .iteration, .draw, everything())
 
-  expect_equal(as_sample_tibble(m_ranef), draws_tidy)
+  expect_equal(tidy_draws(m_ranef), draws_tidy)
 })
 
 
 # rstanarm ----------------------------------------------------------------
-test_that("as_sample_tibble works with rstanarm", {
+test_that("tidy_draws works with rstanarm", {
   skip_if_not_installed("rstanarm")
 
   # we use a model with random effects here because they include parameters with multiple dimensions
@@ -48,13 +48,13 @@ test_that("as_sample_tibble works with rstanarm", {
   draws_tidy =
     bind_rows(chain_1, chain_2)
 
-  expect_equal(as_sample_tibble(m_ranef), draws_tidy)
+  expect_equal(tidy_draws(m_ranef), draws_tidy)
 })
 
 
 
 # rstan -------------------------------------------------------------------
-test_that("as_sample_tibble works with rstan", {
+test_that("tidy_draws works with rstan", {
   skip_if_not_installed("rstan")
 
   # we use a model with random effects here because they include parameters with multiple dimensions
@@ -67,12 +67,12 @@ test_that("as_sample_tibble works with rstan", {
   draws_tidy =
     bind_rows(chain_1, chain_2)
 
-  expect_equal(as_sample_tibble(m_ABC), draws_tidy)
+  expect_equal(tidy_draws(m_ABC), draws_tidy)
 })
 
 
 # jags --------------------------------------------------------------------
-test_that("as_sample_tibble works with runjags", {
+test_that("tidy_draws works with runjags", {
   skip_if_not_installed("runjags")
 
   runjags::runjags.options(inits.warning = FALSE, nodata.warning = FALSE)
@@ -98,10 +98,10 @@ test_that("as_sample_tibble works with runjags", {
     ) %>%
     as_tibble()
 
-  expect_equal(as_sample_tibble(m), draws_tidy)
+  expect_equal(tidy_draws(m), draws_tidy)
 })
 
-test_that("as_sample_tibble works with rjags", {
+test_that("tidy_draws works with rjags", {
   skip_if_not_installed("rjags")
 
   # coda.samples has some progress output I can't seem to turn off, hence capture.output
@@ -123,10 +123,10 @@ test_that("as_sample_tibble works with rjags", {
     ) %>%
     as_tibble()
 
-  expect_equal(as_sample_tibble(m), draws_tidy)
+  expect_equal(tidy_draws(m), draws_tidy)
 })
 
-test_that("as_sample_tibble works with jagsUI", {
+test_that("tidy_draws works with jagsUI", {
   skip_if_not_installed("jagsUI")
 
   # this test model is kind of dumb because jagsUI doesn't seem to allow you to not input data
@@ -148,5 +148,5 @@ test_that("as_sample_tibble works with jagsUI", {
     ) %>%
     as_tibble()
 
-  expect_equal(as_sample_tibble(m), draws_tidy)
+  expect_equal(tidy_draws(m), draws_tidy)
 })

@@ -16,7 +16,7 @@
 #' @section All Supported Models/Sample Formats:
 #'
 #' \strong{All supported models/formats} support the base tidybayes sample extraction functions, such as
-#' \code{\link{as_sample_tibble}}, \code{\link{spread_draws}}, and \code{\link{gather_draws}}. These models/formats include:
+#' \code{\link{tidy_draws}}, \code{\link{spread_draws}}, and \code{\link{gather_draws}}. These models/formats include:
 #'
 #' \itemize{
 #'   \item \code{\link[rstan:stan]{rstan}} models
@@ -56,7 +56,7 @@
 #'
 #' @section Extending tidybayes:
 #'
-#' To include basic support for new models, one need only implement the \code{\link{as_sample_tibble}} generic function
+#' To include basic support for new models, one need only implement the \code{\link{tidy_draws}} generic function
 #' for that model.
 #'
 #' To include support for estimation and prediction, one must implement the \code{\link{fitted_draws}} and

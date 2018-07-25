@@ -24,6 +24,11 @@ combine_chains_for_deprecated_ = function(x) {
   x
 }
 
+draw_from_chain_and_iteration_ = function(chain, iteration) {
+  max_iteration = max(iteration)
+  as.integer(ifelse(is.na(chain), 0, chain - 1) * max_iteration + iteration)
+}
+
 .Deprecated_argument_alias = function(new_arg, old_arg, fun = as.character(sys.call(sys.parent()))[1L]) {
   if (missing(old_arg)) {
     new_arg

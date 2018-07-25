@@ -8,7 +8,7 @@ gather_variables(data, exclude = c(".chain", ".iteration", ".draw", ".row"))
 }
 \arguments{
 \item{data}{A data frame with variable names spread across columns, such as one returned by
-\code{\link{as_sample_tibble}} or \code{\link{spread_draws}}.}
+\code{\link{tidy_draws}} or \code{\link{spread_draws}}.}
 
 \item{exclude}{A character vector of names of columns to be excluded from the gather. Default
 ignores several meta-data column names used in tidybayes.}
@@ -17,7 +17,7 @@ ignores several meta-data column names used in tidybayes.}
 A data frame.
 }
 \description{
-Given a data frame such as might be returned by as_sample_tibble or spread_draws,
+Given a data frame such as might be returned by \code{\link{tidy_draws}} or \code{\link{spread_draws}},
 gather variables and their values from that data frame into a \code{".variable"} and \code{".value"} column.
 }
 \details{
@@ -74,14 +74,14 @@ RankCorr \%>\%
 
 # the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)
 RankCorr \%>\%
-  as_sample_tibble() \%>\%
+  tidy_draws() \%>\%
   gather_variables() \%>\%
   median_qi()
 
 }
 }
 \seealso{
-\code{\link{spread_draws}}, \code{\link{as_sample_tibble}}.
+\code{\link{spread_draws}}, \code{\link{tidy_draws}}.
 }
 \author{
 Matthew Kay

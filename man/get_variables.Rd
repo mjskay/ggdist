@@ -18,7 +18,7 @@ A character vector of variable names in the fitted model.
 }
 \description{
 Get a character vector of the names of the variables in a variety of fitted
-Bayesian model types. All models supported by \code{\link{as_sample_tibble}} are
+Bayesian model types. All models supported by \code{\link{tidy_draws}} are
 supported.
 }
 \details{

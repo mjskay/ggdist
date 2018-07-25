@@ -320,7 +320,7 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
 #' @import stringi
 #' @import dplyr
 spread_draws_long_ = function(model, variable_names, dimension_names, regex = FALSE, sep = "[, ]") {
-  draws = as_sample_tibble(model)
+  draws = tidy_draws(model)
   if (!regex) {
     variable_names = escape_regex(variable_names)
   }

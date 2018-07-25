@@ -7,7 +7,7 @@
 #' Get the names of the variables in a fitted Bayesian model
 #'
 #' Get a character vector of the names of the variables in a variety of fitted
-#' Bayesian model types. All models supported by \code{\link{as_sample_tibble}} are
+#' Bayesian model types. All models supported by \code{\link{tidy_draws}} are
 #' supported.
 #'
 #' This function is often useful for inspecting a model interactively in order
@@ -35,9 +35,9 @@ get_variables = function(model) UseMethod("get_variables")
 #' @rdname get_variables
 #' @export
 get_variables.default = function(model) {
-  #default method just uses as_sample_tibble; could add faster model-type-specific methods
+  #default method just uses tidy_draws; could add faster model-type-specific methods
   model %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     names() %>%
     setdiff(c(".chain", ".iteration", ".draw"))
 }

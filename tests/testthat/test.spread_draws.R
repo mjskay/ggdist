@@ -319,7 +319,7 @@ test_that("variable names containing regex special chars work", {
   dimnames(RankCorr_t)[[2]][[1]] = "(Intercept)"
 
   ref = RankCorr_t %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     select(.chain, .iteration, .draw, `(Intercept)`)
 
   expect_equal(spread_draws(RankCorr_t, `(Intercept)`), ref)

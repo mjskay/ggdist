@@ -25,7 +25,7 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 #' Turn tidy data frames of variables from a Bayesian model back into untidy data
 #'
 #' Inverse operations of \code{\link{spread_draws}} and \code{\link{gather_draws}}, giving
-#' results that look like \code{\link{as_sample_tibble}}.
+#' results that look like \code{\link{tidy_draws}}.
 #'
 #' These functions take symbolic specifications of variable names and dimensions in the same format as
 #' \code{\link{spread_draws}} and \code{\link{gather_draws}} and invert the tidy data frame back into
@@ -43,7 +43,7 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 #' @param value The name of the column in \code{data} that contains draws from the variables.
 #' @return A data frame.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{as_sample_tibble}}.
+#' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{tidy_draws}}.
 #' @keywords manip
 #' @examples
 #'

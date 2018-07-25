@@ -13,13 +13,13 @@ test_that("combine_chains works on a simple example", {
   data(line, package = "coda")
 
   ref = line %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     mutate(
       .draw = as.integer(.iteration + (.chain - 1) * max(.iteration))
     )
 
   line %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     combine_chains() %>%
     expect_equal(ref)
 })
@@ -28,11 +28,11 @@ test_that("combine_chains works with a named output column", {
   data(line, package = "coda")
 
   ref = line %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     mutate(d = as.integer(.iteration + (.chain - 1) * max(.iteration)))
 
   line %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     combine_chains(into = "d") %>%
     expect_equal(ref)
 })

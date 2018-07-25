@@ -40,7 +40,7 @@ test_that("ungather_draws works on multiple parameters with different dimensions
     ungather_draws(b[i, j], c(u_tau, tau)[i])
 
   ref = RankCorr %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     select(.chain, .iteration, .draw, starts_with("b"), starts_with("tau"), starts_with("u_tau"))
 
   expect_equal(result[, order(names(result))], ref[, order(names(ref))])
@@ -55,7 +55,7 @@ test_that("ungather_draws(drop_indices = TRUE) drops draw indices", {
     ungather_draws(b[i, j], c(u_tau, tau)[i], drop_indices = TRUE)
 
   ref = RankCorr %>%
-    as_sample_tibble() %>%
+    tidy_draws() %>%
     select(starts_with("b"), starts_with("tau"), starts_with("u_tau"))
 
   expect_equal(result[, order(names(result))], ref[, order(names(ref))])
@@ -71,7 +71,7 @@ test_that("ungather_draws works with user-specified names", {
   data(line, package = "coda")
 
   ref = line %>%
-    as_sample_tibble()
+    tidy_draws()
 
   result = line %>%
     gather_draws(alpha, beta, sigma) %>%
