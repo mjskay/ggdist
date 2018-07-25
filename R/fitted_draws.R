@@ -11,13 +11,13 @@
 #' @format NULL
 #' @usage NULL
 #' @export
-fitted_samples = function(...) {
+fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL) {
   .Deprecated("fitted_draws", package = "tidybayes") # nocov
-  fitted_samples_(...)                         # nocov
+  fitted_samples_(model, newdata, value = var, ..., n = n)     # nocov
 }
-fitted_samples_ = function(model, newdata, var = "estimate", ...) {
+fitted_samples_ = function(model, newdata, var = "estimate", ..., n = NULL, category = "category") {
   combine_chains_for_deprecated_(fitted_draws( # nocov
-    model, newdata, value = var, ...           # nocov
+    model, newdata, value = var, ..., n = n, category = category    # nocov
   ))                                           # nocov
 }
 
@@ -25,9 +25,9 @@ fitted_samples_ = function(model, newdata, var = "estimate", ...) {
 #' @format NULL
 #' @usage NULL
 #' @export
-add_fitted_samples = function(newdata, model, ...) {
+add_fitted_samples = function(newdata, model, ..., n = NULL) {
   .Deprecated("add_fitted_draws", package = "tidybayes") # nocov
-  fitted_samples_(model, newdata, ...)         # nocov
+  fitted_samples_(model, newdata, ..., n = n)         # nocov
 }
 
 

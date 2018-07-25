@@ -37,8 +37,10 @@ draw_from_chain_and_iteration_ = function(chain, iteration) {
     old_name = quo_name(enquo(old_arg))
 
     warning(
-      "In ", fun, "(): The `", old_name, "` argument is a deprecated alias for `",
-      new_name, "`. Use `", new_name, "` instead.",
+      "\nIn ", fun, "(): The `", old_name, "` argument is a deprecated alias for `",
+      new_name, "`.\n",
+      "Use the `", new_name, "` argument instead.\n",
+      "See help(\"tidybayes-deprecated\").\n",
 
       call. = FALSE
     )
@@ -61,7 +63,7 @@ stop_on_non_generic_arg_ <- function(parent_dot_args, method_type, ..., fun = as
       method_type,
       "`. Please use the generic argument `",
       names(old_args)[old_args == non_generic_arg_passed],
-      "`. See the documentation for additional details.",
+      "`. See the documentation for additional details.\n",
 
       call. = FALSE
     )

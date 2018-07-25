@@ -23,21 +23,21 @@
 \usage{
 point_interval(.data, ..., .width = 0.95, .point = median, .interval = qi,
   .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw",
-  ".row"))
+  ".row"), .prob)
 
 \method{point_interval}{default}(.data, ..., .width = 0.95, .point = median,
   .interval = qi, .simple_names = TRUE, .exclude = c(".chain",
-  ".iteration", ".draw", ".row"))
+  ".iteration", ".draw", ".row"), .prob)
 
 \method{point_interval}{numeric}(.data, ..., .width = 0.95, .point = median,
   .interval = qi, .simple_names = FALSE, .exclude = c(".chain",
-  ".iteration", ".draw", ".row"))
+  ".iteration", ".draw", ".row"), .prob)
 
 point_intervalh(...)
 
-qi(x, .width = 0.95)
+qi(x, .width = 0.95, .prob)
 
-hdi(x, .width = 0.95)
+hdi(x, .width = 0.95, .prob)
 
 mean_qi(.data, ..., .width = 0.95)
 
@@ -95,6 +95,8 @@ and \code{ymax} (for use with ggplot).}
 \item{.exclude}{A character vector of names of columns to be excluded from summarisation
 if no column names are specified to be summarised. Default ignores several meta-data column
 names used in tidybayes.}
+
+\item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{x}{vector to summarise (for interval functions: \code{qi} and \code{hdi})}
 }

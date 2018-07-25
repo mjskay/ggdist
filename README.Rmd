@@ -275,11 +275,22 @@ m %>%
 
 The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
 
-### Model comparison via compatibility with `broom`
+### Point and interval summaries
 
-The output of the `tidybayes::median_qi` function (and other `point_interval` functions) is compatible with `broom::tidy`, so we can compare parameter estimates easily to models supported by `broom`.
+The functions `tidybayes::median_qi`, `tidybayes::mean_qi`, `tidybayes::mode_hdi`, etc (the `point_interval` functions) give tidy output of point summaries and intervals:
 
-For example, let's compare to ordinary least squares (OLS) regression:
+```{r}
+m %>%
+  spread_samples(condition_mean[condition]) %>%
+  median_qi(condition_mean)
+```
+
+
+### Comparison to other models via compatibility with `broom`
+
+Translation functions like `tidybayes::to_broom_names`, `tidybayes::from_broom_names`, `tidybayes::to_ggmcmc_names`, etc. can be used to translate between common tidy format data frames with different naming schemes. This makes it easy, for example, to compare points summaries and intervals between `tidybayes` output and models that are supported by `broom::tidy`.
+
+For example, let's compare against ordinary least squares (OLS) regression:
 
 ```{r}
 linear_estimates = 
@@ -290,12 +301,13 @@ linear_estimates =
 linear_estimates
 ```
 
-The output from `median_qi` when given a single parameter uses `conf.low` and `conf.high` for interval names so that it lines up with `tidy`:
+Using `tidybayes::to_broom_names`, we'll convert the output from `median_qi` to use names from `broom` (`conf.low` and `conf.high`) so that comparison with output from `broom::tidy` is easy:
 
 ```{r}
 bayes_estimates = m %>%
   spread_samples(condition_mean[condition]) %>%
   median_qi(estimate = condition_mean) %>%
+  to_broom_names() %>%
   mutate(model = "Bayes")
 bayes_estimates
 ```

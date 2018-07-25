@@ -283,7 +283,7 @@ Plotting point estimates and with one interval is straightforward using the `ggp
 m %>%
   spread_samples(b_Intercept, r_condition[condition,]) %>%
   median_qi(condition_mean = b_Intercept + r_condition) %>%
-  ggplot(aes(y = condition, x = condition_mean, xmin = conf.low, xmax = conf.high)) +
+  ggplot(aes(y = condition, x = condition_mean, xmin = .lower, xmax = .upper)) +
   geom_pointrangeh()
 ```
 
@@ -302,7 +302,7 @@ The results are in a tidy format: one row per group and probability level (`.pro
 
 ```{r}
 m %>%
-  spread_samples(b_Intercept, r_condition[condition,]) %>%
+  spread_samples(b_Intercept, r_condition[condition,]) %>%.
   median_qi(condition_mean = b_Intercept + r_condition, .prob = c(.95, .66)) %>%
   ggplot(aes(y = condition, x = condition_mean)) +
   geom_pointintervalh() 

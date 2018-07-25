@@ -71,6 +71,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
 #' a different probabilty interval (and value of the corresponding \code{.width} column).
+#' @param .prob Deprecated. Use \code{.width} instead.
 #' @param .point Point summary function, which takes a vector and returns a single
 #' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
 #' @param .interval Interval function, which takes a vector and a probability
@@ -136,7 +137,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
 point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row")
+  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
   UseMethod("point_interval")
 }
@@ -144,8 +145,9 @@ point_interval = function(.data, ..., .width = .95, .point = median, .interval =
 #' @rdname point_interval
 #' @export
 point_interval.default = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row")
+  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
   point_name = tolower(quo_name(enquo(.point)))
@@ -256,8 +258,9 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 #' @importFrom dplyr rename
 #' @export
 point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = FALSE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row")
+  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
+  .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   point_name = tolower(quo_name(enquo(.point)))
   interval_name = tolower(quo_name(enquo(.interval)))
@@ -291,7 +294,9 @@ point_intervalh = flip_aes(point_interval)
 #' @importFrom stats quantile
 #' @export
 #' @rdname point_interval
-qi = function(x, .width = .95) {
+qi = function(x, .width = .95, .prob) {
+  .width = .Deprecated_argument_alias(.width, .prob)
+
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
   matrix(quantile(x, c(lower_prob, upper_prob)), ncol = 2)
@@ -300,7 +305,9 @@ qi = function(x, .width = .95) {
 #' @importFrom coda HPDinterval as.mcmc
 #' @export
 #' @rdname point_interval
-hdi = function(x, .width = .95) {
+hdi = function(x, .width = .95, .prob) {
+  .width = .Deprecated_argument_alias(.width, .prob)
+
   intervals = HDInterval::hdi(density(x), credMass = .width, allowSplit = TRUE)
   if (nrow(intervals) == 1) {
     # the above method tends to be a little conservative on unimodal distributions, so if the
