@@ -56,14 +56,12 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
 
   #subsetting to test the `n` argument
   set.seed(1234)
-  draw_subset = sample(ref$.draw, 10)
+  draw_subset = sample(unique(ref$.draw), 10)
   filtered_ref = ref %>%
     filter(.draw %in% draw_subset)
 
-  set.seed(1234)
-  expect_equal(fitted_draws(m_hp_wt, mtcars_tbl, n = 10), filtered_ref)
-  set.seed(1234)
-  expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt, n = 10), filtered_ref)
+  expect_equal(fitted_draws(m_hp_wt, mtcars_tbl, n = 10, seed = 1234), filtered_ref)
+  expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt, n = 10, seed = 1234), filtered_ref)
 })
 
 test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", {
@@ -112,6 +110,14 @@ test_that("[add_]fitted_draws works on brms models without dpar", {
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp, dpar = FALSE), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp, dpar = FALSE, value = "foo"), rename(ref, foo = .value))
+
+  #subsetting to test the `n` argument
+  set.seed(1234)
+  draw_subset = sample(unique(ref$.draw), 10)
+  filtered_ref = ref %>%
+    filter(.draw %in% draw_subset)
+
+  expect_equal(add_fitted_draws(mtcars_tbl, m_hp, n = 10, seed = 1234), filtered_ref)
 })
 
 
@@ -151,6 +157,15 @@ test_that("[add_]fitted_draws works on brms models with dpar", {
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_sigma, dpar = FALSE), select(ref, -sigma, -mu))
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_sigma, dpar = NULL), select(ref, -sigma, -mu))
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_sigma, dpar = list("mu", "sigma", s1 = "sigma")), mutate(ref, s1 = sigma))
+
+
+  #subsetting to test the `n` argument
+  set.seed(1234)
+  draw_subset = sample(unique(ref$.draw), 10)
+  filtered_ref = ref %>%
+    filter(.draw %in% draw_subset)
+
+  expect_equal(add_fitted_draws(mtcars_tbl, m_hp_sigma, n = 10, seed = 1234, dpar = TRUE), filtered_ref)
 })
 
 
@@ -234,6 +249,15 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (re
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg, category = "foo"), rename(ref, foo = .category))
+
+  #subsetting to test the `n` argument
+  set.seed(1234)
+  draw_subset = sample(unique(ref$.draw), 10)
+  filtered_ref = ref %>%
+    filter(.draw %in% draw_subset)
+
+  expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg, n = 10, seed = 1234), filtered_ref)
+
 })
 
 

@@ -36,16 +36,16 @@ add_fitted_samples = function(newdata, model, ...) {
 
 #' @rdname add_predicted_draws
 #' @export
-add_fitted_draws = function(newdata, model, value = ".value", ..., n = NULL, re_formula = NULL,
+add_fitted_draws = function(newdata, model, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
   category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
-  fitted_draws(model, newdata, value, ..., n = n, re_formula = re_formula,
+  fitted_draws(model, newdata, value, ..., n = n, seed = seed, re_formula = re_formula,
     category = category, dpar = dpar, scale = scale)
 }
 
 #' @rdname add_predicted_draws
 #' @export
-fitted_draws = function(model, newdata, value = ".value", ..., n = NULL, re_formula = NULL,
+fitted_draws = function(model, newdata, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
   category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
   UseMethod("fitted_draws")
@@ -59,7 +59,7 @@ fitted_draws.default = function(model, newdata, ...) {
 
 #' @rdname add_predicted_draws
 #' @export
-fitted_draws.stanreg = function(model, newdata, value = ".value", ..., n = NULL, re_formula = NULL,
+fitted_draws.stanreg = function(model, newdata, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
   category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
   transform = match.arg(scale) == "response"
@@ -73,11 +73,12 @@ fitted_draws.stanreg = function(model, newdata, value = ".value", ..., n = NULL,
   )
 
   draws = fitted_predicted_draws_brmsfit_(rstanarm::posterior_linpred, model, newdata, output_name = value, ...,
-    category = category, re.form = re_formula, transform = transform, is_brms = FALSE
+    seed = seed, category = category, re.form = re_formula, transform = transform, is_brms = FALSE
   )
   # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
   if (!is.null(n)) {
-    draw_subset = sample(draws$.draw, n)
+    if (!is.null(seed)) set.seed(seed)
+    draw_subset = sample(unique(draws$.draw), n)
     draws[draws[[".draw"]] %in% draw_subset,]
   } else {
     draws
@@ -88,7 +89,7 @@ fitted_draws.stanreg = function(model, newdata, value = ".value", ..., n = NULL,
 #' @importFrom rlang is_true is_false is_empty
 #' @importFrom purrr map
 #' @export
-fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL, re_formula = NULL,
+fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
   category = ".category", dpar = FALSE, scale = c("response", "linear")
 ) {
   scale = match.arg(scale)
@@ -135,7 +136,7 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
     varname = names(dpars)[[i]]
     dpar_fitted_draws = fitted_predicted_draws_brmsfit_(
       fitted, model, newdata, output_name = ".value", ...,
-      category = category, nsamples = n, re_formula = re_formula, dpar = dpars[[i]], scale = scale
+      category = category, re_formula = re_formula, dpar = dpars[[i]], scale = scale
     )
 
     if (nrow(dpar_fitted_draws) == nrow(draws)) {
@@ -163,5 +164,12 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
     }
   }
 
-  draws
+  # posterior_linpred, unlike posterior_predict, does not have a "draws" argument for some reason
+  if (!is.null(n)) {
+    if (!is.null(seed)) set.seed(seed)
+    draw_subset = sample(unique(draws$.draw), n)
+    draws[draws[[".draw"]] %in% draw_subset,]
+  } else {
+    draws
+  }
 }

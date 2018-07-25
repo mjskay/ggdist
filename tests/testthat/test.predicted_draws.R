@@ -82,7 +82,7 @@ test_that("[add_]predicted_draws works on a simple brms model", {
   m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   set.seed(123)
-  preds = predict(m_hp, mtcars_tbl, summary = FALSE) %>%
+  preds = predict(m_hp, mtcars_tbl, summary = FALSE, nsamples = 100) %>%
     as.data.frame() %>%
     set_names(seq_len(ncol(.))) %>%
     mutate(
@@ -98,10 +98,8 @@ test_that("[add_]predicted_draws works on a simple brms model", {
     inner_join(preds, by = ".row") %>%
     mutate(.row = as.integer(.row))
 
-  set.seed(123)
-  expect_equal(ref, predicted_draws(m_hp, mtcars_tbl))
-  set.seed(123)
-  expect_equal(ref, add_predicted_draws(mtcars_tbl, m_hp, seed = 123))
+  expect_equal(predicted_draws(m_hp, mtcars_tbl, n = 100, seed = 123), ref)
+  expect_equal(add_predicted_draws(mtcars_tbl, m_hp, n = 100, seed = 123), ref)
 })
 
 test_that("[add_]predicted_draws throws an error when nsamples is called instead of n in brms", {

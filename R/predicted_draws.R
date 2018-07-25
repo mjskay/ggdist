@@ -70,7 +70,8 @@ add_predicted_samples = function(newdata, model, ...) {
 #' @param prediction The name of the output column for \code{predicted_draws}; default \code{".prediction"}.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
-#' @param n The number of draws per prediction / fit to return.
+#' @param n The number of draws per prediction / fit to return, or \code{NULL} to return all draws.
+#' @param seed A seed to use when subsampling draws (i.e. when \code{n} is not \code{NULL}).
 #' @param re_formula formula containing group-level effects to be considered in the prediction.
 #' If \code{NULL} (default), include all group-level effects; if \code{NA}, include no group-level effects.
 #' Some model types (such as \code{\link[brms]{brm}} and \code{\link[rstanarm]{stanreg-objects}}) allow
@@ -147,13 +148,13 @@ add_predicted_samples = function(newdata, model, ...) {
 #' @importFrom dplyr mutate sample_n ungroup group_by
 #' @importFrom stats fitted predict
 #' @export
-add_predicted_draws = function(newdata, model, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
-  predicted_draws(model, newdata, prediction, ..., n = n, re_formula = re_formula)
+add_predicted_draws = function(newdata, model, prediction = ".prediction", ..., n = NULL, seed = NULL, re_formula = NULL) {
+  predicted_draws(model, newdata, prediction, ..., n = n, seed = seed, re_formula = re_formula)
 }
 
 #' @rdname add_predicted_draws
 #' @export
-predicted_draws = function(model, newdata, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
+predicted_draws = function(model, newdata, prediction = ".prediction", ..., n = NULL, seed = NULL, re_formula = NULL) {
   UseMethod("predicted_draws")
 }
 
@@ -165,7 +166,7 @@ predicted_draws.default = function(model, newdata, ...) {
 
 #' @rdname add_predicted_draws
 #' @export
-predicted_draws.stanreg = function(model, newdata, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
+predicted_draws.stanreg = function(model, newdata, prediction = ".prediction", ..., n = NULL, seed = NULL, re_formula = NULL) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `predicted_draws` to support `stanreg` objects.", call. = FALSE) # nocov
   }
@@ -175,13 +176,13 @@ predicted_draws.stanreg = function(model, newdata, prediction = ".prediction", .
   )
 
   fitted_predicted_draws_brmsfit_(rstanarm::posterior_predict, model, newdata, output_name = prediction, ...,
-    draws = n, re.form = re_formula, is_brms = FALSE
+    draws = n, seed = seed, re.form = re_formula, is_brms = FALSE
   )
 }
 
 #' @rdname add_predicted_draws
 #' @export
-predicted_draws.brmsfit = function(model, newdata, prediction = ".prediction", ..., n = NULL, re_formula = NULL) {
+predicted_draws.brmsfit = function(model, newdata, prediction = ".prediction", ..., n = NULL, seed = NULL, re_formula = NULL) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `predicted_draws` to support `brmsfit` objects.", call. = FALSE) # nocov
   }
@@ -191,14 +192,14 @@ predicted_draws.brmsfit = function(model, newdata, prediction = ".prediction", .
   )
 
   fitted_predicted_draws_brmsfit_(predict, model, newdata, output_name = prediction, ...,
-    nsamples = n, re_formula = re_formula
+    nsamples = n, seed = seed, re_formula = re_formula
   )
 }
 
 
 #' @importFrom arrayhelpers array2df ndim
 fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, output_name, category, ...,
-  is_brms = TRUE, summary = NULL #summary is ignored, we change it ourselves
+  seed = NULL, is_brms = TRUE, summary = NULL #summary is ignored, we change it ourselves
 ) {
   newdata %<>% ungroup()
 
@@ -207,6 +208,7 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
     .row = NA
   )
 
+  if (!is.null(seed)) set.seed(seed)
   fits_preds <- if (is_brms) {
     # only brms has/needs the summary argument
     f_fitted_predicted(model, newdata = newdata, summary = FALSE, ...)

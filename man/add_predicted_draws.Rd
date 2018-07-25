@@ -15,36 +15,36 @@
 of a model to a data frame}
 \usage{
 add_fitted_draws(newdata, model, value = ".value", ..., n = NULL,
-  re_formula = NULL, category = ".category", dpar = FALSE,
+  seed = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
   scale = c("response", "linear"))
 
-fitted_draws(model, newdata, value = ".value", ..., n = NULL,
+fitted_draws(model, newdata, value = ".value", ..., n = NULL, seed = NULL,
   re_formula = NULL, category = ".category", dpar = FALSE,
   scale = c("response", "linear"))
 
 \method{fitted_draws}{default}(model, newdata, ...)
 
 \method{fitted_draws}{stanreg}(model, newdata, value = ".value", ...,
-  n = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
-  scale = c("response", "linear"))
+  n = NULL, seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
 
 \method{fitted_draws}{brmsfit}(model, newdata, value = ".value", ...,
-  n = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
-  scale = c("response", "linear"))
+  n = NULL, seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
 
 add_predicted_draws(newdata, model, prediction = ".prediction", ...,
-  n = NULL, re_formula = NULL)
+  n = NULL, seed = NULL, re_formula = NULL)
 
 predicted_draws(model, newdata, prediction = ".prediction", ..., n = NULL,
-  re_formula = NULL)
+  seed = NULL, re_formula = NULL)
 
 \method{predicted_draws}{default}(model, newdata, ...)
 
 \method{predicted_draws}{stanreg}(model, newdata, prediction = ".prediction",
-  ..., n = NULL, re_formula = NULL)
+  ..., n = NULL, seed = NULL, re_formula = NULL)
 
 \method{predicted_draws}{brmsfit}(model, newdata, prediction = ".prediction",
-  ..., n = NULL, re_formula = NULL)
+  ..., n = NULL, seed = NULL, re_formula = NULL)
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
@@ -63,7 +63,9 @@ and \code{brm}, are supported here).}
 \item{...}{Additional arguments passed to the underlying prediction method for the type of
 model given.}
 
-\item{n}{The number of draws per prediction / fit to return.}
+\item{n}{The number of draws per prediction / fit to return, or \code{NULL} to return all draws.}
+
+\item{seed}{A seed to use when subsampling draws (i.e. when \code{n} is not \code{NULL}).}
 
 \item{re_formula}{formula containing group-level effects to be considered in the prediction.
 If \code{NULL} (default), include all group-level effects; if \code{NA}, include no group-level effects.
