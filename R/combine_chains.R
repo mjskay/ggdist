@@ -56,18 +56,12 @@ combine_chains = function(data, chain = .chain, iteration = .iteration, into = "
   chain = enquo(chain)
   iteration = enquo(iteration)
 
-  into_col = if (is.null(into)) {
-    iteration[[2]]
-  } else {
-    into
-  }
-
   max_iteration = data %>%
     pull(!!iteration) %>%
     max()
 
   data %<>% mutate(
-    !!into_col := as.integer(ifelse(is.na(!!chain), 0, (!!chain) - 1) * (!!max_iteration) + !!iteration)
+    !!into := as.integer(ifelse(is.na(!!chain), 0, (!!chain) - 1) * (!!max_iteration) + !!iteration)
   )
 
   data
