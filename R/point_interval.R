@@ -148,8 +148,8 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 ) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
-  point_name = str_to_lower(quo_name(enquo(.point)))
-  interval_name = str_to_lower(quo_name(enquo(.interval)))
+  point_name = tolower(quo_name(enquo(.point)))
+  interval_name = tolower(quo_name(enquo(.interval)))
 
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
@@ -259,8 +259,8 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
-  point_name = str_to_lower(quo_name(enquo(.point)))
-  interval_name = str_to_lower(quo_name(enquo(.interval)))
+  point_name = tolower(quo_name(enquo(.point)))
+  interval_name = tolower(quo_name(enquo(.interval)))
 
   result = map_dfr(.width, function(p) {
     interval = .interval(data, .width = p)
