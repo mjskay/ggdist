@@ -24,7 +24,7 @@ supported.
 \details{
 This function is often useful for inspecting a model interactively in order
 to construct calls to \code{\link{spread_draws}} or \code{\link{gather_draws}}
-in order to extract samples in a tidy format.
+in order to extract draws from models in a tidy format.
 }
 \examples{
 

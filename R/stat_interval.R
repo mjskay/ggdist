@@ -15,7 +15,7 @@ globalVariables(c("...width.."))
 #' \code{\link{geom_interval}} / \code{\link{geom_intervalh}} with sensible defaults.
 #' While the corresponding \code{geom}s are intended for use on
 #' data frames that have already been summarized using a \code{\link{point_interval}}
-#' function, these \code{stat}s are intended for use directly on data frames of samples, and
+#' function, these \code{stat}s are intended for use directly on data frames of draws, and
 #' will perform the summarization using a \code{\link{point_interval}} function.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with

@@ -4,7 +4,7 @@
 ###############################################################################
 
 
-#' Get a sample of draws from a model as a tibble
+#' Get a sample of posterior draws from a model as a tibble
 #'
 #' Extract draws from a Bayesian fit into a wide-format data frame with a
 #' \code{.chain}, \code{.iteration}, and \code{.draw} column, as well as all variables
@@ -141,21 +141,21 @@ as_sample_tibble.matrix = function(model) {
 #' @importFrom purrr discard
 #' @export
 as_sample_tibble.MCMCglmm = function(model) {
-  # samples from MME solutions, including fixed effects
-  sol_samples = as_sample_tibble(model$Sol)
+  # draws from MME solutions, including fixed effects
+  sol_draws = as_sample_tibble(model$Sol)
 
-  # samples from (co)variance matrices, ordinal cutpoints, and latent variables
-  other_samples =
+  # draws from (co)variance matrices, ordinal cutpoints, and latent variables
+  other_draws =
     model[c("VCV", "CP", "Liab")] %>%
     discard(is.null) %>%
-    map2(names(.), function(samples, param_type) {
-      dimnames(samples)[[2]] %<>% paste0(param_type, "_", .)
-      as_sample_tibble(samples)
+    map2(names(.), function(draws, param_type) {
+      dimnames(draws)[[2]] %<>% paste0(param_type, "_", .)
+      as_sample_tibble(draws)
     })
 
-  sol_samples %>%
+  sol_draws %>%
     list() %>%
-    c(other_samples) %>%
+    c(other_draws) %>%
     reduce(inner_join, by = c(".chain", ".iteration", ".draw"))
 }
 

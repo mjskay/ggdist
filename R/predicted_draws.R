@@ -171,7 +171,7 @@ predicted_draws.stanreg = function(model, newdata, prediction = ".prediction", .
   }
 
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]predicted_draws", n = "draws", re_formula = "re.form"
+    names(enquos(...)), "[add_]predicted_draws", n = "draws", re_formula = "re.form"
   )
 
   fitted_predicted_draws_brmsfit_(rstanarm::posterior_predict, model, newdata, output_name = prediction, ...,
@@ -187,7 +187,7 @@ predicted_draws.brmsfit = function(model, newdata, prediction = ".prediction", .
   }
 
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]predicted_draws", n = "nsamples"
+    names(enquos(...)), "[add_]predicted_draws", n = "nsamples"
   )
 
   fitted_predicted_draws_brmsfit_(predict, model, newdata, output_name = prediction, ...,
@@ -252,23 +252,4 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
     inner_join(fits_preds_df, by = ".row") %>%
     select(-!!sym(output_name), !!sym(output_name)) %>%
     group_by(!!!syms(groups))
-}
-
-stop_on_non_generic_arg_ <- function(parent_dot_args_names, method_type, ...) {
-  if (any(parent_dot_args_names %in% list(...))) {
-    non_generic_names_passed = parent_dot_args_names[parent_dot_args_names %in% list(...)]
-
-    stop(
-      paste(
-        c("`", non_generic_names_passed[1],
-          "` is not supported in `",
-          method_type,
-          "`. Please use the generic argument `",
-          names(list(...))[list(...) %in% non_generic_names_passed[1]],
-          "`. See the documentation for additional details."
-          ),
-        sep = ""
-      )
-    )
-  }
 }

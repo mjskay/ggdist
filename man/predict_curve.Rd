@@ -63,7 +63,7 @@ prediction curve).
 with \code{\link{point_interval}} or \code{\link[dplyr]{do}} and
 \code{\link{density_bins}} instead.
 
-The function generates a predictive curve given some posterior samples
+The function generates a predictive curve given posterior draws
 (\code{data}), an expression (\code{formula}), and a set of variables
 defining the curve (\code{...}). For every group in \code{data} (if it is a
 grouped data frame---see \code{\link{group_by}}; otherwise the entire data

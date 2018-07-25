@@ -34,6 +34,7 @@ combine_chains_for_deprecated_ = function(x) {
     warning(
       "In ", fun, "(): The `", old_name, "` argument is a deprecated alias for `",
       new_name, "`. Use `", new_name, "` instead.",
+
       call. = FALSE
     )
 
@@ -41,3 +42,23 @@ combine_chains_for_deprecated_ = function(x) {
   }
 }
 
+stop_on_non_generic_arg_ <- function(parent_dot_args, method_type, ..., fun = as.character(sys.call(sys.parent()))[1L]) {
+  old_args = list(...)
+
+  if (any(parent_dot_args %in% old_args)) {
+    non_generic_args_passed = intersect(parent_dot_args, old_args)
+    non_generic_arg_passed = non_generic_args_passed[[1]]
+
+    stop(
+      "In ", fun, "(): ",
+      "The argument `", non_generic_arg_passed,
+      "` is not supported in `",
+      method_type,
+      "`. Please use the generic argument `",
+      names(old_args)[old_args == non_generic_arg_passed],
+      "`. See the documentation for additional details.",
+
+      call. = FALSE
+    )
+  }
+}

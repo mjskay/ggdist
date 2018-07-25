@@ -14,7 +14,7 @@
 #' with \code{\link{point_interval}} or \code{\link[dplyr]{do}} and
 #' \code{\link{density_bins}} instead.
 #'
-#' The function generates a predictive curve given some posterior samples
+#' The function generates a predictive curve given posterior draws
 #' (\code{data}), an expression (\code{formula}), and a set of variables
 #' defining the curve (\code{...}). For every group in \code{data} (if it is a
 #' grouped data frame---see \code{\link{group_by}}; otherwise the entire data
@@ -157,7 +157,7 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' each bin} \item{upper}{Upper endpoint of each bin} \item{density}{Density
 #' estimate of the bin}
 #' @author Matthew Kay
-#' @seealso See \code{\link{add_predicted_samples}} and \code{\link{stat_lineribbon}} for a better approach. This
+#' @seealso See \code{\link{add_predicted_draws}} and \code{\link{stat_lineribbon}} for a better approach. This
 #' function may be deprecated in the future.
 #' @keywords manip
 #' @examples
@@ -179,7 +179,7 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' mtcars %>%
 #'   group_by(cyl) %>%
 #'   data_grid(hp = seq_range(hp, by = step)) %>%
-#'   add_predicted_samples(m_mpg) %>%
+#'   add_predicted_draws(m_mpg) %>%
 #'   do(density_bins(.$pred)) %>%
 #'   ggplot() +
 #'   geom_rect(aes(

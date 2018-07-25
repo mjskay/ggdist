@@ -47,7 +47,7 @@ spread_samples = function(...) {
 #'
 #' Imagine a JAGS or Stan fit named \code{fit}. The model may contain a variable named
 #' \code{b[i,v]} (in the JAGS or Stan language) with dimension \code{i} in \code{1:100} and
-#' dimension \code{v} in \code{1:3}. However, the default format for samples returned from
+#' dimension \code{v} in \code{1:3}. However, the default format for draws returned from
 #' JAGS or Stan in R will not reflect this indexing structure, instead
 #' they will have multiple columns with names like \code{"b[1,1]"}, \code{"b[2,1]"}, etc.
 #'
@@ -254,9 +254,9 @@ spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
     reduce(union)
 
   tidysamples %>%
-    reduce(function(tidysamples1, tidysamples2) {
-      by_ = intersect(names(tidysamples1), names(tidysamples2))
-      inner_join(tidysamples1, tidysamples2, by = by_)
+    reduce(function(tidysample1, tidysample2) {
+      by_ = intersect(names(tidysample1), names(tidysample2))
+      inner_join(tidysample1, tidysample2, by = by_)
     }) %>%
     group_by_at(groups_)
 }
@@ -272,8 +272,8 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   dimension_names = spec[[2]]
   wide_dimension_name = spec[[3]]
 
-  #extract the samples into a long data frame
-  samples = spread_draws_long_(model, variable_names, dimension_names, regex = regex, sep = sep)
+  #extract the draws into a long data frame
+  draws = spread_draws_long_(model, variable_names, dimension_names, regex = regex, sep = sep)
 
   #convert variable and/or dimensions back into usable data types
   constructors = attr(model, "constructors")
@@ -281,7 +281,7 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   for (column_name in c(variable_names, dimension_names)) {
     if (column_name %in% names(constructors)) {
       #we have a data type constructor for this dimension, convert it
-      samples[[column_name]] = constructors[[column_name]](samples[[column_name]])
+      draws[[column_name]] = constructors[[column_name]](draws[[column_name]])
     }
   }
 
@@ -290,18 +290,18 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   if (!is.null(wide_dimension_name)) {
     #wide dimension requested by name
     if (length(variable_names) != 1) {
-      stop("Cannot extract samples of multiple variables in wide format.")
+      stop("Cannot extract draws from multiple variables in wide format.")
     }
-    samples %>%
+    draws %>%
       spread_(wide_dimension_name, variable_names)
   }
-  else if (has_name(samples, "..")) {
+  else if (has_name(draws, "..")) {
     #a column named ".." is present, use it to form a wide version of the data
     #with numbered names based on the variable name
     if (length(variable_names) != 1) {
-      stop("Cannot extract samples of multiple variables in wide format.")
+      stop("Cannot extract draws from multiple variables in wide format.")
     }
-    samples %>%
+    draws %>%
       #the ".." column will have been set as a grouping column because it was
       #specified as a dimension; therefore before we can modify it we have to
       #remove it from the grouping columns on this table (mutate does not
@@ -312,7 +312,7 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   }
   else {
     #no wide column => just return long version
-    samples
+    draws
   }
 }
 
@@ -320,7 +320,7 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
 #' @import stringi
 #' @import dplyr
 spread_draws_long_ = function(model, variable_names, dimension_names, regex = FALSE, sep = "[, ]") {
-  samples = as_sample_tibble(model)
+  draws = as_sample_tibble(model)
   if (!regex) {
     variable_names = escape_regex(variable_names)
   }
@@ -328,7 +328,7 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
   if (is.null(dimension_names)) {
     #no dimensions, just find the colnames matching the regex(es)
     variable_regex = paste0("^(", paste(variable_names, collapse = "|"), ")$")
-    variable_names_index = stri_detect_regex(colnames(samples), variable_regex)
+    variable_names_index = stri_detect_regex(colnames(draws), variable_regex)
 
     if (!any(variable_names_index)) {
       stop(paste0("No variables found matching spec: ",
@@ -336,8 +336,8 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
       ))
     }
 
-    variable_names = colnames(samples)[variable_names_index]
-    samples[, c(".chain", ".iteration", ".draw", variable_names)]
+    variable_names = colnames(draws)[variable_names_index]
+    draws[, c(".chain", ".iteration", ".draw", variable_names)]
   }
   else {
     dimension_sep_regex = sep
@@ -351,19 +351,19 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
       paste0(rep(dimension_regex, length(dimension_names)), collapse = dimension_sep_regex),
       "\\]$"
     )
-    variable_names_index = stri_detect_regex(colnames(samples), variable_regex)
+    variable_names_index = stri_detect_regex(colnames(draws), variable_regex)
     if (!any(variable_names_index)) {
       stop(paste0("No variables found matching spec: ",
         "c(", paste0(variable_names, collapse = ","), ")",
         "[", paste0(dimension_names, collapse = ","), "]"
       ))
     }
-    variable_names = colnames(samples)[variable_names_index]
+    variable_names = colnames(draws)[variable_names_index]
 
     #rename columns to drop trailing "]" to eliminate extraneous last column
     #when we do separate(), below. e.g. "x[1,2]" becomes "x[1,2". Do the same
     #with variable_names so we can select the columns
-    colnames(samples)[variable_names_index] = stri_sub(colnames(samples)[variable_names_index], to = -2)
+    colnames(draws)[variable_names_index] = stri_sub(colnames(draws)[variable_names_index], to = -2)
     variable_names = stri_sub(variable_names, to = -2)
 
     #specs containing empty dimensions (e.g. mu[] or mu[,k]) will produce
@@ -378,19 +378,19 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
     # Make long format data frame of the variables we want to split.
     # The following code chunk is approximately equivalent to this:
     #
-    #   long_samples = samples[, c(".chain", ".iteration", ".draw", variable_names)] %>%
+    #   long_draws = draws[, c(".chain", ".iteration", ".draw", variable_names)] %>%
     #     gather_(".variable", ".value", variable_names)
     #
     # but takes half as long to run (makes a difference with large samples):
-    long_samples = samples[,c(".chain",".iteration",".draw")] %>%
+    long_draws = draws[,c(".chain",".iteration",".draw")] %>%
       cbind(map_dfr(variable_names, function(variable_name) data.frame(
         .variable = variable_name,
-        .value = samples[[variable_name]],
+        .value = draws[[variable_name]],
 
         stringsAsFactors = FALSE
       )))
 
-    long_samples %>%
+    long_draws %>%
       #next, split dimensions in variable names into columns
       separate_(".variable", c(".variable", ".dimensions"), sep = "\\[|\\]") %>%
       separate_(".dimensions", temp_dimension_names, sep = dimension_sep_regex,

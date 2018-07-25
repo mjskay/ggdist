@@ -3,7 +3,7 @@
 \name{recover_types}
 \alias{recover_types}
 \alias{apply_prototypes}
-\title{Decorate a model fit or samples with data types recovered from the input data}
+\title{Decorate a model fit or sample with data types recovered from the input data}
 \usage{
 recover_types(model, ...)
 }
@@ -19,7 +19,7 @@ See `Details`.}
 A decorated version of \code{model}.
 }
 \description{
-Decorate the samples returned from a Bayesian model with types for
+Decorate a Bayesian model fit or a sample from it with types for
 variable and dimension data types. Meant to be used before calling
 \code{\link{spread_draws}} or \code{\link{gather_draws}} so that the values returned by
 those functions are translated back into useful data types.
@@ -44,7 +44,7 @@ frame from which the original data came.
 Supported types of prototypes are factor, ordered, and logical. For example:
 
 \itemize{ \item if \code{prototypes$v} is a factor, the v column in the
-returned samples is translated into a factor using \code{factor(v,
+returned draws is translated into a factor using \code{factor(v,
 labels=levels(prototypes$v), ordered=is.ordered(prototypes$v))}.  \item if
 \code{prototypes$v} is a logical, the v column is translated into a logical
 using \code{as.logical(v)}. }

@@ -19,9 +19,9 @@ apply_prototypes = function(...) {
   recover_types(...)            # nocov
 }
 
-#' Decorate a model fit or samples with data types recovered from the input data
+#' Decorate a model fit or sample with data types recovered from the input data
 #'
-#' Decorate the samples returned from a Bayesian model with types for
+#' Decorate a Bayesian model fit or a sample from it with types for
 #' variable and dimension data types. Meant to be used before calling
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}} so that the values returned by
 #' those functions are translated back into useful data types.
@@ -45,7 +45,7 @@ apply_prototypes = function(...) {
 #' Supported types of prototypes are factor, ordered, and logical. For example:
 #'
 #' \itemize{ \item if \code{prototypes$v} is a factor, the v column in the
-#' returned samples is translated into a factor using \code{factor(v,
+#' returned draws is translated into a factor using \code{factor(v,
 #' labels=levels(prototypes$v), ordered=is.ordered(prototypes$v))}.  \item if
 #' \code{prototypes$v} is a logical, the v column is translated into a logical
 #' using \code{as.logical(v)}. }

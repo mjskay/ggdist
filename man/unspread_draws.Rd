@@ -19,7 +19,7 @@ unspread_draws(data, ..., draw_indices = c(".chain", ".iteration", ".draw"),
 
 \item{variable}{The name of the column in \code{data} that contains the names of variables from the model.}
 
-\item{value}{The name of the column in \code{data} that contains the samples of the variables.}
+\item{value}{The name of the column in \code{data} that contains draws from the variables.}
 
 \item{draw_indices}{Character vector of column names in \code{data} that
 should be treated as indices of draws. The default is \code{c(".chain",".iteration",".draw")},
@@ -46,8 +46,8 @@ library(dplyr)
 
 data(RankCorr, package = "tidybayes")
 
-# We can use unspread_draws to allow us to manipulate samples with tidybayes
-# and then transform the samples into a form we can use with packages like bayesplot.
+# We can use unspread_draws to allow us to manipulate draws with tidybayes
+# and then transform the draws into a form we can use with packages like bayesplot.
 # Here we subset b[i,j] to just values of i in 1:3 and j == 1, then plot with bayesplot
 RankCorr \%>\%
   spread_draws(b[i,j]) \%>\%

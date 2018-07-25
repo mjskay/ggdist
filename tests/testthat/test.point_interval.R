@@ -12,7 +12,7 @@ context("point_interval")
 
 ff_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
 
-get_samples = function() {
+get_draws = function() {
   #observations of tau grouped by the factor ff (with levels ff_labels)
   data(RankCorr, package = "tidybayes")
   ldply(1:18, function(i) {
@@ -26,9 +26,9 @@ get_samples = function() {
 }
 
 test_that("median_qi works on a grouped variable", {
-  samples = get_samples()
+  draws = get_draws()
 
-  ref = samples %>%
+  ref = draws %>%
     group_by(ff) %>%
     summarise(
       tau.lower = quantile(tau, .025),
@@ -36,11 +36,11 @@ test_that("median_qi works on a grouped variable", {
       tau = median(tau)
     )
 
-  result.simple = samples %>%
+  result.simple = draws %>%
     group_by(ff) %>%
     median_qi(tau)
 
-  result = samples %>%
+  result = draws %>%
     group_by(ff) %>%
     median_qi(tau, .simple_names = FALSE)
 
@@ -53,12 +53,12 @@ test_that("median_qi works on a grouped variable", {
 })
 
 test_that("mean_qi works on multiple columns", {
-  samples = get_samples() %>%
+  draws = get_draws() %>%
     group_by(.iteration) %>%
     spread(ff, tau) %>%
     ungroup()
 
-  ref = samples %>%
+  ref = draws %>%
     summarise(
       a.lower = as.vector(quantile(a, .025)),
       a.upper = as.vector(quantile(a, .975)),
@@ -68,7 +68,7 @@ test_that("mean_qi works on multiple columns", {
       b = mean(b)
     )
 
-  result = samples %>%
+  result = draws %>%
     mean_qi(a, b)
 
   expect_equal(result$a, ref$a)
@@ -80,16 +80,16 @@ test_that("mean_qi works on multiple columns", {
 })
 
 test_that("mean_qi works on non-95% probs", {
-  samples = get_samples()
+  draws = get_draws()
 
-  ref = samples %>%
+  ref = draws %>%
     summarise(
       tau.lower = as.vector(quantile(tau, .25)),
       tau.upper = as.vector(quantile(tau, .75)),
       tau = mean(tau)
     )
 
-  result = samples %>%
+  result = draws %>%
     mean_qi(tau, .width = .5)
 
   expect_equal(result$tau, ref$tau)
@@ -98,9 +98,9 @@ test_that("mean_qi works on non-95% probs", {
 })
 
 test_that("mean_qi works on multiple probs with groups", {
-  samples = get_samples()
+  draws = get_draws()
 
-  ref95 = samples %>%
+  ref95 = draws %>%
     group_by(ff) %>%
     summarise(
       .lower = as.vector(quantile(tau, .025)),
@@ -112,7 +112,7 @@ test_that("mean_qi works on multiple probs with groups", {
     ) %>%
     select(ff, tau, .lower, .upper, .width, .point, .interval)
 
-  ref50 = samples %>%
+  ref50 = draws %>%
     group_by(ff) %>%
     summarise(
       .lower = as.vector(quantile(tau, .25)),
@@ -126,11 +126,11 @@ test_that("mean_qi works on multiple probs with groups", {
 
   ref = bind_rows(ref50, ref95)
 
-  result = samples %>%
+  result = draws %>%
     group_by(ff) %>%
     mean_qi(tau, .width = c(.5, .95))
 
-  result_list = samples %>%
+  result_list = draws %>%
     group_by(ff) %>%
     summarise_at("tau", list) %>%
     mean_qi(tau, .width = c(.5, .95))
@@ -140,10 +140,10 @@ test_that("mean_qi works on multiple probs with groups", {
 })
 
 test_that("mean_qi works on multiple probs with multiple vars", {
-  samples = get_samples() %>%
+  draws = get_draws() %>%
     mutate(tau2 = tau * 2)
 
-  ref95 = samples %>%
+  ref95 = draws %>%
     group_by(ff) %>%
     summarise(
       tau.lower = as.vector(quantile(tau, .025)),
@@ -158,7 +158,7 @@ test_that("mean_qi works on multiple probs with multiple vars", {
     ) %>%
     select(ff, tau, tau.lower, tau.upper, tau2, tau2.lower, tau2.upper, .width, .point, .interval)
 
-  ref50 = samples %>%
+  ref50 = draws %>%
     group_by(ff) %>%
     summarise(
       tau.lower = as.vector(quantile(tau, .25)),
@@ -175,11 +175,11 @@ test_that("mean_qi works on multiple probs with multiple vars", {
 
   ref = bind_rows(ref50, ref95)
 
-  result = samples %>%
+  result = draws %>%
     group_by(ff) %>%
     mean_qi(tau, tau2, .width = c(.5, .95))
 
-  result_list = samples %>%
+  result_list = draws %>%
     group_by(ff) %>%
     summarise_at(c("tau", "tau2"), list) %>%
     mean_qi(tau, tau2, .width = c(.5, .95))

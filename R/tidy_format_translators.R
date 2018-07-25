@@ -6,9 +6,9 @@
 
 # to_broom_names / from_broom_names -----------------------------
 
-#' Translate between different tidy data frame formats
+#' Translate between different tidy data frame formats for draws from distributions
 #'
-#' These functions translate tidybayes-style tidy sample data frames to/from different tidy data frame
+#' These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
 #' formats (each format using a different naming scheme).
 #'
 #' Function prefixed with \code{to_} translate from the tidybayes format to another format, functions
@@ -33,7 +33,7 @@
 #'    \item \code{.value} <-> \code{value}
 #' }
 #'
-#' @param x A data frame to translate.
+#' @param data A data frame to translate.
 #'
 #' @return A data frame with (possibly) new names in some columns, according to the
 #' translation scheme above.
@@ -55,7 +55,7 @@
 #' @importFrom dplyr select_all
 #' @importFrom rlang %||%
 #' @export
-to_broom_names = function(x) {
+to_broom_names = function(data) {
   lookup = c(
     .variable = "term",
     .value = "estimate",
@@ -66,13 +66,13 @@ to_broom_names = function(x) {
 
   # this approach, while possibly a little odd seeming, ensures that
   # group names in grouped data frams are also changed
-  select_all(x, ~ lookup[.] %||% .)
+  select_all(data, ~ lookup[.] %||% .)
 }
 
 
 #' @rdname tidy-format-translators
 #' @export
-from_broom_names = function(x) {
+from_broom_names = function(data) {
   lookup = c(
     term = ".variable",
     estimate = ".value",
@@ -81,7 +81,7 @@ from_broom_names = function(x) {
     conf.high = ".upper"
   )
 
-  select_all(x, ~ lookup[.] %||% .)
+  select_all(data, ~ lookup[.] %||% .)
 }
 
 
@@ -90,7 +90,7 @@ from_broom_names = function(x) {
 
 #' @rdname tidy-format-translators
 #' @export
-to_ggmcmc_names = function(x) {
+to_ggmcmc_names = function(data) {
   lookup = c(
     .chain = "Chain",
     .iteration = "Iteration",
@@ -98,12 +98,12 @@ to_ggmcmc_names = function(x) {
     .value = "value"
   )
 
-  select_all(x, ~ lookup[.] %||% .)
+  select_all(data, ~ lookup[.] %||% .)
 }
 
 #' @rdname tidy-format-translators
 #' @export
-from_ggmcmc_names = function(x) {
+from_ggmcmc_names = function(data) {
   lookup = c(
     Chain = ".chain",
     Iteration = ".iteration",
@@ -111,6 +111,6 @@ from_ggmcmc_names = function(x) {
     value = ".value"
   )
 
-  select_all(x, ~ lookup[.] %||% .)
+  select_all(data, ~ lookup[.] %||% .)
 }
 

@@ -40,7 +40,7 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
 #' @param drop_indices Drop the columns specified by \code{draw_indices} from the resulting data frame. Default \code{FALSE}.
 #' @param variable The name of the column in \code{data} that contains the names of variables from the model.
-#' @param value The name of the column in \code{data} that contains the samples of the variables.
+#' @param value The name of the column in \code{data} that contains draws from the variables.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{as_sample_tibble}}.
@@ -51,8 +51,8 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 #'
 #' data(RankCorr, package = "tidybayes")
 #'
-#' # We can use unspread_draws to allow us to manipulate samples with tidybayes
-#' # and then transform the samples into a form we can use with packages like bayesplot.
+#' # We can use unspread_draws to allow us to manipulate draws with tidybayes
+#' # and then transform the draws into a form we can use with packages like bayesplot.
 #' # Here we subset b[i,j] to just values of i in 1:3 and j == 1, then plot with bayesplot
 #' RankCorr %>%
 #'   spread_draws(b[i,j]) %>%

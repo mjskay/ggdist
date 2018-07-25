@@ -69,7 +69,7 @@ fitted_draws.stanreg = function(model, newdata, value = ".value", ..., n = NULL,
   }
 
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]fitted_draws", re_formula = "re.form", scale = "transform"
+    names(enquos(...)), "[add_]fitted_draws", re_formula = "re.form", scale = "transform"
   )
 
   draws = fitted_predicted_draws_brmsfit_(rstanarm::posterior_linpred, model, newdata, output_name = value, ...,
@@ -98,7 +98,7 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
   }
 
   stop_on_non_generic_arg_(
-    names(list(...)), "[add_]fitted_draws", n = "nsamples", dpar = "dpars"
+    names(enquos(...)), "[add_]fitted_draws", n = "nsamples", dpar = "dpars"
   )
 
   # get the names of distributional regression parameters to include

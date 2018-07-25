@@ -14,7 +14,7 @@ globalVariables(c("...width.."))
 #' A combination of \code{\link{stat_summary}} and \code{\link{geom_lineribbon}} with sensible defaults.
 #' While \code{geom_lineribbon} is intended for use on data frames that have already been summarized using
 #' a \code{\link{point_interval}} function, \code{stat_lineribbon} is intended for use directly on data
-#' frames of samples, and will perform the summarization using a \code{\link{point_interval}} function.
+#' frames of draws, and will perform the summarization using a \code{\link{point_interval}} function.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the

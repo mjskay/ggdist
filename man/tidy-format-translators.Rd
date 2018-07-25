@@ -6,25 +6,25 @@
 \alias{from_broom_names}
 \alias{to_ggmcmc_names}
 \alias{from_ggmcmc_names}
-\title{Translate between different tidy data frame formats}
+\title{Translate between different tidy data frame formats for draws from distributions}
 \usage{
-to_broom_names(x)
+to_broom_names(data)
 
-from_broom_names(x)
+from_broom_names(data)
 
-to_ggmcmc_names(x)
+to_ggmcmc_names(data)
 
-from_ggmcmc_names(x)
+from_ggmcmc_names(data)
 }
 \arguments{
-\item{x}{A data frame to translate.}
+\item{data}{A data frame to translate.}
 }
 \value{
 A data frame with (possibly) new names in some columns, according to the
 translation scheme above.
 }
 \description{
-These functions translate tidybayes-style tidy sample data frames to/from different tidy data frame
+These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
 formats (each format using a different naming scheme).
 }
 \details{

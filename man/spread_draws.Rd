@@ -31,7 +31,7 @@ dimensions) into one of two types of long-format data frames.
 \details{
 Imagine a JAGS or Stan fit named \code{fit}. The model may contain a variable named
 \code{b[i,v]} (in the JAGS or Stan language) with dimension \code{i} in \code{1:100} and
-dimension \code{v} in \code{1:3}. However, the default format for samples returned from
+dimension \code{v} in \code{1:3}. However, the default format for draws returned from
 JAGS or Stan in R will not reflect this indexing structure, instead
 they will have multiple columns with names like \code{"b[1,1]"}, \code{"b[2,1]"}, etc.
 

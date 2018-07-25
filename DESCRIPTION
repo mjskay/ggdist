@@ -1,15 +1,15 @@
 Package: tidybayes
-Title: Tidy Data and Geoms for MCMC/Bayesian Samplers
+Title: Tidy Data and Geoms for Bayesian Models
 Version: 0.12.1.9000
 Date: 2018-01-04
 Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
     email = "mjskay@umich.edu"))
 Maintainer: Matthew Kay <mjskay@umich.edu>
-Description: Facilitates composing data for and extracting samples from Bayesian models
+Description: Facilitates composing data for and extracting posterior draws from Bayesian models
     (JAGS, Stan, rstanarm, brms, MCMCglmm, coda, ...) in a tidy data format. Also provides
-    miscellaneous functions helpful for analysing tidy samples from Bayesian models, such 
-    as functions to generate estimates and intervals, and geoms for common tasks like estimates
-    with multiple intervals, eye plots (intervals plus densities), and fit curves with
+    miscellaneous functions helpful for analysing tidy data frames of draws from Bayesian models, such 
+    as functions to generate point summaries and intervals, and geoms for common tasks like points
+    with multiple uncertainty intervals, eye plots (intervals plus densities), and fit curves with
     multiple, arbitrary uncertainty bands.
 Depends:
     R (>= 2.10)

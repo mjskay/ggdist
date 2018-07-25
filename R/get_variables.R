@@ -12,7 +12,7 @@
 #'
 #' This function is often useful for inspecting a model interactively in order
 #' to construct calls to \code{\link{spread_draws}} or \code{\link{gather_draws}}
-#' in order to extract samples in a tidy format.
+#' in order to extract draws from models in a tidy format.
 #'
 #' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.

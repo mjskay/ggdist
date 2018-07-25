@@ -201,7 +201,7 @@ test_that("spread_draws works on a variable with one named index and one wide an
 })
 
 test_that("spread_draws does not allow extraction of two variables simultaneously with a wide index", {
-  error_message = "Cannot extract samples of multiple variables in wide format."
+  error_message = "Cannot extract draws from multiple variables in wide format."
   expect_error(spread_draws(RankCorr_s, c(tau, typical_mu)[..]), error_message)
   expect_error(spread_draws(RankCorr_s, c(tau, typical_mu)[i] | i), error_message)
 })
@@ -254,9 +254,9 @@ test_that("spread_draws multispec with different dimensions retains grouping inf
 })
 
 test_that("groups from spread_draws retain factor level names", {
-  samples = RankCorr_i %>% spread_draws(tau[i])
+  draws = RankCorr_i %>% spread_draws(tau[i])
 
-  expect_equivalent(attr(samples, "labels")$i, factor(i_labels))
+  expect_equivalent(attr(draws, "labels")$i, factor(i_labels))
 })
 
 test_that("empty dimensions are dropped", {

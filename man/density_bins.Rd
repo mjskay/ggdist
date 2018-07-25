@@ -61,7 +61,7 @@ step = 1
 mtcars \%>\%
   group_by(cyl) \%>\%
   data_grid(hp = seq_range(hp, by = step)) \%>\%
-  add_predicted_samples(m_mpg) \%>\%
+  add_predicted_draws(m_mpg) \%>\%
   do(density_bins(.$pred)) \%>\%
   ggplot() +
   geom_rect(aes(
@@ -74,7 +74,7 @@ mtcars \%>\%
 }
 }
 \seealso{
-See \code{\link{add_predicted_samples}} and \code{\link{stat_lineribbon}} for a better approach. This
+See \code{\link{add_predicted_draws}} and \code{\link{stat_lineribbon}} for a better approach. This
 function may be deprecated in the future.
 }
 \author{

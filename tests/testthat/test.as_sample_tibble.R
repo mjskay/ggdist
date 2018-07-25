@@ -19,7 +19,7 @@ test_that("as_sample_tibble works with brms", {
   # we use a model with random effects here because they include parameters with multiple dimensions
   m_ranef = readRDS("../models/models.brms.m_ranef.rds")
 
-  samples_tidy =
+  draws_tidy =
     brms::posterior_samples(m_ranef, add_chain = TRUE) %>%
     select(.chain = chain, .iteration = iter, everything()) %>%
     mutate(
@@ -30,7 +30,7 @@ test_that("as_sample_tibble works with brms", {
     as_tibble() %>%
     select(.chain, .iteration, .draw, everything())
 
-  expect_equal(as_sample_tibble(m_ranef), samples_tidy)
+  expect_equal(as_sample_tibble(m_ranef), draws_tidy)
 })
 
 
@@ -45,10 +45,10 @@ test_that("as_sample_tibble works with rstanarm", {
     add_column(.chain = 1L, .iteration = 1L:nrow(.), .draw = 1L:nrow(.), .before = 1)
   chain_2 = as_tibble(as.array(m_ranef)[,2,]) %>%
     add_column(.chain = 2L, .iteration = 1L:nrow(.), .draw = (nrow(.) + 1L):(2L * nrow(.)), .before = 1)
-  samples_tidy =
+  draws_tidy =
     bind_rows(chain_1, chain_2)
 
-  expect_equal(as_sample_tibble(m_ranef), samples_tidy)
+  expect_equal(as_sample_tibble(m_ranef), draws_tidy)
 })
 
 
@@ -64,10 +64,10 @@ test_that("as_sample_tibble works with rstan", {
     add_column(.chain = 1L, .iteration = 1L:nrow(.), .draw = 1L:nrow(.), .before = 1)
   chain_2 = as_tibble(as.array(m_ABC)[,2,]) %>%
     add_column(.chain = 2L, .iteration = 1L:nrow(.), .draw = (nrow(.) + 1L):(2L * nrow(.)), .before = 1)
-  samples_tidy =
+  draws_tidy =
     bind_rows(chain_1, chain_2)
 
-  expect_equal(as_sample_tibble(m_ABC), samples_tidy)
+  expect_equal(as_sample_tibble(m_ABC), draws_tidy)
 })
 
 
@@ -90,15 +90,15 @@ test_that("as_sample_tibble works with runjags", {
     summarise = FALSE
   ), globalenv()))
 
-  samples = as.mcmc.list(m)
-  samples_tidy =
+  draws = as.mcmc.list(m)
+  draws_tidy =
     rbind(
-      data.frame(.chain = 1L, .iteration = 1:100L, .draw = 1:100L, samples[[1]], check.names = FALSE),
-      data.frame(.chain = 2L, .iteration = 1:100L, .draw = 101:200L, samples[[2]], check.names = FALSE)
+      data.frame(.chain = 1L, .iteration = 1:100L, .draw = 1:100L, draws[[1]], check.names = FALSE),
+      data.frame(.chain = 2L, .iteration = 1:100L, .draw = 101:200L, draws[[2]], check.names = FALSE)
     ) %>%
     as_tibble()
 
-  expect_equal(as_sample_tibble(m), samples_tidy)
+  expect_equal(as_sample_tibble(m), draws_tidy)
 })
 
 test_that("as_sample_tibble works with rjags", {
@@ -116,14 +116,14 @@ test_that("as_sample_tibble works with rjags", {
     n.iter = 100
   ))
 
-  samples_tidy =
+  draws_tidy =
     rbind(
       data.frame(.chain = 1L, .iteration = 1:100L, .draw = 1:100L, m[[1]], check.names = FALSE),
       data.frame(.chain = 2L, .iteration = 1:100L, .draw = 101:200L, m[[2]], check.names = FALSE)
     ) %>%
     as_tibble()
 
-  expect_equal(as_sample_tibble(m), samples_tidy)
+  expect_equal(as_sample_tibble(m), draws_tidy)
 })
 
 test_that("as_sample_tibble works with jagsUI", {
@@ -141,12 +141,12 @@ test_that("as_sample_tibble works with jagsUI", {
     verbose = FALSE
   )
 
-  samples_tidy =
+  draws_tidy =
     rbind(
       data.frame(.chain = 1L, .iteration = 1:100L, .draw = 1:100L, m$samples[[1]], check.names = FALSE),
       data.frame(.chain = 2L, .iteration = 1:100L, .draw = 101:200L, m$samples[[2]], check.names = FALSE)
     ) %>%
     as_tibble()
 
-  expect_equal(as_sample_tibble(m), samples_tidy)
+  expect_equal(as_sample_tibble(m), draws_tidy)
 })

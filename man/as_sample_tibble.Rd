@@ -13,7 +13,7 @@
 \alias{as_sample_tibble.brmsfit}
 \alias{as_sample_tibble.matrix}
 \alias{as_sample_tibble.MCMCglmm}
-\title{Get a sample of draws from a model as a tibble}
+\title{Get a sample of posterior draws from a model as a tibble}
 \usage{
 as_sample_tibble(model)
 
