@@ -59,7 +59,7 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #'
 #' \code{add_linpred_draws} and \code{linpred_draws} are alternative spellings of \code{fitted_draws}
 #' and \code{add_fitted_draws} for consistency with \code{rstanarm} terminology (specifically
-#' \code{\link[rstanarm{posterior_linpred}}).
+#' \code{\link[rstanarm]{posterior_linpred}}).
 #'
 #' @param newdata Data frame to generate predictions from. If omitted, most model types will
 #' generate predictions from the data used to fit the model.

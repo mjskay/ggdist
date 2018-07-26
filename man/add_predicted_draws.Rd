@@ -141,7 +141,7 @@ are the preferred spellings.
 
 \code{add_linpred_draws} and \code{linpred_draws} are alternative spellings of \code{fitted_draws}
 and \code{add_fitted_draws} for consistency with \code{rstanarm} terminology (specifically
-\code{\link[rstanarm{posterior_linpred}}).
+\code{\link[rstanarm]{posterior_linpred}}).
 }
 \examples{
 \donttest{
