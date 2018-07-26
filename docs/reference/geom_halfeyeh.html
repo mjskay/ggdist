@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Half-eye plots of densities with point estimates and intervals (ggplot geom) — geom_halfeyeh • tidybayes</title>
+<title>Half-eye plots of densities with point and interval summaries (ggplot geom) — geom_halfeyeh • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,12 +32,12 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Half-eye plots of densities with point estimates and intervals (ggplot geom) — geom_halfeyeh" />
+<meta property="og:title" content="Half-eye plots of densities with point and interval summaries (ggplot geom) — geom_halfeyeh" />
 
-<meta property="og:description" content="Generates a combination geom_density_ridges and geom_pointrangeh (using stat_summaryh)
-representing the density, point estimates, and credible interval. Useful
-for representing posterior estimates from Bayesian samplers; in that context
-the mirrored verison is variously called an eye plot, a raindrop plot, or a
+<meta property="og:description" content="Generates a combination of a density and stat_pointintervalh
+representing the density, point summary, and uncertainty intervals
+for draws from a distribution. Useful for representing posteriors from Bayesian models;
+in that context the mirrored version is variously called an eye plot, a raindrop plot,
 violin plot; hence &quot;half-eye&quot; for this plot." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -105,10 +105,10 @@ violin plot; hence &quot;half-eye&quot; for this plot." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -133,17 +133,17 @@ violin plot; hence &quot;half-eye&quot; for this plot." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Half-eye plots of densities with point estimates and intervals (ggplot geom)</h1>
+    <h1>Half-eye plots of densities with point and interval summaries (ggplot geom)</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/geom_halfeyeh.R'><code>R/geom_halfeyeh.R</code></a></small>
     <div class="hidden name"><code>geom_halfeyeh.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Generates a combination geom_density_ridges and geom_pointrangeh (using stat_summaryh)
-representing the density, point estimates, and credible interval. Useful
-for representing posterior estimates from Bayesian samplers; in that context
-the mirrored verison is variously called an eye plot, a raindrop plot, or a
+    <p>Generates a combination of a density and <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>
+representing the density, point summary, and uncertainty intervals
+for draws from a distribution. Useful for representing posteriors from Bayesian models;
+in that context the mirrored version is variously called an eye plot, a raindrop plot,
 violin plot; hence "half-eye" for this plot.</p>
     
     </div>
@@ -151,8 +151,9 @@ violin plot; hence "half-eye" for this plot.</p>
     <pre class="usage"><span class='fu'>geom_halfeyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>relative_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>density.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,7 +171,7 @@ the plot defaults.</p></td>
     </tr>
     <tr>
       <th>position</th>
-      <td><p>Passed to <code>geom_density_ridges</code>. The position adjustment
+      <td><p>The position adjustment
 to use for overlapping points on this layer.</p></td>
     </tr>
     <tr>
@@ -209,8 +210,8 @@ mapping.</p></td>
     <tr>
       <th>point_interval</th>
       <td><p>A function that when given a vector should
-return a data frame with variables <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>.prob</code>; or
-<code>x</code>, <code>xmin</code>, <code>xmax</code>, and <code>.prob</code>. <strong>Either is acceptable</strong>: output
+return a data frame with variables <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>.width</code>; or
+<code>x</code>, <code>xmin</code>, <code>xmax</code>, and <code>.width</code>. <strong>Either is acceptable</strong>: output
 will be converted into the <code>x</code>-based aesthetics <code>geom_halfeyeh</code>.
 See the <code>point_interval</code> family of functions.</p></td>
     </tr>
@@ -225,30 +226,34 @@ are not converted to the correct form automatically.</p></td>
       <td><p>Optional arguments passed to <code>fun.data</code>.</p></td>
     </tr>
     <tr>
+      <th>.width</th>
+      <td><p>The <code>.width</code> argument passed to <code>point_interval</code>.</p></td>
+    </tr>
+    <tr>
       <th>.prob</th>
-      <td><p>The <code>.prob</code> argument passed to <code>fun.data</code>.</p></td>
+      <td><p>Deprecated. Use <code>.width</code> instead.</p></td>
     </tr>
     <tr>
       <th>color</th>
       <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Color of the point
-estimate and credible interval.</p></td>
+summary and uncertainty interval.</p></td>
     </tr>
     <tr>
       <th>size</th>
       <td><p>Passed to <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code>. Line weight of the point
-estimate and credible interval.</p></td>
+summary and uncertainty interval.</p></td>
     </tr>
     <tr>
       <th>size_domain</th>
       <td><p>The minimum and maximum of the values of the size aesthetic that will be translated into actual
-sizes drawn according to <code>size_range</code> (see the documentation for that parameter, below.)</p></td>
+sizes drawn according to <code>size_range</code> (see the documentation for that argument, below.)</p></td>
     </tr>
     <tr>
       <th>size_range</th>
       <td><p>This geom scales the raw size aesthetic values, as they tend to be too thick when using the default
 settings of <code>scale_size_continuous</code>, which give sizes with a range of <code>c(1, 6)</code>. The
 <code>size_domain</code> value indicates the input domain of raw size values (typically this should be equal to the value
-of the <code>range</code> parameter of the <code>scale_size_continuous</code> function), and <code>size_range</code> indicates
+of the <code>range</code> argument of the <code>scale_size_continuous</code> function), and <code>size_range</code> indicates
 the desired output range of the size values (the min and max of the actual sizes used to draw intervals).</p></td>
     </tr>
     <tr>
@@ -260,13 +265,13 @@ thickest line.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A half-eye plot is a compact visual summary of the distribution of some samples,
+    <p>A half-eye plot is a compact visual summary of the distribution of a sample,
 used (under various names and with subtle variations) to visualize posterior
 distributions in Bayesian inference. This instantiation is a combination of
-a density plot, point estimate, and credible interval. <code>geom_halfeyeh()</code> is
-equivalent to <code>geom_density_ridges() + stat_summaryh()</code> with some reasonable
-defaults, including color choices and the use of median with 95% and 66% quantile
-intervals.</p>
+a density plot, point summary, and one or more uncertainty intervals.</p>
+<p><code>geom_halfeyeh()</code> is roughly equivalent to <code>geom_density_ridges() + stat_pointintervalh()</code>
+with some reasonable defaults, including color choices and the use of median with 95%
+and 66% quantile intervals.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -283,7 +288,7 @@ this function is based on.</p></div>
 <span class='fu'>data</span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
   <span class='fu'>geom_halfeyeh</span>()</div><div class='img'><img src='geom_halfeyeh-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>

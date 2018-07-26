@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Combine the chain and iteration columns of tidy samples — combine_chains • tidybayes</title>
+<title>Combine the chain and iteration columns of tidy data frames of draws — combine_chains • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,11 +32,12 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Combine the chain and iteration columns of tidy samples — combine_chains" />
+<meta property="og:title" content="Combine the chain and iteration columns of tidy data frames of draws — combine_chains" />
 
-<meta property="og:description" content="Combines the chain and iteration columns of a tidy data frame of samples from a Bayesian model fit by renumbering
-iterations to ensure that the iteration column alone can uniquely identify each draw. Can be useful for making plots
-showing multiple iterations where you do not care about differences among chains." />
+<meta property="og:description" content="Combines the chain and iteration columns of a tidy data frame of draws from a Bayesian model fit into a new column
+that can uniquely identify each draw. Generally speaking not needed for pure tidybayes code, as tidybayes
+functions now automatically include a .draw column, but can be useful when interacting with packages that
+do not provide such a column." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -103,10 +104,10 @@ showing multiple iterations where you do not care about differences among chains
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -131,39 +132,39 @@ showing multiple iterations where you do not care about differences among chains
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Combine the chain and iteration columns of tidy samples</h1>
+    <h1>Combine the chain and iteration columns of tidy data frames of draws</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/combine_chains.R'><code>R/combine_chains.R</code></a></small>
     <div class="hidden name"><code>combine_chains.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Combines the chain and iteration columns of a tidy data frame of samples from a Bayesian model fit by renumbering
-iterations to ensure that the iteration column alone can uniquely identify each draw. Can be useful for making plots
-showing multiple iterations where you do not care about differences among chains.</p>
+    <p>Combines the chain and iteration columns of a tidy data frame of draws from a Bayesian model fit into a new column
+that can uniquely identify each draw. Generally speaking <strong>not needed for pure tidybayes code</strong>, as tidybayes
+functions now automatically include a <code>.draw</code> column, but can be useful when interacting with packages that
+do not provide such a column.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>combine_chains</span>(<span class='no'>samples</span>, <span class='kw'>chain</span> <span class='kw'>=</span> <span class='no'>.chain</span>, <span class='kw'>iteration</span> <span class='kw'>=</span> <span class='no'>.iteration</span>,
-  <span class='kw'>into</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>combine_chains</span>(<span class='no'>data</span>, <span class='kw'>chain</span> <span class='kw'>=</span> <span class='no'>.chain</span>, <span class='kw'>iteration</span> <span class='kw'>=</span> <span class='no'>.iteration</span>,
+  <span class='kw'>into</span> <span class='kw'>=</span> <span class='st'>".draw"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>samples</th>
-      <td><p>Tidy data frame of samples with columns representing the chain and iteration of each sample, such as
-returned by <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>, or <code><a href='spread_samples.html'>gather_samples</a></code>.</p></td>
+      <th>data</th>
+      <td><p>Tidy data frame of draws with columns representing the chain and iteration of each draw.</p></td>
     </tr>
     <tr>
       <th>chain</th>
-      <td><p>Bare name of column in <code>samples</code> indicating the chain of each row. The default (<code>.chain</code>) is
-the same as returned by other functions in <code>tidybayes</code>.</p></td>
+      <td><p>Bare name of column in <code>data</code> indicating the chain of each row. The default (<code>.chain</code>) is
+the same as used by other functions in <code>tidybayes</code>.</p></td>
     </tr>
     <tr>
       <th>iteration</th>
-      <td><p>Bare name of column in <code>samples</code> indicating the iteration of each row. The default
-(<code>.iteration</code>) is the same as returned by other functions in <code>tidybayes</code>.</p></td>
+      <td><p>Bare name of column in <code>data</code> indicating the iteration of each row. The default
+(<code>.iteration</code>) is the same as used by other functions in <code>tidybayes</code>.</p></td>
     </tr>
     <tr>
       <th>into</th>
@@ -176,7 +177,7 @@ into a new column named <code>into</code>.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of tidy samples with a combined iteration column</p>
+    <p>A data frame of tidy draws with a combined iteration column</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -192,43 +193,39 @@ into a new column named <code>into</code>.</p></td>
 
 <span class='co'># The `line` posterior has two chains with 200 iterations each:</span>
 <span class='no'>line</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='as_sample_tibble.html'>as_sample_tibble</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>summary</span>()</div><div class='output co'>#&gt;      .chain      .iteration         alpha            beta        
-#&gt;  Min.   :1.0   Min.   :  1.00   Min.   :0.858   Min.   :-1.5662  
-#&gt;  1st Qu.:1.0   1st Qu.: 50.75   1st Qu.:2.732   1st Qu.: 0.6039  
-#&gt;  Median :1.5   Median :100.50   Median :3.019   Median : 0.7963  
-#&gt;  Mean   :1.5   Mean   :100.50   Mean   :2.988   Mean   : 0.7992  
-#&gt;  3rd Qu.:2.0   3rd Qu.:150.25   3rd Qu.:3.242   3rd Qu.: 0.9925  
-#&gt;  Max.   :2.0   Max.   :200.00   Max.   :7.173   Max.   : 1.8320  
-#&gt;      sigma        
-#&gt;  Min.   : 0.3262  
-#&gt;  1st Qu.: 0.6158  
-#&gt;  Median : 0.7912  
-#&gt;  Mean   : 0.9681  
-#&gt;  3rd Qu.: 1.0752  
-#&gt;  Max.   :11.2331  </div><div class='input'>
-<span class='co'># combine_chains combines the chains, giving 400 iterations with</span>
-<span class='co'># `.chain = NA` (to indicate that the chains were combined, as opposed to</span>
-<span class='co'># this being 400 iterations from one chain).</span>
+  <span class='fu'><a href='tidy_draws.html'>tidy_draws</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>summary</span>()</div><div class='output co'>#&gt;      .chain      .iteration         .draw           alpha      
+#&gt;  Min.   :1.0   Min.   :  1.00   Min.   :  1.0   Min.   :0.858  
+#&gt;  1st Qu.:1.0   1st Qu.: 50.75   1st Qu.:100.8   1st Qu.:2.732  
+#&gt;  Median :1.5   Median :100.50   Median :200.5   Median :3.019  
+#&gt;  Mean   :1.5   Mean   :100.50   Mean   :200.5   Mean   :2.988  
+#&gt;  3rd Qu.:2.0   3rd Qu.:150.25   3rd Qu.:300.2   3rd Qu.:3.242  
+#&gt;  Max.   :2.0   Max.   :200.00   Max.   :400.0   Max.   :7.173  
+#&gt;       beta             sigma        
+#&gt;  Min.   :-1.5662   Min.   : 0.3262  
+#&gt;  1st Qu.: 0.6039   1st Qu.: 0.6158  
+#&gt;  Median : 0.7963   Median : 0.7912  
+#&gt;  Mean   : 0.7992   Mean   : 0.9681  
+#&gt;  3rd Qu.: 0.9925   3rd Qu.: 1.0752  
+#&gt;  Max.   : 1.8320   Max.   :11.2331  </div><div class='input'>
+<span class='co'># combine_chains combines the chain and iteration column into the .draw column.</span>
 <span class='no'>line</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='as_sample_tibble.html'>as_sample_tibble</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='tidy_draws.html'>tidy_draws</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>combine_chains</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>summary</span>()</div><div class='output co'>#&gt;      .chain      .iteration        alpha            beta        
-#&gt;  Min.   : NA   Min.   :  1.0   Min.   :0.858   Min.   :-1.5662  
-#&gt;  1st Qu.: NA   1st Qu.:100.8   1st Qu.:2.732   1st Qu.: 0.6039  
-#&gt;  Median : NA   Median :200.5   Median :3.019   Median : 0.7963  
-#&gt;  Mean   :NaN   Mean   :200.5   Mean   :2.988   Mean   : 0.7992  
-#&gt;  3rd Qu.: NA   3rd Qu.:300.2   3rd Qu.:3.242   3rd Qu.: 0.9925  
-#&gt;  Max.   : NA   Max.   :400.0   Max.   :7.173   Max.   : 1.8320  
-#&gt;  NA's   :400                                                    
-#&gt;      sigma        
-#&gt;  Min.   : 0.3262  
-#&gt;  1st Qu.: 0.6158  
-#&gt;  Median : 0.7912  
-#&gt;  Mean   : 0.9681  
-#&gt;  3rd Qu.: 1.0752  
-#&gt;  Max.   :11.2331  
-#&gt;                   </div><div class='input'>
+  <span class='fu'>summary</span>()</div><div class='output co'>#&gt;      .chain      .iteration         .draw           alpha      
+#&gt;  Min.   :1.0   Min.   :  1.00   Min.   :  1.0   Min.   :0.858  
+#&gt;  1st Qu.:1.0   1st Qu.: 50.75   1st Qu.:100.8   1st Qu.:2.732  
+#&gt;  Median :1.5   Median :100.50   Median :200.5   Median :3.019  
+#&gt;  Mean   :1.5   Mean   :100.50   Mean   :200.5   Mean   :2.988  
+#&gt;  3rd Qu.:2.0   3rd Qu.:150.25   3rd Qu.:300.2   3rd Qu.:3.242  
+#&gt;  Max.   :2.0   Max.   :200.00   Max.   :400.0   Max.   :7.173  
+#&gt;       beta             sigma        
+#&gt;  Min.   :-1.5662   Min.   : 0.3262  
+#&gt;  1st Qu.: 0.6039   1st Qu.: 0.6158  
+#&gt;  Median : 0.7963   Median : 0.7912  
+#&gt;  Mean   : 0.7992   Mean   : 0.9681  
+#&gt;  3rd Qu.: 0.9925   3rd Qu.: 1.0752  
+#&gt;  Max.   : 1.8320   Max.   :11.2331  </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

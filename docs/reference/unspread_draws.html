@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Turn tidy data frames of parameters from a Bayesian model back into untidy data — ungather_samples • tidybayes</title>
+<title>Turn tidy data frames of variables from a Bayesian model back into untidy data — ungather_draws • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Turn tidy data frames of parameters from a Bayesian model back into untidy data — ungather_samples" />
+<meta property="og:title" content="Turn tidy data frames of variables from a Bayesian model back into untidy data — ungather_draws" />
 
-<meta property="og:description" content="Inverse operations of spread_samples and gather_samples, giving
-results that look like as_sample_tibble." />
+<meta property="og:description" content="Inverse operations of spread_draws and gather_draws, giving
+results that look like tidy_draws." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -102,10 +102,10 @@ results that look like as_sample_tibble." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -130,22 +130,22 @@ results that look like as_sample_tibble." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Turn tidy data frames of parameters from a Bayesian model back into untidy data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/ungather_samples.R'><code>R/ungather_samples.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/unspread_samples.R'><code>R/unspread_samples.R</code></a></small>
-    <div class="hidden name"><code>unspread_samples.Rd</code></div>
+    <h1>Turn tidy data frames of variables from a Bayesian model back into untidy data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/ungather_draws.R'><code>R/ungather_draws.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/unspread_draws.R'><code>R/unspread_draws.R</code></a></small>
+    <div class="hidden name"><code>unspread_draws.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Inverse operations of <code><a href='spread_samples.html'>spread_samples</a></code> and <code><a href='spread_samples.html'>gather_samples</a></code>, giving
-results that look like <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p>
+    <p>Inverse operations of <code><a href='spread_draws.html'>spread_draws</a></code> and <code><a href='spread_draws.html'>gather_draws</a></code>, giving
+results that look like <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>ungather_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>term</span> <span class='kw'>=</span> <span class='st'>"term"</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>,
-  <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>ungather_draws</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>".variable"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>,
+  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>unspread_samples</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>),
+<span class='fu'>unspread_draws</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
   <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -153,31 +153,31 @@ results that look like <code><a href='as_sample_tibble.html'>as_sample_tibble</a
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A tidy data frame of samples, such as one output by <code>spread_samples</code> or <code>gather_samples</code>.</p></td>
+      <td><p>A tidy data frame of draws, such as one output by <code>spread_draws</code> or <code>gather_draws</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Expressions in the form of
-<code>variable_name[index_1, index_2, ...]</code>. See <code><a href='spread_samples.html'>spread_samples</a></code>.</p></td>
+<code>variable_name[dimension_1, dimension_2, ...]</code>. See <code><a href='spread_draws.html'>spread_draws</a></code>.</p></td>
     </tr>
     <tr>
-      <th>term</th>
-      <td><p>The name of the column in <code>data</code> that contains the names of parameters from the model.</p></td>
+      <th>variable</th>
+      <td><p>The name of the column in <code>data</code> that contains the names of variables from the model.</p></td>
     </tr>
     <tr>
-      <th>estimate</th>
-      <td><p>The name of the column in <code>data</code> that contains the samples of the parameters.</p></td>
+      <th>value</th>
+      <td><p>The name of the column in <code>data</code> that contains draws from the variables.</p></td>
     </tr>
     <tr>
-      <th>indices</th>
+      <th>draw_indices</th>
       <td><p>Character vector of column names in <code>data</code> that
-should be treated as indices of chain/iteration. The default is <code>c(".chain",".iteration")</code>,
-which are the same names used for chain/iteration indices returned by
-<code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>.</p></td>
+should be treated as indices of draws. The default is <code>c(".chain",".iteration",".draw")</code>,
+which are the same names used for chain, iteration, and draw indices returned by
+<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>.</p></td>
     </tr>
     <tr>
       <th>drop_indices</th>
-      <td><p>Drop the columns specified by <code>indices</code> from the resulting data frame. Default <code>FALSE</code>.</p></td>
+      <td><p>Drop the columns specified by <code>draw_indices</code> from the resulting data frame. Default <code>FALSE</code>.</p></td>
     </tr>
     </table>
     
@@ -187,13 +187,13 @@ which are the same names used for chain/iteration indices returned by
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>These functions take symbolic specifications of parameter names and indices in the same format as
-<code><a href='spread_samples.html'>spread_samples</a></code> and <code><a href='spread_samples.html'>gather_samples</a></code> and invert the tidy data frame back into
-a data frame whose column names are parameters with indices in them.</p>
+    <p>These functions take symbolic specifications of variable names and dimensions in the same format as
+<code><a href='spread_draws.html'>spread_draws</a></code> and <code><a href='spread_draws.html'>gather_draws</a></code> and invert the tidy data frame back into
+a data frame whose column names are variables with dimensions in them.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='spread_samples.html'>gather_samples</a></code>, <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p></div>
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code>, <code><a href='spread_draws.html'>gather_draws</a></code>, <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -202,22 +202,22 @@ a data frame whose column names are parameters with indices in them.</p>
 
 <span class='fu'>data</span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
-<span class='co'># We can use unspread_samples to allow us to manipulate samples with tidybayes</span>
-<span class='co'># and then transform the samples into a form we can use with packages like bayesplot.</span>
+<span class='co'># We can use unspread_draws to allow us to manipulate draws with tidybayes</span>
+<span class='co'># and then transform the draws into a form we can use with packages like bayesplot.</span>
 <span class='co'># Here we subset b[i,j] to just values of i in 1:3 and j == 1, then plot with bayesplot</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>unspread_samples</span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_samples-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'>unspread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_draws-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># As another example, we could use compare_levels to plot all pairwise comparisons</span>
 <span class='co'># of b[i,1] for i in 1:3</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='compare_levels.html'>compare_levels</a></span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>unspread_samples</span>(<span class='no'>b</span>[<span class='no'>i</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_samples-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'>unspread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_draws-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

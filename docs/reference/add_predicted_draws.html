@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add samples from the posterior fit or posterior prediction of a model to a data frame — add_fitted_samples • tidybayes</title>
+<title>Add draws from (possibly transformed) posterior linear predictors (the "fit") or from posterior predictions
+of a model to a data frame — add_linpred_draws • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +33,11 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Add samples from the posterior fit or posterior prediction of a model to a data frame — add_fitted_samples" />
+<meta property="og:title" content="Add draws from (possibly transformed) posterior linear predictors (the "fit") or from posterior predictions
+of a model to a data frame — add_linpred_draws" />
 
-<meta property="og:description" content="Given a data frame and a model, adds samples from the posterior fit (aka the linear/link-level predictor)
-or the posterior predictions of the model to the data frame in a long format." />
+<meta property="og:description" content="Given a data frame and a model, adds draws from the posterior &quot;fit&quot; (aka the linear/link-level predictor)
+or from the posterior predictions of the model to the data frame in a long format." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -102,10 +104,10 @@ or the posterior predictions of the model to the data frame in a long format." /
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -130,55 +132,64 @@ or the posterior predictions of the model to the data frame in a long format." /
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add samples from the posterior fit or posterior prediction of a model to a data frame</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/fitted_samples.R'><code>R/fitted_samples.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/predicted_samples.R'><code>R/predicted_samples.R</code></a></small>
-    <div class="hidden name"><code>add_predicted_samples.Rd</code></div>
+    <h1>Add draws from (possibly transformed) posterior linear predictors (the "fit") or from posterior predictions
+of a model to a data frame</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/fitted_draws.R'><code>R/fitted_draws.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/predicted_draws.R'><code>R/predicted_draws.R</code></a></small>
+    <div class="hidden name"><code>add_predicted_draws.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Given a data frame and a model, adds samples from the posterior fit (aka the linear/link-level predictor)
-or the posterior predictions of the model to the data frame in a long format.</p>
+    <p>Given a data frame and a model, adds draws from the posterior "fit" (aka the linear/link-level predictor)
+or from the posterior predictions of the model to the data frame in a long format.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>add_fitted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>add_linpred_draws</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+<span class='fu'>linpred_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+
+<span class='fu'>add_fitted_draws</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+
+<span class='fu'>fitted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
+<span class='fu'>fitted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+<span class='fu'>fitted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>,
+  <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>fitted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+<span class='fu'>fitted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>,
+  <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
-<span class='fu'>add_predicted_samples</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>add_predicted_draws</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
+<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>,
+  <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>predicted_samples</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"pred"</span>, <span class='no'>...</span>,
-  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>,
+  <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,18 +201,17 @@ generate predictions from the data used to fit the model.</p></td>
     </tr>
     <tr>
       <th>model</th>
-      <td><p>A supported Bayesian model fit / MCMC object that can provide fits and predictions. Supported models
+      <td><p>A supported Bayesian model fit that can provide fits and predictions. Supported models
 are listed in the second section of <a href='tidybayes-models.html'>tidybayes-models</a>: <em>Models Supporting Prediction</em>. While other
-functions in this package (like <code><a href='spread_samples.html'>spread_samples</a></code>) support a wider range of models, to work with
-<code>add_fitted_samples</code> and <code>add_predicted_samples</code> a model must provide an interface for generating
+functions in this package (like <code><a href='spread_draws.html'>spread_draws</a></code>) support a wider range of models, to work with
+<code>add_fitted_draws</code> and <code>add_predicted_draws</code> a model must provide an interface for generating
 predictions, thus more generic Bayesian modeling interfaces like <code>runjags</code> and <code>rstan</code> are not directly
 supported for these functions (only wrappers around those languages that provide predictions, like <code>rstanarm</code>
 and <code>brm</code>, are supported here).</p></td>
     </tr>
     <tr>
-      <th>var</th>
-      <td><p>The name of the output column for the predictions (default <code>"pred"</code>) or fits
-(default <code>"estimate"</code>, for compatibility with <code><a href='http://www.rdocumentation.org/packages/broom/topics/tidy'>tidy</a></code>).</p></td>
+      <th>value</th>
+      <td><p>The name of the output column for <code>fitted_draws</code>; default <code>".value"</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -210,7 +220,11 @@ model given.</p></td>
     </tr>
     <tr>
       <th>n</th>
-      <td><p>The number of samples per prediction / fit to return.</p></td>
+      <td><p>The number of draws per prediction / fit to return, or <code>NULL</code> to return all draws.</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>A seed to use when subsampling draws (i.e. when <code>n</code> is not <code>NULL</code>).</p></td>
     </tr>
     <tr>
       <th>re_formula</th>
@@ -224,17 +238,17 @@ marginalizing over grouping factors by specifying new levels of a factor in <cod
     <tr>
       <th>category</th>
       <td><p>For <em>some</em> ordinal and multinomial models (notably, <code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code> models but
-<em>not</em> <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stan_polr'>stan_polr</a></code> models), multiple sets of rows will be returned per estimate for
-<code>fitted_samples</code>, one for each category. The <code>category</code> argument specifies the name of the column
-to put the category names into in the resulting data frame. The fact that multiple rows per response are
-returned only for some model types reflects the fact that tidybayes takes the approach of tidying whatever
-output is given to us, and the output from different modeling functions differ on this point. See
-<code><a href='../articles/tidy-brms.html'>vignette("tidy-brms")</a></code> and <code><a href='../articles/tidy-rstanarm.html'>vignette("tidy-rstanarm")</a></code> for examples of dealing with output
+<em>not</em> <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stan_polr'>stan_polr</a></code> models), multiple sets of rows will be returned per input row for
+<code>fitted_draws</code>, one for each category. The <code>category</code> argument specifies the name of the column
+to put the category names into in the resulting data frame (default: <code>".category"</code>). The fact that multiple
+rows per response are returned only for some model types reflects the fact that tidybayes takes the approach of
+tidying whatever output is given to us, and the output from different modeling functions differ on this point.
+See <code><a href='../articles/tidy-brms.html'>vignette("tidy-brms")</a></code> and <code><a href='../articles/tidy-rstanarm.html'>vignette("tidy-rstanarm")</a></code> for examples of dealing with output
 from ordinal models using both approaches.</p></td>
     </tr>
     <tr>
       <th>dpar</th>
-      <td><p>For <code>fitted_samples</code> and <code>add_fitted_samples</code>: Should distributional regression
+      <td><p>For <code>fitted_draws</code> and <code>add_fitted_draws</code>: Should distributional regression
 parameters be included in the output? Valid only for models that support distributional regression parameters,
 such as submodels for variance parameters (as in <code>brm</code>). If <code>TRUE</code>, distributional regression
 parameters are included in the output as additional columns named after each parameter
@@ -248,40 +262,51 @@ If <code>FALSE</code> (the default), distributional regression parameters are no
 on the scale of the response variable. If <code>"linear"</code>, fitted values are returned on the scale of
 the linear predictor.</p></td>
     </tr>
+    <tr>
+      <th>prediction</th>
+      <td><p>The name of the output column for <code>predicted_draws</code>; default <code>".prediction"</code>.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame (actually, a <code><a href='http://www.rdocumentation.org/packages/tibble/topics/tibble'>tibble</a></code>) with a <code>.row</code> column (a
 factor grouping rows from the input <code>newdata</code>), <code>.chain</code> column (the chain
-each sample came from, or <code>NA</code> if the model does not provide chain information),
-<code>.iteration</code> column (the iteration the sample came from), and <code>.pred</code> column (a
-sample from the posterior predictive distribution). For convenience, the resulting data
-frame comes grouped by the original input rows.</p>
+each draw came from, or <code>NA</code> if the model does not provide chain information),
+<code>.iteration</code> column (the iteration the draw came from, or <code>NA</code> if the model does
+not provide iteration information), and a <code>.draw</code> column (a unique index corresponding to each draw
+from the distribution). In addition, <code>fitted_draws</code> includes a column with its name specified by
+the <code>value</code> argument (default is <code>.value</code>) containing draws from the (transformed) linear predictor,
+and <code>predicted_draws</code> contains a <code>.prediction</code> column containing draws from the posterior predictive
+distribution. For convenience, the resulting data frame comes grouped by the original input rows.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>add_fitted_samples</code> adds samples from the posterior linear predictor (or the "link") to
+    <p><code>add_fitted_draws</code> adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to
 the data. It corresponds to <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/posterior_linpred.stanreg'>posterior_linpred</a></code> in <code>rstanarm</code> or
 <code><a href='http://www.rdocumentation.org/packages/brms/topics/fitted.brmsfit'>fitted.brmsfit</a></code> in <code>brms</code>.</p>
-<p><code>add_predicted_samples</code> adds samples from the posterior prediction to
+<p><code>add_predicted_draws</code> adds draws from posterior predictions to
 the data. It corresponds to <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/posterior_predict.stanreg'>posterior_predict</a></code> in <code>rstanarm</code> or
 <code><a href='http://www.rdocumentation.org/packages/brms/topics/predict.brmsfit'>predict.brmsfit</a></code> in <code>brms</code>.</p>
-<p><code>add_fitted_samples</code> and <code>fitted_samples</code> are alternate spellings of the
+<p><code>add_fitted_draws</code> and <code>fitted_draws</code> are alternate spellings of the
 same function with opposite order of the first two arguments to facilitate use in data
 processing pipelines that start either with a data frame or a model. Similarly,
-<code>add_predicted_samples</code> and <code>predicted_samples</code> are alternate spellings.</p>
-<p>Given equal choice between the two, <code>add_fitted_samples</code> and <code>add_predicted_samples</code>
+<code>add_predicted_draws</code> and <code>predicted_draws</code> are alternate spellings.</p>
+<p>Given equal choice between the two, <code>add_fitted_draws</code> and <code>add_predicted_draws</code>
 are the preferred spellings.</p>
+<p><code>add_linpred_draws</code> and <code>linpred_draws</code> are alternative spellings of <code>fitted_draws</code>
+and <code>add_fitted_draws</code> for consistency with <code>rstanarm</code> terminology (specifically
+<code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/posterior_linpred.stanreg'>posterior_linpred</a></code>).</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code></p></div>
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>library</span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'ggplot2' was built under R version 3.5.1</span></div><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'dplyr' was built under R version 3.5.1</span></div><div class='output co'>#&gt; <span class='message'></span>
+<span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: 'dplyr'</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:stats':</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:base':</span>
@@ -314,27 +339,27 @@ are the preferred spellings.</p>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.086 seconds (Warm-up)
+#&gt;  Elapsed Time: 0.083 seconds (Warm-up)
 #&gt;                0.075 seconds (Sampling)
-#&gt;                0.161 seconds (Total)
+#&gt;                0.158 seconds (Total)
 #&gt; </div><div class='input'>
-<span class='co'># sample 100 fit lines from the posterior and overplot them</span>
+<span class='co'># draw 100 fit lines from the posterior and overplot them</span>
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/data_grid'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/seq_range'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>101</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>add_fitted_samples</span>(<span class='no'>m_mpg</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>add_fitted_draws</span>(<span class='no'>m_mpg</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>hp</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mpg</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'>ordered</span>(<span class='no'>cyl</span>))) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>estimate</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='fu'>paste</span>(<span class='no'>cyl</span>, <span class='no'>.iteration</span>)), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.25</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='img'><img src='add_predicted_samples-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>.value</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='fu'>paste</span>(<span class='no'>cyl</span>, <span class='no'>.draw</span>)), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.25</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='img'><img src='add_predicted_draws-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># plot posterior predictive intervals</span>
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/data_grid'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/seq_range'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>101</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>add_predicted_samples</span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>add_predicted_draws</span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>hp</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mpg</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'>ordered</span>(<span class='no'>cyl</span>))) +
-  <span class='fu'><a href='stat_lineribbon.html'>stat_lineribbon</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>pred</span>), <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.99</span>, <span class='fl'>.95</span>, <span class='fl'>.8</span>, <span class='fl'>.5</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.25</span>) +
+  <span class='fu'><a href='stat_lineribbon.html'>stat_lineribbon</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>.prediction</span>), <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.99</span>, <span class='fl'>.95</span>, <span class='fl'>.8</span>, <span class='fl'>.5</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.25</span>) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_fill_brewer</a></span>(<span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"Greys"</span>)</div><div class='img'><img src='add_predicted_samples-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_fill_brewer</a></span>(<span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"Greys"</span>)</div><div class='img'><img src='add_predicted_draws-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

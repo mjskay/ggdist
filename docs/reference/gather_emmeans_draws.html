@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract tidy samples of estimated marginal means (emmeans/lsmeans) from a Bayesian model fit — gather_emmeans_samples • tidybayes</title>
+<title>Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from
+a Bayesian model fit. — gather_emmeans_draws • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,9 +33,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Extract tidy samples of estimated marginal means (emmeans/lsmeans) from a Bayesian model fit — gather_emmeans_samples" />
+<meta property="og:title" content="Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from
+a Bayesian model fit. — gather_emmeans_draws" />
 
-<meta property="og:description" content="Extract samples from the result of a call to emmeans (formerly lsmeans)
+<meta property="og:description" content="Extract draws from the result of a call to emmeans (formerly lsmeans)
 or ref_grid applied to a Bayesian model." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -102,10 +104,10 @@ or ref_grid applied to a Bayesian model." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -130,19 +132,20 @@ or ref_grid applied to a Bayesian model." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract tidy samples of estimated marginal means (emmeans/lsmeans) from a Bayesian model fit</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_emmeans_samples.R'><code>R/gather_emmeans_samples.R</code></a></small>
-    <div class="hidden name"><code>gather_emmeans_samples.Rd</code></div>
+    <h1>Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from
+a Bayesian model fit.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_emmeans_draws.R'><code>R/gather_emmeans_draws.R</code></a></small>
+    <div class="hidden name"><code>gather_emmeans_draws.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Extract samples from the result of a call to <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></code> (formerly <code>lsmeans</code>)
+    <p>Extract draws from the result of a call to <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></code> (formerly <code>lsmeans</code>)
 or <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/ref_grid'>ref_grid</a></code> applied to a Bayesian model.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>gather_emmeans_samples</span>(<span class='no'>object</span>)</pre>
+    <pre class="usage"><span class='fu'>gather_emmeans_draws</span>(<span class='no'>object</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,23 +155,26 @@ or <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/ref_grid
       <td><p>An <code>emmGrid</code> object such as returned by
 <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/ref_grid'>ref_grid</a></code> or <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></code>.</p></td>
     </tr>
+    <tr>
+      <th>value</th>
+      <td><p>The name of the output column to use to contain the values of draws. Defaults to <code>".value"</code>.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of tidy samples. The columns of the reference grid are returned as-is, with an
-additional column called <code>estimate</code> containing samples from the marginal estimates (the name <code>estimate</code> is
-used for compatibility with <code><a href='spread_samples.html'>gather_samples</a></code> and <code><a href='http://www.rdocumentation.org/packages/broom/topics/tidy'>tidy</a></code>). The resulting data
+    <p>A tidy data frame of draws. The columns of the reference grid are returned as-is, with an
+additional column called <code>.value</code> (by default) containing marginal draws. The resulting data
 frame is grouped by the columns from the reference grid to make use of summary functions like
 <code><a href='point_interval.html'>point_interval</a></code> straightforward.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></code> provides a convenient syntax for generating marginal estimates from a model,
+    <p><code><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></code> provides a convenient syntax for generating draws from "estimated marginal means" from a model,
 and can be applied to various Bayesian models, like <code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stanreg-objects'>stanreg-objects</a></code> and
 <code><a href='http://www.rdocumentation.org/packages/MCMCglmm/topics/MCMCglmm'>MCMCglmm</a></code>. Given a <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/ref_grid'>ref_grid</a></code> object as returned by functions like
 <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/ref_grid'>ref_grid</a></code> or <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></code> applied to a Bayesian model,
-<code>gather_emmeans_samples</code> returns a tidy format data frame of samples from
+<code>gather_emmeans_draws</code> returns a tidy format data frame of draws from
 the marginal posterior distributions generated by <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -181,7 +187,9 @@ the marginal posterior distributions generated by <code><a href='http://www.rdoc
 <span class='fu'>library</span>(<span class='no'>dplyr</span>)
 <span class='fu'>library</span>(<span class='no'>magrittr</span>)
 <span class='fu'>library</span>(<span class='no'>rstanarm</span>)
-<span class='fu'>library</span>(<span class='no'>emmeans</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'emmeans' was built under R version 3.5.1</span></div><div class='input'>
+<span class='fu'>library</span>(<span class='no'>emmeans</span>)</div><div class='output co'>#&gt; <span class='message'>NOTE: As of emmeans versions &gt; 1.2.3,</span>
+#&gt; <span class='message'>      The 'cld' function will be deprecated in favor of 'CLD'.</span>
+#&gt; <span class='message'>      You may use 'cld' only if you have package:multcomp attached.</span></div><div class='input'>
 <span class='co'># Here's an example dataset with a categorical predictor (`condition`) with several levels:</span>
 <span class='fu'>set.seed</span>(<span class='fl'>5</span>)
 <span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>
@@ -216,44 +224,42 @@ the marginal posterior distributions generated by <code><a href='http://www.rdoc
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.017 seconds (Warm-up)
-#&gt;                0.016 seconds (Sampling)
+#&gt;  Elapsed Time: 0.016 seconds (Warm-up)
+#&gt;                0.017 seconds (Sampling)
 #&gt;                0.033 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='co'># Once we've fit the model, we can use emmeans() (and functions</span>
-<span class='co'># from that package) to get whatever marginal estimates we want.</span>
-<span class='co'># For example, we can get estimated marginal means by condition:</span>
+<span class='co'># from that package) to get whatever marginal distributions we want.</span>
+<span class='co'># For example, we can get marginal means by condition:</span>
 <span class='no'>m</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></span>(~ <span class='no'>condition</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>gather_emmeans_samples</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
-#&gt; # Groups:   condition [5]
-#&gt;   condition estimate conf.low conf.high .prob
-#&gt;   &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 A            0.189  -0.0845     0.553  0.95
-#&gt; 2 B            1.00    0.636      1.37   0.95
-#&gt; 3 C            1.85    1.51       2.17   0.95
-#&gt; 4 D            1.02    0.703      1.40   0.95
-#&gt; 5 E           -0.927  -1.23      -0.634  0.95</div><div class='input'>
+  <span class='fu'>gather_emmeans_draws</span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 7
+#&gt;   condition .value  .lower .upper .width .point .interval
+#&gt;   &lt;fct&gt;      &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt; 1 A          0.189 -0.0845  0.553   0.95 median qi       
+#&gt; 2 B          1.00   0.636   1.37    0.95 median qi       
+#&gt; 3 C          1.85   1.51    2.17    0.95 median qi       
+#&gt; 4 D          1.02   0.703   1.40    0.95 median qi       
+#&gt; 5 E         -0.927 -1.23   -0.634   0.95 median qi       </div><div class='input'>
 <span class='co'># or we could get pairwise differences:</span>
 <span class='no'>m</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></span>( ~ <span class='no'>condition</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/emmeans/topics/emmeans'>emmeans</a></span>(~ <span class='no'>condition</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/emmeans/topics/contrast'>contrast</a></span>(<span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pairwise"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>gather_emmeans_samples</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 10 x 5
-#&gt; # Groups:   contrast [10]
-#&gt;    contrast estimate conf.low conf.high .prob
-#&gt;    &lt;fct&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1 A - B    -0.810     -1.31     -0.305  0.95
-#&gt;  2 A - C    -1.65      -2.10     -1.15   0.95
-#&gt;  3 A - D    -0.828     -1.27     -0.328  0.95
-#&gt;  4 A - E     1.12       0.665     1.58   0.95
-#&gt;  5 B - C    -0.840     -1.33     -0.326  0.95
-#&gt;  6 B - D    -0.00630   -0.504     0.494  0.95
-#&gt;  7 B - E     1.94       1.49      2.39   0.95
-#&gt;  8 C - D     0.838      0.278     1.30   0.95
-#&gt;  9 C - E     2.81       2.33      3.21   0.95
-#&gt; 10 D - E     1.96       1.52      2.40   0.95</div><div class='input'>
+  <span class='fu'>gather_emmeans_draws</span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 10 x 7
+#&gt;    contrast   .value .lower .upper .width .point .interval
+#&gt;    &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt;  1 A - B    -0.810   -1.31  -0.305   0.95 median qi       
+#&gt;  2 A - C    -1.65    -2.10  -1.15    0.95 median qi       
+#&gt;  3 A - D    -0.828   -1.27  -0.328   0.95 median qi       
+#&gt;  4 A - E     1.12     0.665  1.58    0.95 median qi       
+#&gt;  5 B - C    -0.840   -1.33  -0.326   0.95 median qi       
+#&gt;  6 B - D    -0.00630 -0.504  0.494   0.95 median qi       
+#&gt;  7 B - E     1.94     1.49   2.39    0.95 median qi       
+#&gt;  8 C - D     0.838    0.278  1.30    0.95 median qi       
+#&gt;  9 C - E     2.81     2.33   3.21    0.95 median qi       
+#&gt; 10 D - E     1.96     1.52   2.40    0.95 median qi       </div><div class='input'>
 # see the documentation of emmeans() for more examples of types of
 # contrasts supported by that packge.
 

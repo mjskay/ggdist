@@ -102,10 +102,10 @@ prediction curve)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -154,7 +154,7 @@ prediction curve).</p>
       <th>data</th>
       <td><p>A <code>data.frame</code>, <code>tbl_df</code> or
 <code>link{grouped_df}</code> representing posteriors from a Bayesian model as
-might be obtained through <code><a href='spread_samples.html'>spread_samples</a></code>. Grouped data frames
+might be obtained through <code><a href='spread_draws.html'>spread_draws</a></code>. Grouped data frames
 as returned by <code>group_by</code> are supported.</p></td>
     </tr>
     <tr>
@@ -210,7 +210,7 @@ density_bins</code> will have columns <code>lhs.mid</code>, <code>lhs.lower</cod
     <p><strong>This function is deprecated.</strong> Use <code><a href='http://www.rdocumentation.org/packages/modelr/topics/data_grid'>data_grid</a></code> combined
 with <code><a href='point_interval.html'>point_interval</a></code> or <code><a href='http://dplyr.tidyverse.org/reference/do.html'>do</a></code> and
 <code><a href='density_bins.html'>density_bins</a></code> instead.</p>
-<p>The function generates a predictive curve given some posterior samples
+<p>The function generates a predictive curve given posterior draws
 (<code>data</code>), an expression (<code>formula</code>), and a set of variables
 defining the curve (<code>...</code>). For every group in <code>data</code> (if it is a
 grouped data frame---see <code>group_by</code>; otherwise the entire data
@@ -225,7 +225,7 @@ on the curve.</p>
 <p>Given a summary function like <code><a href='density_bins.html'>density_bins</a></code>, this function will
 produce a predictive distribution for each point on the curve.
 <code>predict_curve_density</code> is a shorthand for such a call, with a
-convenient parameter for adjusting the number of bins per point on the
+convenient argument for adjusting the number of bins per point on the
 curve.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

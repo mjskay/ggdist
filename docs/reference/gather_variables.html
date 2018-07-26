@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gather terms from a tidy data frame of parameter samples into a single column — gather_terms • tidybayes</title>
+<title>Gather variables from a tidy data frame of draws from variables into a single column — gather_variables • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Gather terms from a tidy data frame of parameter samples into a single column — gather_terms" />
+<meta property="og:title" content="Gather variables from a tidy data frame of draws from variables into a single column — gather_variables" />
 
-<meta property="og:description" content="Given a data frame such as might be returned by as_sample_tibble or spread_samples,
-gather terms and their estimates from that data frame into a term and estimate column." />
+<meta property="og:description" content="Given a data frame such as might be returned by tidy_draws or spread_draws,
+gather variables and their values from that data frame into a &quot;.variable&quot; and &quot;.value&quot; column." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -102,10 +102,10 @@ gather terms and their estimates from that data frame into a term and estimate c
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -130,32 +130,32 @@ gather terms and their estimates from that data frame into a term and estimate c
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Gather terms from a tidy data frame of parameter samples into a single column</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_terms.R'><code>R/gather_terms.R</code></a></small>
-    <div class="hidden name"><code>gather_terms.Rd</code></div>
+    <h1>Gather variables from a tidy data frame of draws from variables into a single column</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_variables.R'><code>R/gather_variables.R</code></a></small>
+    <div class="hidden name"><code>gather_variables.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Given a data frame such as might be returned by as_sample_tibble or spread_samples,
-gather terms and their estimates from that data frame into a term and estimate column.</p>
+    <p>Given a data frame such as might be returned by <code><a href='tidy_draws.html'>tidy_draws</a></code> or <code><a href='spread_draws.html'>spread_draws</a></code>,
+gather variables and their values from that data frame into a <code>".variable"</code> and <code>".value"</code> column.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>gather_terms</span>(<span class='no'>data</span>, <span class='kw'>ignore_columns</span> <span class='kw'>=</span> <span class='st'>"^\\..*"</span>)</pre>
+    <pre class="usage"><span class='fu'>gather_variables</span>(<span class='no'>data</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A data frame with parameter/term names spread across columns, such as one returned by
-<code><a href='as_sample_tibble.html'>as_sample_tibble</a></code> or <code><a href='spread_samples.html'>spread_samples</a></code>.</p></td>
+      <td><p>A data frame with variable names spread across columns, such as one returned by
+<code><a href='tidy_draws.html'>tidy_draws</a></code> or <code><a href='spread_draws.html'>spread_draws</a></code>.</p></td>
     </tr>
     <tr>
-      <th>ignore_columns</th>
-      <td><p>A regular expression that matches column names to ignore in the gather. The
-default ignores columns that start with <code>"."</code>.</p></td>
+      <th>exclude</th>
+      <td><p>A character vector of names of columns to be excluded from the gather. Default
+ignores several meta-data column names used in tidybayes.</p></td>
     </tr>
     </table>
     
@@ -165,42 +165,40 @@ default ignores columns that start with <code>"."</code>.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function gather every column except grouping columns and those matching the regular expression
-<code>ignore_columns</code> into key/value columns <code>"term"</code> and <code>"estimate"</code>.</p>
-<p>This function uses <code>"term"</code> and <code>"estimate"</code> instead of names like <code>"parameter"</code>
-and <code>"value"</code> in order to be consistent with the naming scheme of <code><a href='http://www.rdocumentation.org/packages/broom/topics/tidy'>tidy</a></code>.</p>
-<p>Imagine a data frame <code>data</code> as returned by <code><a href='spread_samples.html'>spread_samples(fit, a[i], b[i,v])</a></code>, like this:</p><ul>
+    <p>This function gathers every column except grouping columns and those matching the expression
+<code>exclude</code> into key/value columns <code>".variable"</code> and <code>".value"</code>.</p>
+<p>Imagine a data frame <code>data</code> as returned by <code><a href='spread_draws.html'>spread_draws(fit, a[i], b[i,v])</a></code>, like this:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number</p></li>
 <li><p>column <code>".iteration"</code>: the interation number</p></li>
+<li><p>column <code>".draw"</code>: the draw number</p></li>
 <li><p>column <code>"i"</code>: value in <code>1:5</code></p></li>
 <li><p>column <code>"v"</code>: value in <code>1:10</code></p></li>
-<li><p>column <code>"a"</code>: value of <code>"a[i]"</code> for iteration number
-         <code>".iteration"</code> on chain number <code>".chain"</code></p></li>
-<li><p>column <code>"b"</code>: value of <code>"b[i,v]"</code> for iteration number
-         <code>".iteration"</code> on chain number <code>".chain"</code></p></li>
+<li><p>column <code>"a"</code>: value of <code>"a[i]"</code> for draw number <code>".draw"</code></p></li>
+<li><p>column <code>"b"</code>: value of <code>"b[i,v]"</code> for draw number <code>".draw"</code></p></li>
 </ul>
-    <p><code>gather_terms(data)</code> on that data frame would return a grouped
+    <p><code>gather_variables(data)</code> on that data frame would return a grouped
 data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number</p></li>
 <li><p>column <code>".iteration"</code>: the interation number</p></li>
+<li><p>column <code>".draw"</code>: the draw number</p></li>
 <li><p>column <code>"i"</code>: value in <code>1:5</code></p></li>
 <li><p>column <code>"v"</code>: value in <code>1:10</code></p></li>
-<li><p>column <code>"term"</code>: value in <code>c("a", "b")</code>.</p></li>
-<li><p>column <code>"estimate"</code>: value of <code>"a[i]"</code> (when <code>"term"</code> is <code>"a"</code>;
-         repeated for every value of <code>"v"</code>) or <code>"b[i,v]"</code> (when <code>"term"</code> is
-         <code>"b"</code>) for iteration number <code>".iteration"</code> on chain number <code>".chain"</code></p></li>
+<li><p>column <code>".variable"</code>: value in <code>c("a", "b")</code>.</p></li>
+<li><p>column <code>".value"</code>: value of <code>"a[i]"</code> (when <code>".variable"</code> is <code>"a"</code>;
+         repeated for every value of <code>"v"</code>) or <code>"b[i,v]"</code> (when <code>".variable"</code> is
+         <code>"b"</code>) for draw number <code>".draw"</code></p></li>
 </ul>
     <p>In this example, this call:</p>
-<pre>gather_terms(data)</pre>
+<pre>gather_variables(data)</pre>
     <p>Is roughly equivalent to:</p>
 <pre>data %&gt;%
-  gather(term, estimate, -c(.chain, .iteration, i, v)) %&gt;%
-  group_by(term, add = TRUE)
+  gather(.variable, .value, -c(.chain, .iteration, .draw, i, v)) %&gt;%
+  group_by(.variable, add = TRUE)
 </pre>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>.</p></div>
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code>, <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -210,41 +208,40 @@ data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <span class='fu'>data</span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>v</span>], <span class='no'>tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 144 x 7
-#&gt; # Groups:   i, v, term [144]
-#&gt;        i     v term  estimate conf.low conf.high .prob
-#&gt;    &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1     1     1 b      -1.07    -1.25      -0.905  0.95
-#&gt;  2     1     1 tau     5.99     5.07       7.14   0.95
-#&gt;  3     1     2 b      -1.82    -2.08      -1.54   0.95
-#&gt;  4     1     2 tau     5.99     5.07       7.14   0.95
-#&gt;  5     1     3 b       0.174    0.0349     0.317  0.95
-#&gt;  6     1     3 tau     5.99     5.07       7.14   0.95
-#&gt;  7     1     4 b      -0.0992  -0.342      0.141  0.95
-#&gt;  8     1     4 tau     5.99     5.07       7.14   0.95
-#&gt;  9     2     1 b      -0.735   -1.03      -0.435  0.95
-#&gt; 10     2     1 tau     3.35     2.41       4.58   0.95
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>v</span>], <span class='no'>tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'>gather_variables</span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 144 x 9
+#&gt; # Groups:   i, v [72]
+#&gt;        i     v .variable  .value  .lower .upper .width .point .interval
+#&gt;    &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt;  1     1     1 b         -1.07   -1.25   -0.905   0.95 median qi       
+#&gt;  2     1     1 tau        5.99    5.07    7.14    0.95 median qi       
+#&gt;  3     1     2 b         -1.82   -2.08   -1.54    0.95 median qi       
+#&gt;  4     1     2 tau        5.99    5.07    7.14    0.95 median qi       
+#&gt;  5     1     3 b          0.174   0.0349  0.317   0.95 median qi       
+#&gt;  6     1     3 tau        5.99    5.07    7.14    0.95 median qi       
+#&gt;  7     1     4 b         -0.0992 -0.342   0.141   0.95 median qi       
+#&gt;  8     1     4 tau        5.99    5.07    7.14    0.95 median qi       
+#&gt;  9     2     1 b         -0.735  -1.03   -0.435   0.95 median qi       
+#&gt; 10     2     1 tau        3.35    2.41    4.58    0.95 median qi       
 #&gt; # ... with 134 more rows</div><div class='input'>
 <span class='co'># the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='as_sample_tibble.html'>as_sample_tibble</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>gather_terms</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 235 x 5
-#&gt; # Groups:   term [235]
-#&gt;    term    estimate conf.low conf.high .prob
-#&gt;    &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1 b[1,1]   -1.07    -1.25      -0.905  0.95
-#&gt;  2 b[1,2]   -1.82    -2.08      -1.54   0.95
-#&gt;  3 b[1,3]    0.174    0.0349     0.317  0.95
-#&gt;  4 b[1,4]   -0.0992  -0.342      0.141  0.95
-#&gt;  5 b[10,1]  -0.502   -0.677     -0.309  0.95
-#&gt;  6 b[10,2]  -1.70    -1.99      -1.42   0.95
-#&gt;  7 b[10,3]   0.0343  -0.114      0.187  0.95
-#&gt;  8 b[10,4]   0.330    0.0751     0.574  0.95
-#&gt;  9 b[11,1]  -1.20    -1.37      -1.01   0.95
-#&gt; 10 b[11,2]  -2.39    -2.65      -2.13   0.95
+  <span class='fu'><a href='tidy_draws.html'>tidy_draws</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>gather_variables</span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 235 x 7
+#&gt;    .variable  .value  .lower .upper .width .point .interval
+#&gt;    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt;  1 b[1,1]    -1.07   -1.25   -0.905   0.95 median qi       
+#&gt;  2 b[1,2]    -1.82   -2.08   -1.54    0.95 median qi       
+#&gt;  3 b[1,3]     0.174   0.0349  0.317   0.95 median qi       
+#&gt;  4 b[1,4]    -0.0992 -0.342   0.141   0.95 median qi       
+#&gt;  5 b[10,1]   -0.502  -0.677  -0.309   0.95 median qi       
+#&gt;  6 b[10,2]   -1.70   -1.99   -1.42    0.95 median qi       
+#&gt;  7 b[10,3]    0.0343 -0.114   0.187   0.95 median qi       
+#&gt;  8 b[10,4]    0.330   0.0751  0.574   0.95 median qi       
+#&gt;  9 b[11,1]   -1.20   -1.37   -1.01    0.95 median qi       
+#&gt; 10 b[11,2]   -2.39   -2.65   -2.13    0.95 median qi       
 #&gt; # ... with 225 more rows</div><div class='input'>
 </div></pre>
   </div>

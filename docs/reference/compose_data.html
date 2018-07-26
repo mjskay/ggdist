@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compose data for input into a Bayesian sampler — compose_data • tidybayes</title>
+<title>Compose data for input into a Bayesian model — compose_data • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Compose data for input into a Bayesian sampler — compose_data" />
+<meta property="og:title" content="Compose data for input into a Bayesian model — compose_data" />
 
-<meta property="og:description" content="Compose data into a list suitable to be passed into an MCMC sampler (JAGS,
-BUGS, etc)." />
+<meta property="og:description" content="Compose data into a list suitable to be passed into a Bayesian model (JAGS,
+BUGS, Stan, etc)." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -102,10 +102,10 @@ BUGS, etc)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -130,15 +130,15 @@ BUGS, etc)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compose data for input into a Bayesian sampler</h1>
+    <h1>Compose data for input into a Bayesian model</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/compose_data.R'><code>R/compose_data.R</code></a></small>
     <div class="hidden name"><code>compose_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Compose data into a list suitable to be passed into an MCMC sampler (JAGS,
-BUGS, etc).</p>
+    <p>Compose data into a list suitable to be passed into a Bayesian model (JAGS,
+BUGS, Stan, etc).</p>
     
     </div>
 
@@ -159,7 +159,7 @@ includes all list items composed so far.</p></td>
     </tr>
     <tr>
       <th>.n_name</th>
-      <td><p>A function that is used to form index variables (a variable
+      <td><p>A function that is used to form dimension index variables (a variable
 whose value is number of levels in a factor or the length of a data frame in
 <code>...</code>). For example, if a data frame with 20 rows and a factor <code>"foo"</code>
 (having 3 levels) is passed to <code>compose_data</code>, the list returned by
@@ -214,8 +214,8 @@ the implementations of <code>as_data_list.numeric</code>,
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='x_at_y.html'>x_at_y</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>,
-<code><a href='spread_samples.html'>gather_samples</a></code>.</p></div>
+    <div class='dont-index'><p><code><a href='x_at_y.html'>x_at_y</a></code>, <code><a href='spread_draws.html'>spread_draws</a></code>,
+<code><a href='spread_draws.html'>gather_draws</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

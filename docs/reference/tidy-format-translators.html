@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate lookup vectors for composing nested indices — x_at_y • tidybayes</title>
+<title>Translate between different tidy data frame formats for draws from distributions — tidy-format-translators • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Generate lookup vectors for composing nested indices — x_at_y" />
+<meta property="og:title" content="Translate between different tidy data frame formats for draws from distributions — tidy-format-translators" />
 
-<meta property="og:description" content="Generates a lookup vector such that x_at_y(x, y)[y] == x. Particularly useful
-for generating lookup tables for nested indices in conjunction with compose_data." />
+<meta property="og:description" content="These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
+formats (each format using a different naming scheme)." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -130,78 +130,76 @@ for generating lookup tables for nested indices in conjunction with compose_data
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate lookup vectors for composing nested indices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/x_at_y.R'><code>R/x_at_y.R</code></a></small>
-    <div class="hidden name"><code>x_at_y.Rd</code></div>
+    <h1>Translate between different tidy data frame formats for draws from distributions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/tidy_format_translators.R'><code>R/tidy_format_translators.R</code></a></small>
+    <div class="hidden name"><code>tidy-format-translators.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Generates a lookup vector such that <code>x_at_y(x, y)[y] == x</code>. Particularly useful
-for generating lookup tables for nested indices in conjunction with <code><a href='compose_data.html'>compose_data</a></code>.</p>
+    <p>These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
+formats (each format using a different naming scheme).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>x_at_y</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
+    <pre class="usage"><span class='fu'>to_broom_names</span>(<span class='no'>data</span>)
+
+<span class='fu'>from_broom_names</span>(<span class='no'>data</span>)
+
+<span class='fu'>to_ggmcmc_names</span>(<span class='no'>data</span>)
+
+<span class='fu'>from_ggmcmc_names</span>(<span class='no'>data</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Values in the resulting lookup vector. There should be only
-one unique value of <code>x</code> for every corresponding value of <code>y</code>.</p></td>
-    </tr>
-    <tr>
-      <th>y</th>
-      <td><p>Keys in the resulting lookup vector. Should be factors or integers.</p></td>
-    </tr>
-    <tr>
-      <th>missing</th>
-      <td><p>Missing levels from <code>y</code> will be filled in with this value
-in the resulting lookup vector. Default <code>NA</code>.</p></td>
+      <th>data</th>
+      <td><p>A data frame to translate.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A data frame with (possibly) new names in some columns, according to the
+translation scheme above.</p>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>x_at_y(x, y)</code> returns a vector <code>k</code> such that <code>k[y] == x</code>. It also
-fills in missing values in <code>y</code>: if <code>y</code> is an integer, <code>k</code> will contain
-entries for all values from <code>1</code> to <code>max(y)</code>; if <code>y</code> is a factor,
-<code>k</code> will contain entries for all values from <code>1</code> to <code>nlevels(y)</code>.
-Missing values are replaced with <code>missing</code> (default <code>NA</code>).</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='compose_data.html'>compose_data</a></code>.</p></div>
+    <p>Function prefixed with <code>to_</code> translate from the tidybayes format to another format, functions
+prefixed with <code>from_</code> translate from that format back to the tidybayes format. Formats include:</p>
+<p><code>to_broom_names()</code> / <code>from_broom_names()</code>:</p>
+<ul>
+<li><p><code>.variable</code> &lt;-&gt; <code>term</code></p></li>
+<li><p><code>.value</code> &lt;-&gt; <code>estimate</code></p></li>
+<li><p><code>.prediction</code> &lt;-&gt; <code>.fitted</code></p></li>
+<li><p><code>.lower</code> &lt;-&gt; <code>conf.low</code></p></li>
+<li><p><code>.upper</code> &lt;-&gt; <code>conf.high</code></p></li>
+</ul>
+    <p><code>to_ggmcmc_names()</code> / <code>from_ggmcmc_names()</code>:</p>
+<ul>
+<li><p><code>.chain</code> &lt;-&gt; <code>Chain</code></p></li>
+<li><p><code>.iteration</code> &lt;-&gt; <code>Iteration</code></p></li>
+<li><p><code>.variable</code> &lt;-&gt; <code>Parameter</code></p></li>
+<li><p><code>.value</code> &lt;-&gt; <code>value</code></p></li>
+</ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='fu'>library</span>(<span class='no'>magrittr</span>)
 
-<span class='no'>df</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>paste0</span>(<span class='st'>"p"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>))),
-  <span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>paste0</span>(<span class='st'>"s"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>)))
-)
+<span class='fu'>data</span>(<span class='no'>line</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"coda"</span>)
 
-<span class='co'># turns site into a nested index: site[p] gives the site for plot p</span>
-<span class='no'>df</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='compose_data.html'>compose_data</a></span>(<span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>x_at_y</span>(<span class='no'>site</span>, <span class='no'>plot</span>))</div><div class='output co'>#&gt; $plot
-#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
-#&gt; 
-#&gt; $n_plot
-#&gt; [1] 8
-#&gt; 
-#&gt; $site
-#&gt; [1] 1 1 2 2 3 3 4 4
-#&gt; 
-#&gt; $n_site
-#&gt; [1] 4
-#&gt; 
-#&gt; $n
-#&gt; [1] 16
-#&gt; </div><div class='input'>
+<span class='no'>line</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>gather_draws</a></span>(<span class='no'>alpha</span>, <span class='no'>beta</span>, <span class='no'>sigma</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>to_broom_names</span>()</div><div class='output co'>#&gt; # A tibble: 3 x 7
+#&gt;   term  estimate conf.low conf.high .width .point .interval
+#&gt;   &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt; 1 alpha    3.02     1.97       3.88   0.95 median qi       
+#&gt; 2 beta     0.796    0.143      1.47   0.95 median qi       
+#&gt; 3 sigma    0.791    0.425      2.56   0.95 median qi       </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -209,9 +207,9 @@ Missing values are replaced with <code>missing</code> (default <code>NA</code>).
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#details">Details</a></li>
+      <li><a href="#value">Value</a></li>
 
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

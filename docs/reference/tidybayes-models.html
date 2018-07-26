@@ -34,7 +34,7 @@
   
 <meta property="og:title" content="Models supported by tidybayes — tidybayes-models" />
 
-<meta property="og:description" content="Tidybayes supports two classes of models and sample formats: Models that provide prediction functions, and those that
+<meta property="og:description" content="Tidybayes supports two classes of models and sample formats: Models/formats that provide prediction functions, and those that
 do not." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -102,10 +102,10 @@ do not." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -137,17 +137,17 @@ do not." />
 
     <div class="ref-description">
     
-    <p>Tidybayes supports two classes of models and sample formats: Models that provide prediction functions, and those that
+    <p>Tidybayes supports two classes of models and sample formats: Models/formats that provide prediction functions, and those that
 do not.</p>
     
     </div>
 
         
-    <h2 class="hasAnchor" id="all-supported-models"><a class="anchor" href="#all-supported-models"></a>All Supported Models</h2>
+    <h2 class="hasAnchor" id="all-supported-models-sample-formats"><a class="anchor" href="#all-supported-models-sample-formats"></a>All Supported Models/Sample Formats</h2>
 
     
-    <p><strong>All supported models</strong> support the base tidybayes sample extraction functions, such as
-<code><a href='as_sample_tibble.html'>as_sample_tibble</a></code>, <code><a href='spread_samples.html'>spread_samples</a></code>, and <code><a href='spread_samples.html'>gather_samples</a></code>. These models include:</p>
+    <p><strong>All supported models/formats</strong> support the base tidybayes sample extraction functions, such as
+<code><a href='tidy_draws.html'>tidy_draws</a></code>, <code><a href='spread_draws.html'>spread_draws</a></code>, and <code><a href='spread_draws.html'>gather_draws</a></code>. These models/formats include:</p>
 <ul>
 <li><p><code><a href='http://www.rdocumentation.org/packages/rstan/topics/stan'>rstan</a></code> models</p></li>
 <li><p><code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code> models</p></li>
@@ -169,7 +169,7 @@ do not.</p>
 
     
     <p>In addition, the <strong>following models support fit and prediction</strong> extraction functions, such as
-<code><a href='add_predicted_samples.html'>add_fitted_samples</a></code> and <code><a href='add_predicted_samples.html'>add_predicted_samples</a></code>:</p>
+<code><a href='add_predicted_draws.html'>add_fitted_draws</a></code> and <code><a href='add_predicted_draws.html'>add_predicted_draws</a></code>:</p>
 <ul>
 <li><p><code><a href='http://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code> models</p></li>
 <li><p><code><a href='http://www.rdocumentation.org/packages/rstanarm/topics/rstanarm-package'>rstanarm</a></code> models</p></li>
@@ -177,16 +177,16 @@ do not.</p>
     <p>If you install the <a href='https://github.com/mjskay/tidybayes.rethinking'>tidybayes.rethinking</a> package, models from
 the <a href='https://github.com/rmcelreath/rethinking'>rethinking</a> package are also supported. Note that in
 <code>tidybayes.rethinking</code>, <code>tidy_link</code> takes the place of
-<code><a href='add_predicted_samples.html'>add_fitted_samples</a></code> and <code>tidy_sim</code> takes the place of
-<code><a href='add_predicted_samples.html'>add_predicted_samples</a></code>.</p>
+<code><a href='add_predicted_draws.html'>add_fitted_draws</a></code> and <code>tidy_sim</code> takes the place of
+<code><a href='add_predicted_draws.html'>add_predicted_draws</a></code>.</p>
     
     <h2 class="hasAnchor" id="extending-tidybayes"><a class="anchor" href="#extending-tidybayes"></a>Extending tidybayes</h2>
 
     
-    <p>To include basic support for new models, one need only implement the <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code> generic function
+    <p>To include basic support for new models, one need only implement the <code><a href='tidy_draws.html'>tidy_draws</a></code> generic function
 for that model.</p>
-<p>To include support for estimation and prediction, one must implement the <code><a href='add_predicted_samples.html'>fitted_samples</a></code> and
-<code><a href='add_predicted_samples.html'>predicted_samples</a></code> generic functions.</p>
+<p>To include support for estimation and prediction, one must implement the <code><a href='add_predicted_draws.html'>fitted_draws</a></code> and
+<code><a href='add_predicted_draws.html'>predicted_draws</a></code> generic functions.</p>
     
 
   </div>
@@ -194,7 +194,7 @@ for that model.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
-      <li><a href="#all-supported-models">All Supported Models</a></li>
+      <li><a href="#all-supported-models-sample-formats">All Supported Models/Sample Formats</a></li>
 
       <li><a href="#models-supporting-prediction">Models Supporting Prediction</a></li>
 

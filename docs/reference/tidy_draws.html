@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get samples from a model as a tibble — as_sample_tibble • tidybayes</title>
+<title>Get a sample of posterior draws from a model as a tibble — tidy_draws • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,12 +32,14 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Get samples from a model as a tibble — as_sample_tibble" />
+<meta property="og:title" content="Get a sample of posterior draws from a model as a tibble — tidy_draws" />
 
-<meta property="og:description" content="Extract samples from an MCMC fit into a wide-format data frame with a
-.chain and .iteration column, as well as all terms
-as columns. Generally speaking not as useful as spread_samples or
-gather_samples and is mainly used interally (see `Details`)" />
+<meta property="og:description" content="Extract draws from a Bayesian fit into a wide-format data frame with a
+.chain, .iteration, and .draw column, as well as all variables
+as columns. While this function can be useful for quick glances at models (especially
+combined with gather_variables and median_qi), it is
+generally speaking not as useful as spread_draws or
+gather_draws for most applications, and is mainly used interally (see `Details`)." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -104,10 +106,10 @@ gather_samples and is mainly used interally (see `Details`)" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -132,57 +134,57 @@ gather_samples and is mainly used interally (see `Details`)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get samples from a model as a tibble</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/as_sample_tibble.R'><code>R/as_sample_tibble.R</code></a></small>
-    <div class="hidden name"><code>as_sample_tibble.Rd</code></div>
+    <h1>Get a sample of posterior draws from a model as a tibble</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/tidy_draws.R'><code>R/tidy_draws.R</code></a></small>
+    <div class="hidden name"><code>tidy_draws.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Extract samples from an MCMC fit into a wide-format data frame with a
-<code>.chain</code> and <code>.iteration</code> column, as well as all terms
-as columns. Generally speaking not as useful as <code><a href='spread_samples.html'>spread_samples</a></code> or
-<code><a href='spread_samples.html'>gather_samples</a></code> and is mainly used interally (see `Details`)</p>
+    <p>Extract draws from a Bayesian fit into a wide-format data frame with a
+<code>.chain</code>, <code>.iteration</code>, and <code>.draw</code> column, as well as all variables
+as columns. While this function can be useful for quick glances at models (especially
+combined with <code><a href='gather_variables.html'>gather_variables</a></code> and <code><a href='point_interval.html'>median_qi</a></code>), it is
+generally speaking not as useful as <code><a href='spread_draws.html'>spread_draws</a></code> or
+<code><a href='spread_draws.html'>gather_draws</a></code> for most applications, and is mainly used interally (see `Details`).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
-
-<span class='fu'>as_sample_data_frame</span>(<span class='no'>model</span>)
+    <pre class="usage"><span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for mcmc.list</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for stanfit</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for runjags</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for jagsUI</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for MCMCglmm</span>
-<span class='fu'>as_sample_tibble</span>(<span class='no'>model</span>)</pre>
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>A supported Bayesian model fit / MCMC object. See <code><a href='tidybayes-models.html'>tidybayes-models</a></code> for a list of supported
+      <td><p>A supported Bayesian model fit object. See <code><a href='tidybayes-models.html'>tidybayes-models</a></code> for a list of supported
 models.</p></td>
     </tr>
     </table>
@@ -190,20 +192,21 @@ models.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame (actually, a <code><a href='http://www.rdocumentation.org/packages/tibble/topics/tibble'>tibble</a></code>) with a <code>.chain</code> column,
-<code>.iteration</code> column, and one column for every parameter in <code>model</code>.</p>
+<code>.iteration</code> column, <code>.draw</code> column, and one column for every variable in <code>model</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>You will not typically call this directly; instead use <code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>.
-However, to provide support for new models in those functions,
-you must provide an implementation of this function, <em>or</em> an implementaiton
-of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code> (<code>as_sample_tibble</code> should work on any model
+    <p>In practice, apart from quick looks at a model you will probably not call this directly;
+<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>, which are build on top of this
+function, provide support for extracting variable dimensions are so are often more useful.</p>
+<p>To provide support for new models in tidybayes,
+you must provide an implementation of this function <em>or</em> an implementaiton
+of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code> (<code>tidy_draws</code> should work on any model
 with an implementation of <code><a href='http://www.rdocumentation.org/packages/coda/topics/mcmc.list'>as.mcmc.list</a></code>)</p>
-<p><code>as_sample_data_frame</code> is an alias.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>, which use this function
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>, which use this function
 internally and provides a friendly interface for extracting tidy data frames from model fits.</p></div>
     
 
@@ -214,19 +217,19 @@ internally and provides a friendly interface for extracting tidy data frames fro
 <span class='fu'>data</span>(<span class='no'>line</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"coda"</span>)
 
 <span class='no'>line</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>as_sample_tibble</span>()</div><div class='output co'>#&gt; # A tibble: 400 x 5
-#&gt;    .chain .iteration alpha   beta  sigma
-#&gt;     &lt;int&gt;      &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-#&gt;  1      1          1  7.17 -1.57  11.2  
-#&gt;  2      1          2  2.95  1.50   4.89 
-#&gt;  3      1          3  3.67  0.628  1.40 
-#&gt;  4      1          4  3.32  1.18   0.663
-#&gt;  5      1          5  3.71  0.490  1.36 
-#&gt;  6      1          6  3.58  0.207  1.04 
-#&gt;  7      1          7  2.70  0.883  1.29 
-#&gt;  8      1          8  2.96  1.09   0.459
-#&gt;  9      1          9  3.53  1.07   0.634
-#&gt; 10      1         10  2.09  1.48   0.913
+  <span class='fu'>tidy_draws</span>()</div><div class='output co'>#&gt; # A tibble: 400 x 6
+#&gt;    .chain .iteration .draw alpha   beta  sigma
+#&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+#&gt;  1      1          1     1  7.17 -1.57  11.2  
+#&gt;  2      1          2     2  2.95  1.50   4.89 
+#&gt;  3      1          3     3  3.67  0.628  1.40 
+#&gt;  4      1          4     4  3.32  1.18   0.663
+#&gt;  5      1          5     5  3.71  0.490  1.36 
+#&gt;  6      1          6     6  3.58  0.207  1.04 
+#&gt;  7      1          7     7  2.70  0.883  1.29 
+#&gt;  8      1          8     8  2.96  1.09   0.459
+#&gt;  9      1          9     9  3.53  1.07   0.634
+#&gt; 10      1         10    10  2.09  1.48   0.913
 #&gt; # ... with 390 more rows</div><div class='input'>
 </div></pre>
   </div>

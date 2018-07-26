@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Decorate a model fit or samples with data types recovered from the input data — recover_types • tidybayes</title>
+<title>Decorate a model fit or sample with data types recovered from the input data — recover_types • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,11 +32,11 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Decorate a model fit or samples with data types recovered from the input data — recover_types" />
+<meta property="og:title" content="Decorate a model fit or sample with data types recovered from the input data — recover_types" />
 
-<meta property="og:description" content="Decorate the samples returned from a Bayesian sampler with types for
-variable and index data types. Meant to be used before calling
-spread_samples or gather_samples so that the values returned by
+<meta property="og:description" content="Decorate a Bayesian model fit or a sample from it with types for
+variable and dimension data types. Meant to be used before calling
+spread_draws or gather_draws so that the values returned by
 those functions are translated back into useful data types." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -104,10 +104,10 @@ those functions are translated back into useful data types." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -132,16 +132,16 @@ those functions are translated back into useful data types." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Decorate a model fit or samples with data types recovered from the input data</h1>
+    <h1>Decorate a model fit or sample with data types recovered from the input data</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/recover_types.R'><code>R/recover_types.R</code></a></small>
     <div class="hidden name"><code>recover_types.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Decorate the samples returned from a Bayesian sampler with types for
-variable and index data types. Meant to be used before calling
-<code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code> so that the values returned by
+    <p>Decorate a Bayesian model fit or a sample from it with types for
+variable and dimension data types. Meant to be used before calling
+<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code> so that the values returned by
 those functions are translated back into useful data types.</p>
     
     </div>
@@ -153,13 +153,13 @@ those functions are translated back into useful data types.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects;
+      <td><p>A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 for a full list of supported models, see <a href='tidybayes-models.html'>tidybayes-models</a>.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Lists (or data frames) providing data prototypes used to convert
-columns returned by <code><a href='spread_samples.html'>spread_samples</a></code> and <code><a href='spread_samples.html'>gather_samples</a></code> back into useful data types.
+columns returned by <code><a href='spread_draws.html'>spread_draws</a></code> and <code><a href='spread_draws.html'>gather_draws</a></code> back into useful data types.
 See `Details`.</p></td>
     </tr>
     </table>
@@ -173,20 +173,20 @@ See `Details`.</p></td>
     <p>Each argument in <code>...</code> specifies a list or data.frame. The <code>model</code>
 is decorated with a list of constructors that can convert a numeric column
 into the data types in the lists in <code>...</code>.</p>
-<p>Then, when <code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code> is called on the decorated
-<code>model</code>, each list entry with the same name as the variable or an index
-in varible_spec is a used as a prototype for that variable or index ---
-i.e., its type is taken to be the expected type of that variable or index.
+<p>Then, when <code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code> is called on the decorated
+<code>model</code>, each list entry with the same name as the variable or a dimension
+in varible_spec is a used as a prototype for that variable or dimension ---
+i.e., its type is taken to be the expected type of that variable or dimension.
 Those types are used to translate numeric values of variables back into
 useful values (for example, levels of a factor).</p>
 <p>The most common use of <code>recover_types</code> is to automatically translate
-indices that correspond to levels of a factor in the original data back into
+dimensions of a variable that correspond to levels of a factor in the original data back into
 levels of that factor. The simplest way to do this is to pass in the data
 frame from which the original data came.</p>
 <p>Supported types of prototypes are factor, ordered, and logical. For example:</p>
 <ul>
 <li><p>if <code>prototypes$v</code> is a factor, the v column in the
-returned samples is translated into a factor using <code>factor(v,
+returned draws is translated into a factor using <code>factor(v,
 labels=levels(prototypes$v), ordered=is.ordered(prototypes$v))</code>.</p></li>
 <li><p>if
 <code>prototypes$v</code> is a logical, the v column is translated into a logical
@@ -197,7 +197,7 @@ of the generic function <code>as_constructor</code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='spread_samples.html'>gather_samples</a></code>, <code><a href='compose_data.html'>compose_data</a></code>.</p></div>
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code>, <code><a href='spread_draws.html'>gather_draws</a></code>, <code><a href='compose_data.html'>compose_data</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -255,16 +255,16 @@ of the generic function <code>as_constructor</code>.</p>
 <span class='no'>m</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/rstan/topics/stan'>stan</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>stan_code</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='compose_data.html'>compose_data</a></span>(<span class='no'>ABC</span>), <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>adapt_delta</span><span class='kw'>=</span><span class='fl'>0.99</span>),
   <span class='co'># 1 chain / few iterations just so example runs quickly</span>
   <span class='co'># do not use in practice</span>
-  <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)</div><div class='output co'>#&gt; In file included from C:/R/R-3.5.0/library/BH/include/boost/config.hpp:39:0,
-#&gt;                  from C:/R/R-3.5.0/library/BH/include/boost/math/tools/config.hpp:13,
-#&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/stan/math/rev/core/var.hpp:7,
-#&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/stan/math/rev/core/gevv_vvv_vari.hpp:5,
-#&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/stan/math/rev/core.hpp:12,
-#&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/stan/math/rev/mat.hpp:4,
-#&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/stan/math.hpp:4,
-#&gt;                  from C:/R/R-3.5.0/library/StanHeaders/include/src/stan/model/model_header.hpp:4,
-#&gt;                  from filee5804bba10d6.cpp:8:
-#&gt; C:/R/R-3.5.0/library/BH/include/boost/config/compiler/gcc.hpp:186:0: warning: "BOOST_NO_CXX11_RVALUE_REFERENCES" redefined
+  <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)</div><div class='output co'>#&gt; In file included from C:/R/R-3.5.1/library/BH/include/boost/config.hpp:39:0,
+#&gt;                  from C:/R/R-3.5.1/library/BH/include/boost/math/tools/config.hpp:13,
+#&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math/rev/core/var.hpp:7,
+#&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math/rev/core/gevv_vvv_vari.hpp:5,
+#&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math/rev/core.hpp:12,
+#&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math/rev/mat.hpp:4,
+#&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math.hpp:4,
+#&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/src/stan/model/model_header.hpp:4,
+#&gt;                  from filefc3eee6551.cpp:8:
+#&gt; C:/R/R-3.5.1/library/BH/include/boost/config/compiler/gcc.hpp:186:0: warning: "BOOST_NO_CXX11_RVALUE_REFERENCES" redefined
 #&gt;  #  define BOOST_NO_CXX11_RVALUE_REFERENCES
 #&gt;  ^
 #&gt; &lt;command-line&gt;:0:0: note: this is the location of the previous definition
@@ -289,23 +289,22 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.088 seconds (Warm-up)
-#&gt;                0.118 seconds (Sampling)
-#&gt;                0.206 seconds (Total)
+#&gt;  Elapsed Time: 0.092 seconds (Warm-up)
+#&gt;                0.12 seconds (Sampling)
+#&gt;                0.212 seconds (Total)
 #&gt; </div><div class='input'>
-<span class='co'># without using recover_types(), the `condition` column returned by spread_samples()</span>
+<span class='co'># without using recover_types(), the `condition` column returned by spread_draws()</span>
 <span class='co'># will be an integer:</span>
 <span class='no'>m</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
-#&gt; # Groups:   condition [5]
-#&gt;   condition condition_mean conf.low conf.high .prob
-#&gt;       &lt;int&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1         1          0.199   -0.124     0.628  0.95
-#&gt; 2         2          0.993    0.653     1.33   0.95
-#&gt; 3         3          1.82     1.45      2.21   0.95
-#&gt; 4         4          1.02     0.658     1.39   0.95
-#&gt; 5         5         -0.879   -1.22     -0.534  0.95</div><div class='input'>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 7
+#&gt;   condition condition_mean .lower .upper .width .point .interval
+#&gt;       &lt;int&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt; 1         1          0.199 -0.124  0.628   0.95 median qi       
+#&gt; 2         2          0.993  0.653  1.33    0.95 median qi       
+#&gt; 3         3          1.82   1.45   2.21    0.95 median qi       
+#&gt; 4         4          1.02   0.658  1.39    0.95 median qi       
+#&gt; 5         5         -0.879 -1.22  -0.534   0.95 median qi       </div><div class='input'>
 <span class='co'># If we apply recover_types() first, subsequent calls to other tidybayes functions will</span>
 <span class='co'># automatically back-convert factors so that they are labeled with their original levels</span>
 <span class='co'># (assuming the same name is used)</span>
@@ -313,16 +312,15 @@ of the generic function <code>as_constructor</code>.</p>
 
 <span class='co'># now the `condition` column with be a factor with levels "A", "B", "C", ...</span>
 <span class='no'>m</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 5
-#&gt; # Groups:   condition [5]
-#&gt;   condition condition_mean conf.low conf.high .prob
-#&gt;   &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 A                  0.199   -0.124     0.628  0.95
-#&gt; 2 B                  0.993    0.653     1.33   0.95
-#&gt; 3 C                  1.82     1.45      2.21   0.95
-#&gt; 4 D                  1.02     0.658     1.39   0.95
-#&gt; 5 E                 -0.879   -1.22     -0.534  0.95</div><div class='input'>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 7
+#&gt;   condition condition_mean .lower .upper .width .point .interval
+#&gt;   &lt;fct&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt; 1 A                  0.199 -0.124  0.628   0.95 median qi       
+#&gt; 2 B                  0.993  0.653  1.33    0.95 median qi       
+#&gt; 3 C                  1.82   1.45   2.21    0.95 median qi       
+#&gt; 4 D                  1.02   0.658  1.39    0.95 median qi       
+#&gt; 5 E                 -0.879 -1.22  -0.534   0.95 median qi       </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

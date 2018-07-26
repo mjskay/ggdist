@@ -103,10 +103,10 @@ distributions using predict_curve." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -167,7 +167,7 @@ distributions using predict_curve.</p>
     <tr>
       <th>breaks</th>
       <td><p>Used to set bins for <code>histogram_bins</code>. Can be number of bins (by default it is set to the value
-of <code>n</code>) or a method for setting bins. See the <code>breaks</code> parameter of <code>hist</code>.</p></td>
+of <code>n</code>) or a method for setting bins. See the <code>breaks</code> argument of <code>hist</code>.</p></td>
     </tr>
     </table>
     
@@ -192,7 +192,7 @@ in a consistent format: a data frame of bins suitable for use with
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='add_predicted_samples.html'>add_predicted_samples</a></code> and <code><a href='stat_lineribbon.html'>stat_lineribbon</a></code> for a better approach. This
+    <div class='dont-index'><p>See <code><a href='add_predicted_draws.html'>add_predicted_draws</a></code> and <code><a href='stat_lineribbon.html'>stat_lineribbon</a></code> for a better approach. This
 function may be deprecated in the future.</p></div>
     
 
@@ -229,15 +229,15 @@ function may be deprecated in the future.</p></div>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.088 seconds (Warm-up)
-#&gt;                0.08 seconds (Sampling)
-#&gt;                0.168 seconds (Total)
+#&gt;  Elapsed Time: 0.074 seconds (Warm-up)
+#&gt;                0.075 seconds (Sampling)
+#&gt;                0.149 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='no'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/data_grid'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/seq_range'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>step</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='add_predicted_samples.html'>add_predicted_samples</a></span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='add_predicted_draws.html'>add_predicted_draws</a></span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/do.html'>do</a></span>(<span class='fu'>density_bins</span>(<span class='no'>.</span>$<span class='no'>pred</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>() +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_rect</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(
@@ -245,7 +245,7 @@ function may be deprecated in the future.</p></div>
     <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'>ordered</span>(<span class='no'>cyl</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>density</span>
   )) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>hp</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mpg</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'>ordered</span>(<span class='no'>cyl</span>)), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_alpha'>scale_alpha_continuous</a></span>(<span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.75</span>))</div><div class='img'><img src='density_bins-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_alpha'>scale_alpha_continuous</a></span>(<span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.75</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Unknown or uninitialised column: 'pred'.</span></div><div class='output co'>#&gt; <span class='error'>Error in density.default(x, n = n, ...): argument 'x' must be numeric</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

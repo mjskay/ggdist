@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Data lists for input into a Bayesian sampler — data_list • tidybayes</title>
+<title>Data lists for input into Bayesian models — data_list • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Data lists for input into a Bayesian sampler — data_list" />
+<meta property="og:title" content="Data lists for input into Bayesian models — data_list" />
 
 <meta property="og:description" content="Functions used by compose_data to create lists of data suitable for
-input into a Bayesian sampler. These functions typically should not be called directly
+input into a Bayesian modeling function. These functions typically should not be called directly
 (instead use compose_data), but are exposed for the rare cases in which
 you may need to provide your own conversion routines for a data type not already
 supported (see `Details`)." />
@@ -105,10 +105,10 @@ supported (see `Details`)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -133,7 +133,7 @@ supported (see `Details`)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Data lists for input into a Bayesian sampler</h1>
+    <h1>Data lists for input into Bayesian models</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/compose_data.R'><code>R/compose_data.R</code></a></small>
     <div class="hidden name"><code>data_list.Rd</code></div>
     </div>
@@ -141,7 +141,7 @@ supported (see `Details`)." />
     <div class="ref-description">
     
     <p>Functions used by <code><a href='compose_data.html'>compose_data</a></code> to create lists of data suitable for
-input into a Bayesian sampler. <strong>These functions typically should not be called directly</strong>
+input into a Bayesian modeling function. <strong>These functions typically should not be called directly</strong>
 (instead use <code><a href='compose_data.html'>compose_data</a></code>), but are exposed for the rare cases in which
 you may need to provide your own conversion routines for a data type not already
 supported (see `Details`).</p>
@@ -205,8 +205,8 @@ only one row are still returned as arrays instead of scalars.</p></td>
     </tr>
     <tr>
       <th>.n_name</th>
-      <td><p>A function that is used to form index variables (a variable
-whose value is the length of a factor or a data frame in <code>...</code>). For
+      <td><p>A function that is used to form variables storing the number of
+rows in data frames or the number of levels in factors in <code>...</code>). For
 example, if a factor with <code>name = "foo"</code> (having three levels) is
 passed in, the list returned will include an element named
 <code>.n_name("foo")</code>, which by default would be "n_foo", containing the
@@ -253,7 +253,7 @@ etc for examples.</p>
     <pre class="examples"><div class='input'>
 # Typically these functions should not be used directly.
 # See the compose_data function for examples of how to translate
-# data in lists for input to Bayesian samplers.
+# data in lists for input to Bayesian modeling functions.
 
 </div></pre>
   </div>

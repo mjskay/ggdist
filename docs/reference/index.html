@@ -99,10 +99,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -148,40 +148,35 @@
       <tr>
         
         <td>
-          <p><code><a href="add_predicted_samples.html">add_fitted_samples()</a></code> <code><a href="add_predicted_samples.html">fitted_samples()</a></code> <code><a href="add_predicted_samples.html">add_predicted_samples()</a></code> <code><a href="add_predicted_samples.html">predicted_samples()</a></code> </p>
+          <p><code><a href="add_predicted_draws.html">add_linpred_draws()</a></code> <code><a href="add_predicted_draws.html">linpred_draws()</a></code> <code><a href="add_predicted_draws.html">add_fitted_draws()</a></code> <code><a href="add_predicted_draws.html">fitted_draws()</a></code> <code><a href="add_predicted_draws.html">add_predicted_draws()</a></code> <code><a href="add_predicted_draws.html">predicted_draws()</a></code> </p>
         </td>
-        <td><p>Add samples from the posterior fit or posterior prediction of a model to a data frame</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="as_sample_tibble.html">as_sample_tibble()</a></code> <code><a href="as_sample_tibble.html">as_sample_data_frame()</a></code> </p>
-        </td>
-        <td><p>Get samples from a model as a tibble</p></td>
+        <td><p>Add draws from (possibly transformed) posterior linear predictors (the "fit") or from posterior predictions
+of a model to a data frame</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="combine_chains.html">combine_chains()</a></code> </p>
         </td>
-        <td><p>Combine the chain and iteration columns of tidy samples</p></td>
+        <td><p>Combine the chain and iteration columns of tidy data frames of draws</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="compare_levels.html">compare_levels()</a></code> </p>
         </td>
-        <td><p>Compare the value of some variable extracted from a Bayesian posterior
-sample for different levels of a factor</p></td>
+        <td><p>Compare the value of draws of some variable from a Bayesian model for
+different levels of a factor</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="compose_data.html">compose_data()</a></code> </p>
         </td>
-        <td><p>Compose data for input into a Bayesian sampler</p></td>
+        <td><p>Compose data for input into a Bayesian model</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="data_list.html">data_list()</a></code> <code><a href="data_list.html">as_data_list()</a></code> </p>
         </td>
-        <td><p>Data lists for input into a Bayesian sampler</p></td>
+        <td><p>Data lists for input into Bayesian models</p></td>
       </tr><tr>
         
         <td>
@@ -191,27 +186,28 @@ sample for different levels of a factor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="gather_emmeans_samples.html">gather_emmeans_samples()</a></code> </p>
+          <p><code><a href="gather_emmeans_draws.html">gather_emmeans_draws()</a></code> </p>
         </td>
-        <td><p>Extract tidy samples of estimated marginal means (emmeans/lsmeans) from a Bayesian model fit</p></td>
+        <td><p>Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from
+a Bayesian model fit.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="gather_terms.html">gather_terms()</a></code> </p>
+          <p><code><a href="gather_variables.html">gather_variables()</a></code> </p>
         </td>
-        <td><p>Gather terms from a tidy data frame of parameter samples into a single column</p></td>
+        <td><p>Gather variables from a tidy data frame of draws from variables into a single column</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="geom_eye.html">geom_eye()</a></code> <code><a href="geom_eye.html">geom_eyeh()</a></code> </p>
         </td>
-        <td><p>Eye plots of densities with point estimates and intervals (ggplot geom)</p></td>
+        <td><p>Eye plots of densities with point and interval summaries (ggplot geom)</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="geom_halfeyeh.html">geom_halfeyeh()</a></code> </p>
         </td>
-        <td><p>Half-eye plots of densities with point estimates and intervals (ggplot geom)</p></td>
+        <td><p>Half-eye plots of densities with point and interval summaries (ggplot geom)</p></td>
       </tr><tr>
         
         <td>
@@ -229,25 +225,25 @@ sample for different levels of a factor</p></td>
         <td>
           <p><code><a href="geom_pointinterval.html">geom_pointinterval()</a></code> <code><a href="geom_pointinterval.html">geom_pointintervalh()</a></code> </p>
         </td>
-        <td><p>Point estimate + multiple probability interval plots (ggplot geom)</p></td>
+        <td><p>Point + multiple probability interval plots (ggplot geom)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_variables.html">get_variables()</a></code> </p>
+        </td>
+        <td><p>Get the names of the variables in a fitted Bayesian model</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="n_prefix.html">n_prefix()</a></code> </p>
         </td>
-        <td><p>Prefix function generator for composing index columns</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="parameters.html">parameters()</a></code> </p>
-        </td>
-        <td><p>Get the names of the parameters in a fitted Bayesian model</p></td>
+        <td><p>Prefix function generator for composing dimension index columns</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="point_interval.html">point_interval()</a></code> <code><a href="point_interval.html">point_intervalh()</a></code> <code><a href="point_interval.html">qi()</a></code> <code><a href="point_interval.html">hdi()</a></code> <code><a href="point_interval.html">mean_qi()</a></code> <code><a href="point_interval.html">mean_qih()</a></code> <code><a href="point_interval.html">median_qi()</a></code> <code><a href="point_interval.html">median_qih()</a></code> <code><a href="point_interval.html">mode_qi()</a></code> <code><a href="point_interval.html">mode_qih()</a></code> <code><a href="point_interval.html">mean_hdi()</a></code> <code><a href="point_interval.html">mean_hdih()</a></code> <code><a href="point_interval.html">median_hdi()</a></code> <code><a href="point_interval.html">median_hdih()</a></code> <code><a href="point_interval.html">mode_hdi()</a></code> <code><a href="point_interval.html">mode_hdih()</a></code> </p>
         </td>
-        <td><p>Point and interval estimates for tidy sample data</p></td>
+        <td><p>Point and interval summaries for tidy data frames of draws from distributions</p></td>
       </tr><tr>
         
         <td>
@@ -259,13 +255,13 @@ sample for different levels of a factor</p></td>
         <td>
           <p><code><a href="recover_types.html">recover_types()</a></code> </p>
         </td>
-        <td><p>Decorate a model fit or samples with data types recovered from the input data</p></td>
+        <td><p>Decorate a model fit or sample with data types recovered from the input data</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="spread_samples.html">gather_samples()</a></code> <code><a href="spread_samples.html">spread_samples()</a></code> </p>
+          <p><code><a href="spread_draws.html">gather_draws()</a></code> <code><a href="spread_draws.html">spread_draws()</a></code> </p>
         </td>
-        <td><p>Extract samples of parameters in a Bayesian model fit into a tidy data format</p></td>
+        <td><p>Extract draws of variables in a Bayesian model fit into a tidy data format</p></td>
       </tr><tr>
         
         <td>
@@ -283,13 +279,19 @@ sample for different levels of a factor</p></td>
         <td>
           <p><code><a href="stat_pointinterval.html">stat_pointinterval()</a></code> <code><a href="stat_pointinterval.html">stat_pointintervalh()</a></code> </p>
         </td>
-        <td><p>Point estimate + multiple probability interval plots (ggplot stat)</p></td>
+        <td><p>Point summary + multiple probability interval plots (ggplot stat)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tidy-format-translators.html">to_broom_names()</a></code> <code><a href="tidy-format-translators.html">from_broom_names()</a></code> <code><a href="tidy-format-translators.html">to_ggmcmc_names()</a></code> <code><a href="tidy-format-translators.html">from_ggmcmc_names()</a></code> </p>
+        </td>
+        <td><p>Translate between different tidy data frame formats for draws from distributions</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="tidybayes-deprecated.html">tidybayes-deprecated</a></code> </p>
         </td>
-        <td><p>Deprecated functions in tidybayes</p></td>
+        <td><p>Deprecated functions, arguments, and column names in tidybayes</p></td>
       </tr><tr>
         
         <td>
@@ -299,9 +301,15 @@ sample for different levels of a factor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="unspread_samples.html">ungather_samples()</a></code> <code><a href="unspread_samples.html">unspread_samples()</a></code> </p>
+          <p><code><a href="tidy_draws.html">tidy_draws()</a></code> </p>
         </td>
-        <td><p>Turn tidy data frames of parameters from a Bayesian model back into untidy data</p></td>
+        <td><p>Get a sample of posterior draws from a model as a tibble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="unspread_draws.html">ungather_draws()</a></code> <code><a href="unspread_draws.html">unspread_draws()</a></code> </p>
+        </td>
+        <td><p>Turn tidy data frames of variables from a Bayesian model back into untidy data</p></td>
       </tr><tr>
         
         <td>

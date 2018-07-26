@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point and interval estimates for tidy sample data — point_interval • tidybayes</title>
+<title>Point and interval summaries for tidy data frames of draws from distributions — point_interval • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Point and interval estimates for tidy sample data — point_interval" />
+<meta property="og:title" content="Point and interval summaries for tidy data frames of draws from distributions — point_interval" />
 
-<meta property="og:description" content="Translates samples in a (possibly grouped) data frame into a point and
-interval estimate (or set of point and interval estimates, if there are
+<meta property="og:description" content="Translates draws from distributions in a (possibly grouped) data frame into point and
+interval summaries (or set of point and interval summaries, if there are
 multiple groups in a grouped data frame)." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -103,10 +103,10 @@ multiple groups in a grouped data frame)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -131,57 +131,60 @@ multiple groups in a grouped data frame)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Point and interval estimates for tidy sample data</h1>
+    <h1>Point and interval summaries for tidy data frames of draws from distributions</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/point_interval.R'><code>R/point_interval.R</code></a></small>
     <div class="hidden name"><code>point_interval.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Translates samples in a (possibly grouped) data frame into a point and
-interval estimate (or set of point and interval estimates, if there are
+    <p>Translates draws from distributions in a (possibly grouped) data frame into point and
+interval summaries (or set of point and interval summaries, if there are
 multiple groups in a grouped data frame).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>, <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>,
-  <span class='kw'>.broom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>, <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>,
+  <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>,
+  <span class='st'>".row"</span>), <span class='no'>.prob</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
-  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.broom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
+  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>,
+  <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>), <span class='no'>.prob</span>)
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
-  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.broom</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
+  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>,
+  <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>), <span class='no'>.prob</span>)
 
 <span class='fu'>point_intervalh</span>(<span class='no'>...</span>)
 
-<span class='fu'>qi</span>(<span class='no'>x</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>qi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>)
 
-<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>)
 
-<span class='fu'>mean_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mean_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
 <span class='fu'>mean_qih</span>(<span class='no'>...</span>)
 
-<span class='fu'>median_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>median_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
 <span class='fu'>median_qih</span>(<span class='no'>...</span>)
 
-<span class='fu'>mode_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mode_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
 <span class='fu'>mode_qih</span>(<span class='no'>...</span>)
 
-<span class='fu'>mean_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mean_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
 <span class='fu'>mean_hdih</span>(<span class='no'>...</span>)
 
-<span class='fu'>median_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>median_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
 <span class='fu'>median_hdih</span>(<span class='no'>...</span>)
 
-<span class='fu'>mode_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mode_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
 <span class='fu'>mode_hdih</span>(<span class='no'>...</span>)</pre>
     
@@ -191,39 +194,52 @@ multiple groups in a grouped data frame).</p>
     <tr>
       <th>.data</th>
       <td><p>Data frame (or grouped data frame as returned by <code>group_by</code>)
-that contains samples to summarize.</p></td>
+that contains draws to summarize.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Bare column names or expressions that, when evaluated in the context of
-<code>.data</code>, represent samples to summarise. If this is empty, then by default all
-columns that are not group columns or start with <code>"."</code> (e.g. <code>".chain"</code>
-or <code>".iteration"</code>) will be summarised.</p></td>
+<code>.data</code>, represent draws to summarise. If this is empty, then by default all
+columns that are not group columns and which are not in <code>.exclude</code> (by default
+<code>".chain"</code>, <code>".iteration"</code>, <code>".draw"</code>, and <code>".row"</code>) will be summarised.
+This can be list columns.</p></td>
     </tr>
     <tr>
-      <th>.prob</th>
-      <td><p>vector of probabilities to use for generating intervals. If multiple
-probabilities are provided, multiple rows per group are generated, each with
-a different probabilty interval (and value of the corresponding <code>.prob</code> column).</p></td>
+      <th>.width</th>
+      <td><p>vector of probabilities to use that determine the widths of the resulting intervals.
+If multiple probabilities are provided, multiple rows per group are generated, each with
+a different probabilty interval (and value of the corresponding <code>.width</code> column).</p></td>
     </tr>
     <tr>
       <th>.point</th>
-      <td><p>Point estimate function, which takes a vector and returns a single
+      <td><p>Point summary function, which takes a vector and returns a single
 value, e.g. <code>mean</code>, <code>median</code>, or <code>Mode</code>.</p></td>
     </tr>
     <tr>
       <th>.interval</th>
-      <td><p>Interval estimate function, which takes a vector and a probability
-(<code>.prob</code>) and returns a two-element vector representing the lower and upper
+      <td><p>Interval function, which takes a vector and a probability
+(<code>.width</code>) and returns a two-element vector representing the lower and upper
 bound of an interval; e.g. <code>qi</code>, <code>hdi</code></p></td>
     </tr>
     <tr>
-      <th>.broom</th>
+      <th>.simple_names</th>
       <td><p>When <code>TRUE</code> and only a single column / vector is to be summarised, use the
-name <code>conf.low</code> for the lower end of the interval and <code>conf.high</code> for the
-upper end for consistency with <code><a href='http://www.rdocumentation.org/packages/broom/topics/tidy'>tidy</a></code> in the broom package. If
-<code>.data</code> is a vector and this is <code>TRUE</code>, this will also set the column name
-of the point estimate to <code>estimate</code>.</p></td>
+name <code>.lower</code> for the lower end of the interval and <code>.upper</code> for the
+upper end. If <code>.data</code> is a vector and this is <code>TRUE</code>, this will also set the column name
+of the point summary to <code>.value</code>. When <code>FALSE</code> and <code>.data</code> is a data frame,
+names the lower and upper intervals for each column <code>x</code> <code>x.lower</code> and <code>x.upper</code>.
+When <code>FALSE</code> and <code>.data</code> is a vector, uses the naming scheme <code>y</code>, <code>ymin</code>
+and <code>ymax</code> (for use with ggplot).</p></td>
+    </tr>
+    <tr>
+      <th>.exclude</th>
+      <td><p>A character vector of names of columns to be excluded from summarisation
+if no column names are specified to be summarised. Default ignores several meta-data column
+names used in tidybayes.</p></td>
+    </tr>
+    <tr>
+      <th>.prob</th>
+      <td><p>Deprecated. Use <code>.width</code> instead.</p></td>
     </tr>
     <tr>
       <th>x</th>
@@ -235,23 +251,23 @@ of the point estimate to <code>estimate</code>.</p></td>
 
     <p>If <code>.data</code> is a data frame, then <code>...</code> is a list of bare names of
 columns (or expressions derived from columns) of <code>.data</code>, on which
-the point and interval estimates are derived. Column expressions are processed
+the point and interval summaries are derived. Column expressions are processed
 using the tidy evaluation framework (see <code><a href='http://www.rdocumentation.org/packages/rlang/topics/eval_tidy'>eval_tidy</a></code>).</p>
 <p>For a column named <code>x</code>, the resulting data frame will have a column
-named <code>x</code> containing its point estimate. If there is a single
-column to be summarized and <code>.broom</code> is <code>TRUE</code>, the output will
-also contain columns <code>conf.low</code> (the lower end of the interval),
-<code>conf.high</code> (the upper end of the interval).
+named <code>x</code> containing its point summary. If there is a single
+column to be summarized and <code>.simple_names</code> is <code>TRUE</code>, the output will
+also contain columns <code>.lower</code> (the lower end of the interval),
+<code>.upper</code> (the upper end of the interval).
 Otherwise, for every summarized column <code>x</code>, the output will contain
-<code>x.low</code> (the lower end of the interval) and <code>x.high</code> (the upper
-end of the interval). Finally, the output will have a <code>.prob</code> column
+<code>x.lower</code> (the lower end of the interval) and <code>x.upper</code> (the upper
+end of the interval). Finally, the output will have a <code>.width</code> column
 containing the' probability for the interval on each output row.</p>
 <p>If <code>.data</code> includes groups (see e.g. <code><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></code>),
 the points and intervals are calculated within the groups.</p>
 <p>If <code>.data</code> is a vector, <code>...</code> is ignored and the result is a
-data frame with one row per value of <code>.prob</code> and three columns:
-<code>y</code> (the point estimate), <code>ymin</code> (the lower end of the interval),
-<code>ymax</code> (the upper end of the interval), and <code>.prob</code>, the probability
+data frame with one row per value of <code>.width</code> and three columns:
+<code>y</code> (the point summary), <code>ymin</code> (the lower end of the interval),
+<code>ymax</code> (the upper end of the interval), and <code>.width</code>, the probability
 corresponding to the interval. This behavior allows <code>point_interval</code>
 and its derived functions (like <code>median_qi</code>, <code>mean_qi</code>, <code>mode_hdi</code>, etc)
 to be easily used to plot intervals in ggplot using methods like
@@ -271,7 +287,7 @@ these automatically adjust the function output to match their required aesthetic
 equi-tailed interval) as a 1x2 matrix.</p>
 <p><code>hdi</code> yields the highest-density interval(s) (also known as the highest posterior
 density interval). <em>Note:</em> If the distribution is multimodal, <code>hdi</code> may return multiple
-intervals for each estimate (these will be spread over rows). Internally it uses <code><a href='http://www.rdocumentation.org/packages/HDInterval/topics/hdi'>hdi</a></code>.</p>
+intervals for each probability level (these will be spread over rows). Internally it uses <code><a href='http://www.rdocumentation.org/packages/HDInterval/topics/hdi'>hdi</a></code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -282,23 +298,21 @@ intervals for each estimate (these will be spread over rows). Internally it uses
 <span class='fu'>set.seed</span>(<span class='fl'>123</span>)
 
 <span class='fu'>rnorm</span>(<span class='fl'>1000</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>()</div><div class='output co'>#&gt;             y      ymin     ymax .prob
-#&gt; 1 0.009209639 -1.941554 2.037887  0.95</div><div class='input'>
+  <span class='fu'>median_qi</span>()</div><div class='output co'>#&gt;             y      ymin     ymax .width .point .interval
+#&gt; 1 0.009209639 -1.941554 2.037887   0.95 median        qi</div><div class='input'>
 <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 3 x 4
-#&gt;        x conf.low conf.high .prob
-#&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 0.0549   -0.653     0.753  0.5 
-#&gt; 2 0.0549   -1.24      1.34   0.8 
-#&gt; 3 0.0549   -1.99      1.91   0.95</div><div class='input'>
+  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt;            x    .lower    .upper .width .point .interval
+#&gt; 1 0.05485238 -0.653223 0.7534504   0.50 median        qi
+#&gt; 2 0.05485238 -1.241260 1.3417387   0.80 median        qi
+#&gt; 3 0.05485238 -1.991564 1.9059114   0.95 median        qi</div><div class='input'>
 <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>),
     <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
   ) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='no'>y</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 7
-#&gt;         x x.low x.high     y y.low y.high .prob
-#&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -0.0506 -2.01   1.93  1.98 -1.95   5.95  0.95</div><div class='input'>
+  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='no'>y</span>)</div><div class='output co'>#&gt;             x   x.lower  x.upper        y   y.lower  y.upper .width .point
+#&gt; 1 -0.05057431 -2.012529 1.934141 1.983618 -1.946229 5.947635   0.95 median
+#&gt;   .interval
+#&gt; 1        qi</div><div class='input'>
 <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>rnorm</span>(<span class='fl'>1000</span>),
     <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"a"</span>
@@ -308,30 +322,27 @@ intervals for each estimate (these will be spread over rows). Internally it uses
     <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"b"</span>)
   ) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>group</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 6 x 5
-#&gt; # Groups:   group [2]
-#&gt;   group       x conf.low conf.high .prob
-#&gt;   &lt;fct&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 a     -0.0328   -0.707     0.636  0.5 
-#&gt; 2 b      2.06      0.759     3.44   0.5 
-#&gt; 3 a     -0.0328   -1.27      1.23   0.8 
-#&gt; 4 b      2.06     -0.559     4.48   0.8 
-#&gt; 5 a     -0.0328   -2.00      1.84   0.95
-#&gt; 6 b      2.06     -1.75      5.91   0.95</div><div class='input'>
-<span class='no'>multimodal_samples</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(
+  <span class='fu'>median_qi</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 6 x 7
+#&gt;   group       x .lower .upper .width .point .interval
+#&gt;   &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt; 1 a     -0.0328 -0.707  0.636   0.5  median qi       
+#&gt; 2 b      2.06    0.759  3.44    0.5  median qi       
+#&gt; 3 a     -0.0328 -1.27   1.23    0.8  median qi       
+#&gt; 4 b      2.06   -0.559  4.48    0.8  median qi       
+#&gt; 5 a     -0.0328 -2.00   1.84    0.95 median qi       
+#&gt; 6 b      2.06   -1.75   5.91    0.95 median qi       </div><div class='input'>
+<span class='no'>multimodal_draws</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fu'>rnorm</span>(<span class='fl'>5000</span>, <span class='fl'>0</span>, <span class='fl'>1</span>), <span class='fu'>rnorm</span>(<span class='fl'>2500</span>, <span class='fl'>4</span>, <span class='fl'>1</span>))
   )
 
-<span class='no'>multimodal_samples</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>mode_hdi</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; # A tibble: 3 x 4
-#&gt;         x conf.low conf.high .prob
-#&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -0.0663    -1.33      1.38  0.66
-#&gt; 2 -0.0663     3.49      4.48  0.66
-#&gt; 3 -0.0663    -1.72      5.50  0.95</div><div class='input'>
-<span class='no'>multimodal_samples</span> <span class='kw'>%&gt;%</span>
+<span class='no'>multimodal_draws</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>mode_hdi</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt;             x    .lower   .upper .width .point .interval
+#&gt; 1 -0.06628626 -1.334062 1.375498   0.66   mode       hdi
+#&gt; 2 -0.06628626  3.488457 4.482790   0.66   mode       hdi
+#&gt; 3 -0.06628626 -1.719262 5.500183   0.95   mode       hdi</div><div class='input'>
+<span class='no'>multimodal_draws</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>0</span>)) +
-  <span class='fu'><a href='geom_halfeyeh.html'>geom_halfeyeh</a></span>(<span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mode_hdih</span>, <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='geom_halfeyeh.html'>geom_halfeyeh</a></span>(<span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mode_hdih</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

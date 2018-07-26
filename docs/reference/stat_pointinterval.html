@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point estimate + multiple probability interval plots (ggplot stat) — stat_pointinterval • tidybayes</title>
+<title>Point summary + multiple probability interval plots (ggplot stat) — stat_pointinterval • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,13 +32,13 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Point estimate + multiple probability interval plots (ggplot stat) — stat_pointinterval" />
+<meta property="og:title" content="Point summary + multiple probability interval plots (ggplot stat) — stat_pointinterval" />
 
 <meta property="og:description" content="A combination of stat_summary / stat_summaryh and
 geom_pointinterval / geom_pointintervalh with sensible defaults.
 While the corresponding geoms are intended for use on
 data frames that have already been summarized using a point_interval
-function, these stats are intended for use directly on data frames of samples, and
+function, these stats are intended for use directly on data frames of draws, and
 will perform the summarization using a point_interval function." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -106,10 +106,10 @@ will perform the summarization using a point_interval function." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -134,7 +134,7 @@ will perform the summarization using a point_interval function." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Point estimate + multiple probability interval plots (ggplot stat)</h1>
+    <h1>Point summary + multiple probability interval plots (ggplot stat)</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/stat_pointinterval.R'><code>R/stat_pointinterval.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/stat_pointintervalh.R'><code>R/stat_pointintervalh.R</code></a></small>
     <div class="hidden name"><code>stat_pointinterval.Rd</code></div>
     </div>
@@ -145,19 +145,19 @@ will perform the summarization using a point_interval function." />
 <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code> with sensible defaults.
 While the corresponding <code>geom</code>s are intended for use on
 data frames that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code>
-function, these <code>stat</code>s are intended for use directly on data frames of samples, and
+function, these <code>stat</code>s are intended for use directly on data frames of draws, and
 will perform the summarization using a <code><a href='point_interval.html'>point_interval</a></code> function.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>stat_pointinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointinterval"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>stat_pointintervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointintervalh"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,13 +185,13 @@ the plot defaults.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code>layer</code>. They may also be parameters to the paired geom.</p></td>
+      <td><p>Other arguments passed to <code>layer</code>. They may also be arguments to the paired geom.</p></td>
     </tr>
     <tr>
       <th>point_interval</th>
       <td><p>A function that when given a vector should
-return a data frame with variables <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>.prob</code>; or
-<code>x</code>, <code>xmin</code>, <code>xmax</code>, and <code>.prob</code>. <strong>Either is acceptable</strong>: output
+return a data frame with variables <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>.width</code>; or
+<code>x</code>, <code>xmin</code>, <code>xmax</code>, and <code>.width</code>. <strong>Either is acceptable</strong>: output
 will be converted into the <code>y</code>-based aesthetics for <code>stat_pointinterval</code> and the
 <code>x</code>-based aesthetics for <code>stat_pointintervalh</code>. See the <code>point_interval</code> family of functions.</p></td>
     </tr>
@@ -202,8 +202,12 @@ Note: if the summary function is passed using <code>fun.data</code>, the <code>x
 are not converted to the correct form automatically.</p></td>
     </tr>
     <tr>
+      <th>.width</th>
+      <td><p>The <code>.width</code> argument passed to <code>point_interval</code>.</p></td>
+    </tr>
+    <tr>
       <th>.prob</th>
-      <td><p>The <code>.prob</code> argument passed to <code>fun.data</code>.</p></td>
+      <td><p>Deprecated. Use <code>.width</code> instead.</p></td>
     </tr>
     <tr>
       <th>fun.args</th>
@@ -230,9 +234,9 @@ default plot specification, e.g. borders.</p></td>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>See <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code> for the geom versions, intended
-for use on estimates and intervals that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code> function.
+for use on points and intervals that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code> function.
 See <code><a href='stat_interval.html'>stat_interval</a></code> / <code><a href='stat_interval.html'>stat_intervalh</a></code> for a similar stat intended for intervals without
-point estimates.</p></div>
+point summaries.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -243,13 +247,13 @@ point estimates.</p></div>
 <span class='fu'>data</span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointintervalh</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'>stat_pointintervalh</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the names of the parameters in a fitted Bayesian model — parameters • tidybayes</title>
+<title>Get the names of the variables in a fitted Bayesian model — get_variables • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Get the names of the parameters in a fitted Bayesian model — parameters" />
+<meta property="og:title" content="Get the names of the variables in a fitted Bayesian model — get_variables" />
 
-<meta property="og:description" content="Get a character vector of the names of the parameters in a variety of fitted
-Bayesian models. All models supported by as_sample_tibble are
+<meta property="og:description" content="Get a character vector of the names of the variables in a variety of fitted
+Bayesian model types. All models supported by tidy_draws are
 supported." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -103,10 +103,10 @@ supported." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -131,55 +131,55 @@ supported." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the names of the parameters in a fitted Bayesian model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/parameters.R'><code>R/parameters.R</code></a></small>
-    <div class="hidden name"><code>parameters.Rd</code></div>
+    <h1>Get the names of the variables in a fitted Bayesian model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/get_variables.R'><code>R/get_variables.R</code></a></small>
+    <div class="hidden name"><code>get_variables.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Get a character vector of the names of the parameters in a variety of fitted
-Bayesian models. All models supported by <code><a href='as_sample_tibble.html'>as_sample_tibble</a></code> are
+    <p>Get a character vector of the names of the variables in a variety of fitted
+Bayesian model types. All models supported by <code><a href='tidy_draws.html'>tidy_draws</a></code> are
 supported.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>parameters</span>(<span class='no'>model</span>)
+    <pre class="usage"><span class='fu'>get_variables</span>(<span class='no'>model</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>parameters</span>(<span class='no'>model</span>)</pre>
+<span class='fu'>get_variables</span>(<span class='no'>model</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>A supported Bayesian model fit / MCMC object. Tidybayes supports a variety of model objects; 
+      <td><p>A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 for a full list of supported models, see <a href='tidybayes-models.html'>tidybayes-models</a>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector of parameter names in the fitted model.</p>
+    <p>A character vector of variable names in the fitted model.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function is often useful for inspecting a model interactively in order
-to construct calls to <code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>
-in order to extract samples in a tidy format.</p>
+to construct calls to <code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>
+in order to extract draws from models in a tidy format.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code>, <code><a href='spread_samples.html'>gather_samples</a></code>.</p></div>
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code>, <code><a href='spread_draws.html'>gather_draws</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='fu'>data</span>(<span class='no'>line</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"coda"</span>)
-<span class='fu'>parameters</span>(<span class='no'>line</span>)</div><div class='output co'>#&gt; [1] "alpha" "beta"  "sigma"</div><div class='input'>
+<span class='fu'>get_variables</span>(<span class='no'>line</span>)</div><div class='output co'>#&gt; [1] "alpha" "beta"  "sigma"</div><div class='input'>
 <span class='fu'>data</span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
-<span class='fu'>parameters</span>(<span class='no'>RankCorr</span>)</div><div class='output co'>#&gt;   [1] "b[1,1]"         "b[2,1]"         "b[3,1]"         "b[4,1]"        
+<span class='fu'>get_variables</span>(<span class='no'>RankCorr</span>)</div><div class='output co'>#&gt;   [1] "b[1,1]"         "b[2,1]"         "b[3,1]"         "b[4,1]"        
 #&gt;   [5] "b[5,1]"         "b[6,1]"         "b[7,1]"         "b[8,1]"        
 #&gt;   [9] "b[9,1]"         "b[10,1]"        "b[11,1]"        "b[12,1]"       
 #&gt;  [13] "b[13,1]"        "b[14,1]"        "b[15,1]"        "b[16,1]"       

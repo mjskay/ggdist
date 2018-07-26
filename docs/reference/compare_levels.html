@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compare the value of some variable extracted from a Bayesian posterior
-sample for different levels of a factor — compare_levels • tidybayes</title>
+<title>Compare the value of draws of some variable from a Bayesian model for
+different levels of a factor — compare_levels • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -33,11 +33,11 @@ sample for different levels of a factor — compare_levels • tidybayes</title>
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Compare the value of some variable extracted from a Bayesian posterior
-sample for different levels of a factor — compare_levels" />
+<meta property="og:title" content="Compare the value of draws of some variable from a Bayesian model for
+different levels of a factor — compare_levels" />
 
-<meta property="og:description" content="Given a posterior sample from a Bayesian sampler in long format (e.g. as
-returned by spread_samples), compare the value of a variable in that sample
+<meta property="og:description" content="Given posterior draws from a Bayesian model in long format (e.g. as
+returned by spread_draws), compare the value of a variable in those draws
 across different paired combinations of levels of a factor." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
@@ -105,10 +105,10 @@ across different paired combinations of levels of a factor." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy samples from brms</a>
+      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
     <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy samples from rstanarm</a>
+      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
 </li>
@@ -133,39 +133,39 @@ across different paired combinations of levels of a factor." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compare the value of some variable extracted from a Bayesian posterior
-sample for different levels of a factor</h1>
+    <h1>Compare the value of draws of some variable from a Bayesian model for
+different levels of a factor</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/compare_levels.R'><code>R/compare_levels.R</code></a></small>
     <div class="hidden name"><code>compare_levels.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Given a posterior sample from a Bayesian sampler in long format (e.g. as
-returned by spread_samples), compare the value of a variable in that sample
+    <p>Given posterior draws from a Bayesian model in long format (e.g. as
+returned by <code><a href='spread_draws.html'>spread_draws</a></code>), compare the value of a variable in those draws
 across different paired combinations of levels of a factor.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>compare_levels</span>(<span class='no'>samples</span>, <span class='no'>variable</span>, <span class='no'>by</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>`-`</span>, <span class='kw'>comparison</span> <span class='kw'>=</span> <span class='no'>default</span>,
-  <span class='kw'>indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>))</pre>
+    <pre class="usage"><span class='fu'>compare_levels</span>(<span class='no'>data</span>, <span class='no'>variable</span>, <span class='no'>by</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>`-`</span>, <span class='kw'>comparison</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
+  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>samples</th>
-      <td><p>Long-format <code>data.frame</code> of samples such as returned by
-<code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>.</p></td>
+      <th>data</th>
+      <td><p>Long-format <code>data.frame</code> of draws such as returned by
+<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>.</p></td>
     </tr>
     <tr>
       <th>variable</th>
-      <td><p>Bare (unquoted) name of a column in samples representing the
+      <td><p>Bare (unquoted) name of a column in data representing the
 variable to compare across levels.</p></td>
     </tr>
     <tr>
       <th>by</th>
-      <td><p>Bare (unquoted) name of a column in samples that is a
+      <td><p>Bare (unquoted) name of a column in data that is a
 <code>factor</code> or <code>ordered</code>. The value of <code>variable</code> will be
 compared across pairs of levels of this <code>factor</code>.</p></td>
     </tr>
@@ -189,34 +189,34 @@ the comparisons to make, e.g.: <code>list(c("a", "b"), c("b", "c"))</code> or
 <code>"b"</code> and level <code>"b"</code> against <code>"c"</code>. Note that the
 unevaluated expression syntax ignores the <code>fun</code> argument, can include
 any other functions desired (e.g. variable transformations), and can even
-include more than two levels or other columns in <code>samples</code>.</p></td>
+include more than two levels or other columns in <code>data</code>.</p></td>
     </tr>
     <tr>
-      <th>indices</th>
-      <td><p>Character vector of column names in <code>samples</code> that
+      <th>draw_indices</th>
+      <td><p>Character vector of column names in <code>data</code> that
 should be treated as indices when making the comparison (i.e. values of
 <code>variable</code> within each level of <code>by</code> will be compared at each
-unique combination of levels of <code>indices</code>). Columns in <code>indices</code>
-not found in <code>samples</code> are ignored. The default is <code>c(".chain",".iteration")</code>,
-which are the same names used for chain/iteration indices variables returned by
-<code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code>; thus if you are using <code>compare_levels</code>
-with <code><a href='spread_samples.html'>spread_samples</a></code> or <code><a href='spread_samples.html'>gather_samples</a></code> you generally should not need to change this
+unique combination of levels of <code>draw_indices</code>). Columns in <code>draw_indices</code>
+not found in <code>data</code> are ignored. The default is <code>c(".chain",".iteration",".draw")</code>,
+which are the same names used for chain/iteration/draw indices returned by
+<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>; thus if you are using <code>compare_levels</code>
+with <code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code> you generally should not need to change this
 value.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>data.frame</code> with the same columns as <code>samples</code>, except
+    <p>A <code>data.frame</code> with the same columns as <code>data</code>, except
 that the <code>by</code> column contains a symbolic representation of the
-comparison of pairs of levels of <code>by</code> in <code>samples</code>, and
+comparison of pairs of levels of <code>by</code> in <code>data</code>, and
 <code>variable</code> contains the result of that comparison.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function simplifies conducting comparisons across levels of some
-variable returned from a Bayesian sample. It applies <code>fun</code> to all
-samples of <code>variable</code> for each pair of levels of <code>by</code> as selected
+variable in a tidy data frame of draws. It applies <code>fun</code> to all
+values of <code>variable</code> for each pair of levels of <code>by</code> as selected
 by <code>comparison</code>. By default, all pairwise comparisons are generated if
 <code>by</code> is an unordered <code>factor</code> and ordered comparisons are made if
 <code>by</code> is <code>ordered</code>.</p>
@@ -236,7 +236,7 @@ first apply <code>relevel</code> to <code>by</code> to set the control
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_samples.html'>spread_samples</a></code> and <code><a href='spread_samples.html'>gather_samples</a></code>.</p></div>
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code> and <code><a href='spread_draws.html'>gather_draws</a></code>.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -248,19 +248,18 @@ first apply <code>relevel</code> to <code>by</code> to set the control
 
 <span class='co'># Let's do all pairwise comparisons of b[i,1] for i in 1:3:</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>compare_levels</span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 3 x 5
-#&gt; # Groups:   i [3]
-#&gt;   i         b  conf.low conf.high .prob
-#&gt;   &lt;fct&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 2 - 1 0.347 -0.000723     0.698  0.95
-#&gt; 2 3 - 1 0.744  0.420        1.07   0.95
-#&gt; 3 3 - 2 0.395 -0.0221       0.812  0.95</div><div class='input'>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 3 x 7
+#&gt;   i         b    .lower .upper .width .point .interval
+#&gt;   &lt;fct&gt; &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt; 1 2 - 1 0.347 -0.000723  0.698   0.95 median qi       
+#&gt; 2 3 - 1 0.744  0.420     1.07    0.95 median qi       
+#&gt; 3 3 - 2 0.395 -0.0221    0.812   0.95 median qi       </div><div class='input'>
 <span class='co'># Or let's plot all comparisons against the first level (control):</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_samples.html'>spread_samples</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>compare_levels</span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>comparison</span> <span class='kw'>=</span> <span class='no'>control</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>b</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>)) +
