@@ -32,6 +32,28 @@ add_fitted_samples = function(newdata, model, ..., n = NULL) {
 
 
 
+# [add_]linpred_draws ------------------------------------------------------
+
+#' @rdname add_predicted_draws
+#' @export
+add_linpred_draws = function(newdata, model, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
+) {
+  fitted_draws(model, newdata, value, ..., n = n, seed = seed, re_formula = re_formula,
+    category = category, dpar = dpar, scale = scale)
+}
+
+#' @rdname add_predicted_draws
+#' @export
+linpred_draws = function(model, newdata, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
+) {
+  fitted_draws(model, newdata, value, ..., n = n, seed = seed, re_formula = re_formula,
+    category = category, dpar = dpar, scale = scale)
+}
+
+
+
 # [add_]fitted_draws ------------------------------------------------------
 
 #' @rdname add_predicted_draws

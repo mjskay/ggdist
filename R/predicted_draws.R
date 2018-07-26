@@ -57,6 +57,10 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' Given equal choice between the two, \code{add_fitted_draws} and \code{add_predicted_draws}
 #' are the preferred spellings.
 #'
+#' \code{add_linpred_draws} and \code{linpred_draws} are alternative spellings of \code{fitted_draws}
+#' and \code{add_fitted_draws} for consistency with \code{rstanarm} terminology (specifically
+#' \code{\link[rstanarm{posterior_linpred}}).
+#'
 #' @param newdata Data frame to generate predictions from. If omitted, most model types will
 #' generate predictions from the data used to fit the model.
 #' @param model A supported Bayesian model fit that can provide fits and predictions. Supported models

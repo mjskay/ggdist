@@ -98,7 +98,7 @@ Deprecated functions are:
 Versions of tidybayes before version 1.0 used a different naming scheme for several
 arguments and output columns.
 
-Deprectead arguments and column names are:
+Deprecetad arguments and column names are:
 
 \itemize{
   \item \code{term} is now \code{.variable}
