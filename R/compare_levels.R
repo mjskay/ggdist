@@ -57,7 +57,11 @@ comparison_types = within(list(), {
 #' \code{is.ordered(by)} and \code{pairwise} otherwise.  }
 #'
 #' @param data Long-format \code{data.frame} of draws such as returned by
-#' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
+#' \code{\link{spread_draws}} or \code{\link{gather_draws}}. If \code{data}
+#' is a grouped data frame, comparisons will be made within groups (if
+#' one of the groups in the data frame is the \code{by} column, that specific
+#' group will be ignored, as it is not possible to make comparisons both
+#' within some variable and across it simultaneously).
 #' @param variable Bare (unquoted) name of a column in data representing the
 #' variable to compare across levels.
 #' @param by Bare (unquoted) name of a column in data that is a
@@ -117,6 +121,17 @@ comparison_types = within(list(), {
 #'   ggplot(aes(x = b, y = i)) +
 #'   geom_halfeyeh()
 #'
+#' # Or let's plot comparisons of the first three levels of j within
+#' # the first three levels of i
+#' RankCorr %>%
+#'   spread_draws(b[i,j]) %>%
+#'   filter(j %in% 1:3, i %in% 1:3) %>%
+#'   group_by(i) %>%
+#'   compare_levels(b, by = j) %>%
+#'   ggplot(aes(x = b, y = j)) +
+#'   geom_halfeyeh() +
+#'   facet_grid(cols = vars(i))
+#'
 #' @importFrom tidyselect vars_pull
 #' @importFrom plyr ldply
 #' @importFrom tidyr spread_
@@ -129,7 +144,16 @@ compare_levels = function(data, variable, by, fun=`-`, comparison = "default", d
   by = vars_pull(names(data), !!enquo(by))
   fun = enquo(fun)
   comparison = enquo(comparison)
+  groups_ = group_vars(data)
 
+  data %>%
+    group_by_at(setdiff(groups_, by)) %>%
+    do(compare_levels_(., variable, by, fun, comparison, draw_indices)) %>%
+    group_by_at(union(groups_, by))
+}
+
+
+compare_levels_ = function(data, variable, by, fun, comparison, draw_indices) {
   #drop unused levels from "by" column
   data[[by]] = factor(data[[by]])
 
@@ -176,6 +200,5 @@ compare_levels = function(data, variable, by, fun=`-`, comparison = "default", d
 
     names(comparison) = c(by, variable)
     cbind(data_wide_no_levels, comparison)
-  }) %>%
-    group_by_at(by)
+  })
 }

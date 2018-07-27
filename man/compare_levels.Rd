@@ -10,7 +10,11 @@ compare_levels(data, variable, by, fun = `-`, comparison = "default",
 }
 \arguments{
 \item{data}{Long-format \code{data.frame} of draws such as returned by
-\code{\link{spread_draws}} or \code{\link{gather_draws}}.}
+\code{\link{spread_draws}} or \code{\link{gather_draws}}. If \code{data}
+is a grouped data frame, comparisons will be made within groups (if
+one of the groups in the data frame is the \code{by} column, that specific
+group will be ignored, as it is not possible to make comparisons both
+within some variable and across it simultaneously).}
 
 \item{variable}{Bare (unquoted) name of a column in data representing the
 variable to compare across levels.}
@@ -96,6 +100,17 @@ RankCorr \%>\%
   compare_levels(b, by = i, comparison = control) \%>\%
   ggplot(aes(x = b, y = i)) +
   geom_halfeyeh()
+
+# Or let's plot comparisons of the first three levels of j within
+# the first three levels of i
+RankCorr \%>\%
+  spread_draws(b[i,j]) \%>\%
+  filter(j \%in\% 1:3, i \%in\% 1:3) \%>\%
+  group_by(i) \%>\%
+  compare_levels(b, by = j) \%>\%
+  ggplot(aes(x = b, y = j)) +
+  geom_halfeyeh() +
+  facet_grid(cols = vars(i))
 
 }
 \seealso{

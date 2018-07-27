@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(plyr, ldply, llply, .)
+import::from(plyr, ldply, llply, ddply, .)
 import::from(dplyr, `%>%`)
 import::from(tibble, as_tibble)
 library(tidyr)
@@ -174,4 +174,27 @@ test_that("extraneous columns are dropped before comparison", {
     compare_levels(draws, tau, by = ff, comparison = pairwise),
     compare_levels(draws_extra, tau, by = ff, comparison = pairwise)
   )
+})
+
+test_that("compare_levels respects groups of input data frame", {
+  draws = RankCorr %>%
+    spread_draws(b[i,j]) %>%
+    filter(i %in% 1:3, j %in% 1:3) %>%
+    group_by(i, j)
+
+  ref = ddply(draws, "i", function (d) {
+    draws_wide = spread(d, j, b)
+    ldply(combn(levels(factor(d$j)), 2, simplify = FALSE), function(levels.) {
+      draws_wide$j = factor(paste(levels.[[2]], "-", levels.[[1]]))
+      draws_wide$b = draws_wide[[levels.[[2]]]] - draws_wide[[levels.[[1]]]]
+      draws_wide
+    })
+  }) %>%
+    select(-one_of(c("1", "2", "3"))) %>%
+    group_by(i, j)
+
+  result = compare_levels(draws, b, by = j)
+
+  expect_equal(result, ref)
+  expect_equal(group_vars(result), group_vars(ref))
 })
