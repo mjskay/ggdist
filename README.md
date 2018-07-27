@@ -6,7 +6,7 @@ status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travi
 [![Coverage
 status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
 [![CRAN
-status](http://www.r-pkg.org/badges/version/tidybayes)](https://github.com/mjskay/tidybayes/milestone/1)
+status](http://www.r-pkg.org/badges/version/tidybayes)](https://cran.r-project.org/package=tidybayes)
 [![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)
 
 ![Preview of tidybayes plots](man/figures/preview.png)
@@ -134,11 +134,7 @@ supported.
 
 ## Installation
 
-`tidybayes` is not yet on CRAN, but I am in the process of preparing a
-CRAN submission. You can track progress towards the CRAN submission at
-the [CRAN Milestone](https://github.com/mjskay/tidybayes/milestone/1).
-
-In the mean time, you can install the latest development version from
+You can install the latest development version from
 GitHub with these R commands:
 
 ``` r
