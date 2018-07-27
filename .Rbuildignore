@@ -1,8 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^TODO$
+^\.Rhistory$
+^\.RData$
 ^LICENSE$
-^.*\.md$
 ^.*~$
 ^\.gitignore$
 ^\.gitattributes$
@@ -10,13 +10,12 @@
 ^\.travis\.yml$
 ^README.Rmd$
 ^README_files$
-^temp.*.Rmd$
-^temp.*.nb.html$
-^.lintr$
+^\.lintr$
 ^docs$
 ^_pkgdown\.yml$
-^build_test_models.R$
 ^pkgdown/.*$
 ^pkgdown$
+^build_test_models\.R$
 ^codecov\.yml$
 ^\.covrignore$
+^cran-comments.md$
