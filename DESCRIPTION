@@ -56,6 +56,6 @@ Suggests:
     covr
 License: GPL (>= 3)
 BugReports: https://github.com/mjskay/tidybayes/issues/new
-URL: https://github.com/mjskay/tidybayes
+URL: http://mjskay.github.io/tidybayes, https://github.com/mjskay/tidybayes
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1

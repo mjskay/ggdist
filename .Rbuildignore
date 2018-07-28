@@ -9,6 +9,7 @@
 ^\.git$
 ^\.travis\.yml$
 ^README.Rmd$
+^README.md$
 ^README_files$
 ^\.lintr$
 ^docs$
