@@ -42,6 +42,7 @@ brms.m_hp_sigma = brm(
   data = mtcars_tbl, chains = 2, warmup = 950, iter = 1000, family = lognormal,
   save_warmup = FALSE, save_dso = FALSE
 )
+slot(brms.m_hp_sigma$fit, "stanmodel", check = FALSE) = NULL
 saveRDS(brms.m_hp_sigma, "tests/models/models.brms.m_hp_sigma.rds", compress = "xz")
 
 
@@ -68,6 +69,7 @@ brms.m_cyl_mpg = brm(ordered(paste0("c", cyl)) ~ mpg, data = mtcars_tbl,
   prior = prior(normal(0,1), class = b),
   save_warmup = FALSE, save_dso = FALSE
 )
+slot(brms.m_cyl_mpg$fit, "stanmodel", check = FALSE) = NULL
 saveRDS(brms.m_cyl_mpg, "tests/models/models.brms.m_cyl_mpg.rds", compress = "xz")
 
 
@@ -83,6 +85,7 @@ brms.m_nlpar = brm(bf(y ~ b1 * exp(b2 * x), b1 + b2 ~ 1, nl = TRUE), data = df_n
   chains = 2, warmup = 150, iter = 200,
   save_warmup = FALSE, save_dso = FALSE
 )
+slot(brms.m_nlpar$fit, "stanmodel", check = FALSE) = NULL
 saveRDS(brms.m_nlpar, "tests/models/models.brms.m_nlpar.rds", compress = "xz")
 
 
@@ -107,6 +110,7 @@ brms.m_dpars <- brm(
   warmup = 150, iter = 200, chains = 2,
   save_warmup = FALSE, save_dso = FALSE
 )
+slot(brms.m_dpars$fit, "stanmodel", check = FALSE) = NULL
 saveRDS(brms.m_dpars, "tests/models/models.brms.m_dpars.rds", compress = "xz")
 
 
@@ -130,6 +134,7 @@ brms.m_ranef = brm(
   warmup = 950, iter = 1000, chains = 2,
   save_warmup = FALSE, save_dso = FALSE
 )
+slot(brms.m_ranef$fit, "stanmodel", check = FALSE) = NULL
 saveRDS(brms.m_ranef, "tests/models/models.brms.m_ranef.rds", compress = "xz")
 
 

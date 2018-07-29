@@ -49,27 +49,29 @@ library(ggplot2)
 library(dplyr)
 library(rstanarm)
 library(modelr)
+library(purrr)
+library(tidyr)
 
 theme_set(theme_light())
 
-m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars,
-  # 1 chain / few iterations just so example runs quickly
-  # do not use in practice
-  chains = 1, iter = 500)
+m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars)
 
 step = 1
 mtcars \%>\%
   group_by(cyl) \%>\%
   data_grid(hp = seq_range(hp, by = step)) \%>\%
   add_predicted_draws(m_mpg) \%>\%
-  do(density_bins(.$pred)) \%>\%
+  summarise_all(list) \%>\%
+  mutate(densities = map(.prediction, density_bins)) \%>\%
+  unnest(densities) \%>\%
   ggplot() +
   geom_rect(aes(
     xmin = hp - step/2, ymin = lower, ymax = upper, xmax = hp + step/2,
     fill = ordered(cyl), alpha = density
   )) +
-  geom_point(aes(x = hp, y = mpg, color = ordered(cyl)), data = mtcars) +
-  scale_alpha_continuous(range = c(0, 0.75))
+  geom_point(aes(x = hp, y = mpg, fill = ordered(cyl)), shape = 21, data = mtcars) +
+  scale_alpha_continuous(range = c(0, 1)) +
+  scale_fill_brewer(palette = "Set2")
 
 }
 }
