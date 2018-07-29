@@ -3,7 +3,10 @@
 # These models can take more time to build than we want to spend for rapid testing, so we pre-build them.
 # We also build them with a small number of iterations because we aren't really interested in the results,
 # just in making sure the data manipulations of draws from the models work. They should also be run
-# with save_warmup = FALSE and compressed with compress = "xz" to save space on disk.
+# with save_warmup = FALSE, save_dso = FALSE and compressed with compress = "xz" to save space on disk
+# (the save_dso argument does not apply to rstanarm models). We also employ a bit of a hack by
+# NULLing out the saved dso within the returned fits, since save_dso doesn't seem to do this (saves
+# about half a megabyte of space per model on disk).
 #
 # Author: mjskay
 ###############################################################################
@@ -26,8 +29,9 @@ mtcars_tbl = mtcars %>%
 set.seed(94)
 brms.m_hp = brm(mpg ~ log(hp)*am, data = mtcars_tbl, chains = 2,
   warmup = 950, iter = 1000, family = "lognormal",
-  save_warmup = FALSE
+  save_warmup = FALSE, save_dso = FALSE
 )
+slot(brms.m_hp$fit, "stanmodel", check = FALSE) = NULL
 saveRDS(brms.m_hp, "tests/models/models.brms.m_hp.rds", compress = "xz")
 
 
@@ -36,7 +40,7 @@ brms.m_hp_sigma = brm(
   bf(mpg ~ log(hp), sigma ~ hp),
   prior = c(prior(normal(0, 1), class = b)),
   data = mtcars_tbl, chains = 2, warmup = 950, iter = 1000, family = lognormal,
-  save_warmup = FALSE
+  save_warmup = FALSE, save_dso = FALSE
 )
 saveRDS(brms.m_hp_sigma, "tests/models/models.brms.m_hp_sigma.rds", compress = "xz")
 
@@ -62,7 +66,7 @@ brms.m_cyl_mpg = brm(ordered(paste0("c", cyl)) ~ mpg, data = mtcars_tbl,
   chains = 2, iter = 500, warmup = 450,
   family = cumulative("logit"),
   prior = prior(normal(0,1), class = b),
-  save_warmup = FALSE
+  save_warmup = FALSE, save_dso = FALSE
 )
 saveRDS(brms.m_cyl_mpg, "tests/models/models.brms.m_cyl_mpg.rds", compress = "xz")
 
@@ -77,7 +81,7 @@ prior_nlpar = c(prior(normal(1, 2), nlpar = "b1"), prior(normal(0, 2), nlpar = "
 brms.m_nlpar = brm(bf(y ~ b1 * exp(b2 * x), b1 + b2 ~ 1, nl = TRUE), data = df_nlpar,
   prior = prior_nlpar,
   chains = 2, warmup = 150, iter = 200,
-  save_warmup = FALSE
+  save_warmup = FALSE, save_dso = FALSE
 )
 saveRDS(brms.m_nlpar, "tests/models/models.brms.m_nlpar.rds", compress = "xz")
 
@@ -101,7 +105,7 @@ brms.m_dpars <- brm(
     prior(normal(0, 1), Intercept, dpar = mu2),
     prior(normal(0, 1), dpar = mu2)),
   warmup = 150, iter = 200, chains = 2,
-  save_warmup = FALSE
+  save_warmup = FALSE, save_dso = FALSE
 )
 saveRDS(brms.m_dpars, "tests/models/models.brms.m_dpars.rds", compress = "xz")
 
@@ -124,7 +128,7 @@ brms.m_ranef = brm(
   ),
   control = list(adapt_delta = 0.95),
   warmup = 950, iter = 1000, chains = 2,
-  save_warmup = FALSE
+  save_warmup = FALSE, save_dso = FALSE
 )
 saveRDS(brms.m_ranef, "tests/models/models.brms.m_ranef.rds", compress = "xz")
 
@@ -190,6 +194,6 @@ rstan.m_ABC = stan(model_code = "
     }
   }", data = ABC_data, control = list(adapt_delta=0.99),
   warmup = 2950, iter = 3000, chains = 2,
-  save_warmup = FALSE
+  save_warmup = FALSE, save_dso = FALSE
 )
 saveRDS(rstan.m_ABC, "tests/models/models.rstan.m_ABC.rds", compress = "xz")
