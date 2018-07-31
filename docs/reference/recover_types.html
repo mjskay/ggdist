@@ -178,7 +178,7 @@ is decorated with a list of constructors that can convert a numeric column
 into the data types in the lists in <code>...</code>.</p>
 <p>Then, when <code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code> is called on the decorated
 <code>model</code>, each list entry with the same name as the variable or a dimension
-in varible_spec is a used as a prototype for that variable or dimension ---
+in <code>variable_spec</code> is a used as a prototype for that variable or dimension ---
 i.e., its type is taken to be the expected type of that variable or dimension.
 Those types are used to translate numeric values of variables back into
 useful values (for example, levels of a factor).</p>
@@ -268,7 +268,7 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math/rev/mat.hpp:4,
 #&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math.hpp:4,
 #&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/src/stan/model/model_header.hpp:4,
-#&gt;                  from file90086b6d6fb7.cpp:8:
+#&gt;                  from file3778710e190d.cpp:8:
 #&gt; C:/R/R-3.5.1/library/BH/include/boost/config/compiler/gcc.hpp:186:0: warning: "BOOST_NO_CXX11_RVALUE_REFERENCES" redefined
 #&gt;  #  define BOOST_NO_CXX11_RVALUE_REFERENCES
 #&gt;  ^
@@ -276,8 +276,8 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'dd2cc433974aea50803799100a5d323d' NOW (CHAIN 1).
 #&gt; 
-#&gt; Gradient evaluation took 0 seconds
-#&gt; 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Gradient evaluation took 0.001 seconds
+#&gt; 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
 #&gt; Adjust your expectations accordingly!
 #&gt; 
 #&gt; 
@@ -294,9 +294,9 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.09 seconds (Warm-up)
-#&gt;                0.12 seconds (Sampling)
-#&gt;                0.21 seconds (Total)
+#&gt;  Elapsed Time: 0.089 seconds (Warm-up)
+#&gt;                0.117 seconds (Sampling)
+#&gt;                0.206 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='co'># without using recover_types(), the `condition` column returned by spread_draws()</span>
 <span class='co'># will be an integer:</span>

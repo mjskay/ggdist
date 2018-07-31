@@ -312,79 +312,64 @@ columns with nicer names. For example:</p>
 <span class='fu'>data</span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>spread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>])</div><div class='output co'>#&gt; # A tibble: 72,000 x 6
-#&gt; # Groups:   i, j [72]
-#&gt;    .chain .iteration .draw     i     j        b
-#&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
-#&gt;  1      1          1     1     1     1 -1.16   
-#&gt;  2      1          1     1     1     2 -1.69   
-#&gt;  3      1          1     1     1     3  0.282  
-#&gt;  4      1          1     1     1     4 -0.295  
-#&gt;  5      1          1     1     2     1 -0.587  
-#&gt;  6      1          1     1     2     2  0.00727
-#&gt;  7      1          1     1     2     3 -0.0850 
-#&gt;  8      1          1     1     2     4  0.154  
-#&gt;  9      1          1     1     3     1 -0.413  
-#&gt; 10      1          1     1     3     2 -0.769  
-#&gt; # ... with 71,990 more rows</div><div class='input'>
+  <span class='fu'>spread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>])</div><div class='output co'>#&gt; # A tibble: 12,000 x 6
+#&gt; # Groups:   i, j [12]
+#&gt;    .chain .iteration .draw     i     j         b
+#&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;
+#&gt;  1      1          1     1     1     1 -0.927   
+#&gt;  2      1          1     1     1     2 -2.09    
+#&gt;  3      1          1     1     1     3  0.111   
+#&gt;  4      1          1     1     1     4 -0.000774
+#&gt;  5      1          1     1     2     1 -0.944   
+#&gt;  6      1          1     1     2     2  0.652   
+#&gt;  7      1          1     1     2     3  0.0440  
+#&gt;  8      1          1     1     2     4 -0.171   
+#&gt;  9      1          1     1     3     1 -0.164   
+#&gt; 10      1          1     1     3     2 -1.14    
+#&gt; # ... with 11,990 more rows</div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>spread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>], <span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>u_tau</span>[<span class='no'>i</span>])</div><div class='output co'>#&gt; # A tibble: 72,000 x 8
-#&gt; # Groups:   i, j [72]
-#&gt;    .chain .iteration .draw     i     j        b   tau u_tau
-#&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1      1          1     1     1     1 -1.16     7.13  6.65
-#&gt;  2      1          1     1     1     2 -1.69     7.13  6.65
-#&gt;  3      1          1     1     1     3  0.282    7.13  6.65
-#&gt;  4      1          1     1     1     4 -0.295    7.13  6.65
-#&gt;  5      1          1     1     2     1 -0.587    3.08  4.94
-#&gt;  6      1          1     1     2     2  0.00727  3.08  4.94
-#&gt;  7      1          1     1     2     3 -0.0850   3.08  4.94
-#&gt;  8      1          1     1     2     4  0.154    3.08  4.94
-#&gt;  9      1          1     1     3     1 -0.413    3.48  5.51
-#&gt; 10      1          1     1     3     2 -0.769    3.48  5.51
-#&gt; # ... with 71,990 more rows</div><div class='input'>
+  <span class='fu'>spread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>], <span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>u_tau</span>[<span class='no'>i</span>])</div><div class='output co'>#&gt; # A tibble: 12,000 x 8
+#&gt; # Groups:   i, j [12]
+#&gt;    .chain .iteration .draw     i     j         b   tau u_tau
+#&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1      1          1     1     1     1 -0.927     5.79  5.87
+#&gt;  2      1          1     1     1     2 -2.09      5.79  5.87
+#&gt;  3      1          1     1     1     3  0.111     5.79  5.87
+#&gt;  4      1          1     1     1     4 -0.000774  5.79  5.87
+#&gt;  5      1          1     1     2     1 -0.944     3.19  4.97
+#&gt;  6      1          1     1     2     2  0.652     3.19  4.97
+#&gt;  7      1          1     1     2     3  0.0440    3.19  4.97
+#&gt;  8      1          1     1     2     4 -0.171     3.19  4.97
+#&gt;  9      1          1     1     3     1 -0.164     3.15  5.24
+#&gt; 10      1          1     1     3     2 -1.14      3.15  5.24
+#&gt; # ... with 11,990 more rows</div><div class='input'>
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>gather_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>], <span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>u_tau</span>[<span class='no'>i</span>])</div><div class='output co'>#&gt; # A tibble: 108,000 x 7
-#&gt; # Groups:   i, j, .variable [108]
-#&gt;    .chain .iteration .draw     i     j .variable   .value
-#&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
-#&gt;  1      1          1     1     1     1 b         -1.16   
-#&gt;  2      1          1     1     1     2 b         -1.69   
-#&gt;  3      1          1     1     1     3 b          0.282  
-#&gt;  4      1          1     1     1     4 b         -0.295  
-#&gt;  5      1          1     1     2     1 b         -0.587  
-#&gt;  6      1          1     1     2     2 b          0.00727
-#&gt;  7      1          1     1     2     3 b         -0.0850 
-#&gt;  8      1          1     1     2     4 b          0.154  
-#&gt;  9      1          1     1     3     1 b         -0.413  
-#&gt; 10      1          1     1     3     2 b         -0.769  
-#&gt; # ... with 107,990 more rows</div><div class='input'>
+  <span class='fu'>gather_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>], <span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>u_tau</span>[<span class='no'>i</span>])</div><div class='output co'>#&gt; # A tibble: 18,000 x 7
+#&gt; # Groups:   i, j, .variable [18]
+#&gt;    .chain .iteration .draw     i     j .variable    .value
+#&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;dbl&gt;
+#&gt;  1      1          1     1     1     1 b         -0.927   
+#&gt;  2      1          1     1     1     2 b         -2.09    
+#&gt;  3      1          1     1     1     3 b          0.111   
+#&gt;  4      1          1     1     1     4 b         -0.000774
+#&gt;  5      1          1     1     2     1 b         -0.944   
+#&gt;  6      1          1     1     2     2 b          0.652   
+#&gt;  7      1          1     1     2     3 b          0.0440  
+#&gt;  8      1          1     1     2     4 b         -0.171   
+#&gt;  9      1          1     1     3     1 b         -0.164   
+#&gt; 10      1          1     1     3     2 b         -1.14    
+#&gt; # ... with 17,990 more rows</div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_draws</span>(<span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>typical_r</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 19 x 8
-#&gt; # Groups:   i [19]
-#&gt;        i .variable .value .lower .upper .width .point .interval
-#&gt;    &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-#&gt;  1     1 tau        5.99   5.07   7.14    0.95 median qi       
-#&gt;  2     2 tau        3.35   2.41   4.58    0.95 median qi       
-#&gt;  3     3 tau        3.61   2.68   4.86    0.95 median qi       
-#&gt;  4     4 tau        6.63   5.46   8.01    0.95 median qi       
-#&gt;  5     5 tau        5.13   4.25   6.03    0.95 median qi       
-#&gt;  6     6 tau        6.40   5.36   7.45    0.95 median qi       
-#&gt;  7     7 tau        7.86   6.63   9.28    0.95 median qi       
-#&gt;  8     8 tau        6.42   5.29   7.65    0.95 median qi       
-#&gt;  9     9 tau        2.65   1.84   3.72    0.95 median qi       
-#&gt; 10    10 tau        6.10   4.99   7.32    0.95 median qi       
-#&gt; 11    11 tau        5.93   4.93   6.99    0.95 median qi       
-#&gt; 12    12 tau        7.25   6.07   8.52    0.95 median qi       
-#&gt; 13    13 tau        4.35   3.62   5.14    0.95 median qi       
-#&gt; 14    14 tau        3.77   2.79   4.89    0.95 median qi       
-#&gt; 15    15 tau        4.18   3.46   4.95    0.95 median qi       
-#&gt; 16    16 tau        3.88   2.70   5.37    0.95 median qi       
-#&gt; 17    17 tau        3.21   2.67   3.84    0.95 median qi       
-#&gt; 18    18 tau        3.82   2.97   4.76    0.95 median qi       
-#&gt; 19    NA typical_r  0.558  0.313  0.787   0.95 median qi       </div><div class='input'>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 4 x 8
+#&gt; # Groups:   i [4]
+#&gt;       i .variable .value .lower .upper .width .point .interval
+#&gt;   &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt; 1     1 tau        6.03   5.03   7.11    0.95 median qi       
+#&gt; 2     2 tau        3.30   2.41   4.46    0.95 median qi       
+#&gt; 3     3 tau        3.65   2.73   4.72    0.95 median qi       
+#&gt; 4    NA typical_r  0.548  0.309  0.778   0.95 median qi       </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

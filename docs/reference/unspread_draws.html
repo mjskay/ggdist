@@ -208,19 +208,19 @@ a data frame whose column names are variables with dimensions in them.</p>
 
 <span class='co'># We can use unspread_draws to allow us to manipulate draws with tidybayes</span>
 <span class='co'># and then transform the draws into a form we can use with packages like bayesplot.</span>
-<span class='co'># Here we subset b[i,j] to just values of i in 1:3 and j == 1, then plot with bayesplot</span>
+<span class='co'># Here we subset b[i,j] to just values of i in 1:2 and j == 1, then plot with bayesplot</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>unspread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_draws-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># As another example, we could use compare_levels to plot all pairwise comparisons</span>
-<span class='co'># of b[i,1] for i in 1:3</span>
+<span class='co'># of b[1,j] for j in 1:3</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='compare_levels.html'>compare_levels</a></span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>unspread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>==</span> <span class='fl'>1</span>, <span class='no'>j</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='compare_levels.html'>compare_levels</a></span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>j</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>unspread_draws</span>(<span class='no'>b</span>[<span class='no'>j</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/bayesplot/topics/MCMC-intervals'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_draws-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

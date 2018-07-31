@@ -173,7 +173,7 @@ ignores several meta-data column names used in tidybayes.</p></td>
 <code>exclude</code> into key/value columns <code>".variable"</code> and <code>".value"</code>.</p>
 <p>Imagine a data frame <code>data</code> as returned by <code><a href='spread_draws.html'>spread_draws(fit, a[i], b[i,v])</a></code>, like this:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number</p></li>
-<li><p>column <code>".iteration"</code>: the interation number</p></li>
+<li><p>column <code>".iteration"</code>: the iteration number</p></li>
 <li><p>column <code>".draw"</code>: the draw number</p></li>
 <li><p>column <code>"i"</code>: value in <code>1:5</code></p></li>
 <li><p>column <code>"v"</code>: value in <code>1:10</code></p></li>
@@ -183,7 +183,7 @@ ignores several meta-data column names used in tidybayes.</p></td>
     <p><code>gather_variables(data)</code> on that data frame would return a grouped
 data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number</p></li>
-<li><p>column <code>".iteration"</code>: the interation number</p></li>
+<li><p>column <code>".iteration"</code>: the iteration number</p></li>
 <li><p>column <code>".draw"</code>: the draw number</p></li>
 <li><p>column <code>"i"</code>: value in <code>1:5</code></p></li>
 <li><p>column <code>"v"</code>: value in <code>1:10</code></p></li>
@@ -214,39 +214,47 @@ data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>v</span>], <span class='no'>tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_variables</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 144 x 9
-#&gt; # Groups:   i, v [72]
-#&gt;        i     v .variable  .value  .lower .upper .width .point .interval
-#&gt;    &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-#&gt;  1     1     1 b         -1.07   -1.25   -0.905   0.95 median qi       
-#&gt;  2     1     1 tau        5.99    5.07    7.14    0.95 median qi       
-#&gt;  3     1     2 b         -1.82   -2.08   -1.54    0.95 median qi       
-#&gt;  4     1     2 tau        5.99    5.07    7.14    0.95 median qi       
-#&gt;  5     1     3 b          0.174   0.0349  0.317   0.95 median qi       
-#&gt;  6     1     3 tau        5.99    5.07    7.14    0.95 median qi       
-#&gt;  7     1     4 b         -0.0992 -0.342   0.141   0.95 median qi       
-#&gt;  8     1     4 tau        5.99    5.07    7.14    0.95 median qi       
-#&gt;  9     2     1 b         -0.735  -1.03   -0.435   0.95 median qi       
-#&gt; 10     2     1 tau        3.35    2.41    4.58    0.95 median qi       
-#&gt; # ... with 134 more rows</div><div class='input'>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 24 x 9
+#&gt; # Groups:   i, v [12]
+#&gt;        i     v .variable .value  .lower .upper .width .point .interval
+#&gt;    &lt;int&gt; &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt;  1     1     1 b         -1.08  -1.27   -0.897   0.95 median qi       
+#&gt;  2     1     1 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt;  3     1     2 b         -1.83  -2.08   -1.54    0.95 median qi       
+#&gt;  4     1     2 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt;  5     1     3 b          0.175  0.0447  0.322   0.95 median qi       
+#&gt;  6     1     3 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt;  7     1     4 b         -0.101 -0.347   0.134   0.95 median qi       
+#&gt;  8     1     4 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt;  9     2     1 b         -0.739 -1.01   -0.430   0.95 median qi       
+#&gt; 10     2     1 tau        3.30   2.41    4.46    0.95 median qi       
+#&gt; # ... with 14 more rows</div><div class='input'>
 <span class='co'># the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_draws.html'>tidy_draws</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_variables</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 235 x 7
-#&gt;    .variable  .value  .lower .upper .width .point .interval
-#&gt;    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-#&gt;  1 b[1,1]    -1.07   -1.25   -0.905   0.95 median qi       
-#&gt;  2 b[1,2]    -1.82   -2.08   -1.54    0.95 median qi       
-#&gt;  3 b[1,3]     0.174   0.0349  0.317   0.95 median qi       
-#&gt;  4 b[1,4]    -0.0992 -0.342   0.141   0.95 median qi       
-#&gt;  5 b[10,1]   -0.502  -0.677  -0.309   0.95 median qi       
-#&gt;  6 b[10,2]   -1.70   -1.99   -1.42    0.95 median qi       
-#&gt;  7 b[10,3]    0.0343 -0.114   0.187   0.95 median qi       
-#&gt;  8 b[10,4]    0.330   0.0751  0.574   0.95 median qi       
-#&gt;  9 b[11,1]   -1.20   -1.37   -1.01    0.95 median qi       
-#&gt; 10 b[11,2]   -2.39   -2.65   -2.13    0.95 median qi       
-#&gt; # ... with 225 more rows</div><div class='input'>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 19 x 7
+#&gt;    .variable  .value  .lower  .upper .width .point .interval
+#&gt;    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt;  1 b[1,1]    -1.08   -1.27   -0.897    0.95 median qi       
+#&gt;  2 b[1,2]    -1.83   -2.08   -1.54     0.95 median qi       
+#&gt;  3 b[1,3]     0.175   0.0447  0.322    0.95 median qi       
+#&gt;  4 b[1,4]    -0.101  -0.347   0.134    0.95 median qi       
+#&gt;  5 b[2,1]    -0.739  -1.01   -0.430    0.95 median qi       
+#&gt;  6 b[2,2]     0.0909 -0.384   0.602    0.95 median qi       
+#&gt;  7 b[2,3]    -0.175  -0.410   0.0563   0.95 median qi       
+#&gt;  8 b[2,4]     0.270  -0.151   0.710    0.95 median qi       
+#&gt;  9 b[3,1]    -0.340  -0.609  -0.0615   0.95 median qi       
+#&gt; 10 b[3,2]    -0.732  -1.18   -0.286    0.95 median qi       
+#&gt; 11 b[3,3]     0.0636 -0.163   0.312    0.95 median qi       
+#&gt; 12 b[3,4]     0.0918 -0.327   0.463    0.95 median qi       
+#&gt; 13 tau[1]     6.03    5.03    7.11     0.95 median qi       
+#&gt; 14 tau[2]     3.30    2.41    4.46     0.95 median qi       
+#&gt; 15 tau[3]     3.65    2.73    4.72     0.95 median qi       
+#&gt; 16 typical_r  0.548   0.309   0.778    0.95 median qi       
+#&gt; 17 u_tau[1]   5.62    3.86    8.03     0.95 median qi       
+#&gt; 18 u_tau[2]   5.48    3.46    9.07     0.95 median qi       
+#&gt; 19 u_tau[3]   4.96    3.10    7.86     0.95 median qi       </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

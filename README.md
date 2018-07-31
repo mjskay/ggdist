@@ -12,7 +12,7 @@ status](http://www.r-pkg.org/badges/version/tidybayes)](https://cran.r-project.o
 ![Preview of tidybayes plots](man/figures/preview.png)
 
 `tidybayes` is an R package that aims to make it easy to integrate
-popular Bayesian modelling methods into a tidy data + ggplot
+popular Bayesian modeling methods into a tidy data + ggplot
 workflow.
 
 [Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)

@@ -216,16 +216,16 @@ that contains draws to summarize.</p></td>
     <tr>
       <th>...</th>
       <td><p>Bare column names or expressions that, when evaluated in the context of
-<code>.data</code>, represent draws to summarise. If this is empty, then by default all
+<code>.data</code>, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in <code>.exclude</code> (by default
-<code>".chain"</code>, <code>".iteration"</code>, <code>".draw"</code>, and <code>".row"</code>) will be summarised.
+<code>".chain"</code>, <code>".iteration"</code>, <code>".draw"</code>, and <code>".row"</code>) will be summarized.
 This can be list columns.</p></td>
     </tr>
     <tr>
       <th>.width</th>
       <td><p>vector of probabilities to use that determine the widths of the resulting intervals.
 If multiple probabilities are provided, multiple rows per group are generated, each with
-a different probabilty interval (and value of the corresponding <code>.width</code> column).</p></td>
+a different probability interval (and value of the corresponding <code>.width</code> column).</p></td>
     </tr>
     <tr>
       <th>.point</th>
@@ -240,7 +240,7 @@ bound of an interval; e.g. <code>qi</code>, <code>hdi</code></p></td>
     </tr>
     <tr>
       <th>.simple_names</th>
-      <td><p>When <code>TRUE</code> and only a single column / vector is to be summarised, use the
+      <td><p>When <code>TRUE</code> and only a single column / vector is to be summarized, use the
 name <code>.lower</code> for the lower end of the interval and <code>.upper</code> for the
 upper end. If <code>.data</code> is a vector and this is <code>TRUE</code>, this will also set the column name
 of the point summary to <code>.value</code>. When <code>FALSE</code> and <code>.data</code> is a data frame,
@@ -250,8 +250,8 @@ and <code>ymax</code> (for use with ggplot).</p></td>
     </tr>
     <tr>
       <th>.exclude</th>
-      <td><p>A character vector of names of columns to be excluded from summarisation
-if no column names are specified to be summarised. Default ignores several meta-data column
+      <td><p>A character vector of names of columns to be excluded from summarization
+if no column names are specified to be summarized. Default ignores several meta-data column
 names used in tidybayes.</p></td>
     </tr>
     <tr>
@@ -260,7 +260,7 @@ names used in tidybayes.</p></td>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>vector to summarise (for interval functions: <code>qi</code> and <code>hdi</code>)</p></td>
+      <td><p>vector to summarize (for interval functions: <code>qi</code> and <code>hdi</code>)</p></td>
     </tr>
     </table>
     
