@@ -19,13 +19,13 @@ as_data_list(object, name = "", ...)
 
 \method{as_data_list}{default}(object, name = "", ...)
 
-\method{as_data_list}{numeric}(object, name = "", scalar_as_array = FALSE,
-  ...)
+\method{as_data_list}{numeric}(object, name = "",
+  scalar_as_array = FALSE, ...)
 
 \method{as_data_list}{logical}(object, name = "", ...)
 
-\method{as_data_list}{factor}(object, name = "", .n_name = n_prefix("n"),
-  ...)
+\method{as_data_list}{factor}(object, name = "",
+  .n_name = n_prefix("n"), ...)
 
 \method{as_data_list}{character}(object, name = "", ...)
 

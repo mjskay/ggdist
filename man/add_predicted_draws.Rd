@@ -17,12 +17,12 @@
 of a model to a data frame}
 \usage{
 add_fitted_draws(newdata, model, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
-  scale = c("response", "linear"))
+  seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
 
-fitted_draws(model, newdata, value = ".value", ..., n = NULL, seed = NULL,
-  re_formula = NULL, category = ".category", dpar = FALSE,
-  scale = c("response", "linear"))
+fitted_draws(model, newdata, value = ".value", ..., n = NULL,
+  seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
 
 \method{fitted_draws}{default}(model, newdata, ...)
 
@@ -35,26 +35,28 @@ fitted_draws(model, newdata, value = ".value", ..., n = NULL, seed = NULL,
   dpar = FALSE, scale = c("response", "linear"))
 
 add_linpred_draws(newdata, model, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
-  scale = c("response", "linear"))
+  seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
 
 linpred_draws(model, newdata, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category", dpar = FALSE,
-  scale = c("response", "linear"))
+  seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
 
 add_predicted_draws(newdata, model, prediction = ".prediction", ...,
   n = NULL, seed = NULL, re_formula = NULL)
 
-predicted_draws(model, newdata, prediction = ".prediction", ..., n = NULL,
-  seed = NULL, re_formula = NULL)
+predicted_draws(model, newdata, prediction = ".prediction", ...,
+  n = NULL, seed = NULL, re_formula = NULL)
 
 \method{predicted_draws}{default}(model, newdata, ...)
 
-\method{predicted_draws}{stanreg}(model, newdata, prediction = ".prediction",
-  ..., n = NULL, seed = NULL, re_formula = NULL)
+\method{predicted_draws}{stanreg}(model, newdata,
+  prediction = ".prediction", ..., n = NULL, seed = NULL,
+  re_formula = NULL)
 
-\method{predicted_draws}{brmsfit}(model, newdata, prediction = ".prediction",
-  ..., n = NULL, seed = NULL, re_formula = NULL)
+\method{predicted_draws}{brmsfit}(model, newdata,
+  prediction = ".prediction", ..., n = NULL, seed = NULL,
+  re_formula = NULL)
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will

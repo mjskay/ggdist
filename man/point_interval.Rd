@@ -7,6 +7,7 @@
 \alias{point_intervalh}
 \alias{qi}
 \alias{hdi}
+\alias{hdci}
 \alias{mean_qi}
 \alias{mean_qih}
 \alias{median_qi}
@@ -19,25 +20,33 @@
 \alias{median_hdih}
 \alias{mode_hdi}
 \alias{mode_hdih}
+\alias{mean_hdci}
+\alias{mean_hdcih}
+\alias{median_hdci}
+\alias{median_hdcih}
+\alias{mode_hdci}
+\alias{mode_hdcih}
 \title{Point and interval summaries for tidy data frames of draws from distributions}
 \usage{
-point_interval(.data, ..., .width = 0.95, .point = median, .interval = qi,
-  .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw",
-  ".row"), .prob)
-
-\method{point_interval}{default}(.data, ..., .width = 0.95, .point = median,
+point_interval(.data, ..., .width = 0.95, .point = median,
   .interval = qi, .simple_names = TRUE, .exclude = c(".chain",
   ".iteration", ".draw", ".row"), .prob)
 
-\method{point_interval}{numeric}(.data, ..., .width = 0.95, .point = median,
-  .interval = qi, .simple_names = FALSE, .exclude = c(".chain",
-  ".iteration", ".draw", ".row"), .prob)
+\method{point_interval}{default}(.data, ..., .width = 0.95,
+  .point = median, .interval = qi, .simple_names = TRUE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob)
+
+\method{point_interval}{numeric}(.data, ..., .width = 0.95,
+  .point = median, .interval = qi, .simple_names = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob)
 
 point_intervalh(...)
 
 qi(x, .width = 0.95, .prob)
 
 hdi(x, .width = 0.95, .prob)
+
+hdci(x, .width = 0.95)
 
 mean_qi(.data, ..., .width = 0.95)
 
@@ -62,6 +71,18 @@ median_hdih(...)
 mode_hdi(.data, ..., .width = 0.95)
 
 mode_hdih(...)
+
+mean_hdci(.data, ..., .width = 0.95)
+
+mean_hdcih(...)
+
+median_hdci(.data, ..., .width = 0.95)
+
+median_hdcih(...)
+
+mode_hdci(.data, ..., .width = 0.95)
+
+mode_hdcih(...)
 }
 \arguments{
 \item{.data}{Data frame (or grouped data frame as returned by \code{\link{group_by}})
@@ -150,8 +171,18 @@ these automatically adjust the function output to match their required aesthetic
 equi-tailed interval) as a 1x2 matrix.
 
 \code{hdi} yields the highest-density interval(s) (also known as the highest posterior
-density interval). \emph{Note:} If the distribution is multimodal, \code{hdi} may return multiple
-intervals for each probability level (these will be spread over rows). Internally it uses \code{\link[HDInterval]{hdi}}.
+density interval). \strong{Note:} If the distribution is multimodal, \code{hdi} may return multiple
+intervals for each probability level (these will be spread over rows). You may wish to use
+\code{hdci} (below) instead if you want a single highest-density interval, with the caveat that when
+the distribution is multimodal \code{hdci} is not a highest-density interval. Internally \code{hdi} uses
+\code{\link[HDInterval]{hdi}} with \code{allowSplit = TRUE} (when multimodal) and with
+\code{allowSplit = FALSE} (when not multimodal).
+
+\code{hdci} yields the highest-density \emph{continuous} interval. \strong{Note:} If the distribution
+is multimodal, this may not actually be the highest-density interval (there may be a higher-density
+discontinuous interval). Internally \code{hdci} uses
+\code{\link[HDInterval]{hdi}} with \code{allowSplit = FALSE}; see that function for more
+information on multimodality and continuous versus discontinuous intervals.
 }
 \examples{
 

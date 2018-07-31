@@ -6,14 +6,14 @@
 \title{Point + multiple probability interval plots (ggplot geom)}
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., size_domain = c(1, 6), size_range = c(0.6,
-  1.4), fatten_point = 1.8, na.rm = FALSE, show.legend = FALSE,
-  inherit.aes = TRUE)
+  position = "identity", ..., size_domain = c(1, 6),
+  size_range = c(0.6, 1.4), fatten_point = 1.8, na.rm = FALSE,
+  show.legend = FALSE, inherit.aes = TRUE)
 
 geom_pointintervalh(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., size_domain = c(1, 6), size_range = c(0.6,
-  1.4), fatten_point = 1.8, na.rm = FALSE, show.legend = FALSE,
-  inherit.aes = TRUE)
+  position = "identity", ..., size_domain = c(1, 6),
+  size_range = c(0.6, 1.4), fatten_point = 1.8, na.rm = FALSE,
+  show.legend = FALSE, inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with

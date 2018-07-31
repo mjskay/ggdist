@@ -420,12 +420,13 @@ We can draw fit curves with probability bands:
 ```{r}
 mtcars %>%
   group_by(cyl) %>%
-  data_grid(hp = seq_range(hp, n = 101)) %>%
+  data_grid(hp = seq_range(hp, n = 51)) %>%
   add_fitted_draws(m_mpg) %>%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
   stat_lineribbon(aes(y = .value)) +
   geom_point(data = mtcars) +
-  scale_fill_brewer(palette = "Greys")
+  scale_fill_brewer(palette = "Greys") +
+  scale_color_brewer(palette = "Set2")
 ```
 
 Or we can sample a reasonable number of fit lines (say 100) and overplot them:
@@ -436,8 +437,9 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_fitted_draws(m_mpg, n = 100) %>%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  geom_line(aes(y = .value, group = paste(cyl, .draw)), alpha = 0.25) +
-  geom_point(data = mtcars)
+  geom_line(aes(y = .value, group = paste(cyl, .draw)), alpha = .1) +
+  geom_point(data = mtcars) +
+  scale_color_brewer(palette = "Dark2")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:
@@ -447,10 +449,11 @@ mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
-  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), alpha = 0.25) +
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl), fill = ordered(cyl))) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.95, .80, .50), alpha = 1/4) +
   geom_point(data = mtcars) +
-  scale_fill_brewer(palette = "Greys")
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Dark2")
 ```
 
 This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:
@@ -586,19 +589,22 @@ We could plot fit lines for fitted probabilities against the dataset:
 ```{r}
 data_plot = mtcars %>%
   ggplot(aes(x = mpg, y = cyl, color = ordered(cyl))) +
-  geom_point()
+  geom_point() +
+  scale_color_brewer(palette = "Dark2", name = "cyl")
 
 fit_plot = mtcars %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
   # we can use the `value` argument to give the column with values of 
   # transformed linear predictors a more precise name
-  add_fitted_draws(m_cyl, value = "p(cyl)") %>%
+  add_fitted_draws(m_cyl, value = "P(cyl | mpg)") %>%
   # brms does not keep the category labels,
   # but we can recover them from the original data
   ungroup() %>%
   mutate(cyl = ordered(.category, labels = levels(ordered(mtcars$cyl)))) %>%
-  ggplot(aes(x = mpg, y = `p(cyl)`, color = cyl)) +
-  stat_lineribbon(aes(fill = cyl), alpha = 1/5)
+  ggplot(aes(x = mpg, y = `P(cyl | mpg)`, color = cyl)) +
+  stat_lineribbon(aes(fill = cyl), alpha = 1/5) +
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2")
 
 plot_grid(ncol = 1, align = "v",
   data_plot,
@@ -609,22 +615,30 @@ plot_grid(ncol = 1, align = "v",
 While talking about the mean for an ordinal distribution often does not make sense, in this particular case one could argue that the expected number of cylinders for a car given its miles per gallon is a meaningful quantity. We could plot the posterior distribution for the average number of cylinders for a car given a particular miles per gallon as follows:
 
 $$
-\textrm{E}[\textrm{cyl}|\textrm{mpg}=m] = \sum_{cyl \in \{4,6,8\}} cyl\cdot p(cyl|\textrm{mpg}=m)
+\textrm{E}[\textrm{cyl}|\textrm{mpg}=m] = \sum_{c \in \{4,6,8\}} c\cdot \textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)
 $$
-We can use the above formula to derive a posterior distribution for $\textrm{E}[\textrm{cyl}|\textrm{mpg}=m]$ from the model. The model gives us a posterior distribution for $p(cyl|\textrm{mpg}=m)$: it is the response-scale linear predictor ("fit") for `cyl` (or `.category`) = $cyl$ when `mpg` = $m$. We can group with `.draw` and then use `summarise` to calculate the expected value:
+We can use the above formula to derive a posterior distribution for $\textrm{E}[\textrm{cyl}|\textrm{mpg}=m]$ from the model. The model gives us a posterior distribution for $\textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)$: when `mpg` = $m$, the response-scale linear predictor (the `.value` column from `add_fitted_draws`) for `cyl` (aka `.category`) = $c$ is $\textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)$. Thus, we can group within `.draw` and then use `summarise` to calculate the expected value:
 
 ```{r}
+label_data_function = . %>% 
+  ungroup() %>%
+  filter(mpg == quantile(mpg, .47)) %>%
+  summarise_if(is.numeric, mean)
+
 data_plot_with_mean = mtcars %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
-  add_fitted_draws(m_cyl, value = "p(cyl)", n = 100) %>%
+  add_fitted_draws(m_cyl, value = "P(cyl | mpg)", n = 100) %>%
   # turn the .category (a factor) into a cylinder value in {4, 6, 8}
   mutate(cyl = as.numeric(levels(ordered(mtcars$cyl)))[.category]) %>%
   group_by(mpg, .draw) %>%
   # calculate expected cylinder value
-  summarise(cyl = sum(cyl * `p(cyl)`)) %>%
+  summarise(cyl = sum(cyl * `P(cyl | mpg)`)) %>%
   ggplot(aes(x = mpg, y = cyl)) +
   geom_line(aes(group = .draw), alpha = 5/100) +
-  geom_point(aes(color = ordered(cyl)), data = mtcars)
+  geom_point(aes(fill = ordered(cyl)), data = mtcars, shape = 21, size = 2) +
+  geom_text(aes(x = mpg + 4), label = "E[cyl | mpg]", data = label_data_function, hjust = 0) +
+  geom_segment(aes(yend = cyl, xend = mpg + 3.9), data = label_data_function) +
+  scale_fill_brewer(palette = "Dark2", name = "cyl")
 
 plot_grid(ncol = 1, align = "v",
   data_plot_with_mean,

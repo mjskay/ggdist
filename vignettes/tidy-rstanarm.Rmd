@@ -442,7 +442,8 @@ mtcars %>%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
   stat_lineribbon(aes(y = .value)) +
   geom_point(data = mtcars) +
-  scale_fill_brewer(palette = "Greys")
+  scale_fill_brewer(palette = "Greys") +
+  scale_color_brewer(palette = "Set2")
 ```
 
 Or we can sample a reasonable number of fit lines (say 100) and overplot them:
@@ -453,8 +454,9 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_fitted_draws(m_mpg, n = 100) %>%
   ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  geom_line(aes(y = .value, group = paste(cyl, .draw)), alpha = 0.25) +
-  geom_point(data = mtcars)
+  geom_line(aes(y = .value, group = paste(cyl, .draw)), alpha = .1) +
+  geom_point(data = mtcars) +
+  scale_color_brewer(palette = "Dark2")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:
@@ -464,13 +466,14 @@ mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
-  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), alpha = 0.25) +
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl), fill = ordered(cyl))) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.95, .80, .50), alpha = 1/4) +
   geom_point(data = mtcars) +
-  scale_fill_brewer(palette = "Greys")
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Dark2")
 ```
 
-This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:
+This can get difficult to judge by group, so could be better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:
 
 ```{r}
 mtcars %>%

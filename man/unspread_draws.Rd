@@ -6,10 +6,11 @@
 \title{Turn tidy data frames of variables from a Bayesian model back into untidy data}
 \usage{
 ungather_draws(data, ..., variable = ".variable", value = ".value",
-  draw_indices = c(".chain", ".iteration", ".draw"), drop_indices = FALSE)
-
-unspread_draws(data, ..., draw_indices = c(".chain", ".iteration", ".draw"),
+  draw_indices = c(".chain", ".iteration", ".draw"),
   drop_indices = FALSE)
+
+unspread_draws(data, ..., draw_indices = c(".chain", ".iteration",
+  ".draw"), drop_indices = FALSE)
 }
 \arguments{
 \item{data}{A tidy data frame of draws, such as one output by \code{spread_draws} or \code{gather_draws}.}

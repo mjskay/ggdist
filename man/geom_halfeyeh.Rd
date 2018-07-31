@@ -6,9 +6,9 @@
 \usage{
 geom_halfeyeh(mapping = NULL, data = NULL, position = "identity",
   trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
-  density.color = NA, ..., point_interval = median_qi, fun.data = NULL,
-  fun.args = list(), .width = c(0.66, 0.95), .prob, color = NULL,
-  size = NULL, size_domain = NULL, size_range = NULL,
+  density.color = NA, ..., point_interval = median_qi,
+  fun.data = NULL, fun.args = list(), .width = c(0.66, 0.95), .prob,
+  color = NULL, size = NULL, size_domain = NULL, size_range = NULL,
   fatten_point = NULL)
 }
 \arguments{

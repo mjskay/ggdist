@@ -58,8 +58,18 @@ globalVariables(c("y", "ymin", "ymax"))
 #' equi-tailed interval) as a 1x2 matrix.
 #'
 #' \code{hdi} yields the highest-density interval(s) (also known as the highest posterior
-#' density interval). \emph{Note:} If the distribution is multimodal, \code{hdi} may return multiple
-#' intervals for each probability level (these will be spread over rows). Internally it uses \code{\link[HDInterval]{hdi}}.
+#' density interval). \strong{Note:} If the distribution is multimodal, \code{hdi} may return multiple
+#' intervals for each probability level (these will be spread over rows). You may wish to use
+#' \code{hdci} (below) instead if you want a single highest-density interval, with the caveat that when
+#' the distribution is multimodal \code{hdci} is not a highest-density interval. Internally \code{hdi} uses
+#' \code{\link[HDInterval]{hdi}} with \code{allowSplit = TRUE} (when multimodal) and with
+#' \code{allowSplit = FALSE} (when not multimodal).
+#'
+#' \code{hdci} yields the highest-density \emph{continuous} interval. \strong{Note:} If the distribution
+#' is multimodal, this may not actually be the highest-density interval (there may be a higher-density
+#' discontinuous interval). Internally \code{hdci} uses
+#' \code{\link[HDInterval]{hdi}} with \code{allowSplit = FALSE}; see that function for more
+#' information on multimodality and continuous versus discontinuous intervals.
 #'
 #' @param .data Data frame (or grouped data frame as returned by \code{\link{group_by}})
 #' that contains draws to summarize.
@@ -319,6 +329,13 @@ hdi = function(x, .width = .95, .prob) {
 
 #' @export
 #' @rdname point_interval
+hdci = function(x, .width = .95) {
+  intervals = HDInterval::hdi(x, credMass = .width)
+  matrix(intervals, ncol = 2)
+}
+
+#' @export
+#' @rdname point_interval
 mean_qi = function(.data, ..., .width = .95)
   point_interval(.data, ..., .width = .width, .point = mean, .interval = qi)
 
@@ -372,3 +389,31 @@ mode_hdi = function(.data, ..., .width = .95)
 #' @export
 #' @rdname point_interval
 mode_hdih = flip_aes(mode_hdi)
+
+#' @export
+#' @rdname point_interval
+mean_hdci = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = mean, .interval = hdci)
+
+#' @export
+#' @rdname point_interval
+mean_hdcih = flip_aes(mean_hdci)
+
+#' @export
+#' @rdname point_interval
+median_hdci = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = median, .interval = hdci)
+
+#' @export
+#' @rdname point_interval
+median_hdcih = flip_aes(median_hdci)
+
+#' @importFrom LaplacesDemon Mode
+#' @export
+#' @rdname point_interval
+mode_hdci = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = Mode, .interval = hdci)
+
+#' @export
+#' @rdname point_interval
+mode_hdcih = flip_aes(mode_hdci)

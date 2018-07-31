@@ -7,8 +7,8 @@
 \usage{
 predict_curve(data, formula, summary = median, ...)
 
-predict_curve_density(data, formula, summary = function(...) density_bins(...,
-  n = n), n = 50, ...)
+predict_curve_density(data, formula, summary = function(...)
+  density_bins(..., n = n), n = 50, ...)
 }
 \arguments{
 \item{data}{A \code{\link{data.frame}}, \code{\link{tbl_df}} or
