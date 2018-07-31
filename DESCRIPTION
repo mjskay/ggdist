@@ -1,6 +1,6 @@
 Encoding: UTF-8
 Package: tidybayes
-Title: Tidy Data and Geoms for Bayesian Models
+Title: Tidy Data and 'Geoms' for Bayesian Models
 Version: 1.0.0
 Date: 2018-07-30
 Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),

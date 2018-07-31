@@ -3,7 +3,7 @@ note <- sprintf("R package version %s", meta$Version)
 
 bibentry(
   bibtype = "Manual",
-  title = paste("{tidybayes}:", meta$Title),
+  title = paste("{tidybayes}: Tidy Data and Geoms for {Bayesian} Models"),
   author = c(person("Matthew", "Kay")),
   year = year,
   note = note,
