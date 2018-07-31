@@ -17,7 +17,7 @@ might be obtained through \code{\link{spread_draws}}. Grouped data frames
 as returned by \code{\link{group_by}} are supported.}
 
 \item{formula}{A formula specifying the prediction curve. The left-hand side
-of the formula should be a name respresenting the name of the column that
+of the formula should be a name representing the name of the column that
 will hold the predicted response in the returned data frame. The right-hand
 side is an expression that may include numeric columns from \code{data} and
 variables passed into this function in \code{...}.}

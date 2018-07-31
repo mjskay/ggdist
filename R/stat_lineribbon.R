@@ -40,7 +40,7 @@ globalVariables(c("...width.."))
 #' @param show.legend Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics
 #' are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-#' most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
+#' most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
 #' default plot specification, e.g. borders.
 #' @seealso See \code{\link{geom_lineribbon}} for the geom version, intended for use on points and intervals that have
 #' already been summarized using a \code{\link{point_interval}} function. See \code{\link{stat_pointinterval}} /

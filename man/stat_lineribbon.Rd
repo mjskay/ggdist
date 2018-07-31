@@ -47,7 +47,7 @@ values are silently removed.}
 are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
+most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
 default plot specification, e.g. borders.}
 }
 \description{

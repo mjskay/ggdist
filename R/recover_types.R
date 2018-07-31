@@ -32,7 +32,7 @@ apply_prototypes = function(...) {
 #'
 #' Then, when \code{\link{spread_draws}} or \code{\link{gather_draws}} is called on the decorated
 #' \code{model}, each list entry with the same name as the variable or a dimension
-#' in varible_spec is a used as a prototype for that variable or dimension ---
+#' in \code{variable_spec} is a used as a prototype for that variable or dimension ---
 #' i.e., its type is taken to be the expected type of that variable or dimension.
 #' Those types are used to translate numeric values of variables back into
 #' useful values (for example, levels of a factor).

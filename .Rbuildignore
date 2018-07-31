@@ -20,3 +20,4 @@
 ^codecov\.yml$
 ^\.covrignore$
 ^cran-comments.md$
+^inst/WORDLIST$

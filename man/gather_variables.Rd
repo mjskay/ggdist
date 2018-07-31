@@ -28,7 +28,7 @@ This function gathers every column except grouping columns and those matching th
 Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[i,v])}, like this:
 \itemize{
      \item column \code{".chain"}: the chain number
-     \item column \code{".iteration"}: the interation number
+     \item column \code{".iteration"}: the iteration number
      \item column \code{".draw"}: the draw number
      \item column \code{"i"}: value in \code{1:5}
      \item column \code{"v"}: value in \code{1:10}
@@ -40,7 +40,7 @@ Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[
 data frame (grouped by \code{i} and \code{v}), with:
 \itemize{
      \item column \code{".chain"}: the chain number
-     \item column \code{".iteration"}: the interation number
+     \item column \code{".iteration"}: the iteration number
      \item column \code{".draw"}: the draw number
      \item column \code{"i"}: value in \code{1:5}
      \item column \code{"v"}: value in \code{1:10}

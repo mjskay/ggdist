@@ -2,16 +2,16 @@ Encoding: UTF-8
 Package: tidybayes
 Title: Tidy Data and Geoms for Bayesian Models
 Version: 1.0.0
-Date: 2018-07-26
+Date: 2018-07-30
 Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
     email = "mjskay@umich.edu"))
 Maintainer: Matthew Kay <mjskay@umich.edu>
-Description: Facilitates composing data for and extracting posterior draws from Bayesian models
-    (JAGS, Stan, rstanarm, brms, MCMCglmm, coda, ...) in a tidy data format. Also provides
-    miscellaneous functions helpful for analysing tidy data frames of draws from Bayesian models, such 
-    as functions to generate point summaries and intervals, and geoms for common tasks like points
-    with multiple uncertainty intervals, eye plots (intervals plus densities), and fit curves with
-    multiple, arbitrary uncertainty bands.
+Description: Compose data for and extract, manipulate, and visualize posterior draws from Bayesian models
+    ('JAGS', 'Stan', 'rstanarm', 'brms', 'MCMCglmm', 'coda', ...) in a tidy data format. Functions are provided
+    to help extract tidy data frames of draws from Bayesian models and that generate point
+    summaries and intervals in a tidy format. In addition, 'ggplot2' 'geoms' and 'stats' are provided for
+    common visualization primitives like points with multiple uncertainty intervals, eye plots (intervals plus
+    densities), and fit curves with multiple, arbitrary uncertainty bands.
 Depends:
     R (>= 2.10)
 Imports:
@@ -56,6 +56,7 @@ Suggests:
     cowplot,
     covr
 License: GPL (>= 3)
+Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: http://mjskay.github.io/tidybayes, https://github.com/mjskay/tidybayes
 VignetteBuilder: knitr

@@ -74,30 +74,30 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @param .data Data frame (or grouped data frame as returned by \code{\link{group_by}})
 #' that contains draws to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
-#' \code{.data}, represent draws to summarise. If this is empty, then by default all
+#' \code{.data}, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in \code{.exclude} (by default
-#' \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarised.
+#' \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarized.
 #' This can be list columns.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
-#' a different probabilty interval (and value of the corresponding \code{.width} column).
+#' a different probability interval (and value of the corresponding \code{.width} column).
 #' @param .prob Deprecated. Use \code{.width} instead.
 #' @param .point Point summary function, which takes a vector and returns a single
 #' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
 #' @param .interval Interval function, which takes a vector and a probability
 #' (\code{.width}) and returns a two-element vector representing the lower and upper
 #' bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}
-#' @param .simple_names When \code{TRUE} and only a single column / vector is to be summarised, use the
+#' @param .simple_names When \code{TRUE} and only a single column / vector is to be summarized, use the
 #' name \code{.lower} for the lower end of the interval and \code{.upper} for the
 #' upper end. If \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
 #' of the point summary to \code{.value}. When \code{FALSE} and \code{.data} is a data frame,
 #' names the lower and upper intervals for each column \code{x} \code{x.lower} and \code{x.upper}.
 #' When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y}, \code{ymin}
 #' and \code{ymax} (for use with ggplot).
-#' @param .exclude A character vector of names of columns to be excluded from summarisation
-#' if no column names are specified to be summarised. Default ignores several meta-data column
+#' @param .exclude A character vector of names of columns to be excluded from summarization
+#' if no column names are specified to be summarized. Default ignores several meta-data column
 #' names used in tidybayes.
-#' @param x vector to summarise (for interval functions: \code{qi} and \code{hdi})
+#' @param x vector to summarize (for interval functions: \code{qi} and \code{hdi})
 #' @author Matthew Kay
 #' @examples
 #'

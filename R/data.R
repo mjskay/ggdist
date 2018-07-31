@@ -8,7 +8,7 @@
 #'
 #' Data from Kay and Heer (2016), used for testing.
 #'
-#' For more details, see Kay and Heer (2016) or the github repository describing the analysis:
+#' For more details, see Kay and Heer (2016) or the Github repository describing the analysis:
 #' \url{https://github.com/mjskay/ranking-correlation}. The original experiment (but not this analysis of it)
 #' is described in Harrison \emph{et al.} (2014).
 #'
@@ -18,10 +18,10 @@
 #' @references
 #'
 #' Kay, Matthew, and Jeffrey Heer.
-#' "Beyond weber's law: A second look at ranking visualizations of correlation."
+#' "Beyond Weber's law: A second look at ranking visualizations of correlation."
 #' \emph{IEEE transactions on visualization and computer graphics} 22.1 (2016): 469-478.
 #'
 #' Harrison, Lane, Fumeng Yang, Steven Franconeri, and Remco Chang.
-#' "Ranking visualizations of correlation using weber's law."
+#' "Ranking visualizations of correlation using Weber's law."
 #' \emph{IEEE transactions on visualization and computer graphics} 20.12 (2014): 1943-1952.
 NULL

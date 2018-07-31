@@ -85,9 +85,9 @@ Deprecated functions are:
 
   \item \code{ggeye} is deprecated: for a package whose goal is flexible and customizable
   visualization, monolithic functions are inflexible and do not sufficiently capitalize on users'
-  existing knowlesge of ggplot; instead, I think it is more flexible to design geoms and stats
+  existing knowledge of ggplot; instead, I think it is more flexible to design geoms and stats
   that can used within a complete ggplot workflow. \code{\link{geom_eyeh}} offers a horizontal
-  eye plot geom that can be used instad of \code{ggeye}.
+  eye plot geom that can be used instead of \code{ggeye}.
 
 }
 }
@@ -98,7 +98,7 @@ Deprecated functions are:
 Versions of tidybayes before version 1.0 used a different naming scheme for several
 arguments and output columns.
 
-Deprecetad arguments and column names are:
+Deprecated arguments and column names are:
 
 \itemize{
   \item \code{term} is now \code{.variable}

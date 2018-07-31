@@ -474,7 +474,7 @@ mtcars %>%
 
 `brm` also allows us to set up submodels for parameters of the response distribution *other than* the location (e.g., mean). For example, we can allow a variance parameter, such as the standard deviation, to also be some function of the predictors.
 
-This approach can be helpful in cases of non-constant variance (also called _hetereoskedasticity_ by folks who like obfuscation via Latin). E.g., imagine two groups, each with different mean response _and variance_:
+This approach can be helpful in cases of non-constant variance (also called _heteroskedasticity_ by folks who like obfuscation via Latin). E.g., imagine two groups, each with different mean response _and variance_:
 
 ```{r}
 set.seed(1234)

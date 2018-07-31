@@ -14,7 +14,7 @@ output:
 ![Preview of tidybayes plots](man/figures/preview.png)
 
 `tidybayes` is an R package that aims to make it easy to integrate popular Bayesian 
-modelling methods into a tidy data + ggplot workflow.
+modeling methods into a tidy data + ggplot workflow.
 
 [Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
 data frames (one observation per row) are particularly convenient for use

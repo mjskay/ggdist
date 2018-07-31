@@ -24,9 +24,9 @@ img {
   
 ## Introduction
   
-This vignette introduces the `tidybayes` package, which facilitates the use of tidy data (one observation per row) with Bayesian models in R. This vignette is geared towards working with tidy data in general-purpose modeling functions like JAGS or Stan. For a similar introduction to the use of `tidybayes` with high-level modelling functions such as those in `brms` or `rstanarm`, see <code>[vignette("tidy-brms")](tidy-brms.html)</code> or <code>[vignette("tidy-rstanarm")](tidy-rstanarm.html)</code>.
+This vignette introduces the `tidybayes` package, which facilitates the use of tidy data (one observation per row) with Bayesian models in R. This vignette is geared towards working with tidy data in general-purpose modeling functions like JAGS or Stan. For a similar introduction to the use of `tidybayes` with high-level modeling functions such as those in `brms` or `rstanarm`, see <code>[vignette("tidy-brms")](tidy-brms.html)</code> or <code>[vignette("tidy-rstanarm")](tidy-rstanarm.html)</code>.
   
-The default output (and sometimes input) data formats of popular modeling functions like JAGS and Stan often don't quite conform to the ideal of [tidy data](http://dx.doi.org/10.18637/jss.v059.i10). For example, input formats might expect a list instead of a data frame, and for all variables to be encoded as numeric values (requiring translation of factors to numeric values and the creation of index variables to store the number of levels per factor or the number of observations in a data frame). Output formats will often be in matrix form (requiring conversion for use with libraries like ggplot), and will use numeric indices (requiring conversion back into factor level names if the you wish to make meaningfully-labelled plots or tables). `tidybayes` automates all of these sorts of tasks.
+The default output (and sometimes input) data formats of popular modeling functions like JAGS and Stan often don't quite conform to the ideal of [tidy data](http://dx.doi.org/10.18637/jss.v059.i10). For example, input formats might expect a list instead of a data frame, and for all variables to be encoded as numeric values (requiring translation of factors to numeric values and the creation of index variables to store the number of levels per factor or the number of observations in a data frame). Output formats will often be in matrix form (requiring conversion for use with libraries like ggplot), and will use numeric indices (requiring conversion back into factor level names if the you wish to make meaningfully-labeled plots or tables). `tidybayes` automates all of these sorts of tasks.
   
 ### Philosophy
   
@@ -34,13 +34,13 @@ There are a few core ideas that run through the `tidybayes` API that should (hop
   
 1. __Tidy data does not always mean all parameter names as values__. In contrast to the `ggmcmc` library (which translates model results into a data frame with a `Parameter` and `value` column), the `spread_draws` function in `tidybayes` produces in data frames where the columns are named after parameters and (in some cases) indices of those parameters, as automatically as possible and using a syntax as close to the same way you would refer to those variables in the model's language as possible. A similar function to `ggmcmc`'s approach is also provided in `gather_draws`, since sometimes you *do* want variable names as values in a column. The goal is for `tidybayes` to do the tedious work of figuring out how to make a data frame look the way you need it to, including turning parameters with indices like `"b[1,2]"` and the like into tidy data for you.
   
-2. __Fit into the tidyverse__. `tidybayes` methods fit into a workflow familiar to users of the `tidyverse` (`dplyr`, `tidyr`, `ggplot2`, etc), which means fitting into the pipe (`%>%`) workflow, using and respecting grouped data frames (thus `spread_draws` and `gather_draws` return results already grouped by variable indices, and methods like `median_qi` calculate point summaries and intervals for variables and groups simultaneously), and not reinventing too much of the wheel if it is already made easy by functions provided by existing `tidyverse` packages (unless it makes for much clearer code for a common idiom). For compatibility with other package column names (such as `broom::tidy`), `tidybayes` provides transformation functions like `to_broom_names` that can be dropped directly into dat transformation pipelines.
+2. __Fit into the tidyverse__. `tidybayes` methods fit into a workflow familiar to users of the `tidyverse` (`dplyr`, `tidyr`, `ggplot2`, etc), which means fitting into the pipe (`%>%`) workflow, using and respecting grouped data frames (thus `spread_draws` and `gather_draws` return results already grouped by variable indices, and methods like `median_qi` calculate point summaries and intervals for variables and groups simultaneously), and not reinventing too much of the wheel if it is already made easy by functions provided by existing `tidyverse` packages (unless it makes for much clearer code for a common idiom). For compatibility with other package column names (such as `broom::tidy`), `tidybayes` provides transformation functions like `to_broom_names` that can be dropped directly into data transformation pipelines.
   
 3. __Focus on composable operations and plotting primitives, not monolithic plots and operations__. Several other packages (notably `bayesplot` and `ggmcmc`) already provide an excellent variety of pre-made methods for plotting Bayesian results. `tidybayes` shies away from duplicating this functionality. Instead, it focuses on providing composable operations for generating and manipulating Bayesian samples in a tidy data format, and graphical primitives for `ggplot` that allow you to build custom plots easily. Most simply, where `bayesplot` and `ggmcmc` tend to have functions with many options that return a full ggplot object, `tidybayes` tends towards providing primitives (like `geom`s) that you can compose and combine into your own custom plots. I believe both approaches have their place: pre-made functions are especially useful for common, quick operations that don't need customization (like many diagnostic plots), while composable operations tend to be useful for more complex custom plots (in [my opinion](http://blog.mjskay.com/2017/11/05/i-don-t-want-your-monolithic-ggplot-function/)).
   
 4. __Sensible defaults make life easy.__ But options (and the data being tidy in the first place) make it easy to go your own way when you need to.
   
-5. __Variable names in models should be descriptive, not cryptic__. This principle implies avoiding cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern amongst Stan users (and in the Stan manual) is to use variables like `J` to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like `j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a mnemonic shortform like `p`) for specific elements. In functions where names are auto-generated (like `compose_data`), `tidybayes` will (by default) assume you want these sorts of more descriptive names; however, you can always override the default naming scheme.
+5. __Variable names in models should be descriptive, not cryptic__. This principle implies avoiding cryptic (and short) subscripts in favor of longer (but descriptive) ones. This is a matter of readability and accessibility of models to others. For example, a common pattern among Stan users (and in the Stan manual) is to use variables like `J` to refer to the number of elements in a group (e.g., number of participants) and a corresponding index like `j` to refer to specific elements in that group. I believe this sacrifices too much readability for the sake of concision; I prefer a pattern like `n_participant` for the size of the group and `participant` (or a mnemonic short form like `p`) for specific elements. In functions where names are auto-generated (like `compose_data`), `tidybayes` will (by default) assume you want these sorts of more descriptive names; however, you can always override the default naming scheme.
   
 
 ### Supported model types
@@ -206,7 +206,7 @@ Now that we have our results, the fun begins: getting the draws out in a tidy fo
 str(rstan::extract(m))
 ```
 
-There are also methods for extracting draws as matrices or data frames in stan (and other model types, such as JAGS and MCMCglmm, have their own formats).
+There are also methods for extracting draws as matrices or data frames in Stan (and other model types, such as JAGS and MCMCglmm, have their own formats).
 
 The `spread_draws` method yields a common format for all model types supported by `tidybayes`. It lets us instead extract draws into a data frame in tidy format, with a `.chain` and `.iteration` column storing the chain and iteration for each row (if available), a `.draw` column that uniquely indexes each draw, and the remaining columns corresponding to model variables or variable indices. The `spread_draws` method accepts any number of column specifications, which can include names for variables and names for variable indices. For example, we can extract the `condition_mean` variable as a tidy data frame, and put the value of its first (and only) index into the `condition` column, using a syntax that directly echoes how we would specify indices of the `condition_mean` variable in the model itself:
 
@@ -262,7 +262,7 @@ m %>%
   median_qi(overall_mean, response_sd)
 ```
 
-`median_qi` summarizes each input column using its median. If there are multiple columns to summarise, each gets its own `x.lower` and `x.upper` column (for each column `x`) corresponding to the bounds of the `.width`% interval. If there is only one column, the names `.lower` and `.upper` are used for the interval bounds.
+`median_qi` summarizes each input column using its median. If there are multiple columns to summarize, each gets its own `x.lower` and `x.upper` column (for each column `x`) corresponding to the bounds of the `.width`% interval. If there is only one column, the names `.lower` and `.upper` are used for the interval bounds.
 
 We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, `median_qi` will use every column that is not a grouping column or a special column (like `.chain`, `.iteration`, or `.draw`). Thus in the above example, `overall_mean` and `response_sd` are redundant arguments to `median_qi` because they are also the only columns we gathered from the model. So we can simplify the previous code to the following:
 
@@ -430,9 +430,9 @@ m %>%
 The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
 
 
-### Alternative point summaries and intervals: median, mean, mode; qi, hdi
+### Alternative point summaries and intervals: median, mean, mode; qi, hdi, hdci
 
-The `point_interval` family of functions follow the naming scheme `[median|mean|mode]_[qi|hdi][h|]`, and all work in the same way as `median_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point summary function (median, mean, or mode) and interval (qi or hdi). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. These can be used in any combination desired. 
+The `point_interval` family of functions follow the naming scheme `[median|mean|mode]_[qi|hdi|hdci][h|]`, and all work in the same way as `median_qi`: they take a series of names (or expressions calculated on columns) and summarize those columns with the corresponding point summary function (median, mean, or mode) and interval (qi, hdi, or hdci). `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval), `hdi` yields one or more highest (posterior) density interval(s), and `hdci` yields a single (possibly) highest-density continuous interval. These can be used in any combination desired. 
 
 The `*_hdi` functions have an additional difference: In the case of multimodal distributions, they may return multiple intervals for each probability level. Here are some draws from a multimodal normal mixture:
 
@@ -661,7 +661,7 @@ mtcars %>%
   scale_color_brewer(palette = "Dark2")
 ```
 
-For more exmples of curve-drawing, see `vignette("tidy-brms")` or `vignette("tidy-rstanarm")`.
+For more examples of curve-drawing, see `vignette("tidy-brms")` or `vignette("tidy-rstanarm")`.
 
 
 ## Compatibility with other packages
@@ -706,7 +706,7 @@ bind_rows(linear_results, bayes_results) %>%
   geom_pointrangeh(position = position_dodgev(height = .3))
 ```
 
-Comptability with `tidy` also gives compatibility with `dotwhisker::dwplot`:
+Compatibility with `tidy` also gives compatibility with `dotwhisker::dwplot`:
 
 ```{r, warning = FALSE}
 bind_rows(linear_results, bayes_results) %>%

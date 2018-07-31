@@ -48,7 +48,7 @@ values are silently removed.}
 to match its common use cases; N.B. this is unlike most geoms, which have a default of \code{NA}.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the
+most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
 default plot specification, e.g. borders.}
 }
 \description{
@@ -70,7 +70,7 @@ aesthetics are \code{aes(xmin = .lower, xmax = .upper, size = -.width)}.
 Both geoms provides a scaling factor for line width as well as point size through the \code{fatten.interval} and
 \code{fatten.point} arguments; this scaling factor is designed to give multiple probability intervals reasonable
 scaling at the default settings for \code{\link{scale_size_continuous}}. Finally, these geoms default to not
-displaying the legend, though this can be overriden through setting \code{show.legend = NA} (the setting for most
+displaying the legend, though this can be overridden through setting \code{show.legend = NA} (the setting for most
 geoms) or \code{show.legend = TRUE}.
 }
 \examples{
