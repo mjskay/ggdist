@@ -4,13 +4,16 @@
 ###############################################################################
 
 
-#' Thinned posterior sample from a Bayesian analysis used for testing purposes.
+#' Thinned subset of posterior sample from a Bayesian analysis of perception of correlation.
 #'
-#' Data from Kay and Heer (2016), used for testing.
+#' Data from Kay and Heer (2016), primarily used for testing and examples.
 #'
 #' For more details, see Kay and Heer (2016) or the Github repository describing the analysis:
 #' \url{https://github.com/mjskay/ranking-correlation}. The original experiment (but not this analysis of it)
 #' is described in Harrison \emph{et al.} (2014).
+#'
+#' This version of the posterior sample is thinned substantially and has omitted several
+#' parameters in order for it to be a more manageable size.
 #'
 #' @name RankCorr
 #' @docType data

@@ -10,17 +10,19 @@ library(tidyr)
 context("point_interval")
 
 
-ff_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
+ff_labels = c("a", "b", "c")
 
 get_draws = function() {
   #observations of tau grouped by the factor ff (with levels ff_labels)
   data(RankCorr, package = "tidybayes")
-  ldply(1:18, function(i) {
+  rank_corr = RankCorr[[1]]
+  ldply(1:3, function(i) {
     data.frame(
-      .chain = 1,
-      .iteration = seq_len(nrow(RankCorr)),
+      .chain = as.integer(1),
+      .iteration = seq_len(nrow(rank_corr)),
+      .draw = seq_len(nrow(rank_corr)),
       ff = ff_labels[i],
-      tau = RankCorr[, paste0("tau[", i, "]")]
+      tau = as.vector(rank_corr[, paste0("tau[", i, "]")])
     )
   })
 }

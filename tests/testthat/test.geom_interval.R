@@ -12,7 +12,7 @@ context("geom_interval")
 
 # use a subset of RankCorr so tests are faster
 data(RankCorr, package = "tidybayes")
-RankCorr_s = RankCorr[1:100,]
+RankCorr_s = RankCorr[[1]][1:100,]
 RankCorr_u_tau = RankCorr_s %>%
   spread_draws(u_tau[i]) %>%
   filter(i %in% 1:3)

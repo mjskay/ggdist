@@ -106,10 +106,10 @@ comparison_types = within(list(), {
 #'
 #' data(RankCorr, package = "tidybayes")
 #'
-#' # Let's do all pairwise comparisons of b[i,1] for i in 1:3:
+#' # Let's do all pairwise comparisons of b[i,1]:
 #' RankCorr %>%
 #'   spread_draws(b[i,j]) %>%
-#'   filter(i %in% 1:3, j == 1) %>%
+#'   filter(j == 1) %>%
 #'   compare_levels(b, by = i) %>%
 #'   median_qi()
 #'
@@ -121,11 +121,10 @@ comparison_types = within(list(), {
 #'   ggplot(aes(x = b, y = i)) +
 #'   geom_halfeyeh()
 #'
-#' # Or let's plot comparisons of the first three levels of j within
-#' # the first three levels of i
+#' # Or let's plot comparisons of all levels of j within
+#' # all levels of i
 #' RankCorr %>%
 #'   spread_draws(b[i,j]) %>%
-#'   filter(j %in% 1:3, i %in% 1:3) %>%
 #'   group_by(i) %>%
 #'   compare_levels(b, by = j) %>%
 #'   ggplot(aes(x = b, y = j)) +

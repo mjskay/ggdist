@@ -26,9 +26,9 @@ test_that("[add_]fitted_draws throws an error on unsupported models", {
   data("RankCorr", package = "tidybayes")
 
   expect_error(fitted_draws(RankCorr, data.frame()),
-    'Models of type "matrix" are not currently supported by `fitted_draws`')
+    'Models of type "mcmc.list" are not currently supported by `fitted_draws`')
   expect_error(add_fitted_draws(data.frame(), RankCorr),
-    'Models of type "matrix" are not currently supported by `fitted_draws`')
+    'Models of type "mcmc.list" are not currently supported by `fitted_draws`')
 })
 
 

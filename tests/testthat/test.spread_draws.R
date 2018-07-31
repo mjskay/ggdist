@@ -15,14 +15,14 @@ context("spread_draws")
 data(RankCorr, package = "tidybayes")
 
 # subset of RankCorr (for speed)
-RankCorr_s = RankCorr[1:10,]
+RankCorr_s = RankCorr[[1]][1:10,]
 
 # version of RankCorr with i index labeled
-i_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
+i_labels = c("a", "b", "c")
 RankCorr_i = recover_types(RankCorr_s, list(i = factor(i_labels)))
 
 # version of RankCorr with i and j dimensions labeled
-i_labels = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r")
+i_labels = c("a", "b", "c")
 j_labels = c("A", "B", "C", "D")
 RankCorr_ij = recover_types(RankCorr_s, list(i = factor(i_labels), j = factor(j_labels)))
 
@@ -87,7 +87,7 @@ test_that("spread_draws works on two variables with no dimensions and multiple c
 
 
 test_that("spread_draws works on a variable with one unnamed index", {
-  ref = ldply(1:18, function(i) {
+  ref = ldply(1:3, function(i) {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr_s)),
@@ -101,7 +101,7 @@ test_that("spread_draws works on a variable with one unnamed index", {
 })
 
 test_that("spread_draws works on a variable with one named index", {
-  ref = ldply(1:18, function(i) {
+  ref = ldply(1:3, function(i) {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr_i)),
@@ -120,7 +120,7 @@ test_that("spread_draws works on a variable with one anonymous wide index", {
     .iteration = seq_len(nrow(RankCorr_s)),
     .draw = seq_len(nrow(RankCorr_s))
   )
-  for (i in 1:18) {
+  for (i in 1:3) {
     refcol = data.frame(RankCorr_s[, paste0("tau[", i, "]")])
     names(refcol) = paste0("tau.", i)
     ref = cbind(ref, refcol)
@@ -136,7 +136,7 @@ test_that("spread_draws works on a variable with one named wide index", {
     .iteration = seq_len(nrow(RankCorr_i)),
     .draw = seq_len(nrow(RankCorr_i))
   )
-  for (i in 1:18) {
+  for (i in 1:3) {
     refcol = data.frame(RankCorr_i[, paste0("tau[", i, "]")])
     names(refcol) = i_labels[i]
     ref = cbind(ref, refcol)
@@ -148,7 +148,7 @@ test_that("spread_draws works on a variable with one named wide index", {
 
 test_that("spread_draws works on a variable with two named dimensions", {
   ref = ldply(1:4, function(j) {
-    ldply(1:18, function(i) {
+    ldply(1:3, function(i) {
       data.frame(
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_ij)),
@@ -166,7 +166,7 @@ test_that("spread_draws works on a variable with two named dimensions", {
 
 test_that("spread_draws works on a variable with two named dimensions, one that is wide", {
   ref = ldply(1:4, function(j) {
-    ldply(1:18, function(i) {
+    ldply(1:3, function(i) {
       data.frame(
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_ij)),
@@ -184,7 +184,7 @@ test_that("spread_draws works on a variable with two named dimensions, one that 
 
 test_that("spread_draws works on a variable with one named index and one wide anonymous index", {
   ref = ldply(1:4, function(j) {
-    ldply(1:18, function(i) {
+    ldply(1:3, function(i) {
       data.frame(
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_i)),
@@ -202,26 +202,19 @@ test_that("spread_draws works on a variable with one named index and one wide an
 
 test_that("spread_draws does not allow extraction of two variables simultaneously with a wide index", {
   error_message = "Cannot extract draws from multiple variables in wide format."
-  expect_error(spread_draws(RankCorr_s, c(tau, typical_mu)[..]), error_message)
-  expect_error(spread_draws(RankCorr_s, c(tau, typical_mu)[i] | i), error_message)
+  expect_error(spread_draws(RankCorr_s, c(tau, u_tau)[..]), error_message)
+  expect_error(spread_draws(RankCorr_s, c(tau, u_tau)[i] | i), error_message)
 })
 
 test_that("spread_draws correctly extracts multiple variables simultaneously", {
-  expect_equal(spread_draws(RankCorr_i, c(tau, typical_mu)[i]),
+  expect_equal(spread_draws(RankCorr_i, c(tau, u_tau)[i]),
     spread_draws(RankCorr_i, tau[i]) %>%
-      inner_join(spread_draws(RankCorr_i, typical_mu[i]), by = c(".chain", ".iteration", ".draw", "i"))
-  )
-  expect_equal(spread_draws(RankCorr_i, c(tau, typical_mu, u_tau)[i]),
-    spread_draws(RankCorr_i, tau[i]) %>%
-      inner_join(spread_draws(RankCorr_i, typical_mu[i]), by = c(".chain", ".iteration", ".draw", "i")) %>%
       inner_join(spread_draws(RankCorr_i, u_tau[i]), by = c(".chain", ".iteration", ".draw", "i"))
   )
   expect_equal(spread_draws(RankCorr_i, cbind(tau)[i]),
     spread_draws(RankCorr_i, c(tau)[i]))
-  expect_equal(spread_draws(RankCorr_i, cbind(tau, typical_mu)[i]),
-    spread_draws(RankCorr_i, c(tau, typical_mu)[i]))
-  expect_equal(spread_draws(RankCorr_i, cbind(tau, typical_mu, u_tau)[i]),
-    spread_draws(RankCorr_i, c(tau, typical_mu, u_tau)[i]))
+  expect_equal(spread_draws(RankCorr_i, cbind(tau, u_tau)[i]),
+    spread_draws(RankCorr_i, c(tau, u_tau)[i]))
 })
 
 test_that("spread_draws correctly extracts multiple variables simultaneously when those variables have no dimensions", {

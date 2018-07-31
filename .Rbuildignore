@@ -21,3 +21,4 @@
 ^\.covrignore$
 ^cran-comments.md$
 ^inst/WORDLIST$
+^data-raw$

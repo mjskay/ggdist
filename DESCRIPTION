@@ -1,4 +1,3 @@
-Encoding: UTF-8
 Package: tidybayes
 Title: Tidy Data and 'Geoms' for Bayesian Models
 Version: 1.0.0
@@ -61,3 +60,5 @@ BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: http://mjskay.github.io/tidybayes, https://github.com/mjskay/tidybayes
 VignetteBuilder: knitr
 RoxygenNote: 6.1.0
+LazyData: true
+Encoding: UTF-8

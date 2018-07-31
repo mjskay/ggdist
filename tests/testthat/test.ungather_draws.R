@@ -14,11 +14,17 @@ test_that("ungather_draws works on a simple parameter with no dimensions", {
   data(RankCorr, package = "tidybayes")
 
   ref = data_frame(
-    .chain = as.integer(1),
-    .iteration = seq_len(nrow(RankCorr)),
-    .draw = seq_len(nrow(RankCorr)),
-    typical_r = RankCorr[, "typical_r"]
-  )
+      .chain = as.integer(1),
+      .iteration = seq_len(nrow(RankCorr[[1]])),
+      .draw = seq_len(nrow(RankCorr[[1]])),
+      typical_r = as.vector(RankCorr[[1]][, "typical_r"])
+    ) %>%
+    bind_rows(data_frame(
+      .chain = as.integer(2),
+      .iteration = seq_len(nrow(RankCorr[[2]])),
+      .draw = nrow(RankCorr[[2]]) + seq_len(nrow(RankCorr[[2]])),
+      typical_r = as.vector(RankCorr[[2]][, "typical_r"])
+    ))
 
   RankCorr %>%
     gather_draws(typical_r) %>%
