@@ -49,20 +49,20 @@ data(RankCorr, package = "tidybayes")
 
 # We can use unspread_draws to allow us to manipulate draws with tidybayes
 # and then transform the draws into a form we can use with packages like bayesplot.
-# Here we subset b[i,j] to just values of i in 1:3 and j == 1, then plot with bayesplot
+# Here we subset b[i,j] to just values of i in 1:2 and j == 1, then plot with bayesplot
 RankCorr \%>\%
   spread_draws(b[i,j]) \%>\%
-  filter(i \%in\% 1:3, j == 1) \%>\%
+  filter(i \%in\% 1:2, j == 1) \%>\%
   unspread_draws(b[i,j], drop_indices = TRUE) \%>\%
   bayesplot::mcmc_areas()
 
 # As another example, we could use compare_levels to plot all pairwise comparisons
-# of b[i,1] for i in 1:3
+# of b[1,j] for j in 1:3
 RankCorr \%>\%
   spread_draws(b[i,j]) \%>\%
-  filter(i \%in\% 1:3, j == 1) \%>\%
-  compare_levels(b, by = i) \%>\%
-  unspread_draws(b[i], drop_indices = TRUE) \%>\%
+  filter(i == 1, j \%in\% 1:3) \%>\%
+  compare_levels(b, by = j) \%>\%
+  unspread_draws(b[j], drop_indices = TRUE) \%>\%
   bayesplot::mcmc_areas()
 
 }
