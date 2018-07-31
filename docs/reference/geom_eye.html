@@ -81,7 +81,7 @@ preferred here)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
       </span>
     </div>
 
@@ -113,6 +113,9 @@ preferred here)." />
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -154,16 +157,16 @@ preferred here).</p>
 
     <pre class="usage"><span class='fu'>geom_eye</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>relative_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
+  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='no'>.prob</span>,
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='fu'>geom_eyeh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"area"</span>, <span class='kw'>relative_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>violin.color</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>...</span>, <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
+  <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='no'>.prob</span>,
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>

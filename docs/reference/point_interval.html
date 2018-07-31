@@ -77,7 +77,7 @@ multiple groups in a grouped data frame)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
       </span>
     </div>
 
@@ -109,6 +109,9 @@ multiple groups in a grouped data frame)." />
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -144,25 +147,27 @@ multiple groups in a grouped data frame).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>, <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>,
-  <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>,
-  <span class='st'>".row"</span>), <span class='no'>.prob</span>)
-
-<span class='co'># S3 method for default</span>
-<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
+    <pre class="usage"><span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
   <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>,
   <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>), <span class='no'>.prob</span>)
 
+<span class='co'># S3 method for default</span>
+<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>, <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>), <span class='no'>.prob</span>)
+
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
-  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>,
-  <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>), <span class='no'>.prob</span>)
+<span class='fu'>point_interval</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>, <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>, <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>), <span class='no'>.prob</span>)
 
 <span class='fu'>point_intervalh</span>(<span class='no'>...</span>)
 
 <span class='fu'>qi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>)
 
 <span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>)
+
+<span class='fu'>hdci</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
 <span class='fu'>mean_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
@@ -186,7 +191,19 @@ multiple groups in a grouped data frame).</p>
 
 <span class='fu'>mode_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
-<span class='fu'>mode_hdih</span>(<span class='no'>...</span>)</pre>
+<span class='fu'>mode_hdih</span>(<span class='no'>...</span>)
+
+<span class='fu'>mean_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+
+<span class='fu'>mean_hdcih</span>(<span class='no'>...</span>)
+
+<span class='fu'>median_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+
+<span class='fu'>median_hdcih</span>(<span class='no'>...</span>)
+
+<span class='fu'>mode_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+
+<span class='fu'>mode_hdcih</span>(<span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -286,8 +303,17 @@ these automatically adjust the function output to match their required aesthetic
 <p><code>qi</code> yields the quantile interval (also known as the percentile interval or
 equi-tailed interval) as a 1x2 matrix.</p>
 <p><code>hdi</code> yields the highest-density interval(s) (also known as the highest posterior
-density interval). <em>Note:</em> If the distribution is multimodal, <code>hdi</code> may return multiple
-intervals for each probability level (these will be spread over rows). Internally it uses <code><a href='http://www.rdocumentation.org/packages/HDInterval/topics/hdi'>hdi</a></code>.</p>
+density interval). <strong>Note:</strong> If the distribution is multimodal, <code>hdi</code> may return multiple
+intervals for each probability level (these will be spread over rows). You may wish to use
+<code>hdci</code> (below) instead if you want a single highest-density interval, with the caveat that when
+the distribution is multimodal <code>hdci</code> is not a highest-density interval. Internally <code>hdi</code> uses
+<code><a href='http://www.rdocumentation.org/packages/HDInterval/topics/hdi'>hdi</a></code> with <code>allowSplit = TRUE</code> (when multimodal) and with
+<code>allowSplit = FALSE</code> (when not multimodal).</p>
+<p><code>hdci</code> yields the highest-density <em>continuous</em> interval. <strong>Note:</strong> If the distribution
+is multimodal, this may not actually be the highest-density interval (there may be a higher-density
+discontinuous interval). Internally <code>hdci</code> uses
+<code><a href='http://www.rdocumentation.org/packages/HDInterval/topics/hdi'>hdi</a></code> with <code>allowSplit = FALSE</code>; see that function for more
+information on multimodality and continuous versus discontinuous intervals.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

@@ -78,7 +78,7 @@ or from the posterior predictions of the model to the data frame in a long forma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
       </span>
     </div>
 
@@ -110,6 +110,9 @@ or from the posterior predictions of the model to the data frame in a long forma
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -146,12 +149,12 @@ or from the posterior predictions of the model to the data frame in a long forma
     </div>
 
     <pre class="usage"><span class='fu'>add_fitted_draws</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>,
+  <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
-<span class='fu'>fitted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+<span class='fu'>fitted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>,
+  <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>fitted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
@@ -167,29 +170,31 @@ or from the posterior predictions of the model to the data frame in a long forma
   <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='fu'>add_linpred_draws</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>,
+  <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='fu'>linpred_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>, <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>".category"</span>,
+  <span class='kw'>dpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"response"</span>, <span class='st'>"linear"</span>))
 
 <span class='fu'>add_predicted_draws</span>(<span class='no'>newdata</span>, <span class='no'>model</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>, <span class='no'>...</span>,
   <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>, <span class='no'>...</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>,
-  <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>,
+  <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>,
-  <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+<span class='fu'>predicted_draws</span>(<span class='no'>model</span>, <span class='no'>newdata</span>,
+  <span class='kw'>prediction</span> <span class='kw'>=</span> <span class='st'>".prediction"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>re_formula</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -339,9 +344,9 @@ and <code>add_fitted_draws</code> for consistency with <code>rstanarm</code> ter
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.083 seconds (Warm-up)
-#&gt;                0.073 seconds (Sampling)
-#&gt;                0.156 seconds (Total)
+#&gt;  Elapsed Time: 0.087 seconds (Warm-up)
+#&gt;                0.08 seconds (Sampling)
+#&gt;                0.167 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='co'># draw 100 fit lines from the posterior and overplot them</span>
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>

@@ -77,7 +77,7 @@ distributions using predict_curve." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
       </span>
     </div>
 
@@ -109,6 +109,9 @@ distributions using predict_curve." />
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -202,13 +205,16 @@ function may be deprecated in the future.</p></div>
 <span class='fu'>library</span>(<span class='no'>dplyr</span>)
 <span class='fu'>library</span>(<span class='no'>rstanarm</span>)
 <span class='fu'>library</span>(<span class='no'>modelr</span>)
-
+<span class='fu'>library</span>(<span class='no'>purrr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'purrr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:magrittr':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    set_names</span></div><div class='input'><span class='fu'>library</span>(<span class='no'>tidyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'tidyr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:magrittr':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    extract</span></div><div class='input'>
 <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/theme_get'>theme_set</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_light</a></span>())
 
-<span class='no'>m_mpg</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> * <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>,
-  <span class='co'># 1 chain / few iterations just so example runs quickly</span>
-  <span class='co'># do not use in practice</span>
-  <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)</div><div class='output co'>#&gt; 
+<span class='no'>m_mpg</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> * <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)</div><div class='output co'>#&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
 #&gt; 
 #&gt; Gradient evaluation took 0 seconds
@@ -216,36 +222,114 @@ function may be deprecated in the future.</p></div>
 #&gt; Adjust your expectations accordingly!
 #&gt; 
 #&gt; 
-#&gt; Iteration:   1 / 500 [  0%]  (Warmup)
-#&gt; Iteration:  50 / 500 [ 10%]  (Warmup)
-#&gt; Iteration: 100 / 500 [ 20%]  (Warmup)
-#&gt; Iteration: 150 / 500 [ 30%]  (Warmup)
-#&gt; Iteration: 200 / 500 [ 40%]  (Warmup)
-#&gt; Iteration: 250 / 500 [ 50%]  (Warmup)
-#&gt; Iteration: 251 / 500 [ 50%]  (Sampling)
-#&gt; Iteration: 300 / 500 [ 60%]  (Sampling)
-#&gt; Iteration: 350 / 500 [ 70%]  (Sampling)
-#&gt; Iteration: 400 / 500 [ 80%]  (Sampling)
-#&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
-#&gt; Iteration: 500 / 500 [100%]  (Sampling)
+#&gt; Iteration:    1 / 2000 [  0%]  (Warmup)
+#&gt; Iteration:  200 / 2000 [ 10%]  (Warmup)
+#&gt; Iteration:  400 / 2000 [ 20%]  (Warmup)
+#&gt; Iteration:  600 / 2000 [ 30%]  (Warmup)
+#&gt; Iteration:  800 / 2000 [ 40%]  (Warmup)
+#&gt; Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#&gt; Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#&gt; Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#&gt; Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#&gt; Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#&gt; Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#&gt; Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.079 seconds (Warm-up)
-#&gt;                0.069 seconds (Sampling)
-#&gt;                0.148 seconds (Total)
+#&gt;  Elapsed Time: 0.316 seconds (Warm-up)
+#&gt;                0.31 seconds (Sampling)
+#&gt;                0.626 seconds (Total)
+#&gt; 
+#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
+#&gt; 
+#&gt; Gradient evaluation took 0 seconds
+#&gt; 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Adjust your expectations accordingly!
+#&gt; 
+#&gt; 
+#&gt; Iteration:    1 / 2000 [  0%]  (Warmup)
+#&gt; Iteration:  200 / 2000 [ 10%]  (Warmup)
+#&gt; Iteration:  400 / 2000 [ 20%]  (Warmup)
+#&gt; Iteration:  600 / 2000 [ 30%]  (Warmup)
+#&gt; Iteration:  800 / 2000 [ 40%]  (Warmup)
+#&gt; Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#&gt; Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#&gt; Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#&gt; Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#&gt; Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#&gt; Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#&gt; Iteration: 2000 / 2000 [100%]  (Sampling)
+#&gt; 
+#&gt;  Elapsed Time: 0.302 seconds (Warm-up)
+#&gt;                0.31 seconds (Sampling)
+#&gt;                0.612 seconds (Total)
+#&gt; 
+#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
+#&gt; 
+#&gt; Gradient evaluation took 0 seconds
+#&gt; 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Adjust your expectations accordingly!
+#&gt; 
+#&gt; 
+#&gt; Iteration:    1 / 2000 [  0%]  (Warmup)
+#&gt; Iteration:  200 / 2000 [ 10%]  (Warmup)
+#&gt; Iteration:  400 / 2000 [ 20%]  (Warmup)
+#&gt; Iteration:  600 / 2000 [ 30%]  (Warmup)
+#&gt; Iteration:  800 / 2000 [ 40%]  (Warmup)
+#&gt; Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#&gt; Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#&gt; Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#&gt; Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#&gt; Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#&gt; Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#&gt; Iteration: 2000 / 2000 [100%]  (Sampling)
+#&gt; 
+#&gt;  Elapsed Time: 0.314 seconds (Warm-up)
+#&gt;                0.342 seconds (Sampling)
+#&gt;                0.656 seconds (Total)
+#&gt; 
+#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
+#&gt; 
+#&gt; Gradient evaluation took 0 seconds
+#&gt; 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Adjust your expectations accordingly!
+#&gt; 
+#&gt; 
+#&gt; Iteration:    1 / 2000 [  0%]  (Warmup)
+#&gt; Iteration:  200 / 2000 [ 10%]  (Warmup)
+#&gt; Iteration:  400 / 2000 [ 20%]  (Warmup)
+#&gt; Iteration:  600 / 2000 [ 30%]  (Warmup)
+#&gt; Iteration:  800 / 2000 [ 40%]  (Warmup)
+#&gt; Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#&gt; Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#&gt; Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#&gt; Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#&gt; Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#&gt; Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#&gt; Iteration: 2000 / 2000 [100%]  (Sampling)
+#&gt; 
+#&gt;  Elapsed Time: 0.473 seconds (Warm-up)
+#&gt;                0.454 seconds (Sampling)
+#&gt;                0.927 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='no'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>
 <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/data_grid'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/modelr/topics/seq_range'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>step</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='add_predicted_draws.html'>add_predicted_draws</a></span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/do.html'>do</a></span>(<span class='fu'>density_bins</span>(<span class='no'>.</span>$<span class='no'>pred</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_all</a></span>(<span class='no'>list</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>densities</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/purrr/topics/map'>map</a></span>(<span class='no'>.prediction</span>, <span class='no'>density_bins</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/tidyr/topics/unnest'>unnest</a></span>(<span class='no'>densities</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>() +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_rect</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(
     <span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>hp</span> - <span class='no'>step</span>/<span class='fl'>2</span>, <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>lower</span>, <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>upper</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>hp</span> + <span class='no'>step</span>/<span class='fl'>2</span>,
     <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'>ordered</span>(<span class='no'>cyl</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>density</span>
   )) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>hp</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mpg</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'>ordered</span>(<span class='no'>cyl</span>)), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_alpha'>scale_alpha_continuous</a></span>(<span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.75</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Unknown or uninitialised column: 'pred'.</span></div><div class='output co'>#&gt; <span class='error'>Error in density.default(x, n = n, ...): argument 'x' must be numeric</span></div><div class='input'>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>hp</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mpg</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'>ordered</span>(<span class='no'>cyl</span>)), <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>21</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_alpha'>scale_alpha_continuous</a></span>(<span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>)) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_fill_brewer</a></span>(<span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"Set2"</span>)</div><div class='img'><img src='density_bins-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

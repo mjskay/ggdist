@@ -76,7 +76,7 @@ results that look like tidy_draws." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
       </span>
     </div>
 
@@ -108,6 +108,9 @@ results that look like tidy_draws." />
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -143,10 +146,11 @@ results that look like <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p
     </div>
 
     <pre class="usage"><span class='fu'>ungather_draws</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>".variable"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>,
-  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
+  <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>unspread_draws</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
-  <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>unspread_draws</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>,
+  <span class='st'>".draw"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
