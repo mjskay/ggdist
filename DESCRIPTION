@@ -53,7 +53,9 @@ Suggests:
     modelr,
     brms (>= 2.4.0),
     cowplot,
-    covr
+    covr,
+    gdtools,
+    bindrcpp
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new
