@@ -98,7 +98,6 @@ A snapshot of the data looks like this:
 ```{r}
 head(ABC, 10)
 ```
-*(10 rows of `r nrow(ABC)`)*
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
@@ -163,7 +162,6 @@ m %>%
   spread_draws(b[term,group]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, b[term,group]))`)*
 
 We can choose whatever names we want for the index columns; e.g.: 
 
@@ -172,7 +170,6 @@ m %>%
   spread_draws(b[t,g]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, b[term,group]))`)*
 
 But the more descriptive and less cryptic names from the previous example are probably preferable.
 
@@ -183,7 +180,6 @@ m %>%
   spread_draws(b[,group]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, b[term,group]))`)*
 
 Since all the groups in this case are from the `condition` factor, we may also want to separate out a column just containing the corresponding condition (`A`, `B`, `C`, etc). We can do that using `tidyr::separate`:
 
@@ -193,7 +189,6 @@ m %>%
   separate(group, c("group", "condition"), ":") %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, b[term,group]))`)*
 
 Alternatively, we could change the `sep` argument to `spread_draws` to also split on `:` (`sep` is a regular expression). __Note:__ This works in this example, but will not work well on rstanarm models where interactions between factors are used as grouping levels in a multilevel model, thus `:` is not included in the default separators.
 
@@ -219,7 +214,6 @@ m %>%
   spread_draws(`(Intercept)`, sigma) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, sigma))`)*
 
 Like with `b[term,group]`, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply `median_qi`:
 
@@ -277,7 +271,6 @@ m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, b[term,group]))`)*
 
 Within each draw, `(Intercept)` is repeated as necessary to correspond to every index of `b`. Thus, the `mutate` function from dplyr can be used to find their sum, `condition_mean` (which is the mean for each condition):
 
@@ -353,7 +346,6 @@ ABC %>%
   add_fitted_draws(m) %>%
   head(10)
 ```
-*(10 rows of `r nrow(ABC %>% data_grid(condition) %>% add_fitted_draws(m))`)*
 
 To plot this example, we'll also show the use of `stat_pointintervalh` instead of `geom_pointintervalh`, which summarizes draws into point summaries and intervals within ggplot:
 

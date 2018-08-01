@@ -97,7 +97,6 @@ A snapshot of the data looks like this:
 ```{r}
 head(ABC, 10)
 ```
-*(10 rows of `r nrow(ABC)`)*
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
@@ -164,7 +163,6 @@ m %>%
   spread_draws(r_condition[condition,term]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, r_condition[condition,term]))`)*
 
 We can choose whatever names we want for the index columns; e.g.: 
 
@@ -173,7 +171,6 @@ m %>%
   spread_draws(r_condition[c,t]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, r_condition[condition,term]))`)*
 
 But the more descriptive and less cryptic names from the previous example are probably preferable.
 
@@ -184,7 +181,6 @@ m %>%
   spread_draws(r_condition[condition,]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, r_condition[condition,term]))`)*
 
 
 __Note:__ If you have used `spread_draws` with a raw sample from Stan or JAGS, you may be used to using `recover_types` before `spread_draws` to get index column values back (e.g. if the index was a factor). This is not necessary when using `spread_draws` on `rstanarm` models, because those models already contain that information in their variable names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
@@ -202,7 +198,6 @@ m %>%
   spread_draws(b_Intercept, sigma) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, sigma))`)*
 
 Like with `r_condition[condition,term]`, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply `median_qi`:
 
@@ -260,7 +255,6 @@ m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, b_Intercept, r_condition[condition,]))`)*
 
 Within each draw, `b_Intercept` is repeated as necessary to correspond to every index of `r_condition`. Thus, the `mutate` function from dplyr can be used to find their sum, `condition_mean` (which is the mean for each condition):
 
@@ -336,7 +330,6 @@ ABC %>%
   add_fitted_draws(m) %>%
   head(10)
 ```
-*(10 rows of `r nrow(ABC %>% data_grid(condition) %>% add_fitted_draws(m))`)*
 
 To plot this example, we'll also show the use of `stat_pointintervalh` instead of `geom_pointintervalh`, which summarizes draws into points and intervals within ggplot:
 

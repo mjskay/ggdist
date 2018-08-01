@@ -129,7 +129,6 @@ A snapshot of the data looks like this:
 ```{r}
 head(ABC, 10)
 ```
-*(10 rows of `r nrow(ABC)`)*
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
@@ -221,7 +220,6 @@ m %>%
   spread_draws(condition_mean[condition]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(ABC)`)*
 
 ### Automatically converting columns and indices back into their original data types
 
@@ -235,7 +233,6 @@ m %>%
   spread_draws(condition_mean[condition]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, condition_mean[condition]))`)*
 
 Because we often want to make multiple separate calls to `spread_draws`, it is often convenient to decorate the original model using `recover_types` immediately after it has been fit, so we only have to call it once:
 
@@ -258,7 +255,6 @@ m %>%
   spread_draws(overall_mean, response_sd) %>%
   head(10)
 ```
-*(10 rows of `r nrow(tidy_draws(m))`)*
 
 Like with `condition_mean[condition]`, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply `median_qi`:
 
@@ -479,7 +475,6 @@ m %>%
   spread_draws(overall_mean, condition_mean[condition]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, condition_mean[condition]))`)*
 
 Within each draw, `overall_mean` is repeated as necessary to correspond to every index of `condition_mean`. Thus, the `mutate` function from dplyr can be used to take the differences over all rows, then we can summarize with `median_qi`:
 
@@ -589,7 +584,6 @@ m %>%
   tidy_draws() %>%
   head(10)
 ```
-*(10 rows of `r nrow(tidy_draws(m))`)*
 
 Combining `tidy_draws` with `gather_variables` also allows us to derive similar output to `ggmcmc::ggs`, if desired:
 
@@ -599,7 +593,6 @@ m %>%
   gather_variables() %>%
   head(10)
 ```
-*(10 rows of `r nrow(gather_variables(tidy_draws(m)))`)*
 
 But again, this approach does not handle variable indices for us automatically, so using `spread_draws` and `gather_draws` is generally recommended unless you do not have variable indices to worry about.
 
@@ -613,7 +606,6 @@ m %>%
   spread_draws(`condition_.*`[condition], regex = TRUE) %>%
   head(10)
 ```
-*(10 rows of `r nrow(spread_draws(m, condition_mean[condition]))`)*
 
 This result is equivalent in this case to `spread_draws(c(condition_mean, condition_zoffset)[condition])`, but does not require us to list each variable explicitly---this can be useful, for example, in models with naming schemes like `b_[some name]` for coefficients.
 
@@ -736,7 +728,6 @@ m %>%
   compare_levels(condition_mean, by = condition) %>%
   head(10)
 ```
-*(10 rows of `r nrow(m %>% spread_draws(condition_mean[condition]) %>% compare_levels(condition_mean, by = condition))`)*
 
 To get a version we can pass to `mcmc_hist`, all we need to do is invert the `spread_draws` call we started with:
 
@@ -747,7 +738,6 @@ m %>%
   unspread_draws(condition_mean[condition]) %>%
   head(10)
 ```
-*(10 rows of `r nrow(tidy_draws(m))`)*
 
 We can pass that into `bayesplot::mcmc_areas` directly. The `drop_indices = TRUE` argument to `unspread_draws` indicates that `.chain`, `.iteration`, and `.draw` should not be included in the output:
 

@@ -96,7 +96,7 @@
       <h1>Extracting and visualizing tidy draws from rstanarm models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-07-31</h4>
+            <h4 class="date">2018-08-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-rstanarm.Rmd"><code>vignettes/tidy-rstanarm.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-rstanarm.Rmd</code></div>
@@ -166,7 +166,6 @@ img {
 ##  8 C            1.68 
 ##  9 D            0.857
 ## 10 E           -0.931</code></pre>
-<p><em>(10 rows of 50)</em></p>
 <p>This is a typical tidy format data frame: one observation per row. Graphically:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> response)) <span class="op">+</span></a>
@@ -250,7 +249,6 @@ img {
 ##  8      1          2     2 (Intercept) condition:C  0.862
 ##  9      1          2     2 (Intercept) condition:D -0.328
 ## 10      1          2     2 (Intercept) condition:E -1.76</code></pre>
-<p><em>(10 rows of 20000)</em></p>
 <p>We can choose whatever names we want for the index columns; e.g.:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb14-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b[t,g]) <span class="op">%&gt;%</span></a>
@@ -269,7 +267,6 @@ img {
 ##  8      1          2     2 (Intercept) condition:C  0.862
 ##  9      1          2     2 (Intercept) condition:D -0.328
 ## 10      1          2     2 (Intercept) condition:E -1.76</code></pre>
-<p><em>(10 rows of 20000)</em></p>
 <p>But the more descriptive and less cryptic names from the previous example are probably preferable.</p>
 <p>In this particular model, there is only one term (<code>(Intercept)</code>), thus we could omit that index altogether to just get each <code>group</code> and the value of <code>b</code> for the corresponding condition:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
@@ -289,7 +286,6 @@ img {
 ##  8      1          2     2 condition:C  0.862
 ##  9      1          2     2 condition:D -0.328
 ## 10      1          2     2 condition:E -1.76</code></pre>
-<p><em>(10 rows of 20000)</em></p>
 <p>Since all the groups in this case are from the <code>condition</code> factor, we may also want to separate out a column just containing the corresponding condition (<code>A</code>, <code>B</code>, <code>C</code>, etc). We can do that using <code><a href="http://www.rdocumentation.org/packages/tidyr/topics/separate">tidyr::separate</a></code>:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">m <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b[,group]) <span class="op">%&gt;%</span></a>
@@ -308,7 +304,6 @@ img {
 ##  8      1          2     2 condition C          0.862
 ##  9      1          2     2 condition D         -0.328
 ## 10      1          2     2 condition E         -1.76</code></pre>
-<p><em>(10 rows of 20000)</em></p>
 <p>Alternatively, we could change the <code>sep</code> argument to <code>spread_draws</code> to also split on <code>:</code> (<code>sep</code> is a regular expression). <strong>Note:</strong> This works in this example, but will not work well on rstanarm models where interactions between factors are used as grouping levels in a multilevel model, thus <code>:</code> is not included in the default separators.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">m <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb20-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b[,group,condition], <span class="dt">sep =</span> <span class="st">"[, :]"</span>) <span class="op">%&gt;%</span></a>
@@ -354,7 +349,6 @@ img {
 ##  8      1          8     8         0.417 0.518
 ##  9      1          9     9         0.786 0.533
 ## 10      1         10    10         1.07  0.490</code></pre>
-<p><em>(10 rows of 4000)</em></p>
 <p>Like with <code>b[term,group]</code>, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply <code>median_qi</code>:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, sigma) <span class="op">%&gt;%</span></a>
@@ -434,7 +428,6 @@ img {
 ##  8      1          2     2         0.930 condition:C  0.862
 ##  9      1          2     2         0.930 condition:D -0.328
 ## 10      1          2     2         0.930 condition:E -1.76</code></pre>
-<p><em>(10 rows of 20000)</em></p>
 <p>Within each draw, <code>(Intercept)</code> is repeated as necessary to correspond to every index of <code>b</code>. Thus, the <code>mutate</code> function from dplyr can be used to find their sum, <code>condition_mean</code> (which is the mean for each condition):</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb36-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span></a>
@@ -538,7 +531,6 @@ img {
 ##  8 A             1     NA         NA     8  0.334 
 ##  9 A             1     NA         NA     9  0.457 
 ## 10 A             1     NA         NA    10 -0.0262</code></pre>
-<p><em>(10 rows of 20000)</em></p>
 <p>To plot this example, we’ll also show the use of <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which summarizes draws into point summaries and intervals within ggplot:</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb47-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
