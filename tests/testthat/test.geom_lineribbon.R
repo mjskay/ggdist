@@ -64,10 +64,19 @@ test_that("two-group stat_lineribbons work", {
 
   expect_doppelganger("two-group stat_lineribbons grouped by group", p +
       stat_lineribbon(aes(group = g), .width = c(.50, .75, .90)) + scale_fill_brewer())
-  expect_doppelganger("two-group stat_lineribbons grouped by linetype", p +
-      stat_lineribbon(aes(linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer())
-  expect_doppelganger("two-group stat_lineribbons grouped by color", p +
-      stat_lineribbon(aes(color = g), .width = c(.50, .75, .90)) + scale_fill_brewer())
-  expect_doppelganger("two-group stat_lineribbons grouped by color and linetype", p +
-      stat_lineribbon(aes(color = g, linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer())
+  expect_doppelganger("two-group stat_lineribbons grouped by linetype",
+    p +
+    stat_lineribbon(aes(linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +
+    guides(fill = guide_legend(order = 1), linetype = guide_legend(order = 2))
+  )
+  expect_doppelganger("two-group stat_lineribbons grouped by color",
+    p +
+    stat_lineribbon(aes(color = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +
+    guides(fill = guide_legend(order = 1), color = guide_legend(order = 2))
+  )
+  expect_doppelganger("two-group stat_lineribbons grouped by color and linetype",
+    p +
+    stat_lineribbon(aes(color = g, linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +
+    guides(fill = guide_legend(order = 1), color = guide_legend(order = 2), linetype = guide_legend(order = 2))
+  )
 })
