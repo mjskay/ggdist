@@ -22,3 +22,5 @@
 ^cran-comments.md$
 ^inst/WORDLIST$
 ^data-raw$
+logo\.pdf
+preview\.pdf

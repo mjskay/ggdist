@@ -6,6 +6,8 @@ output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
+params:
+  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
 vignette: >
   %\VignetteIndexEntry{Using tidy data with Bayesian models}
   %\VignetteEngine{knitr::rmarkdown}
@@ -97,8 +99,12 @@ options(mc.cores = min(2, parallel::detectCores()))
 #ggplot options
 theme_set(theme_light())
 
-#figure options
-knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
+#default chunk options
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.height = 4,
+  eval = params$EVAL
+)
 
 options(width = 100)
 ```
