@@ -120,7 +120,14 @@ and anything with its own `as.mcmc.list` implementation. If you install the [tid
 
 ## Installation
 
-You can install the latest development version from GitHub with these R
+You can install the currently-released version from CRAN with this R
+command:
+
+```{r, eval=FALSE}
+install.packages("tidybayes")
+```
+
+Alternatively, you can install the latest development version from GitHub with these R
 commands:
 
 ```{r, eval=FALSE}

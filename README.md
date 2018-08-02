@@ -134,8 +134,15 @@ supported.
 
 ## Installation
 
-You can install the latest development version from GitHub with these R
-commands:
+You can install the currently-released version from CRAN with this R
+command:
+
+``` r
+install.packages("tidybayes")
+```
+
+Alternatively, you can install the latest development version from
+GitHub with these R commands:
 
 ``` r
 install.packages("devtools")
@@ -181,7 +188,7 @@ ABC %>%
   ylab("condition")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 A hierarchical model of this data might fit an overall mean across the
 conditions (`overall_mean`), the standard deviation of the condition
@@ -310,7 +317,7 @@ m %>%
   geom_eyeh()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 Or one can employ the similar “half-eye” plot:
 
@@ -321,7 +328,7 @@ m %>%
   geom_halfeyeh()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ### Plotting posteriors as quantile dotplots
 
@@ -345,7 +352,7 @@ m %>%
   scale_y_continuous(breaks = NULL)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 The idea is to get away from thinking about the posterior as indicating
 one canonical point or interval, but instead to represent it as (say)
@@ -442,7 +449,7 @@ bind_rows(linear_results, bayes_results) %>%
   geom_pointrangeh(position = position_dodgev(height = .3))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
 
@@ -455,7 +462,7 @@ bind_rows(linear_results, bayes_results) %>%
   dotwhisker::dwplot()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ### Posterior prediction and complex custom plots
 
@@ -483,7 +490,7 @@ m %>%
   geom_point(aes(x = response), data = ABC)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 This plot shows 66% and 95% quantile credible intervals of posterior
 median for each condition (point + black line); 95%, 80%, and 50%
@@ -517,7 +524,7 @@ mtcars %>%
   scale_fill_brewer()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 `stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is
 one of several shortcut geoms that simplify common combinations of
@@ -559,7 +566,7 @@ mtcars %>%
   facet_wrap(~ am)                                  # facet by am
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 Or, if you would like overplotted posterior fit lines, you can instead
 use `tidybayes::add_fitted_draws` to get draws from fit lines (instead
@@ -576,7 +583,7 @@ mtcars %>%
   facet_wrap(~ am)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 See `vignette("tidybayes")` for a variety of additional examples and
 more explanation of how it works.
