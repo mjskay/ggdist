@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Added `rmarkdown` as a dependency in 'Suggests' 
+
 ## Submission comments
 This is the first submission to CRAN of the package `tidybayes`.
 I have been developing and maintaining `tidybayes` for a couple
