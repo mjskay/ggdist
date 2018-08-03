@@ -23,7 +23,7 @@
 #'
 #' \itemize{
 #'
-#'   \item \code{spread_draws}, \code{extract_samples}, and \code{tidy_samples} are
+#'   \item \code{spread_samples}, \code{extract_samples}, and \code{tidy_samples} are
 #'   deprecated names for \code{\link{spread_draws}}. The spread/gather terminology
 #'   better distinguishes the resulting data frame format, and \emph{draws} is more
 #'   correct terminology than \emph{samples} for describing multiple realizations from
@@ -33,7 +33,7 @@
 #'   reflecting a package-wide move to using \emph{draws} instead of \emph{samples} for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{unspread_draws} is a deprecated name for \code{\link{unspread_draws}},
+#'   \item \code{unspread_samples} is a deprecated name for \code{\link{unspread_draws}},
 #'   reflecting a package-wide move to using \emph{draws} instead of \emph{samples} for
 #'   describing multiple realizations from a distribution.
 #'
