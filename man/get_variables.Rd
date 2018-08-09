@@ -3,11 +3,17 @@
 \name{get_variables}
 \alias{get_variables}
 \alias{get_variables.default}
+\alias{get_variables.mcmc}
+\alias{get_variables.mcmc.list}
 \title{Get the names of the variables in a fitted Bayesian model}
 \usage{
 get_variables(model)
 
 \method{get_variables}{default}(model)
+
+\method{get_variables}{mcmc}(model)
+
+\method{get_variables}{mcmc.list}(model)
 }
 \arguments{
 \item{model}{A supported Bayesian model fit. Tidybayes supports a variety of model objects;

@@ -2,8 +2,10 @@ Package: tidybayes
 Title: Tidy Data and 'Geoms' for Bayesian Models
 Version: 1.0.1.9000
 Date: 2018-08-02
-Authors@R: c(person("Matthew", "Kay", role = c("aut", "cre"),
-    email = "mjskay@umich.edu"))
+Authors@R: c(
+        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu"),
+        person("Timothy", "Mastny", role = "ctb", email = "tim.mastny@gmail.com")
+    )
 Maintainer: Matthew Kay <mjskay@umich.edu>
 Description: Compose data for and extract, manipulate, and visualize posterior draws from Bayesian models
     ('JAGS', 'Stan', 'rstanarm', 'brms', 'MCMCglmm', 'coda', ...) in a tidy data format. Functions are provided
