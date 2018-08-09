@@ -54,3 +54,14 @@ get_variables.default = function(model) {
     names() %>%
     setdiff(c(".chain", ".iteration", ".draw"))
 }
+
+
+#' @rdname get_variables
+#' @export
+get_variables.mcmc = function(model) {
+  coda::varnames(model, allow.null = FALSE)
+}
+
+#' @rdname get_variables
+#' @export
+get_variables.mcmc.list = get_variables.mcmc
