@@ -5,6 +5,7 @@
 
 library(magrittr)
 library(coda)
+import::from(purrr, map_dfr)
 import::from(dplyr, as_tibble, select)
 import::from(tibble, as_tibble, add_column)
 
@@ -28,7 +29,8 @@ test_that("tidy_draws works with brms", {
       .draw = as.integer((.chain - 1) * max(.iteration) + .iteration)
     ) %>%
     as_tibble() %>%
-    select(.chain, .iteration, .draw, everything())
+    select(.chain, .iteration, .draw, everything()) %>%
+    bind_cols(map_dfr(rstan::get_sampler_params(m_ranef$fit, inc_warmup = FALSE), as_tibble))
 
   expect_equal(tidy_draws(m_ranef), draws_tidy)
 })
@@ -46,7 +48,8 @@ test_that("tidy_draws works with rstanarm", {
   chain_2 = as_tibble(as.array(m_ranef)[,2,]) %>%
     add_column(.chain = 2L, .iteration = 1L:nrow(.), .draw = (nrow(.) + 1L):(2L * nrow(.)), .before = 1)
   draws_tidy =
-    bind_rows(chain_1, chain_2)
+    bind_rows(chain_1, chain_2) %>%
+    bind_cols(map_dfr(rstan::get_sampler_params(m_ranef$stanfit, inc_warmup = FALSE), as_tibble))
 
   expect_equal(tidy_draws(m_ranef), draws_tidy)
 })
@@ -65,7 +68,8 @@ test_that("tidy_draws works with rstan", {
   chain_2 = as_tibble(as.array(m_ABC)[,2,]) %>%
     add_column(.chain = 2L, .iteration = 1L:nrow(.), .draw = (nrow(.) + 1L):(2L * nrow(.)), .before = 1)
   draws_tidy =
-    bind_rows(chain_1, chain_2)
+    bind_rows(chain_1, chain_2)  %>%
+    bind_cols(map_dfr(rstan::get_sampler_params(m_ABC, inc_warmup = FALSE), as_tibble))
 
   expect_equal(tidy_draws(m_ABC), draws_tidy)
 })

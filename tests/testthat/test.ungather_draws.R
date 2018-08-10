@@ -4,7 +4,6 @@
 ###############################################################################
 
 import::from(dplyr, `%>%`, inner_join, data_frame)
-import::from(purrr, map_df)
 library(tidyr)
 
 context("ungather_draws")

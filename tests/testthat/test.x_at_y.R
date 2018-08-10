@@ -4,7 +4,7 @@
 ###############################################################################
 
 import::from(magrittr, `%$%`)
-import::from(purrr, map_df)
+import::from(purrr, map_dfc)
 
 context("x_at_y")
 
@@ -34,7 +34,7 @@ test_that("x_at_y works on a nested design with missing levels", {
 
 test_that("x_at_y works even if the data frame is not sorted by y", {
   df = get_nested_data()
-  rev_df = map_df(df, rev)
+  rev_df = map_dfc(df, rev)
 
   expect_equal(df %$% x_at_y(site, plot), rev_df %$% x_at_y(site, plot))
 })

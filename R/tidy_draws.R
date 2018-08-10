@@ -62,7 +62,7 @@ as_sample_data_frame = function(...) {
 #' line %>%
 #'   tidy_draws()
 #'
-#' @importFrom purrr map_df
+#' @importFrom purrr map_dfr
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble as_tibble tibble
 #' @importFrom coda as.mcmc.list as.mcmc
@@ -106,7 +106,12 @@ tidy_draws.stanfit = function(model) {
   if (!requireNamespace("rstan", quietly = TRUE)) {
     stop("The `rstan` package is needed for `tidy_draws` to support `stanfit` objects.", call. = FALSE) # nocov
   }
-  tidy_draws(rstan::As.mcmc.list(model))
+
+  parameter_draws = tidy_draws(rstan::As.mcmc.list(model))
+
+  diagnostics_draws = map_dfr(rstan::get_sampler_params(model, inc_warmup = FALSE), as_tibble)
+
+  bind_cols(parameter_draws, diagnostics_draws)
 }
 
 #' @rdname tidy_draws
@@ -120,7 +125,11 @@ tidy_draws.stanreg = function(model) {
   sample_matrix = as.array(model) #[iteration, chain, variable]
   n_chain = dim(sample_matrix)[[2]]
   mcmc_list = as.mcmc.list(lapply(seq_len(n_chain), function(chain) as.mcmc(sample_matrix[, chain, ]))) # nolint
-  tidy_draws(mcmc_list)
+  parameter_draws = tidy_draws(mcmc_list)
+
+  diagnostics_draws = map_dfr(rstan::get_sampler_params(model$stanfit, inc_warmup = FALSE), as_tibble)
+
+  bind_cols(parameter_draws, diagnostics_draws)
 }
 
 #' @rdname tidy_draws
@@ -147,7 +156,12 @@ tidy_draws.brmsfit = function(model) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `tidy_draws` to support `brmsfit` objects.", call. = FALSE) # nocov
   }
-  tidy_draws(brms::as.mcmc(model))
+
+  parameter_draws = tidy_draws(brms::as.mcmc(model))
+
+  diagnostics_draws = map_dfr(rstan::get_sampler_params(model$fit, inc_warmup = FALSE), as_tibble)
+
+  bind_cols(parameter_draws, diagnostics_draws)
 }
 
 #' @rdname tidy_draws
