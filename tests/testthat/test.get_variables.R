@@ -1,4 +1,4 @@
-# Tests for parameters
+# Tests for get_variables
 #
 # Author: mjskay
 ###############################################################################

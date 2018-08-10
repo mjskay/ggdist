@@ -8,7 +8,10 @@ as_constructor.factor = function(x) {
   function(x) factor(x, levels = seq_along(x_levels), labels = x_levels, ordered = x_is_ordered)
 }
 
-as_constructor.character = function(x) as_constructor(as.factor(x))
+as_constructor.character = function(x) {
+  x_levels = levels(as.factor(x))
+  function(x) x_levels[x]
+}
 
 as_constructor.logical = function(x) as.logical
 

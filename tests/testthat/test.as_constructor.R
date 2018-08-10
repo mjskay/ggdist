@@ -1,9 +1,9 @@
-# Tests for prototype constructors
+# Tests for prototype constructors (as_constructor)
 #
 # Author: mjskay
 ###############################################################################
 
-context("prototype constructors")
+context("as_constructor")
 
 
 test_that("factor prototypes convert correctly", {
@@ -12,6 +12,14 @@ test_that("factor prototypes convert correctly", {
   expect_equal(constructor(2), factor("b", levels = c("a", "b", "c")))
   expect_equal(constructor(c(3, 2, 1)), factor(c("c", "b", "a"), levels = c("a", "b", "c")))
   expect_equal(constructor(c(2, 2, 3, 1, 1, 2, 3)), factor(c("b", "b", "c", "a", "a", "b", "c")))
+})
+
+test_that("character prototypes convert correctly", {
+  constructor = tidybayes:::as_constructor.character(c("a", "b", "c"))
+  expect_equal(constructor(NULL), character(0))
+  expect_equal(constructor(2), "b")
+  expect_equal(constructor(c(3, 2, 1)), c("c", "b", "a"))
+  expect_equal(constructor(c(2, 2, 3, 1, 1, 2, 3)), c("b", "b", "c", "a", "a", "b", "c"))
 })
 
 test_that("ordered factor prototypes convert correctly", {
