@@ -11,9 +11,9 @@
 #' @format NULL
 #' @usage NULL
 #' @export
-fitted_samples = function(model, newdata, var = "estimate", ..., n = NULL) {
+fitted_samples = function(model, newdata, ..., n = NULL) {
   .Deprecated("fitted_draws", package = "tidybayes") # nocov
-  fitted_samples_(model, newdata, value = var, ..., n = n)     # nocov
+  fitted_samples_(model, newdata,  ..., n = n)     # nocov
 }
 fitted_samples_ = function(model, newdata, var = "estimate", ..., n = NULL, category = "category") {
   combine_chains_for_deprecated_(fitted_draws( # nocov

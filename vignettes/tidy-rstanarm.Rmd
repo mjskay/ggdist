@@ -537,7 +537,7 @@ esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_rs, scale = "linear") %>%
   ggplot(aes(x = as.numeric(agegp), y = .value)) +
-  stat_lineribbon(alpha = 0.5) +
+  stat_lineribbon() +
   scale_fill_brewer(palette = "Greys")
 ```
 
@@ -601,7 +601,7 @@ esoph %>%
     )) %>%
   mutate(.category = list(levels(esoph$tobgp))) %>%
   unnest() %>%
-  ggplot(aes(x = agegp, y = `P(Y = category)`, color = ordered(.category))) +
+  ggplot(aes(x = agegp, y = `P(Y = category)`, color = .category)) +
   stat_pointinterval(position = position_dodge(width = .4), show.legend = TRUE) +
   scale_size_continuous(guide = FALSE) +
   scale_fill_brewer(palette = "Greys") 

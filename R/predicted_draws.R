@@ -11,9 +11,9 @@
 #' @format NULL
 #' @usage NULL
 #' @export
-predicted_samples = function(model, newdata, var = "pred", ..., n = NULL) {
+predicted_samples = function(model, newdata, ..., n = NULL) {
   .Deprecated("predicted_draws", package = "tidybayes") # nocov
-  predicted_samples_(model, newdata, prediction = var, ..., n = n) # nocov
+  predicted_samples_(model, newdata, ..., n = n) # nocov
 }
 predicted_samples_ = function(model, newdata, var = "pred", ..., n = NULL) {
   combine_chains_for_deprecated_(predicted_draws( # nocov
@@ -225,7 +225,7 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
   if (ndim(fits_preds) == 3) {
     #3 dimensions implies a categorical outcome, add a column for it
     # N.B.: at some point getting category names to work would be nice, but may be kind of brittle
-    column_format[[3]] = NA
+    column_format[[3]] = TRUE
     names(column_format)[[3]] = category
     groups %<>% union(category)
   }
@@ -243,11 +243,6 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
     fits_preds_df$.draw = as.character(fits_preds_df$.draw)
   }
   fits_preds_df$.draw = as.integer(fits_preds_df$.draw)
-
-  if (ndim(fits_preds) == 3) {
-    #3 dimensions implies a categorical outcome -> make category column be factor
-    fits_preds_df[[category]] = factor(fits_preds_df[[category]])
-  }
 
   newdata %>%
     mutate(
