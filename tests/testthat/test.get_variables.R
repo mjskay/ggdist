@@ -22,3 +22,12 @@ test_that("mcmc variable extraction works", {
   expect_equal(get_variables(RankCorr[[1]]), ref)
   expect_equal(get_variables(RankCorr), tidy_draws_ref)
 })
+
+test_that("rstanarm variable extraction works", {
+  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+
+  expect_equal(get_variables(m_hp_wt),
+    c("(Intercept)", "hp", "wt", "hp:wt", "sigma", "accept_stat__",
+      "stepsize__", "treedepth__", "n_leapfrog__", "divergent__", "energy__")
+  )
+})
