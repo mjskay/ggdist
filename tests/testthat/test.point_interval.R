@@ -224,3 +224,32 @@ test_that("multiple-response intervals work", {
 
   expect_equal(mode_hdi(dd, x, .width = .5), ref)
 })
+
+test_that("point_interval errors if there are no columns to summarise", {
+  expect_error(median_hdi(data.frame()),
+    "No columns found to calculate point and interval summaries for\\.")
+})
+
+test_that("various point summaries and intervals give correct numbers", {
+  expect_equal(
+    median_hdci(c(0:6, 1:5, 2:4, 2), .width = .6),
+    data.frame(y = 3, ymin = 2, ymax = 4, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mean_qi(c(0:6, 1:5, 2:4, 2), .width = .6),
+    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "qi", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mode_hdi(c(0:6, 1:5, 2:4, 2), .width = .6, .simple_names = TRUE),
+    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
+  )
+})
+
+test_that("attempting to use hdi with multiple multimodal columns simultaneously fails", {
+  expect_error(
+    mode_hdi(data.frame(x = c(1:5, 1, 5), y = c(1:5, 1, 5)), .width = .2),
+    "You are summarizing a multimodal distribution using a method that returns multiple intervals"
+  )
+})
