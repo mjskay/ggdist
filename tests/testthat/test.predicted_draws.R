@@ -38,8 +38,8 @@ test_that("[add_]predicted_draws and basic arguments works on a simple rstanarm 
   preds = posterior_predict(m_hp_wt, mtcars_tbl, draws = 100, seed = 123) %>%
     as.data.frame() %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .prediction, -.chain, -.iteration, -.draw) %>%
@@ -61,8 +61,8 @@ test_that("[add_]predicted_draws and basic arguments works on an rstanarm model 
   preds = posterior_predict(m_cyl, mtcars_tbl, draws = 100, seed = 123) %>%
     as.data.frame() %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .prediction, -.chain, -.iteration, -.draw) %>%
@@ -86,8 +86,8 @@ test_that("[add_]predicted_draws works on a simple brms model", {
     as.data.frame() %>%
     set_names(seq_len(ncol(.))) %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .prediction, -.chain, -.iteration, -.draw) %>%

@@ -28,8 +28,8 @@ test_that("gather_emmeans_draws works on a simple rstanarm model", {
   fits = posterior_linpred(m_hp_wt, newdata = as.data.frame(estimate_grid)) %>%
     as.data.frame() %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%

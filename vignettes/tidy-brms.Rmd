@@ -46,6 +46,7 @@ library(ggridges)
 library(cowplot)
 library(rstan)
 library(brms)
+library(ggrepel)
 ```
 
 These options help Stan run faster:
@@ -569,10 +570,21 @@ The `brms::fitted.brmsfit` function for ordinal and multinomial regression model
 
 ### Ordinal model with continuous predictor
 
-Consider this ordinal regression model:
+We'll fit a model using the `mtcars` dataset that predicts the number of cylinders in a car given the car's mileage (in miles per gallon). While this is a little backwards causality-wise (presumably the number of cylinders causes the mileage, if anything), that does not mean this is not a fine prediction task (I could probably tell someone who knows something about cars the MPG of a car and they could do reasonably well at guessing the number of cylinders in the engine).
+
+Before we fit the model, let's clean the dataset by making the `cyl` column an ordered factor (by default it is just a number):
 
 ```{r}
-m_cyl = brm(ordered(cyl) ~ mpg, data = mtcars, family = cumulative)
+mtcars_clean = mtcars %>%
+  mutate(cyl = ordered(cyl))
+
+head(mtcars_clean)
+```
+
+Then we'll fit an ordinal regression model:
+
+```{r}
+m_cyl = brm(cyl ~ mpg, data = mtcars_clean, family = cumulative)
 ```
 
 `add_fitted_draws` will include a `.category` column, and `.value` will contain draws from the posterior distribution for the probability that the response is in that category. For example, here is the fit for the first row in the dataset:
@@ -586,12 +598,12 @@ data_frame(mpg = 21) %>%
 We could plot fit lines for fitted probabilities against the dataset:
 
 ```{r}
-data_plot = mtcars %>%
-  ggplot(aes(x = mpg, y = cyl, color = ordered(cyl))) +
+data_plot = mtcars_clean %>%
+  ggplot(aes(x = mpg, y = cyl, color = cyl)) +
   geom_point() +
   scale_color_brewer(palette = "Dark2", name = "cyl")
 
-fit_plot = mtcars %>%
+fit_plot = mtcars_clean %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
   # we can use the `value` argument to give the column with values of 
   # transformed linear predictors a more precise name and the 
@@ -622,7 +634,7 @@ label_data_function = . %>%
   filter(mpg == quantile(mpg, .47)) %>%
   summarise_if(is.numeric, mean)
 
-data_plot_with_mean = mtcars %>%
+data_plot_with_mean = mtcars_clean %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
   add_fitted_draws(m_cyl, value = "P(cyl | mpg)", n = 100) %>%
   # turn `.category` (a factor) into a numeric value in {4, 6, 8}
@@ -632,7 +644,7 @@ data_plot_with_mean = mtcars %>%
   summarise(cyl = sum(cyl * `P(cyl | mpg)`)) %>%
   ggplot(aes(x = mpg, y = cyl)) +
   geom_line(aes(group = .draw), alpha = 5/100) +
-  geom_point(aes(fill = ordered(cyl)), data = mtcars, shape = 21, size = 2) +
+  geom_point(aes(y = as.numeric(as.character(cyl)), fill = cyl), data = mtcars_clean, shape = 21, size = 2) +
   geom_text(aes(x = mpg + 4), label = "E[cyl | mpg]", data = label_data_function, hjust = 0) +
   geom_segment(aes(yend = cyl, xend = mpg + 3.9), data = label_data_function) +
   scale_fill_brewer(palette = "Dark2", name = "cyl")
@@ -643,6 +655,44 @@ plot_grid(ncol = 1, align = "v",
 )
 ```
 
+Now let's do some posterior predictive checking: do posterior predictions look like the data? For this, we'll make new predictions at the same values of `mpg` as were present in the original dataset (gray circles) and plot these with the observed data (colored circles):
+
+```{r, fig.width = 6, fig.height = 4}
+mtcars_clean %>%
+  select(mpg) %>%
+  add_predicted_draws(m_cyl, prediction = "cyl", seed = 12345) %>%
+  ggplot(aes(x = mpg, y = cyl)) +
+  geom_count(color = "gray75") +
+  geom_point(aes(fill = cyl), data = mtcars_clean, shape = 21, size = 2) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_label_repel(
+    data = . %>% ungroup() %>% filter(cyl == "8") %>% filter(mpg == max(mpg)) %>% dplyr::slice(1),
+    label = "posterior predictions", xlim = c(26, NA), ylim = c(NA, 2.8), point.padding = 1,
+    label.size = NA, color = "gray50", segment.color = "gray75"
+  ) +
+  geom_label_repel(
+    data = mtcars_clean %>% filter(cyl == "6") %>% filter(mpg == max(mpg)) %>% dplyr::slice(1),
+    label = "observed data", xlim = c(26, NA), ylim = c(2.2, NA), point.padding = 1,
+    label.size = NA, segment.color = "gray35"
+  ) 
+```
+
+This looks pretty good. Let's check using another typical posterior predictive checking plot: many simulated distributions of the response (`cyl`) against the observed distribution of the response:
+
+```{r, fig.width = 6.5, fig.height = 4}
+mtcars_clean %>%
+  data_grid(mpg) %>%
+  add_predicted_draws(m_cyl, prediction = "cyl", n = 100, seed = 12345) %>%
+  ggplot(aes(x = cyl)) +
+  stat_density(aes(group = .draw), geom = "line", position = "identity", color = "gray50", alpha = .1) +
+  stat_density(aes(group = NA), geom = "line", data = mtcars_clean, color = "red", size = 1) +
+  geom_label(data = data.frame(cyl = "4"), y = .32, label = "posterior\npredictions",
+    hjust = 1, color = "gray50", lineheight = 1, label.size = NA) +
+  geom_label(data = data.frame(cyl = "8"), y = .45, label = "observed data",
+    hjust = 0, color = "red", label.size = NA)
+```
+
+This also looks good.
 
 ### Ordinal model with categorical predictor
 

@@ -112,8 +112,8 @@ gather_emmeans_draws = function(object, value = ".value") {
     }
     cbind(
       grid[i, ],
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_along(post),
       .value = post
     )

@@ -38,8 +38,8 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
   fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
@@ -70,8 +70,8 @@ test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", 
   fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
@@ -94,8 +94,8 @@ test_that("[add_]fitted_draws works on brms models without dpar", {
     as.data.frame() %>%
     set_names(seq_len(ncol(.))) %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
@@ -128,8 +128,8 @@ test_that("[add_]fitted_draws works on brms models with dpar", {
     as.data.frame() %>%
     set_names(seq_len(ncol(.))) %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
@@ -177,8 +177,8 @@ test_that("[add_]fitted_draws works on simple brms models with nlpars", {
     as.data.frame() %>%
     set_names(seq_len(ncol(.))) %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
@@ -203,8 +203,8 @@ test_that("[add_]fitted_draws works on simple brms models with multiple dpars", 
     as.data.frame() %>%
     set_names(seq_len(ncol(.))) %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
@@ -237,8 +237,8 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (re
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE) %>%
     array2df(list(.draw = NA, .row = NA, .category = TRUE), label.x = ".value") %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .row = as.integer(.row),
       .draw = as.integer(.draw)
     )
@@ -266,8 +266,8 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (li
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
     array2df(list(.draw = NA, .row = NA, .category = TRUE), label.x = ".value") %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .row = as.integer(.row),
       .draw = as.integer(.draw)
     )
@@ -292,8 +292,8 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
     inner_join(fits, by = ".row") %>%
     left_join(mu_fits, by = c(".row", ".draw")) %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .row = as.integer(.row),
       .draw = as.integer(.draw),
       .category = factor(.category)
@@ -317,8 +317,8 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
     inner_join(fits, by = ".row") %>%
     left_join(mu_fits, by = c(".row", ".draw")) %>%
     mutate(
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA),
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
       .row = as.integer(.row),
       .draw = as.integer(.draw),
       .category = factor(.category)

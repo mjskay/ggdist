@@ -58,6 +58,7 @@ Suggests:
     covr,
     gdtools,
     rmarkdown,
+    ggrepel,
     bindrcpp
 License: GPL (>= 3)
 Language: en-US

@@ -244,13 +244,24 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
   }
   fits_preds_df$.draw = as.integer(fits_preds_df$.draw)
 
+  #for predictions from categorical models in brms, we can use the "levels" attribute
+  #to recover the original factor levels
+  prediction_levels = attr(fits_preds, "levels", exact = TRUE)
+  if (!is.null(prediction_levels)) {
+    fits_preds_df[[output_name]] = factor(
+      fits_preds_df[[output_name]],
+      levels = seq_along(prediction_levels),
+      labels = prediction_levels
+    )
+  }
+
   newdata %>%
     mutate(
       .row = seq_len(n()),
-      .chain = as.integer(NA),
-      .iteration = as.integer(NA)
+      .chain = NA_integer_,
+      .iteration = NA_integer_
     ) %>%
     inner_join(fits_preds_df, by = ".row") %>%
     select(-!!sym(output_name), !!sym(output_name)) %>%
-    group_by(!!!syms(groups))
+    group_by_at(groups)
 }
