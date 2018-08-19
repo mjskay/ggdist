@@ -78,7 +78,7 @@ those functions are translated back into useful data types." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.1.9000</span>
       </span>
     </div>
 
@@ -268,7 +268,7 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math/rev/mat.hpp:4,
 #&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/stan/math.hpp:4,
 #&gt;                  from C:/R/R-3.5.1/library/StanHeaders/include/src/stan/model/model_header.hpp:4,
-#&gt;                  from file9db847142be6.cpp:8:
+#&gt;                  from file28403e1c63f0.cpp:8:
 #&gt; C:/R/R-3.5.1/library/BH/include/boost/config/compiler/gcc.hpp:186:0: warning: "BOOST_NO_CXX11_RVALUE_REFERENCES" redefined
 #&gt;  #  define BOOST_NO_CXX11_RVALUE_REFERENCES
 #&gt;  ^
@@ -294,9 +294,9 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; 
-#&gt;  Elapsed Time: 0.111 seconds (Warm-up)
-#&gt;                0.136 seconds (Sampling)
-#&gt;                0.247 seconds (Total)
+#&gt;  Elapsed Time: 0.087 seconds (Warm-up)
+#&gt;                0.117 seconds (Sampling)
+#&gt;                0.204 seconds (Total)
 #&gt; </div><div class='input'>
 <span class='co'># without using recover_types(), the `condition` column returned by spread_draws()</span>
 <span class='co'># will be an integer:</span>
@@ -320,7 +320,7 @@ of the generic function <code>as_constructor</code>.</p>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; # A tibble: 5 x 7
 #&gt;   condition condition_mean .lower .upper .width .point .interval
-#&gt;   &lt;fct&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+#&gt;   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
 #&gt; 1 A                  0.199 -0.124  0.628   0.95 median qi       
 #&gt; 2 B                  0.993  0.653  1.33    0.95 median qi       
 #&gt; 3 C                  1.82   1.45   2.21    0.95 median qi       
