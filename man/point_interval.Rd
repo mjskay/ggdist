@@ -118,6 +118,10 @@ names the lower and upper intervals for each column \code{x} \code{x.lower} and 
 When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y}, \code{ymin}
 and \code{ymax} (for use with ggplot).}
 
+\item{na.rm}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+If \code{FALSE} (the default), any vectors to be summarised that contain \code{NA} will result in
+point and interval summaries equal to \code{NA}.}
+
 \item{.exclude}{A character vector of names of columns to be excluded from summarization
 if no column names are specified to be summarized. Default ignores several meta-data column
 names used in tidybayes.}
@@ -125,10 +129,6 @@ names used in tidybayes.}
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
-
-\item{a}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
-If \code{FALSE} (the default), any vectors to be summarised that contain \code{NA} will result in
-point and interval summaries equal to \code{NA}.}
 }
 \description{
 Translates draws from distributions in a (possibly grouped) data frame into point and
