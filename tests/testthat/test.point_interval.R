@@ -245,11 +245,74 @@ test_that("various point summaries and intervals give correct numbers", {
     mode_hdi(c(0:6, 1:5, 2:4, 2), .width = .6, .simple_names = TRUE),
     data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
   )
+
+  expect_equal(
+    mode_hdci(c(0:6, 1:5, 2:4, 2), .width = .6, .simple_names = TRUE),
+    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mean_hdci(c(0:6, 1:5, 2:4, 2), .width = .6),
+    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
 })
 
 test_that("attempting to use hdi with multiple multimodal columns simultaneously fails", {
   expect_error(
     mode_hdi(data.frame(x = c(1:5, 1, 5), y = c(1:5, 1, 5)), .width = .2),
     "You are summarizing a multimodal distribution using a method that returns multiple intervals"
+  )
+})
+
+test_that("NAs are handled correctly in point_interval", {
+  expect_equal(
+    median_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
+    data.frame(y = 3, ymin = 2, ymax = 4, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mean_qi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
+    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "qi", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mode_hdi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = TRUE),
+    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mode_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = TRUE),
+    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mean_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
+    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    median_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
+    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mean_qi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
+    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "qi", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mode_hdi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = FALSE),
+    data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mode_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = FALSE),
+    data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+
+  expect_equal(
+    mean_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
+    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
   )
 })

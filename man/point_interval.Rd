@@ -7,6 +7,7 @@
 \alias{point_intervalh}
 \alias{qi}
 \alias{hdi}
+\alias{Mode}
 \alias{hdci}
 \alias{mean_qi}
 \alias{mean_qih}
@@ -29,24 +30,28 @@
 \title{Point and interval summaries for tidy data frames of draws from distributions}
 \usage{
 point_interval(.data, ..., .width = 0.95, .point = median,
-  .interval = qi, .simple_names = TRUE, .exclude = c(".chain",
-  ".iteration", ".draw", ".row"), .prob)
+  .interval = qi, .simple_names = TRUE, na.rm = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob)
 
 \method{point_interval}{default}(.data, ..., .width = 0.95,
   .point = median, .interval = qi, .simple_names = TRUE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob)
+  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob)
 
 \method{point_interval}{numeric}(.data, ..., .width = 0.95,
   .point = median, .interval = qi, .simple_names = FALSE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob)
+  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob)
 
 point_intervalh(...)
 
-qi(x, .width = 0.95, .prob)
+qi(x, .width = 0.95, .prob, na.rm = FALSE)
 
-hdi(x, .width = 0.95, .prob)
+hdi(x, .width = 0.95, .prob, na.rm = FALSE)
 
-hdci(x, .width = 0.95)
+Mode(x, na.rm = FALSE)
+
+hdci(x, .width = 0.95, na.rm = FALSE)
 
 mean_qi(.data, ..., .width = 0.95)
 
@@ -120,6 +125,10 @@ names used in tidybayes.}
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
+
+\item{a}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+If \code{FALSE} (the default), any vectors to be summarised that contain \code{NA} will result in
+point and interval summaries equal to \code{NA}.}
 }
 \description{
 Translates draws from distributions in a (possibly grouped) data frame into point and

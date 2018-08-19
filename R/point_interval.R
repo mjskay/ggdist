@@ -97,6 +97,9 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @param .exclude A character vector of names of columns to be excluded from summarization
 #' if no column names are specified to be summarized. Default ignores several meta-data column
 #' names used in tidybayes.
+#' @param a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+#' If \code{FALSE} (the default), any vectors to be summarised that contain \code{NA} will result in
+#' point and interval summaries equal to \code{NA}.
 #' @param x vector to summarize (for interval functions: \code{qi} and \code{hdi})
 #' @author Matthew Kay
 #' @examples
@@ -147,7 +150,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
 point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
+  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
   UseMethod("point_interval")
 }
@@ -155,7 +158,7 @@ point_interval = function(.data, ..., .width = .95, .point = median, .interval =
 #' @rdname point_interval
 #' @export
 point_interval.default = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
+  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
   .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
@@ -200,9 +203,9 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     }
 
     result = map_dfr(.width, function(p) {
-      data[[col_name]] = map_dbl(draws, .point)
+      data[[col_name]] = map_dbl(draws, .point, na.rm = na.rm)
 
-      intervals = map(draws, .interval, .width = p)
+      intervals = map(draws, .interval, .width = p, na.rm = na.rm)
       # can't use map_dbl here because sometimes (e.g. with hdi) these can
       # return multiple intervals, hence map() here and unnest() below
       data[[".lower"]] = map(intervals, ~ .[, 1])
@@ -229,9 +232,9 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
 
-        data[[col_name]] = map_dbl(draws, .point)
+        data[[col_name]] = map_dbl(draws, .point, na.rm = na.rm)
 
-        intervals = map(draws, .interval, .width = p)
+        intervals = map(draws, .interval, .width = p, na.rm = na.rm)
 
         # can't use map_dbl here because sometimes (e.g. with hdi) these can
         # return multiple intervals, which we need to check for (since it is
@@ -268,7 +271,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 #' @importFrom dplyr rename
 #' @export
 point_interval.numeric = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = FALSE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
+  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
   .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
@@ -276,9 +279,9 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   interval_name = tolower(quo_name(enquo(.interval)))
 
   result = map_dfr(.width, function(p) {
-    interval = .interval(data, .width = p)
+    interval = .interval(data, .width = p, na.rm = na.rm)
     data.frame(
-      y = .point(data),
+      y = .point(data, na.rm = na.rm),
       ymin = interval[, 1],
       ymax = interval[, 2],
       .width = p
@@ -304,21 +307,27 @@ point_intervalh = flip_aes(point_interval)
 #' @importFrom stats quantile
 #' @export
 #' @rdname point_interval
-qi = function(x, .width = .95, .prob) {
+qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
+  if (!na.rm && any(is.na(x))) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
 
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
-  matrix(quantile(x, c(lower_prob, upper_prob)), ncol = 2)
+  matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
 }
 
 #' @importFrom coda HPDinterval as.mcmc
 #' @export
 #' @rdname point_interval
-hdi = function(x, .width = .95, .prob) {
+hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
+  if (!na.rm && any(is.na(x))) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
 
-  intervals = HDInterval::hdi(density(x), credMass = .width, allowSplit = TRUE)
+  intervals = HDInterval::hdi(density(x, na.rm = na.rm), credMass = .width, allowSplit = TRUE)
   if (nrow(intervals) == 1) {
     # the above method tends to be a little conservative on unimodal distributions, so if the
     # result is unimodal, switch to the method below (which will be slightly narrower)
@@ -329,7 +338,21 @@ hdi = function(x, .width = .95, .prob) {
 
 #' @export
 #' @rdname point_interval
-hdci = function(x, .width = .95) {
+Mode = function(x, na.rm = FALSE) {
+  if (!na.rm && any(is.na(x))) {
+    return(NA_real_)
+  }
+
+  LaplacesDemon::Mode(x)
+}
+
+#' @export
+#' @rdname point_interval
+hdci = function(x, .width = .95, na.rm = FALSE) {
+  if (!na.rm && any(is.na(x))) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+
   intervals = HDInterval::hdi(x, credMass = .width)
   matrix(intervals, ncol = 2)
 }
@@ -352,7 +375,6 @@ median_qi = function(.data, ..., .width = .95)
 #' @rdname point_interval
 median_qih = flip_aes(median_qi)
 
-#' @importFrom LaplacesDemon Mode
 #' @export
 #' @rdname point_interval
 mode_qi = function(.data, ..., .width = .95)
@@ -380,7 +402,6 @@ median_hdi = function(.data, ..., .width = .95)
 #' @rdname point_interval
 median_hdih = flip_aes(median_hdi)
 
-#' @importFrom LaplacesDemon Mode
 #' @export
 #' @rdname point_interval
 mode_hdi = function(.data, ..., .width = .95)
@@ -408,7 +429,6 @@ median_hdci = function(.data, ..., .width = .95)
 #' @rdname point_interval
 median_hdcih = flip_aes(median_hdci)
 
-#' @importFrom LaplacesDemon Mode
 #' @export
 #' @rdname point_interval
 mode_hdci = function(.data, ..., .width = .95)
