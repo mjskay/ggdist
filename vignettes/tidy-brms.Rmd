@@ -47,6 +47,8 @@ library(cowplot)
 library(rstan)
 library(brms)
 library(ggrepel)
+
+theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
 
 These options help Stan run faster:
@@ -63,9 +65,6 @@ options(mc.cores = parallel::detectCores())
 # the reader as a best pratice example)
 rstan_options(auto_write = TRUE)
 options(mc.cores = min(2, parallel::detectCores()))
-
-#ggplot options
-theme_set(theme_light())
 
 #default chunk options
 knitr::opts_chunk$set(
@@ -584,7 +583,7 @@ head(mtcars_clean)
 Then we'll fit an ordinal regression model:
 
 ```{r}
-m_cyl = brm(cyl ~ mpg, data = mtcars_clean, family = cumulative)
+m_cyl = brm(cyl ~ mpg, data = mtcars_clean, family = cumulative, seed = 58393)
 ```
 
 `add_fitted_draws` will include a `.category` column, and `.value` will contain draws from the posterior distribution for the probability that the response is in that category. For example, here is the fit for the first row in the dataset:
@@ -597,7 +596,7 @@ data_frame(mpg = 21) %>%
 
 We could plot fit lines for fitted probabilities against the dataset:
 
-```{r}
+```{r, fig.width = 6, fig.height = 4}
 data_plot = mtcars_clean %>%
   ggplot(aes(x = mpg, y = cyl, color = cyl)) +
   geom_point() +
@@ -660,21 +659,21 @@ Now let's do some posterior predictive checking: do posterior predictions look l
 ```{r, fig.width = 6, fig.height = 4}
 mtcars_clean %>%
   select(mpg) %>%
-  add_predicted_draws(m_cyl, prediction = "cyl", seed = 12345) %>%
+  add_predicted_draws(m_cyl, prediction = "cyl", seed = 1234) %>%
   ggplot(aes(x = mpg, y = cyl)) +
   geom_count(color = "gray75") +
   geom_point(aes(fill = cyl), data = mtcars_clean, shape = 21, size = 2) +
   scale_fill_brewer(palette = "Dark2") +
   geom_label_repel(
     data = . %>% ungroup() %>% filter(cyl == "8") %>% filter(mpg == max(mpg)) %>% dplyr::slice(1),
-    label = "posterior predictions", xlim = c(26, NA), ylim = c(NA, 2.8), point.padding = 1,
+    label = "posterior predictions", xlim = c(26, NA), ylim = c(NA, 2.8), point.padding = 0.3,
     label.size = NA, color = "gray50", segment.color = "gray75"
   ) +
   geom_label_repel(
     data = mtcars_clean %>% filter(cyl == "6") %>% filter(mpg == max(mpg)) %>% dplyr::slice(1),
-    label = "observed data", xlim = c(26, NA), ylim = c(2.2, NA), point.padding = 1,
+    label = "observed data", xlim = c(26, NA), ylim = c(2.2, NA), point.padding = 0.2,
     label.size = NA, segment.color = "gray35"
-  ) 
+  )
 ```
 
 This looks pretty good. Let's check using another typical posterior predictive checking plot: many simulated distributions of the response (`cyl`) against the observed distribution of the response:
@@ -689,7 +688,7 @@ mtcars_clean %>%
   geom_label(data = data.frame(cyl = "4"), y = .32, label = "posterior\npredictions",
     hjust = 1, color = "gray50", lineheight = 1, label.size = NA) +
   geom_label(data = data.frame(cyl = "8"), y = .45, label = "observed data",
-    hjust = 0, color = "red", label.size = NA)
+    hjust = 0, color = "red", label.size = NA) 
 ```
 
 This also looks good.

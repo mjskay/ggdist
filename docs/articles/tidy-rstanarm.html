@@ -96,7 +96,7 @@
       <h1>Extracting and visualizing tidy draws from rstanarm models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-08-18</h4>
+            <h4 class="date">2018-08-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-rstanarm.Rmd"><code>vignettes/tidy-rstanarm.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-rstanarm.Rmd</code></div>
@@ -134,7 +134,10 @@ img {
 <a class="sourceLine" id="cb1-10" data-line-number="10"><span class="kw">library</span>(ggridges)</a>
 <a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">library</span>(rstan)</a>
 <a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">library</span>(rstanarm)</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">import<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/import/topics/importfunctions">from</a></span>(LaplacesDemon, invlogit)</a></code></pre></div>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw">library</span>(cowplot)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">import<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/import/topics/importfunctions">from</a></span>(LaplacesDemon, invlogit)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="kw">theme_set</span>(<span class="kw"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span><span class="kw">background_grid</span>())</a></code></pre></div>
 <p>These options help Stan run faster:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">rstan_options</span>(<span class="dt">auto_write =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">options</span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/parallel/topics/detectCores">detectCores</a></span>())</a></code></pre></div>

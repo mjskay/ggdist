@@ -156,7 +156,10 @@
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="kw">library</span>(broom)</a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw">library</span>(brms)</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="kw">library</span>(modelr)</a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="kw">library</span>(forcats)</a></code></pre></div>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="kw">library</span>(forcats)</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="kw">library</span>(cowplot)</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="kw">theme_set</span>(<span class="kw"><a href="reference/theme_tidybayes.html">theme_tidybayes</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span><span class="kw">background_grid</span>())</a></code></pre></div>
 <p>Imagine this dataset:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">n =<span class="st"> </span><span class="dv">10</span></a>
@@ -273,8 +276,10 @@ model {
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span><span class="kw">do</span>(<span class="kw">data_frame</span>(<span class="dt">condition_mean =</span> <span class="kw">quantile</span>(.<span class="op">$</span>condition_mean, <span class="kw">ppoints</span>(<span class="dv">100</span>)))) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> condition_mean)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb12-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_dotplot</span>(<span class="dt">binwidth =</span> <span class="fl">.04</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="kw">fct_rev</span>(condition) <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="ot">NULL</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="dt">rows =</span> <span class="kw">vars</span>(<span class="kw">fct_rev</span>(condition)), <span class="dt">switch =</span> <span class="st">"y"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="reference/theme_tidybayes.html">facet_title_left_horizontal</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="st">  </span><span class="kw">ylab</span>(<span class="ot">NULL</span>)</a></code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.</p>
 </div>
@@ -342,7 +347,7 @@ model {
 <p>Comptability with <code><a href="http://www.rdocumentation.org/packages/broom/topics/tidy">broom::tidy</a></code> also gives compatibility with <code><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dotwhisker::dwplot</a></code>:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">bind_rows</span>(linear_results, bayes_results) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">term =</span> condition) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">  </span>dotwhisker<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dwplot</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">  </span>dotwhisker<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dotwhisker/topics/dwplot">dwplot</a></span>() </a></code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
 <div id="posterior-prediction-and-complex-custom-plots" class="section level3">
@@ -407,7 +412,7 @@ model {
 <a class="sourceLine" id="cb29-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb29-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> .draw), <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">color =</span> <span class="st">"red"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb29-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
-<a class="sourceLine" id="cb29-7" data-line-number="7"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>am)</a></code></pre></div>
+<a class="sourceLine" id="cb29-7" data-line-number="7"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>am) </a></code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <p>See <code><a href="articles/tidybayes.html">vignette("tidybayes")</a></code> for a variety of additional examples and more explanation of how it works.</p>
 </div>

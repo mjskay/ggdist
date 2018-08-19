@@ -151,14 +151,14 @@ library(broom)
 library(brms)
 library(modelr)
 library(forcats)
+library(cowplot)
+
+theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
 
 ```{r hidden_options, include=FALSE}
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
-
-#ggplot options
-theme_set(theme_light())
 
 #misc options
 options(width = 90)
@@ -276,8 +276,10 @@ m %>%
   do(data_frame(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
   ggplot(aes(x = condition_mean)) +
   geom_dotplot(binwidth = .04) +
-  facet_grid(fct_rev(condition) ~ .) +
-  scale_y_continuous(breaks = NULL)
+  facet_grid(rows = vars(fct_rev(condition)), switch = "y") +
+  facet_title_left_horizontal() +
+  scale_y_continuous(breaks = NULL) +
+  ylab(NULL)
 ```
 
 The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
@@ -334,7 +336,7 @@ Comptability with `broom::tidy` also gives compatibility with `dotwhisker::dwplo
 ```{r, warning = FALSE}
 bind_rows(linear_results, bayes_results) %>%
   rename(term = condition) %>%
-  dotwhisker::dwplot()
+  dotwhisker::dwplot() 
 ```
 
 ### Posterior prediction and complex custom plots
@@ -423,7 +425,7 @@ mtcars %>%
   ggplot(aes(x = hp, y = mpg)) +
   geom_line(aes(y = .value, group = .draw), alpha = 0.2, color = "red") +
   geom_point(data = mtcars) +
-  facet_wrap(~ am)
+  facet_wrap(~ am) 
 ```
 
 

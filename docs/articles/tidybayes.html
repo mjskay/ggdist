@@ -154,7 +154,10 @@ img {
 <a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">library</span>(modelr)</a>
 <a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">library</span>(bayesplot)</a>
 <a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw">library</span>(MCMCglmm)</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="kw">library</span>(tidybayes)</a></code></pre></div>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="kw">library</span>(tidybayes)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="kw">library</span>(cowplot)</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="kw">theme_set</span>(<span class="kw"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span><span class="kw">background_grid</span>())</a></code></pre></div>
 <p>These options help Stan run faster:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">rstan_options</span>(<span class="dt">auto_write =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">options</span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/parallel/topics/detectCores">detectCores</a></span>())</a></code></pre></div>
@@ -273,7 +276,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Sun Aug 19 00:01:48 2018.
+## Samples were drawn using NUTS(diag_e) at Sun Aug 19 19:45:11 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -288,24 +291,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the draws out in a tidy format! The default methods in Stan for extracting draws from the model do so in a nested format:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</a></code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 1.002 1.32 1.242 0.537 -0.205 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.93 0.46 1.096 0.895 0.932 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.607 -1.378 -0.853 -0.203 0.208 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.331 -0.335 -0.906 -0.658 -0.623 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.555 0.523 0.445 0.62 0.6 ...
+##  $ response_sd      : num [1:4000(1d)] 0.608 0.519 0.661 0.582 0.539 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.512 0.814 1.166 1.352 1.861 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.626 0.944 1.184 0.822 1.219 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.0837 0.1982 0.2473 0.2624 0.1818 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.391 0.1438 0.0228 0.3542 0.1719 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 1.466 0.681 0.982 1.009 1.477 ...
+##  $ lp__             : num [1:4000(1d)] 2.383 1.148 0.31 0.135 2.991 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting draws as matrices or data frames in Stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>

@@ -46,7 +46,10 @@ library(ggstance)
 library(ggridges)
 library(rstan)
 library(rstanarm)
+library(cowplot)
 import::from(LaplacesDemon, invlogit)
+
+theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
 
 These options help Stan run faster:
@@ -63,9 +66,6 @@ options(mc.cores = parallel::detectCores())
 # the reader as a best pratice example)
 rstan_options(auto_write = TRUE)
 options(mc.cores = min(2, parallel::detectCores()))
-
-#ggplot options
-theme_set(theme_light())
 
 #default chunk options
 knitr::opts_chunk$set(
