@@ -28,6 +28,8 @@ A simple, relatively minimalist ggplot2 theme, and some helper functions to go w
 }
 \examples{
 
+library(ggplot2)
+
 theme_set(theme_tidybayes())
 
 }

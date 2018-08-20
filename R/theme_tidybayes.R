@@ -19,6 +19,8 @@
 #' @keywords manip
 #' @examples
 #'
+#' library(ggplot2)
+#'
 #' theme_set(theme_tidybayes())
 #'
 #' @import ggplot2
