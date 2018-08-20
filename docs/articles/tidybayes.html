@@ -276,7 +276,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
 ## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Sun Aug 19 19:45:11 2018.
+## Samples were drawn using NUTS(diag_e) at Sun Aug 19 20:15:49 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -291,24 +291,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the draws out in a tidy format! The default methods in Stan for extracting draws from the model do so in a nested format:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</a></code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.93 0.46 1.096 0.895 0.932 ...
+##  $ overall_mean     : num [1:4000(1d)] 1.535 1.574 0.52 0.241 0.554 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.331 -0.335 -0.906 -0.658 -0.623 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -1.2039 -0.6035 -0.6837 0.0871 -0.1026 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.608 0.519 0.661 0.582 0.539 ...
+##  $ response_sd      : num [1:4000(1d)] 0.626 0.461 0.575 0.496 0.591 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.626 0.944 1.184 0.822 1.219 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.124 1.892 0.698 0.85 1.019 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.391 0.1438 0.0228 0.3542 0.1719 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.182 0.431 0.043 0.315 0.45 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 2.383 1.148 0.31 0.135 2.991 ...
+##  $ lp__             : num [1:4000(1d)] 0.112 -0.797 -0.687 1.546 -1.788 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting draws as matrices or data frames in Stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>

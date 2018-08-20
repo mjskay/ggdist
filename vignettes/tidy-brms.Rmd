@@ -680,7 +680,7 @@ This looks pretty good. Let's check using another typical posterior predictive c
 
 ```{r, fig.width = 6.5, fig.height = 4}
 mtcars_clean %>%
-  data_grid(mpg) %>%
+  select(mpg) %>%
   add_predicted_draws(m_cyl, prediction = "cyl", n = 100, seed = 12345) %>%
   ggplot(aes(x = cyl)) +
   stat_density(aes(group = .draw), geom = "line", position = "identity", color = "gray50", alpha = .1) +
