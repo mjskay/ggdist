@@ -658,6 +658,8 @@ Now let's do some posterior predictive checking: do posterior predictions look l
 
 ```{r, fig.width = 6, fig.height = 4}
 mtcars_clean %>%
+  # we use `select` instead of `data_grid` here because we want to make posterior predictions
+  # for exactly the same set of observations we have in the original data
   select(mpg) %>%
   add_predicted_draws(m_cyl, prediction = "cyl", seed = 1234) %>%
   ggplot(aes(x = mpg, y = cyl)) +
@@ -676,22 +678,38 @@ mtcars_clean %>%
   )
 ```
 
-This looks pretty good. Let's check using another typical posterior predictive checking plot: many simulated distributions of the response (`cyl`) against the observed distribution of the response:
+This looks pretty good. Let's check using another typical posterior predictive checking plot: many simulated distributions of the response (`cyl`) against the observed distribution of the response. For a continuous response variable this is usually done with a density plot; here, we'll plot the number of posterior predictions in each bin as a line plot, since the response variable is discrete:
 
 ```{r, fig.width = 6.5, fig.height = 4}
 mtcars_clean %>%
   select(mpg) %>%
   add_predicted_draws(m_cyl, prediction = "cyl", n = 100, seed = 12345) %>%
   ggplot(aes(x = cyl)) +
-  stat_density(aes(group = .draw), geom = "line", position = "identity", color = "gray50", alpha = .1) +
-  stat_density(aes(group = NA), geom = "line", data = mtcars_clean, color = "red", size = 1) +
-  geom_label(data = data.frame(cyl = "4"), y = .32, label = "posterior\npredictions",
+  stat_count(aes(group = NA), geom = "line", data = mtcars_clean, color = "red", size = 3, alpha = .5) +
+  stat_count(aes(group = .draw), geom = "line", position = "identity", alpha = .05) +
+  geom_label(data = data.frame(cyl = "4"), y = 9.5, label = "posterior\npredictions",
     hjust = 1, color = "gray50", lineheight = 1, label.size = NA) +
-  geom_label(data = data.frame(cyl = "8"), y = .45, label = "observed data",
-    hjust = 0, color = "red", label.size = NA) 
+  geom_label(data = data.frame(cyl = "8"), y = 14, label = "observed data",
+    hjust = 0, color = "red", label.size = NA)
 ```
 
 This also looks good.
+
+```{r}
+mtcars_clean %>%
+  select(mpg) %>%
+  add_predicted_draws(m_cyl, prediction = "cyl") %>%
+  group_by(.draw) %>%
+  count(cyl) %>%
+  complete(cyl, fill = list(n = 0)) %>%
+  pairwise(cyl, n) %>%
+  ggplot(aes(.x, .y)) +
+  geom_count(color = "gray75") +
+  geom_point(data = mtcars_clean %>% count(cyl) %>% pairwise(cyl, n), color = "red") +
+  facet_grid(vars(.row), vars(.col)) +
+  xlab("Number of observations with cyl = col") +
+  ylab("Number of observations with cyl = row") 
+```
 
 ### Ordinal model with categorical predictor
 
