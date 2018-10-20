@@ -1,4 +1,4 @@
-# pairwise: generate pairwise combinations of values key/value columns in a long-format data frame
+# gather_pairs: gather pairwise combinations of values key/value columns in a long-format data frame
 #
 # Author: mjskay
 ###############################################################################
@@ -8,7 +8,7 @@
 globalVariables(c(".chain", ".iteration"))
 
 
-#' Pairwise combinations of values from key/value columns in a tidy data frame
+#' Gather pairwise combinations of values from key/value columns in a long-format data frame
 #'
 #' Fast method for producing combinations of values in a value column for different levels of a key column,
 #' assuming long-format (tidy) data with an equal number of values per key. Among other things, this is
@@ -47,19 +47,19 @@ globalVariables(c(".chain", ".iteration"))
 #' )
 #'
 #' df %>%
-#'   pairwise(g, t) %>%
+#'   gather_pairs(g, t, row = "g_row", col = "g_col", x = "t_x", y = "t_y") %>%
+#'   ggplot(aes(t_x, t_y)) +
+#'   geom_point() +
+#'   facet_grid(vars(g_row), vars(g_col))
+#'
+#' df %>%
+#'   gather_pairs(g, t, triangle = "upper") %>%
 #'   ggplot(aes(.x, .y)) +
 #'   geom_point() +
 #'   facet_grid(vars(.row), vars(.col))
 #'
 #' df %>%
-#'   pairwise(g, t, triangle = "upper") %>%
-#'   ggplot(aes(.x, .y)) +
-#'   geom_point() +
-#'   facet_grid(vars(.row), vars(.col))
-#'
-#' df %>%
-#'   pairwise(g, t, triangle = "both") %>%
+#'   gather_pairs(g, t, triangle = "both") %>%
 #'   ggplot(aes(.x, .y)) +
 #'   geom_point() +
 #'   facet_grid(vars(.row), vars(.col))
@@ -69,7 +69,7 @@ globalVariables(c(".chain", ".iteration"))
 #' line %>%
 #'   tidy_draws() %>%
 #'   gather_variables() %>%
-#'   pairwise(.variable, .value) %>%
+#'   gather_pairs(.variable, .value) %>%
 #'   ggplot(aes(.x, .y)) +
 #'   geom_point(alpha = .25) +
 #'   facet_grid(vars(.row), vars(.col))
@@ -77,7 +77,7 @@ globalVariables(c(".chain", ".iteration"))
 #' line %>%
 #'   tidy_draws() %>%
 #'   gather_variables() %>%
-#'   pairwise(.variable, .value) %>%
+#'   gather_pairs(.variable, .value) %>%
 #'   ggplot(aes(.x, .y, color = factor(.chain))) +
 #'   geom_density_2d(alpha = .5) +
 #'   facet_grid(vars(.row), vars(.col))
@@ -87,21 +87,23 @@ globalVariables(c(".chain", ".iteration"))
 #' @importFrom plyr dlply
 #' @importFrom dplyr rename group_by_at ungroup group_vars
 #' @export
-pairwise = function(data, key, value, triangle = c("lower only", "upper only", "lower", "upper", "both")) {
+gather_pairs = function(data, key, value, row = ".row", col = ".col", x = ".x", y = ".y",
+    triangle = c("lower only", "upper only", "lower", "upper", "both")
+  ) {
   key = enquo(key)
   value = enquo(value)
 
   data %<>%
-    rename(.row = !!key, .y = !!value)
+    rename(!!as.name(row) := !!key, !!as.name(y) := !!value)
 
-  if (!is.factor(data[[".row"]])) {
-    data[[".row"]] = factor(data[[".row"]])
+  if (!is.factor(data[[row]])) {
+    data[[row]] = factor(data[[row]])
   }
 
   # the approach to looking up levels ensures that the ordering is based
   # on the order of level names in the original variable, not on string order
-  levels_ = 1:nlevels(data[[".row"]])
-  names(levels_) = levels(data[[".row"]])
+  levels_ = 1:nlevels(data[[row]])
+  names(levels_) = levels(data[[row]])
   triangle_test = switch(match.arg(triangle),
     `lower only` = function(row, col) levels_[[row]] > levels_[[col]],
     `upper only` = function(row, col) levels_[[row]] < levels_[[col]],
@@ -111,17 +113,17 @@ pairwise = function(data, key, value, triangle = c("lower only", "upper only", "
   )
 
   groups_ = group_vars(data) %>%
-    setdiff(".row")
+    setdiff(row)
 
   data %>%
     ungroup() %>%
-    pairwise_(triangle_test) %>%
-    group_by_at(c(groups_, ".row", ".col"))
+    gather_pairs_(triangle_test, row, col, x, y) %>%
+    group_by_at(c(groups_, row, col))
 }
 
-pairwise_ = function(data, triangle_test) {
-  row_data = dlply(data, ".row", function(d) d)
-  col_data = map(row_data, . %>% select(.col = .row, .x = .y))
+gather_pairs_ = function(data, triangle_test, row, col, x, y) {
+  row_data = dlply(data, row, function(d) d)
+  col_data = map(row_data, . %>% select(!!as.name(col) := !!as.name(row), !!as.name(x) := !!as.name(y)))
   imap_dfr(row_data, function(row_df, row) {
     imap_dfr(col_data, function(col_df, col) {
       if (triangle_test(row, col)) {
