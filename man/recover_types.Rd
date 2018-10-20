@@ -58,7 +58,7 @@ of the generic function \code{as_constructor}.
 library(dplyr)
 library(magrittr)
 
-if(require("rstarn", quietly = TRUE)) {
+if(require("rstan", quietly = TRUE)) {
 
   # Here's an example dataset with a categorical predictor (`condition`) with several levels:
   set.seed(5)
@@ -92,7 +92,10 @@ if(require("rstarn", quietly = TRUE)) {
       response_sd ~ cauchy(0, 1);       // => half-cauchy(0, 1)
       condition_mean_sd ~ cauchy(0, 1); // => half-cauchy(0, 1)
       overall_mean ~ normal(0, 5);
-      condition_zoffset ~ normal(0, 1); //=> condition_mean ~ normal(overall_mean, condition_mean_sd)
+
+      //=> condition_mean ~ normal(overall_mean, condition_mean_sd)
+      condition_zoffset ~ normal(0, 1);
+
       for (i in 1:n) {
         response[i] ~ normal(condition_mean[condition[i]], response_sd);
       }

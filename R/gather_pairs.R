@@ -17,6 +17,14 @@ globalVariables(c(".chain", ".iteration"))
 #' @param data Tidy data frame.
 #' @param key Bare name of column in \code{data} containing the key .
 #' @param value Bare name of column in \code{data} containg the value.
+#' @param row Character vector giving the name of the output column identifying rows in the matrix
+#' of pairs (takes values of \code{key}).
+#' @param col Character vector giving the name of the output column identifying columns in the matrix
+#' of pairs (takes values of \code{key}).
+#' @param x Character vector giving the name of the output column with x values in the matrix
+#' of pairs (takes values of \code{value}).
+#' @param y Character vector giving the name of the output column with y values in the matrix
+#' of pairs (takes values of \code{value}).
 #' @param triangle Should the upper or lower triangle of the matrix of all possible combinations be returned?
 #' The default, \code{"lower only"}, returns the lower triangle without the diagonal; \code{"lower"} returns
 #' the lower triangle with the diagonal (\code{"upper"} and \code{"upper only"} operate analogously), and
@@ -24,8 +32,9 @@ globalVariables(c(".chain", ".iteration"))
 #'
 #' This method is particularly useful for constructing scatterplot matrices. See examples below.
 #'
-#' @return A tidy data frame of combinations of values in \code{key} and \code{value}, with columns \code{.row}
-#' and \code{.col} containing values from \code{key}, and columns \code{.y} and \code{.x} containing values
+#' @return A tidy data frame of combinations of values in \code{key} and \code{value}, with columns \code{row}
+#' and \code{col} (default names \code{".row"} and \code{".col"}) containing values from \code{key},
+#' and columns \code{y} and \code{x} (default names \code{".y"} and \code{".x"}) containing values
 #' from \code{value}.
 #'
 #' @author Matthew Kay

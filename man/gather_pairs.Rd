@@ -15,6 +15,18 @@ gather_pairs(data, key, value, row = ".row", col = ".col", x = ".x",
 
 \item{value}{Bare name of column in \code{data} containg the value.}
 
+\item{row}{Character vector giving the name of the output column identifying rows in the matrix
+of pairs (takes values of \code{key}).}
+
+\item{col}{Character vector giving the name of the output column identifying columns in the matrix
+of pairs (takes values of \code{key}).}
+
+\item{x}{Character vector giving the name of the output column with x values in the matrix
+of pairs (takes values of \code{value}).}
+
+\item{y}{Character vector giving the name of the output column with y values in the matrix
+of pairs (takes values of \code{value}).}
+
 \item{triangle}{Should the upper or lower triangle of the matrix of all possible combinations be returned?
 The default, \code{"lower only"}, returns the lower triangle without the diagonal; \code{"lower"} returns
 the lower triangle with the diagonal (\code{"upper"} and \code{"upper only"} operate analogously), and
@@ -23,8 +35,9 @@ the lower triangle with the diagonal (\code{"upper"} and \code{"upper only"} ope
 This method is particularly useful for constructing scatterplot matrices. See examples below.}
 }
 \value{
-A tidy data frame of combinations of values in \code{key} and \code{value}, with columns \code{.row}
-and \code{.col} containing values from \code{key}, and columns \code{.y} and \code{.x} containing values
+A tidy data frame of combinations of values in \code{key} and \code{value}, with columns \code{row}
+and \code{col} (default names \code{".row"} and \code{".col"}) containing values from \code{key},
+and columns \code{y} and \code{x} (default names \code{".y"} and \code{".x"}) containing values
 from \code{value}.
 }
 \description{
