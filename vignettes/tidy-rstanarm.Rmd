@@ -70,7 +70,7 @@ options(mc.cores = min(2, parallel::detectCores()))
 knitr::opts_chunk$set(
   fig.width = 6, 
   fig.height = 4,
-  eval = params$EVAL
+  eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
 
 options(width = 120)
