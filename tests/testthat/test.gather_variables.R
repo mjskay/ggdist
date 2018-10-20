@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(dplyr, `%>%`, group_by)
+library(dplyr)
 library(tidyr)
 
 context("gather_variables")

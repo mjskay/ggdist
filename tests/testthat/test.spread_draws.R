@@ -3,9 +3,8 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(plyr, ldply, .)  #TODO: drop remaining ldplys from this file
-import::from(dplyr, `%>%`, inner_join, data_frame)
-import::from(rlang, quo)
+library(dplyr)
+library(rlang)
 library(tidyr)
 
 context("spread_draws")
@@ -87,7 +86,7 @@ test_that("spread_draws works on two variables with no dimensions and multiple c
 
 
 test_that("spread_draws works on a variable with one unnamed index", {
-  ref = ldply(1:3, function(i) {
+  ref = plyr::ldply(1:3, function(i) {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr_s)),
@@ -101,7 +100,7 @@ test_that("spread_draws works on a variable with one unnamed index", {
 })
 
 test_that("spread_draws works on a variable with one named index", {
-  ref = ldply(1:3, function(i) {
+  ref = plyr::ldply(1:3, function(i) {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr_i)),
@@ -147,8 +146,8 @@ test_that("spread_draws works on a variable with one named wide index", {
 
 
 test_that("spread_draws works on a variable with two named dimensions", {
-  ref = ldply(1:4, function(j) {
-    ldply(1:3, function(i) {
+  ref = plyr::ldply(1:4, function(j) {
+    plyr::ldply(1:3, function(i) {
       data.frame(
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_ij)),
@@ -165,8 +164,8 @@ test_that("spread_draws works on a variable with two named dimensions", {
 
 
 test_that("spread_draws works on a variable with two named dimensions, one that is wide", {
-  ref = ldply(1:4, function(j) {
-    ldply(1:3, function(i) {
+  ref = plyr::ldply(1:4, function(j) {
+    plyr::ldply(1:3, function(i) {
       data.frame(
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_ij)),
@@ -183,8 +182,8 @@ test_that("spread_draws works on a variable with two named dimensions, one that 
 })
 
 test_that("spread_draws works on a variable with one named index and one wide anonymous index", {
-  ref = ldply(1:4, function(j) {
-    ldply(1:3, function(i) {
+  ref = plyr::ldply(1:4, function(j) {
+    plyr::ldply(1:3, function(i) {
       data.frame(
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_i)),

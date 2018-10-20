@@ -7,12 +7,12 @@ suppressWarnings(suppressMessages({
   library(dplyr)
   library(tidyr)
   library(arrayhelpers)
+  library(magrittr)
 
   library(bindrcpp, quietly = TRUE)
-  library(rstan, quietly = TRUE)
+  library(rstanarm, quietly = TRUE)
   library(brms, quietly = TRUE)
 }))
-import::from(magrittr, set_rownames)
 
 context("fitted_draws")
 

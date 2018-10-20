@@ -3,8 +3,8 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(magrittr, `%$%`)
-import::from(purrr, map_dfc)
+library(magrittr)
+library(purrr)
 
 context("x_at_y")
 

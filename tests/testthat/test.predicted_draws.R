@@ -7,12 +7,12 @@ suppressWarnings(suppressMessages({
   library(dplyr)
   library(tidyr)
   library(ggplot2)
+  library(magrittr)
 
   library(rstan, quietly = TRUE)
   library(rstanarm, quietly = TRUE)
   library(bindrcpp, quietly = TRUE)
 }))
-import::from(magrittr, set_rownames)
 
 context("predicted_draws")
 

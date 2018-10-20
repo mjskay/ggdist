@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(dplyr, `%>%`, inner_join, data_frame)
+library(dplyr)
 library(tidyr)
 
 context("gather_draws")

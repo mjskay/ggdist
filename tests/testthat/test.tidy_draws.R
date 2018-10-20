@@ -3,11 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
+library(tibble)
+library(dplyr)
+library(purrr)
 library(magrittr)
 library(coda)
-import::from(purrr, map_dfr)
-import::from(dplyr, as_tibble, select)
-import::from(tibble, as_tibble, add_column)
 
 context("tidy_draws")
 

@@ -3,8 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(plyr, ldply, llply, .)
-import::from(dplyr, `%>%`, group_by, summarise, ungroup, rename)
+library(dplyr)
 library(tidyr)
 
 context("point_interval")
@@ -16,7 +15,7 @@ get_draws = function() {
   #observations of tau grouped by the factor ff (with levels ff_labels)
   data(RankCorr, package = "tidybayes")
   rank_corr = RankCorr[[1]]
-  ldply(1:3, function(i) {
+  plyr::ldply(1:3, function(i) {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(rank_corr)),

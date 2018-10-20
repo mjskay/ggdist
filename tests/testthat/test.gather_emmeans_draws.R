@@ -6,11 +6,11 @@
 suppressWarnings(suppressMessages({
   library(dplyr)
   library(tidyr)
+  library(magrittr)
 
   library(rstanarm, quietly = TRUE)
   library(emmeans, quietly = TRUE)
 }))
-import::from(magrittr, set_rownames)
 
 context("gather_emmeans_draws")
 

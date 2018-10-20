@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(dplyr, `%>%`, inner_join, data_frame, group_by, group_by_all, do, bind_rows, arrange)
+library(dplyr)
 library(tidyr)
 library(vdiffr)
 

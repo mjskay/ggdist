@@ -3,9 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(plyr, ldply, llply, ddply, .)
-import::from(dplyr, `%>%`, select, one_of, filter)
-import::from(tibble, as_tibble)
+library(dplyr)
 library(tidyr)
 
 context("compare_levels")
@@ -17,7 +15,7 @@ get_draws = function() {
   #observations of tau grouped by the factor ff (with levels ff_labels)
   data(RankCorr, package = "tidybayes")
   rank_corr = RankCorr[[1]]
-  ldply(1:3, function(i) {
+  plyr::ldply(1:3, function(i) {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(rank_corr)),
@@ -32,7 +30,7 @@ test_that("pairwise level comparison works", {
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(combn(levels(draws$ff), 2, simplify = FALSE), function(levels.) {
+  ref = plyr::ldply(combn(levels(draws$ff), 2, simplify = FALSE), function(levels.) {
     draws_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
     draws_wide$tau = draws_wide[[levels.[[2]]]] - draws_wide[[levels.[[1]]]]
     draws_wide
@@ -50,7 +48,7 @@ test_that("ordered level comparison works", {
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[i - 1]])), function(levels.) {
+  ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[i - 1]])), function(levels.) {
     draws_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
     draws_wide$tau = draws_wide[[levels.[[1]]]] - draws_wide[[levels.[[2]]]]
     draws_wide
@@ -66,7 +64,7 @@ test_that("control level comparison works", {
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
+  ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
     draws_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
     draws_wide$tau = draws_wide[[levels.[[1]]]] - draws_wide[[levels.[[2]]]]
     draws_wide
@@ -93,7 +91,7 @@ test_that("named functions are supported and named with their own name", {
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
+  ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
     draws_wide$ff = factor(paste(levels.[[1]], "+", levels.[[2]]))
     draws_wide$tau = draws_wide[[levels.[[1]]]] + draws_wide[[levels.[[2]]]]
     draws_wide
@@ -108,7 +106,7 @@ test_that("anonymous functions are supported and named with `:`", {
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
+  ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
     draws_wide$ff = factor(paste(levels.[[1]], ":", levels.[[2]]))
     draws_wide$tau = draws_wide[[levels.[[1]]]] + draws_wide[[levels.[[2]]]]
     draws_wide
@@ -123,7 +121,7 @@ test_that("custom comparisons of lists of character vectors are supported", {
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(list(c("a", "b"), c("a", "c")), function(levels.) {
+  ref = plyr::ldply(list(c("a", "b"), c("a", "c")), function(levels.) {
     draws_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
     draws_wide$tau = draws_wide[[levels.[[1]]]] - draws_wide[[levels.[[2]]]]
     draws_wide
@@ -138,7 +136,7 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(.(a + b, exp(c - a)), function(levels.) {
+  ref = plyr::ldply(plyr::.(a + b, exp(c - a)), function(levels.) {
     draws_wide$ff = factor(deparse0(levels.))
     draws_wide$tau = eval(levels., draws_wide)
     draws_wide
@@ -154,7 +152,7 @@ test_that("comparisons of subsets of levels of factors are supported", {
     filter(ff %in% c("a", "c"))
 
   draws_wide = spread(draws, ff, tau)
-  ref = ldply(combn(levels(factor(draws$ff)), 2, simplify = FALSE), function(levels.) {
+  ref = plyr::ldply(combn(levels(factor(draws$ff)), 2, simplify = FALSE), function(levels.) {
     draws_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
     draws_wide$tau = draws_wide[[levels.[[2]]]] - draws_wide[[levels.[[1]]]]
     draws_wide
@@ -183,9 +181,9 @@ test_that("compare_levels respects groups of input data frame", {
     filter(i %in% 1:3, j %in% 1:3) %>%
     group_by(i, j)
 
-  ref = ddply(draws, "i", function (d) {
+  ref = plyr::ddply(draws, "i", function (d) {
     draws_wide = spread(d, j, b)
-    ldply(combn(levels(factor(d$j)), 2, simplify = FALSE), function(levels.) {
+    plyr::ldply(combn(levels(factor(d$j)), 2, simplify = FALSE), function(levels.) {
       draws_wide$j = factor(paste(levels.[[2]], "-", levels.[[1]]))
       draws_wide$b = draws_wide[[levels.[[2]]]] - draws_wide[[levels.[[1]]]]
       draws_wide

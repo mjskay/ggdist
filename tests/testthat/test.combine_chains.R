@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(dplyr, `%>%`, mutate)
+library(dplyr)
 library(tidyr)
 
 context("combine_chains")

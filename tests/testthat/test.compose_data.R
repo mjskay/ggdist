@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-import::from(dplyr, transmute, data_frame)
+library(dplyr)
 
 context("compose_data")
 

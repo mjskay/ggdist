@@ -47,7 +47,6 @@ library(ggridges)
 library(rstan)
 library(rstanarm)
 library(cowplot)
-import::from(LaplacesDemon, invlogit)
 
 theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
@@ -596,8 +595,8 @@ esoph %>%
   inner_join(thresholds, by = ".draw") %>%
   mutate(`P(Y = category)` = map2(threshold, .value, function(alpha, beta_x)
       # this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)
-      invlogit(alpha - beta_x) - 
-      invlogit(lag(alpha, default = -Inf) - beta_x)
+      LaplacesDemon::invlogit(alpha - beta_x) - 
+      LaplacesDemon::invlogit(lag(alpha, default = -Inf) - beta_x)
     )) %>%
   mutate(.category = list(levels(esoph$tobgp))) %>%
   unnest() %>%
@@ -616,8 +615,8 @@ esoph %>%
   inner_join(thresholds, by = ".draw") %>%
   mutate(`P(Y = category)` = map2(threshold, .value, function(alpha, beta_x)
       # this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)
-      invlogit(alpha - beta_x) - 
-      invlogit(lag(alpha, default = -Inf) - beta_x)
+      LaplacesDemon::invlogit(alpha - beta_x) - 
+      LaplacesDemon::invlogit(lag(alpha, default = -Inf) - beta_x)
     )) %>%
   mutate(.category = list(levels(esoph$tobgp))) %>%
   unnest() %>%

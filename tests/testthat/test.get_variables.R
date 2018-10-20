@@ -24,6 +24,7 @@ test_that("mcmc variable extraction works", {
 })
 
 test_that("rstanarm variable extraction works", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_equal(get_variables(m_hp_wt),
