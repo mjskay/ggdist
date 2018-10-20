@@ -695,6 +695,8 @@ mtcars_clean %>%
 
 This also looks good.
 
+Another way to look at these posterior predictions might be as a scatterplot matrix. `tidybayes::gather_pairs` makes it easy to generate long-format data frames suitable for creating custom scatteplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using `facet_grid`:
+
 ```{r}
 mtcars_clean %>%
   select(mpg) %>%
@@ -702,10 +704,10 @@ mtcars_clean %>%
   group_by(.draw) %>%
   count(cyl) %>%
   complete(cyl, fill = list(n = 0)) %>%
-  pairwise(cyl, n) %>%
+  gather_pairs(cyl, n) %>%
   ggplot(aes(.x, .y)) +
   geom_count(color = "gray75") +
-  geom_point(data = mtcars_clean %>% count(cyl) %>% pairwise(cyl, n), color = "red") +
+  geom_point(data = mtcars_clean %>% count(cyl) %>% gather_pairs(cyl, n), color = "red") +
   facet_grid(vars(.row), vars(.col)) +
   xlab("Number of observations with cyl = col") +
   ylab("Number of observations with cyl = row") 
