@@ -6,7 +6,8 @@
 different levels of a factor}
 \usage{
 compare_levels(data, variable, by, fun = `-`, comparison = "default",
-  draw_indices = c(".chain", ".iteration", ".draw"))
+  draw_indices = c(".chain", ".iteration", ".draw"),
+  ignore_groups = ".row")
 }
 \arguments{
 \item{data}{Long-format \code{data.frame} of draws such as returned by
@@ -50,6 +51,12 @@ which are the same names used for chain/iteration/draw indices returned by
 \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using \code{compare_levels}
 with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
 value.}
+
+\item{ignore_groups}{character vector of names of groups to ignore by
+default in the input grouping. This is primarily provided to make it
+easier to pipe output of \code{\link{add_fitted_draws}} into this function,
+as that function provides a \code{".row"} output column that is grouped,
+but which is virtually never desired to group by when using \code{compare_levels}.}
 }
 \value{
 A \code{data.frame} with the same columns as \code{data}, except

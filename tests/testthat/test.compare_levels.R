@@ -43,6 +43,7 @@ test_that("pairwise level comparison works", {
   expect_equal(compare_levels(draws, tau, by = ff, comparison = pairwise), ref)
   expect_equal(group_vars(compare_levels(draws, tau, by = ff, comparison = pairwise)), "ff")
   expect_equal(compare_levels(draws, tau, by = ff, comparison = "pairwise"), ref)
+  expect_equal(compare_levels(group_by(mutate(draws, .row = 1), ff, .row), tau, by = ff, comparison = pairwise), ref)
 })
 
 test_that("ordered level comparison works", {

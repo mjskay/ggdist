@@ -92,6 +92,11 @@ comparison_types = within(list(), {
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using \code{compare_levels}
 #' with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
 #' value.
+#' @param ignore_groups character vector of names of groups to ignore by
+#' default in the input grouping. This is primarily provided to make it
+#' easier to pipe output of \code{\link{add_fitted_draws}} into this function,
+#' as that function provides a \code{".row"} output column that is grouped,
+#' but which is virtually never desired to group by when using \code{compare_levels}.
 #' @return A \code{data.frame} with the same columns as \code{data}, except
 #' that the \code{by} column contains a symbolic representation of the
 #' comparison of pairs of levels of \code{by} in \code{data}, and
@@ -138,12 +143,15 @@ comparison_types = within(list(), {
 #' @importFrom tibble as_tibble
 #' @importFrom rlang sym quo_name eval_tidy
 #' @export
-compare_levels = function(data, variable, by, fun=`-`, comparison = "default", draw_indices = c(".chain", ".iteration", ".draw")) {
+compare_levels = function(data, variable, by, fun=`-`, comparison = "default",
+    draw_indices = c(".chain", ".iteration", ".draw"),
+    ignore_groups = ".row"
+  ) {
   variable = vars_pull(names(data), !!enquo(variable))
   by = vars_pull(names(data), !!enquo(by))
   fun = enquo(fun)
   comparison = enquo(comparison)
-  groups_ = group_vars(data)
+  groups_ = setdiff(group_vars(data), ignore_groups)
 
   data %>%
     group_by_at(setdiff(groups_, by)) %>%
