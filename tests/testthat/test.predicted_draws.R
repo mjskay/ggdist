@@ -4,12 +4,13 @@
 ###############################################################################
 
 suppressWarnings(suppressMessages({
-  library(bindrcpp)
   library(dplyr)
   library(tidyr)
   library(ggplot2)
-  library(rstan)
-  library(rstanarm)
+
+  library(rstan, quietly = TRUE)
+  library(rstanarm, quietly = TRUE)
+  library(bindrcpp, quietly = TRUE)
 }))
 import::from(magrittr, set_rownames)
 
@@ -33,6 +34,7 @@ test_that("[add_]predicted_draws throws an error on unsupported models", {
 
 
 test_that("[add_]predicted_draws and basic arguments works on a simple rstanarm model", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   preds = posterior_predict(m_hp_wt, mtcars_tbl, draws = 100, seed = 123) %>%
@@ -56,6 +58,7 @@ test_that("[add_]predicted_draws and basic arguments works on a simple rstanarm 
 
 
 test_that("[add_]predicted_draws and basic arguments works on an rstanarm model with random effects", {
+  skip_if_not_installed("rstanarm")
   m_cyl = readRDS("../models/models.rstanarm.m_cyl.rds")
 
   preds = posterior_predict(m_cyl, mtcars_tbl, draws = 100, seed = 123) %>%
@@ -79,6 +82,7 @@ test_that("[add_]predicted_draws and basic arguments works on an rstanarm model 
 
 
 test_that("[add_]predicted_draws works on a simple brms model", {
+  skip_if_not_installed("brms")
   m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   set.seed(123)
@@ -103,6 +107,7 @@ test_that("[add_]predicted_draws works on a simple brms model", {
 })
 
 test_that("[add_]predicted_draws throws an error when nsamples is called instead of n in brms", {
+  skip_if_not_installed("brms")
   m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   expect_error(
@@ -116,6 +121,7 @@ test_that("[add_]predicted_draws throws an error when nsamples is called instead
 })
 
 test_that("[add_]predicted_draws throws an error when draws is called instead of n in rstanarm", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(
@@ -129,6 +135,7 @@ test_that("[add_]predicted_draws throws an error when draws is called instead of
 })
 
 test_that("[add_]predicted_draws throws an error when re.form is called instead of re_formula in rstanarm", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(

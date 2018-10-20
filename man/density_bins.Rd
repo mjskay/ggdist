@@ -47,32 +47,35 @@ in a consistent format: a data frame of bins suitable for use with
 
 library(ggplot2)
 library(dplyr)
-library(rstanarm)
-library(modelr)
 library(purrr)
 library(tidyr)
 
-theme_set(theme_light())
+if (
+  require("rstanarm", quietly = TRUE) &&
+  require("modelr", quietly = TRUE)
+) {
 
-m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars)
+  theme_set(theme_light())
 
-step = 1
-mtcars \%>\%
-  group_by(cyl) \%>\%
-  data_grid(hp = seq_range(hp, by = step)) \%>\%
-  add_predicted_draws(m_mpg) \%>\%
-  summarise_all(list) \%>\%
-  mutate(densities = map(.prediction, density_bins)) \%>\%
-  unnest(densities) \%>\%
-  ggplot() +
-  geom_rect(aes(
-    xmin = hp - step/2, ymin = lower, ymax = upper, xmax = hp + step/2,
-    fill = ordered(cyl), alpha = density
-  )) +
-  geom_point(aes(x = hp, y = mpg, fill = ordered(cyl)), shape = 21, data = mtcars) +
-  scale_alpha_continuous(range = c(0, 1)) +
-  scale_fill_brewer(palette = "Set2")
+  m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars)
 
+  step = 1
+  mtcars \%>\%
+    group_by(cyl) \%>\%
+    data_grid(hp = seq_range(hp, by = step)) \%>\%
+    add_predicted_draws(m_mpg) \%>\%
+    summarise_all(list) \%>\%
+    mutate(densities = map(.prediction, density_bins)) \%>\%
+    unnest(densities) \%>\%
+    ggplot() +
+    geom_rect(aes(
+      xmin = hp - step/2, ymin = lower, ymax = upper, xmax = hp + step/2,
+      fill = ordered(cyl), alpha = density
+    )) +
+    geom_point(aes(x = hp, y = mpg, fill = ordered(cyl)), shape = 21, data = mtcars) +
+    scale_alpha_continuous(range = c(0, 1)) +
+    scale_fill_brewer(palette = "Set2")
+}
 }
 }
 \seealso{

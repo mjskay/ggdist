@@ -6,8 +6,9 @@
 suppressWarnings(suppressMessages({
   library(dplyr)
   library(tidyr)
-  library(rstanarm)
-  library(emmeans)
+
+  library(rstanarm, quietly = TRUE)
+  library(emmeans, quietly = TRUE)
 }))
 import::from(magrittr, set_rownames)
 
@@ -21,6 +22,8 @@ mtcars_tbl = mtcars %>%
 
 
 test_that("gather_emmeans_draws works on a simple rstanarm model", {
+  skip_if_not_installed("emmeans")
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   estimate_grid = list(hp = c(100, 110), wt = 0)

@@ -4,12 +4,13 @@
 ###############################################################################
 
 suppressWarnings(suppressMessages({
-  library(bindrcpp)
   library(dplyr)
   library(tidyr)
-  library(rstan)
-  library(brms)
   library(arrayhelpers)
+
+  library(bindrcpp, quietly = TRUE)
+  library(rstan, quietly = TRUE)
+  library(brms, quietly = TRUE)
 }))
 import::from(magrittr, set_rownames)
 
@@ -33,6 +34,7 @@ test_that("[add_]fitted_draws throws an error on unsupported models", {
 
 
 test_that("[add_]fitted_draws works on a simple rstanarm model", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
@@ -65,6 +67,7 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
 })
 
 test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
@@ -88,6 +91,7 @@ test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", 
 
 
 test_that("[add_]fitted_draws works on brms models without dpar", {
+  skip_if_not_installed("brms")
   m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   fits = fitted(m_hp, mtcars_tbl, summary = FALSE) %>%
@@ -122,6 +126,7 @@ test_that("[add_]fitted_draws works on brms models without dpar", {
 
 
 test_that("[add_]fitted_draws works on brms models with dpar", {
+  skip_if_not_installed("brms")
   m_hp_sigma = readRDS("../models/models.brms.m_hp_sigma.rds")
 
   fits = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE) %>%
@@ -170,6 +175,7 @@ test_that("[add_]fitted_draws works on brms models with dpar", {
 
 
 test_that("[add_]fitted_draws works on simple brms models with nlpars", {
+  skip_if_not_installed("brms")
   m_nlpar = readRDS("../models/models.brms.m_nlpar.rds")
   df_nlpar = as_data_frame(m_nlpar$data)
 
@@ -196,6 +202,7 @@ test_that("[add_]fitted_draws works on simple brms models with nlpars", {
 
 
 test_that("[add_]fitted_draws works on simple brms models with multiple dpars", {
+  skip_if_not_installed("brms")
   m_dpars = readRDS("../models/models.brms.m_dpars.rds")
   df_dpars = as_data_frame(m_dpars$data)
 
@@ -232,6 +239,7 @@ test_that("[add_]fitted_draws works on simple brms models with multiple dpars", 
 
 
 test_that("[add_]fitted_draws works on brms models with categorical outcomes (response scale)", {
+  skip_if_not_installed("brms")
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE) %>%
@@ -261,6 +269,7 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (re
 
 
 test_that("[add_]fitted_draws works on brms models with categorical outcomes (linear scale)", {
+  skip_if_not_installed("brms")
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
@@ -280,6 +289,7 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (li
 
 
 test_that("[add_]fitted_draws allows extraction of dpar on brms models with categorical outcomes (linear scale)", {
+  skip_if_not_installed("brms")
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
@@ -305,6 +315,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
 
 
 test_that("[add_]fitted_draws allows extraction of dpar on brms models with categorical outcomes (response scale)", {
+  skip_if_not_installed("brms")
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "response") %>%
@@ -330,6 +341,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
 
 
 test_that("[add_]fitted_draws throws an error when nsamples is called instead of n in brms", {
+  skip_if_not_installed("brms")
   m_hp = readRDS("../models/models.brms.m_hp.rds")
 
   expect_error(
@@ -343,6 +355,7 @@ test_that("[add_]fitted_draws throws an error when nsamples is called instead of
 })
 
 test_that("[add_]predicted_draws throws an error when re.form is called instead of re_formula in rstanarm", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(
@@ -356,6 +369,7 @@ test_that("[add_]predicted_draws throws an error when re.form is called instead 
 })
 
 test_that("[add_]predicted_draws throws an error when transform is called instead of scale in rstanarm", {
+  skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   expect_error(
