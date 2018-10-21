@@ -16,7 +16,7 @@ globalVariables(c(".chain", ".iteration"))
 #'
 #' @param data Tidy data frame.
 #' @param key Bare name of column in \code{data} containing the key .
-#' @param value Bare name of column in \code{data} containg the value.
+#' @param value Bare name of column in \code{data} containing the value.
 #' @param row Character vector giving the name of the output column identifying rows in the matrix
 #' of pairs (takes values of \code{key}).
 #' @param col Character vector giving the name of the output column identifying columns in the matrix

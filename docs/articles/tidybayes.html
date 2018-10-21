@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.2</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@
       <h1>Using tidy data with Bayesian models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-08-19</h4>
+            <h4 class="date">2018-10-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes.Rmd</code></div>
@@ -267,16 +267,16 @@ model {
 ## post-warmup draws per chain=1000, total post-warmup draws=4000.
 ## 
 ##                    mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
-## overall_mean       0.59    0.02 0.57 -0.59  0.26  0.59  0.93  1.69   825    1
-## condition_mean_sd  1.22    0.02 0.56  0.61  0.87  1.09  1.43  2.49  1021    1
-## condition_mean[1]  0.19    0.00 0.17 -0.14  0.08  0.19  0.31  0.55  4000    1
-## condition_mean[2]  1.01    0.00 0.17  0.66  0.89  1.00  1.12  1.35  4000    1
-## condition_mean[3]  1.84    0.00 0.18  1.49  1.72  1.84  1.96  2.18  4000    1
-## condition_mean[4]  1.01    0.00 0.18  0.65  0.89  1.01  1.13  1.37  4000    1
-## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.02 -0.89 -0.77 -0.54  4000    1
-## response_sd        0.56    0.00 0.06  0.45  0.52  0.56  0.60  0.70  1698    1
+## overall_mean       0.63    0.02 0.59 -0.55  0.27  0.62  1.00  1.83   745 1.01
+## condition_mean_sd  1.25    0.02 0.53  0.62  0.89  1.13  1.46  2.68   996 1.00
+## condition_mean[1]  0.19    0.00 0.17 -0.16  0.08  0.19  0.31  0.54  4321 1.00
+## condition_mean[2]  1.00    0.00 0.18  0.65  0.88  1.00  1.12  1.37  4691 1.00
+## condition_mean[3]  1.84    0.00 0.18  1.48  1.72  1.84  1.96  2.19  4415 1.00
+## condition_mean[4]  1.01    0.00 0.18  0.68  0.90  1.01  1.13  1.36  4667 1.00
+## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.01 -0.89 -0.77 -0.54  4498 1.00
+## response_sd        0.56    0.00 0.06  0.46  0.52  0.55  0.60  0.69  1305 1.00
 ## 
-## Samples were drawn using NUTS(diag_e) at Sun Aug 19 20:35:02 2018.
+## Samples were drawn using NUTS(diag_e) at Sun Oct 21 18:59:38 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -291,24 +291,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the draws out in a tidy format! The default methods in Stan for extracting draws from the model do so in a nested format:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</a></code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] -0.0214 1.4961 2.2914 0.0402 0.9548 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.404 0.817 0.752 0.449 0.538 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] 0.0532 -0.5114 -1.304 0.1063 -1.0489 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.0651 -0.2834 -0.8032 -0.1836 -0.1637 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.612 0.578 0.628 0.493 0.499 ...
+##  $ response_sd      : num [1:4000(1d)] 0.546 0.551 0.535 0.557 0.568 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.228 1.619 1.87 1.187 0.803 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.272 1.161 0.841 1.371 0.75 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.0439 0.668 -0.1474 0.1663 0.1127 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.3213 0.4875 0.0759 0.1976 0.4153 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -0.387 0.277 -0.106 1.174 -3.129 ...
+##  $ lp__             : num [1:4000(1d)] 0.741 0.136 -1.163 4.29 0.501 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting draws as matrices or data frames in Stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -320,16 +320,16 @@ model {
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw condition condition_mean
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt;
-##  1      1          1     1         1        -0.0488
-##  2      1          1     1         2         1.19  
-##  3      1          1     1         3         1.90  
-##  4      1          1     1         4         0.962 
-##  5      1          1     1         5        -0.878 
-##  6      1          2     2         1         0.193 
-##  7      1          2     2         2         1.07  
-##  8      1          2     2         3         1.97  
-##  9      1          2     2         4         1.12  
-## 10      1          2     2         5        -1.09</code></pre>
+##  1      1          1     1         1          0.380
+##  2      1          1     1         2          0.866
+##  3      1          1     1         3          1.87 
+##  4      1          1     1         4          1.02 
+##  5      1          1     1         5         -1.23 
+##  6      1          2     2         1          0.478
+##  7      1          2     2         2          0.850
+##  8      1          2     2         3          1.76 
+##  9      1          2     2         4          1.01 
+## 10      1          2     2         5         -0.696</code></pre>
 </div>
 <div id="automatically-converting-columns-and-indices-back-into-their-original-data-types" class="section level3">
 <h3 class="hasAnchor">
@@ -344,16 +344,16 @@ model {
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw condition condition_mean
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;
-##  1      1          1     1 A                -0.0488
-##  2      1          1     1 B                 1.19  
-##  3      1          1     1 C                 1.90  
-##  4      1          1     1 D                 0.962 
-##  5      1          1     1 E                -0.878 
-##  6      1          2     2 A                 0.193 
-##  7      1          2     2 B                 1.07  
-##  8      1          2     2 C                 1.97  
-##  9      1          2     2 D                 1.12  
-## 10      1          2     2 E                -1.09</code></pre>
+##  1      1          1     1 A                  0.380
+##  2      1          1     1 B                  0.866
+##  3      1          1     1 C                  1.87 
+##  4      1          1     1 D                  1.02 
+##  5      1          1     1 E                 -1.23 
+##  6      1          2     2 A                  0.478
+##  7      1          2     2 B                  0.850
+##  8      1          2     2 C                  1.76 
+##  9      1          2     2 D                  1.01 
+## 10      1          2     2 E                 -0.696</code></pre>
 <p>Because we often want to make multiple separate calls to <code>spread_draws</code>, it is often convenient to decorate the original model using <code>recover_types</code> immediately after it has been fit, so we only have to call it once:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">m <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/recover_types.html">recover_types</a></span>(ABC)</a></code></pre></div>
 <p>Now we can omit the <code>recover_types</code> call before subsequent calls to <code>spread_draws</code>.</p>
@@ -374,16 +374,16 @@ model {
 <pre><code>## # A tibble: 10 x 5
 ##    .chain .iteration .draw overall_mean response_sd
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;        &lt;dbl&gt;       &lt;dbl&gt;
-##  1      1          1     1        0.810       0.582
-##  2      1          2     2        0.762       0.596
-##  3      1          3     3        0.689       0.556
-##  4      1          4     4        0.845       0.581
-##  5      1          5     5        0.626       0.617
-##  6      1          6     6        0.431       0.535
-##  7      1          7     7        0.475       0.556
-##  8      1          8     8        0.542       0.489
-##  9      1          9     9        1.24        0.608
-## 10      1         10    10        1.14        0.630</code></pre>
+##  1      1          1     1        0.856       0.517
+##  2      1          2     2        0.879       0.507
+##  3      1          3     3        0.870       0.494
+##  4      1          4     4        0.876       0.502
+##  5      1          5     5        1.18        0.474
+##  6      1          6     6        1.04        0.479
+##  7      1          7     7        1.36        0.541
+##  8      1          8     8        1.08        0.511
+##  9      1          9     9       -0.759       0.572
+## 10      1         10    10       -0.866       0.576</code></pre>
 <p>Like with <code>condition_mean[condition]</code>, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply <code>median_qi</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(overall_mean, response_sd) <span class="op">%&gt;%</span></a>
@@ -391,7 +391,7 @@ model {
 <pre><code>## # A tibble: 1 x 9
 ##   overall_mean overall_mean.lo~ overall_mean.up~ response_sd response_sd.low~ response_sd.upp~
 ##          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
-## 1        0.586           -0.587             1.69       0.556            0.453            0.700
+## 1        0.623           -0.548             1.83       0.554            0.456            0.694
 ## # ... with 3 more variables: .width &lt;dbl&gt;, .point &lt;chr&gt;, .interval &lt;chr&gt;</code></pre>
 <p><code>median_qi</code> summarizes each input column using its median. If there are multiple columns to summarize, each gets its own <code>x.lower</code> and <code>x.upper</code> column (for each column <code>x</code>) corresponding to the bounds of the <code>.width</code>% interval. If there is only one column, the names <code>.lower</code> and <code>.upper</code> are used for the interval bounds.</p>
 <p>We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, <code>median_qi</code> will use every column that is not a grouping column or a special column (like <code>.chain</code>, <code>.iteration</code>, or <code>.draw</code>). Thus in the above example, <code>overall_mean</code> and <code>response_sd</code> are redundant arguments to <code>median_qi</code> because they are also the only columns we gathered from the model. So we can simplify the previous code to the following:</p>
@@ -401,7 +401,7 @@ model {
 <pre><code>## # A tibble: 1 x 9
 ##   overall_mean overall_mean.lo~ overall_mean.up~ response_sd response_sd.low~ response_sd.upp~
 ##          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
-## 1        0.586           -0.587             1.69       0.556            0.453            0.700
+## 1        0.623           -0.548             1.83       0.554            0.456            0.694
 ## # ... with 3 more variables: .width &lt;dbl&gt;, .point &lt;chr&gt;, .interval &lt;chr&gt;</code></pre>
 </div>
 <div id="with-indexed-variables" class="section level3">
@@ -414,11 +414,11 @@ model {
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A                  0.191 -0.137  0.548   0.95 median qi       
-## 2 B                  1.00   0.656  1.35    0.95 median qi       
-## 3 C                  1.84   1.49   2.18    0.95 median qi       
-## 4 D                  1.01   0.654  1.37    0.95 median qi       
-## 5 E                 -0.894 -1.24  -0.544   0.95 median qi</code></pre>
+## 1 A                  0.194 -0.155  0.539   0.95 median qi       
+## 2 B                  1.00   0.653  1.37    0.95 median qi       
+## 3 C                  1.84   1.48   2.19    0.95 median qi       
+## 4 D                  1.01   0.678  1.36    0.95 median qi       
+## 5 E                 -0.893 -1.24  -0.539   0.95 median qi</code></pre>
 <p>How did <code>median_qi</code> know what to aggregate? Data frames returned by <code>spread_draws</code> are automatically grouped by all index variables you pass to it; in this case, that means it groups by <code>condition</code>. <code>median_qi</code> respects groups, and calculates the point summaries and intervals within all groups. Then, because no columns were passed to <code>median_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>condition_mean</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span></a>
@@ -427,11 +427,11 @@ model {
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A                  0.191 -0.137  0.548   0.95 median qi       
-## 2 B                  1.00   0.656  1.35    0.95 median qi       
-## 3 C                  1.84   1.49   2.18    0.95 median qi       
-## 4 D                  1.01   0.654  1.37    0.95 median qi       
-## 5 E                 -0.894 -1.24  -0.544   0.95 median qi</code></pre>
+## 1 A                  0.194 -0.155  0.539   0.95 median qi       
+## 2 B                  1.00   0.653  1.37    0.95 median qi       
+## 3 C                  1.84   1.48   2.19    0.95 median qi       
+## 4 D                  1.01   0.678  1.36    0.95 median qi       
+## 5 E                 -0.893 -1.24  -0.539   0.95 median qi</code></pre>
 <p>When given only a single column, <code>median_qi</code> will use the names <code>.lower</code> and <code>.upper</code> for the lower and upper ends of the intervals.</p>
 </div>
 </div>
@@ -515,21 +515,21 @@ model {
 <pre><code>## # A tibble: 15 x 7
 ##    condition condition_mean  .lower .upper .width .point .interval
 ##    &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-##  1 A                  0.191 -0.137   0.548   0.95 median qi       
-##  2 B                  1.00   0.656   1.35    0.95 median qi       
-##  3 C                  1.84   1.49    2.18    0.95 median qi       
-##  4 D                  1.01   0.654   1.37    0.95 median qi       
-##  5 E                 -0.894 -1.24   -0.544   0.95 median qi       
-##  6 A                  0.191 -0.0238  0.411   0.8  median qi       
-##  7 B                  1.00   0.784   1.23    0.8  median qi       
+##  1 A                  0.194 -0.155   0.539   0.95 median qi       
+##  2 B                  1.00   0.653   1.37    0.95 median qi       
+##  3 C                  1.84   1.48    2.19    0.95 median qi       
+##  4 D                  1.01   0.678   1.36    0.95 median qi       
+##  5 E                 -0.893 -1.24   -0.539   0.95 median qi       
+##  6 A                  0.194 -0.0290  0.410   0.8  median qi       
+##  7 B                  1.00   0.773   1.23    0.8  median qi       
 ##  8 C                  1.84   1.61    2.06    0.8  median qi       
-##  9 D                  1.01   0.787   1.24    0.8  median qi       
-## 10 E                 -0.894 -1.12   -0.665   0.8  median qi       
-## 11 A                  0.191  0.0751  0.307   0.5  median qi       
-## 12 B                  1.00   0.890   1.12    0.5  median qi       
+##  9 D                  1.01   0.790   1.24    0.8  median qi       
+## 10 E                 -0.893 -1.11   -0.663   0.8  median qi       
+## 11 A                  0.194  0.0813  0.309   0.5  median qi       
+## 12 B                  1.00   0.875   1.12    0.5  median qi       
 ## 13 C                  1.84   1.72    1.96    0.5  median qi       
-## 14 D                  1.01   0.893   1.13    0.5  median qi       
-## 15 E                 -0.894 -1.02   -0.769   0.5  median qi</code></pre>
+## 14 D                  1.01   0.896   1.13    0.5  median qi       
+## 15 E                 -0.893 -1.01   -0.773   0.5  median qi</code></pre>
 <p>The results are in a tidy format: one row per index (<code>condition</code>) and probability level (<code>.width</code>). This facilitates plotting. For example, assigning <code>-.width</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals:</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb38-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span></a>
@@ -607,16 +607,16 @@ model {
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw overall_mean condition condition_mean
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;        &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;
-##  1      1          1     1        0.810 A                -0.0488
-##  2      1          1     1        0.810 B                 1.19  
-##  3      1          1     1        0.810 C                 1.90  
-##  4      1          1     1        0.810 D                 0.962 
-##  5      1          1     1        0.810 E                -0.878 
-##  6      1          2     2        0.762 A                 0.193 
-##  7      1          2     2        0.762 B                 1.07  
-##  8      1          2     2        0.762 C                 1.97  
-##  9      1          2     2        0.762 D                 1.12  
-## 10      1          2     2        0.762 E                -1.09</code></pre>
+##  1      1          1     1        0.856 A                  0.380
+##  2      1          1     1        0.856 B                  0.866
+##  3      1          1     1        0.856 C                  1.87 
+##  4      1          1     1        0.856 D                  1.02 
+##  5      1          1     1        0.856 E                 -1.23 
+##  6      1          2     2        0.879 A                  0.478
+##  7      1          2     2        0.879 B                  0.850
+##  8      1          2     2        0.879 C                  1.76 
+##  9      1          2     2        0.879 D                  1.01 
+## 10      1          2     2        0.879 E                 -0.696</code></pre>
 <p>Within each draw, <code>overall_mean</code> is repeated as necessary to correspond to every index of <code>condition_mean</code>. Thus, the <code>mutate</code> function from dplyr can be used to take the differences over all rows, then we can summarize with <code>median_qi</code>:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(overall_mean, condition_mean[condition]) <span class="op">%&gt;%</span></a>
@@ -625,11 +625,11 @@ model {
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_offset  .lower .upper .width .point .interval
 ##   &lt;chr&gt;                &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A                   -0.398 -1.59    0.803   0.95 median qi       
-## 2 B                    0.408 -0.756   1.62    0.95 median qi       
-## 3 C                    1.24   0.0928  2.47    0.95 median qi       
-## 4 D                    0.416 -0.737   1.63    0.95 median qi       
-## 5 E                   -1.47  -2.65   -0.301   0.95 median qi</code></pre>
+## 1 A                   -0.432 -1.65    0.755   0.95 median qi       
+## 2 B                    0.376 -0.857   1.57    0.95 median qi       
+## 3 C                    1.20   0.0444  2.48    0.95 median qi       
+## 4 D                    0.382 -0.792   1.62    0.95 median qi       
+## 5 E                   -1.51  -2.76   -0.330   0.95 median qi</code></pre>
 </div>
 <div id="posterior-predictions" class="section level2">
 <h2 class="hasAnchor">
@@ -701,12 +701,12 @@ model {
 ## # Groups:   .variable [2]
 ##   .variable      condition .value .lower .upper .width .point .interval
 ##   &lt;chr&gt;          &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 condition_mean A          0.191 -0.137  0.548   0.95 median qi       
-## 2 condition_mean B          1.00   0.656  1.35    0.95 median qi       
-## 3 condition_mean C          1.84   1.49   2.18    0.95 median qi       
-## 4 condition_mean D          1.01   0.654  1.37    0.95 median qi       
-## 5 condition_mean E         -0.894 -1.24  -0.544   0.95 median qi       
-## 6 overall_mean   &lt;NA&gt;       0.586 -0.587  1.69    0.95 median qi</code></pre>
+## 1 condition_mean A          0.194 -0.155  0.539   0.95 median qi       
+## 2 condition_mean B          1.00   0.653  1.37    0.95 median qi       
+## 3 condition_mean C          1.84   1.48   2.19    0.95 median qi       
+## 4 condition_mean D          1.01   0.678  1.36    0.95 median qi       
+## 5 condition_mean E         -0.893 -1.24  -0.539   0.95 median qi       
+## 6 overall_mean   &lt;NA&gt;       0.623 -0.548  1.83    0.95 median qi</code></pre>
 <p>Note that <code>condition = NA</code> for the <code>overall_mean</code> row, because it does not have an index with that name in the specification passed to <code>gather_draws</code>.</p>
 <p>While this works well if we do not need to perform computations that involve multiple columns, the semi-wide format returned by <code>spread_draws</code> is very useful for computations that involve multiple columns names, such as the calculation of the <code>condition_offset</code> above. If we want to make intermediate computations on the format returned by <code>spread_draws</code> and <em>then</em> gather variables into one column, we can use <code>gather_variables</code>, which will gather all non-grouped variables that are not special columns (like <code>.chain</code>, <code>.iteration</code>, or <code>.draw</code>):</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
@@ -718,21 +718,21 @@ model {
 ## # Groups:   condition [5]
 ##    condition .variable        .value  .lower .upper .width .point .interval
 ##    &lt;chr&gt;     &lt;chr&gt;             &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-##  1 A         condition_mean    0.191 -0.137   0.548   0.95 median qi       
-##  2 A         condition_offset -0.398 -1.59    0.803   0.95 median qi       
-##  3 A         overall_mean      0.586 -0.587   1.69    0.95 median qi       
-##  4 B         condition_mean    1.00   0.656   1.35    0.95 median qi       
-##  5 B         condition_offset  0.408 -0.756   1.62    0.95 median qi       
-##  6 B         overall_mean      0.586 -0.587   1.69    0.95 median qi       
-##  7 C         condition_mean    1.84   1.49    2.18    0.95 median qi       
-##  8 C         condition_offset  1.24   0.0928  2.47    0.95 median qi       
-##  9 C         overall_mean      0.586 -0.587   1.69    0.95 median qi       
-## 10 D         condition_mean    1.01   0.654   1.37    0.95 median qi       
-## 11 D         condition_offset  0.416 -0.737   1.63    0.95 median qi       
-## 12 D         overall_mean      0.586 -0.587   1.69    0.95 median qi       
-## 13 E         condition_mean   -0.894 -1.24   -0.544   0.95 median qi       
-## 14 E         condition_offset -1.47  -2.65   -0.301   0.95 median qi       
-## 15 E         overall_mean      0.586 -0.587   1.69    0.95 median qi</code></pre>
+##  1 A         condition_mean    0.194 -0.155   0.539   0.95 median qi       
+##  2 A         condition_offset -0.432 -1.65    0.755   0.95 median qi       
+##  3 A         overall_mean      0.623 -0.548   1.83    0.95 median qi       
+##  4 B         condition_mean    1.00   0.653   1.37    0.95 median qi       
+##  5 B         condition_offset  0.376 -0.857   1.57    0.95 median qi       
+##  6 B         overall_mean      0.623 -0.548   1.83    0.95 median qi       
+##  7 C         condition_mean    1.84   1.48    2.19    0.95 median qi       
+##  8 C         condition_offset  1.20   0.0444  2.48    0.95 median qi       
+##  9 C         overall_mean      0.623 -0.548   1.83    0.95 median qi       
+## 10 D         condition_mean    1.01   0.678   1.36    0.95 median qi       
+## 11 D         condition_offset  0.382 -0.792   1.62    0.95 median qi       
+## 12 D         overall_mean      0.623 -0.548   1.83    0.95 median qi       
+## 13 E         condition_mean   -0.893 -1.24   -0.539   0.95 median qi       
+## 14 E         condition_offset -1.51  -2.76   -0.330   0.95 median qi       
+## 15 E         overall_mean      0.623 -0.548   1.83    0.95 median qi</code></pre>
 <p>Note how <code>overall_mean</code> is now repeated here for each condition, because we have performed the gather after spreading model variables across columns.</p>
 <p>Finally, if we want raw model variable names as columns names instead of having indices split out as their own column names, we can use <code>tidy_draws</code>. Generally speaking <code>spread_draws</code> and <code>gather_draws</code> are typically more useful that <code>tidy_draws</code>, but it is provided as a common method for generating data frames from many types of Bayesian models, and is used internally by <code>gather_draws</code> and <code>spread_draws</code>:</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
@@ -741,16 +741,16 @@ model {
 <pre><code>## # A tibble: 10 x 23
 ##    .chain .iteration .draw overall_mean `condition_zoff~ `condition_zoff~ `condition_zoff~
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;        &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
-##  1      1          1     1        0.810          -0.743            0.330             0.941
-##  2      1          2     2        0.762          -0.441            0.239             0.941
-##  3      1          3     3        0.689          -0.358            0.0563            0.751
-##  4      1          4     4        0.845          -0.564            0.277             0.573
-##  5      1          5     5        0.626          -0.234            0.225             0.976
-##  6      1          6     6        0.431          -0.0670           1.04              1.74 
-##  7      1          7     7        0.475          -0.658            0.553             1.75 
-##  8      1          8     8        0.542          -0.409            0.680             1.74 
-##  9      1          9     9        1.24           -0.730           -0.387             0.717
-## 10      1         10    10        1.14           -0.690           -0.265             0.805
+##  1      1          1     1        0.856           -0.519          0.0105             1.10 
+##  2      1          2     2        0.879           -0.491         -0.0352             1.08 
+##  3      1          3     3        0.870           -0.500         -0.107              1.11 
+##  4      1          4     4        0.876           -0.440          0.00865            1.13 
+##  5      1          5     5        1.18            -0.907          0.0605             0.506
+##  6      1          6     6        1.04            -1.02           0.163              0.682
+##  7      1          7     7        1.36            -1.18          -0.0130             0.369
+##  8      1          8     8        1.08            -0.815         -0.224              0.611
+##  9      1          9     9       -0.759            0.676          1.13               1.92 
+## 10      1         10    10       -0.866            0.628          1.05               2.03 
 ## # ... with 16 more variables: `condition_zoffset[4]` &lt;dbl&gt;, `condition_zoffset[5]` &lt;dbl&gt;,
 ## #   response_sd &lt;dbl&gt;, condition_mean_sd &lt;dbl&gt;, `condition_mean[1]` &lt;dbl&gt;,
 ## #   `condition_mean[2]` &lt;dbl&gt;, `condition_mean[3]` &lt;dbl&gt;, `condition_mean[4]` &lt;dbl&gt;,
@@ -765,16 +765,16 @@ model {
 ## # Groups:   .variable [1]
 ##    .chain .iteration .draw .variable    .value
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;dbl&gt;
-##  1      1          1     1 overall_mean  0.810
-##  2      1          2     2 overall_mean  0.762
-##  3      1          3     3 overall_mean  0.689
-##  4      1          4     4 overall_mean  0.845
-##  5      1          5     5 overall_mean  0.626
-##  6      1          6     6 overall_mean  0.431
-##  7      1          7     7 overall_mean  0.475
-##  8      1          8     8 overall_mean  0.542
-##  9      1          9     9 overall_mean  1.24 
-## 10      1         10    10 overall_mean  1.14</code></pre>
+##  1      1          1     1 overall_mean  0.856
+##  2      1          2     2 overall_mean  0.879
+##  3      1          3     3 overall_mean  0.870
+##  4      1          4     4 overall_mean  0.876
+##  5      1          5     5 overall_mean  1.18 
+##  6      1          6     6 overall_mean  1.04 
+##  7      1          7     7 overall_mean  1.36 
+##  8      1          8     8 overall_mean  1.08 
+##  9      1          9     9 overall_mean -0.759
+## 10      1         10    10 overall_mean -0.866</code></pre>
 <p>But again, this approach does not handle variable indices for us automatically, so using <code>spread_draws</code> and <code>gather_draws</code> is generally recommended unless you do not have variable indices to worry about.</p>
 </div>
 <div id="selecting-variables-using-regular-expressions" class="section level2">
@@ -788,16 +788,16 @@ model {
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw condition condition_mean condition_zoffset
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;             &lt;dbl&gt;
-##  1      1          1     1 A                -0.0488            -0.743
-##  2      1          1     1 B                 1.19               0.330
-##  3      1          1     1 C                 1.90               0.941
-##  4      1          1     1 D                 0.962              0.131
-##  5      1          1     1 E                -0.878             -1.46 
-##  6      1          2     2 A                 0.193             -0.441
-##  7      1          2     2 B                 1.07               0.239
-##  8      1          2     2 C                 1.97               0.941
-##  9      1          2     2 D                 1.12               0.281
-## 10      1          2     2 E                -1.09              -1.44</code></pre>
+##  1      1          1     1 A                  0.380           -0.519 
+##  2      1          1     1 B                  0.866            0.0105
+##  3      1          1     1 C                  1.87             1.10  
+##  4      1          1     1 D                  1.02             0.175 
+##  5      1          1     1 E                 -1.23            -2.27  
+##  6      1          2     2 A                  0.478           -0.491 
+##  7      1          2     2 B                  0.850           -0.0352
+##  8      1          2     2 C                  1.76             1.08  
+##  9      1          2     2 D                  1.01             0.156 
+## 10      1          2     2 E                 -0.696           -1.93</code></pre>
 <p>This result is equivalent in this case to <code><a href="../reference/spread_draws.html">spread_draws(c(condition_mean, condition_zoffset)[condition])</a></code>, but does not require us to list each variable explicitly—this can be useful, for example, in models with naming schemes like <code>b_[some name]</code> for coefficients.</p>
 </div>
 <div id="drawing-fit-curves-with-uncertainty" class="section level2">
@@ -873,11 +873,11 @@ model {
 <pre><code>## # A tibble: 5 x 8
 ##   condition estimate conf.low conf.high .width .point .interval model
 ##   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;
-## 1 A            0.191   -0.137     0.548   0.95 median qi        Bayes
-## 2 B            1.00     0.656     1.35    0.95 median qi        Bayes
-## 3 C            1.84     1.49      2.18    0.95 median qi        Bayes
-## 4 D            1.01     0.654     1.37    0.95 median qi        Bayes
-## 5 E           -0.894   -1.24     -0.544   0.95 median qi        Bayes</code></pre>
+## 1 A            0.194   -0.155     0.539   0.95 median qi        Bayes
+## 2 B            1.00     0.653     1.37    0.95 median qi        Bayes
+## 3 C            1.84     1.48      2.19    0.95 median qi        Bayes
+## 4 D            1.01     0.678     1.36    0.95 median qi        Bayes
+## 5 E           -0.893   -1.24     -0.539   0.95 median qi        Bayes</code></pre>
 <p>Here, <code>to_broom_names</code> will convert <code>.lower</code> and <code>.upper</code> into <code>conf.low</code> and <code>conf.high</code> so the names of the columns we need to make the comparison (<code>condition</code>, <code>estimate</code>, <code>conf.low</code>, and <code>conf.high</code>) all line up easily. This makes it simple to combine the two tidy data frames together using <code>bind_rows</code>, and plot them:</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="kw">bind_rows</span>(linear_results, bayes_results) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb73-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">fct_rev</span>(condition)) <span class="op">%&gt;%</span></a>
@@ -908,16 +908,16 @@ model {
 ## # Groups:   condition [1]
 ##    .chain .iteration .draw condition condition_mean
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;fct&gt;              &lt;dbl&gt;
-##  1      1          1     1 B - A              1.24 
-##  2      1          2     2 B - A              0.877
-##  3      1          3     3 B - A              0.493
-##  4      1          4     4 B - A              1.32 
-##  5      1          5     5 B - A              0.502
-##  6      1          6     6 B - A              0.864
-##  7      1          7     7 B - A              1.16 
-##  8      1          8     8 B - A              0.728
-##  9      1          9     9 B - A              0.258
-## 10      1         10    10 B - A              0.363</code></pre>
+##  1      1          1     1 B - A              0.486
+##  2      1          2     2 B - A              0.372
+##  3      1          3     3 B - A              0.384
+##  4      1          4     4 B - A              0.449
+##  5      1          5     5 B - A              1.04 
+##  6      1          6     6 B - A              1.39 
+##  7      1          7     7 B - A              1.46 
+##  8      1          8     8 B - A              0.629
+##  9      1          9     9 B - A              0.631
+## 10      1         10    10 B - A              0.597</code></pre>
 <p>To get a version we can pass to <code>mcmc_hist</code>, all we need to do is invert the <code>spread_draws</code> call we started with:</p>
 <div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb79-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(condition_mean[condition]) <span class="op">%&gt;%</span></a>
@@ -927,16 +927,16 @@ model {
 <pre><code>## # A tibble: 10 x 13
 ##    .chain .iteration .draw `condition_mean~ `condition_mean~ `condition_mean~ `condition_mean~
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
-##  1      1          1     1            1.24              1.95            0.706            1.01 
-##  2      1          2     2            0.877             1.78            0.905            0.931
-##  3      1          3     3            0.493             1.32            0.827            0.901
-##  4      1          4     4            1.32              1.79            0.466            0.906
-##  5      1          5     5            0.502             1.32            0.822            0.567
-##  6      1          6     6            0.864             1.41            0.544            0.662
-##  7      1          7     7            1.16              2.31            1.15             1.23 
-##  8      1          8     8            0.728             1.44            0.707            0.820
-##  9      1          9     9            0.258             1.09            0.831            0.484
-## 10      1         10    10            0.363             1.28            0.914            0.498
+##  1      1          1     1            0.486             1.49            1.00             0.636
+##  2      1          2     2            0.372             1.28            0.909            0.528
+##  3      1          3     3            0.384             1.58            1.19             0.481
+##  4      1          4     4            0.449             1.57            1.12             0.420
+##  5      1          5     5            1.04              1.52            0.478            0.979
+##  6      1          6     6            1.39              2.00            0.610            1.27 
+##  7      1          7     7            1.46              1.94            0.476            1.30 
+##  8      1          8     8            0.629             1.52            0.889            0.530
+##  9      1          9     9            0.631             1.73            1.09             0.811
+## 10      1         10    10            0.597             1.99            1.39             0.972
 ## # ... with 6 more variables: `condition_mean[D - B]` &lt;dbl&gt;, `condition_mean[D - C]` &lt;dbl&gt;,
 ## #   `condition_mean[E - A]` &lt;dbl&gt;, `condition_mean[E - B]` &lt;dbl&gt;, `condition_mean[E - C]` &lt;dbl&gt;,
 ## #   `condition_mean[E - D]` &lt;dbl&gt;</code></pre>
@@ -952,12 +952,13 @@ model {
 <div id="compatibility-with-emmeans-formerly-lsmeans" class="section level3">
 <h3 class="hasAnchor">
 <a href="#compatibility-with-emmeans-formerly-lsmeans" class="anchor"></a>Compatibility with <code>emmeans</code> (formerly <code>lsmeans</code>)</h3>
-<p>The <code>emmeans</code> package provides a convenient syntax for generating marginal estimates from a model, including numerous types of contrasts. It also supports some Bayesian modeling packages, like <code>MCMCglmm</code> and <code>rstanarm</code>. However, it does not provide draws in a tidy format. The <code>gather_emmeans_draws</code> function converts output from <code>emmeans</code> into a tidy format, keeping the <code>emmeans</code> reference grid and adding a <code>.value</code> column with long-format draws.</p>
-<div id="using-rstanarm" class="section level4">
+<p>The <code>emmeans</code> package provides a convenient syntax for generating marginal estimates from a model, including numerous types of contrasts. It also supports some Bayesian modeling packages, like <code>MCMCglmm</code>, <code>rstanarm</code>, and <code>brms</code>. However, it does not provide draws in a tidy format. The <code>gather_emmeans_draws</code> function converts output from <code>emmeans</code> into a tidy format, keeping the <code>emmeans</code> reference grid and adding a <code>.value</code> column with long-format draws.</p>
+<div id="using-rstanarm-or-brms" class="section level4">
 <h4 class="hasAnchor">
-<a href="#using-rstanarm" class="anchor"></a>Using <code>rstanarm</code>
+<a href="#using-rstanarm-or-brms" class="anchor"></a>Using <code>rstanarm</code> or <code>brms</code>
 </h4>
-<p>For example, given this <code>rstanarm</code> model:</p>
+<p>Both <code>rstanarm</code> and <code>brms</code> behave similarly when used with <code>emmeans</code>. The example below uses <code>rstanarm</code>, but should work similarly for <code>brms</code>.</p>
+<p>Given this <code>rstanarm</code> model:</p>
 <div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">m_rst =<span class="st"> </span><span class="kw">stan_glm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC)</a></code></pre></div>
 <p>We can use <code><a href="http://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> to get conditional means with uncertainty:</p>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">m_rst <span class="op">%&gt;%</span></a>

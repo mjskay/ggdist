@@ -13,7 +13,7 @@ gather_pairs(data, key, value, row = ".row", col = ".col", x = ".x",
 
 \item{key}{Bare name of column in \code{data} containing the key .}
 
-\item{value}{Bare name of column in \code{data} containg the value.}
+\item{value}{Bare name of column in \code{data} containing the value.}
 
 \item{row}{Character vector giving the name of the output column identifying rows in the matrix
 of pairs (takes values of \code{key}).}

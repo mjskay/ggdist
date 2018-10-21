@@ -695,7 +695,7 @@ mtcars_clean %>%
 
 This also looks good.
 
-Another way to look at these posterior predictions might be as a scatterplot matrix. `tidybayes::gather_pairs` makes it easy to generate long-format data frames suitable for creating custom scatteplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using `facet_grid`:
+Another way to look at these posterior predictions might be as a scatterplot matrix. `tidybayes::gather_pairs` makes it easy to generate long-format data frames suitable for creating custom scatterplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using `facet_grid`:
 
 ```{r}
 mtcars_clean %>%

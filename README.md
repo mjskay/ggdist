@@ -168,6 +168,9 @@ library(broom)
 library(brms)
 library(modelr)
 library(forcats)
+library(cowplot)
+
+theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
 
 Imagine this dataset:
@@ -271,21 +274,21 @@ m %>%
 
 | .chain | .iteration | .draw | condition | condition\_mean | response\_sd |
 | -----: | ---------: | ----: | :-------- | --------------: | -----------: |
-|      1 |          1 |     1 | A         |     \-0.0488381 |    0.5824056 |
-|      1 |          1 |     1 | B         |       1.1920197 |    0.5824056 |
-|      1 |          1 |     1 | C         |       1.8984306 |    0.5824056 |
-|      1 |          1 |     1 | D         |       0.9617923 |    0.5824056 |
-|      1 |          1 |     1 | E         |     \-0.8784776 |    0.5824056 |
-|      1 |          2 |     2 | A         |       0.1930336 |    0.5961389 |
-|      1 |          2 |     2 | B         |       1.0703175 |    0.5961389 |
-|      1 |          2 |     2 | C         |       1.9749954 |    0.5961389 |
-|      1 |          2 |     2 | D         |       1.1242398 |    0.5961389 |
-|      1 |          2 |     2 | E         |     \-1.0909016 |    0.5961389 |
-|      1 |          3 |     3 | A         |       0.2633968 |    0.5559389 |
-|      1 |          3 |     3 | B         |       0.7562821 |    0.5559389 |
-|      1 |          3 |     3 | C         |       1.5831328 |    0.5559389 |
-|      1 |          3 |     3 | D         |       1.1647897 |    0.5559389 |
-|      1 |          3 |     3 | E         |     \-0.8511654 |    0.5559389 |
+|      1 |          1 |     1 | A         |       0.3799180 |    0.5173212 |
+|      1 |          1 |     1 | B         |       0.8655726 |    0.5173212 |
+|      1 |          1 |     1 | C         |       1.8660413 |    0.5173212 |
+|      1 |          1 |     1 | D         |       1.0161765 |    0.5173212 |
+|      1 |          1 |     1 | E         |     \-1.2252053 |    0.5173212 |
+|      1 |          2 |     2 | A         |       0.4783359 |    0.5068886 |
+|      1 |          2 |     2 | B         |       0.8498675 |    0.5068886 |
+|      1 |          2 |     2 | C         |       1.7586497 |    0.5068886 |
+|      1 |          2 |     2 | D         |       1.0058950 |    0.5068886 |
+|      1 |          2 |     2 | E         |     \-0.6960075 |    0.5068886 |
+|      1 |          3 |     3 | A         |       0.3811166 |    0.4942790 |
+|      1 |          3 |     3 | B         |       0.7655946 |    0.4942790 |
+|      1 |          3 |     3 | C         |       1.9564889 |    0.4942790 |
+|      1 |          3 |     3 | D         |       0.8620409 |    0.4942790 |
+|      1 |          3 |     3 | E         |     \-0.8646748 |    0.4942790 |
 
 </div>
 
@@ -348,8 +351,10 @@ m %>%
   do(data_frame(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
   ggplot(aes(x = condition_mean)) +
   geom_dotplot(binwidth = .04) +
-  facet_grid(fct_rev(condition) ~ .) +
-  scale_y_continuous(breaks = NULL)
+  facet_grid(rows = vars(fct_rev(condition)), switch = "y") +
+  facet_title_left_horizontal() +
+  scale_y_continuous(breaks = NULL) +
+  ylab(NULL)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
@@ -374,11 +379,11 @@ m %>%
 
 | condition | condition\_mean |      .lower |      .upper | .width | .point | .interval |
 | :-------- | --------------: | ----------: | ----------: | -----: | :----- | :-------- |
-| A         |       0.1911702 | \-0.1374798 |   0.5480979 |   0.95 | median | qi        |
-| B         |       1.0044480 |   0.6559603 |   1.3464413 |   0.95 | median | qi        |
-| C         |       1.8398608 |   1.4854153 |   2.1840286 |   0.95 | median | qi        |
-| D         |       1.0112651 |   0.6541362 |   1.3738020 |   0.95 | median | qi        |
-| E         |     \-0.8938598 | \-1.2404690 | \-0.5443226 |   0.95 | median | qi        |
+| A         |       0.1941983 | \-0.1554990 |   0.5388005 |   0.95 | median | qi        |
+| B         |       1.0000279 |   0.6525839 |   1.3666515 |   0.95 | median | qi        |
+| C         |       1.8363346 |   1.4803019 |   2.1931636 |   0.95 | median | qi        |
+| D         |       1.0129198 |   0.6781254 |   1.3621610 |   0.95 | median | qi        |
+| E         |     \-0.8926450 | \-1.2407441 | \-0.5388904 |   0.95 | median | qi        |
 
 </div>
 
@@ -433,11 +438,11 @@ bayes_results
 
 | condition |    estimate |    conf.low |   conf.high | .width | .point | .interval | model |
 | :-------- | ----------: | ----------: | ----------: | -----: | :----- | :-------- | :---- |
-| A         |   0.1911702 | \-0.1374798 |   0.5480979 |   0.95 | median | qi        | Bayes |
-| B         |   1.0044480 |   0.6559603 |   1.3464413 |   0.95 | median | qi        | Bayes |
-| C         |   1.8398608 |   1.4854153 |   2.1840286 |   0.95 | median | qi        | Bayes |
-| D         |   1.0112651 |   0.6541362 |   1.3738020 |   0.95 | median | qi        | Bayes |
-| E         | \-0.8938598 | \-1.2404690 | \-0.5443226 |   0.95 | median | qi        | Bayes |
+| A         |   0.1941983 | \-0.1554990 |   0.5388005 |   0.95 | median | qi        | Bayes |
+| B         |   1.0000279 |   0.6525839 |   1.3666515 |   0.95 | median | qi        | Bayes |
+| C         |   1.8363346 |   1.4803019 |   2.1931636 |   0.95 | median | qi        | Bayes |
+| D         |   1.0129198 |   0.6781254 |   1.3621610 |   0.95 | median | qi        | Bayes |
+| E         | \-0.8926450 | \-1.2407441 | \-0.5388904 |   0.95 | median | qi        | Bayes |
 
 </div>
 
@@ -449,6 +454,12 @@ bind_rows(linear_results, bayes_results) %>%
   geom_pointrangeh(position = position_dodgev(height = .3))
 ```
 
+    ## Warning in bind_rows_(x, .id): binding factor and character vector, coercing into
+    ## character vector
+
+    ## Warning in bind_rows_(x, .id): binding character and factor vector, coercing into
+    ## character vector
+
 ![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
@@ -459,7 +470,7 @@ Comptability with `broom::tidy` also gives compatibility with
 ``` r
 bind_rows(linear_results, bayes_results) %>%
   rename(term = condition) %>%
-  dotwhisker::dwplot()
+  dotwhisker::dwplot() 
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
@@ -580,7 +591,7 @@ mtcars %>%
   ggplot(aes(x = hp, y = mpg)) +
   geom_line(aes(y = .value, group = .draw), alpha = 0.2, color = "red") +
   geom_point(data = mtcars) +
-  facet_wrap(~ am)
+  facet_wrap(~ am) 
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
@@ -603,5 +614,5 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2018). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 1.0.0, <https://mjskay.github.io/tidybayes/>.
+Models*. R package version 1.0.2, <https://mjskay.github.io/tidybayes/>.
 DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).

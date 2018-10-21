@@ -79,7 +79,7 @@ across different paired combinations of levels of a factor." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.2</span>
       </span>
     </div>
 
@@ -151,7 +151,8 @@ across different paired combinations of levels of a factor.</p>
     </div>
 
     <pre class="usage"><span class='fu'>compare_levels</span>(<span class='no'>data</span>, <span class='no'>variable</span>, <span class='no'>by</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>`-`</span>, <span class='kw'>comparison</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>))</pre>
+  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
+  <span class='kw'>ignore_groups</span> <span class='kw'>=</span> <span class='st'>".row"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -209,6 +210,14 @@ which are the same names used for chain/iteration/draw indices returned by
 <code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>; thus if you are using <code>compare_levels</code>
 with <code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code> you generally should not need to change this
 value.</p></td>
+    </tr>
+    <tr>
+      <th>ignore_groups</th>
+      <td><p>character vector of names of groups to ignore by
+default in the input grouping. This is primarily provided to make it
+easier to pipe output of <code><a href='add_predicted_draws.html'>add_fitted_draws</a></code> into this function,
+as that function provides a <code>".row"</code> output column that is grouped,
+but which is virtually never desired to group by when using <code>compare_levels</code>.</p></td>
     </tr>
     </table>
     
