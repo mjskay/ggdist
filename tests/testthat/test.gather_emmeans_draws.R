@@ -7,9 +7,6 @@ suppressWarnings(suppressMessages({
   library(dplyr)
   library(tidyr)
   library(magrittr)
-
-  library(rstanarm, quietly = TRUE)
-  library(emmeans, quietly = TRUE)
 }))
 
 context("gather_emmeans_draws")
@@ -24,11 +21,12 @@ mtcars_tbl = mtcars %>%
 test_that("gather_emmeans_draws works on a simple rstanarm model", {
   skip_if_not_installed("emmeans")
   skip_if_not_installed("rstanarm")
+
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
   estimate_grid = list(hp = c(100, 110), wt = 0)
 
-  fits = posterior_linpred(m_hp_wt, newdata = as.data.frame(estimate_grid)) %>%
+  fits = rstanarm::posterior_linpred(m_hp_wt, newdata = as.data.frame(estimate_grid)) %>%
     as.data.frame() %>%
     mutate(
       .chain = NA_integer_,
@@ -47,7 +45,7 @@ test_that("gather_emmeans_draws works on a simple rstanarm model", {
   # call that created the model (here, the global environment).
   # So we'll specify mtcars_tbl manually using `data =`
   result = m_hp_wt %>%
-    ref_grid(estimate_grid, data = mtcars_tbl) %>%
+    emmeans::ref_grid(estimate_grid, data = mtcars_tbl) %>%
     gather_emmeans_draws()
 
   expect_equal(ref, result)

@@ -8,10 +8,6 @@ suppressWarnings(suppressMessages({
   library(tidyr)
   library(ggplot2)
   library(magrittr)
-
-  library(rstan, quietly = TRUE)
-  library(rstanarm, quietly = TRUE)
-  library(bindrcpp, quietly = TRUE)
 }))
 
 context("predicted_draws")
@@ -37,7 +33,7 @@ test_that("[add_]predicted_draws and basic arguments works on a simple rstanarm 
   skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
-  preds = posterior_predict(m_hp_wt, mtcars_tbl, draws = 100, seed = 123) %>%
+  preds = rstanarm::posterior_predict(m_hp_wt, mtcars_tbl, draws = 100, seed = 123) %>%
     as.data.frame() %>%
     mutate(
       .chain = NA_integer_,
@@ -61,7 +57,7 @@ test_that("[add_]predicted_draws and basic arguments works on an rstanarm model 
   skip_if_not_installed("rstanarm")
   m_cyl = readRDS("../models/models.rstanarm.m_cyl.rds")
 
-  preds = posterior_predict(m_cyl, mtcars_tbl, draws = 100, seed = 123) %>%
+  preds = rstanarm::posterior_predict(m_cyl, mtcars_tbl, draws = 100, seed = 123) %>%
     as.data.frame() %>%
     mutate(
       .chain = NA_integer_,

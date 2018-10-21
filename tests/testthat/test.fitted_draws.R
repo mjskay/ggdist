@@ -8,10 +8,6 @@ suppressWarnings(suppressMessages({
   library(tidyr)
   library(arrayhelpers)
   library(magrittr)
-
-  library(bindrcpp, quietly = TRUE)
-  library(rstanarm, quietly = TRUE)
-  library(brms, quietly = TRUE)
 }))
 
 context("fitted_draws")
@@ -37,7 +33,7 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
   skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
-  fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
+  fits = rstanarm::posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
     mutate(
       .chain = NA_integer_,
@@ -70,7 +66,7 @@ test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", 
   skip_if_not_installed("rstanarm")
   m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
 
-  fits = posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
+  fits = rstanarm::posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
     mutate(
       .chain = NA_integer_,
