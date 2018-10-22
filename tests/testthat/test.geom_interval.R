@@ -18,6 +18,7 @@ RankCorr_u_tau = RankCorr_s %>%
 
 test_that("horizontal grouped intervals work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.5, .75, .90)) %>%
@@ -59,6 +60,7 @@ test_that("horizontal grouped intervals work", {
 
 test_that("grouped intervals work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.5, .75, .90)) %>%

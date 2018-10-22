@@ -1,6 +1,6 @@
 Package: tidybayes
 Title: Tidy Data and 'Geoms' for Bayesian Models
-Version: 1.0.2
+Version: 1.0.3
 Date: 2018-10-21
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu"),
@@ -40,6 +40,7 @@ Suggests:
     knitr,
     testthat,
     vdiffr,
+    svglite,
     rstan (>= 2.17.0),
     runjags,
     rjags,

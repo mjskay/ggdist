@@ -17,6 +17,7 @@ RankCorr_u_tau = RankCorr %>%
 
 test_that("horizontal grouped pointintervals work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
 
   forward_plot = RankCorr_u_tau %>%
     median_hdci(.width = c(.66, .95)) %>%
@@ -53,6 +54,7 @@ test_that("horizontal grouped pointintervals work", {
 
 test_that("grouped pointintervals work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%

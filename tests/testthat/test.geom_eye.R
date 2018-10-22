@@ -10,6 +10,8 @@ context("geom_eye")
 
 test_that("one-parameter eye plots work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
   set.seed(123)
   df = data.frame(x = rnorm(1000), y = 1)
 
@@ -32,6 +34,8 @@ test_that("one-parameter eye plots work", {
 
 test_that("two-parameter eye plots work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
   set.seed(123)
   df = data.frame(x = rnorm(1000), y = "a", y_int = 1) %>%
     rbind(data.frame(x = rnorm(1000, 1), y = "b", y_int = 2))

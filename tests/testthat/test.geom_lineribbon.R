@@ -22,6 +22,7 @@ make_line_data = function(offset = 0, seed = 123, g = "a") {
 
 test_that("one-group stat_lineribbons work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
 
   df = make_line_data()
 
@@ -36,6 +37,7 @@ test_that("one-group stat_lineribbons work", {
 
 test_that("one-group geom_lineribbons work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
 
   df = make_line_data()
 
@@ -57,6 +59,7 @@ test_that("one-group geom_lineribbons work", {
 
 test_that("two-group stat_lineribbons work", {
   skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
 
   df = bind_rows(
     make_line_data(),

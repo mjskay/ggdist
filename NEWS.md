@@ -1,4 +1,4 @@
-# tidybayes 1.0.2
+# tidybayes 1.0.3
 
 * Added `gather_pairs` method for creating custom scatterplot matrices (and more!) 
 * Ordinal models in brms now use original category labels (#122)
