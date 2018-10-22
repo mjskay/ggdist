@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.3</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@
       <h1>Using tidy data with Bayesian models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2018-10-21</h4>
+            <h4 class="date">2018-10-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes.Rmd</code></div>
@@ -276,7 +276,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.01 -0.89 -0.77 -0.54  4498 1.00
 ## response_sd        0.56    0.00 0.06  0.46  0.52  0.55  0.60  0.69  1305 1.00
 ## 
-## Samples were drawn using NUTS(diag_e) at Sun Oct 21 18:59:38 2018.
+## Samples were drawn using NUTS(diag_e) at Mon Oct 22 08:31:21 2018.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -291,24 +291,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the draws out in a tidy format! The default methods in Stan for extracting draws from the model do so in a nested format:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">str</span>(rstan<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</a></code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.404 0.817 0.752 0.449 0.538 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.147 0.084 0.57 -0.232 -0.79 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.0651 -0.2834 -0.8032 -0.1836 -0.1637 ...
+##  $ condition_zoffset: num [1:4000, 1:5] 0.209 -0.216 -0.768 0.185 0.661 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.546 0.551 0.535 0.557 0.568 ...
+##  $ response_sd      : num [1:4000(1d)] 0.52 0.541 0.637 0.658 0.526 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.272 1.161 0.841 1.371 0.75 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 0.736 1.226 0.601 1.974 1.694 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.3213 0.4875 0.0759 0.1976 0.4153 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.3 -0.181 0.109 0.134 0.329 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 0.741 0.136 -1.163 4.29 0.501 ...
+##  $ lp__             : num [1:4000(1d)] -0.638 0.179 -1.772 1.052 2.482 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting draws as matrices or data frames in Stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
