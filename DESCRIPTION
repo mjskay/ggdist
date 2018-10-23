@@ -1,7 +1,7 @@
 Package: tidybayes
 Title: Tidy Data and 'Geoms' for Bayesian Models
-Version: 1.0.3
-Date: 2018-10-21
+Version: 1.0.3.9000
+Date: 2018-10-23
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu"),
         person("Timothy", "Mastny", role = "ctb", email = "tim.mastny@gmail.com")
