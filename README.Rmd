@@ -9,6 +9,7 @@ output:
 [![Build status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
 [![Coverage status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
 [![CRAN status](http://www.r-pkg.org/badges/version/tidybayes)](https://cran.r-project.org/package=tidybayes)
+![Download count](https://cranlogs.r-pkg.org/badges/last-month/tidybayes)
 [![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)
 
 ![Preview of tidybayes plots](man/figures/preview.png)
@@ -184,7 +185,7 @@ ABC %>%
 
 A hierarchical model of this data might fit an overall mean across the conditions (`overall_mean`), the standard deviation of the condition means (`condition_mean_sd`), the mean within each condition (`condition_mean[condition]`) and the standard deviation of the responses given a condition mean (`response_sd`):
 
-```{stan, output.var = "ABC_stan", results = "hide"}
+```{stan, output.var = "ABC_stan", results = "hide", cache = TRUE}
 data {
   int<lower=1> n;
   int<lower=1> n_condition;
@@ -369,7 +370,7 @@ For models that support it (like `rstanarm` and `brms` models), We can also use 
 
 Let's fit a slightly naive model to miles per gallon versus horsepower in the `mtcars` dataset:
 
-```{r, results = "hide", message = FALSE, warning = FALSE}
+```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg = brm(mpg ~ log(hp), data = mtcars, family = lognormal)
 ```
 
@@ -387,9 +388,9 @@ mtcars %>%
 
 `stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is one of several shortcut geoms that simplify common combinations of `tidybayes` functions and `ggplot` goems. It is roughly equivalent to the following:
 
-```{r, eval=FALSE}
+```r
   stat_summary(
-    aes(y = .prediction, fill = forcats::fct_rev(ordered(...width..)), group = -...width..), 
+    aes(y = .prediction, fill = forcats::fct_rev(ordered(stat(.width))), group = -stat(.width)), 
     geom = "ribbon", point_interval = median_qi, fun.args = list(.width = c(.99, .95, .8, .5))
   ) +
   stat_summary(aes(y = .prediction), fun.y = median, geom = "line", color = "red", size = 1.25)
@@ -399,7 +400,7 @@ Because this is all tidy data, if you wanted to build a model with interactions 
 
 Such a model might be:
 
-```{r, results = "hide", message = FALSE, warning = FALSE}
+```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg_am = brm(mpg ~ log(hp)*am, data = mtcars, family = lognormal)
 ```
 

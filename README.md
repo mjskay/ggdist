@@ -7,6 +7,8 @@ status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travi
 status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
 [![CRAN
 status](http://www.r-pkg.org/badges/version/tidybayes)](https://cran.r-project.org/package=tidybayes)
+![Download
+count](https://cranlogs.r-pkg.org/badges/last-month/tidybayes)
 [![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)
 
 ![Preview of tidybayes plots](man/figures/preview.png)
@@ -544,7 +546,7 @@ the following:
 
 ``` r
   stat_summary(
-    aes(y = .prediction, fill = forcats::fct_rev(ordered(...width..)), group = -...width..), 
+    aes(y = .prediction, fill = forcats::fct_rev(ordered(stat(.width))), group = -stat(.width)), 
     geom = "ribbon", point_interval = median_qi, fun.args = list(.width = c(.99, .95, .8, .5))
   ) +
   stat_summary(aes(y = .prediction), fun.y = median, geom = "line", color = "red", size = 1.25)
@@ -577,7 +579,7 @@ mtcars %>%
   facet_wrap(~ am)                                  # facet by am
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 Or, if you would like overplotted posterior fit lines, you can instead
 use `tidybayes::add_fitted_draws` to get draws from fit lines (instead
@@ -594,7 +596,7 @@ mtcars %>%
   facet_wrap(~ am) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 See `vignette("tidybayes")` for a variety of additional examples and
 more explanation of how it works.
@@ -614,5 +616,5 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2018). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 1.0.2, <https://mjskay.github.io/tidybayes/>.
+Models*. R package version 1.0.3, <https://mjskay.github.io/tidybayes/>.
 DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
