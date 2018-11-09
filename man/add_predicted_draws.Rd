@@ -43,20 +43,20 @@ linpred_draws(model, newdata, value = ".value", ..., n = NULL,
   dpar = FALSE, scale = c("response", "linear"))
 
 add_predicted_draws(newdata, model, prediction = ".prediction", ...,
-  n = NULL, seed = NULL, re_formula = NULL)
+  n = NULL, seed = NULL, re_formula = NULL, category = ".category")
 
 predicted_draws(model, newdata, prediction = ".prediction", ...,
-  n = NULL, seed = NULL, re_formula = NULL)
+  n = NULL, seed = NULL, re_formula = NULL, category = ".category")
 
 \method{predicted_draws}{default}(model, newdata, ...)
 
 \method{predicted_draws}{stanreg}(model, newdata,
   prediction = ".prediction", ..., n = NULL, seed = NULL,
-  re_formula = NULL)
+  re_formula = NULL, category = ".category")
 
 \method{predicted_draws}{brmsfit}(model, newdata,
   prediction = ".prediction", ..., n = NULL, seed = NULL,
-  re_formula = NULL)
+  re_formula = NULL, category = ".category")
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will
@@ -86,12 +86,16 @@ marginalizing over grouping factors by specifying new levels of a factor in \cod
 \code{\link[brms]{brm}}, you must also pass \code{allow_new_levels = TRUE} here to include new levels (see
 \code{\link[brms]{predict.brmsfit}}).}
 
-\item{category}{For \emph{some} ordinal and multinomial models (notably, \code{\link[brms]{brm}} models but
+\item{category}{For \emph{some} ordinal, multinomial, and multivariate models (notably, \code{\link[brms]{brm}} models but
 \emph{not} \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per input row for
-\code{fitted_draws}, one for each category. The \code{category} argument specifies the name of the column
-to put the category names into in the resulting data frame (default: \code{".category"}). The fact that multiple
-rows per response are returned only for some model types reflects the fact that tidybayes takes the approach of
-tidying whatever output is given to us, and the output from different modeling functions differ on this point.
+\code{fitted_draws} or \code{predicted_draws}, depending on the model type. For ordinal/multinomial models,
+these rows correspond to different categories of the response variable. For multivariate models, these correspond to
+different response variables. The \code{category} argument specifies the name of the column
+to put the category names (or variable names) into in the resulting data frame. The default name of this column
+(\code{".category"}) reflects the fact that this functionality was originally used only for ordinal models and
+has been re-used for multivariate models. The fact that multiple rows per response are returned only for some
+model types reflects the fact that tidybayes takes the approach of tidying whatever output is given to us, and
+the output from different modeling functions differs on this point.
 See \code{vignette("tidy-brms")} and \code{vignette("tidy-rstanarm")} for examples of dealing with output
 from ordinal models using both approaches.}
 
