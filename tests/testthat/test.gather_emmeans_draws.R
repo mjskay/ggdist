@@ -15,7 +15,7 @@ context("gather_emmeans_draws")
 # data
 mtcars_tbl = mtcars %>%
   set_rownames(seq_len(nrow(.))) %>%
-  as_data_frame()
+  as_tibble()
 
 
 test_that("gather_emmeans_draws works on a simple rstanarm model", {
@@ -34,9 +34,9 @@ test_that("gather_emmeans_draws works on a simple rstanarm model", {
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
-  ref = as_data_frame(estimate_grid) %>%
+  ref = as_tibble(estimate_grid) %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
     select(-.row)

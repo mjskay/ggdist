@@ -10,12 +10,12 @@ context("geom_lineribbon")
 
 make_line_data = function(offset = 0, seed = 123, g = "a") {
   set.seed(seed)
-  data_frame(
+  tibble(
       x = seq(0, 1, length.out = 25),
       g = g
     ) %>%
     group_by_all() %>%
-    do(data_frame(
+    do(tibble(
       y = rnorm(500, mean = .$x + offset)
     ))
 }

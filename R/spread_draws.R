@@ -263,7 +263,7 @@ spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
 
 #' @import dplyr
 #' @importFrom tidyr spread_
-#' @importFrom tibble has_name
+#' @importFrom rlang has_name
 spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
   spec = parse_variable_spec(variable_spec)
@@ -435,7 +435,7 @@ all_names <- function(x) {
 # 2. A vector of dimension names (or NULL if none)
 # 3. The name of the wide dimension (or NULL if none)
 #' @importFrom purrr reduce map map2
-#' @importFrom rlang set_names
+#' @importFrom rlang set_names new_data_mask
 parse_variable_spec = function(variable_spec) {
   names = all_names(variable_spec[[2]])
   #specs for each bare variable name in the spec expression
@@ -482,5 +482,6 @@ parse_variable_spec = function(variable_spec) {
     names_spec
   ))
 
-  eval_tidy(variable_spec, spec_env)
+  spec_data_mask = new_data_mask(spec_env)
+  eval_tidy(variable_spec, spec_data_mask)
 }

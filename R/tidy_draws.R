@@ -64,10 +64,8 @@ as_sample_data_frame = function(...) {
 #'
 #' @importFrom purrr map_dfr
 #' @importFrom dplyr bind_cols
-#' @importFrom tibble as_tibble tibble
+#' @importFrom dplyr as_tibble tibble
 #' @importFrom coda as.mcmc.list as.mcmc
-#' @importFrom stats coef vcov
-#' @importFrom MASS mvrnorm
 #' @export
 tidy_draws = function(model) UseMethod("tidy_draws")
 

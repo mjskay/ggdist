@@ -16,7 +16,7 @@ context("fitted_draws")
 # data
 mtcars_tbl = mtcars %>%
   set_rownames(seq_len(nrow(.))) %>%
-  as_data_frame()
+  as_tibble()
 
 
 test_that("[add_]fitted_draws throws an error on unsupported models", {
@@ -41,7 +41,7 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
@@ -74,7 +74,7 @@ test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", 
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
@@ -99,7 +99,7 @@ test_that("[add_]fitted_draws works on brms models without dpar", {
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
@@ -134,7 +134,7 @@ test_that("[add_]fitted_draws works on brms models with dpar", {
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   fits$mu = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE, dpar = "mu") %>%
     as.data.frame() %>%
@@ -173,7 +173,7 @@ test_that("[add_]fitted_draws works on brms models with dpar", {
 test_that("[add_]fitted_draws works on simple brms models with nlpars", {
   skip_if_not_installed("brms")
   m_nlpar = readRDS("../models/models.brms.m_nlpar.rds")
-  df_nlpar = as_data_frame(m_nlpar$data)
+  df_nlpar = as_tibble(m_nlpar$data)
 
   fits = fitted(m_nlpar, df_nlpar, summary = FALSE) %>%
     as.data.frame() %>%
@@ -184,7 +184,7 @@ test_that("[add_]fitted_draws works on simple brms models with nlpars", {
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   ref = df_nlpar %>%
     mutate(.row = rownames(.)) %>%
@@ -200,7 +200,7 @@ test_that("[add_]fitted_draws works on simple brms models with nlpars", {
 test_that("[add_]fitted_draws works on simple brms models with multiple dpars", {
   skip_if_not_installed("brms")
   m_dpars = readRDS("../models/models.brms.m_dpars.rds")
-  df_dpars = as_data_frame(m_dpars$data)
+  df_dpars = as_tibble(m_dpars$data)
 
   fits = fitted(m_dpars, df_dpars, summary = FALSE) %>%
     as.data.frame() %>%
@@ -211,7 +211,7 @@ test_that("[add_]fitted_draws works on simple brms models with multiple dpars", 
       .draw = seq_len(n())
     ) %>%
     gather(.row, .value, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   fits$mu1 = fitted(m_dpars, df_dpars, summary = FALSE, dpar = "mu1") %>%
     as.data.frame() %>%

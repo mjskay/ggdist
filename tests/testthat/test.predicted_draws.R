@@ -16,7 +16,7 @@ context("predicted_draws")
 # data
 mtcars_tbl = mtcars %>%
   set_rownames(seq_len(nrow(.))) %>%
-  as_data_frame()
+  as_tibble()
 
 
 test_that("[add_]predicted_draws throws an error on unsupported models", {
@@ -41,7 +41,7 @@ test_that("[add_]predicted_draws and basic arguments works on a simple rstanarm 
       .draw = seq_len(n())
     ) %>%
     gather(.row, .prediction, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
@@ -65,7 +65,7 @@ test_that("[add_]predicted_draws and basic arguments works on an rstanarm model 
       .draw = seq_len(n())
     ) %>%
     gather(.row, .prediction, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
@@ -91,7 +91,7 @@ test_that("[add_]predicted_draws works on a simple brms model", {
       .draw = seq_len(n())
     ) %>%
     gather(.row, .prediction, -.chain, -.iteration, -.draw) %>%
-    as_data_frame()
+    as_tibble()
 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%

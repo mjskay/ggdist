@@ -36,15 +36,14 @@
 #'   compose_data(site = x_at_y(site, plot))
 #'
 #' @importFrom rlang enquo quo_label is_integerish
-#' @importFrom tibble data_frame
-#' @importFrom dplyr group_by slice distinct left_join
+#' @importFrom dplyr tibble group_by slice distinct left_join
 #' @importFrom magrittr %$%
 #' @export
 x_at_y = function(x, y, missing = NA) {
   x_label = quo_label(enquo(x))
   y_label = quo_label(enquo(y))
 
-  data = data_frame(x = x, y = y)
+  data = tibble(x = x, y = y)
 
   # make the index --- this will not include missing values
   index =
@@ -77,7 +76,7 @@ x_at_y = function(x, y, missing = NA) {
     }
 
   #fill in any NAs
-  index = data_frame(y = all_y) %>%
+  index = tibble(y = all_y) %>%
     left_join(index, by = "y") %$%
     x
 

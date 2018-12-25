@@ -204,7 +204,7 @@ density_bins = function(x, n = 101, ...) {
   last_mid = length(mid)
   x_diffs = mid[-1] - mid[-last_mid]
 
-  data_frame(
+  tibble(
     mid = mid,
     lower = c(mid[[1]] - x_diffs[[1]] / 2, mid[-1] - x_diffs / 2),
     upper = c(mid[-last_mid] + x_diffs / 2, mid[[last_mid]] + x_diffs[[last_mid - 1]] / 2),
@@ -219,7 +219,7 @@ density_bins = function(x, n = 101, ...) {
 histogram_bins = function(x, n = 30, breaks = n, ...) {
   h = hist(x, breaks = breaks, ..., plot = FALSE)
 
-  data_frame(
+  tibble(
     mid = rowMeans(embed(h$breaks, 2)),
     lower = h$breaks[-length(h$breaks)],
     upper = h$breaks[-1],

@@ -4,7 +4,6 @@
 ###############################################################################
 
 library(dplyr)
-library(rlang)
 library(tidyr)
 
 context("spread_draws")
@@ -59,7 +58,7 @@ test_that("spread_draws correctly rejects missing variables", {
 
 
 test_that("spread_draws works on a simple variable with no dimensions", {
-  ref = data_frame(
+  ref = tibble(
     .chain = as.integer(1),
     .iteration = seq_len(nrow(RankCorr_s)),
     .draw = .iteration,
@@ -73,7 +72,7 @@ test_that("spread_draws works on a simple variable with no dimensions", {
 test_that("spread_draws works on two variables with no dimensions and multiple chains", {
   data(line, package = "coda")
 
-  ref = data_frame(
+  ref = tibble(
     .chain = c(rep(1L, nrow(line[[1]])), rep(2L, nrow(line[[2]]))),
     .iteration = c(seq_len(nrow(line[[1]])), seq_len(nrow(line[[2]]))),
     .draw = seq_len(nrow(line[[1]]) + nrow(line[[2]])),

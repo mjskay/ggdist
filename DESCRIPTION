@@ -21,15 +21,11 @@ Imports:
     tidyr,
     ggplot2 (>= 3.0.0),
     stringi,
-    stringr,
     LaplacesDemon,
     coda,
     purrr (>= 0.2.3),
-    tibble,
-    MASS,
-    rlang,
+    rlang (>= 0.3.0),
     ggstance,
-    ggridges,
     grid,
     forcats,
     HDInterval,
@@ -46,7 +42,6 @@ Suggests:
     rjags,
     jagsUI,
     rstanarm (>= 2.17.2),
-    rstantools,
     emmeans,
     broom (>= 0.4.3),
     dotwhisker,
@@ -55,6 +50,7 @@ Suggests:
     modelr,
     brms (>= 2.4.3),
     cowplot,
+    ggridges,
     covr,
     gdtools,
     rmarkdown,
@@ -65,6 +61,6 @@ Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: http://mjskay.github.io/tidybayes, https://github.com/mjskay/tidybayes
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 LazyData: true
 Encoding: UTF-8

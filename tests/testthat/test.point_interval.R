@@ -190,7 +190,7 @@ test_that("mean_qi works on multiple probs with multiple vars", {
 })
 
 test_that("mean_qi correctly identifies the desired columns when ... is empty", {
-  testdf = data_frame(
+  testdf = tibble(
     .chain = 1:1000,
     .iteration = 1:1000,
     .draw = 1:1000,
@@ -206,7 +206,7 @@ test_that("mean_qi correctly identifies the desired columns when ... is empty", 
 
 test_that("multiple-response intervals work", {
   set.seed(1234)
-  dd = data_frame(
+  dd = tibble(
     x = c(rnorm(1000), rnorm(1000, mean = 5))
   )
 

@@ -85,7 +85,7 @@ test_that("as_data_list psses through existing data lists unchanged", {
 test_that("compose_data converts character vectors into dimension indices", {
   ref = list(x = array(c(1, 2, 3)), n_x = 3, n = 3)
 
-  expect_equal(compose_data(data_frame(x = c("a","b","c"))), ref)
+  expect_equal(compose_data(tibble(x = c("a","b","c"))), ref)
 })
 
 test_that("compose_data warns if there are unused levels in a factor", {

@@ -23,7 +23,7 @@ options(mc.cores = parallel::detectCores())
 
 mtcars_tbl = mtcars %>%
   set_rownames(seq_len(nrow(.))) %>%
-  as_data_frame()
+  as_tibble()
 
 
 set.seed(94)
@@ -116,7 +116,7 @@ saveRDS(brms.m_dpars, "tests/models/models.brms.m_dpars.rds", compress = "xz")
 
 # brms model with random intercept
 set.seed(3932)
-ranef_data = data_frame(
+ranef_data = tibble(
   group = rep(c("a","b","c","d","e"), each = 10),
   group_mean = rep(rnorm(5), each = 10),
   x = rep(1:10, 5),

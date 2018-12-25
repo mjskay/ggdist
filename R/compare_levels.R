@@ -140,7 +140,7 @@ comparison_types = within(list(), {
 #' @importFrom plyr ldply
 #' @importFrom tidyr spread_
 #' @importFrom dplyr one_of
-#' @importFrom tibble as_tibble
+#' @importFrom dplyr as_tibble
 #' @importFrom rlang sym quo_name eval_tidy
 #' @export
 compare_levels = function(data, variable, by, fun=`-`, comparison = "default",

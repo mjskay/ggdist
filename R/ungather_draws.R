@@ -67,7 +67,7 @@ ungather_draws_ = function(
   # filter to desired rows and columns, removing duplicates (which may have been
   # introduced if `data` was the result of a call to `gather_variables`)
   data %<>%
-    filter(.data[[!!variable]] %in% !!variable_names) %>%
+    filter(.data[[variable]] %in% !!variable_names) %>%
     ungroup() %>%
     select_at(c(draw_indices, dimension_names, variable, value)) %>%
     distinct()
