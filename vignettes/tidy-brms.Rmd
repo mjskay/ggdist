@@ -43,6 +43,7 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(magrittr)
 library(dplyr)
+library(purrr)
 library(forcats)
 library(tidyr)
 library(modelr)
@@ -404,6 +405,32 @@ ABC %>%
   stat_pointintervalh(aes(x = .value), data = fits, .width = c(.66, .95), position = position_nudge(y = -0.2)) +
   geom_point() +
   scale_color_brewer()
+```
+
+## Posterior predictions, Kruschke-style
+
+The above approach to posterior predictions integrates over the parameter uncertainty to give a single posterior predictive distribution. Another approach, often used by John Kruschke in his book [Doing Bayesian Data Analysis](https://sites.google.com/site/doingbayesiandataanalysis/), is to attempt to show both the predictive uncertainty and the parameter uncertainty simultaneously by showing several possible predictive distributions implied by the posterior.
+
+We can do this pretty easily by asking for the distributional parameters for a given prediction implied by the posterior. We'll do it explicitly here by setting `dpar = c("mu", "sigma")` in `add_fitted_draws`. Rather than specifying the parameters explicitly, you can also just set `dpar = TRUE` to get draws from all distributional parameters in a model, and this will work for any response distribution supported by brms.
+
+For a more detailed description of how these charts (and some useful variations on them), see [Solomon Kurz's excellent blog post on the topic](https://solomonkurz.netlify.com/post/make-rotated-gaussians-kruschke-style/).
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  add_fitted_draws(m, dpar = c("mu", "sigma"), n = 100) %>%
+  mutate(
+    lower = qnorm(.001, mu, sigma),
+    upper = qnorm(.999, mu, sigma),
+    response = map2(lower, upper, seq, length.out = 101),
+    density = pmap(list(response, mu, sigma), dnorm)
+  ) %>%
+  unnest() %>%
+  ggplot(aes(x = response, y = condition)) +
+  geom_ridgeline(aes(height = density, group = interaction(condition, .draw)), 
+    fill = NA, color = adjustcolor("black", alpha.f = 1/20)
+  ) +
+  geom_point(data = ABC, pch = 21, fill = "lightblue", size = 2)
 ```
 
 ## Fit/prediction curves
