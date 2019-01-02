@@ -1,10 +1,109 @@
 url: http://mjskay.github.io/tidybayes
 
+
 template:
   params:
     bootswatch: paper
     ganalytics: UA-93322-5
 
+
 authors:
   Matthew Kay:
     href: http://www.mjskay.com
+
+
+reference:
+- title: Composing data for input to a model
+  desc:  Transform tidy data frames into data lists appropriate for model types like Stan and JAGS
+  contents:
+  - compose_data
+  - data_list
+  - as_data_list
+  - n_prefix
+  - x_at_y
+
+- title: Extracting posteriors
+  desc:  Get tidy draws of posterior distributions from objects (and helper functions for examining objects)
+  contents:
+  - get_variables
+  - recover_types
+  - gather_draws
+  - spread_draws
+  - tidy_draws
+  - gather_emmeans_draws
+  - ungather_draws
+  - unspread_draws
+
+- title: Extracting fits, predictions, and residuals
+  desc:  Get tidy draws from transformed linear predictors ("fits"), posterior predictions, or residuals
+  contents:
+  - add_fitted_draws
+  - fitted_draws
+  - add_linpred_draws
+  - linpred_draws
+  - add_predicted_draws
+  - predicted_draws
+  - add_residual_draws
+  - residual_draws
+
+- title: Manipulating tidy data frames of draws
+  desc:  Convenience functions for common data manipulation tasks with tidy data frames of draws
+  contents:
+  - combine_chains
+  - compare_levels
+  - gather_pairs
+  - gather_variables
+  - density_bins
+  - histogram_bins
+  - predict_curve
+  - predict_curve_density
+  - to_broom_names
+  - from_broom_names
+  - to_ggmcmc_names
+  - from_ggmcmc_names
+
+- title: Point summaries and intervals
+  desc:  Calculate point summaries and intervals on (grouped) data frames of draws
+  contents:
+  - point_interval
+  - point_intervalh
+  - qi
+  - hdi
+  - Mode
+  - ends_with("hdci")
+  - ends_with("hdi")
+  - ends_with("qi")
+  - ends_with("hdcih")
+  - ends_with("hdih")
+  - ends_with("qih")
+
+- title: Visualizing draws
+  desc:  Geoms for visualizing tidy data frames of draws
+  contents:
+  - geom_eye
+  - geom_eyeh
+  - geom_halfeyeh
+  - geom_interval
+  - geom_intervalh
+  - geom_lineribbon
+  - geom_pointinterval
+  - geom_pointintervalh
+  - stat_interval
+  - stat_intervalh
+  - stat_lineribbon
+  - stat_pointinterval
+  - stat_pointintervalh
+
+- title: GGplot theme
+  desc:  Tidybayes theme for ggplot2
+  contents:
+  - theme_tidybayes
+  - facet_title_left_horizontal
+  - facet_title_right_horizontal
+  - axis_titles_bottom_left
+
+- title: Other
+  desc:  Other functions and documentation
+  contents:
+  - tidybayes-deprecated
+  - tidybayes-models
