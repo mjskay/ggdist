@@ -18,8 +18,8 @@
 \alias{residual_draws}
 \alias{residual_draws.default}
 \alias{residual_draws.brmsfit}
-\title{Add draws from (possibly transformed) posterior linear predictors (the "fit") or from posterior predictions
-of a model to a data frame}
+\title{Add draws from the (possibly transformed) posterior linear predictors (the "fit") of a model, the posterior predictions
+of a model, or the residuals of a model to a data frame}
 \usage{
 add_fitted_draws(newdata, model, value = ".value", ..., n = NULL,
   seed = NULL, re_formula = NULL, category = ".category",
@@ -144,8 +144,8 @@ and \code{predicted_draws} contains a \code{.prediction} column containing draws
 distribution. For convenience, the resulting data frame comes grouped by the original input rows.
 }
 \description{
-Given a data frame and a model, adds draws from the posterior "fit" (aka the linear/link-level predictor)
-or from the posterior predictions of the model to the data frame in a long format.
+Given a data frame and a model, adds draws from the posterior "fit" (aka the linear/link-level predictor),
+the posterior predictions of the model, or the residual of a model to the data frame in a long format.
 }
 \details{
 \code{add_fitted_draws} adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to
