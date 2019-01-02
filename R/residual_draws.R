@@ -4,6 +4,7 @@
 ###############################################################################
 
 
+#' @importFrom stats residuals
 
 #' @rdname add_predicted_draws
 #' @export

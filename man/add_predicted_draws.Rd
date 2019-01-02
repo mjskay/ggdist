@@ -129,6 +129,8 @@ on the scale of the response variable. If \code{"linear"}, fitted values are ret
 the linear predictor.}
 
 \item{prediction}{The name of the output column for \code{predicted_draws}; default \code{".prediction"}.}
+
+\item{residual}{The name of the output column for \code{residual_draws}; default \code{".residual"}.}
 }
 \value{
 A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a

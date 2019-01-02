@@ -72,6 +72,7 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' and \code{brm}, are supported here).
 #' @param value The name of the output column for \code{fitted_draws}; default \code{".value"}.
 #' @param prediction The name of the output column for \code{predicted_draws}; default \code{".prediction"}.
+#' @param residual The name of the output column for \code{residual_draws}; default \code{".residual"}.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
 #' @param n The number of draws per prediction / fit to return, or \code{NULL} to return all draws.
