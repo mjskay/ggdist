@@ -107,7 +107,7 @@ tidy_draws.stanfit = function(model) {
 
   parameter_draws = tidy_draws(rstan::As.mcmc.list(model))
 
-  diagnostics_draws = map_dfr(rstan::get_sampler_params(model, inc_warmup = FALSE), as_tibble)
+  diagnostics_draws = map_dfr(rstan::get_sampler_params(model, inc_warmup = FALSE), as.data.frame)
 
   bind_cols(parameter_draws, diagnostics_draws)
 }
