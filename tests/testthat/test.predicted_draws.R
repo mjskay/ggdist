@@ -102,6 +102,31 @@ test_that("[add_]predicted_draws works on a simple brms model", {
   expect_equal(add_predicted_draws(mtcars_tbl, m_hp, n = 100, seed = 123), ref)
 })
 
+test_that("[add_]predicted_draws works on brms models with categorical outcomes", {
+  skip_if_not_installed("brms")
+  m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
+
+  set.seed(1234)
+  preds = predict(m_cyl_mpg, mtcars_tbl, summary = FALSE, nsamples = 100) %>%
+    array2df(list(.draw = NA, .row = NA), label.x = ".prediction") %>%
+    mutate(
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
+      .draw = as.integer(.draw),
+      .row = as.character(.row),
+      .prediction = factor(.prediction, levels = 1:3, labels = paste0("c", c(4,6,8)))
+    )
+
+  ref = mtcars_tbl %>%
+    mutate(.row = rownames(.)) %>%
+    inner_join(preds, by = ".row") %>%
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
+
+  expect_equal(predicted_draws(m_cyl_mpg, mtcars_tbl, seed = 1234, n = 100), ref)
+  expect_equal(add_predicted_draws(mtcars_tbl, m_cyl_mpg, seed = 1234, n = 100), ref)
+})
+
 test_that("[add_]predicted_draws throws an error when nsamples is called instead of n in brms", {
   skip_if_not_installed("brms")
   m_hp = readRDS("../models/models.brms.m_hp.rds")
