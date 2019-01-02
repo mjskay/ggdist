@@ -799,6 +799,16 @@ m_rst %>%
   geom_halfeyeh()
 ```
 
+`gather_emmeans_draws()` also supports `emm_list` objects, which contain estimates from different reference grids (see `emmeans::ref_grid()` for more information on reference grids). An additional column with the default name of `.grid` is added to indicate the reference grid for each row in the output:
+
+```{r}
+m_rst %>%
+  emmeans(pairwise ~ condition) %>%
+  gather_emmeans_draws() %>%
+  median_qi()
+```
+
+
 #### Using `MCMCglmm`
 
 Let's do the same example as above again, this time using `MCMCglmm` instead of `rstanarm`. The only different when using `MCMCglmm` is that to use `MCMCglmm` with `emmeans` you must also pass the original data used to fit the model to the  `emmeans` call (see `vignette("models", package = "emmeans"))` for more information).

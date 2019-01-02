@@ -87,7 +87,6 @@
 #'
 #' @importFrom utils modifyList
 #' @importFrom ggstance stat_summaryh geom_pointrangeh
-#' @importFrom ggridges geom_density_ridges
 #' @import ggplot2
 #' @export
 geom_halfeyeh = function(

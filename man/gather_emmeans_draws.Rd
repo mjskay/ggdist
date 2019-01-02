@@ -2,22 +2,38 @@
 % Please edit documentation in R/gather_emmeans_draws.R
 \name{gather_emmeans_draws}
 \alias{gather_emmeans_draws}
+\alias{gather_emmeans_draws.default}
+\alias{gather_emmeans_draws.emm_list}
 \title{Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from
 a Bayesian model fit.}
 \usage{
-gather_emmeans_draws(object, value = ".value")
+gather_emmeans_draws(object, value = ".value", ...)
+
+\method{gather_emmeans_draws}{default}(object, value = ".value", ...)
+
+\method{gather_emmeans_draws}{emm_list}(object, value = ".value",
+  grid = ".grid", ...)
 }
 \arguments{
 \item{object}{An \code{emmGrid} object such as returned by
 \code{\link[emmeans]{ref_grid}} or \code{\link[emmeans]{emmeans}}.}
 
 \item{value}{The name of the output column to use to contain the values of draws. Defaults to \code{".value"}.}
+
+\item{...}{Additional arguments passed to the underlying method for the type of object given.}
+
+\item{grid}{If \code{object} is an \code{\link[emmeans]{emm_list}}, the name of the output column to use to contain the name of the
+reference grid that a given row corresponds to. Defaults to \code{".grid"}.}
 }
 \value{
 A tidy data frame of draws. The columns of the reference grid are returned as-is, with an
 additional column called \code{.value} (by default) containing marginal draws. The resulting data
 frame is grouped by the columns from the reference grid to make use of summary functions like
 \code{\link{point_interval}} straightforward.
+
+If \code{object} is an \code{\link[emmeans]{emm_list}}, which contains estimates from different reference grids,
+an additional column with the default name of \code{".grid"} is added to indicate the reference grid for each row in the output.
+The name of this column is controlled by the \code{grid} argument.
 }
 \description{
 Extract draws from the result of a call to \code{\link[emmeans]{emmeans}} (formerly \code{lsmeans})
