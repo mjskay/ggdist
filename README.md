@@ -195,7 +195,7 @@ ABC %>%
   ylab("condition")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](README_files/figure-gfm/make_data-1.png)<!-- -->
 
 A hierarchical model of this data might fit an overall mean across the
 conditions (`overall_mean`), the standard deviation of the condition
@@ -324,7 +324,7 @@ m %>%
   geom_eyeh()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/geom_eyeh-1.png)<!-- -->
 
 Or one can employ the similar “half-eye” plot:
 
@@ -335,7 +335,7 @@ m %>%
   geom_halfeyeh()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/geom_halfeyeh-1.png)<!-- -->
 
 ### Plotting posteriors as quantile dotplots
 
@@ -361,7 +361,7 @@ m %>%
   ylab(NULL)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/quantile_dotplots-1.png)<!-- -->
 
 The idea is to get away from thinking about the posterior as indicating
 one canonical point or interval, but instead to represent it as (say)
@@ -464,7 +464,7 @@ bind_rows(linear_results, bayes_results) %>%
     ## Warning in bind_rows_(x, .id): binding character and factor vector, coercing into
     ## character vector
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/broom_bind-1.png)<!-- -->
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
 
@@ -477,7 +477,7 @@ bind_rows(linear_results, bayes_results) %>%
   dotwhisker::dwplot() 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/dwplot-1.png)<!-- -->
 
 ### Posterior prediction and complex custom plots
 
@@ -505,7 +505,7 @@ m %>%
   geom_point(aes(x = response), data = ABC)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/pp_intervals-1.png)<!-- -->
 
 This plot shows 66% and 95% quantile credible intervals of posterior
 median for each condition (point + black line); 95%, 80%, and 50%
@@ -539,7 +539,7 @@ mtcars %>%
   scale_fill_brewer()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/pp_bands-1.png)<!-- -->
 
 `stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is
 one of several shortcut geoms that simplify common combinations of
@@ -581,7 +581,7 @@ mtcars %>%
   facet_wrap(~ am)                                  # facet by am
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](README_files/figure-gfm/pp_bands_facet-1.png)<!-- -->
 
 Or, if you would like overplotted posterior fit lines, you can instead
 use `tidybayes::add_fitted_draws` to get draws from fit lines (instead
@@ -598,7 +598,7 @@ mtcars %>%
   facet_wrap(~ am) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/spaghetti-1.png)<!-- -->
 
 Animated hypothetical outcome plots (HOPs) can also be easily
 constructed by using `gganimate`:
@@ -622,7 +622,7 @@ p = mtcars %>%
 animate(p, nframes = ndraws * 5, fps = 10, width = 700, height = 432, res = 100, type = "cairo")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.gif)<!-- -->
+![](README_files/figure-gfm/hops-1.gif)<!-- -->
 
 See `vignette("tidybayes")` for a variety of additional examples and
 more explanation of how it works.

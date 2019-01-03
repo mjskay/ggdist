@@ -125,14 +125,14 @@ and anything with its own `as.mcmc.list` implementation. If you install the [tid
 You can install the currently-released version from CRAN with this R
 command:
 
-```{r, eval=FALSE}
+```{r install, eval=FALSE}
 install.packages("tidybayes")
 ```
 
 Alternatively, you can install the latest development version from GitHub with these R
 commands:
 
-```{r, eval=FALSE}
+```{r install_github, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("mjskay/tidybayes")
 ```
@@ -170,7 +170,7 @@ options(width = 90)
 
 Imagine this dataset:
 
-```{r}
+```{r make_data}
 set.seed(5)
 n = 10
 n_condition = 5
@@ -227,7 +227,7 @@ We have compiled and loaded this model into the variable `ABC_stan`. Rather than
 
 So we can skip right to modeling:
 
-```{r}
+```{r abc_sampling}
 m = sampling(ABC_stan, data = compose_data(ABC), control = list(adapt_delta=0.99))
 ```
 
@@ -235,13 +235,13 @@ m = sampling(ABC_stan, data = compose_data(ABC), control = list(adapt_delta=0.99
 
 We decorate the fitted model using `tidybayes::recover_types`, which will ensure that numeric indices (like `condition`) are back-translated back into factors when we extract data:
 
-```{r}
+```{r recover_types}
 m %<>% recover_types(ABC)
 ```
 
 Now we can extract variables of interest using `spread_draws`, which automatically parses indices, converts them back into their original format, and turns them into data frame columns. This function accepts a symbolic specification of Stan variables using the same syntax you would to index columns in Stan. For example, we can extract the condition means and the residual standard deviation:
 
-```{r}
+```{r spread_draws}
 m %>%
   spread_draws(condition_mean[condition], response_sd) %>%
   head(15)  # just show the first few rows
@@ -254,7 +254,7 @@ The condition numbers are automatically turned back into text ("A", "B", "C", ..
 
 Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the `tidybayes::geom_eyeh` geom (horizontal version of `tidybayes::geom_eye`), which combines a violin plot of the posterior density, median, 66% and 95% quantile interval to give an "eye plot" of the posterior. The point and interval types are customizable using the `point_interval` family of functions. A "half-eye" plot (non-mirrored density) is also available as `tidybayes::geom_halfeyeh`.
 
-```{r}
+```{r geom_eyeh}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
@@ -263,7 +263,7 @@ m %>%
 
 Or one can employ the similar "half-eye" plot:
 
-```{r}
+```{r geom_halfeyeh}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
@@ -274,7 +274,7 @@ m %>%
 
 Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating [quantile dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):
 
-```{r}
+```{r quantile_dotplots}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   do(data_frame(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
@@ -292,7 +292,7 @@ The idea is to get away from thinking about the posterior as indicating one cano
 
 The functions `tidybayes::median_qi`, `tidybayes::mean_qi`, `tidybayes::mode_hdi`, etc (the `point_interval` functions) give tidy output of point summaries and intervals:
 
-```{r}
+```{r median_qi}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   median_qi(condition_mean)
@@ -305,7 +305,7 @@ Translation functions like `tidybayes::to_broom_names`, `tidybayes::from_broom_n
 
 For example, let's compare against ordinary least squares (OLS) regression:
 
-```{r}
+```{r broom_ols}
 linear_results = 
   lm(response ~ condition, data = ABC) %>% 
   emmeans(~ condition) %>% 
@@ -316,7 +316,7 @@ linear_results
 
 Using `tidybayes::to_broom_names`, we'll convert the output from `median_qi` (which uses names `.lower` and `.upper`) to use names from `broom` (`conf.low` and `conf.high`) so that comparison with output from `broom::tidy` is easy:
 
-```{r}
+```{r broom_tidybayes}
 bayes_results = m %>%
   spread_draws(condition_mean[condition]) %>%
   median_qi(estimate = condition_mean) %>%
@@ -327,7 +327,7 @@ bayes_results
 
 This makes it easy to bind the two results together and plot them:
 
-```{r}
+```{r broom_bind}
 bind_rows(linear_results, bayes_results) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
   geom_pointrangeh(position = position_dodgev(height = .3))
@@ -337,7 +337,7 @@ Shrinkage towards the overall mean is visible in the Bayesian results.
 
 Comptability with `broom::tidy` also gives compatibility with `dotwhisker::dwplot`:
 
-```{r, warning = FALSE}
+```{r dwplot, warning = FALSE}
 bind_rows(linear_results, bayes_results) %>%
   rename(term = condition) %>%
   dotwhisker::dwplot() 
@@ -347,7 +347,7 @@ bind_rows(linear_results, bayes_results) %>%
 
 The tidy data format returned by `spread_draws` also facilitates additional computation on variables followed by the construction of more complex custom plots. For example, we can generate posterior predictions easily, and use the `.width` argument (passed internally to `median_qi`) to generate any number of intervals from the posterior predictions, then plot them alongside point summaries and the data:
 
-```{r}
+```{r pp_intervals}
 m %>%
   spread_draws(condition_mean[condition], response_sd) %>%
   mutate(prediction = rnorm(n(), condition_mean, response_sd)) %>%
@@ -373,13 +373,13 @@ For models that support it (like `rstanarm` and `brms` models), We can also use 
 
 Let's fit a slightly naive model to miles per gallon versus horsepower in the `mtcars` dataset:
 
-```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
+```{r m_mpg, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg = brm(mpg ~ log(hp), data = mtcars, family = lognormal)
 ```
 
 Now we will use `modelr::data_grid`, `tidybayes::add_predicted_draws`, and `tidybayes::stat_lineribbon` to generate a fit curve with multiple probability bands:
 
-```{r}
+```{r pp_bands}
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
@@ -403,13 +403,13 @@ Because this is all tidy data, if you wanted to build a model with interactions 
 
 Such a model might be:
 
-```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
+```{r m_mpg_am, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg_am = brm(mpg ~ log(hp)*am, data = mtcars, family = lognormal)
 ```
 
 Then we can generate and plot predictions as before (differences from above are highlighted as comments):
 
-```{r}
+```{r pp_bands_facet}
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%    # add am to the prediction grid
   add_predicted_draws(m_mpg_am) %>%
@@ -422,7 +422,7 @@ mtcars %>%
 
 Or, if you would like overplotted posterior fit lines, you can instead use `tidybayes::add_fitted_draws` to get draws from fit lines (instead of predictions), select some reasonable number of them (say `n = 100`), and then plot them:
 
-```{r}
+```{r spaghetti}
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 200), am) %>%
   add_fitted_draws(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
@@ -434,7 +434,7 @@ mtcars %>%
 
 Animated hypothetical outcome plots (HOPs) can also be easily constructed by using `gganimate`:
 
-```{r}
+```{r hops}
 set.seed(12345)
 ndraws = 50
 
