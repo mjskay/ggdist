@@ -171,6 +171,8 @@ library(brms)
 library(modelr)
 library(forcats)
 library(cowplot)
+library(RColorBrewer)
+library(gganimate)
 
 theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
@@ -276,21 +278,21 @@ m %>%
 
 | .chain | .iteration | .draw | condition | condition\_mean | response\_sd |
 | -----: | ---------: | ----: | :-------- | --------------: | -----------: |
-|      1 |          1 |     1 | A         |       0.3799180 |    0.5173212 |
-|      1 |          1 |     1 | B         |       0.8655726 |    0.5173212 |
-|      1 |          1 |     1 | C         |       1.8660413 |    0.5173212 |
-|      1 |          1 |     1 | D         |       1.0161765 |    0.5173212 |
-|      1 |          1 |     1 | E         |     \-1.2252053 |    0.5173212 |
-|      1 |          2 |     2 | A         |       0.4783359 |    0.5068886 |
-|      1 |          2 |     2 | B         |       0.8498675 |    0.5068886 |
-|      1 |          2 |     2 | C         |       1.7586497 |    0.5068886 |
-|      1 |          2 |     2 | D         |       1.0058950 |    0.5068886 |
-|      1 |          2 |     2 | E         |     \-0.6960075 |    0.5068886 |
-|      1 |          3 |     3 | A         |       0.3811166 |    0.4942790 |
-|      1 |          3 |     3 | B         |       0.7655946 |    0.4942790 |
-|      1 |          3 |     3 | C         |       1.9564889 |    0.4942790 |
-|      1 |          3 |     3 | D         |       0.8620409 |    0.4942790 |
-|      1 |          3 |     3 | E         |     \-0.8646748 |    0.4942790 |
+|      1 |          1 |     1 | A         |       0.3656141 |    0.5400360 |
+|      1 |          1 |     1 | B         |       1.0395402 |    0.5400360 |
+|      1 |          1 |     1 | C         |       1.6639880 |    0.5400360 |
+|      1 |          1 |     1 | D         |       0.9140224 |    0.5400360 |
+|      1 |          1 |     1 | E         |     \-0.8706108 |    0.5400360 |
+|      1 |          2 |     2 | A         |       0.3704801 |    0.5135496 |
+|      1 |          2 |     2 | B         |       1.1134818 |    0.5135496 |
+|      1 |          2 |     2 | C         |       1.8316294 |    0.5135496 |
+|      1 |          2 |     2 | D         |       0.9721666 |    0.5135496 |
+|      1 |          2 |     2 | E         |     \-1.1822674 |    0.5135496 |
+|      1 |          3 |     3 | A         |       0.2782690 |    0.4892883 |
+|      1 |          3 |     3 | B         |       0.9946686 |    0.4892883 |
+|      1 |          3 |     3 | C         |       1.6247294 |    0.4892883 |
+|      1 |          3 |     3 | D         |       1.0482952 |    0.4892883 |
+|      1 |          3 |     3 | E         |     \-0.7814636 |    0.4892883 |
 
 </div>
 
@@ -322,7 +324,7 @@ m %>%
   geom_eyeh()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 Or one can employ the similar “half-eye” plot:
 
@@ -333,7 +335,7 @@ m %>%
   geom_halfeyeh()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ### Plotting posteriors as quantile dotplots
 
@@ -359,7 +361,7 @@ m %>%
   ylab(NULL)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 The idea is to get away from thinking about the posterior as indicating
 one canonical point or interval, but instead to represent it as (say)
@@ -381,11 +383,11 @@ m %>%
 
 | condition | condition\_mean |      .lower |      .upper | .width | .point | .interval |
 | :-------- | --------------: | ----------: | ----------: | -----: | :----- | :-------- |
-| A         |       0.1941983 | \-0.1554990 |   0.5388005 |   0.95 | median | qi        |
-| B         |       1.0000279 |   0.6525839 |   1.3666515 |   0.95 | median | qi        |
-| C         |       1.8363346 |   1.4803019 |   2.1931636 |   0.95 | median | qi        |
-| D         |       1.0129198 |   0.6781254 |   1.3621610 |   0.95 | median | qi        |
-| E         |     \-0.8926450 | \-1.2407441 | \-0.5388904 |   0.95 | median | qi        |
+| A         |       0.1925031 | \-0.1501714 |   0.5356484 |   0.95 | median | qi        |
+| B         |       0.9947435 |   0.6505535 |   1.3631547 |   0.95 | median | qi        |
+| C         |       1.8368975 |   1.4763869 |   2.1888422 |   0.95 | median | qi        |
+| D         |       1.0128491 |   0.6797698 |   1.3599013 |   0.95 | median | qi        |
+| E         |     \-0.8904511 | \-1.2405663 | \-0.5313393 |   0.95 | median | qi        |
 
 </div>
 
@@ -440,11 +442,11 @@ bayes_results
 
 | condition |    estimate |    conf.low |   conf.high | .width | .point | .interval | model |
 | :-------- | ----------: | ----------: | ----------: | -----: | :----- | :-------- | :---- |
-| A         |   0.1941983 | \-0.1554990 |   0.5388005 |   0.95 | median | qi        | Bayes |
-| B         |   1.0000279 |   0.6525839 |   1.3666515 |   0.95 | median | qi        | Bayes |
-| C         |   1.8363346 |   1.4803019 |   2.1931636 |   0.95 | median | qi        | Bayes |
-| D         |   1.0129198 |   0.6781254 |   1.3621610 |   0.95 | median | qi        | Bayes |
-| E         | \-0.8926450 | \-1.2407441 | \-0.5388904 |   0.95 | median | qi        | Bayes |
+| A         |   0.1925031 | \-0.1501714 |   0.5356484 |   0.95 | median | qi        | Bayes |
+| B         |   0.9947435 |   0.6505535 |   1.3631547 |   0.95 | median | qi        | Bayes |
+| C         |   1.8368975 |   1.4763869 |   2.1888422 |   0.95 | median | qi        | Bayes |
+| D         |   1.0128491 |   0.6797698 |   1.3599013 |   0.95 | median | qi        | Bayes |
+| E         | \-0.8904511 | \-1.2405663 | \-0.5313393 |   0.95 | median | qi        | Bayes |
 
 </div>
 
@@ -462,7 +464,7 @@ bind_rows(linear_results, bayes_results) %>%
     ## Warning in bind_rows_(x, .id): binding character and factor vector, coercing into
     ## character vector
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
 
@@ -475,7 +477,7 @@ bind_rows(linear_results, bayes_results) %>%
   dotwhisker::dwplot() 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ### Posterior prediction and complex custom plots
 
@@ -503,7 +505,7 @@ m %>%
   geom_point(aes(x = response), data = ABC)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 This plot shows 66% and 95% quantile credible intervals of posterior
 median for each condition (point + black line); 95%, 80%, and 50%
@@ -531,13 +533,13 @@ probability bands:
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
-  ggplot(aes(x = hp)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5)) +
-  geom_point(aes(y = mpg), data = mtcars) +
+  ggplot(aes(x = hp, y = mpg)) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
+  geom_point(data = mtcars, size = 2) +
   scale_fill_brewer()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 `stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is
 one of several shortcut geoms that simplify common combinations of
@@ -573,13 +575,13 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%    # add am to the prediction grid
   add_predicted_draws(m_mpg_am) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5)) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
   geom_point(data = mtcars) +
   scale_fill_brewer() +
   facet_wrap(~ am)                                  # facet by am
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 Or, if you would like overplotted posterior fit lines, you can instead
 use `tidybayes::add_fitted_draws` to get draws from fit lines (instead
@@ -588,15 +590,39 @@ and then plot them:
 
 ``` r
 mtcars %>%
-  data_grid(hp = seq_range(hp, n = 101), am) %>%
+  data_grid(hp = seq_range(hp, n = 200), am) %>%
   add_fitted_draws(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), alpha = 0.2, color = "red") +
-  geom_point(data = mtcars) +
+  geom_line(aes(y = .value, group = .draw), alpha = 1/20) +
+  geom_point(data = mtcars, shape = 21, size = 2.5, fill = brewer.pal(6, "Blues")[[3]]) +
   facet_wrap(~ am) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+Animated hypothetical outcome plots (HOPs) can also be easily
+constructed by using `gganimate`:
+
+``` r
+set.seed(12345)
+ndraws = 50
+
+p = mtcars %>%
+  data_grid(hp = seq_range(hp, n = 50), am) %>%
+  add_fitted_draws(m_mpg_am, n = ndraws) %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_line(aes(y = .value, group = .draw), color = "gray65") +
+  geom_line(aes(y = .value), color = "gray65") +
+  geom_point(data = mtcars, shape = 21, size = 2.5, fill = brewer.pal(6, "Blues")[[3]]) +
+  facet_wrap(~ am, labeller = label_both) +
+  transition_states(.draw, 1, 0) +
+  ease_aes('sine-in-out') +
+  exit_recolor(color = "white")
+
+animate(p, nframes = ndraws * 5, fps = 10, width = 700, height = 432, res = 100, type = "cairo")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-21-1.gif)<!-- -->
 
 See `vignette("tidybayes")` for a variety of additional examples and
 more explanation of how it works.
@@ -615,6 +641,7 @@ have encountered, but I would love to make it cover more\!
 
 ## Citing `tidybayes`
 
-Matthew Kay (2018). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 1.0.3, <https://mjskay.github.io/tidybayes/>.
-DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
+Matthew Kay (2019). *tidybayes: Tidy Data and Geoms for Bayesian
+Models*. R package version 1.0.3.9000,
+<https://mjskay.github.io/tidybayes/>. DOI:
+[10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).

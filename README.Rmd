@@ -1,6 +1,7 @@
 ---
 output: 
   github_document:
+    html_preview: false
     df_print: kable
 ---
 
@@ -153,6 +154,8 @@ library(brms)
 library(modelr)
 library(forcats)
 library(cowplot)
+library(RColorBrewer)
+library(gganimate)
 
 theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
@@ -185,7 +188,7 @@ ABC %>%
 
 A hierarchical model of this data might fit an overall mean across the conditions (`overall_mean`), the standard deviation of the condition means (`condition_mean_sd`), the mean within each condition (`condition_mean[condition]`) and the standard deviation of the responses given a condition mean (`response_sd`):
 
-```{stan, output.var = "ABC_stan", results = "hide", cache = TRUE}
+```{stan abc_model, output.var = "ABC_stan", results = "hide", cache = TRUE}
 data {
   int<lower=1> n;
   int<lower=1> n_condition;
@@ -380,9 +383,9 @@ Now we will use `modelr::data_grid`, `tidybayes::add_predicted_draws`, and `tidy
 mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
-  ggplot(aes(x = hp)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5)) +
-  geom_point(aes(y = mpg), data = mtcars) +
+  ggplot(aes(x = hp, y = mpg)) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
+  geom_point(data = mtcars, size = 2) +
   scale_fill_brewer()
 ```
 
@@ -411,7 +414,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%    # add am to the prediction grid
   add_predicted_draws(m_mpg_am) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5)) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
   geom_point(data = mtcars) +
   scale_fill_brewer() +
   facet_wrap(~ am)                                  # facet by am
@@ -421,14 +424,34 @@ Or, if you would like overplotted posterior fit lines, you can instead use `tidy
 
 ```{r}
 mtcars %>%
-  data_grid(hp = seq_range(hp, n = 101), am) %>%
+  data_grid(hp = seq_range(hp, n = 200), am) %>%
   add_fitted_draws(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), alpha = 0.2, color = "red") +
-  geom_point(data = mtcars) +
+  geom_line(aes(y = .value, group = .draw), alpha = 1/20) +
+  geom_point(data = mtcars, shape = 21, size = 2.5, fill = brewer.pal(6, "Blues")[[3]]) +
   facet_wrap(~ am) 
 ```
 
+Animated hypothetical outcome plots (HOPs) can also be easily constructed by using `gganimate`:
+
+```{r}
+set.seed(12345)
+ndraws = 50
+
+p = mtcars %>%
+  data_grid(hp = seq_range(hp, n = 50), am) %>%
+  add_fitted_draws(m_mpg_am, n = ndraws) %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_line(aes(y = .value, group = .draw), color = "gray65") +
+  geom_line(aes(y = .value), color = "gray65") +
+  geom_point(data = mtcars, shape = 21, size = 2.5, fill = brewer.pal(6, "Blues")[[3]]) +
+  facet_wrap(~ am, labeller = label_both) +
+  transition_states(.draw, 1, 0) +
+  ease_aes('sine-in-out') +
+  exit_recolor(color = "white")
+
+animate(p, nframes = ndraws * 5, fps = 10, width = 700, height = 432, res = 100, type = "cairo")
+```
 
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
 
