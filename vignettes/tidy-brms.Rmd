@@ -430,7 +430,7 @@ ABC %>%
   geom_ridgeline(aes(height = density, group = interaction(condition, .draw)), 
     fill = NA, color = adjustcolor("black", alpha.f = 1/20)
   ) +
-  geom_point(data = ABC, pch = 21, fill = "lightblue", size = 2)
+  geom_point(data = ABC, shape = 21, fill = brewer.pal(3, "Blues")[[2]], size = 2)
 ```
 
 ## Fit/prediction curves
@@ -468,6 +468,27 @@ mtcars %>%
   scale_color_brewer(palette = "Dark2")
 ```
 
+Or we can create animated [hypothetical outcome plots (HOPs)](https://mucollective.northwestern.edu/project/hops-trends) of fit lines:
+
+```{r}
+set.seed(123456)
+ndraws = 50
+
+p = mtcars %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
+  add_fitted_draws(m_mpg, n = ndraws) %>%
+  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
+  geom_line(aes(y = .value, group = paste(cyl, .draw))) +
+  geom_point(data = mtcars) +
+  scale_color_brewer(palette = "Dark2") +
+  transition_states(.draw, 1, 2) +
+  shadow_mark(future = TRUE, color = "black", alpha = 0.05) +
+  exit_recolor(color = "gray95")
+
+animate(p, nframes = ndraws * 10, fps = 20, width = 700, height = 432, res = 100, type = "cairo")
+```
+
 Or, for posterior predictions (instead of fits), we can go back to probability bands:
 
 ```{r}
@@ -490,10 +511,10 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5)) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
   geom_point(data = mtcars) +
   scale_fill_brewer() +
-  facet_grid(. ~ cyl)
+  facet_grid(. ~ cyl, space = "free_x", scales = "free_x")
 ```
 
 ### Extracting of distributional regression parameters
@@ -673,7 +694,7 @@ data_plot_with_mean = mtcars_clean %>%
   geom_point(aes(y = as.numeric(as.character(cyl)), fill = cyl), data = mtcars_clean, shape = 21, size = 2) +
   geom_text(aes(x = mpg + 4), label = "E[cyl | mpg]", data = label_data_function, hjust = 0) +
   geom_segment(aes(yend = cyl, xend = mpg + 3.9), data = label_data_function) +
-  scale_fill_brewer(palette = "Dark2", name = "cyl")
+  scale_fill_brewer(palette = "Set2", name = "cyl")
 
 plot_grid(ncol = 1, align = "v",
   data_plot_with_mean,
@@ -725,12 +746,21 @@ This also looks good.
 Another way to look at these posterior predictions might be as a scatterplot matrix. `tidybayes::gather_pairs` makes it easy to generate long-format data frames suitable for creating custom scatterplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using `facet_grid`:
 
 ```{r}
+set.seed(12345)
+
 mtcars_clean %>%
   select(mpg) %>%
   add_predicted_draws(m_cyl, prediction = "cyl") %>%
-  group_by(.draw) %>%
-  count(cyl) %>%
-  complete(cyl, fill = list(n = 0)) %>%
+  # once dplyr 3 hits this can be replaced with count() (since it will include 0s)
+  # until then this ugly code is faster than count() + complete()
+  ungroup() %>%
+  nest(-.draw) %>%
+  mutate(counts = map(data, ~
+    table(.x$cyl) %>%
+    as.data.frame() %>%
+    set_names("cyl", "n")
+  )) %>%
+  unnest(counts) %>%
   gather_pairs(cyl, n) %>%
   ggplot(aes(.x, .y)) +
   geom_count(color = "gray75") +
@@ -756,8 +786,9 @@ esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_brm, dpar = TRUE) %>%
   ggplot(aes(x = agegp, y = .value, color = .category)) +
-  stat_pointinterval(position = position_dodge(width = .4), .width = c(.66, .95), show.legend = TRUE) +
-  scale_size_continuous(guide = FALSE)
+  stat_pointinterval(position = position_dodge(width = .4)) +
+  scale_size_continuous(guide = FALSE) +
+  scale_color_manual(values = brewer.pal(6, "Blues")[-c(1,2)])
 ```
 
 It is hard to see the changes in categories in the above plot; let's try something that gives a better gist of the distribution within each year:
