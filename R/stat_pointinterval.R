@@ -40,8 +40,9 @@ globalVariables(c("...width.."))
 #' @param fun.args Other optional arguments passed to \code{fun.data}.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 #' values are silently removed.
-#' @param show.legend Should this later be included in the legends? Default is \code{FALSE}, unlike most stats/geoms,
-#' to match its common use cases; N.B. this is unlike most geoms, which have a default of \code{NA}.
+#' @param show.legend Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
+#' to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
+#' those that are mapped (the default for most geoms).
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
 #' default plot specification, e.g. borders.
@@ -76,7 +77,7 @@ stat_pointinterval <- function(mapping = NULL, data = NULL,
   .prob,
   fun.args = list(),
   na.rm = FALSE,
-  show.legend = FALSE,
+  show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
   .width = .Deprecated_argument_alias(.width, .prob)

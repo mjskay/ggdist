@@ -15,7 +15,7 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
   size_range = c(0.6, 1.4),
   fatten_point = 1.8,
   na.rm = FALSE,
-  show.legend = FALSE,
+  show.legend = c(size = FALSE),
   inherit.aes = TRUE) {
 
   l = layer(

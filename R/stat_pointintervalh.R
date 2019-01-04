@@ -15,7 +15,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
   .prob,
   fun.args = list(),
   na.rm = FALSE,
-  show.legend = FALSE,
+  show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
   .width = .Deprecated_argument_alias(.width, .prob)

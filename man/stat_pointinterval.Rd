@@ -9,13 +9,13 @@ stat_pointinterval(mapping = NULL, data = NULL,
   geom = "pointinterval", position = "identity", ...,
   point_interval = median_qi, fun.data = NULL, .width = c(0.66,
   0.95), .prob, fun.args = list(), na.rm = FALSE,
-  show.legend = FALSE, inherit.aes = TRUE)
+  show.legend = c(size = FALSE), inherit.aes = TRUE)
 
 stat_pointintervalh(mapping = NULL, data = NULL,
   geom = "pointintervalh", position = "identity", ...,
   point_interval = median_qi, fun.data = NULL, .width = c(0.66,
   0.95), .prob, fun.args = list(), na.rm = FALSE,
-  show.legend = FALSE, inherit.aes = TRUE)
+  show.legend = c(size = FALSE), inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -51,8 +51,9 @@ are not converted to the correct form automatically.}
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{Should this later be included in the legends? Default is \code{FALSE}, unlike most stats/geoms,
-to match its common use cases; N.B. this is unlike most geoms, which have a default of \code{NA}.}
+\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
+to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
+those that are mapped (the default for most geoms).}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the

@@ -55,7 +55,12 @@ Suggests:
     gdtools,
     rmarkdown,
     ggrepel,
-    bindrcpp
+    bindrcpp,
+    RColorBrewer,
+    gganimate,
+    gifski,
+    png,
+    transformr
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new
