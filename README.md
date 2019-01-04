@@ -11,7 +11,7 @@ status](http://www.r-pkg.org/badges/version/tidybayes)](https://cran.r-project.o
 count](https://cranlogs.r-pkg.org/badges/last-month/tidybayes)
 [![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)
 
-![Preview of tidybayes plots](man/figures/preview.png)
+![Preview of tidybayes plots](man/figures/preview.gif)
 
 `tidybayes` is an R package that aims to make it easy to integrate
 popular Bayesian modeling methods into a tidy data + ggplot
@@ -593,9 +593,9 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 200), am) %>%
   add_fitted_draws(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), alpha = 1/20) +
-  geom_point(data = mtcars, shape = 21, size = 2.5, fill = brewer.pal(6, "Blues")[[3]]) +
-  facet_wrap(~ am) 
+  geom_line(aes(y = .value, group = .draw), alpha = 1/20, color = brewer.pal(5, "Blues")[[5]]) +
+  geom_point(data = mtcars) +
+  facet_wrap(~ am)
 ```
 
 ![](README_files/figure-gfm/spaghetti-1.png)<!-- -->
@@ -611,9 +611,9 @@ p = mtcars %>%
   data_grid(hp = seq_range(hp, n = 50), am) %>%
   add_fitted_draws(m_mpg_am, n = ndraws) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), color = "gray65") +
-  geom_line(aes(y = .value), color = "gray65") +
-  geom_point(data = mtcars, shape = 21, size = 2.5, fill = brewer.pal(6, "Blues")[[3]]) +
+  geom_line(aes(y = .value, group = .draw), color = brewer.pal(6, "Blues")[[3]]) +
+  geom_line(aes(y = .value), color = brewer.pal(6, "Blues")[[3]]) +
+  geom_point(data = mtcars) +
   facet_wrap(~ am, labeller = label_both) +
   transition_states(.draw, 1, 0) +
   ease_aes('sine-in-out') +
