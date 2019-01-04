@@ -23,7 +23,4 @@
 ^cran-comments.md$
 ^inst/WORDLIST$
 ^data-raw$
-logo\.pdf
-preview\.pdf
-preview\.psd
-preview-spaghetti\.gif
+^figures-source$
