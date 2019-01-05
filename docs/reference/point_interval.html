@@ -110,6 +110,9 @@ multiple groups in a grouped data frame)." />
     <li>
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
+    <li>
+      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -281,7 +284,7 @@ names used in tidybayes.</p></td>
     <p>If <code>.data</code> is a data frame, then <code>...</code> is a list of bare names of
 columns (or expressions derived from columns) of <code>.data</code>, on which
 the point and interval summaries are derived. Column expressions are processed
-using the tidy evaluation framework (see <code><a href='https://rlang.r-lib.org/reference/eval_tidy.html'>eval_tidy</a></code>).</p>
+using the tidy evaluation framework (see <code><a href='https://www.rdocumentation.org/packages/rlang/topics/eval_tidy'>eval_tidy</a></code>).</p>
 <p>For a column named <code>x</code>, the resulting data frame will have a column
 named <code>x</code> containing its point summary. If there is a single
 column to be summarized and <code>.simple_names</code> is <code>TRUE</code>, the output will

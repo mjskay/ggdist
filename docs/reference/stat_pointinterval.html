@@ -113,6 +113,9 @@ will perform the summarization using a point_interval function." />
     <li>
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
+    <li>
+      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -159,13 +162,13 @@ will perform the summarization using a <code><a href='point_interval.html'>point
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
   <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>,
   <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>stat_pointintervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointintervalh"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
   <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>,
   <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -227,8 +230,9 @@ values are silently removed.</p></td>
     </tr>
     <tr>
       <th>show.legend</th>
-      <td><p>Should this later be included in the legends? Default is <code>FALSE</code>, unlike most stats/geoms,
-to match its common use cases; N.B. this is unlike most geoms, which have a default of <code>NA</code>.</p></td>
+      <td><p>Should this layer be included in the legends? Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(size = FALSE)</a></code>, unlike most geoms,
+to match its common use cases. <code>FALSE</code> hides all legends, <code>TRUE</code> shows all legends, and <code>NA</code> shows only
+those that are mapped (the default for most geoms).</p></td>
     </tr>
     <tr>
       <th>inherit.aes</th>

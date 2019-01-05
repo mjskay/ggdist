@@ -54,6 +54,8 @@ library(ggridges)
 library(rstan)
 library(rstanarm)
 library(cowplot)
+library(RColorBrewer)
+library(gganimate)
 
 theme_set(theme_tidybayes() + panel_border() + background_grid())
 ```
@@ -474,7 +476,7 @@ p = mtcars %>%
   shadow_mark(future = TRUE, color = "black", alpha = 0.05) +
   exit_recolor(color = "gray95")
 
-animate(p, nframes = ndraws * 10, fps = 20, width = 700, height = 432, res = 100, type = "cairo")
+animate(p, nframes = ndraws * 10, fps = 20, width = 1152, height = 768, res = 192, type = "cairo")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:

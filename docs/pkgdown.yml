@@ -4,6 +4,7 @@ pkgdown_sha: ~
 articles:
   tidy-brms: tidy-brms.html
   tidy-rstanarm: tidy-rstanarm.html
+  tidybayes-residuals: tidybayes-residuals.html
   tidybayes: tidybayes.html
 urls:
   reference: http://mjskay.github.io/tidybayes/reference

@@ -69,6 +69,9 @@
     <li>
       <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
     </li>
+    <li>
+      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -97,7 +100,7 @@
       <h1>Extracting and visualizing tidy draws from brms models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2019-01-02</h4>
+            <h4 class="date">2019-01-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-brms.Rmd"><code>vignettes/tidy-brms.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-brms.Rmd</code></div>
@@ -137,8 +140,10 @@ img {
 <a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(rstan)</a>
 <a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(brms)</a>
 <a class="sourceLine" id="cb1-14" data-line-number="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggrepel)</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="kw">theme_set</span>(<span class="kw"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span><span class="kw">background_grid</span>())</a></code></pre></div>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(RColorBrewer)</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gganimate)</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="kw">theme_set</span>(<span class="kw"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span><span class="kw">background_grid</span>())</a></code></pre></div>
 <p>These options help Stan run faster:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">rstan_options</span>(<span class="dt">auto_write =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/parallel/topics/detectCores">detectCores</a></span>())</a></code></pre></div>
@@ -200,15 +205,15 @@ img {
 ## Group-Level Effects: 
 ## ~condition (Number of levels: 5) 
 ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sd(Intercept)     1.16      0.42     0.61     2.17        921 1.00
+## sd(Intercept)     1.17      0.43     0.60     2.23       1024 1.00
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept     0.50      0.46    -0.46     1.38        950 1.01
+## Intercept     0.49      0.47    -0.49     1.36        901 1.00
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma     0.56      0.06     0.46     0.70       1714 1.00
+## sigma     0.56      0.06     0.46     0.69       2162 1.00
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -249,16 +254,16 @@ img {
 ## # Groups:   condition, term [5]
 ##    .chain .iteration .draw condition term      r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1     1 A         Intercept      -0.133
-##  2      1          1     1 B         Intercept       0.108
-##  3      1          1     1 C         Intercept       1.19 
-##  4      1          1     1 D         Intercept       0.612
-##  5      1          1     1 E         Intercept      -1.49 
-##  6      1          2     2 A         Intercept      -0.517
-##  7      1          2     2 B         Intercept       0.794
-##  8      1          2     2 C         Intercept       1.40 
-##  9      1          2     2 D         Intercept       0.408
-## 10      1          2     2 E         Intercept      -1.27</code></pre>
+##  1      1          1     1 A         Intercept     -0.745 
+##  2      1          1     1 B         Intercept      0.151 
+##  3      1          1     1 C         Intercept      0.874 
+##  4      1          1     1 D         Intercept     -0.0326
+##  5      1          1     1 E         Intercept     -2.05  
+##  6      1          2     2 A         Intercept     -0.972 
+##  7      1          2     2 B         Intercept     -0.0725
+##  8      1          2     2 C         Intercept      0.623 
+##  9      1          2     2 D         Intercept     -0.379 
+## 10      1          2     2 E         Intercept     -2.02</code></pre>
 <p>We can choose whatever names we want for the index columns; e.g.:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb16-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(r_condition[c,t]) <span class="op">%&gt;%</span></a>
@@ -267,16 +272,16 @@ img {
 ## # Groups:   c, t [5]
 ##    .chain .iteration .draw c     t         r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1     1 A     Intercept      -0.133
-##  2      1          1     1 B     Intercept       0.108
-##  3      1          1     1 C     Intercept       1.19 
-##  4      1          1     1 D     Intercept       0.612
-##  5      1          1     1 E     Intercept      -1.49 
-##  6      1          2     2 A     Intercept      -0.517
-##  7      1          2     2 B     Intercept       0.794
-##  8      1          2     2 C     Intercept       1.40 
-##  9      1          2     2 D     Intercept       0.408
-## 10      1          2     2 E     Intercept      -1.27</code></pre>
+##  1      1          1     1 A     Intercept     -0.745 
+##  2      1          1     1 B     Intercept      0.151 
+##  3      1          1     1 C     Intercept      0.874 
+##  4      1          1     1 D     Intercept     -0.0326
+##  5      1          1     1 E     Intercept     -2.05  
+##  6      1          2     2 A     Intercept     -0.972 
+##  7      1          2     2 B     Intercept     -0.0725
+##  8      1          2     2 C     Intercept      0.623 
+##  9      1          2     2 D     Intercept     -0.379 
+## 10      1          2     2 E     Intercept     -2.02</code></pre>
 <p>But the more descriptive and less cryptic names from the previous example are probably preferable.</p>
 <p>In this particular model, there is only one term (<code>Intercept</code>), thus we could omit that index altogether to just get each <code>condition</code> and the value of <code>r_condition</code> for that condition:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
@@ -286,16 +291,16 @@ img {
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw condition r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1     1 A              -0.133
-##  2      1          1     1 B               0.108
-##  3      1          1     1 C               1.19 
-##  4      1          1     1 D               0.612
-##  5      1          1     1 E              -1.49 
-##  6      1          2     2 A              -0.517
-##  7      1          2     2 B               0.794
-##  8      1          2     2 C               1.40 
-##  9      1          2     2 D               0.408
-## 10      1          2     2 E              -1.27</code></pre>
+##  1      1          1     1 A             -0.745 
+##  2      1          1     1 B              0.151 
+##  3      1          1     1 C              0.874 
+##  4      1          1     1 D             -0.0326
+##  5      1          1     1 E             -2.05  
+##  6      1          2     2 A             -0.972 
+##  7      1          2     2 B             -0.0725
+##  8      1          2     2 C              0.623 
+##  9      1          2     2 D             -0.379 
+## 10      1          2     2 E             -2.02</code></pre>
 <p><strong>Note:</strong> If you have used <code>spread_draws</code> with a raw sample from Stan or JAGS, you may be used to using <code>recover_types</code> before <code>spread_draws</code> to get index column values back (e.g. if the index was a factor). This is not necessary when using <code>spread_draws</code> on <code>rstanarm</code> models, because those models already contain that information in their variable names. For more on <code>recover_types</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
 </div>
@@ -313,16 +318,16 @@ img {
 <pre><code>## # A tibble: 10 x 5
 ##    .chain .iteration .draw b_Intercept sigma
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt;
-##  1      1          1     1       0.534 0.475
-##  2      1          2     2       0.401 0.531
-##  3      1          3     3       0.654 0.505
-##  4      1          4     4       0.791 0.580
-##  5      1          5     5       0.207 0.631
-##  6      1          6     6       0.266 0.646
-##  7      1          7     7      -0.132 0.583
-##  8      1          8     8      -0.472 0.519
-##  9      1          9     9      -0.542 0.527
-## 10      1         10    10      -0.593 0.502</code></pre>
+##  1      1          1     1       1.02  0.436
+##  2      1          2     2       1.19  0.628
+##  3      1          3     3       1.25  0.640
+##  4      1          4     4       0.489 0.488
+##  5      1          5     5       0.468 0.575
+##  6      1          6     6       0.420 0.492
+##  7      1          7     7      -0.416 0.547
+##  8      1          8     8      -0.492 0.499
+##  9      1          9     9      -0.268 0.560
+## 10      1         10    10      -0.200 0.554</code></pre>
 <p>Like with <code>r_condition[condition,term]</code>, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply <code>median_qi</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span></a>
@@ -330,7 +335,7 @@ img {
 <pre><code>## # A tibble: 1 x 9
 ##   b_Intercept b_Intercept.lower b_Intercept.upper sigma sigma.lower sigma.upper .width .point .interval
 ##         &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.522            -0.461              1.38 0.557       0.460       0.699   0.95 median qi</code></pre>
+## 1       0.514            -0.488              1.36 0.555       0.458       0.691   0.95 median qi</code></pre>
 <p>We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, <code>median_qi</code> will use every column that is not a grouping column or a special column (like <code>.chain</code>, <code>.iteration</code>, or <code>.draw</code>). Thus in the above example, <code>b_Intercept</code> and <code>sigma</code> are redundant arguments to <code>median_qi</code> because they are also the only columns we gathered from the model. So we can simplify this to:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span></a>
@@ -338,7 +343,7 @@ img {
 <pre><code>## # A tibble: 1 x 9
 ##   b_Intercept b_Intercept.lower b_Intercept.upper sigma sigma.lower sigma.upper .width .point .interval
 ##         &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.522            -0.461              1.38 0.557       0.460       0.699   0.95 median qi</code></pre>
+## 1       0.514            -0.488              1.36 0.555       0.458       0.691   0.95 median qi</code></pre>
 <p>If you would rather have a long-format list of intervals, use <code>gather_draws</code> instead:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb26-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">gather_draws</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span></a>
@@ -346,8 +351,8 @@ img {
 <pre><code>## # A tibble: 2 x 7
 ##   .variable   .value .lower .upper .width .point .interval
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 b_Intercept  0.522 -0.461  1.38    0.95 median qi       
-## 2 sigma        0.557  0.460  0.699   0.95 median qi</code></pre>
+## 1 b_Intercept  0.514 -0.488  1.36    0.95 median qi       
+## 2 sigma        0.555  0.458  0.691   0.95 median qi</code></pre>
 <p>For more on <code>gather_draws</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
 <div id="with-indexed-model-variables" class="section level3">
@@ -360,11 +365,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition r_condition .lower .upper .width .point .interval
 ##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A              -0.326 -1.21   0.681   0.95 median qi       
-## 2 B               0.485 -0.405  1.48    0.95 median qi       
-## 3 C               1.32   0.389  2.38    0.95 median qi       
-## 4 D               0.486 -0.426  1.52    0.95 median qi       
-## 5 E              -1.39  -2.33  -0.384   0.95 median qi</code></pre>
+## 1 A              -0.316 -1.20   0.700   0.95 median qi       
+## 2 B               0.482 -0.409  1.53    0.95 median qi       
+## 3 C               1.33   0.435  2.37    0.95 median qi       
+## 4 D               0.502 -0.413  1.53    0.95 median qi       
+## 5 E              -1.39  -2.30  -0.407   0.95 median qi</code></pre>
 <p>How did <code>median_qi</code> know what to aggregate? Data frames returned by <code>spread_draws</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_draws</code> groups its results by <code>condition</code>. <code>median_qi</code> respects those groups, and calculates the point summaries and intervals within all groups. Then, because no columns were passed to <code>median_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>r_condition</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -373,11 +378,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition r_condition .lower .upper .width .point .interval
 ##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A              -0.326 -1.21   0.681   0.95 median qi       
-## 2 B               0.485 -0.405  1.48    0.95 median qi       
-## 3 C               1.32   0.389  2.38    0.95 median qi       
-## 4 D               0.486 -0.426  1.52    0.95 median qi       
-## 5 E              -1.39  -2.33  -0.384   0.95 median qi</code></pre>
+## 1 A              -0.316 -1.20   0.700   0.95 median qi       
+## 2 B               0.482 -0.409  1.53    0.95 median qi       
+## 3 C               1.33   0.435  2.37    0.95 median qi       
+## 4 D               0.502 -0.413  1.53    0.95 median qi       
+## 5 E              -1.39  -2.30  -0.407   0.95 median qi</code></pre>
 </div>
 </div>
 <div id="combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="section level2">
@@ -392,16 +397,16 @@ img {
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw b_Intercept condition r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1     1       0.534 A              -0.133
-##  2      1          1     1       0.534 B               0.108
-##  3      1          1     1       0.534 C               1.19 
-##  4      1          1     1       0.534 D               0.612
-##  5      1          1     1       0.534 E              -1.49 
-##  6      1          2     2       0.401 A              -0.517
-##  7      1          2     2       0.401 B               0.794
-##  8      1          2     2       0.401 C               1.40 
-##  9      1          2     2       0.401 D               0.408
-## 10      1          2     2       0.401 E              -1.27</code></pre>
+##  1      1          1     1        1.02 A             -0.745 
+##  2      1          1     1        1.02 B              0.151 
+##  3      1          1     1        1.02 C              0.874 
+##  4      1          1     1        1.02 D             -0.0326
+##  5      1          1     1        1.02 E             -2.05  
+##  6      1          2     2        1.19 A             -0.972 
+##  7      1          2     2        1.19 B             -0.0725
+##  8      1          2     2        1.19 C              0.623 
+##  9      1          2     2        1.19 D             -0.379 
+## 10      1          2     2        1.19 E             -2.02</code></pre>
 <p>Within each draw, <code>b_Intercept</code> is repeated as necessary to correspond to every index of <code>r_condition</code>. Thus, the <code>mutate</code> function from dplyr can be used to find their sum, <code>condition_mean</code> (which is the mean for each condition):</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb34-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="st">`</span><span class="dt">b_Intercept</span><span class="st">`</span>, r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -410,11 +415,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A                  0.198 -0.136  0.546   0.95 median qi       
-## 2 B                  1.00   0.657  1.34    0.95 median qi       
-## 3 C                  1.83   1.48   2.19    0.95 median qi       
-## 4 D                  1.01   0.659  1.37    0.95 median qi       
-## 5 E                 -0.889 -1.24  -0.514   0.95 median qi</code></pre>
+## 1 A                  0.188 -0.161  0.529   0.95 median qi       
+## 2 B                  1.00   0.644  1.34    0.95 median qi       
+## 3 C                  1.83   1.49   2.18    0.95 median qi       
+## 4 D                  1.01   0.673  1.34    0.95 median qi       
+## 5 E                 -0.886 -1.24  -0.548   0.95 median qi</code></pre>
 <p><code>median_qi</code> uses tidy evaluation (see <code>vignette("tidy-evaluation", package = "rlang")</code>), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>median_qi</code>:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb36-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -422,11 +427,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A                  0.198 -0.136  0.546   0.95 median qi       
-## 2 B                  1.00   0.657  1.34    0.95 median qi       
-## 3 C                  1.83   1.48   2.19    0.95 median qi       
-## 4 D                  1.01   0.659  1.37    0.95 median qi       
-## 5 E                 -0.889 -1.24  -0.514   0.95 median qi</code></pre>
+## 1 A                  0.188 -0.161  0.529   0.95 median qi       
+## 2 B                  1.00   0.644  1.34    0.95 median qi       
+## 3 C                  1.83   1.49   2.18    0.95 median qi       
+## 4 D                  1.01   0.673  1.34    0.95 median qi       
+## 5 E                 -0.886 -1.24  -0.548   0.95 median qi</code></pre>
 </div>
 <div id="plotting-point-summaries-and-intervals" class="section level2">
 <h2 class="hasAnchor">
@@ -449,21 +454,21 @@ img {
 <pre><code>## # A tibble: 15 x 7
 ##    condition condition_mean  .lower .upper .width .point .interval
 ##    &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-##  1 A                  0.198 -0.136   0.546   0.95 median qi       
-##  2 B                  1.00   0.657   1.34    0.95 median qi       
-##  3 C                  1.83   1.48    2.19    0.95 median qi       
-##  4 D                  1.01   0.659   1.37    0.95 median qi       
-##  5 E                 -0.889 -1.24   -0.514   0.95 median qi       
-##  6 A                  0.198 -0.0261  0.422   0.8  median qi       
-##  7 B                  1.00   0.773   1.22    0.8  median qi       
-##  8 C                  1.83   1.60    2.06    0.8  median qi       
-##  9 D                  1.01   0.785   1.23    0.8  median qi       
-## 10 E                 -0.889 -1.11   -0.658   0.8  median qi       
-## 11 A                  0.198  0.0844  0.316   0.5  median qi       
-## 12 B                  1.00   0.881   1.12    0.5  median qi       
-## 13 C                  1.83   1.70    1.96    0.5  median qi       
-## 14 D                  1.01   0.892   1.13    0.5  median qi       
-## 15 E                 -0.889 -1.01   -0.762   0.5  median qi</code></pre>
+##  1 A                  0.188 -0.161   0.529   0.95 median qi       
+##  2 B                  1.00   0.644   1.34    0.95 median qi       
+##  3 C                  1.83   1.49    2.18    0.95 median qi       
+##  4 D                  1.01   0.673   1.34    0.95 median qi       
+##  5 E                 -0.886 -1.24   -0.548   0.95 median qi       
+##  6 A                  0.188 -0.0285  0.404   0.8  median qi       
+##  7 B                  1.00   0.780   1.23    0.8  median qi       
+##  8 C                  1.83   1.61    2.06    0.8  median qi       
+##  9 D                  1.01   0.788   1.23    0.8  median qi       
+## 10 E                 -0.886 -1.11   -0.662   0.8  median qi       
+## 11 A                  0.188  0.0736  0.305   0.5  median qi       
+## 12 B                  1.00   0.884   1.12    0.5  median qi       
+## 13 C                  1.83   1.71    1.95    0.5  median qi       
+## 14 D                  1.01   0.898   1.13    0.5  median qi       
+## 15 E                 -0.886 -1.01   -0.767   0.5  median qi</code></pre>
 <p>The results are in a tidy format: one row per group and uncertainty interval width (<code>.width</code>). This facilitates plotting. For example, assigning <code>-.width</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The <code>geom_pointintervalh</code> geom, provided by tidybayes, is a shorthand for a <code>geom_pointrangeh</code> with <code>xmin</code>, <code>xmax</code>, and <code>size</code> set appropriately based on the <code>.lower</code>, <code>.upper</code>, and <code>.width</code> columns in the data to produce plots of point summaries with multiple probability levels:</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb41-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -493,18 +498,18 @@ img {
 <a class="sourceLine" id="cb43-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="dv">10</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 6
 ## # Groups:   condition, .row [1]
-##    condition  .row .chain .iteration .draw  .value
-##    &lt;chr&gt;     &lt;int&gt;  &lt;int&gt;      &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;
-##  1 A             1     NA         NA     1  0.400 
-##  2 A             1     NA         NA     2 -0.115 
-##  3 A             1     NA         NA     3  0.0421
-##  4 A             1     NA         NA     4  0.399 
-##  5 A             1     NA         NA     5  0.0396
-##  6 A             1     NA         NA     6  0.0671
-##  7 A             1     NA         NA     7  0.341 
-##  8 A             1     NA         NA     8  0.196 
-##  9 A             1     NA         NA     9  0.0428
-## 10 A             1     NA         NA    10  0.180</code></pre>
+##    condition  .row .chain .iteration .draw .value
+##    &lt;chr&gt;     &lt;int&gt;  &lt;int&gt;      &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;
+##  1 A             1     NA         NA     1 0.278 
+##  2 A             1     NA         NA     2 0.217 
+##  3 A             1     NA         NA     3 0.207 
+##  4 A             1     NA         NA     4 0.319 
+##  5 A             1     NA         NA     5 0.251 
+##  6 A             1     NA         NA     6 0.141 
+##  7 A             1     NA         NA     7 0.369 
+##  8 A             1     NA         NA     8 0.0485
+##  9 A             1     NA         NA     9 0.319 
+## 10 A             1     NA         NA    10 0.374</code></pre>
 <p>To plot this example, we’ll also show the use of <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which summarizes draws into points and intervals within ggplot:</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb45-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
@@ -538,7 +543,7 @@ img {
 <a class="sourceLine" id="cb47-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb47-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb47-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_density_ridges</span>()</a></code></pre></div>
-<pre><code>## Picking joint bandwidth of 0.102</code></pre>
+<pre><code>## Picking joint bandwidth of 0.1</code></pre>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
 <p>We could also use <code><a href="../reference/stat_interval.html">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1">ABC <span class="op">%&gt;%</span></a>
@@ -587,7 +592,7 @@ img {
 <a class="sourceLine" id="cb51-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_ridgeline</span>(<span class="kw">aes</span>(<span class="dt">height =</span> density, <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/interaction">interaction</a></span>(condition, .draw)), </a>
 <a class="sourceLine" id="cb51-13" data-line-number="13">    <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/adjustcolor">adjustcolor</a></span>(<span class="st">"black"</span>, <span class="dt">alpha.f =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">20</span>)</a>
 <a class="sourceLine" id="cb51-14" data-line-number="14">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb51-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> ABC, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">fill =</span> <span class="st">"lightblue"</span>, <span class="dt">size =</span> <span class="dv">2</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb51-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> ABC, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">fill =</span> <span class="kw">brewer.pal</span>(<span class="dv">3</span>, <span class="st">"Blues"</span>)[[<span class="dv">2</span>]], <span class="dt">size =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
 </div>
 <div id="fitprediction-curves" class="section level2">
@@ -616,78 +621,96 @@ img {
 <a class="sourceLine" id="cb54-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb54-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a></code></pre></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
+<p>Or we can create animated <a href="https://mucollective.northwestern.edu/project/hops-trends">hypothetical outcome plots (HOPs)</a> of fit lines:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123456</span>)</a>
+<a class="sourceLine" id="cb55-2" data-line-number="2">ndraws =<span class="st"> </span><span class="dv">50</span></a>
+<a class="sourceLine" id="cb55-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb55-4" data-line-number="4">p =<span class="st"> </span>mtcars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-5" data-line-number="5"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-6" data-line-number="6"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_mpg, <span class="dt">n =</span> ndraws) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-8" data-line-number="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(cyl))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(cyl, .draw))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-11" data-line-number="11"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-12" data-line-number="12"><span class="st">  </span><span class="kw">transition_states</span>(.draw, <span class="dv">1</span>, <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-13" data-line-number="13"><span class="st">  </span><span class="kw">shadow_mark</span>(<span class="dt">future =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> <span class="st">"black"</span>, <span class="dt">alpha =</span> <span class="fl">0.05</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-14" data-line-number="14"><span class="st">  </span><span class="kw">exit_recolor</span>(<span class="dt">color =</span> <span class="st">"gray95"</span>)</a>
+<a class="sourceLine" id="cb55-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb55-16" data-line-number="16"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> ndraws <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">fps =</span> <span class="dv">20</span>, <span class="dt">width =</span> <span class="dv">1152</span>, <span class="dt">height =</span> <span class="dv">768</span>, <span class="dt">res =</span> <span class="dv">192</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-34-1.gif"><!-- --></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1">mtcars <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb55-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb55-3" data-line-number="3"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb55-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_mpg) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb55-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(cyl), <span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(cyl))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb55-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> .prediction), <span class="dt">.width =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">95</span>, <span class="fl">.80</span>, <span class="fl">.50</span>), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb55-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
-<a class="sourceLine" id="cb55-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Set2"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb55-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-34-1.png" width="576"></p>
-<p>This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">mtcars <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb56-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb56-3" data-line-number="3"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb56-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_mpg) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> .prediction), <span class="dt">.width =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">99</span>, <span class="fl">.95</span>, <span class="fl">.8</span>, <span class="fl">.5</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb56-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(cyl), <span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(cyl))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb56-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> .prediction), <span class="dt">.width =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">95</span>, <span class="fl">.80</span>, <span class="fl">.50</span>), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb56-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-9" data-line-number="9"><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl)</a></code></pre></div>
+<a class="sourceLine" id="cb56-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Set2"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb56-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a></code></pre></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-35-1.png" width="576"></p>
+<p>This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">mtcars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-3" data-line-number="3"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">hp =</span> <span class="kw">seq_range</span>(hp, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_mpg) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> hp, <span class="dt">y =</span> mpg)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> .prediction), <span class="dt">.width =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">99</span>, <span class="fl">.95</span>, <span class="fl">.8</span>, <span class="fl">.5</span>), <span class="dt">color =</span> <span class="kw">brewer.pal</span>(<span class="dv">5</span>, <span class="st">"Blues"</span>)[[<span class="dv">5</span>]]) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-9" data-line-number="9"><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl, <span class="dt">space =</span> <span class="st">"free_x"</span>, <span class="dt">scales =</span> <span class="st">"free_x"</span>)</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-36-1.png" width="576"></p>
 <div id="extracting-of-distributional-regression-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#extracting-of-distributional-regression-parameters" class="anchor"></a>Extracting of distributional regression parameters</h3>
 <p><code>brm</code> also allows us to set up submodels for parameters of the response distribution <em>other than</em> the location (e.g., mean). For example, we can allow a variance parameter, such as the standard deviation, to also be some function of the predictors.</p>
 <p>This approach can be helpful in cases of non-constant variance (also called <em>heteroskedasticity</em> by folks who like obfuscation via Latin). E.g., imagine two groups, each with different mean response <em>and variance</em>:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">1234</span>)</a>
-<a class="sourceLine" id="cb57-2" data-line-number="2">AB =<span class="st"> </span><span class="kw">data_frame</span>(</a>
-<a class="sourceLine" id="cb57-3" data-line-number="3">  <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="dt">each =</span> <span class="dv">20</span>),</a>
-<a class="sourceLine" id="cb57-4" data-line-number="4">  <span class="dt">response =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">40</span>, <span class="dt">mean =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">5</span>), <span class="dt">each =</span> <span class="dv">20</span>), <span class="dt">sd =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">each =</span> <span class="dv">20</span>))</a>
-<a class="sourceLine" id="cb57-5" data-line-number="5">)</a>
-<a class="sourceLine" id="cb57-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb57-7" data-line-number="7">AB <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb57-8" data-line-number="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response, <span class="dt">y =</span> group)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb57-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-36-1.png" width="576"></p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">1234</span>)</a>
+<a class="sourceLine" id="cb58-2" data-line-number="2">AB =<span class="st"> </span><span class="kw">data_frame</span>(</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3">  <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="dt">each =</span> <span class="dv">20</span>),</a>
+<a class="sourceLine" id="cb58-4" data-line-number="4">  <span class="dt">response =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">40</span>, <span class="dt">mean =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">5</span>), <span class="dt">each =</span> <span class="dv">20</span>), <span class="dt">sd =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">each =</span> <span class="dv">20</span>))</a>
+<a class="sourceLine" id="cb58-5" data-line-number="5">)</a>
+<a class="sourceLine" id="cb58-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb58-7" data-line-number="7">AB <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-8" data-line-number="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response, <span class="dt">y =</span> group)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb58-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-37-1.png" width="576"></p>
 <p>Here is a model that lets the mean <em>and standard deviation</em> of <code>response</code> be dependent on <code>group</code>:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">m_ab =<span class="st"> </span><span class="kw">brm</span>(</a>
-<a class="sourceLine" id="cb58-2" data-line-number="2">  <span class="kw">bf</span>(</a>
-<a class="sourceLine" id="cb58-3" data-line-number="3">    response <span class="op">~</span><span class="st"> </span>group,</a>
-<a class="sourceLine" id="cb58-4" data-line-number="4">    sigma <span class="op">~</span><span class="st"> </span>group</a>
-<a class="sourceLine" id="cb58-5" data-line-number="5">  ),</a>
-<a class="sourceLine" id="cb58-6" data-line-number="6">  <span class="dt">data =</span> AB</a>
-<a class="sourceLine" id="cb58-7" data-line-number="7">)</a></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1">m_ab =<span class="st"> </span><span class="kw">brm</span>(</a>
+<a class="sourceLine" id="cb59-2" data-line-number="2">  <span class="kw">bf</span>(</a>
+<a class="sourceLine" id="cb59-3" data-line-number="3">    response <span class="op">~</span><span class="st"> </span>group,</a>
+<a class="sourceLine" id="cb59-4" data-line-number="4">    sigma <span class="op">~</span><span class="st"> </span>group</a>
+<a class="sourceLine" id="cb59-5" data-line-number="5">  ),</a>
+<a class="sourceLine" id="cb59-6" data-line-number="6">  <span class="dt">data =</span> AB</a>
+<a class="sourceLine" id="cb59-7" data-line-number="7">)</a></code></pre></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>We can plot the posterior distribution of the mean <code>response</code> alongside posterior predictive intervals and the data:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1">grid =<span class="st"> </span>AB <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(group)</a>
-<a class="sourceLine" id="cb61-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb61-4" data-line-number="4">fits =<span class="st"> </span>grid <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb61-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_ab)</a>
-<a class="sourceLine" id="cb61-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb61-7" data-line-number="7">preds =<span class="st"> </span>grid <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb61-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_ab)</a>
-<a class="sourceLine" id="cb61-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb61-10" data-line-number="10">AB <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb61-11" data-line-number="11"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response, <span class="dt">y =</span> group)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb61-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value), <span class="dt">relative_scale =</span> <span class="fl">0.7</span>, <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="fl">0.1</span>), <span class="dt">data =</span> fits) <span class="op">+</span></a>
-<a class="sourceLine" id="cb61-13" data-line-number="13"><span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction), <span class="dt">data =</span> preds) <span class="op">+</span></a>
-<a class="sourceLine" id="cb61-14" data-line-number="14"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> AB) <span class="op">+</span></a>
-<a class="sourceLine" id="cb61-15" data-line-number="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-38-1.png" width="576"></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">grid =<span class="st"> </span>AB <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(group)</a>
+<a class="sourceLine" id="cb62-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb62-4" data-line-number="4">fits =<span class="st"> </span>grid <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_ab)</a>
+<a class="sourceLine" id="cb62-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb62-7" data-line-number="7">preds =<span class="st"> </span>grid <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_ab)</a>
+<a class="sourceLine" id="cb62-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb62-10" data-line-number="10">AB <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-11" data-line-number="11"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response, <span class="dt">y =</span> group)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb62-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value), <span class="dt">relative_scale =</span> <span class="fl">0.7</span>, <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="fl">0.1</span>), <span class="dt">data =</span> fits) <span class="op">+</span></a>
+<a class="sourceLine" id="cb62-13" data-line-number="13"><span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction), <span class="dt">data =</span> preds) <span class="op">+</span></a>
+<a class="sourceLine" id="cb62-14" data-line-number="14"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> AB) <span class="op">+</span></a>
+<a class="sourceLine" id="cb62-15" data-line-number="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>()</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-39-1.png" width="576"></p>
 <p>This shows posteriors of the mean of each group (black intervals and the density plots) and posterior predictive intervals (blue).</p>
 <p>The predictive intervals in group <code>b</code> are larger than in group <code>a</code> because the model fits a different standard deviation for each group. We can see how the corresponding distributional parameter, <code>sigma</code>, changes by extracting it using the <code>dpar</code> argument to <code>add_fitted_draws</code>:</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">grid <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb62-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_ab, <span class="dt">dpar =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb62-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sigma, <span class="dt">y =</span> group)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb62-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb62-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-39-1.png" width="576"></p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">grid <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_ab, <span class="dt">dpar =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sigma, <span class="dt">y =</span> group)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>)</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-40-1.png" width="576"></p>
 <p>By setting <code>dpar = TRUE</code>, all distributional parameters are added as additional columns in the result of <code>add_fitted_draws</code>; if you only want a specific parameter, you can specify it (or a list of just the parameters you want). In the above model, <code>dpar = TRUE</code> is equivalent to <code>dpar = list("mu", "sigma")</code>.</p>
 </div>
 </div>
@@ -696,24 +719,24 @@ img {
 <a href="#comparing-levels-of-a-factor" class="anchor"></a>Comparing levels of a factor</h2>
 <p>If we wish compare the means from each condition, <code>compare_levels</code> facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences.</p>
 <p>Let’s demonstrate <code>compare_levels</code> with another plotting geom, <code>geom_halfeyeh</code>, which gives horizontal “half-eye” plots, combining intervals with a density plot:</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span></a>
-<a class="sourceLine" id="cb63-2" data-line-number="2">m <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(r_condition[condition,]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(r_condition, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> r_condition)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb63-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-40-1.png" width="672"></p>
-<p>If you prefer “caterpillar” plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:</p>
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span></a>
 <a class="sourceLine" id="cb64-2" data-line-number="2">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb64-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(r_condition[condition,]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb64-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(r_condition, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-5" data-line-number="5"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/reorder.factor">reorder</a></span>(condition, r_condition)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-7" data-line-number="7"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> r_condition)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb64-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb64-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>) </a></code></pre></div>
+<a class="sourceLine" id="cb64-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> r_condition)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb64-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>()</a></code></pre></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-41-1.png" width="672"></p>
+<p>If you prefer “caterpillar” plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span></a>
+<a class="sourceLine" id="cb65-2" data-line-number="2">m <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb65-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(r_condition[condition,]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb65-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(r_condition, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb65-5" data-line-number="5"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb65-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/reorder.factor">reorder</a></span>(condition, r_condition)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb65-7" data-line-number="7"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> r_condition)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb65-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="../reference/geom_halfeyeh.html">geom_halfeyeh</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb65-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>) </a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-42-1.png" width="672"></p>
 </div>
 <div id="ordinal-models" class="section level2">
 <h2 class="hasAnchor">
@@ -724,10 +747,10 @@ img {
 <a href="#ordinal-model-with-continuous-predictor" class="anchor"></a>Ordinal model with continuous predictor</h3>
 <p>We’ll fit a model using the <code>mtcars</code> dataset that predicts the number of cylinders in a car given the car’s mileage (in miles per gallon). While this is a little backwards causality-wise (presumably the number of cylinders causes the mileage, if anything), that does not mean this is not a fine prediction task (I could probably tell someone who knows something about cars the MPG of a car and they could do reasonably well at guessing the number of cylinders in the engine).</p>
 <p>Before we fit the model, let’s clean the dataset by making the <code>cyl</code> column an ordered factor (by default it is just a number):</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1">mtcars_clean =<span class="st"> </span>mtcars <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb65-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cyl =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(cyl))</a>
-<a class="sourceLine" id="cb65-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb65-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(mtcars_clean)</a></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1">mtcars_clean =<span class="st"> </span>mtcars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cyl =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(cyl))</a>
+<a class="sourceLine" id="cb66-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb66-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(mtcars_clean)</a></code></pre></div>
 <pre><code>##    mpg cyl disp  hp drat    wt  qsec vs am gear carb
 ## 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
 ## 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
@@ -736,13 +759,13 @@ img {
 ## 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
 ## 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
 <p>Then we’ll fit an ordinal regression model:</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">m_cyl =<span class="st"> </span><span class="kw">brm</span>(cyl <span class="op">~</span><span class="st"> </span>mpg, <span class="dt">data =</span> mtcars_clean, <span class="dt">family =</span> cumulative, <span class="dt">seed =</span> <span class="dv">58393</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">m_cyl =<span class="st"> </span><span class="kw">brm</span>(cyl <span class="op">~</span><span class="st"> </span>mpg, <span class="dt">data =</span> mtcars_clean, <span class="dt">family =</span> cumulative, <span class="dt">seed =</span> <span class="dv">58393</span>)</a></code></pre></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p><code>add_fitted_draws</code> will include a <code>.category</code> column, and <code>.value</code> will contain draws from the posterior distribution for the probability that the response is in that category. For example, here is the fit for the first row in the dataset:</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">mpg =</span> <span class="dv">21</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb70-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_cyl) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb70-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(.value)</a></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">mpg =</span> <span class="dv">21</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb71-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_cyl) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb71-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(.value)</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 9
 ## # Groups:   mpg, .row [1]
 ##     mpg  .row .category  .value     .lower .upper .width .point .interval
@@ -751,138 +774,148 @@ img {
 ## 2    21     1 6         0.716   0.316      0.953    0.95 median qi       
 ## 3    21     1 8         0.00307 0.00000986 0.0721   0.95 median qi</code></pre>
 <p>We could plot fit lines for fitted probabilities against the dataset:</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1">data_plot =<span class="st"> </span>mtcars_clean <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb72-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> cyl, <span class="dt">color =</span> cyl)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb72-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb72-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>, <span class="dt">name =</span> <span class="st">"cyl"</span>)</a>
-<a class="sourceLine" id="cb72-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb72-6" data-line-number="6">fit_plot =<span class="st"> </span>mtcars_clean <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb72-7" data-line-number="7"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mpg =</span> <span class="kw">seq_range</span>(mpg, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb72-8" data-line-number="8"><span class="st">  </span><span class="co"># we can use the `value` argument to give the column with values of </span></a>
-<a class="sourceLine" id="cb72-9" data-line-number="9"><span class="st">  </span><span class="co"># transformed linear predictors a more precise name and the </span></a>
-<a class="sourceLine" id="cb72-10" data-line-number="10"><span class="st">  </span><span class="co"># `category` argument to give the column with category labels</span></a>
-<a class="sourceLine" id="cb72-11" data-line-number="11"><span class="st">  </span><span class="co"># a more precise name</span></a>
-<a class="sourceLine" id="cb72-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_cyl, <span class="dt">value =</span> <span class="st">"P(cyl | mpg)"</span>, <span class="dt">category =</span> <span class="st">"cyl"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb72-13" data-line-number="13"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> <span class="st">`</span><span class="dt">P(cyl | mpg)</span><span class="st">`</span>, <span class="dt">color =</span> cyl)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb72-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">fill =</span> cyl), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb72-15" data-line-number="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb72-16" data-line-number="16"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a>
-<a class="sourceLine" id="cb72-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb72-18" data-line-number="18"><span class="kw">plot_grid</span>(<span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">align =</span> <span class="st">"v"</span>,</a>
-<a class="sourceLine" id="cb72-19" data-line-number="19">  data_plot,</a>
-<a class="sourceLine" id="cb72-20" data-line-number="20">  fit_plot</a>
-<a class="sourceLine" id="cb72-21" data-line-number="21">)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-45-1.png" width="576"></p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1">data_plot =<span class="st"> </span>mtcars_clean <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb73-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> cyl, <span class="dt">color =</span> cyl)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb73-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb73-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>, <span class="dt">name =</span> <span class="st">"cyl"</span>)</a>
+<a class="sourceLine" id="cb73-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb73-6" data-line-number="6">fit_plot =<span class="st"> </span>mtcars_clean <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb73-7" data-line-number="7"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mpg =</span> <span class="kw">seq_range</span>(mpg, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb73-8" data-line-number="8"><span class="st">  </span><span class="co"># we can use the `value` argument to give the column with values of </span></a>
+<a class="sourceLine" id="cb73-9" data-line-number="9"><span class="st">  </span><span class="co"># transformed linear predictors a more precise name and the </span></a>
+<a class="sourceLine" id="cb73-10" data-line-number="10"><span class="st">  </span><span class="co"># `category` argument to give the column with category labels</span></a>
+<a class="sourceLine" id="cb73-11" data-line-number="11"><span class="st">  </span><span class="co"># a more precise name</span></a>
+<a class="sourceLine" id="cb73-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_cyl, <span class="dt">value =</span> <span class="st">"P(cyl | mpg)"</span>, <span class="dt">category =</span> <span class="st">"cyl"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb73-13" data-line-number="13"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> <span class="st">`</span><span class="dt">P(cyl | mpg)</span><span class="st">`</span>, <span class="dt">color =</span> cyl)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb73-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="kw">aes</span>(<span class="dt">fill =</span> cyl), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb73-15" data-line-number="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb73-16" data-line-number="16"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a>
+<a class="sourceLine" id="cb73-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb73-18" data-line-number="18"><span class="kw">plot_grid</span>(<span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">align =</span> <span class="st">"v"</span>,</a>
+<a class="sourceLine" id="cb73-19" data-line-number="19">  data_plot,</a>
+<a class="sourceLine" id="cb73-20" data-line-number="20">  fit_plot</a>
+<a class="sourceLine" id="cb73-21" data-line-number="21">)</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-46-1.png" width="576"></p>
 <p>While talking about the mean for an ordinal distribution often does not make sense, in this particular case one could argue that the expected number of cylinders for a car given its miles per gallon is a meaningful quantity. We could plot the posterior distribution for the average number of cylinders for a car given a particular miles per gallon as follows:</p>
 <p><span class="math display">\[
 \textrm{E}[\textrm{cyl}|\textrm{mpg}=m] = \sum_{c \in \{4,6,8\}} c\cdot \textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)
 \]</span> We can use the above formula to derive a posterior distribution for <span class="math inline">\(\textrm{E}[\textrm{cyl}|\textrm{mpg}=m]\)</span> from the model. The model gives us a posterior distribution for <span class="math inline">\(\textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)\)</span>: when <code>mpg</code> = <span class="math inline">\(m\)</span>, the response-scale linear predictor (the <code>.value</code> column from <code>add_fitted_draws</code>) for <code>cyl</code> (aka <code>.category</code>) = <span class="math inline">\(c\)</span> is <span class="math inline">\(\textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)\)</span>. Thus, we can group within <code>.draw</code> and then use <code>summarise</code> to calculate the expected value:</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1">label_data_function =<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb73-2" data-line-number="2"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(mpg <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mpg, <span class="fl">.47</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise_if</span>(is.numeric, mean)</a>
-<a class="sourceLine" id="cb73-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb73-6" data-line-number="6">data_plot_with_mean =<span class="st"> </span>mtcars_clean <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-7" data-line-number="7"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mpg =</span> <span class="kw">seq_range</span>(mpg, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_cyl, <span class="dt">value =</span> <span class="st">"P(cyl | mpg)"</span>, <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-9" data-line-number="9"><span class="st">  </span><span class="co"># turn `.category` (a factor) into a numeric value in {4, 6, 8}</span></a>
-<a class="sourceLine" id="cb73-10" data-line-number="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cyl =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(.category))) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-11" data-line-number="11"><span class="st">  </span><span class="kw">group_by</span>(mpg, .draw) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-12" data-line-number="12"><span class="st">  </span><span class="co"># calculate expected cylinder value</span></a>
-<a class="sourceLine" id="cb73-13" data-line-number="13"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cyl =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(cyl <span class="op">*</span><span class="st"> `</span><span class="dt">P(cyl | mpg)</span><span class="st">`</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb73-14" data-line-number="14"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> cyl)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb73-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> .draw), <span class="dt">alpha =</span> <span class="dv">5</span><span class="op">/</span><span class="dv">100</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb73-16" data-line-number="16"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(cyl)), <span class="dt">fill =</span> cyl), <span class="dt">data =</span> mtcars_clean, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb73-17" data-line-number="17"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg <span class="op">+</span><span class="st"> </span><span class="dv">4</span>), <span class="dt">label =</span> <span class="st">"E[cyl | mpg]"</span>, <span class="dt">data =</span> label_data_function, <span class="dt">hjust =</span> <span class="dv">0</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb73-18" data-line-number="18"><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">yend =</span> cyl, <span class="dt">xend =</span> mpg <span class="op">+</span><span class="st"> </span><span class="fl">3.9</span>), <span class="dt">data =</span> label_data_function) <span class="op">+</span></a>
-<a class="sourceLine" id="cb73-19" data-line-number="19"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>, <span class="dt">name =</span> <span class="st">"cyl"</span>)</a>
-<a class="sourceLine" id="cb73-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb73-21" data-line-number="21"><span class="kw">plot_grid</span>(<span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">align =</span> <span class="st">"v"</span>,</a>
-<a class="sourceLine" id="cb73-22" data-line-number="22">  data_plot_with_mean,</a>
-<a class="sourceLine" id="cb73-23" data-line-number="23">  fit_plot</a>
-<a class="sourceLine" id="cb73-24" data-line-number="24">)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-46-1.png" width="576"></p>
-<p>Now let’s do some posterior predictive checking: do posterior predictions look like the data? For this, we’ll make new predictions at the same values of <code>mpg</code> as were present in the original dataset (gray circles) and plot these with the observed data (colored circles):</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1">mtcars_clean <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb74-2" data-line-number="2"><span class="st">  </span><span class="co"># we use `select` instead of `data_grid` here because we want to make posterior predictions</span></a>
-<a class="sourceLine" id="cb74-3" data-line-number="3"><span class="st">  </span><span class="co"># for exactly the same set of observations we have in the original data</span></a>
-<a class="sourceLine" id="cb74-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(mpg) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb74-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_cyl, <span class="dt">prediction =</span> <span class="st">"cyl"</span>, <span class="dt">seed =</span> <span class="dv">1234</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb74-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> cyl)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb74-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_count</span>(<span class="dt">color =</span> <span class="st">"gray75"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb74-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> cyl), <span class="dt">data =</span> mtcars_clean, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb74-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb74-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_label_repel</span>(</a>
-<a class="sourceLine" id="cb74-11" data-line-number="11">    <span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(cyl <span class="op">==</span><span class="st"> "8"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(mpg <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(mpg)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb74-12" data-line-number="12">    <span class="dt">label =</span> <span class="st">"posterior predictions"</span>, <span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">26</span>, <span class="ot">NA</span>), <span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="ot">NA</span>, <span class="fl">2.8</span>), <span class="dt">point.padding =</span> <span class="fl">0.3</span>,</a>
-<a class="sourceLine" id="cb74-13" data-line-number="13">    <span class="dt">label.size =</span> <span class="ot">NA</span>, <span class="dt">color =</span> <span class="st">"gray50"</span>, <span class="dt">segment.color =</span> <span class="st">"gray75"</span></a>
-<a class="sourceLine" id="cb74-14" data-line-number="14">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb74-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_label_repel</span>(</a>
-<a class="sourceLine" id="cb74-16" data-line-number="16">    <span class="dt">data =</span> mtcars_clean <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(cyl <span class="op">==</span><span class="st"> "6"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(mpg <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(mpg)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb74-17" data-line-number="17">    <span class="dt">label =</span> <span class="st">"observed data"</span>, <span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">26</span>, <span class="ot">NA</span>), <span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">2.2</span>, <span class="ot">NA</span>), <span class="dt">point.padding =</span> <span class="fl">0.2</span>,</a>
-<a class="sourceLine" id="cb74-18" data-line-number="18">    <span class="dt">label.size =</span> <span class="ot">NA</span>, <span class="dt">segment.color =</span> <span class="st">"gray35"</span></a>
-<a class="sourceLine" id="cb74-19" data-line-number="19">  )</a></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1">label_data_function =<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb74-2" data-line-number="2"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(mpg <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mpg, <span class="fl">.47</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise_if</span>(is.numeric, mean)</a>
+<a class="sourceLine" id="cb74-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb74-6" data-line-number="6">data_plot_with_mean =<span class="st"> </span>mtcars_clean <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-7" data-line-number="7"><span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mpg =</span> <span class="kw">seq_range</span>(mpg, <span class="dt">n =</span> <span class="dv">101</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_cyl, <span class="dt">value =</span> <span class="st">"P(cyl | mpg)"</span>, <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-9" data-line-number="9"><span class="st">  </span><span class="co"># turn `.category` (a factor) into a numeric value in {4, 6, 8}</span></a>
+<a class="sourceLine" id="cb74-10" data-line-number="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cyl =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(.category))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-11" data-line-number="11"><span class="st">  </span><span class="kw">group_by</span>(mpg, .draw) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-12" data-line-number="12"><span class="st">  </span><span class="co"># calculate expected cylinder value</span></a>
+<a class="sourceLine" id="cb74-13" data-line-number="13"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cyl =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(cyl <span class="op">*</span><span class="st"> `</span><span class="dt">P(cyl | mpg)</span><span class="st">`</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb74-14" data-line-number="14"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> cyl)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb74-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> .draw), <span class="dt">alpha =</span> <span class="dv">5</span><span class="op">/</span><span class="dv">100</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb74-16" data-line-number="16"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(cyl)), <span class="dt">fill =</span> cyl), <span class="dt">data =</span> mtcars_clean, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb74-17" data-line-number="17"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg <span class="op">+</span><span class="st"> </span><span class="dv">4</span>), <span class="dt">label =</span> <span class="st">"E[cyl | mpg]"</span>, <span class="dt">data =</span> label_data_function, <span class="dt">hjust =</span> <span class="dv">0</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb74-18" data-line-number="18"><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">yend =</span> cyl, <span class="dt">xend =</span> mpg <span class="op">+</span><span class="st"> </span><span class="fl">3.9</span>), <span class="dt">data =</span> label_data_function) <span class="op">+</span></a>
+<a class="sourceLine" id="cb74-19" data-line-number="19"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Set2"</span>, <span class="dt">name =</span> <span class="st">"cyl"</span>)</a>
+<a class="sourceLine" id="cb74-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb74-21" data-line-number="21"><span class="kw">plot_grid</span>(<span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">align =</span> <span class="st">"v"</span>,</a>
+<a class="sourceLine" id="cb74-22" data-line-number="22">  data_plot_with_mean,</a>
+<a class="sourceLine" id="cb74-23" data-line-number="23">  fit_plot</a>
+<a class="sourceLine" id="cb74-24" data-line-number="24">)</a></code></pre></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-47-1.png" width="576"></p>
-<p>This looks pretty good. Let’s check using another typical posterior predictive checking plot: many simulated distributions of the response (<code>cyl</code>) against the observed distribution of the response. For a continuous response variable this is usually done with a density plot; here, we’ll plot the number of posterior predictions in each bin as a line plot, since the response variable is discrete:</p>
+<p>Now let’s do some posterior predictive checking: do posterior predictions look like the data? For this, we’ll make new predictions at the same values of <code>mpg</code> as were present in the original dataset (gray circles) and plot these with the observed data (colored circles):</p>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" data-line-number="1">mtcars_clean <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb75-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(mpg) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb75-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_cyl, <span class="dt">prediction =</span> <span class="st">"cyl"</span>, <span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">seed =</span> <span class="dv">12345</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb75-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cyl)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb75-5" data-line-number="5"><span class="st">  </span><span class="kw">stat_count</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="ot">NA</span>), <span class="dt">geom =</span> <span class="st">"line"</span>, <span class="dt">data =</span> mtcars_clean, <span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb75-6" data-line-number="6"><span class="st">  </span><span class="kw">stat_count</span>(<span class="kw">aes</span>(<span class="dt">group =</span> .draw), <span class="dt">geom =</span> <span class="st">"line"</span>, <span class="dt">position =</span> <span class="st">"identity"</span>, <span class="dt">alpha =</span> <span class="fl">.05</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb75-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_label</span>(<span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">cyl =</span> <span class="st">"4"</span>), <span class="dt">y =</span> <span class="fl">9.5</span>, <span class="dt">label =</span> <span class="st">"posterior</span><span class="ch">\n</span><span class="st">predictions"</span>,</a>
-<a class="sourceLine" id="cb75-8" data-line-number="8">    <span class="dt">hjust =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">"gray50"</span>, <span class="dt">lineheight =</span> <span class="dv">1</span>, <span class="dt">label.size =</span> <span class="ot">NA</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb75-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_label</span>(<span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">cyl =</span> <span class="st">"8"</span>), <span class="dt">y =</span> <span class="dv">14</span>, <span class="dt">label =</span> <span class="st">"observed data"</span>,</a>
-<a class="sourceLine" id="cb75-10" data-line-number="10">    <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">label.size =</span> <span class="ot">NA</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-48-1.png" width="624"></p>
-<p>This also looks good.</p>
-<p>Another way to look at these posterior predictions might be as a scatterplot matrix. <code><a href="../reference/gather_pairs.html">tidybayes::gather_pairs</a></code> makes it easy to generate long-format data frames suitable for creating custom scatterplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using <code>facet_grid</code>:</p>
+<a class="sourceLine" id="cb75-2" data-line-number="2"><span class="st">  </span><span class="co"># we use `select` instead of `data_grid` here because we want to make posterior predictions</span></a>
+<a class="sourceLine" id="cb75-3" data-line-number="3"><span class="st">  </span><span class="co"># for exactly the same set of observations we have in the original data</span></a>
+<a class="sourceLine" id="cb75-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(mpg) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb75-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_cyl, <span class="dt">prediction =</span> <span class="st">"cyl"</span>, <span class="dt">seed =</span> <span class="dv">1234</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb75-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> cyl)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb75-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_count</span>(<span class="dt">color =</span> <span class="st">"gray75"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb75-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> cyl), <span class="dt">data =</span> mtcars_clean, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb75-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb75-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_label_repel</span>(</a>
+<a class="sourceLine" id="cb75-11" data-line-number="11">    <span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(cyl <span class="op">==</span><span class="st"> "8"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(mpg <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(mpg)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb75-12" data-line-number="12">    <span class="dt">label =</span> <span class="st">"posterior predictions"</span>, <span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">26</span>, <span class="ot">NA</span>), <span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="ot">NA</span>, <span class="fl">2.8</span>), <span class="dt">point.padding =</span> <span class="fl">0.3</span>,</a>
+<a class="sourceLine" id="cb75-13" data-line-number="13">    <span class="dt">label.size =</span> <span class="ot">NA</span>, <span class="dt">color =</span> <span class="st">"gray50"</span>, <span class="dt">segment.color =</span> <span class="st">"gray75"</span></a>
+<a class="sourceLine" id="cb75-14" data-line-number="14">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb75-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_label_repel</span>(</a>
+<a class="sourceLine" id="cb75-16" data-line-number="16">    <span class="dt">data =</span> mtcars_clean <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(cyl <span class="op">==</span><span class="st"> "6"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(mpg <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(mpg)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb75-17" data-line-number="17">    <span class="dt">label =</span> <span class="st">"observed data"</span>, <span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">26</span>, <span class="ot">NA</span>), <span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">2.2</span>, <span class="ot">NA</span>), <span class="dt">point.padding =</span> <span class="fl">0.2</span>,</a>
+<a class="sourceLine" id="cb75-18" data-line-number="18">    <span class="dt">label.size =</span> <span class="ot">NA</span>, <span class="dt">segment.color =</span> <span class="st">"gray35"</span></a>
+<a class="sourceLine" id="cb75-19" data-line-number="19">  )</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-48-1.png" width="576"></p>
+<p>This looks pretty good. Let’s check using another typical posterior predictive checking plot: many simulated distributions of the response (<code>cyl</code>) against the observed distribution of the response. For a continuous response variable this is usually done with a density plot; here, we’ll plot the number of posterior predictions in each bin as a line plot, since the response variable is discrete:</p>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1">mtcars_clean <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb76-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(mpg) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb76-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_cyl, <span class="dt">prediction =</span> <span class="st">"cyl"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb76-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(.draw) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb76-5" data-line-number="5"><span class="st">  </span><span class="kw">count</span>(cyl) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb76-6" data-line-number="6"><span class="st">  </span><span class="kw">complete</span>(cyl, <span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">n =</span> <span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb76-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="../reference/gather_pairs.html">gather_pairs</a></span>(cyl, n) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb76-8" data-line-number="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(.x, .y)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb76-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_count</span>(<span class="dt">color =</span> <span class="st">"gray75"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb76-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars_clean <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(cyl) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/gather_pairs.html">gather_pairs</a></span>(cyl, n), <span class="dt">color =</span> <span class="st">"red"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb76-11" data-line-number="11"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="kw">vars</span>(.row), <span class="kw">vars</span>(.col)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb76-12" data-line-number="12"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"Number of observations with cyl = col"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb76-13" data-line-number="13"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">"Number of observations with cyl = row"</span>) </a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-49-1.png" width="576"></p>
+<a class="sourceLine" id="cb76-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_cyl, <span class="dt">prediction =</span> <span class="st">"cyl"</span>, <span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">seed =</span> <span class="dv">12345</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb76-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cyl)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb76-5" data-line-number="5"><span class="st">  </span><span class="kw">stat_count</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="ot">NA</span>), <span class="dt">geom =</span> <span class="st">"line"</span>, <span class="dt">data =</span> mtcars_clean, <span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb76-6" data-line-number="6"><span class="st">  </span><span class="kw">stat_count</span>(<span class="kw">aes</span>(<span class="dt">group =</span> .draw), <span class="dt">geom =</span> <span class="st">"line"</span>, <span class="dt">position =</span> <span class="st">"identity"</span>, <span class="dt">alpha =</span> <span class="fl">.05</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb76-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_label</span>(<span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">cyl =</span> <span class="st">"4"</span>), <span class="dt">y =</span> <span class="fl">9.5</span>, <span class="dt">label =</span> <span class="st">"posterior</span><span class="ch">\n</span><span class="st">predictions"</span>,</a>
+<a class="sourceLine" id="cb76-8" data-line-number="8">    <span class="dt">hjust =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">"gray50"</span>, <span class="dt">lineheight =</span> <span class="dv">1</span>, <span class="dt">label.size =</span> <span class="ot">NA</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb76-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_label</span>(<span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">cyl =</span> <span class="st">"8"</span>), <span class="dt">y =</span> <span class="dv">14</span>, <span class="dt">label =</span> <span class="st">"observed data"</span>,</a>
+<a class="sourceLine" id="cb76-10" data-line-number="10">    <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">label.size =</span> <span class="ot">NA</span>)</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-49-1.png" width="624"></p>
+<p>This also looks good.</p>
+<p>Another way to look at these posterior predictions might be as a scatterplot matrix. <code><a href="../reference/gather_pairs.html">tidybayes::gather_pairs</a></code> makes it easy to generate long-format data frames suitable for creating custom scatterplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using <code>facet_grid</code>:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">12345</span>)</a>
+<a class="sourceLine" id="cb77-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb77-3" data-line-number="3">mtcars_clean <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(mpg) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_cyl, <span class="dt">prediction =</span> <span class="st">"cyl"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-6" data-line-number="6"><span class="st">  </span><span class="co"># once dplyr 3 hits this can be replaced with count() (since it will include 0s)</span></a>
+<a class="sourceLine" id="cb77-7" data-line-number="7"><span class="st">  </span><span class="co"># until then this ugly code is faster than count() + complete()</span></a>
+<a class="sourceLine" id="cb77-8" data-line-number="8"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-9" data-line-number="9"><span class="st">  </span><span class="kw">nest</span>(<span class="op">-</span>.draw) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-10" data-line-number="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">counts =</span> <span class="kw">map</span>(data, <span class="op">~</span></a>
+<a class="sourceLine" id="cb77-11" data-line-number="11"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(.x<span class="op">$</span>cyl) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-12" data-line-number="12"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-13" data-line-number="13"><span class="st">    </span><span class="kw">set_names</span>(<span class="st">"cyl"</span>, <span class="st">"n"</span>)</a>
+<a class="sourceLine" id="cb77-14" data-line-number="14">  )) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-15" data-line-number="15"><span class="st">  </span><span class="kw">unnest</span>(counts) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-16" data-line-number="16"><span class="st">  </span><span class="kw"><a href="../reference/gather_pairs.html">gather_pairs</a></span>(cyl, n) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-17" data-line-number="17"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(.x, .y)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb77-18" data-line-number="18"><span class="st">  </span><span class="kw">geom_count</span>(<span class="dt">color =</span> <span class="st">"gray75"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb77-19" data-line-number="19"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars_clean <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(cyl) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/gather_pairs.html">gather_pairs</a></span>(cyl, n), <span class="dt">color =</span> <span class="st">"red"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb77-20" data-line-number="20"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="kw">vars</span>(.row), <span class="kw">vars</span>(.col)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb77-21" data-line-number="21"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"Number of observations with cyl = col"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb77-22" data-line-number="22"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">"Number of observations with cyl = row"</span>) </a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-50-1.png" width="576"></p>
 </div>
 <div id="ordinal-model-with-categorical-predictor" class="section level3">
 <h3 class="hasAnchor">
 <a href="#ordinal-model-with-categorical-predictor" class="anchor"></a>Ordinal model with categorical predictor</h3>
 <p>Here’s an ordinal model with a categorical predictor:</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(esoph)</a>
-<a class="sourceLine" id="cb77-2" data-line-number="2">m_esoph_brm =<span class="st"> </span><span class="kw">brm</span>(tobgp <span class="op">~</span><span class="st"> </span>agegp, <span class="dt">data =</span> esoph, <span class="dt">family =</span> <span class="kw">cumulative</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(esoph)</a>
+<a class="sourceLine" id="cb78-2" data-line-number="2">m_esoph_brm =<span class="st"> </span><span class="kw">brm</span>(tobgp <span class="op">~</span><span class="st"> </span>agegp, <span class="dt">data =</span> esoph, <span class="dt">family =</span> <span class="kw">cumulative</span>())</a></code></pre></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## recompiling to avoid crashing R session</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>Then we can plot predicted probabilities for each outcome category within each level of the predictor:</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1">esoph <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb81-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(agegp) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb81-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_esoph_brm, <span class="dt">dpar =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb81-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> agegp, <span class="dt">y =</span> .value, <span class="dt">color =</span> .category)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb81-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> <span class="fl">.4</span>), <span class="dt">.width =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">66</span>, <span class="fl">.95</span>), <span class="dt">show.legend =</span> <span class="ot">TRUE</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb81-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-51-1.png" width="576"></p>
-<p>It is hard to see the changes in categories in the above plot; let’s try something that gives a better gist of the distribution within each year:</p>
 <div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">esoph <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb82-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(agegp) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb82-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_esoph_brm) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb82-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> .category)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-5" data-line-number="5"><span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="dt">fun.x =</span> median, <span class="dt">geom =</span> <span class="st">"barh"</span>, <span class="dt">fill =</span> <span class="st">"gray75"</span>, <span class="dt">width =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-7" data-line-number="7"><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">expand =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-8" data-line-number="8"><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>agegp, <span class="dt">switch =</span> <span class="st">"x"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-9" data-line-number="9"><span class="st">  </span><span class="kw">theme_classic</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-10" data-line-number="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.placement =</span> <span class="st">"outside"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-11" data-line-number="11"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"P(tobacco consumption category | age group)"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb82-12" data-line-number="12"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"age group"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-52-1.png" width="768"></p>
+<a class="sourceLine" id="cb82-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_esoph_brm, <span class="dt">dpar =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb82-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> agegp, <span class="dt">y =</span> .value, <span class="dt">color =</span> .category)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb82-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> <span class="fl">.4</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb82-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb82-7" data-line-number="7"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">brewer.pal</span>(<span class="dv">6</span>, <span class="st">"Blues"</span>)[<span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>)])</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-52-1.png" width="576"></p>
+<p>It is hard to see the changes in categories in the above plot; let’s try something that gives a better gist of the distribution within each year:</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">esoph <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb83-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(agegp) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb83-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m_esoph_brm) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb83-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> .category)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-5" data-line-number="5"><span class="st">  </span><span class="kw">stat_summaryh</span>(<span class="dt">fun.x =</span> median, <span class="dt">geom =</span> <span class="st">"barh"</span>, <span class="dt">fill =</span> <span class="st">"gray75"</span>, <span class="dt">width =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-7" data-line-number="7"><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">expand =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-8" data-line-number="8"><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>agegp, <span class="dt">switch =</span> <span class="st">"x"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-9" data-line-number="9"><span class="st">  </span><span class="kw">theme_classic</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-10" data-line-number="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.placement =</span> <span class="st">"outside"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-11" data-line-number="11"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"P(tobacco consumption category | age group)"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-12" data-line-number="12"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"age group"</span>)</a></code></pre></div>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-53-1.png" width="768"></p>
 <p>This output should be very similar to the output from the corresponding <code>m_esoph_rs</code> model in <code><a href="../articles/tidy-rstanarm.html">vignette("tidy-rstanarm")</a></code> (modulo different priors), though brms does more of the work for us to produce it than <code>rstanarm</code> does.</p>
 </div>
 </div>

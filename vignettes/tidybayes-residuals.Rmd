@@ -1,0 +1,578 @@
+---
+title: "Extracting and visualizing tidy residuals from Bayesian models"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    df_print: kable
+params:
+  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
+vignette: >
+  %\VignetteIndexEntry{Extracting and visualizing tidy residuals from Bayesian models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+img {
+  border: none;
+}
+</style>
+
+```{r chunk_options, include=FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.height = 4,
+  eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
+)
+```
+
+## Introduction
+  
+This vignette describes how to use the `tidybayes` package to extract [tidy](http://dx.doi.org/10.18637/jss.v059.i10) data frames of draws from draws from resiudals from Bayesian models, and also acts as a demo for the construction of randomized quantile residuals, a generic form of residual applicable to a wide range of models, including censored regressions and models with discrete response variables. For a more general introduction to `tidybayes`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
+
+
+## Setup
+  
+The following libraries are required to run this vignette:
+  
+```{r setup, message = FALSE, warning = FALSE}
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(tidybayes)
+library(ggplot2)
+library(ggridges)
+library(cowplot)
+library(rstan)
+library(brms)
+library(gganimate)
+
+theme_set(theme_tidybayes() + panel_border() + background_grid())
+```
+
+These options help Stan run faster:
+
+```{r, eval=FALSE}
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+```{r hidden_options, include=FALSE}
+# While the previous code chunk is the actual recommended approach,
+# CRAN vignette building policy limits us to 2 cores, so we use at most
+# 2 to build this vignette (but show the previous chunk to
+# the reader as a best pratice example)
+rstan_options(auto_write = TRUE)
+options(mc.cores = min(2, parallel::detectCores()))
+
+options(width = 120)
+```
+
+
+## Example dataset
+
+We're going to use a simple dataset to demonstrate residuals that can be applied to discrete and censored outcomes. We'll generate data from a Normal distribution:
+
+$$
+\begin{align*}
+y^* &\sim \textrm{Normal}(0.5,1) \\
+y_\textrm{lower} &= \lfloor{y^*}\rfloor \\
+y_\textrm{upper} &= \lceil{y^*}\rceil
+\end{align*}
+$$
+We don't observe $y^*$, only $y_\textrm{lower}$ and $y_\textrm{upper}$, i.e., the upper and lower bounds of an interval in which $y^*$ lies. This is *interval-censored* data.
+
+We can generate it as follows:
+
+```{r}
+set.seed(4118)
+n = 100
+
+cens_df =
+  data_frame(
+    y_star = rnorm(n, 0.5, 1),
+    y_lower = floor(y_star),
+    y_upper = ceiling(y_star),
+    censoring = "interval"
+  )
+```
+
+A snapshot of the data looks like this:
+
+```{r}
+head(cens_df, 10)
+```
+
+This is a typical tidy format data frame: one observation per row. 
+
+A graphical depiction of the censoring process might be something like this:
+
+```{r, fig.width = 1.75, fig.height = 5}
+uncensored_plot = cens_df %>%
+  ggplot(aes(y = "", x = y_star)) +
+  geom_density_ridges(bandwidth = 0.5, scale = 1.5) +
+  geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
+  ylab(NULL) +
+  scale_x_continuous(breaks = -4:4, limits = c(-4, 4))
+
+censored_plot = cens_df %>%
+  ggplot(aes(y = "", x = (y_lower + y_upper)/2)) +
+  geom_dotplot(
+    aes(fill = ordered(y_lower)),
+    method = "histodot", origin = -4, binwidth = 1, dotsize = 0.5, stackratio = .8, show.legend = FALSE,
+    stackgroups = TRUE, binpositions = "all", color = NA
+  ) +
+  geom_segment(
+    aes(x = y + 0.5, xend = y + 0.5, y = 1.75, yend = 1.5, color = ordered(y)),
+    data = data.frame(y = unique(cens_df$y_lower)), show.legend = FALSE,
+    arrow = arrow(type = "closed", length = unit(7, "points")), size = 1
+  ) +
+  ylab(NULL) +
+  xlab("interval-censored y") +
+  scale_x_continuous(breaks = -4:4, limits = c(-4, 4))
+
+plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
+  uncensored_plot,
+  censored_plot
+)
+```
+
+## Model for `y_star`
+
+Before we fit a model to the censored data, let's see what an ideal model looks like: we'll fit a model to `y_star`. With censored or discrete data in the real-world, we would not be able to fit such a model, because we would not have observations of `y_star`, only the intervals. But this might help us understand what we're looking for in a fit that's working.
+
+```{r}
+m_ideal = brm(y_star ~ 1, data = cens_df, family = student)
+```
+
+This looks like this:
+
+```{r}
+m_ideal
+```
+
+### Residuals
+
+`add_residual_draws()` operates much like `add_fitted_draws()` and `add_predicted_draws()`: it gives us draws from the posterior distribution for each residual:
+
+```{r}
+cens_df %>%
+  add_residual_draws(m_ideal) %>%
+  ggplot(aes(x = .row, y = .residual)) +
+  stat_pointinterval()
+```
+
+This is a typical residual plot, though with the addition of the uncertainty associated with each residual afforded by generating draws from the distribution associated with each residual.
+
+Let's check the QQ plot:
+
+```{r}
+cens_df %>%
+  add_residual_draws(m_ideal) %>%
+  median_qi() %>%
+  ggplot(aes(sample = .residual)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+This is a typical way of looking at residuals. However, this type of residual will not generalize to discrete and censored models, so let's consider something else...
+
+### Probability residuals and quantile residuals
+
+We can use the posterior predictive probability $P(y^*_\textrm{rep} < y^*|\theta)$ as a sort of **probability residual** (`p_residual` below). If the predictive distribution is well-calibrated, these probabilities should be uniform, and if we apply the inverse cumulative distribution function (CDF) of the standard Normal distribution to these probability residuals, the result should be standard Normal. These are **quantile residuals** (`q_residual`).
+
+```{r}
+cens_df %>%
+  add_predicted_draws(m_ideal) %>%
+  summarise(
+    p_residual = mean(.prediction < y_star),
+    q_residual = qnorm(p_residual)
+  ) %>%
+  ggplot(aes(sample = q_residual)) +
+  geom_qq() +
+  geom_abline()
+```
+
+This QQ plot shows us the model fits pretty well.
+
+## Basic interval-censored model
+
+Assuming a situation where we do not have access to the original (uncensored) data, we will perform a regression on the interval-censored data. In brms, we can do this by specifying the lower (`y_lower`) and upper (`y_upper`) bounds on each observation, and the censoring type (`censoring`), which in this case is `"interval"` for all observations.
+
+```{r}
+m = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df)
+```
+
+The results look like this:
+
+```{r}
+m
+```
+
+Again, `add_residual_draws()` lets us look at the residuals:
+
+```{r}
+cens_df %>%
+  add_residual_draws(m) %>%
+  ggplot(aes(x = .row, y = .residual)) +
+  stat_pointinterval()
+```
+
+But notice the horizontal striations due to censoring. This obscures patterns we might wish to see in the diagnostic plots. Patterns like this often show up in censored regression, logistic regression, Poisson regression, and other discrete regression models. Notice how `brms` also gives us a warning message that the residuals may not be meaningful due to censoring.
+
+Let's look at the QQ plot:
+
+```{r}
+cens_df %>%
+  add_residual_draws(m) %>%
+  median_qi(.residual) %>%
+  ggplot(aes(sample = .residual)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+Again, the striations are making interpretation difficult. But there is hope!
+
+### Randomized quantile residuals
+
+We can extend the ideas of **probability residuals** to make **randomized probability residuals**. 
+
+Where the probability residual for the uncensored model was something like this:
+
+$$
+r^*_\textrm{prob} = P(y^*_\textrm{rep} < y^*|\theta)
+$$
+We can't calculate the residual for a censored observation this way, as we do not know what $y^*$ is. However, we do know that $r^*_\textrm{prob}$ should be in the following interval:
+
+$$
+\begin{align*}
+&& r^*_\textrm{prob} &\in (r_\textrm{lower}, r_\textrm{upper}] \\
+&where& r_\textrm{lower} &= P(y^*_\textrm{rep} < y_\textrm{lower}|\theta) \\
+&&      r_\textrm{upper} &= P(y^*_\textrm{rep} < y_\textrm{upper}|\theta)
+\end{align*}
+$$
+
+If we define a **randomized probability residual** as:
+
+$$
+r_\textrm{prob} \sim \textrm{Uniform}(r_\textrm{lower}, r_\textrm{upper})
+$$
+
+Then these residuals will be unformly random (see [Dunn and Smyth 1996](http://doi.org/10.2307/1390802)), and we can similarly define a **randomized quantile residual** by passing the probability residuals through the Normal inverse CDF. Like so:
+
+
+```{r}
+cens_df %>%
+  add_predicted_draws(m) %>%
+  summarise(
+    p_lower = mean(.prediction < y_lower),
+    p_upper = mean(.prediction < y_upper),
+    p_residual = runif(1, p_lower, p_upper),
+    q_residual = qnorm(p_residual)
+  ) %>%
+  ggplot(aes(x = .row, y = q_residual)) +
+  geom_point()
+```
+
+The striations are gone! And a QQ plot:
+
+```{r}
+cens_df %>%
+  add_predicted_draws(m) %>%
+  summarise(
+    p_lower = mean(.prediction < y_lower),
+    p_upper = mean(.prediction < y_upper),
+    p_residual = runif(1, p_lower, p_upper),
+    q_residual = qnorm(p_residual)
+  ) %>%
+  ggplot(aes(sample = q_residual)) +
+  geom_qq() +
+  geom_abline()
+```
+
+Looks decent. However, our residuals are now subject to noise---we actually have a distribution of possible QQ plots. So, let's check on some of them to make sure this nice-looking one is not just a fluke. We'll employ [HOPs](https://mucollective.co/project/hops-trends) to do that:
+
+```{r}
+k = 50
+
+p = cens_df %>%
+  add_predicted_draws(m) %>%
+  summarise(
+    p_lower = mean(.prediction < y_lower),
+    p_upper = mean(.prediction < y_upper),
+    p_residual = list(runif(k, p_lower, p_upper)),
+    residual_draw = list(1:k)
+  ) %>%
+  unnest() %>%
+  mutate(q_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = q_residual)) +
+  geom_qq() +
+  geom_abline() +
+  transition_manual(residual_draw)
+
+animate(p, width = 1152, height = 768, res = 192, type = "cairo")
+```
+
+Looks good.
+
+## What if the model does not fit well?
+
+Let's instead generate the data from a t distribution, which should give us some more extreme values:
+
+```{r}
+set.seed(41181)
+n = 100
+
+cens_df_t =
+  data_frame(
+    y = rt(n, 3) + 0.5,
+    y_lower = floor(y),
+    y_upper = ceiling(y),
+    censoring = "interval"
+  )
+```
+
+Note the presence of outliers:
+
+```{r, fig.width = 4, fig.height = 5.75}
+uncensored_plot = cens_df_t %>%
+  ggplot(aes(y = "", x = y)) +
+  geom_density_ridges(bandwidth = 0.5, scale = 1.5) +
+  geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
+  ylab(NULL) +
+  scale_x_continuous(breaks = -10:10, limits = c(-10, 10))
+
+censored_plot = cens_df_t %>%
+  ggplot(aes(y = "", x = (y_lower + y_upper)/2)) +
+  geom_dotplot(
+    aes(fill = ordered(y_lower)),
+    method = "histodot", origin = -4, binwidth = 1, dotsize = 0.5, stackratio = .8, show.legend = FALSE,
+    stackgroups = TRUE, binpositions = "all", color = NA
+  ) +
+  geom_segment(
+    aes(x = y + 0.5, xend = y + 0.5, y = 1.75, yend = 1.5, color = ordered(y)),
+    data = data.frame(y = unique(cens_df_t$y_lower)), show.legend = FALSE,
+    arrow = arrow(type = "closed", length = unit(7, "points")), size = 1
+  ) +
+  ylab(NULL) +
+  xlab("interval-censored y") +
+  scale_x_continuous(breaks = -10:10, limits = c(-10, 10))
+
+plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
+  uncensored_plot,
+  censored_plot
+)
+```
+
+### Model
+
+Now, fitting the same model as before:
+
+```{r}
+m_t1 = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df_t)
+```
+
+And checking the QQ plot:
+
+```{r}
+cens_df_t %>%
+  add_residual_draws(m_t1) %>%
+  median_qi(.residual) %>%
+  ggplot(aes(sample = .residual)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+It looks like this could be problematic, but the striations make diagnosing the problem difficult.
+
+### Randomized quantile residuals
+
+Let's try randomized quantile residuals again:
+
+```{r}
+cens_df_t %>%
+  add_predicted_draws(m_t1) %>%
+  summarise(
+    p_lower = mean(.prediction < y_lower),
+    p_upper = mean(.prediction < y_upper),
+    p_residual = runif(1, p_lower, p_upper),
+    q_residual = qnorm(p_residual)
+  ) %>%
+  ggplot(aes(sample = q_residual)) +
+  geom_qq() +
+  geom_abline()
+```
+
+Does not look good for the model---this s-shape is characteristic of excess kurtosis (aka fat tails), which is exactly what a t distribution should produce. But let's check using HOPs again:
+
+```{r}
+k = 50
+
+p = cens_df_t %>%
+  add_predicted_draws(m_t1) %>%
+  summarise(
+    p_lower = mean(.prediction < y_lower),
+    p_upper = mean(.prediction < y_upper),
+    p_residual = list(runif(k, p_lower, p_upper)),
+    residual_draw = list(1:k)
+  ) %>%
+  unnest() %>%
+  mutate(q_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = q_residual)) +
+  geom_qq() +
+  geom_abline() +
+  transition_manual(residual_draw)
+
+animate(p, width = 1152, height = 768, res = 192, type = "cairo")
+```
+
+Still not good! But the clear s shape is very diagnostic of fat tails, so let's try a different model.
+
+## Robust interval-censored model
+
+A common model to try to "robustify" linear regression is to swap out the Normal response distribution for a Student's t distribution, which has fatter tails (it also happens that this is the distribution used to generate the data above, so I am clearly cheating, but also: *this had better work*).
+
+```{r}
+m_t2 = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df_t, family = student)
+```
+
+Let's look at the QQ plot of the residuals:
+
+```{r}
+cens_df_t %>%
+  add_residual_draws(m_t2) %>%
+  median_qi(.residual) %>%
+  ggplot(aes(sample = .residual)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+Odd, these don't look great! But again, these residuals are not to be trusted...
+
+### Randomized quantile residuals
+
+Let's check out the randomized quantile residuals:
+
+```{r}
+k = 50
+
+p = cens_df_t %>%
+  add_predicted_draws(m_t2) %>%
+  summarise(
+    p_lower = mean(.prediction < y_lower),
+    p_upper = mean(.prediction < y_upper),
+    p_residual = list(runif(k, p_lower, p_upper)),
+    residual_draw = list(1:k)
+  ) %>%
+  unnest() %>%
+  mutate(q_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = q_residual)) +
+  geom_qq() +
+  geom_abline() +
+  transition_manual(residual_draw)
+
+animate(p, width = 1152, height = 768, res = 192, type = "cairo")
+```
+
+Looking pretty good! As well they should, since this is the same model that generated the data.
+
+## Ordinal regression
+
+But we're not done yet---another sensible choice of model for this data might have been an ordinal regression. So let's try that too.
+
+First, we'll add a column that transforms the data into an ordered factor:
+
+```{r}
+cens_df_o = cens_df_t %>%
+  mutate(y_factor = ordered(y_lower))
+```
+
+Then we'll fit an ordinal regression model. We have to adjust the fit parameters a bit to get it to converge (I suspect this is because some of the categories have zero observations):
+
+```{r}
+m_o = brm(y_factor ~ 1, data = cens_df_o, family = cumulative, 
+  prior = prior(normal(0, 10), class = Intercept), control = list(adapt_delta = 0.99))
+```
+
+Now, let's check out those residuals:
+
+```{r, error = TRUE}
+cens_df_o %>%
+  add_residual_draws(m_o) %>%
+  median_qi(.residual) %>%
+  ggplot(aes(sample = .residual)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+Gah! `brms` will not even produce residuals for models like these. Fortunately, we can still construct randomized quantile residuals.
+
+### Randomized quantile residuals for a discrete distribution
+
+For the interval-censored model, we had:
+
+$$
+\begin{align*}
+&& r_\textrm{lower} &= P(y^*_\textrm{rep} < y_\textrm{lower}|\theta) \\
+&& r_\textrm{upper} &= P(y^*_\textrm{rep} < y_\textrm{upper}|\theta) \\
+&& r_\textrm{prob} &\sim \textrm{Uniform}(r_\textrm{lower}, r_\textrm{upper})
+\end{align*}
+$$
+
+But that was for a model with observations of the form $(y_\textrm{lower}, y_\textrm{upper}]$ and which can produce a posterior predictive distribution for the latent variable $y^*_\textrm{rep}$. Now our observations are discrete values of the form $y_\textrm{factor}$, and our posterior predictive distribution for $y_\textrm{rep}$ is also discrete. So we have to tweak the definition a bit:
+
+$$
+\begin{align*}
+&& r_\textrm{lower} &= P(y_\textrm{rep} < y_\textrm{factor}|\theta) \\
+&& r_\textrm{upper} &= P(y_\textrm{rep} \le y_\textrm{factor}|\theta) \\
+&& r_\textrm{prob} &\sim \textrm{Uniform}(r_\textrm{lower}, r_\textrm{upper})
+\end{align*}
+$$
+
+Then we proceed as before:
+
+```{r}
+cens_df_o %>%
+  add_predicted_draws(m_o) %>%
+  mutate(.prediction = ordered(.prediction)) %>%
+  summarise(
+    p_lower = mean(.prediction < y_factor),
+    p_upper = mean(.prediction <= y_factor),
+    p_residual = runif(1, p_lower, p_upper),
+    q_residual = qnorm(p_residual)
+  ) %>%
+  ggplot(aes(x = .row, y = q_residual)) +
+  geom_point()
+```
+
+Or in HOPs-QQ plot form:
+
+```{r}
+k = 50
+
+p = cens_df_o %>%
+  add_predicted_draws(m_o) %>%
+  mutate(.prediction = ordered(.prediction)) %>%
+  summarise(
+    p_lower = mean(.prediction < y_factor),
+    p_upper = mean(.prediction <= y_factor),
+    p_residual = list(runif(k, p_lower, p_upper)),
+    residual_draw = list(1:k)
+  ) %>%
+  unnest() %>%
+  mutate(q_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = q_residual)) +
+  geom_qq() +
+  geom_abline() +
+  transition_manual(residual_draw)
+
+animate(p, width = 1152, height = 768, res = 192, type = "cairo")
+```
+
+It is not too surprising that the ordinal regression also works here, even though it is not the data generating model. Ordinal regressions are pretty robust.
+
