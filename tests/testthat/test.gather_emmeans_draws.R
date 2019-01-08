@@ -59,8 +59,8 @@ test_that("gather_emmeans_draws works on an emm_list", {
 
   estimate_grid = list(hp = c(100, 110, 120), wt = 0)
 
-  grid_list = ref_grid(m_hp_wt, estimate_grid, data = mtcars_tbl) %>%
-    emmeans(pairwise ~ hp|wt)
+  grid_list = emmeans::ref_grid(m_hp_wt, estimate_grid, data = mtcars_tbl) %>%
+    emmeans::emmeans(pairwise ~ hp|wt)
 
   ref = map_dfr(grid_list, gather_emmeans_draws, .id = ".grid") %>%
     group_by(.grid, .value, hp, wt, contrast)
