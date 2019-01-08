@@ -35,11 +35,11 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 
 # [add_]predicted_draws ---------------------------------------------------
 
-#' Add draws from the (possibly transformed) posterior linear predictors (the "fit") of a model, the posterior predictions
-#' of a model, or the residuals of a model to a data frame
+#' Add draws from the posterior fit, predictions, or residuals of a model to a data frame
 #'
-#' Given a data frame and a model, adds draws from the posterior "fit" (aka the linear/link-level predictor),
-#' the posterior predictions of the model, or the residual of a model to the data frame in a long format.
+#' Given a data frame and a model, adds draws from the (possibly transformed) posterior "fit" (aka the
+#' linear/link-level predictor), the posterior predictions of the model, or the residuals of a model to
+#' the data frame in a long format.
 #'
 #' \code{add_fitted_draws} adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to
 #' the data. It corresponds to \code{\link[rstanarm]{posterior_linpred}} in \code{rstanarm} or
