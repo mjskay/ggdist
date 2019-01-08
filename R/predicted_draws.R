@@ -115,7 +115,8 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' and \code{predicted_draws} contains a \code{.prediction} column containing draws from the posterior predictive
 #' distribution. For convenience, the resulting data frame comes grouped by the original input rows.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_draws}}
+#' @seealso \code{\link{add_draws}} for the variant of these functions for use with packages that do not have
+#' explicit support for these functions yet. See \code{\link{spread_draws}} for manipulating posteriors directly.
 #' @keywords manip
 #' @examples
 #' \donttest{

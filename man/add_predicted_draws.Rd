@@ -208,7 +208,8 @@ if (
 }
 }
 \seealso{
-\code{\link{spread_draws}}
+\code{\link{add_draws}} for the variant of these functions for use with packages that do not have
+explicit support for these functions yet. See \code{\link{spread_draws}} for manipulating posteriors directly.
 }
 \author{
 Matthew Kay
