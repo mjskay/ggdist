@@ -148,6 +148,13 @@ gather_emmeans_draws.emm_list = function(object, value = ".value", grid = ".grid
     reduce(union)
 
   list_of_draw_tibbles %>%
+    # bind_rows on a tibble throws irrelevant (in this case) messages about
+    # implicit NAs in factors in the case where factor columns do not have values
+    # in all tibbles being merge, which may happen in the case where a `contrast`
+    # column is output from one emmeans grid but not another. So we'll avoid
+    # that by converting factor columns to characters first
+    map(ungroup) %>%
+    map(mutate_if, is.factor, as.character) %>%
     bind_rows(.id = grid) %>%
     group_by_at(c(group_names, grid))
 }

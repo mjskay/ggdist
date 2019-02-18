@@ -247,7 +247,7 @@ test_that("spread_draws multispec with different dimensions retains grouping inf
 test_that("groups from spread_draws retain factor level names", {
   draws = RankCorr_i %>% spread_draws(tau[i])
 
-  expect_equivalent(attr(draws, "labels")$i, factor(i_labels))
+  expect_equivalent(attr(draws, "groups")$i, factor(i_labels))
 })
 
 test_that("empty dimensions are dropped", {

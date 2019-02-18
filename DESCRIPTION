@@ -17,7 +17,7 @@ Depends:
     R (>= 2.10)
 Imports:
     plyr,
-    dplyr,
+    dplyr (>= 0.8.0),
     tidyr,
     ggplot2 (>= 3.0.0),
     stringi,
@@ -35,7 +35,7 @@ Imports:
 Suggests:
     knitr,
     testthat,
-    vdiffr,
+    vdiffr (>= 0.3.0),
     svglite,
     rstan (>= 2.17.0),
     runjags,
