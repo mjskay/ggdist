@@ -4,6 +4,9 @@
     <loc>http://mjskay.github.io/tidybayes/index.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/add_draws.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/tidybayes/reference/add_predicted_draws.html</loc>
   </url>
   <url>
@@ -62,6 +65,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/recover_types.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/sample_draws.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/spread_draws.html</loc>

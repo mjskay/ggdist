@@ -79,7 +79,7 @@ distributions using predict_curve." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -228,11 +228,11 @@ function may be deprecated in the future.</p></div>
 
   <span class='no'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>
   <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://www.rdocumentation.org/packages/modelr/topics/data_grid'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/modelr/topics/seq_range'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>step</span>)) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='add_predicted_draws.html'>add_predicted_draws</a></span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='http://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_all</a></span>(<span class='no'>list</span>) <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>densities</span> <span class='kw'>=</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>.prediction</span>, <span class='no'>density_bins</span>)) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_all</a></span>(<span class='no'>list</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>densities</span> <span class='kw'>=</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>.prediction</span>, <span class='no'>density_bins</span>)) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://tidyr.tidyverse.org/reference/unnest.html'>unnest</a></span>(<span class='no'>densities</span>) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_rect</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(
@@ -264,8 +264,8 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
 #&gt; Chain 1:  Elapsed Time: 0.293 seconds (Warm-up)
-#&gt; Chain 1:                0.263 seconds (Sampling)
-#&gt; Chain 1:                0.556 seconds (Total)
+#&gt; Chain 1:                0.262 seconds (Sampling)
+#&gt; Chain 1:                0.555 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -288,9 +288,9 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.259 seconds (Warm-up)
-#&gt; Chain 2:                0.251 seconds (Sampling)
-#&gt; Chain 2:                0.51 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.289 seconds (Warm-up)
+#&gt; Chain 2:                0.295 seconds (Sampling)
+#&gt; Chain 2:                0.584 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -313,9 +313,9 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.268 seconds (Warm-up)
-#&gt; Chain 3:                0.269 seconds (Sampling)
-#&gt; Chain 3:                0.537 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.278 seconds (Warm-up)
+#&gt; Chain 3:                0.284 seconds (Sampling)
+#&gt; Chain 3:                0.562 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -338,9 +338,9 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.33 seconds (Warm-up)
-#&gt; Chain 4:                0.315 seconds (Sampling)
-#&gt; Chain 4:                0.645 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.261 seconds (Warm-up)
+#&gt; Chain 4:                0.241 seconds (Sampling)
+#&gt; Chain 4:                0.502 seconds (Total)
 #&gt; Chain 4: </div><div class='img'><img src='density_bins-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

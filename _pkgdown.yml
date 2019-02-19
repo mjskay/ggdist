@@ -45,6 +45,7 @@ reference:
   - predicted_draws
   - add_residual_draws
   - residual_draws
+  - add_draws
 
 - title: Manipulating tidy data frames of draws
   desc:  Convenience functions for common data manipulation tasks with tidy data frames of draws
@@ -53,6 +54,7 @@ reference:
   - compare_levels
   - gather_pairs
   - gather_variables
+  - sample_draws
   - density_bins
   - histogram_bins
   - predict_curve

@@ -9,7 +9,7 @@ add_draws(data, draws, value = ".value")
 \arguments{
 \item{data}{Data frame to add draws to, with M rows.}
 
-\item{draws}{N \times M matrix of draws, with M columns corresponding to the M rows in \code{data}, and N draws in each column.}
+\item{draws}{N by M matrix of draws, with M columns corresponding to the M rows in \code{data}, and N draws in each column.}
 
 \item{value}{The name of the output column; default \code{".value"}.}
 }
@@ -25,7 +25,7 @@ a generic version of \code{\link{add_fitted_draws}}/\code{\link{add_predicted_dr
 that have their own prediction functions that are not yet supported by tidybayes.
 }
 \details{
-Given a data frame with M rows and an N \times M matrix of N draws, adds a \code{.row}, \code{.draw}, and \code{.value}
+Given a data frame with M rows and an N by M matrix of N draws, adds a \code{.row}, \code{.draw}, and \code{.value}
 column (or another name if \code{value} is set) to \code{data}, and expands \code{data} into a long-format dataframe of draws.
 
 \code{\link{add_fitted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_linpred(m))}, except

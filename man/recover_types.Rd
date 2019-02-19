@@ -65,7 +65,7 @@ if(require("rstan", quietly = TRUE)) {
   n = 10
   n_condition = 5
   ABC =
-    data_frame(
+    tibble(
       condition = rep(c("A","B","C","D","E"), n),
       response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
     )

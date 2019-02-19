@@ -284,13 +284,13 @@ $$
 p^{\textrm{resid}}_i \sim \textrm{Uniform}(p^\textrm{lower}_i, p^\textrm{upper}_i)
 $$
 
-Then these residuals will be uniformly random (see [Dunn and Smyth 1996](http://doi.org/10.2307/1390802)), and we can similarly define a **randomized quantile residual** by passing the probability residuals through the Normal inverse CDF:
+Then these residuals will be uniformly random (see [Dunn and Smyth 1996](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.362.9960&rep=rep1&type=pdf)), and we can similarly define a **randomized quantile residual** by passing the probability residuals through the Normal inverse CDF:
 
 $$
 z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 $$
 
-We in code, that looks like this:
+In code, that looks like this:
 
 ```{r}
 cens_df %>%
@@ -657,11 +657,6 @@ A model for this might be the following:
 
 ```{r}
 m_bin = brm(y ~ 1, data = bin_df, family = bernoulli)
-```
-
-
-```{r}
-m_bin = stan_glm(y ~ 1, data = bin_df, family = binomial)
 ```
 
 Again, standard residuals are hard to interpret:

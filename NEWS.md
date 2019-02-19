@@ -1,3 +1,16 @@
+# tidybayes 1.0.4
+
+* Fixed errors on CRAN from changes in dplyr
+* Support multivariate models in predicted_draws, closes #134
+* Initial support for add_residual_draws, towards #133
+* Add tidybayes-residuals vignette
+* Add add_draws (closes #149) and sample_draws (towards #144)
+* Add support for emm_list in gather_emmeans_draws, closes #126
+* Add hypothetical outcome plots (HOPs) to examples
+* Default for show.legend no longer omits all guides
+* Make default lineribbon color black, closes #153
+
+
 # tidybayes 1.0.3
 
 * Added `gather_pairs` method for creating custom scatterplot matrices (and more!) 

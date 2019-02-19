@@ -77,7 +77,7 @@ and visualization tasks common to many models:
   densities with point summaries and intervals ("eye plots", `geom_eye` and `geom_eyeh`;
   or "half-eye plots", `geom_halfeyeh`), and visualizing fit lines with an arbitrary 
   number of uncertainty bands (`geom_lineribbon` and `stat_lineribbon`). Combining the
-  base-R `quantile` function with `geom_dotplot` also facilitates the contruction
+  base-R `quantile` function with `geom_dotplot` also facilitates the construction
   of quantile dotplots of posteriors (see example in this document).
 
 * __Comparing a variable across levels of a factor__, which often means first
@@ -97,7 +97,7 @@ other packages__:
   with results of other models straightforward.
   
 * The `unspread_draws` and `ungather_draws` functions invert
-  `spread_draws` and `gather_draws`, aiding compatiblity with other Bayesian
+  `spread_draws` and `gather_draws`, aiding compatibility with other Bayesian
   plotting packages (notably `bayesplot`).
   
 * The `gather_emmeans_draws` function turns the output from `emmeans::emmeans`
@@ -335,7 +335,7 @@ bind_rows(linear_results, bayes_results) %>%
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
 
-Comptability with `broom::tidy` also gives compatibility with `dotwhisker::dwplot`:
+Compatibility with `broom::tidy` also gives compatibility with `dotwhisker::dwplot`:
 
 ```{r dwplot, warning = FALSE}
 bind_rows(linear_results, bayes_results) %>%

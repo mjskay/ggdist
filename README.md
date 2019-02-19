@@ -86,8 +86,8 @@ manipulation and visualization tasks common to many models:
     plots”, `geom_halfeyeh`), and visualizing fit lines with an
     arbitrary number of uncertainty bands (`geom_lineribbon` and
     `stat_lineribbon`). Combining the base-R `quantile` function with
-    `geom_dotplot` also facilitates the contruction of quantile dotplots
-    of posteriors (see example in this document).
+    `geom_dotplot` also facilitates the construction of quantile
+    dotplots of posteriors (see example in this document).
 
   - **Comparing a variable across levels of a factor**, which often
     means first generating pairs of levels of a factor (according to
@@ -108,7 +108,7 @@ Finally, `tidybayes` aims to fit into common workflows through
     with results of other models straightforward.
 
   - The `unspread_draws` and `ungather_draws` functions invert
-    `spread_draws` and `gather_draws`, aiding compatiblity with other
+    `spread_draws` and `gather_draws`, aiding compatibility with other
     Bayesian plotting packages (notably `bayesplot`).
 
   - The `gather_emmeans_draws` function turns the output from
@@ -184,7 +184,7 @@ set.seed(5)
 n = 10
 n_condition = 5
 ABC =
-  data_frame(
+  tibble(
     condition = rep(c("A","B","C","D","E"), n),
     response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
   )
@@ -352,7 +352,7 @@ dot resolution of the plot, here 100):
 ``` r
 m %>%
   spread_draws(condition_mean[condition]) %>%
-  do(data_frame(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
+  do(tibble(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
   ggplot(aes(x = condition_mean)) +
   geom_dotplot(binwidth = .04) +
   facet_grid(rows = vars(fct_rev(condition)), switch = "y") +
@@ -468,7 +468,7 @@ bind_rows(linear_results, bayes_results) %>%
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
 
-Comptability with `broom::tidy` also gives compatibility with
+Compatibility with `broom::tidy` also gives compatibility with
 `dotwhisker::dwplot`:
 
 ``` r
@@ -534,7 +534,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = "#08519C") +
   geom_point(data = mtcars, size = 2) +
   scale_fill_brewer()
 ```
@@ -575,7 +575,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%    # add am to the prediction grid
   add_predicted_draws(m_mpg_am) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = "#08519C") +
   geom_point(data = mtcars) +
   scale_fill_brewer() +
   facet_wrap(~ am)                                  # facet by am
@@ -593,7 +593,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 200), am) %>%
   add_fitted_draws(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), alpha = 1/20, color = brewer.pal(5, "Blues")[[5]]) +
+  geom_line(aes(y = .value, group = .draw), alpha = 1/20, color = "#08519C") +
   geom_point(data = mtcars) +
   facet_wrap(~ am)
 ```
@@ -611,15 +611,13 @@ p = mtcars %>%
   data_grid(hp = seq_range(hp, n = 50), am) %>%
   add_fitted_draws(m_mpg_am, n = ndraws) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), color = brewer.pal(6, "Blues")[[3]]) +
-  geom_line(aes(y = .value), color = brewer.pal(6, "Blues")[[3]]) +
+  geom_line(aes(y = .value, group = .draw), color = "#08519C") +
   geom_point(data = mtcars) +
   facet_wrap(~ am, labeller = label_both) +
-  transition_states(.draw, 1, 0) +
-  ease_aes('sine-in-out') +
-  exit_recolor(color = "white")
+  transition_states(.draw, 0, 1) +
+  shadow_mark(past = TRUE, future = TRUE, alpha = 1/20, color = "gray50")
 
-animate(p, nframes = ndraws * 5, fps = 10, width = 700, height = 432, res = 100, type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 700, height = 432, res = 100, type = "cairo")
 ```
 
 ![](README_files/figure-gfm/hops-1.gif)<!-- -->
@@ -642,6 +640,5 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2019). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 1.0.3.9000,
-<https://mjskay.github.io/tidybayes/>. DOI:
-[10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
+Models*. R package version 1.0.4, <https://mjskay.github.io/tidybayes/>.
+DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).

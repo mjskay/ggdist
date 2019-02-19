@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -100,7 +100,7 @@
       <h1>Extracting and visualizing tidy draws from rstanarm models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2019-01-04</h4>
+            <h4 class="date">2019-02-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-rstanarm.Rmd"><code>vignettes/tidy-rstanarm.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-rstanarm.Rmd</code></div>
@@ -155,7 +155,7 @@ img {
 <a class="sourceLine" id="cb3-2" data-line-number="2">n =<span class="st"> </span><span class="dv">10</span></a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">n_condition =<span class="st"> </span><span class="dv">5</span></a>
 <a class="sourceLine" id="cb3-4" data-line-number="4">ABC =</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span><span class="kw">data_frame</span>(</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span><span class="kw">tibble</span>(</a>
 <a class="sourceLine" id="cb3-6" data-line-number="6">    <span class="dt">condition =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"C"</span>,<span class="st">"D"</span>,<span class="st">"E"</span>), n),</a>
 <a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="dt">response =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span><span class="dv">5</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>), <span class="fl">0.5</span>)</a>
 <a class="sourceLine" id="cb3-8" data-line-number="8">  )</a></code></pre></div>
@@ -561,7 +561,7 @@ img {
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-2" data-line-number="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-4" data-line-number="4"><span class="st">  </span><span class="kw">do</span>(<span class="kw">data_frame</span>(<span class="dt">.value =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(.<span class="op">$</span>.value, <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/ppoints">ppoints</a></span>(<span class="dv">100</span>)))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb48-4" data-line-number="4"><span class="st">  </span><span class="kw">do</span>(<span class="kw">tibble</span>(<span class="dt">.value =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(.<span class="op">$</span>.value, <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/ppoints">ppoints</a></span>(<span class="dv">100</span>)))) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb48-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_dotplot</span>(<span class="dt">binwidth =</span> <span class="fl">.04</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb48-7" data-line-number="7"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="kw">fct_rev</span>(condition) <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span></a>
@@ -646,11 +646,10 @@ img {
 <a class="sourceLine" id="cb56-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(cyl, .draw))) <span class="op">+</span></a>
 <a class="sourceLine" id="cb56-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb56-11" data-line-number="11"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-12" data-line-number="12"><span class="st">  </span><span class="kw">transition_states</span>(.draw, <span class="dv">1</span>, <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-13" data-line-number="13"><span class="st">  </span><span class="kw">shadow_mark</span>(<span class="dt">future =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> <span class="st">"black"</span>, <span class="dt">alpha =</span> <span class="fl">0.05</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-14" data-line-number="14"><span class="st">  </span><span class="kw">exit_recolor</span>(<span class="dt">color =</span> <span class="st">"gray95"</span>)</a>
-<a class="sourceLine" id="cb56-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb56-16" data-line-number="16"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> ndraws <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">fps =</span> <span class="dv">20</span>, <span class="dt">width =</span> <span class="dv">1152</span>, <span class="dt">height =</span> <span class="dv">768</span>, <span class="dt">res =</span> <span class="dv">192</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb56-12" data-line-number="12"><span class="st">  </span><span class="kw">transition_states</span>(.draw, <span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb56-13" data-line-number="13"><span class="st">  </span><span class="kw">shadow_mark</span>(<span class="dt">future =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> <span class="st">"gray50"</span>, <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb56-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb56-15" data-line-number="15"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> ndraws, <span class="dt">fps =</span> <span class="fl">2.5</span>, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-35-1.gif"><!-- --></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">mtcars <span class="op">%&gt;%</span></a>

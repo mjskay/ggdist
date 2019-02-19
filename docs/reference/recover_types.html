@@ -80,7 +80,7 @@ those functions are translated back into useful data types." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -220,7 +220,7 @@ of the generic function <code>as_constructor</code>.</p>
   <span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>
   <span class='no'>n_condition</span> <span class='kw'>=</span> <span class='fl'>5</span>
   <span class='no'>ABC</span> <span class='kw'>=</span>
-    <span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tibble</a></span>(
       <span class='kw'>condition</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"A"</span>,<span class='st'>"B"</span>,<span class='st'>"C"</span>,<span class='st'>"D"</span>,<span class='st'>"E"</span>), <span class='no'>n</span>),
       <span class='kw'>response</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>n</span> * <span class='fl'>5</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,-<span class='fl'>1</span>), <span class='fl'>0.5</span>)
     )
@@ -311,9 +311,9 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Chain 1: Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.089 seconds (Warm-up)
+#&gt; Chain 1:  Elapsed Time: 0.085 seconds (Warm-up)
 #&gt; Chain 1:                0.066 seconds (Sampling)
-#&gt; Chain 1:                0.155 seconds (Total)
+#&gt; Chain 1:                0.151 seconds (Total)
 #&gt; Chain 1: </div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
 #&gt;   condition condition_mean  .lower .upper .width .point .interval
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    

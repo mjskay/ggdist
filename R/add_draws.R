@@ -3,7 +3,10 @@
 # Author: mjskay
 ###############################################################################
 
-# add_draws ---------------------------------------------------
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(".draw")
+
 
 #' Add draws to a data frame in tidy format
 #'
@@ -11,7 +14,7 @@
 #' a generic version of \code{\link{add_fitted_draws}}/\code{\link{add_predicted_draws}} that can be used with model types
 #' that have their own prediction functions that are not yet supported by tidybayes.
 #'
-#' Given a data frame with M rows and an N \times M matrix of N draws, adds a \code{.row}, \code{.draw}, and \code{.value}
+#' Given a data frame with M rows and an N by M matrix of N draws, adds a \code{.row}, \code{.draw}, and \code{.value}
 #' column (or another name if \code{value} is set) to \code{data}, and expands \code{data} into a long-format dataframe of draws.
 #'
 #' \code{\link{add_fitted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_linpred(m))}, except
@@ -21,7 +24,7 @@
 #' that \code{add_predicted_draws} standardizes argument names and values across packages.
 #'
 #' @param data Data frame to add draws to, with M rows.
-#' @param draws N \times M matrix of draws, with M columns corresponding to the M rows in \code{data}, and N draws in each column.
+#' @param draws N by M matrix of draws, with M columns corresponding to the M rows in \code{data}, and N draws in each column.
 #' @param value The name of the output column; default \code{".value"}.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
 #' factor grouping rows from the input \code{data}), a \code{.draw} column (a unique index corresponding to each draw
@@ -64,6 +67,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom tidyr unnest
 #' @importFrom dplyr tibble bind_cols
+#' @importFrom tibble is_tibble
 #' @export
 add_draws = function(data, draws, value = ".value") {
   .value = as.name(value)

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prefix function generator for composing dimension index columns — n_prefix • tidybayes</title>
+<title>Sample draws from a tidy-format data frame of draws — sample_draws • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,11 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Prefix function generator for composing dimension index columns — n_prefix" />
+<meta property="og:title" content="Sample draws from a tidy-format data frame of draws — sample_draws" />
 
-<meta property="og:description" content="Generates a function for generating names of index columns for factors in
-compose_data by prefixing a character vector to the original
-column name." />
+<meta property="og:description" content="Given a tidy-format data frame of draws with a column indexing each draw, subsample the data frame to a given size." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -139,105 +137,46 @@ column name." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Prefix function generator for composing dimension index columns</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/compose_data.R'><code>R/compose_data.R</code></a></small>
-    <div class="hidden name"><code>n_prefix.Rd</code></div>
+    <h1>Sample draws from a tidy-format data frame of draws</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/sample_draws.R'><code>R/sample_draws.R</code></a></small>
+    <div class="hidden name"><code>sample_draws.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Generates a function for generating names of index columns for factors in
-<code><a href='compose_data.html'>compose_data</a></code> by prefixing a character vector to the original
-column name.</p>
+    <p>Given a tidy-format data frame of draws with a column indexing each draw, subsample the data frame to a given size.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>n_prefix</span>(<span class='no'>prefix</span>)</pre>
+    <pre class="usage"><span class='fu'>sample_draws</span>(<span class='no'>data</span>, <span class='no'>n</span>, <span class='kw'>draw</span> <span class='kw'>=</span> <span class='st'>".draw"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>prefix</th>
-      <td><p>Character vector to be prepended to column names by
-<code><a href='compose_data.html'>compose_data</a></code> to create index columns. Typically something
-like <code>"n"</code> (that is the default used in the <code>.n_name</code> argument
-of <code><a href='compose_data.html'>compose_data</a></code>).</p>
-<p>Returns a function. The function returned takes a character vector, <code>name</code>
-and returns <code><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0(prefix, "_", name)</a></code>, unless <code>name</code> is empty, in
-which case it will return <code>prefix</code>.</p>
-<p><code>n_prefix("n")</code> is the default method that <code><a href='compose_data.html'>compose_data</a></code> uses to
-generate column names for variables storing the number of levels in a factor. Under
-this method, given a data frame
-<code>df</code> with a factor column <code>"foo"</code> containing 5 levels, the results of
-<code><a href='compose_data.html'>compose_data(df)</a></code> will include an element named <code>"n"</code> (the result of
-<code>n_prefix("n")("")</code>) equal to the number of rows in <code>df</code> and an element
-named <code>"n_foo"</code> (the result of <code>n_prefix("n")("foo")</code>) equal to the
-number of levels in <code>df$foo</code>.</p></td>
+      <th>data</th>
+      <td><p>Data frame to sample from</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>The number of draws to select</p></td>
+    </tr>
+    <tr>
+      <th>draw</th>
+      <td><p>The name of the column indexing the draws</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>The <code>.n_name</code> argument of <code><a href='compose_data.html'>compose_data</a></code>.</p></div>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)
-
-<span class='no'>df</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/factor'>factor</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"p"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>))),
-  <span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/factor'>factor</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"s"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>)))
-)
-
-<span class='co'># without changing `.n_name`, compose_data() will prefix indices</span>
-<span class='co'># with "n" by default</span>
-<span class='no'>df</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='compose_data.html'>compose_data</a></span>()</div><div class='output co'>#&gt; $plot
-#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
-#&gt; 
-#&gt; $n_plot
-#&gt; [1] 8
-#&gt; 
-#&gt; $site
-#&gt;  [1] 1 1 2 2 3 3 4 4 1 1 2 2 3 3 4 4
-#&gt; 
-#&gt; $n_site
-#&gt; [1] 4
-#&gt; 
-#&gt; $n
-#&gt; [1] 16
-#&gt; </div><div class='input'>
-<span class='co'># you can use n_prefix() to define a different prefix (e.g. "N"):</span>
-<span class='no'>df</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='compose_data.html'>compose_data</a></span>(<span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'>n_prefix</span>(<span class='st'>"N"</span>))</div><div class='output co'>#&gt; $plot
-#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
-#&gt; 
-#&gt; $N_plot
-#&gt; [1] 8
-#&gt; 
-#&gt; $site
-#&gt;  [1] 1 1 2 2 3 3 4 4 1 1 2 2 3 3 4 4
-#&gt; 
-#&gt; $N_site
-#&gt; [1] 4
-#&gt; 
-#&gt; $N
-#&gt; [1] 16
-#&gt; </div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
+    <h2>Author</h2>
+    <p>Matthew Kay</p>
   </div>
 </div>
 

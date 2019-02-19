@@ -50,9 +50,9 @@ Specifically, \code{geom_lineribbon} acts as if its default aesthetics are
 library(dplyr)
 library(ggplot2)
 
-data_frame(x = 1:10) \%>\%
+tibble(x = 1:10) \%>\%
   group_by_all() \%>\%
-  do(data_frame(y = rnorm(100, .$x))) \%>\%
+  do(tibble(y = rnorm(100, .$x))) \%>\%
   median_qi(.width = c(.5, .8, .95)) \%>\%
   ggplot(aes(x = x, y = y)) +
   # automatically uses aes(ymin = .lower, ymax = .upper, fill = fct_rev(ordered(.width)))

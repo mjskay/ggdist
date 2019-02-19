@@ -12,6 +12,7 @@
 ^README.Rmd$
 ^README.md$
 ^README_files$
+^README_cache$
 ^\.lintr$
 ^docs$
 ^_pkgdown\.yml$
