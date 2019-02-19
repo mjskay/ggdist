@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
   
-This vignette describes how to use the `tidybayes` package to extract [tidy](http://dx.doi.org/10.18637/jss.v059.i10) data frames of draws from draws from resiudals from Bayesian models, and also acts as a demo for the construction of randomized quantile residuals, a generic form of residual applicable to a wide range of models, including censored regressions and models with discrete response variables. For a more general introduction to `tidybayes`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
+This vignette describes how to use the `tidybayes` package to extract [tidy](http://dx.doi.org/10.18637/jss.v059.i10) data frames of draws from residuals of Bayesian models, and also acts as a demo for the construction of randomized quantile residuals, a generic form of residual applicable to a wide range of models, including censored regressions and models with discrete response variables. For a more general introduction to `tidybayes`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
 
 
 ## Setup
@@ -80,12 +80,22 @@ We're going to use a simple dataset to demonstrate residuals that can be applied
 
 $$
 \begin{align*}
-y^* &\sim \textrm{Normal}(0.5,1) \\
-y_\textrm{lower} &= \lfloor{y^*}\rfloor \\
-y_\textrm{upper} &= \lceil{y^*}\rceil
+y^*_i &\sim \textrm{Normal}(0.5,1) \\
+y^\textrm{lower}_i &= \lfloor{y^*_i}\rfloor \\
+y^\textrm{upper}_i &= \lceil{y^*_i}\rceil
 \end{align*}
 $$
-We don't observe $y^*$, only $y_\textrm{lower}$ and $y_\textrm{upper}$, i.e., the upper and lower bounds of an interval in which $y^*$ lies. This is *interval-censored* data.
+Or we can write the vectorized version of the model:
+
+$$
+\begin{align*}
+\mathbf{y}^* &\sim \textrm{Normal}(0.5,1) \\
+\mathbf{y}^\textrm{lower} &= \lfloor{\mathbf{y}^*}\rfloor \\
+\mathbf{y}^\textrm{upper} &= \lceil{\mathbf{y}^*}\rceil
+\end{align*}
+$$
+
+We don't observe each $y^*_i$, only $y^\textrm{lower}_i$ and $y^\textrm{upper}_i$, i.e., the upper and lower bounds of an interval in which $y^*_i$ lies. This is *interval-censored* data.
 
 We can generate it as follows:
 
@@ -94,7 +104,7 @@ set.seed(4118)
 n = 100
 
 cens_df =
-  data_frame(
+  tibble(
     y_star = rnorm(n, 0.5, 1),
     y_lower = floor(y_star),
     y_upper = ceiling(y_star),
@@ -184,21 +194,32 @@ This is a typical way of looking at residuals. However, this type of residual wi
 
 ### Probability residuals and quantile residuals
 
-We can use the posterior predictive probability $P(y^*_\textrm{rep} < y^*|\theta)$ as a sort of **probability residual** (`p_residual` below). If the predictive distribution is well-calibrated, these probabilities should be uniform, and if we apply the inverse cumulative distribution function (CDF) of the standard Normal distribution to these probability residuals, the result should be standard Normal. These are **quantile residuals** (`q_residual`).
+To derive a more general form of residual, we will use the posterior predictive distribution, $\mathbf{y}^{*\textrm{rep}}|\mathbf{y}^*$. This gives us the model's predictive distribution for a replication of $\mathbf{y}^*$, denoted $\mathbf{y}^{*\textrm{rep}}$. In particular, for each observation, we will calculate the predicted probability of seeing an observation less than or equal to the observation we actually got:
+
+$$
+p^{*\textrm{resid}}_i = P(y^{*\textrm{rep}}_i \le y^*_i|\mathbf{y}^*)
+$$
+This is one type of Bayesian **posterior predictive p-value**; I will call it a **probability residual** (`p_residual`) by analogy to quantile residuals. If the predictive distribution is well-calibrated, these probabilities should be uniform (in general these will not be quite uniform due to the double use of $\mathbf{y}*$; a future iteration of this article will demonstrate the use of leave-one-out posterior predictive distributions to address that issue). 
+
+If we apply the inverse cumulative distribution function (CDF) of the standard Normal distribution to these probability residuals, the result should be approximately standard Normal. These are **quantile residuals** (`z_residual`):
+
+$$
+z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
+$$
 
 ```{r}
 cens_df %>%
   add_predicted_draws(m_ideal) %>%
   summarise(
     p_residual = mean(.prediction < y_star),
-    q_residual = qnorm(p_residual)
+    z_residual = qnorm(p_residual)
   ) %>%
-  ggplot(aes(sample = q_residual)) +
+  ggplot(aes(sample = z_residual)) +
   geom_qq() +
   geom_abline()
 ```
 
-This QQ plot shows us the model fits pretty well.
+This QQ plot shows us the model fits okay.
 
 ## Basic interval-censored model
 
@@ -245,26 +266,31 @@ We can extend the ideas of **probability residuals** to make **randomized probab
 Where the probability residual for the uncensored model was something like this:
 
 $$
-r^*_\textrm{prob} = P(y^*_\textrm{rep} < y^*|\theta)
+p^{*\textrm{resid}}_i = P(y^{*\textrm{rep}}_i < y^*_i|\mathbf{y}^*)
 $$
-We can't calculate the residual for a censored observation this way, as we do not know what $y^*$ is. However, we do know that $r^*_\textrm{prob}$ should be in the following interval:
+We can't calculate the residual for a censored observation this way, as we do not know what $\mathbf{y}^*$ is, only $\mathbf{y}^\textrm{lower}$ and $\mathbf{y}^\textrm{upper}$. However, we do know that $p^{*\textrm{resid}}_i$ should be in the following interval:
 
 $$
 \begin{align*}
-&& r^*_\textrm{prob} &\in (r_\textrm{lower}, r_\textrm{upper}] \\
-&where& r_\textrm{lower} &= P(y^*_\textrm{rep} < y_\textrm{lower}|\theta) \\
-&&      r_\textrm{upper} &= P(y^*_\textrm{rep} < y_\textrm{upper}|\theta)
+&& p^{*\textrm{resid}}_i &\in (p^\textrm{lower}_i, p^\textrm{upper}_i] \\
+&\textrm{where}& p^\textrm{lower}_i &= P(y^{*\textrm{rep}}_i < y^\textrm{lower}_i|\mathbf{y}^\textrm{lower},\mathbf{y}^\textrm{upper}) \\
+&&      p^\textrm{upper}_i &= P(y^{*\textrm{rep}}_i \le y^\textrm{upper}_i|\mathbf{y}^\textrm{lower},\mathbf{y}^\textrm{upper})
 \end{align*}
 $$
 
 If we define a **randomized probability residual** as:
 
 $$
-r_\textrm{prob} \sim \textrm{Uniform}(r_\textrm{lower}, r_\textrm{upper})
+p^{\textrm{resid}}_i \sim \textrm{Uniform}(p^\textrm{lower}_i, p^\textrm{upper}_i)
 $$
 
-Then these residuals will be unformly random (see [Dunn and Smyth 1996](http://doi.org/10.2307/1390802)), and we can similarly define a **randomized quantile residual** by passing the probability residuals through the Normal inverse CDF. Like so:
+Then these residuals will be uniformly random (see [Dunn and Smyth 1996](http://doi.org/10.2307/1390802)), and we can similarly define a **randomized quantile residual** by passing the probability residuals through the Normal inverse CDF:
 
+$$
+z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
+$$
+
+We in code, that looks like this:
 
 ```{r}
 cens_df %>%
@@ -273,9 +299,9 @@ cens_df %>%
     p_lower = mean(.prediction < y_lower),
     p_upper = mean(.prediction < y_upper),
     p_residual = runif(1, p_lower, p_upper),
-    q_residual = qnorm(p_residual)
+    z_residual = qnorm(p_residual)
   ) %>%
-  ggplot(aes(x = .row, y = q_residual)) +
+  ggplot(aes(x = .row, y = z_residual)) +
   geom_point()
 ```
 
@@ -288,9 +314,9 @@ cens_df %>%
     p_lower = mean(.prediction < y_lower),
     p_upper = mean(.prediction < y_upper),
     p_residual = runif(1, p_lower, p_upper),
-    q_residual = qnorm(p_residual)
+    z_residual = qnorm(p_residual)
   ) %>%
-  ggplot(aes(sample = q_residual)) +
+  ggplot(aes(sample = z_residual)) +
   geom_qq() +
   geom_abline()
 ```
@@ -309,8 +335,8 @@ p = cens_df %>%
     residual_draw = list(1:k)
   ) %>%
   unnest() %>%
-  mutate(q_residual = qnorm(p_residual)) %>%
-  ggplot(aes(sample = q_residual)) +
+  mutate(z_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = z_residual)) +
   geom_qq() +
   geom_abline() +
   transition_manual(residual_draw)
@@ -329,7 +355,7 @@ set.seed(41181)
 n = 100
 
 cens_df_t =
-  data_frame(
+  tibble(
     y = rt(n, 3) + 0.5,
     y_lower = floor(y),
     y_upper = ceiling(y),
@@ -401,9 +427,9 @@ cens_df_t %>%
     p_lower = mean(.prediction < y_lower),
     p_upper = mean(.prediction < y_upper),
     p_residual = runif(1, p_lower, p_upper),
-    q_residual = qnorm(p_residual)
+    z_residual = qnorm(p_residual)
   ) %>%
-  ggplot(aes(sample = q_residual)) +
+  ggplot(aes(sample = z_residual)) +
   geom_qq() +
   geom_abline()
 ```
@@ -422,8 +448,8 @@ p = cens_df_t %>%
     residual_draw = list(1:k)
   ) %>%
   unnest() %>%
-  mutate(q_residual = qnorm(p_residual)) %>%
-  ggplot(aes(sample = q_residual)) +
+  mutate(z_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = z_residual)) +
   geom_qq() +
   geom_abline() +
   transition_manual(residual_draw)
@@ -470,8 +496,8 @@ p = cens_df_t %>%
     residual_draw = list(1:k)
   ) %>%
   unnest() %>%
-  mutate(q_residual = qnorm(p_residual)) %>%
-  ggplot(aes(sample = q_residual)) +
+  mutate(z_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = z_residual)) +
   geom_qq() +
   geom_abline() +
   transition_manual(residual_draw)
@@ -492,7 +518,7 @@ cens_df_o = cens_df_t %>%
   mutate(y_factor = ordered(y_lower))
 ```
 
-Then we'll fit an ordinal regression model. We have to adjust the fit parameters a bit to get it to converge (I suspect this is because some of the categories have zero observations):
+Then we'll fit an ordinal regression model. We have to adjust the fit parameters a bit to get it to converge:
 
 ```{r}
 m_o = brm(y_factor ~ 1, data = cens_df_o, family = cumulative, 
@@ -510,7 +536,7 @@ cens_df_o %>%
   geom_qq_line()
 ```
 
-Gah! `brms` will not even produce residuals for models like these. Fortunately, we can still construct randomized quantile residuals.
+Gah! `brms` will not even produce residuals for models like these. This is very sensible, as standard residuals here are hard to define. Fortunately, we can still construct randomized quantile residuals.
 
 ### Randomized quantile residuals for a discrete distribution
 
@@ -518,19 +544,19 @@ For the interval-censored model, we had:
 
 $$
 \begin{align*}
-&& r_\textrm{lower} &= P(y^*_\textrm{rep} < y_\textrm{lower}|\theta) \\
-&& r_\textrm{upper} &= P(y^*_\textrm{rep} < y_\textrm{upper}|\theta) \\
-&& r_\textrm{prob} &\sim \textrm{Uniform}(r_\textrm{lower}, r_\textrm{upper})
+&& p^\textrm{lower}_i &= P(y^{*\textrm{rep}}_i < y^\textrm{lower}_i|\mathbf{y}^\textrm{lower},\mathbf{y}^\textrm{upper}) \\
+&&      p^\textrm{upper}_i &= P(y^{*\textrm{rep}}_i \le y^\textrm{upper}_i|\mathbf{y}^\textrm{lower},\mathbf{y}^\textrm{upper}) \\
+&& p^{\textrm{resid}}_i &\sim \textrm{Uniform}(p^\textrm{lower}_i, p^\textrm{upper}_i)
 \end{align*}
 $$
 
-But that was for a model with observations of the form $(y_\textrm{lower}, y_\textrm{upper}]$ and which can produce a posterior predictive distribution for the latent variable $y^*_\textrm{rep}$. Now our observations are discrete values of the form $y_\textrm{factor}$, and our posterior predictive distribution for $y_\textrm{rep}$ is also discrete. So we have to tweak the definition a bit:
+But that was for a model with observations of the form $(\mathbf{y}^\textrm{lower}, \mathbf{y}^\textrm{upper}]$ and which can produce a posterior predictive distribution for the latent variable $\mathbf{y}^{*\textrm{rep}}|\mathbf{y}^\textrm{lower}, \mathbf{y}^\textrm{upper}$. Now our observations are discrete values of $\mathbf{y}^\textrm{factor}$, and our posterior predictive distribution, $\mathbf{y}^\textrm{rep}|\mathbf{y}^\textrm{factor}$, is also discrete. So we have to tweak the definition a bit:
 
 $$
 \begin{align*}
-&& r_\textrm{lower} &= P(y_\textrm{rep} < y_\textrm{factor}|\theta) \\
-&& r_\textrm{upper} &= P(y_\textrm{rep} \le y_\textrm{factor}|\theta) \\
-&& r_\textrm{prob} &\sim \textrm{Uniform}(r_\textrm{lower}, r_\textrm{upper})
+&& p^\textrm{lower}_i &= P(y^{\textrm{rep}}_i < y^\textrm{factor}_i|\mathbf{y}^\textrm{factor}) \\
+&&      p^\textrm{upper}_i &= P(y^{\textrm{rep}}_i \le y^\textrm{factor}_i|\mathbf{y}^\textrm{factor}) \\
+&& p^{\textrm{resid}}_i &\sim \textrm{Uniform}(p^\textrm{lower}_i, p^\textrm{upper}_i)
 \end{align*}
 $$
 
@@ -544,9 +570,9 @@ cens_df_o %>%
     p_lower = mean(.prediction < y_factor),
     p_upper = mean(.prediction <= y_factor),
     p_residual = runif(1, p_lower, p_upper),
-    q_residual = qnorm(p_residual)
+    z_residual = qnorm(p_residual)
   ) %>%
-  ggplot(aes(x = .row, y = q_residual)) +
+  ggplot(aes(x = .row, y = z_residual)) +
   geom_point()
 ```
 
@@ -565,8 +591,8 @@ p = cens_df_o %>%
     residual_draw = list(1:k)
   ) %>%
   unnest() %>%
-  mutate(q_residual = qnorm(p_residual)) %>%
-  ggplot(aes(sample = q_residual)) +
+  mutate(z_residual = qnorm(p_residual)) %>%
+  ggplot(aes(sample = z_residual)) +
   geom_qq() +
   geom_abline() +
   transition_manual(residual_draw)
@@ -575,4 +601,153 @@ animate(p, width = 1152, height = 768, res = 192, type = "cairo")
 ```
 
 It is not too surprising that the ordinal regression also works here, even though it is not the data generating model. Ordinal regressions are pretty robust.
+
+## A function for probability residuals
+
+Here's a function that can calculate randomized probability residuals for you. A future version of `tidybayes` will likely supply some variant of this function, but for now, since it is experimental, I have not folded it into the main package yet. Use at your own risk:
+
+```{r}
+library(rlang)
+make_probability_residuals = function(data, prediction, y, y_upper = NA, n = 1) {
+  .prediction = enquo(prediction)
+  .y = enquo(y)
+  .y_upper = enquo(y_upper)
+
+  if (eval_tidy(expr(is.factor(!!.prediction) && !is.ordered(!!.prediction)), data)) {
+    data = mutate(data, !!.prediction := ordered(!!.prediction, levels = levels(!!.prediction)))
+  }
+  
+  if (is.na(enquo(y_upper)[[2]])) {
+    #no y_upper provided, use y as y_upper
+    data = summarise(data,
+      .p_lower = mean(!!.prediction < !!.y),
+      .p_upper = mean(!!.prediction <= !!.y)
+    )
+  } else {
+    #y_upper should be a vector, and if an entry in it is NA, use the entry from y
+    data = summarise(data,
+      .p_lower = mean(!!.prediction < !!.y),
+      .p_upper = mean(!!.prediction <= ifelse(is.na(!!.y_upper), !!.y, !!.y_upper))
+    )
+  }
+  
+  data %>%
+    mutate(
+      .p_residual = map2(.p_lower, .p_upper, runif, n = !!n),
+      .residual_draw = map(.p_residual, seq_along)
+    ) %>%
+    unnest(.p_residual, .residual_draw, .drop = FALSE) %>%
+    mutate(.z_residual = qnorm(.p_residual))
+}
+```
+
+## Logistic regression
+
+Consider a simple dataset with a single binary outcome:
+
+```{r}
+set.seed(51919)
+
+bin_df = tibble(
+  y = rbernoulli(100, .7)
+)
+```
+
+A model for this might be the following:
+
+```{r}
+m_bin = brm(y ~ 1, data = bin_df, family = bernoulli)
+```
+
+
+```{r}
+m_bin = stan_glm(y ~ 1, data = bin_df, family = binomial)
+```
+
+Again, standard residuals are hard to interpret:
+
+```{r}
+bin_df %>%
+  add_residual_draws(m_bin) %>%
+  median_qi() %>%
+  ggplot(aes(sample = .residual)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+Randomized quantile residuals help us see that the fit is reasonable:
+
+```{r}
+p = bin_df %>%
+  add_predicted_draws(m_bin) %>%
+  make_probability_residuals(.prediction, y, n = 50) %>%
+  ggplot(aes(sample = .z_residual)) +
+  geom_qq() +
+  geom_abline() +
+  transition_manual(.residual_draw)
+
+animate(p, width = 1152, height = 768, res = 192, type = "cairo")
+```
+
+We could also look at the probability residuals instead, comparing them against a uniform distribution, like so:
+
+```{r}
+p = bin_df %>%
+  add_predicted_draws(m_bin) %>%
+  make_probability_residuals(.prediction, y, n = 50) %>%
+  ggplot(aes(sample = .p_residual)) +
+  geom_qq(distribution = qunif) +
+  geom_abline() +
+  transition_manual(.residual_draw)
+
+animate(p, width = 1152, height = 768, res = 192, type = "cairo")
+```
+
+
+## Poisson regression
+
+Finally, we'll round this out with a Poisson regression. Here's some count data:
+
+```{r}
+set.seed(51919)
+
+count_df = tibble(
+  y = rpois(100, 10)
+)
+
+count_df %>%
+  ggplot(aes(x = y)) +
+  geom_dotplot(binwidth = 1, dotsize = 0.75)
+```
+
+And a model:
+
+```{r}
+m_count = brm(y ~ 1, data = count_df, family = poisson)
+```
+
+Standard residuals:
+
+```{r}
+count_df %>%
+  add_residual_draws(m_count) %>%
+  median_qi() %>%
+  ggplot(aes(sample = .residual)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+Again, hard to interpret. Let's try randomized quantile residuals instead:
+
+```{r}
+p = count_df %>%
+  add_predicted_draws(m_count) %>%
+  make_probability_residuals(.prediction, y, n = 50) %>%
+  ggplot(aes(sample = .z_residual)) +
+  geom_qq() +
+  geom_abline() +
+  transition_manual(.residual_draw)
+
+animate(p, width = 1152, height = 768, res = 192, type = "cairo")
+```
 
