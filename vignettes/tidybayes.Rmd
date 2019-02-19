@@ -837,7 +837,7 @@ Let's do the same example as above again, this time using `MCMCglmm` instead of 
 
 First, we'll fit the model:
 
-```{r}
+```r
 # MCMCglmm does not support tibbles directly,
 # so we convert ABC to a data.frame on the way in
 m_glmm = MCMCglmm(response ~ condition, data = as.data.frame(ABC))
@@ -845,7 +845,7 @@ m_glmm = MCMCglmm(response ~ condition, data = as.data.frame(ABC))
 
 Now we can use `emmeans` and `gather_emmeans_draws` exactly as we did with `rstanarm`, but we need to include a `data` argument in the `emmeans` call:
 
-```{r}
+```r
 m_glmm %>%
   emmeans( ~ condition, data = ABC) %>%
   contrast(method = "pairwise") %>%

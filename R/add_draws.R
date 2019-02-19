@@ -55,11 +55,11 @@ globalVariables(".draw")
 #'   mtcars %>%
 #'     group_by(cyl) %>%
 #'     data_grid(hp = seq_range(hp, n = 101)) %>%
-#'     # the line below is equivalent to add_predicted_draws(m_mpg), except that it does not
+#'     # the line below is equivalent to add_fitted_draws(m_mpg), except that it does not
 #'     # standardize arguments across model types
-#'     add_draws(posterior_predict(m_mpg)) %>%
+#'     add_draws(posterior_linpred(m_mpg, newdata = .)) %>%
 #'     ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-#'     stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), alpha = 0.25) +
+#'     stat_lineribbon(aes(y = .value), alpha = 0.25) +
 #'     geom_point(data = mtcars) +
 #'     scale_fill_brewer(palette = "Greys")
 #' }
