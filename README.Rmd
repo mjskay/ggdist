@@ -175,7 +175,7 @@ set.seed(5)
 n = 10
 n_condition = 5
 ABC =
-  data_frame(
+  tibble(
     condition = rep(c("A","B","C","D","E"), n),
     response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
   )
@@ -277,7 +277,7 @@ Intervals are nice if the alpha level happens to line up with whatever decision 
 ```{r quantile_dotplots}
 m %>%
   spread_draws(condition_mean[condition]) %>%
-  do(data_frame(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
+  do(tibble(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
   ggplot(aes(x = condition_mean)) +
   geom_dotplot(binwidth = .04) +
   facet_grid(rows = vars(fct_rev(condition)), switch = "y") +
@@ -384,7 +384,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   add_predicted_draws(m_mpg) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = "#08519C") +
   geom_point(data = mtcars, size = 2) +
   scale_fill_brewer()
 ```
@@ -414,7 +414,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101), am) %>%    # add am to the prediction grid
   add_predicted_draws(m_mpg_am) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
+  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = "#08519C") +
   geom_point(data = mtcars) +
   scale_fill_brewer() +
   facet_wrap(~ am)                                  # facet by am
@@ -427,7 +427,7 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 200), am) %>%
   add_fitted_draws(m_mpg_am, n = 100) %>%         # sample 100 fits from the posterior
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), alpha = 1/20, color = brewer.pal(5, "Blues")[[5]]) +
+  geom_line(aes(y = .value, group = .draw), alpha = 1/20, color = "#08519C") +
   geom_point(data = mtcars) +
   facet_wrap(~ am)
 ```
@@ -436,21 +436,19 @@ Animated hypothetical outcome plots (HOPs) can also be easily constructed by usi
 
 ```{r hops}
 set.seed(12345)
-ndraws = 50
+ndraws = 100
 
 p = mtcars %>%
   data_grid(hp = seq_range(hp, n = 50), am) %>%
   add_fitted_draws(m_mpg_am, n = ndraws) %>%
   ggplot(aes(x = hp, y = mpg)) +
-  geom_line(aes(y = .value, group = .draw), color = brewer.pal(6, "Blues")[[3]]) +
-  geom_line(aes(y = .value), color = brewer.pal(6, "Blues")[[3]]) +
+  geom_line(aes(y = .value, group = .draw), color = "#08519C") +
   geom_point(data = mtcars) +
   facet_wrap(~ am, labeller = label_both) +
-  transition_states(.draw, 1, 0) +
-  ease_aes('sine-in-out') +
-  exit_recolor(color = "white")
+  transition_states(.draw, 0, 1) +
+  shadow_mark(past = TRUE, future = TRUE, alpha = 1/20, color = "gray50")
 
-animate(p, nframes = ndraws * 5, fps = 10, width = 700, height = 432, res = 100, type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 700, height = 432, res = 100, type = "cairo")
 ```
 
 See `vignette("tidybayes")` for a variety of additional examples and more explanation of how it works.
