@@ -436,7 +436,7 @@ Animated hypothetical outcome plots (HOPs) can also be easily constructed by usi
 
 ```{r hops}
 set.seed(12345)
-ndraws = 100
+ndraws = 50
 
 p = mtcars %>%
   data_grid(hp = seq_range(hp, n = 50), am) %>%

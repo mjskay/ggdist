@@ -484,11 +484,10 @@ p = mtcars %>%
   geom_line(aes(y = .value, group = paste(cyl, .draw))) +
   geom_point(data = mtcars) +
   scale_color_brewer(palette = "Dark2") +
-  transition_states(.draw, 1, 2) +
-  shadow_mark(future = TRUE, color = "black", alpha = 0.05) +
-  exit_recolor(color = "gray95")
+  transition_states(.draw, 0, 1) +
+  shadow_mark(future = TRUE, color = "gray50", alpha = 1/20)
 
-animate(p, nframes = ndraws * 10, fps = 20, width = 1152, height = 768, res = 192, type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 384, res = 96, type = "cairo")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:
