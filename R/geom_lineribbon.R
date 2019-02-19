@@ -48,9 +48,9 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' library(dplyr)
 #' library(ggplot2)
 #'
-#' data_frame(x = 1:10) %>%
+#' tibble(x = 1:10) %>%
 #'   group_by_all() %>%
-#'   do(data_frame(y = rnorm(100, .$x))) %>%
+#'   do(tibble(y = rnorm(100, .$x))) %>%
 #'   median_qi(.width = c(.5, .8, .95)) %>%
 #'   ggplot(aes(x = x, y = y)) +
 #'   # automatically uses aes(ymin = .lower, ymax = .upper, fill = fct_rev(ordered(.width)))
@@ -117,7 +117,7 @@ draw_key_lineribbon <- function(data, params, size) {
 #' @import ggplot2
 #' @export
 GeomLineribbon <- ggproto("GeomLineribbon", Geom,
-  default_aes = aes(colour = "red", size = 1.25, linetype = 1, shape = 19,
+  default_aes = aes(colour = "black", size = 1.25, linetype = 1, shape = 19,
     fill = NA, alpha = NA, stroke = 1),
 
   draw_key = draw_key_lineribbon,
