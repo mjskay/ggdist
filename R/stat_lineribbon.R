@@ -50,9 +50,9 @@ globalVariables(c("...width.."))
 #' library(dplyr)
 #' library(ggplot2)
 #'
-#' data_frame(x = 1:10) %>%
+#' tibble(x = 1:10) %>%
 #'   group_by_all() %>%
-#'   do(data_frame(y = rnorm(100, .$x))) %>%
+#'   do(tibble(y = rnorm(100, .$x))) %>%
 #'   ggplot(aes(x = x, y = y)) +
 #'   stat_lineribbon() +
 #'   scale_fill_brewer()

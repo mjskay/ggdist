@@ -88,7 +88,7 @@ set.seed(5)
 n = 10
 n_condition = 5
 ABC =
-  data_frame(
+  tibble(
     condition = rep(c("A","B","C","D","E"), n),
     response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
   )
@@ -367,7 +367,7 @@ Intervals are nice if the alpha level happens to line up with whatever decision 
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
-  do(data_frame(.value = quantile(.$.value, ppoints(100)))) %>%
+  do(tibble(.value = quantile(.$.value, ppoints(100)))) %>%
   ggplot(aes(x = .value)) +
   geom_dotplot(binwidth = .04) +
   facet_grid(fct_rev(condition) ~ .) +

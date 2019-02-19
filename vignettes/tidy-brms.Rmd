@@ -89,7 +89,7 @@ set.seed(5)
 n = 10
 n_condition = 5
 ABC =
-  data_frame(
+  tibble(
     condition = rep(c("A","B","C","D","E"), n),
     response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
   )
@@ -319,7 +319,7 @@ m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   mutate(condition_mean = b_Intercept + r_condition) %>%
   ggplot(aes(y = condition, x = condition_mean)) +
-  geom_halfeyeh() 
+  geom_halfeyeh()
 ```
 
 
@@ -353,7 +353,7 @@ Intervals are nice if the alpha level happens to line up with whatever decision 
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
-  do(data_frame(.value = quantile(.$.value, ppoints(100)))) %>%
+  do(tibble(.value = quantile(.$.value, ppoints(100)))) %>%
   ggplot(aes(x = .value)) +
   geom_dotplot(binwidth = .04) +
   facet_grid(fct_rev(condition) ~ .) +
@@ -384,7 +384,7 @@ ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
   ggplot(aes(y = condition, x = .prediction)) +
-  stat_intervalh() +
+  stat_intervalh(.width = c(.50, .80, .95, .99)) +
   geom_point(aes(x = response), data = ABC) +
   scale_color_brewer()
 ```
@@ -527,7 +527,7 @@ This approach can be helpful in cases of non-constant variance (also called _het
 
 ```{r}
 set.seed(1234)
-AB = data_frame(
+AB = tibble(
   group = rep(c("a", "b"), each = 20),
   response = rnorm(40, mean = rep(c(1, 5), each = 20), sd = rep(c(1, 3), each = 20))
 )
@@ -639,7 +639,7 @@ m_cyl = brm(cyl ~ mpg, data = mtcars_clean, family = cumulative, seed = 58393)
 `add_fitted_draws` will include a `.category` column, and `.value` will contain draws from the posterior distribution for the probability that the response is in that category. For example, here is the fit for the first row in the dataset:
 
 ```{r}
-data_frame(mpg = 21) %>%
+tibble(mpg = 21) %>%
   add_fitted_draws(m_cyl) %>%
   median_qi(.value)
 ```
