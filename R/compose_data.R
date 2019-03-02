@@ -101,8 +101,8 @@ as_data_list.numeric = function(object, name = "",
   scalar_as_array = FALSE,  #treat single scalar values as array of length 1
   ...) {
   data = data_list(if (scalar_as_array) as.array(object) else object)
-  if (name == "") {
-    warning("No name provided for value `", deparse0(object), "`")
+  if (!is.null(name) && name == "") {
+    warning("Empty name provided for value `", deparse0(object), "`")
   }
   names(data) = name
   data
@@ -131,11 +131,18 @@ as_data_list.character = function(object, name="", ...) {
 #' @rdname data_list
 #' @export
 as_data_list.list = function(object, name="", ...) {
-  #go through list and translate variables
-  data = data_list()
-  for (i in seq_along(object)) {
-    data = c(data, as_data_list(object[[i]], name = names(object)[[i]], ...))
+  if (is.null(names(object))) {
+    # this is an unnamed list: translate it as-is
+    data = data_list(object)
+    names(data) = name
+  } else {
+    #go through list and translate each variable
+    data = data_list()
+    for (i in seq_along(object)) {
+      data = c(data, as_data_list(object[[i]], name = names(object)[[i]], ...))
+    }
   }
+
   data
 }
 #' @rdname data_list

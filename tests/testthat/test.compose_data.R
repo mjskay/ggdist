@@ -99,7 +99,7 @@ test_that("compose_data converts logicals correctly", {
 
 test_that("warning generated for unnamed values", {
   expect_warning(compose_data(set_names(list(1, 2), c("a", ""))),
-    "No name provided for value `2`")
+    "Empty name provided for value `2`")
 })
 
 test_that("data_list print method gives correct output", {
@@ -110,4 +110,23 @@ test_that("unsupported formats are dropped", {
   expect_warning(res <- compose_data(a = 1, b = Sys.Date()),
     '"b" has unsupported type "Date" and was dropped.')
   expect_equal(res, list(a = 1))
+})
+
+test_that("unnamed lists are supported as 2d arrays", {
+  ref = list(x = list(1:10, 2:11), n = 2, m = 10)
+
+  expect_equal(compose_data(x = list(1:10, 2:11), n = length(x), m = length(x[[1]])), ref)
+})
+
+test_that("unnamed lists are supported as multidimensional arrays", {
+  ref = list(x = list(list(1:4, 2:5, 3:6), list(4:7, 5:8, 6:9)), n = 2, m = 3, l = 4)
+
+  expect_equal(compose_data(x = list(list(1:4, 2:5, 3:6), list(4:7, 5:8, 6:9)), n = length(x), m = length(x[[1]]), l = length(x[[1]][[1]])), ref)
+})
+
+test_that("matrices are supported", {
+  ref = list(x = matrix(1:10, nrow = 2), n = 2, m = 5)
+
+  expect_equal(compose_data(x = matrix(1:10, nrow = 2), n = nrow(x), m = ncol(x)), ref)
+  expect_equal(compose_data(tibble(x = matrix(1:10, nrow = 2)), m = ncol(x)), ref)
 })
