@@ -352,4 +352,24 @@ test_that("nested matrices are correctly extracted", {
   expect_equal(spread_draws_long_(test_draws, "x", c("2","1"))[["x"]][[2]], matrix(c(11:20, 12:21), ncol = 2))
 })
 
+test_that("nested 3d arrays are correctly extracted", {
+  test_draws = tibble(
+    .chain = NA, .iteration = NA, .draw = 1,
+    `x[1,1,1]`  = 1,
+    `x[1,1,2]`  = 2,
+    `x[1,1,3]`  = 3,
+    `x[1,2,1]`  = 4,
+    `x[1,2,2]`  = 5,
+    `x[1,2,3]`  = 6,
+    `x[2,1,1]`  = 11,
+    `x[2,1,2]`  = 12,
+    `x[2,1,3]`  = 13,
+    `x[2,2,1]`  = 14,
+    `x[2,2,2]`  = 15,
+    `x[2,2,3]`  = 16
+  )
 
+  expect_equal(spread_draws_long_(test_draws, "x", c(".",".","."))[["x"]][[1]],
+    #column-major order of the above 3d array
+    array(c(1, 11, 4, 14, 2, 12, 5, 15, 3, 13, 6, 16), dim = c(2,2,3)))
+})
