@@ -53,7 +53,9 @@ test_that("spread_draws correctly rejects missing variables", {
   expect_error(spread_draws(RankCorr, c(a, b)),
     "No variables found matching spec: c\\(a,b\\)")
   expect_error(spread_draws(RankCorr, a[b]),
-    "No variables found matching spec: c\\(a\\)\\[b\\]")
+    "No variables found matching spec: a\\[b\\]")
+  expect_error(spread_draws(RankCorr, c(a, x)[b]),
+    "No variables found matching spec: c\\(a,x\\)\\[b\\]")
 })
 
 
@@ -315,3 +317,39 @@ test_that("variable names containing regex special chars work", {
 
   expect_equal(spread_draws(RankCorr_t, `(Intercept)`), ref)
 })
+
+test_that("nested matrices are correctly extracted", {
+  test_draws = tibble(
+    .chain = NA, .iteration = NA, .draw = 1,
+    `x[1,1]`  = 1,
+    `x[1,2]`  = 2,
+    `x[1,3]`  = 3,
+    `x[1,4]`  = 4,
+    `x[1,5]`  = 5,
+    `x[1,6]`  = 6,
+    `x[1,7]`  = 7,
+    `x[1,8]`  = 8,
+    `x[1,9]`  = 9,
+    `x[1,10]` = 10,
+    `x[2,1]`  = 2,
+    `x[2,2]`  = 3,
+    `x[2,3]`  = 4,
+    `x[2,4]`  = 5,
+    `x[2,5]`  = 6,
+    `x[2,6]`  = 7,
+    `x[2,7]`  = 8,
+    `x[2,8]`  = 9,
+    `x[2,9]`  = 10,
+    `x[2,10]` = 11
+  ) %>%
+    rbind(. + 10)
+
+  expect_equal(spread_draws_long_(test_draws, "x", c("i","."))[["x"]][[2]], 2:11)
+  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[1]], t(matrix(c(1:10, 2:11), ncol = 2)))
+  expect_equal(spread_draws_long_(test_draws, "x", c("1","2"))[["x"]][[1]], t(matrix(c(1:10, 2:11), ncol = 2)))
+  expect_equal(spread_draws_long_(test_draws, "x", c("2","1"))[["x"]][[1]], matrix(c(1:10, 2:11), ncol = 2))
+  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[2]], t(matrix(c(11:20, 12:21), ncol = 2)))
+  expect_equal(spread_draws_long_(test_draws, "x", c("2","1"))[["x"]][[2]], matrix(c(11:20, 12:21), ncol = 2))
+})
+
+

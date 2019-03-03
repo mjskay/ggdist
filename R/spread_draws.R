@@ -271,8 +271,8 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   dimension_names = spec[[2]]
   wide_dimension_name = spec[[3]]
 
-  #extract the draws into a long data frame
-  draws = spread_draws_long_(model, variable_names, dimension_names, regex = regex, sep = sep)
+  #extract the draws into a long format data frame
+  draws = spread_draws_long_(tidy_draws(model), variable_names, dimension_names, regex = regex, sep = sep)
 
   #convert variable and/or dimensions back into usable data types
   constructors = attr(model, "constructors")
@@ -315,11 +315,13 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   }
 }
 
+## draws: tidy draws, such as reutrned by tidy_draws()
+## variable_names: a character vector of names of variables
+## dimension_names: a character vector of dimension names
 #' @importFrom tidyr spread_ separate_ gather_
 #' @import stringi
 #' @import dplyr
-spread_draws_long_ = function(model, variable_names, dimension_names, regex = FALSE, sep = "[, ]") {
-  draws = tidy_draws(model)
+spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FALSE, sep = "[, ]") {
   if (!regex) {
     variable_names = escape_regex(variable_names)
   }
@@ -330,9 +332,9 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
     variable_names_index = stri_detect_regex(colnames(draws), variable_regex)
 
     if (!any(variable_names_index)) {
-      stop(paste0("No variables found matching spec: ",
-        "c(", paste0(variable_names, collapse = ","), ")"
-      ))
+      stop("No variables found matching spec: ",
+        printable_variable_names(variable_names)
+      )
     }
 
     variable_names = colnames(draws)[variable_names_index]
@@ -352,10 +354,10 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
     )
     variable_names_index = stri_detect_regex(colnames(draws), variable_regex)
     if (!any(variable_names_index)) {
-      stop(paste0("No variables found matching spec: ",
-        "c(", paste0(variable_names, collapse = ","), ")",
+      stop("No variables found matching spec: ",
+        printable_variable_names(variable_names),
         "[", paste0(dimension_names, collapse = ","), "]"
-      ))
+      )
     }
     variable_names = colnames(draws)[variable_names_index]
 
@@ -374,6 +376,17 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
       ifelse(. == "", paste0(".drop", seq_along(.)), .)
     dimension_names = dimension_names[dimension_names != ""]
 
+    # similarly, for nested dimensions specified using '.' we internally convert these to
+    # numeric values in order to get sensible ordering
+    temp_dimension_names = temp_dimension_names %>%
+      #must give each blank dimension column a unique name, otherwise spread_() won't work below
+      ifelse(. == ".", as.character(seq_along(.)), .)
+    nested_dimension_names = temp_dimension_names[!is.na(suppressWarnings(as.integer(temp_dimension_names)))]
+    # sort nested dimension names so they are nested in the order the user desires
+    nested_dimension_names = nested_dimension_names[order(nested_dimension_names)]
+    # remove nested dimensions from the final grouping dimensions (since they will not be columns after nesting)
+    dimension_names = setdiff(dimension_names, c(nested_dimension_names, "."))
+
     # Make long format data frame of the variables we want to split.
     # The following code chunk is approximately equivalent to this:
     #
@@ -389,12 +402,58 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
         stringsAsFactors = FALSE
       )))
 
-    long_draws %>%
+    long_draws = long_draws %>%
       #next, split dimensions in variable names into columns
       separate_(".variable", c(".variable", ".dimensions"), sep = "\\[|\\]") %>%
       separate_(".dimensions", temp_dimension_names, sep = dimension_sep_regex,
         convert = TRUE #converts dimensions to numerics if applicable
-      ) %>%
+      )
+
+
+    if (length(nested_dimension_names) > 0) {
+      # some dimensions were requested to be nested as list columns containing arrays
+
+      # first, figure out the size of each dimension, in the order we will arrange them
+      nested_dimension_sizes = long_draws %>%
+        summarise_at(nested_dimension_names, ~ length(unique(.x))) %>%
+        unlist(use.names = FALSE)
+
+      # now we'll create a wide-format data frame where each row has all of the value of
+      # the array we are going to nest in that row in the same order that the array()
+      # function assumes arrays are laid out so that we can easily use array() to do the
+      # nesting
+      draws_for_nesting = long_draws %>%
+        # must reverse the order of the dimensions here because array() treats the
+        # leftmost dimension as moving fastest.
+        arrange(!!!syms(rev(nested_dimension_names))) %>%
+        unite(".dimensions", !!!nested_dimension_names, sep = ",") %>%
+        # have to make .dimensions a factor with the order the levels appear in the data
+        # (due to the arrange() call above) so that the order is preserved on spread()
+        mutate(.dimensions = factor(.dimensions, levels = unique(.dimensions)))
+
+      # need to save the number of columns in the long-format df so we can select
+      # the spread()-ed columns we are about to create later.
+      # - 2 omits .dimensions and .value, which are the last two columns here
+      n_long_col = ncol(draws_for_nesting) - 2
+
+      draws_for_nesting = draws_for_nesting %>%
+        spread(".dimensions", ".value")
+
+      # 1:n_long_col selects .chain, .iteration, .draw, .variable, any
+      # dimension columns we *didn't* nest
+      long_draws = draws_for_nesting[,1:n_long_col]
+      long_draws[[".value"]] = map(1:nrow(draws_for_nesting), function(row) {
+        # -(1:n_long_col) omits .chain, .iteration, .draw, .variable, and any
+        # dimension columns we *aren't* nesting
+        unlist(draws_for_nesting[row, -(1:n_long_col)], use.names = FALSE)
+      })
+      if (length(nested_dimension_names) > 1) {
+        # more than one dimension, have to convert to arrays
+        long_draws[[".value"]] = map(long_draws[[".value"]], array, dim = nested_dimension_sizes)
+      }
+    }
+
+    long_draws %>%
       #now, make the value of each variable a column
       spread_(".variable", ".value") %>%
       #drop the columns that correpond to blank dimensions in the original spec
@@ -406,6 +465,15 @@ spread_draws_long_ = function(model, variable_names, dimension_names, regex = FA
 
 
 # helpers -----------------------------------------------------------------
+
+# get a string for printing variable names in specs for error
+printable_variable_names = function(variable_names) {
+  if (length(variable_names) == 1) {
+    variable_names
+  } else {
+    paste0("c(", paste0(variable_names, collapse = ","), ")")
+  }
+}
 
 # get all variable names from an expression
 # based on http://adv-r.had.co.nz/dsl.html
@@ -455,6 +523,7 @@ parse_variable_spec = function(variable_spec) {
 
       `[` = function(spec, ...) {
         dimension_names = as.character(substitute(list(...))[-1])
+
 
         list(
           spec[[1]],
