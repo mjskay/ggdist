@@ -669,6 +669,47 @@ plot_grid(ncol = 1, align = "v",
 )
 ```
 
+As [Michael Betancourt points out], the above display does not let you see the correlation between `P(cyl|mpg)` for different values of `cyl` at a particular value of `mpg`. For example, in the portion of the posterior where `P(cyl = 6|mpg = 20)` is high, `P(cyl = 4|mpg = 20)` and `P(cyl = 8|mpg = 20)` must be low (since these must add up to 1). 
+
+One way to see this correlation might be to employ [hypothetical outcome plots (HOPs)](https://doi.org/10.1371/journal.pone.0142444) just for the fit line, "detach"ing it from the ribbon (another alternative would be to use HOPs on top of line ensembles, as demonstrated earlier in this document). By employing animation, you can see how the lines move in tandem or opposition to each other, revealing some patterns in how they are correlated:
+
+
+```{r}
+ndraws = 50
+
+p = mtcars_clean %>%
+  data_grid(mpg = seq_range(mpg, n = 101)) %>%
+  add_fitted_draws(m_cyl, value = "P(cyl | mpg)", category = "cyl") %>%
+  ggplot(aes(x = mpg, y = `P(cyl | mpg)`, color = cyl)) +
+  # we remove the `.draw` column from the data for stat_lineribbon so that the same ribbons
+  # are drawn on every frame (since we use .draw to determine the transitions below)
+  stat_lineribbon(aes(fill = cyl), alpha = 1/5, color = NA, data = . %>% select(-.draw)) +
+  # we use sample_draws to subsample at the level of geom_line (rather than for the full dataset
+  # as in previous HOPs examples) because we need the full set of draws for stat_lineribbon above
+  geom_line(aes(group = paste(.draw, cyl)), size = 1, data = . %>% sample_draws(ndraws)) +
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  transition_manual(.draw)
+
+animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 192, res = 96, type = "cairo")
+```
+
+Notice how the lines move together, and how they move up or down together or in opposition. We could take a slice through these lines at an x position in the above chart (say, `mpg = 20`) and look at the correlation between them using a scatterplot matrix:
+
+```{r}
+tibble(mpg = 20) %>%
+  add_fitted_draws(m_cyl, value = "P(cyl | mpg = 20)", category = "cyl") %>%
+  ungroup() %>%
+  select(.draw, cyl, `P(cyl | mpg = 20)`) %>%
+  gather_pairs(cyl, `P(cyl | mpg = 20)`, triangle = "both") %>%
+  filter(.row != .col) %>%
+  ggplot(aes(.x, .y)) +
+  geom_point(alpha = 1/50) +
+  facet_grid(.row ~ .col) +
+  ylab("P(cyl = row | mpg = 20)") +
+  xlab("P(cyl = col | mpg = 20)")
+```
+
 While talking about the mean for an ordinal distribution often does not make sense, in this particular case one could argue that the expected number of cylinders for a car given its miles per gallon is a meaningful quantity. We could plot the posterior distribution for the average number of cylinders for a car given a particular miles per gallon as follows:
 
 $$
