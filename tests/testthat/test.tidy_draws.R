@@ -77,6 +77,10 @@ test_that("tidy_draws works with rstan", {
 
 # jags --------------------------------------------------------------------
 test_that("tidy_draws works with runjags", {
+  # runjags will still load without JAGS, it just fails later (so skipping on runjags alone will
+  # not work correctly if runjags is installed but the system does not have JAGS). So we skip if 
+  # rjags does not load as well, as rjags will correctly fail to load if JAGS isn't installed.
+  skip_if_not_installed("rjags")
   skip_if_not_installed("runjags")
 
   runjags::runjags.options(inits.warning = FALSE, nodata.warning = FALSE)
