@@ -26,13 +26,24 @@ mtcars_tbl = mtcars %>%
   as_tibble()
 
 
+
+# brms models -------------------------------------------------------------
+
+# this function removes unnecessary parts of brms fits that we don't use
+# during testing and which make the model files large (to decrease the
+# size of the package)
+strip_brms_model = function(m) {
+  slot(m$fit, "stanmodel", check = FALSE) = NULL
+  m
+}
+
+
 set.seed(94)
 brms.m_hp = brm(mpg ~ log(hp)*am, data = mtcars_tbl, chains = 2,
   warmup = 950, iter = 1000, family = "lognormal",
-  save_warmup = FALSE, save_dso = FALSE
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
 )
-slot(brms.m_hp$fit, "stanmodel", check = FALSE) = NULL
-saveRDS(brms.m_hp, "tests/models/models.brms.m_hp.rds", compress = "xz")
+saveRDS(strip_brms_model(brms.m_hp), "tests/models/models.brms.m_hp.rds", compress = "xz")
 
 
 set.seed(943)
@@ -40,26 +51,9 @@ brms.m_hp_sigma = brm(
   bf(mpg ~ log(hp), sigma ~ hp),
   prior = c(prior(normal(0, 1), class = b)),
   data = mtcars_tbl, chains = 2, warmup = 950, iter = 1000, family = lognormal,
-  save_warmup = FALSE, save_dso = FALSE
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
 )
-slot(brms.m_hp_sigma$fit, "stanmodel", check = FALSE) = NULL
-saveRDS(brms.m_hp_sigma, "tests/models/models.brms.m_hp_sigma.rds", compress = "xz")
-
-
-set.seed(9439)
-rstanarm.m_hp_wt = stan_glm(mpg ~ hp*wt, data = mtcars_tbl,
-  chains = 2, warmup = 950, iter = 1000,
-  save_warmup = FALSE
-)
-saveRDS(rstanarm.m_hp_wt, "tests/models/models.rstanarm.m_hp_wt.rds", compress = "xz")
-
-
-set.seed(94394)
-rstanarm.m_cyl = stan_glmer(mpg ~ (1|cyl), data = mtcars_tbl,
-  chains = 2, iter = 3000, warmup = 2950,
-  save_warmup = FALSE
-)
-saveRDS(rstanarm.m_cyl, "tests/models/models.rstanarm.m_cyl.rds", compress = "xz")
+saveRDS(strip_brms_model(brms.m_hp_sigma), "tests/models/models.brms.m_hp_sigma.rds", compress = "xz")
 
 
 set.seed(943943)
@@ -67,10 +61,9 @@ brms.m_cyl_mpg = brm(ordered(paste0("c", cyl)) ~ mpg, data = mtcars_tbl,
   chains = 2, iter = 500, warmup = 450,
   family = cumulative("logit"),
   prior = prior(normal(0,1), class = b),
-  save_warmup = FALSE, save_dso = FALSE
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
 )
-slot(brms.m_cyl_mpg$fit, "stanmodel", check = FALSE) = NULL
-saveRDS(brms.m_cyl_mpg, "tests/models/models.brms.m_cyl_mpg.rds", compress = "xz")
+saveRDS(strip_brms_model(brms.m_cyl_mpg), "tests/models/models.brms.m_cyl_mpg.rds", compress = "xz")
 
 
 # simple nlpars brms model
@@ -83,10 +76,9 @@ prior_nlpar = c(prior(normal(1, 2), nlpar = "b1"), prior(normal(0, 2), nlpar = "
 brms.m_nlpar = brm(bf(y ~ b1 * exp(b2 * x), b1 + b2 ~ 1, nl = TRUE), data = df_nlpar,
   prior = prior_nlpar,
   chains = 2, warmup = 150, iter = 200,
-  save_warmup = FALSE, save_dso = FALSE
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
 )
-slot(brms.m_nlpar$fit, "stanmodel", check = FALSE) = NULL
-saveRDS(brms.m_nlpar, "tests/models/models.brms.m_nlpar.rds", compress = "xz")
+saveRDS(strip_brms_model(brms.m_nlpar), "tests/models/models.brms.m_nlpar.rds", compress = "xz")
 
 
 # simple brms model with multiple dpars
@@ -108,10 +100,9 @@ brms.m_dpars <- brm(
     prior(normal(0, 1), Intercept, dpar = mu2),
     prior(normal(0, 1), dpar = mu2)),
   warmup = 150, iter = 200, chains = 2,
-  save_warmup = FALSE, save_dso = FALSE
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
 )
-slot(brms.m_dpars$fit, "stanmodel", check = FALSE) = NULL
-saveRDS(brms.m_dpars, "tests/models/models.brms.m_dpars.rds", compress = "xz")
+saveRDS(strip_brms_model(brms.m_dpars), "tests/models/models.brms.m_dpars.rds", compress = "xz")
 
 
 # brms model with random intercept
@@ -132,11 +123,41 @@ brms.m_ranef = brm(
   ),
   control = list(adapt_delta = 0.95),
   warmup = 950, iter = 1000, chains = 2,
-  save_warmup = FALSE, save_dso = FALSE
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
 )
-slot(brms.m_ranef$fit, "stanmodel", check = FALSE) = NULL
-saveRDS(brms.m_ranef, "tests/models/models.brms.m_ranef.rds", compress = "xz")
+saveRDS(strip_brms_model(brms.m_ranef), "tests/models/models.brms.m_ranef.rds", compress = "xz")
 
+
+# simple dirichlet model for testing prediction / fit output,
+# see https://github.com/mjskay/tidybayes/issues/164
+set.seed(1234)
+dirich_df = tibble(x = rep(c("A", "B"), each = 10))
+dirich_df$Y = as.matrix(rdirichlet(20, c(1,2,1)))
+dimnames(dirich_df$Y) = list(NULL, c("y1", "y2", "y3"))
+
+brms.m_dirich = brm(Y ~ x, family = dirichlet(), data = dirich_df, 
+  warmup = 950, iter = 1000, chains = 2,
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
+)
+saveRDS(strip_brms_model(brms.m_dirich), "tests/models/models.brms.m_dirich.rds", compress = "xz")
+
+
+# rstanarm models ---------------------------------------------------------
+
+set.seed(9439)
+rstanarm.m_hp_wt = stan_glm(mpg ~ hp*wt, data = mtcars_tbl,
+  chains = 2, warmup = 950, iter = 1000,
+  save_warmup = FALSE
+)
+saveRDS(rstanarm.m_hp_wt, "tests/models/models.rstanarm.m_hp_wt.rds", compress = "xz")
+
+
+set.seed(94394)
+rstanarm.m_cyl = stan_glmer(mpg ~ (1|cyl), data = mtcars_tbl,
+  chains = 2, iter = 3000, warmup = 2950,
+  save_warmup = FALSE
+)
+saveRDS(rstanarm.m_cyl, "tests/models/models.rstanarm.m_cyl.rds", compress = "xz")
 
 #rstanarm model with random intercept
 set.seed(48431)
