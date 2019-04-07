@@ -49,7 +49,7 @@ Suggests:
     MCMCglmm,
     bayesplot,
     modelr,
-    brms (>= 2.4.3),
+    brms (>= 2.8.0),
     cowplot,
     ggridges,
     covr,

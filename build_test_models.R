@@ -135,7 +135,7 @@ dirich_df = tibble(x = rep(c("A", "B"), each = 10))
 dirich_df$Y = as.matrix(rdirichlet(20, c(1,2,1)))
 dimnames(dirich_df$Y) = list(NULL, c("y1", "y2", "y3"))
 
-brms.m_dirich = brm(Y ~ x, family = dirichlet(), data = dirich_df, 
+brms.m_dirich = brm(Y ~ x, family = dirichlet(), data = dirich_df,
   warmup = 950, iter = 1000, chains = 2,
   save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
 )

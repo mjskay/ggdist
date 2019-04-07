@@ -160,6 +160,7 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate sample_n ungroup group_by
 #' @importFrom stats fitted predict
+#' @importFrom rlang is_integerish
 #' @export
 add_predicted_draws = function(newdata, model, prediction = ".prediction", ..., n = NULL, seed = NULL, re_formula = NULL, category = ".category") {
   predicted_draws(model, newdata, prediction, ..., n = n, seed = seed, re_formula = re_formula, category = category)
@@ -254,9 +255,13 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
   fits_preds_df$.draw = as.integer(fits_preds_df$.draw)
 
   #for predictions from categorical models in brms, we can use the "levels" attribute
-  #to recover the original factor levels
+  #to recover the original factor levels. But we must be careful: dirichlet models also
+  #get this attribute set, so we must also test that responses are all positive integer values.
   prediction_levels = attr(fits_preds, "levels", exact = TRUE)
-  if (!is.null(prediction_levels)) {
+  if (!is.null(prediction_levels) &
+      is_integerish(fits_preds_df[[output_name]]) &
+      all(fits_preds_df[[output_name]] >= 1)
+    ) {
     fits_preds_df[[output_name]] = factor(
       fits_preds_df[[output_name]],
       levels = seq_along(prediction_levels),

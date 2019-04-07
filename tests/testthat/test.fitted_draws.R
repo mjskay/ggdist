@@ -283,6 +283,25 @@ test_that("[add_]fitted_draws works on brms models with categorical outcomes (li
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg, scale = "linear"), ref)
 })
 
+test_that("[add_]fitted_draws works on brms models with dirichlet outcomes (response scale)", {
+  skip_if_not_installed("brms")
+  m_dirich = readRDS("../models/models.brms.m_dirich.rds")
+
+  grid = tibble(x = c("A", "B"))
+  fits = fitted(m_dirich, grid, summary = FALSE) %>%
+    array2df(list(.draw = NA, .row = NA, .category = TRUE), label.x = ".value") %>%
+    mutate(
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
+      .row = as.integer(.row),
+      .draw = as.integer(.draw)
+    )
+
+  ref = inner_join(grid %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
+
+  expect_equal(fitted_draws(m_dirich, grid), ref)
+})
+
 
 test_that("[add_]fitted_draws allows extraction of dpar on brms models with categorical outcomes (linear scale)", {
   skip_if_not_installed("brms")
