@@ -27,16 +27,28 @@ mtcars_tbl = mtcars %>%
 
 
 
-# brms models -------------------------------------------------------------
+# stripping functions -----------------------------------------------------
 
-# this function removes unnecessary parts of brms fits that we don't use
+# this function removes unnecessary parts of stan models that we don't use
 # during testing and which make the model files large (to decrease the
 # size of the package)
-strip_brms_model = function(m) {
-  slot(m$fit, "stanmodel", check = FALSE) = NULL
+strip_stan_model = function(m) {
+  slot(m, "stanmodel", check = FALSE) = NULL
   m
 }
 
+strip_brms_model = function(m) {
+  m$fit = strip_stan_model(m$fit)
+  m
+}
+
+strip_rstanarm_model = function(m) {
+  m$stanfit = strip_stan_model(m$stanfit)
+  m
+}
+
+
+# brms models -------------------------------------------------------------
 
 set.seed(94)
 brms.m_hp = brm(mpg ~ log(hp)*am, data = mtcars_tbl, chains = 2,
@@ -149,7 +161,7 @@ rstanarm.m_hp_wt = stan_glm(mpg ~ hp*wt, data = mtcars_tbl,
   chains = 2, warmup = 950, iter = 1000,
   save_warmup = FALSE
 )
-saveRDS(rstanarm.m_hp_wt, "tests/models/models.rstanarm.m_hp_wt.rds", compress = "xz")
+saveRDS(strip_rstanarm_model(rstanarm.m_hp_wt), "tests/models/models.rstanarm.m_hp_wt.rds", compress = "xz")
 
 
 set.seed(94394)
@@ -157,7 +169,7 @@ rstanarm.m_cyl = stan_glmer(mpg ~ (1|cyl), data = mtcars_tbl,
   chains = 2, iter = 3000, warmup = 2950,
   save_warmup = FALSE
 )
-saveRDS(rstanarm.m_cyl, "tests/models/models.rstanarm.m_cyl.rds", compress = "xz")
+saveRDS(strip_rstanarm_model(rstanarm.m_cyl), "tests/models/models.rstanarm.m_cyl.rds", compress = "xz")
 
 #rstanarm model with random intercept
 set.seed(48431)
@@ -167,7 +179,7 @@ rstanarm.m_ranef = stan_glmer(
   warmup = 150, iter = 200, chains = 2,
   save_warmup = FALSE
 )
-saveRDS(rstanarm.m_ranef, "tests/models/models.rstanarm.m_ranef.rds", compress = "xz")
+saveRDS(strip_rstanarm_model(rstanarm.m_ranef), "tests/models/models.rstanarm.m_ranef.rds", compress = "xz")
 
 
 # Stan models -----------------------------------------------------------------
@@ -222,4 +234,4 @@ rstan.m_ABC = stan(model_code = "
   warmup = 2950, iter = 3000, chains = 2,
   save_warmup = FALSE, save_dso = FALSE
 )
-saveRDS(rstan.m_ABC, "tests/models/models.rstan.m_ABC.rds", compress = "xz")
+saveRDS(strip_stan_model(rstan.m_ABC), "tests/models/models.rstan.m_ABC.rds", compress = "xz")
