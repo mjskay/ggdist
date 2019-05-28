@@ -1,6 +1,6 @@
 language: r
 r: release
-sudo: false
+sudo: true
 cache: packages
 
 warnings_are_errors: TRUE
@@ -13,20 +13,47 @@ addons:
     packages:
       - jags
 
+r_binary_packages:
+  - plyr
+  - dplyr
+  - tidyr
+  - ggplot2
+  - stringi
+  - LaplacesDemon
+  - coda
+  - purrr
+  - rlang
+  - ggstance
+  - forcats
+  - tidyselect
+  - tibble
+  - magrittr
+  - knitr
+  - testthat
+  - svglite
+  - rstan
+  - runjags
+  - rjags
+  - jagsUI
+  - rstanarm
+  - emmeans
+  - broom
+  - MCMCglmm
+  - bayesplot
+  - modelr
+  - brms
+  - cowplot
+  - ggridges
+  - covr
+  - gdtools
+  - rmarkdown
+  - ggrepel
+  - bindrcpp
+  - RColorBrewer
+  - gganimate
+  - png
+
 env:
   global:
-    - CXX_OLEVEL=2 CXX=clang++
     - _R_CHECK_FORCE_SUGGESTS_=FALSE
     - NOT_CRAN=true
-
-before_install:
-  - mkdir -p ~/.R/
-  - echo "CXX = `R CMD config CXX`" >> ~/.R/Makevars
-  - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ~/.R/Makevars
-  - export CLANG_EXTRA_ARG=""
-  - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
-  - sed -i.bak "s/ g++/ ${CXX}${CLANG_EXTRA_ARG}/" ~/.R/Makevars
-  - sed -i.bak "s/O[0-3]/O$CXX_OLEVEL/" ~/.R/Makevars
-
-# after_success:
-#   - Rscript -e 'covr::codecov()'
