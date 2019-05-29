@@ -412,45 +412,7 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
 
     if (length(nested_dimension_names) > 0) {
       # some dimensions were requested to be nested as list columns containing arrays
-
-      # first, figure out the size of each dimension, in the order we will arrange them
-      nested_dimension_sizes = long_draws %>%
-        summarise_at(nested_dimension_names, ~ length(unique(.x))) %>%
-        unlist(use.names = FALSE)
-
-      # now we'll create a wide-format data frame where each row has all of the value of
-      # the array we are going to nest in that row in the same order that the array()
-      # function assumes arrays are laid out so that we can easily use array() to do the
-      # nesting
-      draws_for_nesting = long_draws %>%
-        # must reverse the order of the dimensions here because array() treats the
-        # leftmost dimension as moving fastest.
-        arrange(!!!syms(rev(nested_dimension_names))) %>%
-        unite(".dimensions", !!!nested_dimension_names, sep = ",") %>%
-        # have to make .dimensions a factor with the order the levels appear in the data
-        # (due to the arrange() call above) so that the order is preserved on spread()
-        mutate(.dimensions = factor(.dimensions, levels = unique(.dimensions)))
-
-      # need to save the number of columns in the long-format df so we can select
-      # the spread()-ed columns we are about to create later.
-      # - 2 omits .dimensions and .value, which are the last two columns here
-      n_long_col = ncol(draws_for_nesting) - 2
-
-      draws_for_nesting = draws_for_nesting %>%
-        spread(".dimensions", ".value")
-
-      # 1:n_long_col selects .chain, .iteration, .draw, .variable, any
-      # dimension columns we *didn't* nest
-      long_draws = draws_for_nesting[,1:n_long_col]
-      long_draws[[".value"]] = map(1:nrow(draws_for_nesting), function(row) {
-        # -(1:n_long_col) omits .chain, .iteration, .draw, .variable, and any
-        # dimension columns we *aren't* nesting
-        unlist(draws_for_nesting[row, -(1:n_long_col)], use.names = FALSE)
-      })
-      if (length(nested_dimension_names) > 1) {
-        # more than one dimension, have to convert to arrays
-        long_draws[[".value"]] = map(long_draws[[".value"]], array, dim = nested_dimension_sizes)
-      }
+      long_draws = nest_dimensions_(long_draws, temp_dimension_names, nested_dimension_names)
     }
 
     long_draws %>%
@@ -461,6 +423,134 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
       #group by the desired dimensions so that we return a pre-grouped data frame to the user
       group_by_at(dimension_names)
   }
+}
+
+
+## Nest some dimensions of a variable into list columns (for x[.,.] syntax in gather/spread_draws)
+## long_draws: long draws in the internal long draws format from spread_draws_long_
+## dimension_names: dimensions not used for nesting
+## nested_dimension_names: dimensions to be nested
+nest_dimensions_fast_ = function(long_draws, dimension_names, nested_dimension_names) {
+  # first, figure out the size of each dimension, in the order we will arrange them
+  nested_dimension_sizes = long_draws %>%
+    summarise_at(nested_dimension_names, ~ length(unique(.x))) %>%
+    unlist(use.names = FALSE)
+
+  # now we'll create a wide-format data frame where each row has all of the value of
+  # the array we are going to nest in that row in the same order that the array()
+  # function assumes arrays are laid out so that we can easily use array() to do the
+  # nesting
+  draws_for_nesting = long_draws %>%
+    # must reverse the order of the dimensions here because array() treats the
+    # leftmost dimension as moving fastest.
+    arrange(!!!syms(rev(nested_dimension_names))) %>%
+    unite(".dimensions", !!!nested_dimension_names, sep = ",") %>%
+    # have to make .dimensions a factor with the order the levels appear in the data
+    # (due to the arrange() call above) so that the order is preserved on spread()
+    mutate(.dimensions = factor(.dimensions, levels = unique(.dimensions)))
+
+  # need to save the number of columns in the long-format df so we can select
+  # the spread()-ed columns we are about to create later.
+  # - 2 omits .dimensions and .value, which are the last two columns here
+  n_long_col = ncol(draws_for_nesting) - 2
+
+  draws_for_nesting = draws_for_nesting %>%
+    spread(".dimensions", ".value")
+
+  # 1:n_long_col selects .chain, .iteration, .draw, .variable, any
+  # dimension columns we *didn't* nest
+  long_draws = draws_for_nesting[,1:n_long_col]
+  long_draws[[".value"]] = map(1:nrow(draws_for_nesting), function(row) {
+    # -(1:n_long_col) omits .chain, .iteration, .draw, .variable, and any
+    # dimension columns we *aren't* nesting
+    unlist(draws_for_nesting[row, -(1:n_long_col)], use.names = FALSE)
+  })
+  if (length(nested_dimension_names) > 1) {
+    # more than one dimension, have to convert to arrays
+    long_draws[[".value"]] = map(long_draws[[".value"]], array, dim = nested_dimension_sizes)
+  }
+
+  long_draws
+}
+
+
+## Nest some dimensions of a variable into list columns (for x[.,.] syntax in gather/spread_draws)
+## long_draws: long draws in the internal long draws format from spread_draws_long_
+## dimension_names: dimensions not used for nesting
+## nested_dimension_names: dimensions to be nested
+nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names) {
+  ragged = FALSE
+  value_name = ".value"
+  value = as.name(value_name)
+
+  long_draws %<>%
+    # must sort dimensions to ensure they are extracted in the appropriate order
+    arrange(!!!syms(nested_dimension_names)) %>%
+    group_by_at(
+      c(".chain", ".iteration", ".draw", ".variable", dimension_names) %>%
+      # nested dimension names must come at the end of the group list
+      # (minus the last nested dimension) so that we summarise in the
+      # correct order
+      setdiff(nested_dimension_names) %>%
+      c(nested_dimension_names[-length(nested_dimension_names)])
+    )
+
+  # go from last dimension up
+  nested_dimension_names = rev(nested_dimension_names)
+
+  for (i in seq_along(nested_dimension_names)) {
+    dimension_name = nested_dimension_names[[i]]
+    dimension = as.name(dimension_name)
+
+    long_draws %<>%
+      summarise_at(c(dimension_name, value_name), list)
+
+    #this array is ragged if any previous dimension was ragged or if all the indices on the current dimension are not all equal
+    ragged = ragged ||
+      !all_elements_identical(filter(long_draws, .draw == .draw[[1]])[[dimension_name]])
+
+    # pull out the indices from the first draw to verify we can use them as array indices
+    first_indices = long_draws[[dimension_name]][[1]]
+    if (!ragged &&
+      identical(first_indices, seq_along(first_indices))
+    ) {
+      # array is not ragged and indices are integers from 1:N, so we can just stuff the values into arrays
+
+      if (i != 1) {
+        # for everything but the first dimension, we have to bind the arrays together
+        # for the first dimension, the summarise above will have already turned it
+        # into a vector, so we don't have to do anything here
+        long_draws %<>% mutate(
+          !!value := map(!!value, abind, along = 0)
+        )
+      }
+    } else if (ragged) {
+      # array is ragged, let's figure out what our indices are for this dimension...
+      indices = long_draws %>%
+        filter(.draw == .draw[[1]]) %$%
+        reduce(dimension_name, union)
+    }
+
+    if (ragged) {
+      # array is ragged, so put it together as nested lists
+      if (is.character(first_indices)) {
+        # indices are strings, so just update the names of the list
+        long_draws %<>% mutate(
+          !!value := map2(!!value, !!dimension, set_names)
+        )
+      } else if (!identical(first_indices, seq_along(first_indices))) {
+        # not all indices are present from 1:N, so we have to manually re-index to make sure things line up
+        long_draws %<>% mutate(
+          !!value := map2(!!dimension, !!value, reduce2, function(l, x, y) {l[[x]] <- y; l}, .init = list())
+        )
+      } # else => the dimensions at this level are all integers from 1:N,
+        # so the list-summarized version is already correct and we don't have to do anything else
+    }
+
+    long_draws[[dimension_name]] = NULL
+  }
+
+  ungroup(long_draws)
 }
 
 
@@ -495,6 +585,20 @@ all_names <- function(x) {
     stop("Don't know how to handle type `", typeof(x), "`",
       call. = FALSE)
   }
+}
+
+# return TRUE if all elements of the provided list are identical
+all_elements_identical = function(.list) {
+  if (length(.list) == 0) {
+    return(TRUE)
+  }
+
+  first = .list[[1]]
+  for (e in .list) {
+    if (!identical(e, first)) return(FALSE)
+  }
+
+  TRUE
 }
 
 #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
