@@ -12,6 +12,9 @@ addons:
   apt:
     packages:
       - jags
+      - cargo           # for gifski
+      - libudunits2-dev # for units (transformr)
+      - libgdal-dev     # for sf (transformr)
 
 r_binary_packages:
   - plyr
