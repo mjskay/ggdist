@@ -5,7 +5,6 @@
 
 library(dplyr)
 library(tidyr)
-library(abind)
 
 context("spread_draws")
 
@@ -319,6 +318,16 @@ test_that("variable names containing regex special chars work", {
   expect_equal(spread_draws(RankCorr_t, `(Intercept)`), ref)
 })
 
+# test_draws = tibble(
+#   .chain = NA, .iteration = NA, .draw = 1,
+#   `x[1,a]`  = 12,
+#   `x[1,3]`  = 13,
+#   `x[2,0]`  = 22,
+#   `x[2,3]`  = 23,
+# ) %>%
+#   rbind(. + 10)
+
+
 test_that("nested matrices are correctly extracted", {
   test_draws = tibble(
     .chain = NA, .iteration = NA, .draw = 1,
@@ -345,35 +354,42 @@ test_that("nested matrices are correctly extracted", {
   ) %>%
     rbind(. + 10)
 
+  null_dimnames = function(v) {
+    dimnames(v) = list(NULL, NULL)
+    v
+  }
+
   expect_equal(spread_draws_long_(test_draws, "x", c("i","."))[["x"]][[2]], 2:11)
-  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[1]], abind(list(1:10, 2:11), along = 0))
-  expect_equal(spread_draws_long_(test_draws, "x", c("1","2"))[["x"]][[1]], abind(list(1:10, 2:11), along = 0))
-  expect_equal(spread_draws_long_(test_draws, "x", c("2","1"))[["x"]][[1]], abind(list(1:10, 2:11), along = 2))
-  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[2]], abind(list(11:20, 12:21), along = 0))
-  expect_equal(spread_draws_long_(test_draws, "x", c("2","1"))[["x"]][[2]], abind(list(11:20, 12:21), along = 2))
+  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[1]], null_dimnames(rbind(1:10, 2:11)))
+  expect_equal(spread_draws_long_(test_draws, "x", c("1","2"))[["x"]][[1]], null_dimnames(rbind(1:10, 2:11)))
+  expect_equal(spread_draws_long_(test_draws, "x", c("2","1"))[["x"]][[1]], null_dimnames(cbind(1:10, 2:11)))
+  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[2]], null_dimnames(rbind(11:20, 12:21)))
+  expect_equal(spread_draws_long_(test_draws, "x", c("2","1"))[["x"]][[2]], null_dimnames(cbind(11:20, 12:21)))
 })
 
 test_that("nested 3d arrays are correctly extracted", {
   test_draws = tibble(
     .chain = NA, .iteration = NA, .draw = 1,
-    `x[1,1,1]`  = 1,
-    `x[1,1,2]`  = 2,
-    `x[1,1,3]`  = 3,
-    `x[1,2,1]`  = 4,
-    `x[1,2,2]`  = 5,
-    `x[1,2,3]`  = 6,
-    `x[2,2,1]`  = 14,
-    `x[2,2,2]`  = 15,
-    `x[2,2,3]`  = 16,
-    `x[2,1,1]`  = 11,
-    `x[2,1,2]`  = 12,
-    `x[2,1,3]`  = 13
+    `x[1,1,1]`  = 111,
+    `x[1,1,2]`  = 112,
+    `x[1,1,3]`  = 113,
+    `x[1,2,1]`  = 121,
+    `x[1,2,2]`  = 122,
+    `x[1,2,3]`  = 123,
+    `x[2,2,1]`  = 221,
+    `x[2,2,2]`  = 222,
+    `x[2,2,3]`  = 223,
+    `x[2,1,1]`  = 211,
+    `x[2,1,2]`  = 212,
+    `x[2,1,3]`  = 213
   ) %>%
     rbind(. + 10)
 
-  expect_equal(spread_draws_long_(test_draws, "x", c(".",".","."))[["x"]][[1]],
-    #column-major order of the above 3d array
-    abind(array(c(1, 11, 4, 14, 2, 12, 5, 15, 3, 13, 6, 16), dim = c(2,2,3))))
+  #column-major order of the above 3d array
+  ref = array(c(111, 211, 121, 221, 112, 212, 122, 222, 113, 213, 123, 223), dim = c(2,2,3))
+  dimnames(ref) = list(NULL, NULL, NULL)
+
+  expect_equal(spread_draws_long_(test_draws, "x", c(".",".","."))[["x"]][[1]], ref)
 })
 
 test_that("nested matrices with multiple variables are correctly extracted", {
@@ -398,6 +414,8 @@ test_that("nested matrices with multiple variables are correctly extracted", {
   ) %>%
     rbind(. + 10)
 
-  expect_equal(spread_draws_long_(test_draws, c("x", "y"), c(".","."))[["y"]][[1]],
-    abind(list(11:14, 15:18), along = 0))
+  ref = rbind(11:14, 15:18)
+  dimnames(ref) = list(NULL, NULL)
+
+  expect_equal(spread_draws_long_(test_draws, c("x", "y"), c(".","."))[["y"]][[1]], ref)
 })

@@ -430,54 +430,6 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
 ## long_draws: long draws in the internal long draws format from spread_draws_long_
 ## dimension_names: dimensions not used for nesting
 ## nested_dimension_names: dimensions to be nested
-nest_dimensions_fast_ = function(long_draws, dimension_names, nested_dimension_names) {
-  # first, figure out the size of each dimension, in the order we will arrange them
-  nested_dimension_sizes = long_draws %>%
-    summarise_at(nested_dimension_names, ~ length(unique(.x))) %>%
-    unlist(use.names = FALSE)
-
-  # now we'll create a wide-format data frame where each row has all of the value of
-  # the array we are going to nest in that row in the same order that the array()
-  # function assumes arrays are laid out so that we can easily use array() to do the
-  # nesting
-  draws_for_nesting = long_draws %>%
-    # must reverse the order of the dimensions here because array() treats the
-    # leftmost dimension as moving fastest.
-    arrange(!!!syms(rev(nested_dimension_names))) %>%
-    unite(".dimensions", !!!nested_dimension_names, sep = ",") %>%
-    # have to make .dimensions a factor with the order the levels appear in the data
-    # (due to the arrange() call above) so that the order is preserved on spread()
-    mutate(.dimensions = factor(.dimensions, levels = unique(.dimensions)))
-
-  # need to save the number of columns in the long-format df so we can select
-  # the spread()-ed columns we are about to create later.
-  # - 2 omits .dimensions and .value, which are the last two columns here
-  n_long_col = ncol(draws_for_nesting) - 2
-
-  draws_for_nesting = draws_for_nesting %>%
-    spread(".dimensions", ".value")
-
-  # 1:n_long_col selects .chain, .iteration, .draw, .variable, any
-  # dimension columns we *didn't* nest
-  long_draws = draws_for_nesting[,1:n_long_col]
-  long_draws[[".value"]] = map(1:nrow(draws_for_nesting), function(row) {
-    # -(1:n_long_col) omits .chain, .iteration, .draw, .variable, and any
-    # dimension columns we *aren't* nesting
-    unlist(draws_for_nesting[row, -(1:n_long_col)], use.names = FALSE)
-  })
-  if (length(nested_dimension_names) > 1) {
-    # more than one dimension, have to convert to arrays
-    long_draws[[".value"]] = map(long_draws[[".value"]], array, dim = nested_dimension_sizes)
-  }
-
-  long_draws
-}
-
-
-## Nest some dimensions of a variable into list columns (for x[.,.] syntax in gather/spread_draws)
-## long_draws: long draws in the internal long draws format from spread_draws_long_
-## dimension_names: dimensions not used for nesting
-## nested_dimension_names: dimensions to be nested
 nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names) {
   ragged = FALSE
   value_name = ".value"
@@ -505,46 +457,71 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
     long_draws %<>%
       summarise_at(c(dimension_name, value_name), list)
 
-    #this array is ragged if any previous dimension was ragged or if all the indices on the current dimension are not all equal
-    ragged = ragged ||
-      !all_elements_identical(filter(long_draws, .draw == .draw[[1]])[[dimension_name]])
-
     # pull out the indices from the first draw to verify we can use them as array indices
-    first_indices = long_draws[[dimension_name]][[1]]
-    if (!ragged &&
-      identical(first_indices, seq_along(first_indices))
-    ) {
-      # array is not ragged and indices are integers from 1:N, so we can just stuff the values into arrays
+    first_draw_indices = filter(long_draws, .draw == .draw[[1]])[[dimension_name]]
 
-      if (i != 1) {
-        # for everything but the first dimension, we have to bind the arrays together
-        # for the first dimension, the summarise above will have already turned it
-        # into a vector, so we don't have to do anything here
-        long_draws %<>% mutate(
-          !!value := map(!!value, abind, along = 0)
-        )
-      }
-    } else if (ragged) {
-      # array is ragged, let's figure out what our indices are for this dimension...
-      indices = long_draws %>%
-        filter(.draw == .draw[[1]]) %$%
-        reduce(dimension_name, union)
-    }
+    #this array is ragged if any of the indices on the current dimension are not all equal
+    ragged = !all_elements_identical(first_draw_indices)
+    reindex = ragged
 
     if (ragged) {
-      # array is ragged, so put it together as nested lists
-      if (is.character(first_indices)) {
-        # indices are strings, so just update the names of the list
+      # this is ragged, so first we'll combine all the valid indices of this dimension together
+      indices = reduce(first_draw_indices, union)
+    } else {
+      # this is not ragged, so we can just use the first value of indices
+      indices = first_draw_indices[[1]]
+    }
+    # must sort dimensions to ensure they are extracted in the appropriate order
+    indices = sort(indices)
+
+    if (!ragged) {
+      # array is not ragged, so combining should be easy...
+      if (is.character(first_draw_indices)) {
+        # indices are strings, so update the names before we combine
         long_draws %<>% mutate(
           !!value := map2(!!value, !!dimension, set_names)
         )
-      } else if (!identical(first_indices, seq_along(first_indices))) {
-        # not all indices are present from 1:N, so we have to manually re-index to make sure things line up
-        long_draws %<>% mutate(
-          !!value := map2(!!dimension, !!value, reduce2, function(l, x, y) {l[[x]] <- y; l}, .init = list())
-        )
-      } # else => the dimensions at this level are all integers from 1:N,
-        # so the list-summarized version is already correct and we don't have to do anything else
+      } else if (!identical(first_draw_indices[[1]], seq_along(first_draw_indices[[1]]))) {
+        if (min(indices) < 1 || !is_integerish(indices)) {
+          # indices are not an integer sequence >= 1, convert to strings
+          indices = as.character(indices)
+        } else {
+          # force indices to start at 1
+          indices = seq_len(max(indices))
+        }
+        # this is a numeric index and not all indices are present from 1:N,
+        # so we have to manually re-index to make sure things line up
+        reindex = TRUE
+      }
+    }
+
+    if (reindex) {
+      #create a template list that we can use to re-index the values
+      template_vector = long_draws[[value_name]][[1]][[1]]
+      template_vector[] = NA
+      template_list = replicate(length(indices), template_vector, simplify = FALSE)
+      if (is.character(indices)) {
+        names(template_list) = indices
+      }
+
+      #then we'll re-index each value
+      long_draws[[value_name]] =
+        map2(long_draws[[dimension_name]], long_draws[[value_name]], function(indices, old_value) {
+          new_value = template_list
+          new_value[indices] = old_value
+          new_value
+        })
+    }
+
+    # at this point each element at this level should be appropriately named and indexed, so we
+    # can go ahead and combine the vectors.
+
+    # for everything but the first dimension, we bind before the first dimension. This ensures
+    # that the first dimension creates a vector (not a Nx1 array), which is what we want if
+    # there is only one dimension.
+    along = ifelse(i == 1, 1, 0)
+    if (i != 1) {
+      long_draws[[value_name]] = map(long_draws[[value_name]], abind0)
     }
 
     long_draws[[dimension_name]] = NULL
@@ -599,6 +576,39 @@ all_elements_identical = function(.list) {
   }
 
   TRUE
+}
+
+# a faster version of abind::abind(..., along = 0)
+abind0 = function(vectors) {
+  if (!is.list(vectors)) {
+    return(vectors)
+  }
+  if (length(vectors) == 1) {
+    return(vectors[[1]])
+  }
+
+  first_vector = vectors[[1]]
+  if (is.null(dim(first_vector))) {
+    inner_dim = length(first_vector)
+    inner_dimnames = list(names(first_vector))
+  } else {
+    inner_dim = dim(first_vector)
+    inner_dimnames = dimnames(vectors[[1]]) %||%
+      replicate(length(inner_dim), NULL)
+  }
+
+  dim. = c(inner_dim, length(vectors))
+
+  outer_dimnames = list(names(vectors))
+  dimnames. = c(outer_dimnames, inner_dimnames)
+
+  perm = c(length(dim.), seq_len(length(dim.) - 1))
+  x = aperm(
+    array(unlist(vectors, recursive = FALSE), dim = dim.),
+    perm = perm
+  )
+  dimnames(x) = dimnames.
+  x
 }
 
 #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
