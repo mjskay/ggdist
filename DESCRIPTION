@@ -14,7 +14,7 @@ Description: Compose data for and extract, manipulate, and visualize posterior d
     common visualization primitives like points with multiple uncertainty intervals, eye plots (intervals plus
     densities), and fit curves with multiple, arbitrary uncertainty bands.
 Depends:
-    R (>= 2.10)
+    R (>= 3.5.0)
 Imports:
     plyr,
     dplyr (>= 0.8.0),
