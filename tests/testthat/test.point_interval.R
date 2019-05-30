@@ -214,7 +214,7 @@ test_that("multiple-response intervals work", {
     summarise(
       .lower = list(hdi(x, .width = .5)[, 1]),
       .upper = list(hdi(x, .width = .5)[, 2]),
-      x = LaplacesDemon::Mode(x),
+      x = Mode(x),
       .width = .5,
       .point = "mode",
       .interval = "hdi"

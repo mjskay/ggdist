@@ -337,12 +337,24 @@ hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
 
 #' @export
 #' @rdname point_interval
+#' @importFrom rlang is_integerish
 Mode = function(x, na.rm = FALSE) {
-  if (!na.rm && any(is.na(x))) {
+  if (na.rm) {
+    x = x[!is.na(x)]
+  }
+  else if (any(is.na(x))) {
     return(NA_real_)
   }
 
-  LaplacesDemon::Mode(x)
+  if (is_integerish(x)) {
+    # for the discrete case, based on https://stackoverflow.com/a/8189441
+    ux = unique(x)
+    ux[which.max(tabulate(match(x, ux)))]
+  } else {
+    # for the continuous case
+    d = density(x)
+    d$x[which.max(d$y)]
+  }
 }
 
 #' @export

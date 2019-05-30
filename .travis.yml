@@ -21,7 +21,6 @@ r_binary_packages:
   - dplyr
   - tidyr
   - ggplot2
-  - LaplacesDemon
   - coda
   - purrr
   - rlang

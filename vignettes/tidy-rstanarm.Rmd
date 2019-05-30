@@ -617,8 +617,8 @@ esoph %>%
   inner_join(thresholds, by = ".draw") %>%
   mutate(`P(Y = category)` = map2(threshold, .value, function(alpha, beta_x)
       # this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)
-      LaplacesDemon::invlogit(alpha - beta_x) - 
-      LaplacesDemon::invlogit(lag(alpha, default = -Inf) - beta_x)
+      plogis(alpha - beta_x) - 
+      plogis(lag(alpha, default = -Inf) - beta_x)
     )) %>%
   mutate(.category = list(levels(esoph$tobgp))) %>%
   unnest() %>%
@@ -637,8 +637,8 @@ esoph %>%
   inner_join(thresholds, by = ".draw") %>%
   mutate(`P(Y = category)` = map2(threshold, .value, function(alpha, beta_x)
       # this part is logit^-1(alpha_j - beta*x) - logit^-1(alpha_j-1 - beta*x)
-      LaplacesDemon::invlogit(alpha - beta_x) - 
-      LaplacesDemon::invlogit(lag(alpha, default = -Inf) - beta_x)
+      plogis(alpha - beta_x) - 
+      plogis(lag(alpha, default = -Inf) - beta_x)
     )) %>%
   mutate(.category = list(levels(esoph$tobgp))) %>%
   unnest() %>%
