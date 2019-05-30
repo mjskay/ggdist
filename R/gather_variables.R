@@ -91,7 +91,6 @@ gather_terms = function(...) {
 #'   median_qi()
 #'
 #' }
-#' @importFrom stringi stri_detect_regex
 #' @importFrom magrittr %>%
 #' @importFrom purrr map
 #' @importFrom tidyr gather

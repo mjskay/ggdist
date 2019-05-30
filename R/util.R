@@ -12,9 +12,8 @@ deparse0 = function(expr, width.cutoff = 500, ...) {
 
 # Based on https://stackoverflow.com/a/14838753
 # Escapes a string for inclusion in a regex
-#' @importFrom stringi stri_replace_all_regex
 escape_regex <- function(string) {
-  stri_replace_all_regex(string, "(\\W)", "\\\\$1")
+  gsub("(\\W)", "\\\\\\1", string)
 }
 
 combine_chains_for_deprecated_ = function(x) {

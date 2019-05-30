@@ -20,7 +20,6 @@ Imports:
     dplyr (>= 0.8.0),
     tidyr,
     ggplot2 (>= 3.0.0),
-    stringi,
     LaplacesDemon,
     coda,
     purrr (>= 0.2.3),

@@ -3,7 +3,6 @@
 # Author: mjskay
 ###############################################################################
 
-library(stringi)
 library(magrittr)
 library(coda)
 
@@ -11,7 +10,7 @@ library(coda)
 raw = readRDS("data-raw/RankCorr.rds")
 
 # variable names to subset the chains to
-var_names = stri_detect(dimnames(raw[[1]])[[2]], regex = "(b\\[[1-3],[1-4]\\])|tau\\[[1-3]\\]|typical_r")
+var_names = grepl("(b\\[[1-3],[1-4]\\])|tau\\[[1-3]\\]|typical_r", dimnames(raw[[1]])[[2]])
 
 # additional thinning to apply to the chains
 thin_extra = 20

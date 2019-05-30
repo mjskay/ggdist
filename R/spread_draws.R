@@ -319,7 +319,6 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
 ## variable_names: a character vector of names of variables
 ## dimension_names: a character vector of dimension names
 #' @importFrom tidyr spread_ separate_ gather_
-#' @import stringi
 #' @import dplyr
 spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FALSE, sep = "[, ]") {
   if (!regex) {
@@ -329,7 +328,7 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
   if (is.null(dimension_names)) {
     #no dimensions, just find the colnames matching the regex(es)
     variable_regex = paste0("^(", paste(variable_names, collapse = "|"), ")$")
-    variable_names_index = stri_detect_regex(colnames(draws), variable_regex)
+    variable_names_index = grepl(variable_regex, colnames(draws))
 
     if (!any(variable_names_index)) {
       stop("No variables found matching spec: ",
@@ -352,7 +351,7 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
       paste0(rep(dimension_regex, length(dimension_names)), collapse = dimension_sep_regex),
       "\\]$"
     )
-    variable_names_index = stri_detect_regex(colnames(draws), variable_regex)
+    variable_names_index = grepl(variable_regex, colnames(draws))
     if (!any(variable_names_index)) {
       stop("No variables found matching spec: ",
         printable_variable_names(variable_names),
@@ -364,8 +363,8 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
     #rename columns to drop trailing "]" to eliminate extraneous last column
     #when we do separate(), below. e.g. "x[1,2]" becomes "x[1,2". Do the same
     #with variable_names so we can select the columns
-    colnames(draws)[variable_names_index] = stri_sub(colnames(draws)[variable_names_index], to = -2)
-    variable_names = stri_sub(variable_names, to = -2)
+    colnames(draws)[variable_names_index] %<>% substr(start = 1, stop = nchar(.) - 1)
+    variable_names %<>% substr(start = 1, stop = nchar(.) - 1)
 
     #specs containing empty dimensions (e.g. mu[] or mu[,k]) will produce
     #some dimension_names == ""; we can't use empty variable names below, so we

@@ -145,7 +145,6 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at
-#' @importFrom stringi stri_startswith_fixed
 #' @importFrom tidyr unnest
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
