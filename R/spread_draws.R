@@ -429,14 +429,21 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
 ## long_draws: long draws in the internal long draws format from spread_draws_long_
 ## dimension_names: dimensions not used for nesting
 ## nested_dimension_names: dimensions to be nested
+#' @importFrom forcats fct_inorder
 nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names) {
   ragged = FALSE
   value_name = ".value"
   value = as.name(value_name)
 
+  for (dimension_name in dimension_names) {
+    if (is.character(long_draws[[dimension_name]])) {
+      # character columns are converted into in-order factors to preserve
+      # the order of their levels when grouping / summarising below
+      long_draws[[dimension_name]] = fct_inorder(long_draws[[dimension_name]])
+    }
+  }
+
   long_draws %<>%
-    # must sort dimensions to ensure they are extracted in the appropriate order
-    arrange(!!!syms(nested_dimension_names)) %>%
     group_by_at(
       c(".chain", ".iteration", ".draw", ".variable", dimension_names) %>%
       # nested dimension names must come at the end of the group list
@@ -469,16 +476,13 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
     } else {
       # this is not ragged, so we can just use the first value of indices
       indices = first_draw_indices[[1]]
-    }
-    # must sort dimensions to ensure they are extracted in the appropriate order
-    indices = sort(indices)
 
-    if (!ragged) {
       # array is not ragged, so combining should be easy...
-      if (is.character(first_draw_indices[[1]])) {
+      if (is.character(indices) || is.factor(indices)) {
         # indices are strings, so update the names before we combine
-        long_draws[[value_name]] = map2(long_draws[[value_name]], long_draws[[dimension_name]], set_names)
-      } else if (!identical(first_draw_indices[[1]], seq_along(first_draw_indices[[1]]))) {
+        long_draws[[value_name]] = map2(long_draws[[value_name]], long_draws[[dimension_name]],
+          ~ set_names(.x, as.character(.y)))
+      } else if (!identical(indices, seq_along(indices))) {
         if (min(indices) < 1 || !is_integerish(indices)) {
           # indices are not an integer sequence >= 1, convert to strings
           indices = as.character(indices)
@@ -493,11 +497,13 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
     }
 
     if (reindex) {
+      is_character_index = is.character(indices)
+
       #create a template list that we can use to re-index the values
       template_vector = long_draws[[value_name]][[1]][[1]]
       template_vector[] = NA
       template_list = replicate(length(indices), template_vector, simplify = FALSE)
-      if (is.character(indices)) {
+      if (is_character_index) {
         names(template_list) = indices
       }
 
@@ -505,6 +511,9 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
       long_draws[[value_name]] =
         map2(long_draws[[dimension_name]], long_draws[[value_name]], function(indices, old_value) {
           new_value = template_list
+          if (is_character_index) {
+            indices = as.character(indices)
+          }
           new_value[indices] = old_value
           new_value
         })

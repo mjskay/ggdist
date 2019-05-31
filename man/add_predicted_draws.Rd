@@ -4,11 +4,11 @@
 \name{add_fitted_draws}
 \alias{add_fitted_draws}
 \alias{fitted_draws}
+\alias{add_linpred_draws}
+\alias{linpred_draws}
 \alias{fitted_draws.default}
 \alias{fitted_draws.stanreg}
 \alias{fitted_draws.brmsfit}
-\alias{add_linpred_draws}
-\alias{linpred_draws}
 \alias{add_predicted_draws}
 \alias{predicted_draws}
 \alias{predicted_draws.default}
@@ -28,6 +28,14 @@ fitted_draws(model, newdata, value = ".value", ..., n = NULL,
   seed = NULL, re_formula = NULL, category = ".category",
   dpar = FALSE, scale = c("response", "linear"))
 
+add_linpred_draws(newdata, model, value = ".value", ..., n = NULL,
+  seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
+
+linpred_draws(model, newdata, value = ".value", ..., n = NULL,
+  seed = NULL, re_formula = NULL, category = ".category",
+  dpar = FALSE, scale = c("response", "linear"))
+
 \method{fitted_draws}{default}(model, newdata, ...)
 
 \method{fitted_draws}{stanreg}(model, newdata, value = ".value", ...,
@@ -36,14 +44,6 @@ fitted_draws(model, newdata, value = ".value", ..., n = NULL,
 
 \method{fitted_draws}{brmsfit}(model, newdata, value = ".value", ...,
   n = NULL, seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
-
-add_linpred_draws(newdata, model, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
-
-linpred_draws(model, newdata, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category",
   dpar = FALSE, scale = c("response", "linear"))
 
 add_predicted_draws(newdata, model, prediction = ".prediction", ...,
