@@ -51,6 +51,8 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
   expect_equal(fitted_draws(m_hp_wt, mtcars_tbl), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt, value = "foo"), rename(ref, foo = .value))
+  expect_equal(linpred_draws(m_hp_wt, mtcars_tbl), ref)
+  expect_equal(add_linpred_draws(mtcars_tbl, m_hp_wt), ref)
 
   #subsetting to test the `n` argument
   set.seed(1234)

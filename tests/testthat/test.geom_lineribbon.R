@@ -69,8 +69,10 @@ test_that("two-group stat_lineribbons work", {
 
   p = ggplot(df, aes(x = x, y = y))
 
-  vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by group", p +
-      stat_lineribbon(aes(group = g), .width = c(.50, .75, .90)) + scale_fill_brewer())
+  vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by group",
+    p +
+    stat_lineribbon(aes(group = g), .width = c(.50, .75, .90)) + scale_fill_brewer()
+  )
   vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by linetype",
     p +
     stat_lineribbon(aes(linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +

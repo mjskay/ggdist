@@ -229,6 +229,24 @@ test_that("point_interval errors if there are no columns to summarise", {
     "No columns found to calculate point and interval summaries for\\.")
 })
 
+test_that("point_interval works on vectors", {
+  set.seed(1234)
+  x = rnorm(100, mean = 5)
+
+  ref = data.frame(
+    y = mean(x),
+    ymin = as.vector(quantile(x, probs = .025)),
+    ymax = as.vector(quantile(x, probs = .975)),
+    .width = .95,
+    .point = "mean",
+    .interval = "qi",
+    stringsAsFactors = FALSE
+  )
+
+  expect_equal(mean_qi(x), ref)
+  expect_equal(mean_qih(x), rename(ref, x = y, xmin = ymin, xmax = ymax))
+})
+
 test_that("various point summaries and intervals give correct numbers", {
   expect_equal(
     median_hdci(c(0:6, 1:5, 2:4, 2), .width = .6),

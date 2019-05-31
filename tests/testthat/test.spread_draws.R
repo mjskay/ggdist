@@ -318,15 +318,8 @@ test_that("variable names containing regex special chars work", {
   expect_equal(spread_draws(RankCorr_t, `(Intercept)`), ref)
 })
 
-# test_draws = tibble(
-#   .chain = NA, .iteration = NA, .draw = 1,
-#   `x[1,a]`  = 12,
-#   `x[1,3]`  = 13,
-#   `x[2,0]`  = 22,
-#   `x[2,3]`  = 23,
-# ) %>%
-#   rbind(. + 10)
 
+# tests for nested syntax -------------------------------------------------
 
 test_that("nested matrices are correctly extracted", {
   test_draws = tibble(
@@ -418,4 +411,80 @@ test_that("nested matrices with multiple variables are correctly extracted", {
   dimnames(ref) = list(NULL, NULL)
 
   expect_equal(spread_draws_long_(test_draws, c("x", "y"), c(".","."))[["y"]][[1]], ref)
+})
+
+test_that("nested matrices with named columns correctly extracted", {
+  test_draws = tibble(
+    .chain = NA, .iteration = NA, .draw = 1,
+    `x[1,a]`  = 11,
+    `x[1,b]`  = 12,
+    `x[2,a]`  = 21,
+    `x[2,b]`  = 22,
+  ) %>%
+    rbind(. + 10)
+
+  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[1]],
+    array(c(11,21,12,22), dim = c(2, 2), dimnames = list(NULL, c("a", "b"))))
+})
+
+test_that("nested ragged arrays are correctly extracted", {
+  test_draws = tibble(
+    .chain = NA, .iteration = NA, .draw = 1,
+    `x[1,a]`  = 12,
+    `x[1,b]`  = 13,
+    `x[2,1]`  = 21,
+    `x[2,b]`  = 23,
+  ) %>%
+    rbind(. + 10)
+
+  expect_equal(spread_draws_long_(test_draws, "x", c(".","."))[["x"]][[1]],
+    array(c(NA,21,12,NA,13,23), dim = c(2, 3), dimnames = list(NULL, c("1", "a", "b"))))
+})
+
+test_that("nested vectors are correctly extracted", {
+  test_draws = tibble(
+    .chain = NA, .iteration = NA, .draw = 1,
+    `x[1]`  = 1,
+    `x[2]`  = 2,
+    `x[3]`  = 3,
+  )
+
+  expect_equal(spread_draws_long_(test_draws, "x", ".")[["x"]][[1]], c(1,2,3))
+  test_draws[["x[d]"]] = 4
+  expect_equal(spread_draws_long_(test_draws, "x", ".")[["x"]][[1]], c(`1` = 1, `2` = 2, `3` = 3, d = 4))
+})
+
+test_that("nested arrays with string names are correctly extracted", {
+  test_draws = tibble(
+    .chain = NA, .iteration = NA, .draw = 1,
+    `x[a]`  = 1,
+    `x[b]`  = 2,
+    `x[c]`  = 3,
+  )
+
+  expect_equal(spread_draws_long_(test_draws, "x", ".")[["x"]][[1]], c(a = 1, b = 2, c = 3))
+})
+
+test_that("nested arrays with numeric indices that aren't 1:N are extracted properly", {
+  test_draws = tibble(
+    .chain = NA, .iteration = NA, .draw = 1,
+    `x[2]`  = 2,
+    `x[3]`  = 3,
+    `x[5]`  = 5,
+  )
+
+  expect_equal(spread_draws_long_(test_draws, "x", ".")[["x"]][[1]], c(NA, 2, 3, NA, 5))
+})
+
+# all_elements_identical ------------------------------------------------------------------
+
+test_that("all_elements_identical base case: on empty list is TRUE", {
+  expect_equal(all_elements_identical(list()), TRUE)
+})
+
+# abind0 ------------------------------------------------------------------
+
+test_that("abind0 base cases", {
+  expect_equal(abind0(c(1,2,3)), c(1,2,3))
+  expect_equal(abind0(list(c(1,2,3))), c(1,2,3))
 })

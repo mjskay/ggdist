@@ -22,7 +22,7 @@ test_that("horizontal grouped pointintervals work", {
   forward_plot = RankCorr_u_tau %>%
     median_hdci(.width = c(.66, .95)) %>%
     ggplot(aes(y = i, x = u_tau)) +
-    geom_pointintervalh()
+    geom_pointintervalh(show.legend = TRUE)
 
   vdiffr::expect_doppelganger("grouped pointintervals (h)", forward_plot)
 
@@ -59,7 +59,7 @@ test_that("grouped pointintervals work", {
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%
     ggplot(aes(x = i, y = u_tau)) +
-    geom_pointinterval()
+    geom_pointinterval(show.legend = TRUE)
 
   vdiffr::expect_doppelganger("grouped pointintervals", forward_plot)
 

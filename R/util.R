@@ -17,9 +17,9 @@ escape_regex <- function(string) {
 }
 
 combine_chains_for_deprecated_ = function(x) {
-  x$.chain = NA_integer_
-  x$.iteration = x$.draw
-  x$.draw = NULL
+  x$.chain = NA_integer_  # nocov
+  x$.iteration = x$.draw  # nocov
+  x$.draw = NULL          # nocov
   x
 }
 

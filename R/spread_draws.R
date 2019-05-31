@@ -475,11 +475,9 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
 
     if (!ragged) {
       # array is not ragged, so combining should be easy...
-      if (is.character(first_draw_indices)) {
+      if (is.character(first_draw_indices[[1]])) {
         # indices are strings, so update the names before we combine
-        long_draws %<>% mutate(
-          !!value := map2(!!value, !!dimension, set_names)
-        )
+        long_draws[[value_name]] = map2(long_draws[[value_name]], long_draws[[dimension_name]], set_names)
       } else if (!identical(first_draw_indices[[1]], seq_along(first_draw_indices[[1]]))) {
         if (min(indices) < 1 || !is_integerish(indices)) {
           # indices are not an integer sequence >= 1, convert to strings
@@ -518,8 +516,9 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
     # for everything but the first dimension, we bind before the first dimension. This ensures
     # that the first dimension creates a vector (not a Nx1 array), which is what we want if
     # there is only one dimension.
-    along = ifelse(i == 1, 1, 0)
-    if (i != 1) {
+    if (i == 1) {
+      long_draws[[value_name]] = map(long_draws[[value_name]], unlist, recursive = FALSE)
+    } else {
       long_draws[[value_name]] = map(long_draws[[value_name]], abind0)
     }
 
@@ -607,6 +606,7 @@ abind0 = function(vectors) {
     perm = perm
   )
   dimnames(x) = dimnames.
+  mode(x) = "numeric"
   x
 }
 

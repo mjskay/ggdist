@@ -7,7 +7,7 @@ context("as_constructor")
 
 
 test_that("factor prototypes convert correctly", {
-  constructor = tidybayes:::as_constructor.factor(factor(c("a", "b", "c")))
+  constructor = tidybayes:::as_constructor(factor(c("a", "b", "c")))
   expect_equal(constructor(NULL), factor(levels = c("a", "b", "c")))
   expect_equal(constructor(2), factor("b", levels = c("a", "b", "c")))
   expect_equal(constructor(c(3, 2, 1)), factor(c("c", "b", "a"), levels = c("a", "b", "c")))
@@ -15,7 +15,7 @@ test_that("factor prototypes convert correctly", {
 })
 
 test_that("character prototypes convert correctly", {
-  constructor = tidybayes:::as_constructor.character(c("a", "b", "c"))
+  constructor = tidybayes:::as_constructor(c("a", "b", "c"))
   expect_equal(constructor(NULL), character(0))
   expect_equal(constructor(2), "b")
   expect_equal(constructor(c(3, 2, 1)), c("c", "b", "a"))
@@ -23,7 +23,7 @@ test_that("character prototypes convert correctly", {
 })
 
 test_that("ordered factor prototypes convert correctly", {
-  constructor = tidybayes:::as_constructor.factor(ordered(c("a", "b", "c")))
+  constructor = tidybayes:::as_constructor(ordered(c("a", "b", "c")))
   expect_equal(constructor(NULL), ordered(NULL, levels = c("a", "b", "c")))
   expect_equal(constructor(2), ordered("b", levels = c("a", "b", "c")))
   expect_equal(constructor(c(3, 2, 1)), ordered(c("c", "b", "a"), levels = c("a", "b", "c")))
@@ -31,8 +31,15 @@ test_that("ordered factor prototypes convert correctly", {
 })
 
 test_that("logical prototypes convert correctly", {
-  constructor = tidybayes:::as_constructor.logical(TRUE)
+  constructor = tidybayes:::as_constructor(TRUE)
   expect_equal(constructor(0), FALSE)
   expect_equal(constructor(1), TRUE)
   expect_equal(constructor(c(0, 1, 2)), c(FALSE, TRUE, TRUE))
+})
+
+test_that("numeric prototypes convert correctly", {
+  constructor = tidybayes:::as_constructor(c(1,2,3))
+  expect_equal(constructor(0), 0)
+  expect_equal(constructor(1), 1)
+  expect_equal(constructor(c(0, 1, 2)), c(0, 1, 2))
 })

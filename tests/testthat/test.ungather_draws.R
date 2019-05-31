@@ -9,6 +9,10 @@ library(tidyr)
 context("ungather_draws")
 
 
+test_that("ungather_draws raises an error when not provided with anything to ungather", {
+  expect_error(ungather_draws(tibble()), "You must supply at least one variable to ungather")
+})
+
 test_that("ungather_draws works on a simple parameter with no dimensions", {
   data(RankCorr, package = "tidybayes")
 

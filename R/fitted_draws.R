@@ -13,12 +13,12 @@
 #' @export
 fitted_samples = function(model, newdata, ..., n = NULL) {
   .Deprecated("fitted_draws", package = "tidybayes") # nocov
-  fitted_samples_(model, newdata,  ..., n = n)     # nocov
+  fitted_samples_(model, newdata,  ..., n = n)       # nocov
 }
 fitted_samples_ = function(model, newdata, var = "estimate", ..., n = NULL, category = "category") {
-  combine_chains_for_deprecated_(fitted_draws( # nocov
+  combine_chains_for_deprecated_(fitted_draws(                      # nocov
     model, newdata, value = var, ..., n = n, category = category    # nocov
-  ))                                           # nocov
+  ))                                                                # nocov
 }
 
 #' @rdname tidybayes-deprecated
@@ -27,12 +27,12 @@ fitted_samples_ = function(model, newdata, var = "estimate", ..., n = NULL, cate
 #' @export
 add_fitted_samples = function(newdata, model, ..., n = NULL) {
   .Deprecated("add_fitted_draws", package = "tidybayes") # nocov
-  fitted_samples_(model, newdata, ..., n = n)         # nocov
+  fitted_samples_(model, newdata, ..., n = n)            # nocov
 }
 
 
 
-# [add_]fitted_draws ------------------------------------------------------
+# [add_]fitted_draws / linpred_draws aliases -------------------------------------------------
 
 #' @rdname add_predicted_draws
 #' @export
@@ -50,6 +50,26 @@ fitted_draws = function(model, newdata, value = ".value", ..., n = NULL, seed = 
 ) {
   UseMethod("fitted_draws")
 }
+
+#' @rdname add_predicted_draws
+#' @export
+add_linpred_draws = function(newdata, model, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
+) {
+  fitted_draws(model, newdata, value, ..., n = n, seed = seed, re_formula = re_formula,
+    category = category, dpar = dpar, scale = scale)
+}
+
+#' @rdname add_predicted_draws
+#' @export
+linpred_draws = function(model, newdata, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
+  category = ".category", dpar = FALSE, scale = c("response", "linear")
+) {
+  fitted_draws(model, newdata, value, ..., n = n, seed = seed, re_formula = re_formula,
+    category = category, dpar = dpar, scale = scale)
+}
+
+# fitted_draws generics -------------------------------------------------
 
 #' @rdname add_predicted_draws
 #' @export
@@ -172,26 +192,4 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
   } else {
     draws
   }
-}
-
-
-
-# [add_]linpred_draws ------------------------------------------------------
-
-#' @rdname add_predicted_draws
-#' @export
-add_linpred_draws = function(newdata, model, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
-  category = ".category", dpar = FALSE, scale = c("response", "linear")
-) {
-  fitted_draws(model, newdata, value, ..., n = n, seed = seed, re_formula = re_formula,
-    category = category, dpar = dpar, scale = scale)
-}
-
-#' @rdname add_predicted_draws
-#' @export
-linpred_draws = function(model, newdata, value = ".value", ..., n = NULL, seed = NULL, re_formula = NULL,
-  category = ".category", dpar = FALSE, scale = c("response", "linear")
-) {
-  fitted_draws(model, newdata, value, ..., n = n, seed = seed, re_formula = re_formula,
-    category = category, dpar = dpar, scale = scale)
 }
