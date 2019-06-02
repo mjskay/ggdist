@@ -5,6 +5,7 @@
 
 library(dplyr)
 library(tidyr)
+library(magrittr)
 
 context("residual_draws")
 
