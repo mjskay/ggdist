@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -139,40 +139,61 @@
       <small>Source: <a href='https://github.com/mjskay/tidybayes/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="tidybayes-1-0-4" class="section level1">
+    <div id="tidybayes-110" class="section level1">
 <h1 class="page-header">
-<a href="#tidybayes-1-0-4" class="anchor"></a>tidybayes 1.0.4<small> Unreleased </small>
+<a href="#tidybayes-110" class="anchor"></a>tidybayes 1.1.0<small> Unreleased </small>
 </h1>
+<p>New features and documentation:</p>
 <ul>
-<li>Fixed errors on CRAN from changes in dplyr</li>
-<li>Support multivariate models in predicted_draws, closes <a href='https://github.com/mjskay/tidybayes/issues/134'>#134</a></li>
+<li>Support matrices, n-d arrays, and lists of vectors in compose_data (<a href='https://github.com/mjskay/tidybayes/issues/159'>#159</a>)</li>
+<li>Support nested vectors, matrices, n-d arrays, and ragged arrays through x[.,.] syntax in gather/spread_draws (<a href='https://github.com/mjskay/tidybayes/issues/154'>#154</a>)</li>
+<li>Add detached-line-ribbon HOPs example for ordinal models in brms vignette</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Fixed errors on CRAN from changes in brms</li>
+<li>Properly handle dirichlet responses in predicted_draws (<a href='https://github.com/mjskay/tidybayes/issues/164'>#164</a>)</li>
+</ul>
+</div>
+    <div id="tidybayes-104" class="section level1">
+<h1 class="page-header">
+<a href="#tidybayes-104" class="anchor"></a>tidybayes 1.0.4<small> 2019-02-19 </small>
+</h1>
+<p>New features and documentation:</p>
+<ul>
 <li>Initial support for add_residual_draws, towards <a href='https://github.com/mjskay/tidybayes/issues/133'>#133</a></li>
 <li>Add tidybayes-residuals vignette</li>
-<li>Add add_draws (closes <a href='https://github.com/mjskay/tidybayes/issues/149'>#149</a>) and sample_draws (towards <a href='https://github.com/mjskay/tidybayes/issues/144'>#144</a>)</li>
-<li>Add support for emm_list in gather_emmeans_draws, closes <a href='https://github.com/mjskay/tidybayes/issues/126'>#126</a></li>
+<li>Add add_draws to support models that add_[fitted|predicted]_draws does not (closes <a href='https://github.com/mjskay/tidybayes/issues/149'>#149</a>)</li>
+<li>Add sample_draws to make it easier to take fewer draws anywhere in the pipeline (towards <a href='https://github.com/mjskay/tidybayes/issues/144'>#144</a>)</li>
 <li>Add hypothetical outcome plots (HOPs) to examples</li>
+</ul>
+<p>Minor changes:</p>
+<ul>
+<li>Fixed errors on CRAN from changes in dplyr</li>
+<li>Fix bug to support multivariate models in predicted_draws, closes <a href='https://github.com/mjskay/tidybayes/issues/134'>#134</a></li>
+<li>Add support for emm_list in gather_emmeans_draws, closes <a href='https://github.com/mjskay/tidybayes/issues/126'>#126</a></li>
 <li>Default for show.legend no longer omits all guides</li>
 <li>Make default lineribbon color black, closes <a href='https://github.com/mjskay/tidybayes/issues/153'>#153</a></li>
 </ul>
 </div>
-    <div id="tidybayes-1-0-3" class="section level1">
+    <div id="tidybayes-103" class="section level1">
 <h1 class="page-header">
-<a href="#tidybayes-1-0-3" class="anchor"></a>tidybayes 1.0.3<small> 2018-10-22 </small>
+<a href="#tidybayes-103" class="anchor"></a>tidybayes 1.0.3<small> 2018-10-22 </small>
 </h1>
 <ul>
 <li>Added <code>gather_pairs</code> method for creating custom scatterplot matrices (and more!)</li>
 <li>Ordinal models in brms now use original category labels (<a href='https://github.com/mjskay/tidybayes/issues/122'>#122</a>)</li>
 <li>
 <code>NA</code> values are now better supported in <code>point_interval</code>, and it has an na.rm argument (<a href='https://github.com/mjskay/tidybayes/issues/123'>#123</a>)</li>
-<li>Added sampler diagnostics to tidy_draws() stan output (<a href='https://github.com/mjskay/tidybayes/issues/109'>#109</a>)</li>
+<li>Added sampler diagnostics to tidy_draws() Stan output (<a href='https://github.com/mjskay/tidybayes/issues/109'>#109</a>)</li>
 <li>Added MCMCglmm+emmeans example to vignettes</li>
 <li>Add guards to prevent usage of packages listed in <code>Suggests</code>
 </li>
 </ul>
 </div>
-    <div id="tidybayes-1-0-0" class="section level1">
+    <div id="tidybayes-100" class="section level1">
 <h1 class="page-header">
-<a href="#tidybayes-1-0-0" class="anchor"></a>tidybayes 1.0.0<small> Unreleased </small>
+<a href="#tidybayes-100" class="anchor"></a>tidybayes 1.0.0<small> Unreleased </small>
 </h1>
 <p>Major changes:</p>
 <ul>
@@ -186,9 +207,10 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#tidybayes-1-0-4">1.0.4</a></li>
-        <li><a href="#tidybayes-1-0-3">1.0.3</a></li>
-        <li><a href="#tidybayes-1-0-0">1.0.0</a></li>
+        <li><a href="#tidybayes-110">1.1.0</a></li>
+        <li><a href="#tidybayes-104">1.0.4</a></li>
+        <li><a href="#tidybayes-103">1.0.3</a></li>
+        <li><a href="#tidybayes-100">1.0.0</a></li>
       </ul>
     </div>
   </div>

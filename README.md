@@ -14,8 +14,7 @@ count](https://cranlogs.r-pkg.org/badges/last-month/tidybayes)
 ![Preview of tidybayes plots](man/figures/preview.gif)
 
 `tidybayes` is an R package that aims to make it easy to integrate
-popular Bayesian modeling methods into a tidy data + ggplot
-workflow.
+popular Bayesian modeling methods into a tidy data + ggplot workflow.
 
 [Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
 data frames (one observation per row) are particularly convenient for
@@ -42,7 +41,7 @@ operations:
     `"b[1,2]"` into separate columns of a data frame, like `i =
     c(1,1,..)` and `j = c(1,2,...)`. More tediously, sometimes these
     indices actually correspond to levels of a factor in the original
-    data; e.g. `"x[1]"` might correspond to a value of `x` for the first
+    data; e.g. `"x[1]"` might correspond to a value of `x` for the first
     level of some factor. We provide several straightforward ways to
     convert draws from a variable with indices into useful long-format
     (“[tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)”)
@@ -244,8 +243,7 @@ frame and automatically generates a list of the following elements:
     observation
   - `response`: a vector of observations
 
-So we can skip right to
-modeling:
+So we can skip right to modeling:
 
 ``` r
 m = sampling(ABC_stan, data = compose_data(ABC), control = list(adapt_delta=0.99))
@@ -543,7 +541,7 @@ mtcars %>%
 
 `stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is
 one of several shortcut geoms that simplify common combinations of
-`tidybayes` functions and `ggplot` goems. It is roughly equivalent to
+`tidybayes` functions and `ggplot` geoms. It is roughly equivalent to
 the following:
 
 ``` r
@@ -640,5 +638,5 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2019). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 1.0.4, <https://mjskay.github.io/tidybayes/>.
+Models*. R package version 1.1.0, <https://mjskay.github.io/tidybayes/>.
 DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).

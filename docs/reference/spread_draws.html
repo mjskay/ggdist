@@ -78,7 +78,7 @@ dimensions) into one of two types of long-format data frames." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -300,7 +300,20 @@ columns with nicer names. For example:</p>
 <li><p>column <code>"b"</code>: value of <code>"b[i,2]"</code> for draw <code>".draw"</code></p></li>
 <li><p>column <code>"c"</code>: value of <code>"b[i,3]"</code> for draw <code>".draw"</code></p></li>
 </ul>
-    <p>Finally, variable names can be regular expressions by setting <code>regex = TRUE</code>; e.g.:</p>
+    <p>The shorthand <code>.</code> can be used to specify columns that should be nested
+into vectors, matrices, or n-dimensional arrays (depending on how many dimensions
+are specified with <code>.</code>).</p>
+<p>For example, <code>spread_draws(fit, a[.], b[.,.])</code> might return a
+data frame, with:</p><ul>
+<li><p>column <code>".chain"</code>: the chain number.</p></li>
+<li><p>column <code>".iteration"</code>: the iteration number.</p></li>
+<li><p>column <code>".draw"</code>: a unique number for each draw from the posterior.</p></li>
+<li><p>column <code>"a"</code>: a list column of vectors.</p></li>
+<li><p>column <code>"b"</code>: a list column of matrices.</p></li>
+</ul>
+    <p>Ragged arrays are turned into non-ragged arrays with
+missing entries given the value <code>NA</code>.</p>
+<p>Finally, variable names can be regular expressions by setting <code>regex = TRUE</code>; e.g.:</p>
 <p><code>spread_draws(fit, `b_.*`[i], regex = TRUE)</code></p>
 <p>Would return a tidy data frame with variables starting with `b_` and having one dimension.</p>
     

@@ -79,7 +79,7 @@ useful for producing scatter-plot matrices." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -154,7 +154,7 @@ useful for producing scatter-plot matrices.</p>
 
     <pre class="usage"><span class='fu'>gather_pairs</span>(<span class='no'>data</span>, <span class='no'>key</span>, <span class='no'>value</span>, <span class='kw'>row</span> <span class='kw'>=</span> <span class='st'>".row"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>".col"</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>".x"</span>,
   <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>".y"</span>, <span class='kw'>triangle</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"lower only"</span>, <span class='st'>"upper only"</span>, <span class='st'>"lower"</span>, <span class='st'>"upper"</span>,
-  <span class='st'>"both"</span>))</pre>
+  <span class='st'>"both only"</span>, <span class='st'>"both"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,8 +195,9 @@ of pairs (takes values of <code>value</code>).</p></td>
       <th>triangle</th>
       <td><p>Should the upper or lower triangle of the matrix of all possible combinations be returned?
 The default, <code>"lower only"</code>, returns the lower triangle without the diagonal; <code>"lower"</code> returns
-the lower triangle with the diagonal (<code>"upper"</code> and <code>"upper only"</code> operate analogously), and
-<code>"both"</code> returns the full set of possible combinations.</p>
+the lower triangle with the diagonal (<code>"upper"</code> and <code>"upper only"</code> operate analogously),
+<code>"both"</code> returns the full set of possible combinations, and <code>"both only"</code> returns all
+combinations except the diagonal.</p>
 <p>This method is particularly useful for constructing scatterplot matrices. See examples below.</p></td>
     </tr>
     </table>
@@ -230,35 +231,35 @@ from <code>value</code>.</p>
 
 <span class='no'>df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_pairs</span>(<span class='no'>g</span>, <span class='no'>t</span>, <span class='kw'>row</span> <span class='kw'>=</span> <span class='st'>"g_row"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"g_col"</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"t_x"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"t_y"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>t_x</span>, <span class='no'>t_y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>g_row</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>g_col</span>))</div><div class='img'><img src='gather_pairs-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='no'>t_x</span>, <span class='no'>t_y</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_grid'>facet_grid</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>g_row</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>g_col</span>))</div><div class='img'><img src='gather_pairs-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_pairs</span>(<span class='no'>g</span>, <span class='no'>t</span>, <span class='kw'>triangle</span> <span class='kw'>=</span> <span class='st'>"upper"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_grid'>facet_grid</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_pairs</span>(<span class='no'>g</span>, <span class='no'>t</span>, <span class='kw'>triangle</span> <span class='kw'>=</span> <span class='st'>"both"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-3.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_grid'>facet_grid</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>line</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"coda"</span>)
 
 <span class='no'>line</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_draws.html'>tidy_draws</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='gather_variables.html'>gather_variables</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_pairs</span>(<span class='no'>.variable</span>, <span class='no'>.value</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>.25</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-4.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>.25</span>) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_grid'>facet_grid</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>line</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_draws.html'>tidy_draws</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='gather_variables.html'>gather_variables</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_pairs</span>(<span class='no'>.variable</span>, <span class='no'>.value</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/factor'>factor</a></span>(<span class='no'>.chain</span>))) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_density_2d.html'>geom_density_2d</a></span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>.5</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-5.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='no'>.x</span>, <span class='no'>.y</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/factor'>factor</a></span>(<span class='no'>.chain</span>))) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_density_2d'>geom_density_2d</a></span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>.5</span>) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_grid'>facet_grid</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.row</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/vars'>vars</a></span>(<span class='no'>.col</span>))</div><div class='img'><img src='gather_pairs-5.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

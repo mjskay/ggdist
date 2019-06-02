@@ -34,7 +34,9 @@
   
 <meta property="og:title" content="Sample draws from a tidy-format data frame of draws — sample_draws" />
 
-<meta property="og:description" content="Given a tidy-format data frame of draws with a column indexing each draw, subsample the data frame to a given size." />
+<meta property="og:description" content="Given a tidy-format data frame of draws with a column indexing each draw, subsample the data frame to a given size
+based on a column indexing draws, ensuring that rows in sub-groups of a grouped data frame are sampled from the
+same draws." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -77,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -144,7 +146,9 @@
 
     <div class="ref-description">
     
-    <p>Given a tidy-format data frame of draws with a column indexing each draw, subsample the data frame to a given size.</p>
+    <p>Given a tidy-format data frame of draws with a column indexing each draw, subsample the data frame to a given size
+based on a column indexing draws, ensuring that rows in sub-groups of a grouped data frame are sampled from the
+same draws.</p>
     
     </div>
 
@@ -167,13 +171,75 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p><code>sample_draws()</code> makes it easier to sub-sample a grouped, tidy-format data frame of draws. On a grouped data frame,
+the naive approach of using <code>filter</code> with the <code>.draw</code> column will give incorrect results as it will
+select a different sample within each group. <code>sample_draws()</code> ensures the same sample is selected within
+each group.</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
+
+<span class='kw'>if</span> (
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='st'>"rstanarm"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&amp;&amp;</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='st'>"modelr"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+) {
+
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/theme_get'>theme_set</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_light</a></span>())
+
+  <span class='no'>m_mpg</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>hp</span> * <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>,
+    <span class='co'># 1 chain / few iterations just so example runs quickly</span>
+    <span class='co'># do not use in practice</span>
+    <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)
+
+  <span class='co'># draw 100 fit lines from the posterior and overplot them</span>
+  <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://www.rdocumentation.org/packages/modelr/topics/data_grid'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/modelr/topics/seq_range'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>101</span>)) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='add_predicted_draws.html'>add_fitted_draws</a></span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'>sample_draws</span>(<span class='fl'>100</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>hp</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mpg</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/factor'>ordered</a></span>(<span class='no'>cyl</span>))) +
+    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>.value</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='no'>cyl</span>, <span class='no'>.draw</span>)), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.25</span>) +
+    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
+}</div><div class='output co'>#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
+#&gt; Chain 1: 
+#&gt; Chain 1: Gradient evaluation took 0 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Chain 1: Adjust your expectations accordingly!
+#&gt; Chain 1: 
+#&gt; Chain 1: 
+#&gt; Chain 1: Iteration:   1 / 500 [  0%]  (Warmup)
+#&gt; Chain 1: Iteration:  50 / 500 [ 10%]  (Warmup)
+#&gt; Chain 1: Iteration: 100 / 500 [ 20%]  (Warmup)
+#&gt; Chain 1: Iteration: 150 / 500 [ 30%]  (Warmup)
+#&gt; Chain 1: Iteration: 200 / 500 [ 40%]  (Warmup)
+#&gt; Chain 1: Iteration: 250 / 500 [ 50%]  (Warmup)
+#&gt; Chain 1: Iteration: 251 / 500 [ 50%]  (Sampling)
+#&gt; Chain 1: Iteration: 300 / 500 [ 60%]  (Sampling)
+#&gt; Chain 1: Iteration: 350 / 500 [ 70%]  (Sampling)
+#&gt; Chain 1: Iteration: 400 / 500 [ 80%]  (Sampling)
+#&gt; Chain 1: Iteration: 450 / 500 [ 90%]  (Sampling)
+#&gt; Chain 1: Iteration: 500 / 500 [100%]  (Sampling)
+#&gt; Chain 1: 
+#&gt; Chain 1:  Elapsed Time: 0.073 seconds (Warm-up)
+#&gt; Chain 1:                0.089 seconds (Sampling)
+#&gt; Chain 1:                0.162 seconds (Total)
+#&gt; Chain 1: </div><div class='img'><img src='sample_draws-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     <p>Matthew Kay</p>

@@ -79,7 +79,7 @@ multiple groups in a grouped data frame)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -303,7 +303,7 @@ data frame with one row per value of <code>.width</code> and three columns:
 corresponding to the interval. This behavior allows <code>point_interval</code>
 and its derived functions (like <code>median_qi</code>, <code>mean_qi</code>, <code>mode_hdi</code>, etc)
 to be easily used to plot intervals in ggplot using methods like
-<code><a href='geom_eye.html'>geom_eye</a></code>, <code><a href='geom_eye.html'>geom_eyeh</a></code>, or <code><a href='https://ggplot2.tidyverse.org/reference/stat_summary.html'>stat_summary</a></code>.</p>
+<code><a href='geom_eye.html'>geom_eye</a></code>, <code><a href='geom_eye.html'>geom_eyeh</a></code>, or <code><a href='https://www.rdocumentation.org/packages/ggplot2/topics/stat_summary'>stat_summary</a></code>.</p>
 <p>The functions ending in <code>h</code> (e.g., <code>point_intervalh</code>, <code>median_qih</code>)
 behave identically to the function without the h, except that when passed a vector,
 they return a data frame with <code>x</code>/<code>xmin</code>/<code>xmax</code> instead of
@@ -382,7 +382,7 @@ information on multimodality and continuous versus discontinuous intervals.</p>
 #&gt; 2 -0.06628626  3.488457 4.482790   0.66   mode       hdi
 #&gt; 3 -0.06628626 -1.719262 5.500183   0.95   mode       hdi</div><div class='input'>
 <span class='no'>multimodal_draws</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>0</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>0</span>)) +
   <span class='fu'><a href='geom_halfeyeh.html'>geom_halfeyeh</a></span>(<span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='no'>mode_hdih</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></span></pre>
   </div>
