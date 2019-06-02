@@ -180,6 +180,23 @@ columns with nicer names. For example:
  \item column \code{"c"}: value of \code{"b[i,3]"} for draw \code{".draw"}
 }
 
+The shorthand \code{.} can be used to specify columns that should be nested
+into vectors, matrices, or n-dimensional arrays (depending on how many dimensions
+are specified with \code{.}).
+
+For example, \code{spread_draws(fit, a[.], b[.,.])} might return a
+data frame, with:
+\itemize{
+   \item column \code{".chain"}: the chain number.
+   \item column \code{".iteration"}: the iteration number.
+   \item column \code{".draw"}: a unique number for each draw from the posterior.
+   \item column \code{"a"}: a list column of vectors.
+   \item column \code{"b"}: a list column of matrices.
+ }
+
+Ragged arrays are turned into non-ragged arrays with
+missing entries given the value \code{NA}.
+
 Finally, variable names can be regular expressions by setting \code{regex = TRUE}; e.g.:
 
 \code{spread_draws(fit, `b_.*`[i], regex = TRUE)}
