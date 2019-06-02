@@ -1,6 +1,18 @@
-# tidybayes 1.0.4
+# tidybayes 1.1.0
 
-* Fixed errors on CRAN from changes in dplyr
+New features and documentation:
+
+* Support matrices, n-d arrays, and lists of vecetors in compose_data (#159)
+* Support nested vectors, matrics, n-d arrays, and ragged arrays through x[.,.] syntax in gather/spread_draws (#154)
+* Add detached-line-ribbon HOPs example for ordinal models in brms vignette
+
+Bug fixes:
+
+* Fixed errors on CRAN from changes in brms
+* Properly handle dirichlet responses in predicted_draws (#164)
+
+
+# tidybayes 1.0.4
 
 New features and documentation:
 
@@ -12,6 +24,7 @@ New features and documentation:
 
 Minor changes:
 
+* Fixed errors on CRAN from changes in dplyr
 * Fix bug to support multivariate models in predicted_draws, closes #134
 * Add support for emm_list in gather_emmeans_draws, closes #126
 * Default for show.legend no longer omits all guides
