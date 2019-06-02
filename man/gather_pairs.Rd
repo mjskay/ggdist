@@ -6,7 +6,7 @@
 \usage{
 gather_pairs(data, key, value, row = ".row", col = ".col", x = ".x",
   y = ".y", triangle = c("lower only", "upper only", "lower", "upper",
-  "both"))
+  "both only", "both"))
 }
 \arguments{
 \item{data}{Tidy data frame.}
@@ -29,8 +29,9 @@ of pairs (takes values of \code{value}).}
 
 \item{triangle}{Should the upper or lower triangle of the matrix of all possible combinations be returned?
 The default, \code{"lower only"}, returns the lower triangle without the diagonal; \code{"lower"} returns
-the lower triangle with the diagonal (\code{"upper"} and \code{"upper only"} operate analogously), and
-\code{"both"} returns the full set of possible combinations.
+the lower triangle with the diagonal (\code{"upper"} and \code{"upper only"} operate analogously),
+\code{"both"} returns the full set of possible combinations, and \code{"both only"} returns all
+combinations except the diagonal.
 
 This method is particularly useful for constructing scatterplot matrices. See examples below.}
 }
