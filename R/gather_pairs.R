@@ -27,8 +27,9 @@ globalVariables(c(".chain", ".iteration"))
 #' of pairs (takes values of \code{value}).
 #' @param triangle Should the upper or lower triangle of the matrix of all possible combinations be returned?
 #' The default, \code{"lower only"}, returns the lower triangle without the diagonal; \code{"lower"} returns
-#' the lower triangle with the diagonal (\code{"upper"} and \code{"upper only"} operate analogously), and
-#' \code{"both"} returns the full set of possible combinations.
+#' the lower triangle with the diagonal (\code{"upper"} and \code{"upper only"} operate analogously),
+#' \code{"both"} returns the full set of possible combinations, and \code{"both only"} returns all
+#' combinations except the diagonal.
 #'
 #' This method is particularly useful for constructing scatterplot matrices. See examples below.
 #'
@@ -97,7 +98,7 @@ globalVariables(c(".chain", ".iteration"))
 #' @importFrom dplyr rename group_by_at ungroup group_vars
 #' @export
 gather_pairs = function(data, key, value, row = ".row", col = ".col", x = ".x", y = ".y",
-    triangle = c("lower only", "upper only", "lower", "upper", "both")
+    triangle = c("lower only", "upper only", "lower", "upper", "both only", "both")
   ) {
   key = enquo(key)
   value = enquo(value)
@@ -118,6 +119,7 @@ gather_pairs = function(data, key, value, row = ".row", col = ".col", x = ".x", 
     `upper only` = function(row, col) levels_[[row]] < levels_[[col]],
     lower = function(row, col) levels_[[row]] >= levels_[[col]],
     upper = function(row, col) levels_[[row]] <= levels_[[col]],
+    `both only` = function(row, col) levels_[[row]] != levels_[[col]],
     both = function(row, col) TRUE
   )
 
