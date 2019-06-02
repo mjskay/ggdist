@@ -16,6 +16,10 @@ mtcars_tbl = mtcars %>%
   as_tibble()
 
 
+test_that("[add_]residual_draws throws error on unsupported models", {
+  expect_error(residual_draws(list()), "Models of type \"list\" are not currently supported by `residual_draws`")
+})
+
 test_that("[add_]residual_draws works on a simple brms model", {
   skip_if_not_installed("brms")
   m_hp = readRDS("../models/models.brms.m_hp.rds")
@@ -37,4 +41,5 @@ test_that("[add_]residual_draws works on a simple brms model", {
     mutate(.row = as.integer(.row))
 
   expect_equal(residual_draws(m_hp, mtcars_tbl), ref)
+  expect_equal(add_residual_draws(mtcars_tbl, m_hp), ref)
 })
