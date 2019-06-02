@@ -2,8 +2,8 @@
 
 New features and documentation:
 
-* Support matrices, n-d arrays, and lists of vecetors in compose_data (#159)
-* Support nested vectors, matrics, n-d arrays, and ragged arrays through x[.,.] syntax in gather/spread_draws (#154)
+* Support matrices, n-d arrays, and lists of vectors in compose_data (#159)
+* Support nested vectors, matrices, n-d arrays, and ragged arrays through x[.,.] syntax in gather/spread_draws (#154)
 * Add detached-line-ribbon HOPs example for ordinal models in brms vignette
 
 Bug fixes:
@@ -36,7 +36,7 @@ Minor changes:
 * Added `gather_pairs` method for creating custom scatterplot matrices (and more!) 
 * Ordinal models in brms now use original category labels (#122)
 * `NA` values are now better supported in `point_interval`, and it has an na.rm argument (#123)
-* Added sampler diagnostics to tidy_draws() stan output (#109)
+* Added sampler diagnostics to tidy_draws() Stan output (#109)
 * Added MCMCglmm+emmeans example to vignettes
 * Add guards to prevent usage of packages listed in `Suggests`
 

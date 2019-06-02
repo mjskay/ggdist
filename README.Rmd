@@ -389,7 +389,7 @@ mtcars %>%
   scale_fill_brewer()
 ```
 
-`stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is one of several shortcut geoms that simplify common combinations of `tidybayes` functions and `ggplot` goems. It is roughly equivalent to the following:
+`stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is one of several shortcut geoms that simplify common combinations of `tidybayes` functions and `ggplot` geoms. It is roughly equivalent to the following:
 
 ```r
   stat_summary(
