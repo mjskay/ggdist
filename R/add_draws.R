@@ -17,10 +17,11 @@ globalVariables(".draw")
 #' Given a data frame with M rows and an N by M matrix of N draws, adds a \code{.row}, \code{.draw}, and \code{.value}
 #' column (or another name if \code{value} is set) to \code{data}, and expands \code{data} into a long-format dataframe of draws.
 #'
-#' \code{\link{add_fitted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_linpred(m))}, except
-#' that \code{add_fitted_draws} standardizes argument names and values across packages.
+#' \code{\link{add_fitted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_linpred(m, newdata = df, summary = FALSE))}, except
+#' that \code{add_fitted_draws} standardizes argument names and values across packages and has additional features for some
+#' model types (like handling ordinal responses and distributional parameters in brms).
 #'
-#' \code{\link{add_predicted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_predict(m))}, except
+#' \code{\link{add_predicted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_predict(m, newdata = df, summary = FALSE))}, except
 #' that \code{add_predicted_draws} standardizes argument names and values across packages.
 #'
 #' @param data Data frame to add draws to, with M rows.
@@ -46,7 +47,7 @@ globalVariables(".draw")
 #'
 #'   theme_set(theme_light())
 #'
-#'   m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars,
+#'   m_mpg = brm(mpg ~ hp * cyl, data = mtcars,
 #'     # 1 chain / few iterations just so example runs quickly
 #'     # do not use in practice
 #'     chains = 1, iter = 500)
@@ -56,8 +57,11 @@ globalVariables(".draw")
 #'     group_by(cyl) %>%
 #'     data_grid(hp = seq_range(hp, n = 101)) %>%
 #'     # the line below is equivalent to add_fitted_draws(m_mpg), except that it does not
-#'     # standardize arguments across model types
-#'     add_draws(posterior_linpred(m_mpg, newdata = .)) %>%
+#'     # standardize arguments across model types. `summary = FALSE` is not strictly necessary
+#'     # with posterior_linpred(), but because it is necessary on some functions (otherwise
+#'     # those functions return summaries instead of a matrix of draws) it is
+#'     # included in this example.
+#'     add_draws(posterior_linpred(m_mpg, newdata = ., summary = FALSE)) %>%
 #'     ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
 #'     stat_lineribbon(aes(y = .value), alpha = 0.25) +
 #'     geom_point(data = mtcars) +
