@@ -36,7 +36,7 @@ levels to compare (as strings) and/or unevaluated expressions containing
 representing the comparisons to make; or (c) a list of pairs of names of
 levels to compare (as strings) and/or unevaluated expressions representing
 the comparisons to make, e.g.: \code{list(c("a", "b"), c("b", "c"))} or
-\code{.(a - b, b - c)}, both of which would compare level \code{"a"} against
+\code{plyr::.(a - b, b - c)}, both of which would compare level \code{"a"} against
 \code{"b"} and level \code{"b"} against \code{"c"}. Note that the
 unevaluated expression syntax ignores the \code{fun} argument, can include
 any other functions desired (e.g. variable transformations), and can even
