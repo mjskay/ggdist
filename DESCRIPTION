@@ -60,6 +60,7 @@ Suggests:
     gifski,
     png,
     transformr
+Remotes: lionel-/ggstance
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new
