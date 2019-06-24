@@ -23,7 +23,7 @@ Imports:
     coda,
     purrr (>= 0.2.3),
     rlang (>= 0.3.0),
-    ggstance,
+    ggstance (>= 0.3.2),
     grid,
     forcats,
     HDInterval,
@@ -60,7 +60,6 @@ Suggests:
     gifski,
     png,
     transformr
-Remotes: lionel-/ggstance
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new
