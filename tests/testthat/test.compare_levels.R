@@ -145,6 +145,7 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
     as_tibble()
 
   expect_equal(compare_levels(draws, tau, by = ff, comparison = plyr::.(a + b, exp(c - a))), ref)
+  expect_equal(compare_levels(draws, tau, by = ff, comparison = exprs(a + b, exp(c - a))), ref)
 })
 
 test_that("comparisons of subsets of levels of factors are supported", {

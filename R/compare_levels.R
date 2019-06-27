@@ -78,7 +78,7 @@ comparison_types = within(list(), {
 #' representing the comparisons to make; or (c) a list of pairs of names of
 #' levels to compare (as strings) and/or unevaluated expressions representing
 #' the comparisons to make, e.g.: \code{list(c("a", "b"), c("b", "c"))} or
-#' \code{plyr::.(a - b, b - c)}, both of which would compare level \code{"a"} against
+#' \code{exprs(a - b, b - c)}, both of which would compare level \code{"a"} against
 #' \code{"b"} and level \code{"b"} against \code{"c"}. Note that the
 #' unevaluated expression syntax ignores the \code{fun} argument, can include
 #' any other functions desired (e.g. variable transformations), and can even
@@ -189,7 +189,7 @@ compare_levels_ = function(data, variable, by, fun, comparison, draw_indices) {
   else comparison_function(data[[by]])
 
   #make comparisons
-  ldply(comparison_levels, function(levels.) {
+  ldply(comparison_levels, .id = NULL, function(levels.) {
     comparison = if (is.language(levels.)) {
       #user-supplied quoted expressions are evaluated within the data frame
       data.frame(
