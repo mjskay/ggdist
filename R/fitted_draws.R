@@ -74,7 +74,12 @@ linpred_draws = function(model, newdata, value = ".value", ..., n = NULL, seed =
 #' @rdname add_predicted_draws
 #' @export
 fitted_draws.default = function(model, newdata, ...) {
-  stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `fitted_draws`"))
+  stop(
+    "Models of type ", deparse0(class(model)), " are not currently supported by `fitted_draws`.\n",
+    "You might try using `add_draws()` for models that do not have explicit fit/prediction\n",
+    "support; see help(\"add_draws\") for an example. See also help(\"tidybayes-models\") for\n",
+    "more information on what functions are supported by what model types."
+  )
 }
 
 #' @rdname add_predicted_draws

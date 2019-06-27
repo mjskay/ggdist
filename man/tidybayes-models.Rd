@@ -43,6 +43,9 @@ In addition, the \strong{following models support fit and prediction} extraction
   \item \code{\link[rstanarm:rstanarm-package]{rstanarm}} models
 }
 
+\strong{If your model type is not in the above list}, you may still be able to use the \code{\link{add_draws}}
+function to turn matrices of predictive draws (or fit draws) into tidy data frames.
+
 If you install the \href{https://github.com/mjskay/tidybayes.rethinking}{tidybayes.rethinking} package, models from
 the \href{https://github.com/rmcelreath/rethinking}{rethinking} package are also supported. Note that in
 \code{tidybayes.rethinking}, \code{tidy_link} takes the place of

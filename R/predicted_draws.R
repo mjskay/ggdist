@@ -175,7 +175,12 @@ predicted_draws = function(model, newdata, prediction = ".prediction", ..., n = 
 #' @rdname add_predicted_draws
 #' @export
 predicted_draws.default = function(model, newdata, ...) {
-  stop(paste0("Models of type ", deparse0(class(model)), " are not currently supported by `predicted_draws`"))
+  stop(
+    "Models of type ", deparse0(class(model)), " are not currently supported by `predicted_draws`.\n",
+    "You might try using `add_draws()` for models that do not have explicit fit/prediction\n",
+    "support; see help(\"add_draws\") for an example. See also help(\"tidybayes-models\") for\n",
+    "more information on what functions are supported by what model types."
+  )
 }
 
 #' @rdname add_predicted_draws
