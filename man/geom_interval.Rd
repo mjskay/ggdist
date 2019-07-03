@@ -52,6 +52,11 @@ of functions, making them often more convenient than vanilla \code{\link{geom_li
 Specifically, \code{geom_interval} acts as if its default aesthetics are
 \code{aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))}. \code{geom_intervalh} acts as if
 its default aesthetics are \code{aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))}.
+
+A \code{width} (or for \code{geom_intervalh}, \code{height}) aesthetic is also computed by default to
+make use of \code{position = "dodge"} (respectively, \code{position = "dodgev"}) straightforward.
+If you prefer a different width/height, you can specify these directly by passing a \code{width}
+or \code{height} value to \code{\link{position_dodge}} or \code{\link{position_dodgev}}.
 }
 \examples{
 

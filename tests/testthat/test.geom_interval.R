@@ -99,3 +99,36 @@ test_that("grouped intervals work", {
 
   vdiffr::expect_doppelganger("grouped intervals (stat, reverse order)", stat_reverse_plot)
 })
+
+test_that("multimodal intervals work with stat_interval", {
+  set.seed(1234)
+  df = data.frame(x = c(rnorm(300), rnorm(300, 5)) + c(0,.5), g = c("a","b"))
+
+  stat_intervalh_plot_multimodal = df %>%
+    ggplot(aes(x = x, y = "a")) +
+    stat_intervalh(point_interval = mean_hdi) +
+    scale_color_brewer()
+
+  vdiffr::expect_doppelganger("multimodal intervals (h, stat)", stat_intervalh_plot_multimodal)
+
+  stat_intervalh_plot_multimodal_dodged = df %>%
+    ggplot(aes(x = x, y = "a", group = g)) +
+    stat_intervalh(point_interval = mean_hdi, position = ggstance::position_dodgev()) +
+    scale_color_brewer()
+
+  vdiffr::expect_doppelganger("multimodal intervals (h, stat, dodged)", stat_intervalh_plot_multimodal_dodged)
+
+  stat_interval_plot_multimodal = df %>%
+    ggplot(aes(y = x, x = "a")) +
+    stat_interval(point_interval = mean_hdi) +
+    scale_color_brewer()
+
+  vdiffr::expect_doppelganger("multimodal intervals (stat)", stat_interval_plot_multimodal)
+
+  stat_interval_plot_multimodal_dodged = df %>%
+    ggplot(aes(y = x, x = "a", group = g)) +
+    stat_interval(point_interval = mean_hdi, position = "dodge") +
+    scale_color_brewer()
+
+  vdiffr::expect_doppelganger("multimodal intervals (stat, dodged)", stat_interval_plot_multimodal_dodged)
+})

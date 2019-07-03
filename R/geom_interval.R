@@ -25,6 +25,11 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' \code{aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))}. \code{geom_intervalh} acts as if
 #' its default aesthetics are \code{aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))}.
 #'
+#' A \code{width} (or for \code{geom_intervalh}, \code{height}) aesthetic is also computed by default to
+#' make use of \code{position = "dodge"} (respectively, \code{position = "dodgev"}) straightforward.
+#' If you prefer a different width/height, you can specify these directly by passing a \code{width}
+#' or \code{height} value to \code{\link{position_dodge}} or \code{\link{position_dodgev}}.
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
 #' layer level if you are overriding the plot defaults.
@@ -119,6 +124,17 @@ GeomInterval <- ggproto("GeomInterval", Geom,
   draw_key = draw_key_path,
 
   required_aes = c("x", "y", "ymin", "ymax"),
+
+  setup_data = function(data, params) {
+    # provide a default width so that position_dodge works sensibly by default
+    if (is.null(data$xmin) && is.null(data$xmax)) {
+      data$width = data$width %||%
+        params$width %||% (resolution(data$x, FALSE) * 0.75)
+      transform(data,
+        xmin = x - width / 2, xmax = x + width / 2, width = NULL
+      )
+    }
+  },
 
   draw_panel = function(data, panel_scales, coord) {
     # draw all the intervals

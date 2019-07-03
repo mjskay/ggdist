@@ -61,6 +61,17 @@ GeomIntervalh <- ggproto("GeomIntervalh", Geom,
 
   required_aes = c("x", "y", "xmin", "xmax"),
 
+  setup_data = function(data, params) {
+    # provide a default width so that position_dodge works sensibly by default
+    if (is.null(data$ymin) && is.null(data$ymax)) {
+      data$height = data$height %||%
+        params$height %||% (resolution(data$y, FALSE) * 0.75)
+      transform(data,
+        ymin = y - height / 2, ymax = y + height / 2, height = NULL
+      )
+    }
+  },
+
   draw_panel = function(data, panel_scales, coord) {
     # draw all the intervals
     interval_grobs = data %>%
