@@ -35,22 +35,7 @@
 #' @keywords manip
 #' @examples
 #'
-#' library(magrittr)
-#' library(ggplot2)
-#'
-#' data(RankCorr, package = "tidybayes")
-#'
-#' RankCorr %>%
-#'   spread_draws(u_tau[i]) %>%
-#'   median_qi(.width = c(.8, .95)) %>%
-#'   ggplot(aes(y = i, x = u_tau)) +
-#'   geom_pointintervalh()
-#'
-#' RankCorr %>%
-#'   spread_draws(u_tau[i]) %>%
-#'   median_qi(.width = c(.8, .95)) %>%
-#'   ggplot(aes(x = i, y = u_tau)) +
-#'   geom_pointinterval()
+#' # TODO
 #'
 #' @importFrom ggplot2 GeomSegment GeomPolygon
 #' @importFrom plyr dlply
@@ -61,10 +46,13 @@ geom_area_interval = function(
   stat = "identity", position = "identity",
   ...,
 
-  scale = 0.9,
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
+  scale = 0.9,
   orientation = c("horizontal", "vertical"),
-  justification = NA,
+  justification = NULL,
+  normalize = c("max_height", "height", "none"),
+  area = TRUE,
+  interval = TRUE,
   na.rm = FALSE,
 
   show.legend = NA,
@@ -73,6 +61,7 @@ geom_area_interval = function(
 
   side = match.arg(side)
   orientation = match.arg(orientation)
+  normalize = match.arg(normalize)
 
   layer(
     data = data,
@@ -84,10 +73,13 @@ geom_area_interval = function(
     inherit.aes = inherit.aes,
 
     params = list(
-      scale = scale,
       side = side,
+      scale = scale,
       orientation = orientation,
       justification = justification,
+      normalize = normalize,
+      area = area,
+      interval = interval,
       na.rm = na.rm,
       ...
     )
@@ -96,27 +88,73 @@ geom_area_interval = function(
 
 GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
   default_aes = aes(
-    shape = 19,
-    colour = "black",
-    fill = "gray65",
+    # shared aesthetics
     alpha = NA,
-    size = 1,
+
+    # shared point and interval aesthetics
+    colour = "black",
+
+    # shared area and interval aesthetics
+    linetype = "solid",
+
+    # shared point and area aesthetics
+    fill = "gray65",
+
+    # point aesthetics
+    shape = 19,
     stroke = 0.5,
-    linetype = "solid"
+    point_colour = NULL,      # falls back to colour
+    point_fill = NULL,        # falls back to fill
+    point_size = 3,
+
+    # interval aesthetics
+    size = 1,
+    interval_size = NULL,     # falls back to size
+    interval_linetype = NULL, # falls back to linetype
+    interval_colour = NULL,   # falls back to colour
+
+    # area aesthetics
+    outside_colour = NA,         # no line around the outside of the area by default
+    outside_linetype = NULL,     # falls back to linetype
+    outside_size = 1
   ),
 
-  extra_params = c("side", "scale", "orientation", "justification", "na.rm"),
+  extra_params = c(
+    "side",
+    "scale",
+    "orientation",
+    "justification",
+    "normalize",
+    "area",
+    "interval",
+    "na.rm"
+  ),
 
   setup_data = function(self, data, params) {
     define_orientation_variables(params$orientation)
 
-    # rescale functions according to how we want to scale them
-    # current approach is normalize so max height across all is 1
-    # this preserves areas across groups
-    finite_f = data$f[is.finite(data$f)]
-    if (length(finite_f) > 0) {
-      data$f = data$f / max(finite_f)
-    }
+    # normalize functions according to how we want to scale them
+    switch(params$normalize,
+      max_height = {
+        # normalize so max height across all is 1
+        # this preserves areas across groups in area plots
+        finite_f = data$thickness[is.finite(data$thickness)]
+        if (length(finite_f) > 0) {
+          data$thickness = data$thickness / max(finite_f)
+        }
+      },
+      height = {
+        # normalize so height in each group is 1
+        data = ddply(data, c("group", y), function(d) {
+          finite_f = d$thickness[is.finite(d$thickness)]
+          if (length(finite_f) > 0) {
+            d$thickness = d$thickness / max(finite_f)
+          }
+          d
+        })
+      },
+      none =,
+    )
 
     # figure out the bounding rectangles for each group
     # this is necessary so that the bounding box is correct for
@@ -124,146 +162,121 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     data[[height]] = data[[height]] %||% params[[height]] %||%
       resolution(data[[y]], FALSE)
 
-    # justification = get_justification(params$justification, params$side)
-    # print(justification)
-    #
-    # data[[ymin]] = data[[y]] - justification * data[[height]]
-    # data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
-
+    # determine bounding boxes based on justification: position
+    # the min/max bounds around y such that y is at the correct
+    # justification relative to the bounds
     justification = get_justification(params$justification, params$side)
     data[[ymin]] = data[[y]] - justification * data[[height]]
     data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
 
-    switch_side(params$side,
-      top = {
-        data[[y]] = data[[ymin]]
-      },
-      bottom = {
-        data[[y]] = data[[ymax]]
-      },
-      both = {
-        data[[y]] = (data[[ymin]] + data[[ymax]]) / 2
-      }
-    )
-
-
     data
   },
 
-  draw_group = function(self, data, panel_params, coord, ..., side, scale, orientation, justification) {
+  draw_panel = function(self, data, panel_params, coord,
+      side, scale, orientation, justification, area, interval
+    ) {
+
     define_orientation_variables(orientation)
 
     # recover height (position_dodge adjusts ymax/ymix but not height)
     data[[height]] = data[[ymax]] - data[[ymin]]
+    justification = get_justification(justification, side)
 
-    density_grobs = list()
-    if (!is.null(data$f)) {
-      # function values were provided, draw them
+    area_grobs = list()
+    if (area && !is.null(data$thickness)) {
+      # thickness values were provided, draw them
 
-      # function data is any of the data with finite function values
-      f_data = data[is.finite(data$f),]
+      # area data is any of the data with finite thickness values
+      a_data = data[is.finite(data$thickness),]
 
-      if (nrow(f_data) > 0) {
+      if (nrow(a_data) > 0) {
         # rescale the data to be within the confines of the bounding box
         # we do this *again* here (rather than in setup_data) because
         # position_dodge doesn't work if we only do it up there
-        f_scale = scale * f_data[[height]] / max(f_data$f)
+        a_scale = scale * a_data[[height]]
 
-        # switch_side(side,
-        #   top = {
-        #     f_data[[y]] = f_data[[ymin]]
-        #   },
-        #   bottom = {
-        #     f_data[[y]] = f_data[[ymax]]
-        #   },
-        #   both = {
-        #     f_data[[y]] = (f_data[[ymin]] + f_data[[ymax]]) / 2
-        #   }
-        # )
-        #
-        # f_data[[ymin]] = f_data[[y]] - f_data$f * f_scale * justification
-        # f_data[[ymax]] = f_data[[y]] + f_data$f * f_scale * (1 - justification)
-
-        justification = get_justification(justification, side)
         switch_side(side,
           top = {
-            #f_data[[y]] = f_data[[y]] + justification * f_data[[height]] * (1 - scale)
-            f_data[[ymin]] = f_data[[y]]
-            f_data[[ymax]] = f_data[[y]] + f_data$f * f_scale
+            # the slight nudge of justification * a_data[[height]] * (1 - scale) ensures that
+            # justifications work properly when scale != 1 (and similarly for other values of `side`)
+            a_data[[y]] = a_data[[ymin]] + justification * a_data[[height]] * (1 - scale)
+            a_data[[ymin]] = a_data[[y]]
+            a_data[[ymax]] = a_data[[y]] + a_data$thickness * a_scale
           },
           bottom = {
-            #f_data[[y]] = f_data[[y]] - (1 - justification) * f_data[[height]] * (1 - scale)
-            f_data[[ymin]] = f_data[[y]] - f_data$f * f_scale
-            f_data[[ymax]] = f_data[[y]]
+            a_data[[y]] = a_data[[ymax]] - (1 - justification) * a_data[[height]] * (1 - scale)
+            a_data[[ymin]] = a_data[[y]] - a_data$thickness * a_scale
+            a_data[[ymax]] = a_data[[y]]
           },
           both = {
-            #f_data[[y]] = f_data[[y]] - (0.5 - justification) * f_data[[height]] * (1 - scale)
-            f_data[[ymin]] = f_data[[y]] - f_data$f * f_scale / 2
-            f_data[[ymax]] = f_data[[y]] + f_data$f * f_scale / 2
+            a_data[[y]] = (a_data[[ymin]] + a_data[[ymax]]) / 2 - (0.5 - justification) * a_data[[height]] * (1 - scale)
+            a_data[[ymin]] = a_data[[y]] - a_data$thickness * a_scale / 2
+            a_data[[ymax]] = a_data[[y]] + a_data$thickness * a_scale / 2
           }
         )
 
-        # f_data[[y]] = f_data[[y]] - justification * f_data[[height]] * scale
-        # f_data[[ymin]] = f_data[[ymin]] - justification * f_data[[height]] * scale
-        # f_data[[ymax]] = f_data[[ymax]] - justification * f_data[[height]] * scale
+        a_data$colour = a_data$outside_colour
+        a_data$linetype = a_data$outside_linetype %||% a_data$linetype
+        a_data$size = a_data$outside_size
 
-        # density grob color defaults to NA
-        # TODO: make this something else
-        f_data$colour = NA
-
-        # build grobs to display the densities
-        density_grobs = dlply(f_data, y, function(d) {
+        # build grobs to display the areas
+        area_grobs = dlply(a_data, c("group", y), function(d) {
           data_order = order(d[[x]])
-          density_data_top = d[data_order,]
-          density_data_top[[y]] = density_data_top[[ymax]]
+          area_data_top = d[data_order,]
+          area_data_top[[y]] = area_data_top[[ymax]]
 
-          density_data_bottom = d[rev(data_order),]
-          density_data_bottom[[y]] = density_data_bottom[[ymin]]
+          area_data_bottom = d[rev(data_order),]
+          area_data_bottom[[y]] = area_data_bottom[[ymin]]
 
-          GeomPolygon$draw_panel(rbind(density_data_top, density_data_bottom), panel_params, coord, ...)
+          area_data = rbind(area_data_top, area_data_bottom)
+
+          area_grob = GeomPolygon$draw_panel(transform(area_data, colour = NA), panel_params, coord)
+
+          if (!is.null(area_data_top$colour) && !all(is.na(area_data_top$colour))) {
+            # we have an outline to draw around the outside of the area:
+            # the definition of "outside" depends on the value of `side`:
+            outside_data = switch_side(side, top = area_data_top, bottom = area_data_bottom, both = area_data)
+            gList(area_grob, GeomPath$draw_panel(outside_data, panel_params, coord))
+          } else {
+            area_grob
+          }
         })
       }
     }
 
     interval_grobs = list()
     point_grobs = list()
-    if (!is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
+    if (interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       # intervals were provided, draw them
 
       # interval data is any of the data with non-missing interval values
       i_data = data[!is.na(data[[xmin]]) & !is.na(data[[xmax]]),]
 
-      justification = get_justification(justification, side)
-      switch_side(side,
-        top = {
-          i_data[[y]] = i_data[[y]] + justification * i_data[[height]]
-        },
-        bottom = {
-          i_data[[y]] = i_data[[y]] - (1 - justification) * i_data[[height]]
-        },
-        both = {
-          i_data[[y]] = i_data[[y]] - (0.5 - justification) * i_data[[height]]
-        }
-      )
+      # adjust y position based on justification
+      i_data[[y]] = i_data[[ymin]] + justification * i_data[[height]]
 
       if (nrow(i_data) > 0) {
         # reorder by interval width so largest intervals are drawn first
         i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
 
         p_data = i_data
-        # TODO: make this something else
-        p_data$colour = "red"
-        point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, ...))
+        p_data$colour = p_data$point_colour %||% p_data$colour
+        p_data$fill = p_data$point_fill %||% p_data$fill
+        p_data$size = p_data$point_size
+        point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord))
 
         i_data[[x]] = i_data[[xmin]]
         i_data[[xend]] = i_data[[xmax]]
         i_data[[yend]] = i_data[[y]]
-        interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, ...))
+        i_data$colour = i_data$interval_colour %||% i_data$colour
+        i_data$size = i_data$interval_size %||% i_data$size
+        i_data$linetype = i_data$interval_linetype %||% i_data$linetype
+        interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt"))
       }
     }
 
     ggname("geom_area_interval",
-      gTree(children = do.call(gList, c(density_grobs, interval_grobs, point_grobs)))
+      gTree(children = do.call(gList, c(area_grobs, interval_grobs, point_grobs)))
     )
   }
 )
@@ -318,7 +331,7 @@ switch_side = function(side, top, bottom, both) {
 }
 
 get_justification = function(justification, side) {
-  if (is.na(justification)) {
+  if (is.null(justification)) {
     switch_side(side,
       top = 0,
       bottom = 1,

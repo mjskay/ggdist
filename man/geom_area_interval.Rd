@@ -2,13 +2,15 @@
 % Please edit documentation in R/geom_area_interval.R
 \name{geom_area_interval}
 \alias{geom_area_interval}
-\title{Area function + point + interval meta-geom}
+\title{Area + point + interval meta-geom}
 \usage{
 geom_area_interval(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., scale = 0.9, side = c("topright",
-  "top", "right", "bottomleft", "bottom", "left", "both"),
-  orientation = c("horizontal", "vertical"), na.rm = FALSE,
-  show.legend = NA, inherit.aes = TRUE)
+  position = "identity", ..., side = c("topright", "top", "right",
+  "bottomleft", "bottom", "left", "both"), scale = 0.9,
+  orientation = c("horizontal", "vertical"), justification = NULL,
+  normalize = c("max_height", "height", "none"), area = TRUE,
+  interval = TRUE, na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -47,22 +49,7 @@ halfeye plots, point+interval plots, or CCDF barplots.
 }
 \examples{
 
-library(magrittr)
-library(ggplot2)
-
-data(RankCorr, package = "tidybayes")
-
-RankCorr \%>\%
-  spread_draws(u_tau[i]) \%>\%
-  median_qi(.width = c(.8, .95)) \%>\%
-  ggplot(aes(y = i, x = u_tau)) +
-  geom_pointintervalh()
-
-RankCorr \%>\%
-  spread_draws(u_tau[i]) \%>\%
-  median_qi(.width = c(.8, .95)) \%>\%
-  ggplot(aes(x = i, y = u_tau)) +
-  geom_pointinterval()
+# TODO
 
 }
 \seealso{
