@@ -93,15 +93,17 @@ geom_area_interval = function(
 }
 
 GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
-  default_aes = aes(weight = 1, colour = "black", fill = "gray65", size = 0,
-    alpha = NA, linetype = "solid"),
+  default_aes = aes(
+    shape = 19,
+    colour = "black",
+    fill = "gray65",
+    alpha = NA,
+    size = 1,
+    stroke = 0.5,
+    linetype = "solid"
+  ),
 
   extra_params = c("side", "scale", "orientation", "na.rm"),
-
-  setup_params = function(self, data, params) {
-    stop("HI")
-    params
-  },
 
   setup_data = function(self, data, params) {
     define_orientation_variables(params$orientation)
@@ -169,6 +171,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
         )
 
         # density grob color defaults to NA
+        # TODO: make this something else
         f_data$colour = NA
 
         # build grobs to display the densities
@@ -186,6 +189,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     }
 
     interval_grobs = list()
+    point_grobs = list()
     if (!is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       # intervals were provided, draw them
 
@@ -196,18 +200,20 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
         # reorder by interval width so largest intervals are drawn first
         i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
 
+        p_data = i_data
+        # TODO: make this something else
+        p_data$colour = "red"
+        point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, ...))
+
         i_data[[x]] = i_data[[xmin]]
         i_data[[xend]] = i_data[[xmax]]
         i_data[[yend]] = i_data[[y]]
-
-        i_data$colour = "black"
-
         interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, ...))
       }
     }
 
     ggname("geom_area_interval",
-      gTree(children = do.call(gList, c(density_grobs, interval_grobs)))
+      gTree(children = do.call(gList, c(density_grobs, interval_grobs, point_grobs)))
     )
   }
 )
