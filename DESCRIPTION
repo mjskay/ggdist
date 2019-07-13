@@ -24,6 +24,7 @@ Imports:
     purrr (>= 0.2.3),
     rlang (>= 0.3.0),
     ggstance (>= 0.3.2),
+    scales,
     grid,
     forcats,
     HDInterval,

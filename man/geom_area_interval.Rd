@@ -26,12 +26,43 @@ the plot defaults.}
 
 \item{...}{Other arguments passed to \code{\link{layer}}.}
 
+\item{side}{Which side to draw the area on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the area to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the area
+to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}}
+
+\item{scale}{What proportion of the region allocated to this geom to use to draw the area. If \code{scale = 1},
+areas that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}, the default) or
+vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
+aesthetic to identify different groups, then for each group uses the \code{x} (resp. \code{y}) aesthetic and the
+\code{thickness} aesthetic to draw a function as an area, and draws points and intervals horizontally
+(resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp. \code{ymin}, \code{y}, and \code{ymax})
+aesthetics.}
+
+\item{justification}{Justification of the interval relative to the area, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NA} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
+\code{0.5}.}
+
+\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"max_height"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
+groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
+ normalization (this should probably only be used with functions whose values are in [0,1]).}
+
+\item{area}{Should the area portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-those that are mapped (the default for most geoms).}
+\item{show.legend}{Should this layer be included in the legends? \code{FALSE} hides all legends,
+\code{TRUE} shows all legends, and \code{NA} (the default) shows only those that are mapped.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
@@ -39,8 +70,9 @@ default plot specification, e.g. borders.}
 }
 \description{
 This meta-geom supports drawing combinations of functions (as areas), points, and intervals. It acts as a meta-geom
-for implementing eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots with horizontal or
-vertical orientations, and with appropriate support for dodging.
+for implementing eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots (among other things)
+and supports both horizontal and vertical orientations, dodging with position = dodge, and relative justification of
+areas with their corresponding intervals.
 }
 \details{
 \code{geom_area_interval} is a flexible meta-geom that you can use directly, though in most cases you will want to
