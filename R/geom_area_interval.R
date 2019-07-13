@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-#' Area function + point + interval meta-geom
+#' Area + point + interval meta-geom
 #'
 #' This meta-geom supports drawing combinations of functions (as areas), points, and intervals. It acts as a meta-geom
 #' for implementing eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots with horizontal or
@@ -64,6 +64,7 @@ geom_area_interval = function(
   scale = 0.9,
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
   orientation = c("horizontal", "vertical"),
+  justification = NA,
   na.rm = FALSE,
 
   show.legend = NA,
@@ -86,6 +87,7 @@ geom_area_interval = function(
       scale = scale,
       side = side,
       orientation = orientation,
+      justification = justification,
       na.rm = na.rm,
       ...
     )
@@ -103,7 +105,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     linetype = "solid"
   ),
 
-  extra_params = c("side", "scale", "orientation", "na.rm"),
+  extra_params = c("side", "scale", "orientation", "justification", "na.rm"),
 
   setup_data = function(self, data, params) {
     define_orientation_variables(params$orientation)
@@ -122,26 +124,37 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     data[[height]] = data[[height]] %||% params[[height]] %||%
       resolution(data[[y]], FALSE)
 
+    # justification = get_justification(params$justification, params$side)
+    # print(justification)
+    #
+    # data[[ymin]] = data[[y]] - justification * data[[height]]
+    # data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
+
+    justification = get_justification(params$justification, params$side)
+    data[[ymin]] = data[[y]] - justification * data[[height]]
+    data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
+
     switch_side(params$side,
       top = {
-        data[[ymin]] = data[[y]]
-        data[[ymax]] = data[[y]] + data[[height]]
+        data[[y]] = data[[ymin]]
       },
       bottom = {
-        data[[ymin]] = data[[y]] - data[[height]]
-        data[[ymax]] = data[[y]]
+        data[[y]] = data[[ymax]]
       },
       both = {
-        data[[ymin]] = data[[y]] - data[[height]] / 2
-        data[[ymax]] = data[[y]] + data[[height]] / 2
+        data[[y]] = (data[[ymin]] + data[[ymax]]) / 2
       }
     )
+
 
     data
   },
 
-  draw_group = function(self, data, panel_params, coord, ..., side, scale, orientation) {
+  draw_group = function(self, data, panel_params, coord, ..., side, scale, orientation, justification) {
     define_orientation_variables(orientation)
+
+    # recover height (position_dodge adjusts ymax/ymix but not height)
+    data[[height]] = data[[ymax]] - data[[ymin]]
 
     density_grobs = list()
     if (!is.null(data$f)) {
@@ -154,21 +167,45 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
         # rescale the data to be within the confines of the bounding box
         # we do this *again* here (rather than in setup_data) because
         # position_dodge doesn't work if we only do it up there
-        f_scale = scale * (f_data[[ymax]] - f_data[[ymin]])
+        f_scale = scale * f_data[[height]] / max(f_data$f)
+
+        # switch_side(side,
+        #   top = {
+        #     f_data[[y]] = f_data[[ymin]]
+        #   },
+        #   bottom = {
+        #     f_data[[y]] = f_data[[ymax]]
+        #   },
+        #   both = {
+        #     f_data[[y]] = (f_data[[ymin]] + f_data[[ymax]]) / 2
+        #   }
+        # )
+        #
+        # f_data[[ymin]] = f_data[[y]] - f_data$f * f_scale * justification
+        # f_data[[ymax]] = f_data[[y]] + f_data$f * f_scale * (1 - justification)
+
+        justification = get_justification(justification, side)
         switch_side(side,
           top = {
+            #f_data[[y]] = f_data[[y]] + justification * f_data[[height]] * (1 - scale)
             f_data[[ymin]] = f_data[[y]]
             f_data[[ymax]] = f_data[[y]] + f_data$f * f_scale
           },
           bottom = {
+            #f_data[[y]] = f_data[[y]] - (1 - justification) * f_data[[height]] * (1 - scale)
             f_data[[ymin]] = f_data[[y]] - f_data$f * f_scale
             f_data[[ymax]] = f_data[[y]]
           },
           both = {
+            #f_data[[y]] = f_data[[y]] - (0.5 - justification) * f_data[[height]] * (1 - scale)
             f_data[[ymin]] = f_data[[y]] - f_data$f * f_scale / 2
             f_data[[ymax]] = f_data[[y]] + f_data$f * f_scale / 2
           }
         )
+
+        # f_data[[y]] = f_data[[y]] - justification * f_data[[height]] * scale
+        # f_data[[ymin]] = f_data[[ymin]] - justification * f_data[[height]] * scale
+        # f_data[[ymax]] = f_data[[ymax]] - justification * f_data[[height]] * scale
 
         # density grob color defaults to NA
         # TODO: make this something else
@@ -195,6 +232,19 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
 
       # interval data is any of the data with non-missing interval values
       i_data = data[!is.na(data[[xmin]]) & !is.na(data[[xmax]]),]
+
+      justification = get_justification(justification, side)
+      switch_side(side,
+        top = {
+          i_data[[y]] = i_data[[y]] + justification * i_data[[height]]
+        },
+        bottom = {
+          i_data[[y]] = i_data[[y]] - (1 - justification) * i_data[[height]]
+        },
+        both = {
+          i_data[[y]] = i_data[[y]] - (0.5 - justification) * i_data[[height]]
+        }
+      )
 
       if (nrow(i_data) > 0) {
         # reorder by interval width so largest intervals are drawn first
@@ -267,3 +317,14 @@ switch_side = function(side, top, bottom, both) {
   )
 }
 
+get_justification = function(justification, side) {
+  if (is.na(justification)) {
+    switch_side(side,
+      top = 0,
+      bottom = 1,
+      both = 0.5
+    )
+  } else {
+    justification
+  }
+}
