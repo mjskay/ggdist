@@ -41,7 +41,7 @@ scale_point_color_discrete = scale_point_colour_discrete
 
 #' @rdname scale_
 #' @export
-scale_point_colour_continuous = function(..., aesthetics = "point_colour", guide = "colorbar_generic") {
+scale_point_colour_continuous = function(..., aesthetics = "point_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
@@ -51,7 +51,7 @@ scale_point_color_continuous = scale_point_colour_continuous
 
 #' @rdname scale_
 #' @export
-scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = "colorbar_generic") {
+scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
@@ -100,7 +100,7 @@ scale_interval_color_discrete = scale_interval_colour_discrete
 
 #' @rdname scale_
 #' @export
-scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = "colorbar_generic") {
+scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
@@ -119,7 +119,7 @@ scale_outside_color_discrete = scale_outside_colour_discrete
 
 #' @rdname scale_
 #' @export
-scale_outside_colour_continuous = function(..., aesthetics = "outside_colour", guide = "colorbar_generic") {
+scale_outside_colour_continuous = function(..., aesthetics = "outside_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
@@ -149,15 +149,19 @@ scale_outside_size_discrete = function(..., range = c(1, 6), na.translate = FALS
 
 #' @rdname scale_
 #' @export
-guide_colorbar_generic = function(...) {
-  # the default colorbar throws an error when asked to draw color bars for these aesthetics
+guide_colourbar2 = function(...) {
+  # the default colourbar throws an error when asked to draw color bars for these aesthetics
   # even though it seems perfectly capable of doing so. This fixes that...
-  colorbar = ggplot2::guide_colorbar()
-  colorbar$available_aes = union(colorbar$available_aes, c(
+  colourbar = ggplot2::guide_colourbar(...)
+  colourbar$available_aes = union(colourbar$available_aes, c(
     "point_color",
     "point_fill",
     "interval_colour",
     "outside_colour"
   ))
-  colorbar
+  colourbar
 }
+
+#' @rdname scale_
+#' @export
+guide_colorbar2 = guide_colourbar2

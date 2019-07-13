@@ -23,7 +23,8 @@
 \alias{scale_outside_linetype}
 \alias{scale_outside_size_continuous}
 \alias{scale_outside_size_discrete}
-\alias{guide_colorbar_generic}
+\alias{guide_colourbar2}
+\alias{guide_colorbar2}
 \title{Custom ggplot scales for geom_area_interval (and derivatives)}
 \usage{
 scale_point_colour_discrete(..., aesthetics = "point_colour")
@@ -31,13 +32,13 @@ scale_point_colour_discrete(..., aesthetics = "point_colour")
 scale_point_color_discrete(..., aesthetics = "point_colour")
 
 scale_point_colour_continuous(..., aesthetics = "point_colour",
-  guide = "colorbar_generic")
+  guide = "colourbar2")
 
 scale_point_color_continuous(..., aesthetics = "point_colour",
-  guide = "colorbar_generic")
+  guide = "colourbar2")
 
 scale_point_fill_continuous(..., aesthetics = "point_fill",
-  guide = "colorbar_generic")
+  guide = "colourbar2")
 
 scale_point_size_continuous(..., range = c(1, 6))
 
@@ -55,20 +56,20 @@ scale_interval_colour_discrete(..., aesthetics = "interval_colour")
 scale_interval_color_discrete(..., aesthetics = "interval_colour")
 
 scale_interval_colour_continuous(..., aesthetics = "interval_colour",
-  guide = "colorbar_generic")
+  guide = "colourbar2")
 
 scale_interval_color_continuous(..., aesthetics = "interval_colour",
-  guide = "colorbar_generic")
+  guide = "colourbar2")
 
 scale_outside_colour_discrete(..., aesthetics = "outside_colour")
 
 scale_outside_color_discrete(..., aesthetics = "outside_colour")
 
 scale_outside_colour_continuous(..., aesthetics = "outside_colour",
-  guide = "colorbar_generic")
+  guide = "colourbar2")
 
 scale_outside_color_continuous(..., aesthetics = "outside_colour",
-  guide = "colorbar_generic")
+  guide = "colourbar2")
 
 scale_outside_linetype(..., na.value = "blank")
 
@@ -76,7 +77,9 @@ scale_outside_size_continuous(..., range = c(1, 6))
 
 scale_outside_size_discrete(..., range = c(1, 6), na.translate = FALSE)
 
-guide_colorbar_generic(...)
+guide_colourbar2(...)
+
+guide_colorbar2(...)
 }
 \description{
 These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_area_interval}}
