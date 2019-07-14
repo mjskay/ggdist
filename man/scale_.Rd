@@ -81,15 +81,35 @@ guide_colourbar2(...)
 
 guide_colorbar2(...)
 }
-\description{
-These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_area_interval}}
-and stats/geoms based on it (like eye plots).
-}
-\details{
-The following additional scales are defined:
+\arguments{
+\item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
+passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.}
+
+\item{aesthetics}{Names of aesthetics to set scales for.}
+
+\item{guide}{Guide to use for legends for an aesthetic.}
+
+\item{range}{a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
+after transformation.}
+
+\item{na.translate}{In discrete scales, should we show missing values?}
+
+\item{na.value}{When na.translate is true, what value should be shown?
+
+The following additional scales / aesthetics are defined for use with \code{\link{geom_area_interval}} and
+related geoms:
 
 \enumerate{
   \item{\code{scale_point_color_*}}{Point color}
+  \item{\code{scale_point_fill_*}}{Point fill color}
+  \item{\code{scale_point_size_*}}{Point size}
+  \item{\code{scale_interval_color_*}}{Interval line color}
+  \item{\code{scale_interval_size_*}}{Interval line width. By default maps larger values onto smaller lines
+  to match typical usage, uses linear scaling, and has a smaller range than \code{scale_size}, as it is
+  typically used to map probability levels onto line widths}
+  \item{\code{scale_interval_linetype_*}}{Interval line type}
+  \item{\code{scale_outside_color_*}}{Outside line color}
+  \item{\code{scale_outside_linetype_*}}{Outside line type}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.
@@ -99,6 +119,15 @@ Other scale functions can be used with the aesthetics/scales defined here by usi
 argument to that scale function. For example, to use color brewer scales with the \code{point_color} aesthetic:
 
 \code{scale_color_brewer(..., aesthetics = "point_color")}
+
+With continuous color scales, you may also need to provide a guide as the default guide does not work properly;
+this is what \code{guide_colorbar2} is for:
+
+\code{scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")}}
+}
+\description{
+These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_area_interval}}
+and stats/geoms based on it (like eye plots).
 }
 \examples{
 
@@ -106,8 +135,7 @@ argument to that scale function. For example, to use color brewer scales with th
 
 }
 \seealso{
-See \code{\link{geom_lineribbon}} for a similar geom designed for curves plus probability bands. See
-\code{\link{geom_pointrange}} and \code{\link{geom_pointrangeh}} for the geoms these are based on.
+\code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
 }
 \author{
 Matthew Kay
