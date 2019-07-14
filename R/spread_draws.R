@@ -642,9 +642,9 @@ abind0 = function(vectors) {
 # 2. A vector of dimension names (or NULL if none)
 # 3. The name of the wide dimension (or NULL if none)
 #' @importFrom purrr reduce map map2
-#' @importFrom rlang set_names new_data_mask
+#' @importFrom rlang set_names new_data_mask quo_get_expr
 parse_variable_spec = function(variable_spec) {
-  names = all_names(variable_spec[[2]])
+  names = all_names(quo_get_expr(variable_spec))
   #specs for each bare variable name in the spec expression
   names_spec = names %>%
     set_names() %>%

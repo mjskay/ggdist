@@ -141,7 +141,7 @@ comparison_types = within(list(), {
 #' @importFrom tidyr spread_
 #' @importFrom dplyr one_of
 #' @importFrom dplyr as_tibble
-#' @importFrom rlang sym quo_name eval_tidy
+#' @importFrom rlang sym quo_name eval_tidy quo_get_expr
 #' @export
 compare_levels = function(data, variable, by, fun=`-`, comparison = "default",
     draw_indices = c(".chain", ".iteration", ".draw"),
@@ -172,7 +172,7 @@ compare_levels_ = function(data, variable, by, fun, comparison, draw_indices) {
   data_wide = spread_(data, by, variable)
 
   # determine a pretty function name
-  fun_name = if (is.name(fun[[2]])) quo_name(fun) else ":"
+  fun_name = if (is.name(quo_get_expr(fun))) quo_name(fun) else ":"
   fun = eval_tidy(fun)
 
   #get a version of the data data frame without columns representing
@@ -182,7 +182,7 @@ compare_levels_ = function(data, variable, by, fun, comparison, draw_indices) {
   data_wide_no_levels = select(data_wide, -one_of(by_levels))
 
   #get list of pairs of levels to compare
-  if (is.character(comparison[[2]])) comparison = as.name(comparison[[2]])
+  if (is.character(quo_get_expr(comparison))) comparison = as.name(quo_get_expr(comparison))
   comparison_function = eval_tidy(comparison, comparison_types)
   comparison_levels =
     if (is.list(comparison_function)) comparison_function
