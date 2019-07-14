@@ -9,6 +9,17 @@ ggname <- function(prefix, grob) {
   grob
 }
 
+# create a new layer with some default computed aesthetics derived from the original data
+layer_with_default_computed_aesthetics = function(old_layer, new_layer_name, default_computed_aesthetics) {
+  new_setup_layer = function(self, data, plot) {
+    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
+    ggproto_parent(old_layer, self)$setup_layer(data, plot)
+  }
+
+  ggplot2::ggproto(new_layer_name, old_layer,
+    setup_layer = new_setup_layer)
+}
+
 # applies some computed aesthetics to a layer, but allow them to be overridden by the
 # layer or by the plot aesthetics.
 apply_default_computed_aesthetics = function(self, plot, default_computed_aesthetics) {

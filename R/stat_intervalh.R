@@ -26,12 +26,10 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
 
   fun.data = fun.data %||% horizontal_aes(point_interval)
 
-  l = layer(
+  layer(
     data = data,
     mapping = mapping,
-    #we can re-use StatPointintervalh internally because it does exactly the same thing
-    #we would have done for a StatIntervalh.
-    stat = StatPointintervalh,
+    stat = StatIntervalh,
     geom = geom,
     position = position,
     show.legend = show.legend,
@@ -44,21 +42,10 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
       ...
     )
   )
-
-  #provide some default computed aesthetics
-  default_computed_aesthetics = aes(color = forcats::fct_rev(ordered(...width..)))  # nolint
-
-  compute_aesthetics = l$compute_aesthetics
-  l$compute_aesthetics = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    compute_aesthetics(data, plot)
-  }
-
-  map_statistic = l$map_statistic
-  l$map_statistic = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    map_statistic(data, plot)
-  }
-
-  l
 }
+
+StatIntervalh <- ggproto("StatIntervalh", StatPointintervalh,
+  default_aes = aes(
+    color = stat(level)
+  )
+)

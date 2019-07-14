@@ -79,12 +79,10 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
 
   fun.data = fun.data %||% vertical_aes(point_interval)
 
-  l = layer(
+  layer(
     data = data,
     mapping = mapping,
-    #we can re-use StatPointinterval internally because it does exactly the same thing
-    #we would have done for a StatLineribbon
-    stat = StatPointinterval,
+    stat = StatLineribbon,
     geom = geom,
     position = position,
     show.legend = show.legend,
@@ -97,24 +95,11 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
       ...
     )
   )
-
-  #provide some default computed aesthetics
-  default_computed_aesthetics = aes(
-    group = stat(.width),
-    fill = forcats::fct_rev(ordered(stat(.width)))
-  )
-
-  compute_aesthetics = l$compute_aesthetics
-  l$compute_aesthetics = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    compute_aesthetics(data, plot)
-  }
-
-  map_statistic = l$map_statistic
-  l$map_statistic = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    map_statistic(data, plot)
-  }
-
-  l
 }
+
+StatLineribbon <- ggproto("StatLineribbon", StatPointinterval,
+  default_aes = aes(
+    group = stat(level),
+    fill = stat(level)
+  )
+)

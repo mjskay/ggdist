@@ -22,7 +22,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
 
   fun.data = fun.data %||% horizontal_aes(point_interval)
 
-  l = layer(
+  layer(
     data = data,
     mapping = mapping,
     stat = StatPointintervalh,
@@ -38,27 +38,14 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
       ...
     )
   )
-
-  #provide some default computed aesthetics
-  default_computed_aesthetics = aes(size = -...width..)  # nolint
-
-  compute_aesthetics = l$compute_aesthetics
-  l$compute_aesthetics = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    compute_aesthetics(data, plot)
-  }
-
-  map_statistic = l$map_statistic
-  l$map_statistic = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    map_statistic(data, plot)
-  }
-
-  l
 }
 
 #' @importFrom plyr defaults
 StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
+  default_aes = aes(
+    size = stat(-.width)
+  ),
+
   compute_panel = function(data, scales, fun.data = median_qih, .width = c(.66, .95),
     fun.args = list(), na.rm = FALSE
   ) {
@@ -71,6 +58,8 @@ StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
       do.call(fun.data, c(list(quote(df$x)), fun.args))
     }
 
-    summarise_by_y(data, fun)
+    data = summarise_by_y(data, fun)
+    data$level = forcats::fct_rev(ordered(data$.width))
+    data
   }
 )

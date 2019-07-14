@@ -95,20 +95,7 @@ geom_interval <- function(mapping = NULL, data = NULL,
 
   #provide some default computed aesthetics
   default_computed_aesthetics = aes(ymin = .lower, ymax = .upper, color = forcats::fct_rev(ordered(.width)))
-
-  compute_aesthetics = l$compute_aesthetics
-  l$compute_aesthetics = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    compute_aesthetics(data, plot)
-  }
-
-  map_statistic = l$map_statistic
-  l$map_statistic = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    map_statistic(data, plot)
-  }
-
-  l
+  layer_with_default_computed_aesthetics(l, "LayerGeomInterval", default_computed_aesthetics)
 }
 
 #' @rdname tidybayes-ggproto
