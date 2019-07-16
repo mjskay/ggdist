@@ -9,36 +9,12 @@ ggname <- function(prefix, grob) {
   grob
 }
 
-# create a new layer with some default computed aesthetics derived from the original data
-layer_with_default_computed_aesthetics = function(old_layer, new_layer_name, default_computed_aesthetics) {
-  new_setup_layer = function(self, data, plot) {
-    apply_default_computed_aesthetics(self, plot, default_computed_aesthetics)
-    ggproto_parent(old_layer, self)$setup_layer(data, plot)
-  }
-
-  ggplot2::ggproto(new_layer_name, old_layer,
-    setup_layer = new_setup_layer)
-}
-
-# applies some computed aesthetics to a layer, but allow them to be overridden by the
-# layer or by the plot aesthetics.
-apply_default_computed_aesthetics = function(self, plot, default_computed_aesthetics) {
-  if (!"original_mapping" %in% names(self)) {
-    self$original_mapping = self$mapping
-  }
-  self$mapping = self$original_mapping
-  if (is.null(self$mapping)) {
-    self$mapping = aes()
-  }
-
-  map2(names(default_computed_aesthetics), default_computed_aesthetics, function(name, value) {
-    for (aesthetic in default_computed_aesthetics)
-      if (!(name %in% names(plot$mapping)) &&
-          !(name %in% names(self$mapping))
-      ) {
-        self$mapping[[name]] = value
-      }
-  })
+# provide default aesthetics for a mapping --- useful for creating default computed
+# asethetics when creating a layer (i.e. aesthetics computed from the input data
+# rather than default non-data-mapped aesthetics)
+default_aes = function(mapping, ...) {
+  if (is.null(mapping)) mapping = aes()
+  modifyList(aes(...), mapping)
 }
 
 #' Base ggproto classes for tidybayes

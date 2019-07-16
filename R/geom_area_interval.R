@@ -113,6 +113,9 @@ geom_area_interval = function(
 
 GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
   default_aes = aes(
+    # default datatype is area (other valid value is "interval" for points/intervals)
+    datatype = "area",
+
     # shared aesthetics
     alpha = NA,
 
@@ -158,22 +161,24 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
   setup_data = function(self, data, params) {
     define_orientation_variables(params$orientation)
 
+    data$datatype = data$datatype %||% "area"
+
     # normalize functions according to how we want to scale them
     switch(params$normalize,
       max_height = {
         # normalize so max height across all is 1
         # this preserves areas across groups in area plots
-        finite_f = data$thickness[is.finite(data$thickness)]
-        if (length(finite_f) > 0) {
-          data$thickness = data$thickness / max(finite_f)
+        finite_thickness = data$thickness[data$datatype == "area" & is.finite(data$thickness)]
+        if (length(finite_thickness) > 0) {
+          data$thickness = data$thickness / max(finite_thickness)
         }
       },
       height = {
         # normalize so height in each group is 1
         data = ddply(data, c("group", y), function(d) {
-          finite_f = d$thickness[is.finite(d$thickness)]
-          if (length(finite_f) > 0) {
-            d$thickness = d$thickness / max(finite_f)
+          finite_thickness = d$thickness[d$datatype == "area" & is.finite(d$thickness)]
+          if (length(finite_thickness) > 0) {
+            d$thickness = d$thickness / max(finite_thickness)
           }
           d
         })
@@ -211,8 +216,8 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     if (area && !is.null(data$thickness)) {
       # thickness values were provided, draw them
 
-      # area data is any of the data with finite thickness values
-      a_data = data[is.finite(data$thickness),]
+      # area data is any of the data with datatype == "area"
+      a_data = data[data$datatype == "area",]
 
       if (nrow(a_data) > 0) {
         # rescale the data to be within the confines of the bounding box
@@ -274,8 +279,8 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     if (interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       # intervals were provided, draw them
 
-      # interval data is any of the data with non-missing interval values
-      i_data = data[!is.na(data[[xmin]]) & !is.na(data[[xmax]]),]
+      # interval data is any of the data with datatype == "interval"
+      i_data = data[data$datatype == "interval",]
 
       # adjust y position based on justification
       i_data[[y]] = i_data[[ymin]] + justification * i_data[[height]]

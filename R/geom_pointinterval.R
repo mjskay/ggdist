@@ -89,7 +89,10 @@ geom_pointinterval <- function(mapping = NULL, data = NULL,
   fatten_point = 1.8,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
-  inherit.aes = TRUE) {
+  inherit.aes = TRUE
+) {
+
+  mapping = default_aes(mapping, ymin = .lower, ymax = .upper, size = -.width)
 
   l = layer(
     data = data,
@@ -107,10 +110,6 @@ geom_pointinterval <- function(mapping = NULL, data = NULL,
       ...
     )
   )
-
-  #provide some default computed aesthetics
-  default_computed_aesthetics = aes(ymin = .lower, ymax = .upper, size = -.width)
-  layer_with_default_computed_aesthetics(l, "LayerGeomPointinterval", default_computed_aesthetics)
 }
 
 #' @importFrom grid grobTree

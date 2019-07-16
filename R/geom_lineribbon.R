@@ -65,9 +65,13 @@ geom_lineribbon <- function(mapping = NULL, data = NULL,
   ...,
   na.rm = FALSE,
   show.legend = NA,
-  inherit.aes = TRUE) {
+  inherit.aes = TRUE
+) {
 
-  l = layer(
+  f = function(x) forcats::fct_rev(ordered(x))
+  mapping = default_aes(mapping, ymin = .lower, ymax = .upper, fill = f(.width))
+
+  layer(
     data = data,
     mapping = mapping,
     stat = stat,
@@ -80,10 +84,6 @@ geom_lineribbon <- function(mapping = NULL, data = NULL,
       ...
     )
   )
-
-  #provide some default computed aesthetics
-  default_computed_aesthetics = aes(ymin = .lower, ymax = .upper, fill = forcats::fct_rev(ordered(.width)))
-  layer_with_default_computed_aesthetics(l, "LayerGeomLineribbon", default_computed_aesthetics)
 }
 
 #' @importFrom grid grobTree
