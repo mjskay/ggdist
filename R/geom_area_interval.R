@@ -45,8 +45,9 @@
 #' (the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
 #' groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
 #'  normalization (this should probably only be used with functions whose values are in [0,1]).
-#' @param area Should the area portion of the geom be drawn? Default \code{TRUE}.
-#' @param interval Should the interval portion of the geom be drawn? Default \code{TRUE}.
+#' @param show_area Should the area portion of the geom be drawn? Default \code{TRUE}.
+#' @param show_point Should the point portion of the geom be drawn? Default \code{TRUE}.
+#' @param show_interval Should the interval portion of the geom be drawn? Default \code{TRUE}.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 #' values are silently removed.
 #' @param show.legend Should this layer be included in the legends? \code{FALSE} hides all legends,
@@ -76,8 +77,9 @@ geom_area_interval = function(
   orientation = c("horizontal", "vertical"),
   justification = NULL,
   normalize = c("max_height", "height", "none"),
-  area = TRUE,
-  interval = TRUE,
+  show_area = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
   na.rm = FALSE,
 
   show.legend = NA,
@@ -103,8 +105,9 @@ geom_area_interval = function(
       orientation = orientation,
       justification = justification,
       normalize = normalize,
-      area = area,
-      interval = interval,
+      show_area = show_area,
+      show_point = show_point,
+      show_interval = show_interval,
       na.rm = na.rm,
       ...
     )
@@ -153,8 +156,8 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     "orientation",
     "justification",
     "normalize",
-    "area",
-    "interval",
+    "show_area",
+    "show_interval",
     "na.rm"
   ),
 
@@ -203,7 +206,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
   },
 
   draw_panel = function(self, data, panel_params, coord,
-      side, scale, orientation, justification, area, interval
+      side, scale, orientation, justification, show_area, show_point, show_interval
     ) {
 
     define_orientation_variables(orientation)
@@ -213,7 +216,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     justification = get_justification(justification, side)
 
     area_grobs = list()
-    if (area && !is.null(data$thickness)) {
+    if (show_area && !is.null(data$thickness)) {
       # thickness values were provided, draw them
 
       # area data is any of the data with datatype == "area"
@@ -276,7 +279,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
 
     interval_grobs = list()
     point_grobs = list()
-    if (interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
+    if (show_interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       # intervals were provided, draw them
 
       # interval data is any of the data with datatype == "interval"
@@ -289,11 +292,13 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
         # reorder by interval width so largest intervals are drawn first
         i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
 
-        p_data = i_data
-        p_data$colour = p_data$point_colour %||% p_data$colour
-        p_data$fill = p_data$point_fill %||% p_data$fill
-        p_data$size = p_data$point_size
-        point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord))
+        if (show_point) {
+          p_data = i_data
+          p_data$colour = p_data$point_colour %||% p_data$colour
+          p_data$fill = p_data$point_fill %||% p_data$fill
+          p_data$size = p_data$point_size
+          point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord))
+        }
 
         i_data[[x]] = i_data[[xmin]]
         i_data[[xend]] = i_data[[xmax]]

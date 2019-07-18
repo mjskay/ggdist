@@ -8,9 +8,9 @@ geom_area_interval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = c("topright", "top", "right",
   "bottomleft", "bottom", "left", "both"), scale = 0.9,
   orientation = c("horizontal", "vertical"), justification = NULL,
-  normalize = c("max_height", "height", "none"), area = TRUE,
-  interval = TRUE, na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
+  normalize = c("max_height", "height", "none"), show_area = TRUE,
+  show_point = TRUE, show_interval = TRUE, na.rm = FALSE,
+  show.legend = NA, inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -54,9 +54,11 @@ is \code{NA} (the default), then it is set automatically based on the value of \
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
  normalization (this should probably only be used with functions whose values are in [0,1]).}
 
-\item{area}{Should the area portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_area}{Should the area portion of the geom be drawn? Default \code{TRUE}.}
 
-\item{interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
