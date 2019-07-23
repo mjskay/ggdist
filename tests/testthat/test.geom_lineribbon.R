@@ -55,6 +55,13 @@ test_that("one-group geom_lineribbons work", {
       geom_lineribbon() +
       scale_fill_brewer()
   )
+  vdiffr::expect_doppelganger("one-group geom_lineribbon (manual aes in ggplot call)", df %>%
+      group_by(x, g) %>%
+      mean_qi(y, .width = c(.50, .75, .90)) %>%
+      ggplot(aes(x = x, y = y, ymin = .lower - 10)) +
+      geom_lineribbon() +
+      scale_fill_brewer()
+  )
 })
 
 test_that("two-group stat_lineribbons work", {

@@ -69,8 +69,9 @@ globalVariables(c("...width.."))
 #'   scale_color_brewer()
 #'
 #' @export
-stat_interval <- function(mapping = NULL, data = NULL,
-  geom = "interval", position = "identity",
+stat_interval = function(mapping = NULL, data = NULL,
+  geom = "interval",
+  position = "identity",
   ...,
   point_interval = median_qi,
   fun.data = NULL,

@@ -17,10 +17,7 @@ geom_intervalh <- function(mapping = NULL, data = NULL,
   inherit.aes = TRUE
 ) {
 
-  f = function(x) forcats::fct_rev(ordered(x))
-  mapping = default_aes(mapping, xmin = .lower, xmax = .upper, color = f(.width))
-
-  layer(
+  l = layer(
     data = data,
     mapping = mapping,
     stat = stat,
@@ -32,6 +29,11 @@ geom_intervalh <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       ...
     )
+  )
+
+  #TODO: move up
+  add_default_computed_aesthetics(l,
+    aes(xmin = .lower, xmax = .upper, color = forcats::fct_rev(ordered(.width)))
   )
 }
 

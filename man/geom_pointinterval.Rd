@@ -6,9 +6,8 @@
 \title{Point + multiple probability interval plots (ggplot geom)}
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., size_domain = c(1, 6),
-  size_range = c(0.6, 1.4), fatten_point = 1.8, na.rm = FALSE,
-  show.legend = c(size = FALSE), inherit.aes = TRUE)
+  position = "identity", ..., side = "both",
+  orientation = "vertical", show_area = FALSE, datatype = "interval")
 
 geom_pointintervalh(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., size_domain = c(1, 6),
@@ -44,9 +43,8 @@ thickest line.}
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-those that are mapped (the default for most geoms).}
+\item{show.legend}{Should this layer be included in the legends? \code{FALSE} hides all legends,
+\code{TRUE} shows all legends, and \code{NA} (the default) shows only those that are mapped.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
@@ -70,9 +68,7 @@ aesthetics are \code{aes(xmin = .lower, xmax = .upper, size = -.width)}.
 
 Both geoms provides a scaling factor for line width as well as point size through the \code{fatten.interval} and
 \code{fatten.point} arguments; this scaling factor is designed to give multiple probability intervals reasonable
-scaling at the default settings for \code{\link{scale_size_continuous}}. Finally, these geoms default to not
-displaying the legend, though this can be overridden through setting \code{show.legend = NA} (the setting for most
-geoms) or \code{show.legend = TRUE}.
+scaling at the default settings for \code{\link{scale_size_continuous}}.
 }
 \examples{
 

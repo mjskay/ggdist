@@ -37,7 +37,7 @@
 #' aesthetics.
 #' @param justification Justification of the interval relative to the area, where \code{0} indicates bottom/left
 #' justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-#' is \code{NA} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+#' is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
 #' \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
 #' \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
 #' \code{0.5}.
@@ -72,11 +72,75 @@ geom_area_interval = function(
   stat = "identity", position = "identity",
   ...,
 
+  # IF YOU ARE CHANGING THESE,
+  # YOU MUST ALSO UPDATE:
+  # 1. The call to layer_geom_area_interval below
+  # 2. The argument definition of layer_geom_area_interval
+  # 3. The call to layer() in layer_geom_area_interval
+  # 4. The definition of GeomAreaInterval$extra_params
+  # 5. The definition of GeomAreaInterval$default_params
+  # 6. The argument definitions of GeomAreaInterval$draw_panel
+  # This is needed to support how defaults work with child geoms,
+  # amongst other things
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
   scale = 0.9,
   orientation = c("horizontal", "vertical"),
   justification = NULL,
   normalize = c("max_height", "height", "none"),
+  interval_size_domain = c(1, 6),
+  interval_size_range = c(0.6, 1.4),
+  fatten_point = 1.8,
+  show_area = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  na.rm = FALSE,
+
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer_geom_area_interval(
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    geom = GeomAreaInterval,
+    ...,
+
+    side = side,
+    scale = scale,
+    orientation = orientation,
+    justification = justification,
+    normalize = normalize,
+    interval_size_domain = interval_size_domain,
+    interval_size_range = interval_size_range,
+    fatten_point = fatten_point,
+    show_area = show_area,
+    show_point = show_point,
+    show_interval = show_interval,
+    na.rm = na.rm,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes
+  )
+}
+
+layer_geom_area_interval = function(
+  mapping = NULL,
+  default_mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  geom = GeomAreaInterval,
+  ...,
+
+  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
+  scale = 0.9,
+  orientation = c("horizontal", "vertical"),
+  justification = NULL,
+  normalize = c("max_height", "height", "none"),
+  interval_size_domain = c(1, 6),
+  interval_size_range = c(0.6, 1.4),
+  fatten_point = 1.8,
   show_area = TRUE,
   show_point = TRUE,
   show_interval = TRUE,
@@ -86,15 +150,20 @@ geom_area_interval = function(
   inherit.aes = TRUE
 ) {
 
+  .Deprecated_arguments(
+    c("size_domain", "size_range"), ..., which = -2,
+    message = "Use the interval_size_domain and interval_size_range arguments instead."
+  )
+
   side = match.arg(side)
   orientation = match.arg(orientation)
   normalize = match.arg(normalize)
 
-  layer(
+  l = layer(
     data = data,
     mapping = mapping,
     stat = stat,
-    geom = GeomAreaInterval,
+    geom = geom,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
@@ -105,6 +174,9 @@ geom_area_interval = function(
       orientation = orientation,
       justification = justification,
       normalize = normalize,
+      interval_size_domain = interval_size_domain,
+      interval_size_range = interval_size_range,
+      fatten_point = fatten_point,
       show_area = show_area,
       show_point = show_point,
       show_interval = show_interval,
@@ -112,6 +184,41 @@ geom_area_interval = function(
       ...
     )
   )
+
+  if (!is.null(default_mapping)) {
+    add_default_computed_aesthetics(l, default_mapping)
+  } else {
+    l
+  }
+}
+
+draw_key_area_interval = function(self, data, params, size) {
+  params = modifyList(self$default_params, params)
+
+  area_grob = if(any(data$datatype == "area")) {
+    draw_key_rect(override_area_aesthetics(data), params, size)
+  }
+
+  interval_grob = if(any(data$datatype == "interval")) {
+    orientation = params$orientation
+    interval_key = switch(orientation,
+      horizontal = draw_key_hpath,
+      vertical = draw_key_vpath
+    )
+    interval_key(
+      override_interval_aesthetics(data, params$interval_size_domain, params$interval_size_range),
+      params, size
+    )
+  }
+
+  point_grob = if(any(data$datatype == "point")) {
+    draw_key_point(
+      override_point_aesthetics(data, params$interval_size_domain, params$interval_size_range, params$fatten_point),
+      params, size
+    )
+  }
+
+  gTree(children = gList(area_grob, interval_grob, point_grob))
 }
 
 GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
@@ -133,10 +240,10 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
 
     # point aesthetics
     shape = 19,
-    stroke = 0.5,
+    stroke = 1,
     point_colour = NULL,      # falls back to colour
     point_fill = NULL,        # falls back to fill
-    point_size = 3,
+    point_size = 2.5,
 
     # interval aesthetics
     size = 1,
@@ -150,21 +257,47 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     outside_size = 1
   ),
 
+  optional_aes = c(
+    "ymin", "ymax", "xmin", "xmax", "width", "height"
+  ),
+
   extra_params = c(
     "side",
     "scale",
     "orientation",
     "justification",
     "normalize",
+    "interval_size_domain",
+    "interval_size_range",
+    "fatten_point",
     "show_area",
+    "show_point",
     "show_interval",
     "na.rm"
   ),
 
+  default_params = list(
+    side = "topright",
+    scale = 0.9,
+    orientation = "horizontal",
+    justification = NULL,
+    normalize = "max_height",
+    interval_size_domain = c(1, 6),
+    interval_size_range = c(0.6, 1.4),
+    fatten_point = 1.8,
+    show_area = TRUE,
+    show_point = TRUE,
+    show_interval = TRUE
+  ),
+
+  default_datatype = "area",
+
   setup_data = function(self, data, params) {
+    params = modifyList(self$default_params, params)
+
     define_orientation_variables(params$orientation)
 
-    data$datatype = data$datatype %||% "area"
+    data$datatype = data$datatype %||% self$default_datatype
 
     # normalize functions according to how we want to scale them
     switch(params$normalize,
@@ -205,8 +338,20 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     data
   },
 
+  draw_key = draw_key_area_interval,
+
   draw_panel = function(self, data, panel_params, coord,
-      side, scale, orientation, justification, show_area, show_point, show_interval
+      side = self$default_params$side,
+      scale = self$default_params$scale,
+      orientation = self$default_params$orientation,
+      justification = self$default_params$justification,
+      normalize = self$default_params$normalize,
+      interval_size_domain = self$default_params$interval_size_domain,
+      interval_size_range = self$default_params$interval_size_range,
+      fatten_point = self$default_params$fatten_point,
+      show_area = self$default_params$show_area,
+      show_point = self$default_params$show_point,
+      show_interval = self$default_params$show_interval
     ) {
 
     define_orientation_variables(orientation)
@@ -248,9 +393,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
           }
         )
 
-        a_data$colour = a_data$outside_colour
-        a_data$linetype = a_data$outside_linetype %||% a_data$linetype
-        a_data$size = a_data$outside_size
+        a_data = override_area_aesthetics(a_data)
 
         # build grobs to display the areas
         area_grobs = dlply(a_data, c("group", y), function(d) {
@@ -293,19 +436,14 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
         i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
 
         if (show_point) {
-          p_data = i_data
-          p_data$colour = p_data$point_colour %||% p_data$colour
-          p_data$fill = p_data$point_fill %||% p_data$fill
-          p_data$size = p_data$point_size
+          p_data = override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
           point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord))
         }
 
         i_data[[x]] = i_data[[xmin]]
         i_data[[xend]] = i_data[[xmax]]
         i_data[[yend]] = i_data[[y]]
-        i_data$colour = i_data$interval_colour %||% i_data$colour
-        i_data$size = i_data$interval_size %||% i_data$size
-        i_data$linetype = i_data$interval_linetype %||% i_data$linetype
+        i_data = override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
         interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt"))
       }
     }
@@ -375,4 +513,35 @@ get_justification = function(justification, side) {
   } else {
     justification
   }
+}
+
+
+# aesthetic overrides -----------------------------------------------------
+
+override_area_aesthetics = function(a_data) {
+  a_data$colour = a_data$outside_colour
+  a_data$linetype = a_data$outside_linetype %||% a_data$linetype
+  a_data$size = a_data$outside_size
+  a_data
+}
+
+override_point_aesthetics = function(p_data, size_domain, size_range, fatten_point) {
+  p_data$colour = p_data$point_colour %||% p_data$colour
+  p_data$fill = p_data$point_fill %||% p_data$fill
+  p_data$size = fatten_point * adjust_line_size(p_data$point_size, size_domain, size_range)
+  p_data
+}
+
+override_interval_aesthetics = function(i_data, size_domain, size_range) {
+  i_data$colour = i_data$interval_colour %||% i_data$colour
+  i_data$size = adjust_line_size(i_data$interval_size %||% i_data$size, size_domain, size_range)
+  i_data$linetype = i_data$interval_linetype %||% i_data$linetype
+  i_data
+}
+
+adjust_line_size = function(size, size_domain, size_range) {
+  pmax(
+    (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
+    (size_range[[2]] - size_range[[1]]) + size_range[[1]],
+  0)
 }

@@ -72,29 +72,38 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' @import ggplot2
 #' @export
-geom_interval <- function(mapping = NULL, data = NULL,
-  stat = "identity", position = "identity",
+geom_interval = function(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
   ...,
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
+
+  side = "both",
+  orientation = "vertical",
+  interval_size_range = c(1, 6),
+  show_area = FALSE,
+  show_point = FALSE,
+
+  datatype = "interval"
 ) {
 
-  f = function(x) forcats::fct_rev(ordered(x))
-  mapping = default_aes(mapping, ymin = .lower, ymax = .upper, color = f(.width))
-
-  layer(
+  layer_geom_area_interval(
     data = data,
     mapping = mapping,
+    default_mapping = aes(ymin = .lower, ymax = .upper, color = forcats::fct_rev(ordered(.width))),
     stat = stat,
     geom = GeomInterval,
     position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      na.rm = na.rm,
-      ...
-    )
+    ...,
+
+    side = side,
+    orientation = orientation,
+    interval_size_range = interval_size_range,
+    show_area = show_area,
+    show_point = show_point,
+
+    datatype = datatype
   )
 }
 
@@ -104,45 +113,20 @@ geom_interval <- function(mapping = NULL, data = NULL,
 #' @importFrom grid grobName gTree gList
 #' @import ggplot2
 #' @export
-GeomInterval <- ggproto("GeomInterval", Geom,
-  default_aes = aes(colour = "black", size = 4, linetype = 1, shape = 19,
-    fill = NA, alpha = NA, stroke = 1),
+GeomInterval <- ggproto("GeomInterval", GeomAreaInterval,
+  default_aes = modifyList(GeomAreaInterval$default_aes, aes(
+    datatype = "interval",
+    size = 4,
+    fill = NA
+  )),
 
-  draw_key = draw_key_path,
+  default_params = modifyList(GeomAreaInterval$default_params, list(
+    side = "both",
+    orientation = "vertical",
+    interval_size_range = c(1, 6),
+    show_area = FALSE,
+    show_point = FALSE
+  )),
 
-  required_aes = c("x", "y", "ymin", "ymax"),
-
-  setup_data = function(data, params) {
-    # provide a default width so that position_dodge works sensibly by default
-    if (is.null(data$xmin) && is.null(data$xmax)) {
-      data$width = data$width %||%
-        params$width %||% (resolution(data$x, FALSE) * 0.75)
-      transform(data,
-        xmin = x - width / 2, xmax = x + width / 2, width = NULL
-      )
-    }
-  },
-
-  draw_panel = function(data, panel_scales, coord) {
-    # draw all the intervals
-    interval_grobs = data %>%
-      dlply("group", function(d) {
-        group_grobs = list(GeomLinerange$draw_panel(d, panel_scales, coord))
-        list(
-          width = d %$% mean(abs(ymax - ymin)),
-          grobs = group_grobs
-        )
-      })
-
-    # this is a slightly hackish approach to getting the draw order correct for the common
-    # use case of fit lines / curves: draw the intervals in order from largest mean width to
-    # smallest mean width, so that the widest intervals are on the bottom.
-    interval_grobs = interval_grobs[order(-map_dbl(interval_grobs, "width"))] %>%
-      map("grobs") %>%
-      reduce(c)
-
-    ggname("geom_interval",
-      gTree(children = do.call(gList, interval_grobs))
-    )
-  }
+  default_datatype = "interval"
 )

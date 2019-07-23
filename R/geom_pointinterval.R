@@ -27,9 +27,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' Both geoms provides a scaling factor for line width as well as point size through the \code{fatten.interval} and
 #' \code{fatten.point} arguments; this scaling factor is designed to give multiple probability intervals reasonable
-#' scaling at the default settings for \code{\link{scale_size_continuous}}. Finally, these geoms default to not
-#' displaying the legend, though this can be overridden through setting \code{show.legend = NA} (the setting for most
-#' geoms) or \code{show.legend = TRUE}.
+#' scaling at the default settings for \code{\link{scale_size_continuous}}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
@@ -50,9 +48,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' thickest line.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 #' values are silently removed.
-#' @param show.legend Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-#' to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-#' those that are mapped (the default for most geoms).
+#' @param show.legend Should this layer be included in the legends? \code{FALSE} hides all legends,
+#' \code{TRUE} shows all legends, and \code{NA} (the default) shows only those that are mapped.
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 #' most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
 #' default plot specification, e.g. borders.
@@ -81,41 +78,34 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' @import ggplot2
 #' @export
-geom_pointinterval <- function(mapping = NULL, data = NULL,
-  stat = "identity", position = "identity",
+geom_pointinterval = function(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
   ...,
-  size_domain = c(1, 6),
-  size_range = c(0.6, 1.4),
-  fatten_point = 1.8,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
+
+  side = "both",
+  orientation = "vertical",
+  show_area = FALSE,
+
+  datatype = "interval"
 ) {
 
-  mapping = default_aes(mapping, ymin = .lower, ymax = .upper, size = -.width)
-
-  l = layer(
+  layer_geom_area_interval(
     data = data,
     mapping = mapping,
+    default_mapping = aes(ymin = .lower, ymax = .upper, interval_size = forcats::fct_rev(ordered(.width))),
     stat = stat,
-    geom = GeomPointinterval,
+    geom = GeomInterval,
     position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      size_domain = size_domain,
-      size_range = size_range,
-      fatten_point = fatten_point,
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
+    ...,
 
-#' @importFrom grid grobTree
-draw_key_pointinterval <- function(data, params, size) {
-  grobTree(
-    draw_key_path(transform(data, size = (3 + data$size) * 0.15), params, size)
+    side = side,
+    orientation = orientation,
+    show_area = show_area,
+
+    datatype = datatype
   )
 }
 
@@ -125,34 +115,25 @@ draw_key_pointinterval <- function(data, params, size) {
 #' @importFrom grid grobName gTree gList
 #' @import ggplot2
 #' @export
-GeomPointinterval <- ggproto("GeomPointinterval", Geom,
-  default_aes = aes(colour = "black", size = 1.35, linetype = 1, shape = 19,
-    fill = NA, alpha = NA, stroke = 1),
+GeomPointinterval <- ggproto("GeomPointinterval", GeomAreaInterval,
+  default_aes = modifyList(GeomAreaInterval$default_aes, aes(
+    datatype = "interval",
+    fill = NA
+  )),
 
-  draw_key = draw_key_pointinterval,
+  default_params = modifyList(GeomAreaInterval$default_params, list(
+    side = "both",
+    orientation = "vertical",
+    show_area = FALSE
+  )),
 
-  required_aes = c("x", "y", "ymin", "ymax"),
-
-  draw_panel = function(
-      data, panel_scales, coord, size_domain = c(1, 6), size_range = c(0.6, 1.4), fatten_point = 1.8
-    ) {
-
-    line_data = transform(data,
-      size = pmax(
-        (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
-        (size_range[[2]] - size_range[[1]]) + size_range[[1]],
-        0)
-    )
-
-    if (is.null(data$y)) {
-      return(GeomInterval$draw_panel(line_data, panel_scales, coord))
-    }
-
-    ggname("geom_pointinterval",
-      gTree(children = gList(
-        GeomInterval$draw_panel(line_data, panel_scales, coord),
-        GeomPoint$draw_panel(transform(line_data, size = size * fatten_point), panel_scales, coord)
-      ))
-    )
-  }
+  default_datatype = "interval"
 )
+
+#TODO: delete this
+#' @importFrom grid grobTree
+draw_key_pointinterval <- function(data, params, size) {
+  grobTree(
+    draw_key_path(transform(data, size = (3 + data$size) * 0.15), params, size)
+  )
+}

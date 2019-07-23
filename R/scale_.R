@@ -8,29 +8,18 @@
 #' These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_area_interval}}
 #' and stats/geoms based on it (like eye plots).
 #'
-#' @param ... Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
-#' passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.
-#' @param aesthetics Names of aesthetics to set scales for.
-#' @param guide Guide to use for legends for an aesthetic.
-#' @param range a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
-#' after transformation.
-#' @param na.translate In discrete scales, should we show missing values?
-#' @param na.value When na.translate is true, what value should be shown?
-#'
 #' The following additional scales / aesthetics are defined for use with \code{\link{geom_area_interval}} and
 #' related geoms:
 #'
 #' \enumerate{
-#'   \item{\code{scale_point_color_*}}{Point color}
-#'   \item{\code{scale_point_fill_*}}{Point fill color}
-#'   \item{\code{scale_point_size_*}}{Point size}
-#'   \item{\code{scale_interval_color_*}}{Interval line color}
-#'   \item{\code{scale_interval_size_*}}{Interval line width. By default maps larger values onto smaller lines
-#'   to match typical usage, uses linear scaling, and has a smaller range than \code{scale_size}, as it is
-#'   typically used to map probability levels onto line widths}
-#'   \item{\code{scale_interval_linetype_*}}{Interval line type}
-#'   \item{\code{scale_outside_color_*}}{Outside line color}
-#'   \item{\code{scale_outside_linetype_*}}{Outside line type}
+#'   \item{\code{scale_point_color_* }}{Point color}
+#'   \item{\code{scale_point_fill_* }}{Point fill color}
+#'   \item{\code{scale_point_size_* }}{Point size}
+#'   \item{\code{scale_interval_color_* }}{Interval line color}
+#'   \item{\code{scale_interval_size_* }}{Interval line width}
+#'   \item{\code{scale_interval_linetype_* }}{Interval line type}
+#'   \item{\code{scale_outside_color_* }}{Outside line color}
+#'   \item{\code{scale_outside_linetype_* }}{Outside line type}
 #' }
 #'
 #' See the corresponding scale documentation in ggplot for more information; e.g.
@@ -46,7 +35,15 @@
 #'
 #' \code{scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")}
 #'
-#' @name scale_
+#' @param ... Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
+#' passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.
+#' @param aesthetics Names of aesthetics to set scales for.
+#' @param guide Guide to use for legends for an aesthetic.
+#' @param range a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
+#' after transformation.
+#' @param na.translate In discrete scales, should we show missing values?
+#' @param na.value When na.translate is true, what value should be shown?
+#' @name scales
 #' @author Matthew Kay
 #' @seealso \code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
 #' @keywords manip
@@ -58,33 +55,33 @@
 scale_point_colour_discrete =
   function(..., aesthetics = "point_colour") scale_colour_discrete(..., aesthetics = aesthetics)
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_point_color_discrete = scale_point_colour_discrete
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_point_colour_continuous = function(..., aesthetics = "point_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_point_color_continuous = scale_point_colour_continuous
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @importFrom scales area_pal
 #' @export
 scale_point_size_continuous =
   function (..., range = c(1, 6)) continuous_scale("point_size", "point_size_c", area_pal(range), ...)
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
@@ -92,21 +89,21 @@ scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE)
     na.translate = na.translate, ...)
 }
 
-#' @rdname scale_
-#' @importFrom scales rescale_pal
+#' @rdname scales
+#' @importFrom scales area_pal
 #' @export
 scale_interval_size_continuous =
-  function (..., range = c(1.4, 0.6)) continuous_scale("interval_size", "interval_size_c", rescale_pal(range), ...)
+  function (..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", area_pal(range), ...)
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
-scale_interval_size_discrete = function(..., range = c(1.4, 0.6), na.translate = FALSE) {
+scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
   discrete_scale("interval_size", "interval_size_d", function(n) seq(range[1], range[2], length.out = n),
     na.translate = na.translate, ...)
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @importFrom scales linetype_pal
 #' @export
 scale_interval_linetype = function(..., na.value = "blank") {
@@ -114,57 +111,57 @@ scale_interval_linetype = function(..., na.value = "blank") {
 }
 
 #' @export
-#' @rdname scale_
+#' @rdname scales
 scale_interval_colour_discrete =
   function(..., aesthetics = "interval_colour") scale_colour_discrete(..., aesthetics = aesthetics)
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_interval_color_discrete = scale_interval_colour_discrete
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_interval_color_continuous = scale_interval_colour_continuous
 
 #' @export
-#' @rdname scale_
+#' @rdname scales
 scale_outside_colour_discrete =
   function(..., aesthetics = "outside_colour") scale_colour_discrete(..., aesthetics = aesthetics)
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_outside_color_discrete = scale_outside_colour_discrete
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_outside_colour_continuous = function(..., aesthetics = "outside_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_outside_color_continuous = scale_outside_colour_continuous
 
-#' @rdname scale_
+#' @rdname scales
 #' @importFrom scales linetype_pal
 #' @export
 scale_outside_linetype = function(..., na.value = "blank") {
   discrete_scale("outside_linetype", "outside_linetype_d", linetype_pal(), na.value = na.value, ...)
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @importFrom scales area_pal
 #' @export
 scale_outside_size_continuous =
   function (..., range = c(1, 6)) continuous_scale("outside_size", "outside_size_c", area_pal(range), ...)
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 scale_outside_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
@@ -172,7 +169,7 @@ scale_outside_size_discrete = function(..., range = c(1, 6), na.translate = FALS
     na.translate = na.translate, ...)
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 guide_colourbar2 = function(...) {
   # the default colourbar throws an error when asked to draw color bars for these aesthetics
@@ -187,6 +184,6 @@ guide_colourbar2 = function(...) {
   colourbar
 }
 
-#' @rdname scale_
+#' @rdname scales
 #' @export
 guide_colorbar2 = guide_colourbar2

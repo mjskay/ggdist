@@ -68,15 +68,20 @@ globalVariables(c("...width.."))
 #'   stat_pointinterval(.width = c(.66, .95))
 #'
 #' @export
-stat_pointinterval <- function(mapping = NULL, data = NULL,
-  geom = "pointinterval", position = "identity",
+stat_pointinterval = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "pointinterval",
+  position = "identity",
   ...,
+
   point_interval = median_qi,
   fun.data = NULL,
   .width = c(.66, .95),
   .prob,
   fun.args = list(),
   na.rm = FALSE,
+
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
@@ -105,7 +110,8 @@ stat_pointinterval <- function(mapping = NULL, data = NULL,
 #' @importFrom plyr defaults
 StatPointinterval <- ggproto("StatPointinterval", StatSummary,
   default_aes = aes(
-    size = stat(-.width)
+    datatype = "interval",
+    interval_size = stat(level)
   ),
 
   compute_panel = function(data, scales, fun.data = median_qi, .width = c(.66, .95),

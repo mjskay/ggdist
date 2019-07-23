@@ -6,8 +6,9 @@
 \title{Multiple probability interval plots (ggplot geom)}
 \usage{
 geom_interval(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
+  position = "identity", ..., side = "both",
+  orientation = "vertical", interval_size_range = c(1, 6),
+  show_area = FALSE, show_point = FALSE, datatype = "interval")
 
 geom_intervalh(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., na.rm = FALSE, show.legend = NA,

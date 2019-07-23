@@ -19,9 +19,7 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
   inherit.aes = TRUE
 ) {
 
-  mapping = default_aes(mapping, xmin = .lower, xmax = .upper, size = -.width)
-
-  layer(
+  l = layer(
     data = data,
     mapping = mapping,
     stat = stat,
@@ -36,6 +34,10 @@ geom_pointintervalh <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       ...
     )
+  )
+
+  add_default_computed_aesthetics(l,
+    aes(xmin = .lower, xmax = .upper, size = -.width)
   )
 }
 

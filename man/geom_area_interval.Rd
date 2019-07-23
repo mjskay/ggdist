@@ -8,9 +8,11 @@ geom_area_interval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = c("topright", "top", "right",
   "bottomleft", "bottom", "left", "both"), scale = 0.9,
   orientation = c("horizontal", "vertical"), justification = NULL,
-  normalize = c("max_height", "height", "none"), show_area = TRUE,
-  show_point = TRUE, show_interval = TRUE, na.rm = FALSE,
-  show.legend = NA, inherit.aes = TRUE)
+  normalize = c("max_height", "height", "none"),
+  interval_size_domain = c(1, 6), interval_size_range = c(0.6, 1.4),
+  fatten_point = 1.8, show_area = TRUE, show_point = TRUE,
+  show_interval = TRUE, na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -44,7 +46,7 @@ aesthetics.}
 
 \item{justification}{Justification of the interval relative to the area, where \code{0} indicates bottom/left
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NA} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
 \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
 \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
 \code{0.5}.}
