@@ -75,11 +75,9 @@ geom_slabinterval = function(
   # IF YOU ARE CHANGING THESE,
   # YOU MUST ALSO UPDATE:
   # 1. The call to layer_geom_slabinterval below
-  # 2. The argument definition of layer_geom_slabinterval
-  # 3. The call to layer() in layer_geom_slabinterval
-  # 4. The definition of GeomSlabinterval$extra_params
-  # 5. The definition of GeomSlabinterval$default_params
-  # 6. The argument definitions of GeomSlabinterval$draw_panel
+  # 2. The definition of GeomSlabinterval$extra_params
+  # 3. The definition of GeomSlabinterval$default_params
+  # 4. The argument definitions of GeomSlabinterval$draw_panel
   # This is needed to support how defaults work with child geoms,
   # amongst other things
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
@@ -133,19 +131,6 @@ layer_geom_slabinterval = function(
   geom = GeomSlabinterval,
   ...,
 
-  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
-  scale = 0.9,
-  orientation = c("horizontal", "vertical"),
-  justification = NULL,
-  normalize = c("max_height", "height", "none"),
-  interval_size_domain = c(1, 6),
-  interval_size_range = c(0.6, 1.4),
-  fatten_point = 1.8,
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
-  na.rm = FALSE,
-
   show.legend = NA,
   inherit.aes = TRUE
 ) {
@@ -154,10 +139,6 @@ layer_geom_slabinterval = function(
     c("size_domain", "size_range"), ..., which = -2,
     message = "Use the interval_size_domain and interval_size_range arguments instead."
   )
-
-  side = match.arg(side)
-  orientation = match.arg(orientation)
-  normalize = match.arg(normalize)
 
   l = layer(
     data = data,
@@ -169,18 +150,6 @@ layer_geom_slabinterval = function(
     inherit.aes = inherit.aes,
 
     params = list(
-      side = side,
-      scale = scale,
-      orientation = orientation,
-      justification = justification,
-      normalize = normalize,
-      interval_size_domain = interval_size_domain,
-      interval_size_range = interval_size_range,
-      fatten_point = fatten_point,
-      show_slab = show_slab,
-      show_point = show_point,
-      show_interval = show_interval,
-      na.rm = na.rm,
       ...
     )
   )
@@ -241,9 +210,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # point aesthetics
     shape = 19,
     stroke = 1,
+    point_size = NULL,        # falls back to size
     point_colour = NULL,      # falls back to colour
     point_fill = NULL,        # falls back to fill
-    point_size = 2.5,
 
     # interval aesthetics
     size = 1,
@@ -528,18 +497,19 @@ override_slab_aesthetics = function(s_data) {
 override_point_aesthetics = function(p_data, size_domain, size_range, fatten_point) {
   p_data$colour = p_data$point_colour %||% p_data$colour
   p_data$fill = p_data$point_fill %||% p_data$fill
-  p_data$size = fatten_point * adjust_line_size(p_data$point_size, size_domain, size_range)
+  p_data$size = p_data$point_size %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
   p_data
 }
 
 override_interval_aesthetics = function(i_data, size_domain, size_range) {
   i_data$colour = i_data$interval_colour %||% i_data$colour
-  i_data$size = adjust_line_size(i_data$interval_size %||% i_data$size, size_domain, size_range)
+  i_data$size = get_line_size(i_data, size_domain, size_range)
   i_data$linetype = i_data$interval_linetype %||% i_data$linetype
   i_data
 }
 
-adjust_line_size = function(size, size_domain, size_range) {
+get_line_size = function(i_data, size_domain, size_range) {
+  size = i_data$interval_size %||% i_data$size
   pmax(
     (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
     (size_range[[2]] - size_range[[1]]) + size_range[[1]],

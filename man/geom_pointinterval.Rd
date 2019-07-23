@@ -7,7 +7,8 @@
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = "both",
-  orientation = "vertical", show_slab = FALSE, datatype = "interval")
+  orientation = "vertical", show_slab = FALSE, datatype = "interval",
+  show.legend = c(size = FALSE))
 
 geom_pointintervalh(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., size_domain = c(1, 6),
@@ -28,6 +29,9 @@ the plot defaults.}
 
 \item{...}{Other arguments passed to \code{\link{layer}}.}
 
+\item{show.legend}{Should this layer be included in the legends? \code{FALSE} hides all legends,
+\code{TRUE} shows all legends, and \code{NA} (the default) shows only those that are mapped.}
+
 \item{size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes drawn according to \code{size_range} (see the documentation for that argument, below.)}
 
@@ -42,9 +46,6 @@ thickest line.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
-
-\item{show.legend}{Should this layer be included in the legends? \code{FALSE} hides all legends,
-\code{TRUE} shows all legends, and \code{NA} (the default) shows only those that are mapped.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the

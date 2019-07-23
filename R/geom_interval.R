@@ -110,7 +110,6 @@ geom_interval = function(
 #' @rdname tidybayes-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom grid grobName gTree gList
 #' @import ggplot2
 #' @export
 GeomInterval <- ggproto("GeomInterval", GeomSlabinterval,

@@ -111,7 +111,7 @@ stat_pointinterval = function(
 StatPointinterval <- ggproto("StatPointinterval", StatSummary,
   default_aes = aes(
     datatype = "interval",
-    interval_size = stat(level)
+    size = stat(-.width)
   ),
 
   compute_panel = function(data, scales, fun.data = median_qi, .width = c(.66, .95),

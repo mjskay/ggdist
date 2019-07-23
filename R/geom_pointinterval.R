@@ -89,15 +89,17 @@ geom_pointinterval = function(
   orientation = "vertical",
   show_slab = FALSE,
 
-  datatype = "interval"
+  datatype = "interval",
+
+  show.legend = c(size = FALSE)
 ) {
 
   layer_geom_slabinterval(
     data = data,
     mapping = mapping,
-    default_mapping = aes(ymin = .lower, ymax = .upper, interval_size = forcats::fct_rev(ordered(.width))),
+    default_mapping = aes(ymin = .lower, ymax = .upper, size = -.width),
     stat = stat,
-    geom = GeomInterval,
+    geom = GeomPointinterval,
     position = position,
     ...,
 
@@ -105,14 +107,15 @@ geom_pointinterval = function(
     orientation = orientation,
     show_slab = show_slab,
 
-    datatype = datatype
+    datatype = datatype,
+
+    show.legend = show.legend
   )
 }
 
 #' @rdname tidybayes-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom grid grobName gTree gList
 #' @import ggplot2
 #' @export
 GeomPointinterval <- ggproto("GeomPointinterval", GeomSlabinterval,

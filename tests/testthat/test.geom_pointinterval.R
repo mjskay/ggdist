@@ -60,9 +60,16 @@ test_that("grouped pointintervals work", {
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%
     ggplot(aes(x = i, y = u_tau)) +
-    geom_pointinterval(show.legend = TRUE)
+    geom_pointinterval(interval_size_range = c(1,4), fatten_point = 3)
 
-  vdiffr::expect_doppelganger("grouped pointintervals", forward_plot)
+  vdiffr::expect_doppelganger("grouped pointintervals with custom fatten", forward_plot)
+
+  forward_plot = RankCorr_u_tau %>%
+    mean_qi(.width = c(.66, .95)) %>%
+    ggplot(aes(x = i, y = u_tau, interval_size = forcats::fct_rev(ordered(.width)))) +
+    geom_pointinterval()
+
+  vdiffr::expect_doppelganger("grouped pointintervals with interval_size and legend", forward_plot)
 
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
