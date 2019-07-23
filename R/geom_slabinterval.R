@@ -3,14 +3,14 @@
 # Author: mjskay
 ###############################################################################
 
-#' Area + point + interval meta-geom
+#' Slab + point + interval meta-geom
 #'
-#' This meta-geom supports drawing combinations of functions (as areas), points, and intervals. It acts as a meta-geom
+#' This meta-geom supports drawing combinations of functions (as slabs), points, and intervals. It acts as a meta-geom
 #' for implementing eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots (among other things)
 #' and supports both horizontal and vertical orientations, dodging with position = dodge, and relative justification of
-#' areas with their corresponding intervals.
+#' slabs with their corresponding intervals.
 #'
-#' \code{geom_area_interval} is a flexible meta-geom that you can use directly, though in most cases you will want to
+#' \code{geom_slabinterval} is a flexible meta-geom that you can use directly, though in most cases you will want to
 #' use shortcut geoms that combine appropriate stats with this geom to create more useful primitives, such as eye plots,
 #' halfeye plots, point+interval plots, or CCDF barplots.
 #'
@@ -22,20 +22,20 @@
 #' @param stat The statistical transformation to use on the data for this layer.
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}.
-#' @param side Which side to draw the area on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-#' which cause the area to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-#' or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the area
+#' @param side Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+#' which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+#' or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
 #' to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
 #' \code{"vertical"}
-#' @param scale What proportion of the region allocated to this geom to use to draw the area. If \code{scale = 1},
-#' areas that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
+#' @param scale What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+#' slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
 #' @param orientation Whether this geom is drawn horizontally (\code{"horizontal"}, the default) or
 #' vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
 #' aesthetic to identify different groups, then for each group uses the \code{x} (resp. \code{y}) aesthetic and the
-#' \code{thickness} aesthetic to draw a function as an area, and draws points and intervals horizontally
+#' \code{thickness} aesthetic to draw a function as an slab, and draws points and intervals horizontally
 #' (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp. \code{ymin}, \code{y}, and \code{ymax})
 #' aesthetics.
-#' @param justification Justification of the interval relative to the area, where \code{0} indicates bottom/left
+#' @param justification Justification of the interval relative to the slab, where \code{0} indicates bottom/left
 #' justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
 #' is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
 #' \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
@@ -45,7 +45,7 @@
 #' (the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
 #' groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
 #'  normalization (this should probably only be used with functions whose values are in [0,1]).
-#' @param show_area Should the area portion of the geom be drawn? Default \code{TRUE}.
+#' @param show_slab Should the slab portion of the geom be drawn? Default \code{TRUE}.
 #' @param show_point Should the point portion of the geom be drawn? Default \code{TRUE}.
 #' @param show_interval Should the interval portion of the geom be drawn? Default \code{TRUE}.
 #' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
@@ -67,19 +67,19 @@
 #' @importFrom plyr dlply
 #' @importFrom rlang %||%
 #' @export
-geom_area_interval = function(
+geom_slabinterval = function(
   mapping = NULL, data = NULL,
   stat = "identity", position = "identity",
   ...,
 
   # IF YOU ARE CHANGING THESE,
   # YOU MUST ALSO UPDATE:
-  # 1. The call to layer_geom_area_interval below
-  # 2. The argument definition of layer_geom_area_interval
-  # 3. The call to layer() in layer_geom_area_interval
-  # 4. The definition of GeomAreaInterval$extra_params
-  # 5. The definition of GeomAreaInterval$default_params
-  # 6. The argument definitions of GeomAreaInterval$draw_panel
+  # 1. The call to layer_geom_slabinterval below
+  # 2. The argument definition of layer_geom_slabinterval
+  # 3. The call to layer() in layer_geom_slabinterval
+  # 4. The definition of GeomSlabinterval$extra_params
+  # 5. The definition of GeomSlabinterval$default_params
+  # 6. The argument definitions of GeomSlabinterval$draw_panel
   # This is needed to support how defaults work with child geoms,
   # amongst other things
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
@@ -90,7 +90,7 @@ geom_area_interval = function(
   interval_size_domain = c(1, 6),
   interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8,
-  show_area = TRUE,
+  show_slab = TRUE,
   show_point = TRUE,
   show_interval = TRUE,
   na.rm = FALSE,
@@ -98,12 +98,12 @@ geom_area_interval = function(
   show.legend = NA,
   inherit.aes = TRUE
 ) {
-  layer_geom_area_interval(
+  layer_geom_slabinterval(
     mapping = mapping,
     data = data,
     stat = stat,
     position = position,
-    geom = GeomAreaInterval,
+    geom = GeomSlabinterval,
     ...,
 
     side = side,
@@ -114,7 +114,7 @@ geom_area_interval = function(
     interval_size_domain = interval_size_domain,
     interval_size_range = interval_size_range,
     fatten_point = fatten_point,
-    show_area = show_area,
+    show_slab = show_slab,
     show_point = show_point,
     show_interval = show_interval,
     na.rm = na.rm,
@@ -124,13 +124,13 @@ geom_area_interval = function(
   )
 }
 
-layer_geom_area_interval = function(
+layer_geom_slabinterval = function(
   mapping = NULL,
   default_mapping = NULL,
   data = NULL,
   stat = "identity",
   position = "identity",
-  geom = GeomAreaInterval,
+  geom = GeomSlabinterval,
   ...,
 
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
@@ -141,7 +141,7 @@ layer_geom_area_interval = function(
   interval_size_domain = c(1, 6),
   interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8,
-  show_area = TRUE,
+  show_slab = TRUE,
   show_point = TRUE,
   show_interval = TRUE,
   na.rm = FALSE,
@@ -177,7 +177,7 @@ layer_geom_area_interval = function(
       interval_size_domain = interval_size_domain,
       interval_size_range = interval_size_range,
       fatten_point = fatten_point,
-      show_area = show_area,
+      show_slab = show_slab,
       show_point = show_point,
       show_interval = show_interval,
       na.rm = na.rm,
@@ -192,11 +192,11 @@ layer_geom_area_interval = function(
   }
 }
 
-draw_key_area_interval = function(self, data, params, size) {
+draw_key_slabinterval = function(self, data, params, size) {
   params = modifyList(self$default_params, params)
 
-  area_grob = if(any(data$datatype == "area")) {
-    draw_key_rect(override_area_aesthetics(data), params, size)
+  slab_grob = if(any(data$datatype == "slab")) {
+    draw_key_rect(override_slab_aesthetics(data), params, size)
   }
 
   interval_grob = if(any(data$datatype == "interval")) {
@@ -218,13 +218,13 @@ draw_key_area_interval = function(self, data, params, size) {
     )
   }
 
-  gTree(children = gList(area_grob, interval_grob, point_grob))
+  gTree(children = gList(slab_grob, interval_grob, point_grob))
 }
 
-GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
+GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   default_aes = aes(
-    # default datatype is area (other valid value is "interval" for points/intervals)
-    datatype = "area",
+    # default datatype is slab (other valid value is "interval" for points/intervals)
+    datatype = "slab",
 
     # shared aesthetics
     alpha = NA,
@@ -232,10 +232,10 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     # shared point and interval aesthetics
     colour = "black",
 
-    # shared area and interval aesthetics
+    # shared slab and interval aesthetics
     linetype = "solid",
 
-    # shared point and area aesthetics
+    # shared point and slab aesthetics
     fill = "gray65",
 
     # point aesthetics
@@ -251,10 +251,10 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     interval_linetype = NULL, # falls back to linetype
     interval_colour = NULL,   # falls back to colour
 
-    # area aesthetics
-    outside_colour = NA,         # no line around the outside of the area by default
-    outside_linetype = NULL,     # falls back to linetype
-    outside_size = 1
+    # slab aesthetics
+    outline_colour = NA,         # no outline around the slab by default
+    outline_linetype = NULL,     # falls back to linetype
+    outline_size = 1
   ),
 
   optional_aes = c(
@@ -270,7 +270,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     "interval_size_domain",
     "interval_size_range",
     "fatten_point",
-    "show_area",
+    "show_slab",
     "show_point",
     "show_interval",
     "na.rm"
@@ -285,12 +285,12 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     interval_size_domain = c(1, 6),
     interval_size_range = c(0.6, 1.4),
     fatten_point = 1.8,
-    show_area = TRUE,
+    show_slab = TRUE,
     show_point = TRUE,
     show_interval = TRUE
   ),
 
-  default_datatype = "area",
+  default_datatype = "slab",
 
   setup_data = function(self, data, params) {
     params = modifyList(self$default_params, params)
@@ -303,8 +303,8 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     switch(params$normalize,
       max_height = {
         # normalize so max height across all is 1
-        # this preserves areas across groups in area plots
-        finite_thickness = data$thickness[data$datatype == "area" & is.finite(data$thickness)]
+        # this preserves slabs across groups in slab plots
+        finite_thickness = data$thickness[data$datatype == "slab" & is.finite(data$thickness)]
         if (length(finite_thickness) > 0) {
           data$thickness = data$thickness / max(finite_thickness)
         }
@@ -312,7 +312,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
       height = {
         # normalize so height in each group is 1
         data = ddply(data, c("group", y), function(d) {
-          finite_thickness = d$thickness[d$datatype == "area" & is.finite(d$thickness)]
+          finite_thickness = d$thickness[d$datatype == "slab" & is.finite(d$thickness)]
           if (length(finite_thickness) > 0) {
             d$thickness = d$thickness / max(finite_thickness)
           }
@@ -338,7 +338,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     data
   },
 
-  draw_key = draw_key_area_interval,
+  draw_key = draw_key_slabinterval,
 
   draw_panel = function(self, data, panel_params, coord,
       side = self$default_params$side,
@@ -349,7 +349,7 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
       interval_size_domain = self$default_params$interval_size_domain,
       interval_size_range = self$default_params$interval_size_range,
       fatten_point = self$default_params$fatten_point,
-      show_area = self$default_params$show_area,
+      show_slab = self$default_params$show_slab,
       show_point = self$default_params$show_point,
       show_interval = self$default_params$show_interval
     ) {
@@ -360,61 +360,61 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
     data[[height]] = data[[ymax]] - data[[ymin]]
     justification = get_justification(justification, side)
 
-    area_grobs = list()
-    if (show_area && !is.null(data$thickness)) {
+    slab_grobs = list()
+    if (show_slab && !is.null(data$thickness)) {
       # thickness values were provided, draw them
 
-      # area data is any of the data with datatype == "area"
-      a_data = data[data$datatype == "area",]
+      # slab data is any of the data with datatype == "slab"
+      s_data = data[data$datatype == "slab",]
 
-      if (nrow(a_data) > 0) {
+      if (nrow(s_data) > 0) {
         # rescale the data to be within the confines of the bounding box
         # we do this *again* here (rather than in setup_data) because
         # position_dodge doesn't work if we only do it up there
-        a_scale = scale * a_data[[height]]
+        a_scale = scale * s_data[[height]]
 
         switch_side(side,
           top = {
-            # the slight nudge of justification * a_data[[height]] * (1 - scale) ensures that
+            # the slight nudge of justification * s_data[[height]] * (1 - scale) ensures that
             # justifications work properly when scale != 1 (and similarly for other values of `side`)
-            a_data[[y]] = a_data[[ymin]] + justification * a_data[[height]] * (1 - scale)
-            a_data[[ymin]] = a_data[[y]]
-            a_data[[ymax]] = a_data[[y]] + a_data$thickness * a_scale
+            s_data[[y]] = s_data[[ymin]] + justification * s_data[[height]] * (1 - scale)
+            s_data[[ymin]] = s_data[[y]]
+            s_data[[ymax]] = s_data[[y]] + s_data$thickness * a_scale
           },
           bottom = {
-            a_data[[y]] = a_data[[ymax]] - (1 - justification) * a_data[[height]] * (1 - scale)
-            a_data[[ymin]] = a_data[[y]] - a_data$thickness * a_scale
-            a_data[[ymax]] = a_data[[y]]
+            s_data[[y]] = s_data[[ymax]] - (1 - justification) * s_data[[height]] * (1 - scale)
+            s_data[[ymin]] = s_data[[y]] - s_data$thickness * a_scale
+            s_data[[ymax]] = s_data[[y]]
           },
           both = {
-            a_data[[y]] = (a_data[[ymin]] + a_data[[ymax]]) / 2 - (0.5 - justification) * a_data[[height]] * (1 - scale)
-            a_data[[ymin]] = a_data[[y]] - a_data$thickness * a_scale / 2
-            a_data[[ymax]] = a_data[[y]] + a_data$thickness * a_scale / 2
+            s_data[[y]] = (s_data[[ymin]] + s_data[[ymax]]) / 2 - (0.5 - justification) * s_data[[height]] * (1 - scale)
+            s_data[[ymin]] = s_data[[y]] - s_data$thickness * a_scale / 2
+            s_data[[ymax]] = s_data[[y]] + s_data$thickness * a_scale / 2
           }
         )
 
-        a_data = override_area_aesthetics(a_data)
+        s_data = override_slab_aesthetics(s_data)
 
-        # build grobs to display the areas
-        area_grobs = dlply(a_data, c("group", y), function(d) {
+        # build grobs to display the slabs
+        slab_grobs = dlply(s_data, c("group", y), function(d) {
           data_order = order(d[[x]])
-          area_data_top = d[data_order,]
-          area_data_top[[y]] = area_data_top[[ymax]]
+          slab_data_top = d[data_order,]
+          slab_data_top[[y]] = slab_data_top[[ymax]]
 
-          area_data_bottom = d[rev(data_order),]
-          area_data_bottom[[y]] = area_data_bottom[[ymin]]
+          slab_data_bottom = d[rev(data_order),]
+          slab_data_bottom[[y]] = slab_data_bottom[[ymin]]
 
-          area_data = rbind(area_data_top, area_data_bottom)
+          slab_data = rbind(slab_data_top, slab_data_bottom)
 
-          area_grob = GeomPolygon$draw_panel(transform(area_data, colour = NA), panel_params, coord)
+          slab_grob = GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
 
-          if (!is.null(area_data_top$colour) && !all(is.na(area_data_top$colour))) {
-            # we have an outline to draw around the outside of the area:
+          if (!is.null(slab_data_top$colour) && !all(is.na(slab_data_top$colour))) {
+            # we have an outline to draw around the outside of the slab:
             # the definition of "outside" depends on the value of `side`:
-            outside_data = switch_side(side, top = area_data_top, bottom = area_data_bottom, both = area_data)
-            gList(area_grob, GeomPath$draw_panel(outside_data, panel_params, coord))
+            outline_data = switch_side(side, top = slab_data_top, bottom = slab_data_bottom, both = slab_data)
+            gList(slab_grob, GeomPath$draw_panel(outline_data, panel_params, coord))
           } else {
-            area_grob
+            slab_grob
           }
         })
       }
@@ -448,8 +448,8 @@ GeomAreaInterval = ggproto("GeomAreaInterval", Geom,
       }
     }
 
-    ggname("geom_area_interval",
-      gTree(children = do.call(gList, c(area_grobs, interval_grobs, point_grobs)))
+    ggname("geom_slabinterval",
+      gTree(children = do.call(gList, c(slab_grobs, interval_grobs, point_grobs)))
     )
   }
 )
@@ -518,11 +518,11 @@ get_justification = function(justification, side) {
 
 # aesthetic overrides -----------------------------------------------------
 
-override_area_aesthetics = function(a_data) {
-  a_data$colour = a_data$outside_colour
-  a_data$linetype = a_data$outside_linetype %||% a_data$linetype
-  a_data$size = a_data$outside_size
-  a_data
+override_slab_aesthetics = function(s_data) {
+  s_data$colour = s_data$outline_colour
+  s_data$linetype = s_data$outline_linetype %||% s_data$linetype
+  s_data$size = s_data$outline_size
+  s_data
 }
 
 override_point_aesthetics = function(p_data, size_domain, size_range, fatten_point) {

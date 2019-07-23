@@ -83,7 +83,7 @@ Collate:
     "gather_pairs.R"
     "gather_variables.R"
     "geom.R"
-    "geom_area_interval.R"
+    "geom_slabinterval.R"
     "geom_eye.R"
     "geom_eyeh.R"
     "geom_grouped_violin.R"

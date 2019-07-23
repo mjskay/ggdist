@@ -7,7 +7,7 @@
 \usage{
 geom_pointinterval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = "both",
-  orientation = "vertical", show_area = FALSE, datatype = "interval")
+  orientation = "vertical", show_slab = FALSE, datatype = "interval")
 
 geom_pointintervalh(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., size_domain = c(1, 6),

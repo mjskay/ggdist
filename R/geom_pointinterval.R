@@ -87,12 +87,12 @@ geom_pointinterval = function(
 
   side = "both",
   orientation = "vertical",
-  show_area = FALSE,
+  show_slab = FALSE,
 
   datatype = "interval"
 ) {
 
-  layer_geom_area_interval(
+  layer_geom_slabinterval(
     data = data,
     mapping = mapping,
     default_mapping = aes(ymin = .lower, ymax = .upper, interval_size = forcats::fct_rev(ordered(.width))),
@@ -103,7 +103,7 @@ geom_pointinterval = function(
 
     side = side,
     orientation = orientation,
-    show_area = show_area,
+    show_slab = show_slab,
 
     datatype = datatype
   )
@@ -115,16 +115,16 @@ geom_pointinterval = function(
 #' @importFrom grid grobName gTree gList
 #' @import ggplot2
 #' @export
-GeomPointinterval <- ggproto("GeomPointinterval", GeomAreaInterval,
-  default_aes = modifyList(GeomAreaInterval$default_aes, aes(
+GeomPointinterval <- ggproto("GeomPointinterval", GeomSlabinterval,
+  default_aes = modifyList(GeomSlabinterval$default_aes, aes(
     datatype = "interval",
     fill = NA
   )),
 
-  default_params = modifyList(GeomAreaInterval$default_params, list(
+  default_params = modifyList(GeomSlabinterval$default_params, list(
     side = "both",
     orientation = "vertical",
-    show_area = FALSE
+    show_slab = FALSE
   )),
 
   default_datatype = "interval"

@@ -16,16 +16,16 @@
 \alias{scale_interval_color_discrete}
 \alias{scale_interval_colour_continuous}
 \alias{scale_interval_color_continuous}
-\alias{scale_outside_colour_discrete}
-\alias{scale_outside_color_discrete}
-\alias{scale_outside_colour_continuous}
-\alias{scale_outside_color_continuous}
-\alias{scale_outside_linetype}
-\alias{scale_outside_size_continuous}
-\alias{scale_outside_size_discrete}
+\alias{scale_outline_colour_discrete}
+\alias{scale_outline_color_discrete}
+\alias{scale_outline_colour_continuous}
+\alias{scale_outline_color_continuous}
+\alias{scale_outline_linetype}
+\alias{scale_outline_size_continuous}
+\alias{scale_outline_size_discrete}
 \alias{guide_colourbar2}
 \alias{guide_colorbar2}
-\title{Custom ggplot scales for geom_area_interval (and derivatives)}
+\title{Custom ggplot scales for geom_slabinterval (and derivatives)}
 \usage{
 scale_point_colour_discrete(..., aesthetics = "point_colour")
 
@@ -61,21 +61,21 @@ scale_interval_colour_continuous(..., aesthetics = "interval_colour",
 scale_interval_color_continuous(..., aesthetics = "interval_colour",
   guide = "colourbar2")
 
-scale_outside_colour_discrete(..., aesthetics = "outside_colour")
+scale_outline_colour_discrete(..., aesthetics = "outline_colour")
 
-scale_outside_color_discrete(..., aesthetics = "outside_colour")
+scale_outline_color_discrete(..., aesthetics = "outline_colour")
 
-scale_outside_colour_continuous(..., aesthetics = "outside_colour",
+scale_outline_colour_continuous(..., aesthetics = "outline_colour",
   guide = "colourbar2")
 
-scale_outside_color_continuous(..., aesthetics = "outside_colour",
+scale_outline_color_continuous(..., aesthetics = "outline_colour",
   guide = "colourbar2")
 
-scale_outside_linetype(..., na.value = "blank")
+scale_outline_linetype(..., na.value = "blank")
 
-scale_outside_size_continuous(..., range = c(1, 6))
+scale_outline_size_continuous(..., range = c(1, 6))
 
-scale_outside_size_discrete(..., range = c(1, 6), na.translate = FALSE)
+scale_outline_size_discrete(..., range = c(1, 6), na.translate = FALSE)
 
 guide_colourbar2(...)
 
@@ -97,11 +97,11 @@ after transformation.}
 \item{na.value}{When na.translate is true, what value should be shown?}
 }
 \description{
-These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_area_interval}}
+These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_slabinterval}}
 and stats/geoms based on it (like eye plots).
 }
 \details{
-The following additional scales / aesthetics are defined for use with \code{\link{geom_area_interval}} and
+The following additional scales / aesthetics are defined for use with \code{\link{geom_slabinterval}} and
 related geoms:
 
 \enumerate{
@@ -111,8 +111,8 @@ related geoms:
   \item{\code{scale_interval_color_* }}{Interval line color}
   \item{\code{scale_interval_size_* }}{Interval line width}
   \item{\code{scale_interval_linetype_* }}{Interval line type}
-  \item{\code{scale_outside_color_* }}{Outside line color}
-  \item{\code{scale_outside_linetype_* }}{Outside line type}
+  \item{\code{scale_outline_color_* }}{Outside line color}
+  \item{\code{scale_outline_linetype_* }}{Outside line type}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.

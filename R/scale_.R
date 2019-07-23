@@ -1,14 +1,14 @@
-# Custom scales, largely for geom_area_interval and its derivatives
+# Custom scales, largely for geom_slabinterval and its derivatives
 #
 # Author: mjskay
 ###############################################################################
 
-#' Custom ggplot scales for geom_area_interval (and derivatives)
+#' Custom ggplot scales for geom_slabinterval (and derivatives)
 #'
-#' These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_area_interval}}
+#' These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_slabinterval}}
 #' and stats/geoms based on it (like eye plots).
 #'
-#' The following additional scales / aesthetics are defined for use with \code{\link{geom_area_interval}} and
+#' The following additional scales / aesthetics are defined for use with \code{\link{geom_slabinterval}} and
 #' related geoms:
 #'
 #' \enumerate{
@@ -18,8 +18,8 @@
 #'   \item{\code{scale_interval_color_* }}{Interval line color}
 #'   \item{\code{scale_interval_size_* }}{Interval line width}
 #'   \item{\code{scale_interval_linetype_* }}{Interval line type}
-#'   \item{\code{scale_outside_color_* }}{Outside line color}
-#'   \item{\code{scale_outside_linetype_* }}{Outside line type}
+#'   \item{\code{scale_outline_color_* }}{Outside line color}
+#'   \item{\code{scale_outline_linetype_* }}{Outside line type}
 #' }
 #'
 #' See the corresponding scale documentation in ggplot for more information; e.g.
@@ -131,41 +131,41 @@ scale_interval_color_continuous = scale_interval_colour_continuous
 
 #' @export
 #' @rdname scales
-scale_outside_colour_discrete =
-  function(..., aesthetics = "outside_colour") scale_colour_discrete(..., aesthetics = aesthetics)
+scale_outline_colour_discrete =
+  function(..., aesthetics = "outline_colour") scale_colour_discrete(..., aesthetics = aesthetics)
 
 #' @rdname scales
 #' @export
-scale_outside_color_discrete = scale_outside_colour_discrete
+scale_outline_color_discrete = scale_outline_colour_discrete
 
 #' @rdname scales
 #' @export
-scale_outside_colour_continuous = function(..., aesthetics = "outside_colour", guide = "colourbar2") {
+scale_outline_colour_continuous = function(..., aesthetics = "outline_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
 #' @rdname scales
 #' @export
-scale_outside_color_continuous = scale_outside_colour_continuous
+scale_outline_color_continuous = scale_outline_colour_continuous
 
 #' @rdname scales
 #' @importFrom scales linetype_pal
 #' @export
-scale_outside_linetype = function(..., na.value = "blank") {
-  discrete_scale("outside_linetype", "outside_linetype_d", linetype_pal(), na.value = na.value, ...)
+scale_outline_linetype = function(..., na.value = "blank") {
+  discrete_scale("outline_linetype", "outline_linetype_d", linetype_pal(), na.value = na.value, ...)
 }
 
 #' @rdname scales
 #' @importFrom scales area_pal
 #' @export
-scale_outside_size_continuous =
-  function (..., range = c(1, 6)) continuous_scale("outside_size", "outside_size_c", area_pal(range), ...)
+scale_outline_size_continuous =
+  function (..., range = c(1, 6)) continuous_scale("outline_size", "outline_size_c", area_pal(range), ...)
 
 #' @rdname scales
 #' @export
-scale_outside_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
+scale_outline_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
-  discrete_scale("outside_size", "outside_size_d", function(n) seq(range[1], range[2], length.out = n),
+  discrete_scale("outline_size", "outline_size_d", function(n) seq(range[1], range[2], length.out = n),
     na.translate = na.translate, ...)
 }
 
@@ -179,7 +179,7 @@ guide_colourbar2 = function(...) {
     "point_color",
     "point_fill",
     "interval_colour",
-    "outside_colour"
+    "outline_colour"
   ))
   colourbar
 }
