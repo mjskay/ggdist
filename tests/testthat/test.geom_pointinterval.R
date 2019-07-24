@@ -67,7 +67,7 @@ test_that("grouped pointintervals work", {
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%
     ggplot(aes(x = i, y = u_tau, interval_size = forcats::fct_rev(ordered(.width)))) +
-    geom_pointinterval()
+    geom_pointinterval(key_glyph = "interval")
 
   vdiffr::expect_doppelganger("grouped pointintervals with interval_size and legend", forward_plot)
 

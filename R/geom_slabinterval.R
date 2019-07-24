@@ -198,35 +198,6 @@ layer_geom_slabinterval = function(
   }
 }
 
-draw_key_slabinterval = function(self, data, params, size) {
-  params = modifyList(self$default_params, params)
-
-  slab_grob = if(any(data$datatype == "slab")) {
-    draw_key_rect(override_slab_aesthetics(data), params, size)
-  }
-
-  interval_grob = if(any(data$datatype == "interval")) {
-    orientation = params$orientation
-    interval_key = switch(orientation,
-      horizontal = draw_key_path,
-      vertical = draw_key_vpath
-    )
-    interval_key(
-      override_interval_aesthetics(data, params$interval_size_domain, params$interval_size_range),
-      params, size
-    )
-  }
-
-  point_grob = if(any(data$datatype == "point")) {
-    draw_key_point(
-      override_point_aesthetics(data, params$interval_size_domain, params$interval_size_range, params$fatten_point),
-      params, size
-    )
-  }
-
-  gTree(children = gList(slab_grob, interval_grob, point_grob))
-}
-
 GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   default_aes = aes(
     # default datatype is slab (other valid value is "interval" for points/intervals)
@@ -344,7 +315,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     data
   },
 
-  draw_key = draw_key_slabinterval,
+  draw_key = draw_key_slabpointinterval,
 
   draw_panel = function(self, data, panel_params, coord,
       side = self$default_params$side,
