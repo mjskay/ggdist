@@ -39,4 +39,3 @@ theme_set(theme_tidybayes())
 \author{
 Matthew Kay
 }
-\keyword{manip}

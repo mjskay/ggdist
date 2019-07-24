@@ -46,7 +46,6 @@
 #' @name scales
 #' @author Matthew Kay
 #' @seealso \code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
-#' @keywords manip
 #' @examples
 #'
 #' # TODO

@@ -1,4 +1,4 @@
-# A geom_linerangeh but with sensible defaults for displaying multiple intervals
+# A multiple interval geom (horizontal)
 #
 # Author: mjskay
 ###############################################################################
@@ -6,34 +6,40 @@
 
 
 #' @rdname geom_interval
-#' @importFrom ggstance geom_linerangeh GeomLinerangeh
 #' @import ggplot2
 #' @export
-geom_intervalh <- function(mapping = NULL, data = NULL,
-  stat = "identity", position = "identity",
+geom_intervalh = function(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
   ...,
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
+
+  side = "both",
+  orientation = "horizontal",
+  interval_size_range = c(1, 6),
+  show_slab = FALSE,
+  show_point = FALSE,
+
+  datatype = "interval"
 ) {
 
-  l = layer(
+  layer_geom_slabinterval(
     data = data,
     mapping = mapping,
+    default_mapping = aes(xmin = .lower, xmax = .upper, color = forcats::fct_rev(ordered(.width))),
     stat = stat,
     geom = GeomIntervalh,
     position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      na.rm = na.rm,
-      ...
-    )
-  )
+    ...,
 
-  #TODO: move up
-  add_default_computed_aesthetics(l,
-    aes(xmin = .lower, xmax = .upper, color = forcats::fct_rev(ordered(.width)))
+    side = side,
+    orientation = orientation,
+    interval_size_range = interval_size_range,
+    show_slab = show_slab,
+    show_point = show_point,
+
+    datatype = datatype
   )
 }
 
@@ -42,45 +48,20 @@ geom_intervalh <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @import ggplot2
 #' @export
-GeomIntervalh <- ggproto("GeomIntervalh", Geom,
-  default_aes = aes(colour = "black", size = 4, linetype = 1, shape = 19,
-    fill = NA, alpha = NA, stroke = 1),
+GeomIntervalh <- ggproto("GeomIntervalh", GeomSlabinterval,
+  default_aes = modifyList(GeomSlabinterval$default_aes, aes(
+    datatype = "interval",
+    size = 4,
+    fill = NA
+  )),
 
-  draw_key = draw_key_path,
+  default_params = modifyList(GeomSlabinterval$default_params, list(
+    side = "both",
+    orientation = "horizontal",
+    interval_size_range = c(1, 6),
+    show_slab = FALSE,
+    show_point = FALSE
+  )),
 
-  required_aes = c("x", "y", "xmin", "xmax"),
-
-  setup_data = function(data, params) {
-    # provide a default height so that position_dodgev works sensibly by default
-    if (is.null(data$ymin) && is.null(data$ymax)) {
-      data$height = data$height %||%
-        params$height %||% (resolution(data$y, FALSE) * 0.75)
-      transform(data,
-        ymin = y - height / 2, ymax = y + height / 2, height = NULL
-      )
-    }
-  },
-
-  draw_panel = function(data, panel_scales, coord) {
-    # draw all the intervals
-    interval_grobs = data %>%
-      dlply("group", function(d) {
-        group_grobs = list(GeomLinerangeh$draw_panel(d, panel_scales, coord))
-        list(
-          width = d %$% mean(abs(xmax - xmin)),
-          grobs = group_grobs
-        )
-      })
-
-    # this is a slightly hackish approach to getting the draw order correct for the common
-    # use case of fit lines / curves: draw the intervals in order from largest mean width to
-    # smallest mean width, so that the widest intervals are on the bottom.
-    interval_grobs = interval_grobs[order(-map_dbl(interval_grobs, "width"))] %>%
-      map("grobs") %>%
-      reduce(c)
-
-    ggname("geom_intervalh",
-      gTree(children = do.call(gList, interval_grobs))
-    )
-  }
+  default_datatype = "interval"
 )

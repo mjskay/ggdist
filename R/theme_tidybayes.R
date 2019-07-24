@@ -16,7 +16,6 @@
 #'
 #' @author Matthew Kay
 #' @seealso \code{\link[ggplot2]{theme}}, \code{\link[ggplot2]{theme_set}}
-#' @keywords manip
 #' @examples
 #'
 #' library(ggplot2)

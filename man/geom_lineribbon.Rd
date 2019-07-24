@@ -69,4 +69,3 @@ based on.
 \author{
 Matthew Kay
 }
-\keyword{manip}

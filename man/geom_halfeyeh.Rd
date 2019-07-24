@@ -115,4 +115,3 @@ this function is based on.
 \author{
 Matthew Kay
 }
-\keyword{manip}

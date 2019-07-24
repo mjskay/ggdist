@@ -76,7 +76,6 @@
 #' @seealso See \code{\link{geom_halfeyeh}}
 #' for the non-mirrored density ("half eye") version. See \code{\link{geom_violin}} and \code{\link{stat_pointinterval}}
 #' for the geoms these functions are based on.
-#' @keywords manip
 #' @examples
 #'
 #' library(magrittr)

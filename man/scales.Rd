@@ -139,4 +139,3 @@ this is what \code{guide_colorbar2} is for:
 \author{
 Matthew Kay
 }
-\keyword{manip}

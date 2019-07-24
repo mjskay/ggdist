@@ -42,7 +42,6 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' within ggplot. See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for a similar geom intended
 #' for point summaries and intervals. See \code{\link{geom_ribbon}} and \code{\link{geom_line}} for the geoms this is
 #' based on.
-#' @keywords manip
 #' @examples
 #'
 #' library(dplyr)

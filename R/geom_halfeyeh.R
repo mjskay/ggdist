@@ -72,7 +72,6 @@
 #' @seealso See \code{\link{geom_eye}} and \code{\link{geom_eyeh}} for the mirrored-density
 #' (full "eye") versions. See \code{\link[ggridges]{geom_density_ridges}} and \code{\link{stat_summaryh}} for the geoms
 #' this function is based on.
-#' @keywords manip
 #' @examples
 #'
 #' library(magrittr)

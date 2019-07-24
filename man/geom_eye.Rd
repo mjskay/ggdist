@@ -132,4 +132,3 @@ for the geoms these functions are based on.
 \author{
 Matthew Kay
 }
-\keyword{manip}

@@ -11,53 +11,114 @@ geom_interval(mapping = NULL, data = NULL, stat = "identity",
   show_slab = FALSE, show_point = FALSE, datatype = "interval")
 
 geom_intervalh(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
+  position = "identity", ..., side = "both",
+  orientation = "horizontal", interval_size_range = c(1, 6),
+  show_slab = FALSE, show_point = FALSE, datatype = "interval")
 }
 \arguments{
-\item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
-layer level if you are overriding the plot defaults.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
+\code{\link[=aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply \code{mapping} if there is no plot mapping.}
 
-\item{data}{A layer specific dataset - only needed if you want to override
-the plot defaults.}
+\item{data}{The data to be displayed in this layer. There are three
+options:
 
-\item{stat}{The statistical transformation to use on the data for this layer.}
+If \code{NULL}, the default, the data is inherited from the plot
+data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
 
-\item{position}{The position adjustment to use for overlapping points on this layer.}
+A \code{data.frame}, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+\code{\link[=fortify]{fortify()}} for which variables will be created.
+
+A \code{function} will be called with a single argument,
+the plot data. The return value must be a \code{data.frame}, and
+will be used as the layer data. A \code{function} can be created
+from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
+
+\item{stat}{The statistical transformation to use on the data for this
+layer, as a string.}
+
+\item{position}{The position adjustment to use for overlapping points on this layer. Setting this equal to
+\code{"dodge"} or \code{"dodgev"} (if the \code{ggstance} package is loaded) can be useful if you have
+overlapping intervals.}
 
 \item{...}{Other arguments passed to \code{\link{layer}}.}
 
-\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
+\item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"both"} draws the slab mirrored on both sides (as in a violin plot).}
+
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
+aesthetic to identify different groups, then for each group uses the \code{x} (resp. \code{y}) aesthetic and the
+\code{thickness} aesthetic to draw a function as an slab, and draws points and intervals horizontally
+(resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp. \code{ymin}, \code{y}, and \code{ymax})
+aesthetics.}
+
+\item{interval_size_range}{This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of \code{\link{scale_size_continuous}}, which give sizes
+with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
+(typically this should be equal to the value of the \code{range} argument of the \code{\link{scale_size_continuous}}
+function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals).}
+
+\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{...}{Arguments passed on to \code{geom_slabinterval}
+\describe{
+  \item{scale}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+  \item{justification}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
+\code{0.5}.}
+  \item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"max_height"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
+groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
+ normalization (this should probably only be used with functions whose values are in [0,1]).}
+  \item{interval_size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
+  \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
+aesthetic and \code{\link{scale_point_size_continuous}} or \code{\link{scale_point_size_discrete}}; sizes
+specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+  \item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+  \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
-
-\item{show.legend}{Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics
-are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.}
-
-\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
-default plot specification, e.g. borders.}
+  \item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+  \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+}}
 }
 \description{
-Modified versions of \code{\link{geom_linerange}} and \code{\link{geom_linerangeh}} with default aesthetics
+Multiple interval geoms with default aesthetics
 designed for use with output from \code{\link{point_interval}}.
+Wrapper around \code{\link{geom_slabinterval}}.
 }
 \details{
-\code{geom_interval} is a modified version of \code{\link{geom_linerange}}, and \code{geom_intervalh} is
-a modified version of \code{\link{geom_linerangeh}}. These geoms set some default aesthetics equal
+These geoms are wrappers around \code{\link{geom_slabinterval}} with defaults designed to produce
+multiple interval plots. These geoms set some default aesthetics equal
 to the \code{.lower}, \code{.upper}, and \code{.width} columns generated by the \code{point_interval} family
-of functions, making them often more convenient than vanilla \code{\link{geom_linerange}} or
-\code{\link{geom_linerangeh}} when used with functions like \code{\link{median_qi}}, \code{\link{mean_qi}},
+of functions, making them often more convenient than vanilla \code{\link{geom_linerange}}
+when used with functions like \code{\link{median_qi}}, \code{\link{mean_qi}},
 \code{\link{mode_hdi}}, etc.
 
 Specifically, \code{geom_interval} acts as if its default aesthetics are
 \code{aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))}. \code{geom_intervalh} acts as if
 its default aesthetics are \code{aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))}.
-
-A \code{width} (or for \code{geom_intervalh}, \code{height}) aesthetic is also computed by default to
-make use of \code{position = "dodge"} (respectively, \code{position = "dodgev"}) straightforward.
-If you prefer a different width/height, you can specify these directly by passing a \code{width}
-or \code{height} value to \code{\link{position_dodge}} or \code{\link{position_dodgev}}.
 }
 \examples{
 
@@ -82,10 +143,9 @@ RankCorr \%>\%
 
 }
 \seealso{
-See \code{\link{geom_lineribbon}} for a similar geom designed for curves plus probability bands. See
-\code{\link{geom_linerange}} and \code{\link{geom_linerangeh}} for the geoms these are based on.
+See \code{\link{geom_slabinterval}} for the geom that these geoms wrap. All parameters of that geom are
+available to these geoms.
 }
 \author{
 Matthew Kay
 }
-\keyword{manip}
