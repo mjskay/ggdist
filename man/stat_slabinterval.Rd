@@ -26,11 +26,13 @@ the plot defaults.}
 
 \item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.}
 
-\item{point_interval}{A function that when given a vector should
-return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
-\code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
-will be converted into the \code{y}-based aesthetics for \code{stat_pointinterval} and the
-\code{x}-based aesthetics for \code{stat_pointintervalh}. See the \code{point_interval} family of functions.}
+\item{point_interval}{A function from the \code{\link{point_interval}} family (e.g., \code{median_qi}, \code{mean_qi}, etc).
+This function should obey the
+\code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
+a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
+\code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
+depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
+more information.}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}.}
 

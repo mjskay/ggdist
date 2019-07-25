@@ -1,4 +1,4 @@
-# A stat_summary with a geom_pointinterval
+# A stat designed for use with geom_slabinterval
 #
 # Author: mjskay
 ###############################################################################
@@ -27,11 +27,13 @@ globalVariables(c("...width.."))
 #' \code{geom_pointinterval}/\code{geom_pointintervalh} and \code{stat_pointinterval}/\code{stat_pointintervalh}.
 #' @param position The position adjustment to use for overlapping points on this layer.
 #' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
-#' @param point_interval A function that when given a vector should
-#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
-#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
-#'   will be converted into the \code{y}-based aesthetics for \code{stat_pointinterval} and the
-#'   \code{x}-based aesthetics for \code{stat_pointintervalh}. See the \code{point_interval} family of functions.
+#' @param point_interval A function from the \code{\link{point_interval}} family (e.g., \code{median_qi}, \code{mean_qi}, etc).
+#'   This function should obey the
+#'   \code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
+#'   a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
+#'   \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
+#'   depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
+#'   more information.
 #' @param fun.data Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
 #'   Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
 #'   are not converted to the correct form automatically.
@@ -55,6 +57,7 @@ globalVariables(c("...width.."))
 #' #TODO
 #'
 #' @importFrom rlang as_function
+#' @importFrom dplyr bind_rows
 #' @export
 stat_slabinterval = function(
   mapping = NULL,
@@ -136,21 +139,22 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
 
 
     # do the interval
-    interval_args = modifyList(list(.width = .width), interval_args)
+    interval_args = modifyList(
+      list(.width = .width),
+      interval_args
+    )
 
     draw_interval = FALSE
     if (is.null(interval_function)) {
       if (!is.null(point_interval)) {
+        # need to set .simple_names here to get .value, .lower, and .upper
+        interval_args$.simple_names = TRUE
+        point_interval = as_function(point_interval)
+
         # function is a point_interval, we need to make the version that
         # can take in a data frame
-        fix_orientation_aes = switch(orientation,
-          horizontal = horizontal_aes,
-          vertical = vertical_aes
-        )
-        point_interval = fix_orientation_aes(as_function(point_interval))
-
         fun = function(df) {
-          do.call(point_interval, c(list(df[[x]]), interval_args))
+          do.call(point_interval, c(list(quote(df[[x]])), interval_args))
         }
         draw_interval = TRUE
       }
@@ -158,7 +162,7 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
       interval_function = as_function(interval_function)
 
       fun = function(df) {
-        do.call(interval_function, c(list(df), interval_args))
+        do.call(interval_function, c(list(quote(df)), interval_args))
       }
       draw_interval = TRUE
     }
@@ -166,11 +170,14 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
     i_data = NULL
     if (draw_interval) {
       i_data = summarise_by(data, c("group", y), fun)
+      names(i_data)[names(i_data) == ".value"] = x
+      names(i_data)[names(i_data) == ".lower"] = xmin
+      names(i_data)[names(i_data) == ".upper"] = xmax
       i_data$level = forcats::fct_rev(ordered(i_data$.width))
       i_data$datatype = "interval"
     }
 
-    rbind(s_data, i_data)
+    bind_rows(s_data, i_data)
   }
 )
 
