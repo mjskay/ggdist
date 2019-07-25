@@ -9,7 +9,7 @@
 globalVariables(c("...width.."))
 
 
-#' Point summary + multiple probability interval plots (ggplot stat)
+#' Compute slab functions and interval functions (ggplot stat)
 #'
 #' A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and
 #' \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} with sensible defaults.
@@ -52,82 +52,125 @@ globalVariables(c("...width.."))
 #' point summaries.
 #' @examples
 #'
-#' library(magrittr)
-#' library(ggplot2)
+#' #TODO
 #'
-#' data(RankCorr, package = "tidybayes")
-#'
-#' RankCorr %>%
-#'   spread_draws(u_tau[i]) %>%
-#'   ggplot(aes(y = i, x = u_tau)) +
-#'   stat_pointintervalh(.width = c(.66, .95))
-#'
-#' RankCorr %>%
-#'   spread_draws(u_tau[i]) %>%
-#'   ggplot(aes(x = i, y = u_tau)) +
-#'   stat_pointinterval(.width = c(.66, .95))
-#'
+#' @importFrom rlang as_function
 #' @export
-stat_pointinterval = function(
+stat_slabinterval = function(
   mapping = NULL,
   data = NULL,
-  geom = "pointinterval",
+  geom = "slabinterval",
   position = "identity",
   ...,
 
-  point_interval = median_qi,
-  fun.data = NULL,
+  orientation = c("horizontal", "vertical"),
+
+  slab_function = NULL,
+  slab_args = list(),
+  limits = NULL,
+  n = 101,
+
+  interval_function = NULL,
+  interval_args = list(),
+  point_interval = NULL,
   .width = c(.66, .95),
-  .prob,
-  fun.args = list(),
+
   na.rm = FALSE,
 
-  show.legend = c(size = FALSE),
+  show.legend = NA,
   inherit.aes = TRUE
 ) {
-  .width = .Deprecated_argument_alias(.width, .prob)
-
-  fun.data = fun.data %||% vertical_aes(point_interval)
+  orientation = match.arg(orientation)
 
   layer(
     data = data,
     mapping = mapping,
-    stat = StatPointinterval,
+    stat = StatSlabinterval,
     geom = geom,
     position = position,
+
     show.legend = show.legend,
     inherit.aes = inherit.aes,
+
     params = list(
-      fun.data = fun.data,
+      slab_function = slab_function,
+      slab_args = slab_args,
+      limits = limits,
+      n = n,
+
+      interval_function = interval_function,
+      interval_args = interval_args,
+      point_interval = point_interval,
       .width = .width,
-      fun.args = fun.args,
+
       na.rm = na.rm,
       ...
     )
   )
 }
 
-StatPointinterval <- ggproto("StatPointinterval", StatSummary,
+StatSlabinterval <- ggproto("StatSlabinterval", Stat,
   default_aes = aes(
-    datatype = "interval",
-    size = stat(-.width)
+    datatype = "slab"
   ),
 
-  compute_panel = function(data, scales, fun.data = median_qi, .width = c(.66, .95),
-    fun.args = list(), na.rm = FALSE
+  compute_panel = function(data, scales,
+    orientation = "horizontal",
+
+    slab_function = NULL,
+    slab_args = list(),
+    limits = NULL,
+    n = 101,
+
+    interval_function = NULL,
+    interval_args = list(),
+    point_interval = NULL,
+    .width = c(.66, .95),
+
+    na.rm = FALSE
   ) {
+    define_orientation_variables(orientation)
 
-    fun.args = modifyList(list(.width = .width), fun.args)
+    # do the slab
+    s_data = NULL
 
-    # Function that takes complete data frame as input
-    fun.data = match.fun(fun.data)
-    fun = function(df) {
-      do.call(fun.data, c(list(quote(df$y)), fun.args))
+
+    # do the interval
+    interval_args = modifyList(list(.width = .width), interval_args)
+
+    draw_interval = FALSE
+    if (is.null(interval_function)) {
+      if (!is.null(point_interval)) {
+        # function is a point_interval, we need to make the version that
+        # can take in a data frame
+        fix_orientation_aes = switch(orientation,
+          horizontal = horizontal_aes,
+          vertical = vertical_aes
+        )
+        point_interval = fix_orientation_aes(as_function(point_interval))
+
+        fun = function(df) {
+          do.call(point_interval, c(list(df[[x]]), interval_args))
+        }
+        draw_interval = TRUE
+      }
+    } else {
+      interval_function = as_function(interval_function)
+
+      fun = function(df) {
+        do.call(interval_function, c(list(df), interval_args))
+      }
+      draw_interval = TRUE
     }
 
-    data = summarise_by(data, c("group", "x"), fun)
-    data$level = forcats::fct_rev(ordered(data$.width))
-    data
+    i_data = NULL
+    if (draw_interval) {
+      i_data = summarise_by(data, c("group", y), fun)
+      i_data$level = forcats::fct_rev(ordered(i_data$.width))
+      i_data$datatype = "interval"
+    }
+
+    rbind(s_data, i_data)
   }
 )
 

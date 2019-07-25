@@ -37,6 +37,42 @@ add_default_computed_aesthetics = function(l, default_mapping) {
   )
 }
 
+# defines "orientation" variables in the environment of the calling
+# function (for convenience): these are variables (typically aesthetics)
+# that differ depending on whether the geom's orientation is horizontal
+# or vertical. They are named assuming a horizontal orientation.
+define_orientation_variables = function(orientation) {
+  f = parent.frame()
+
+  if (orientation == "horizontal") {
+    f$height = "height"
+
+    f$y = "y"
+    f$ymin = "ymin"
+    f$ymax = "ymax"
+    f$yend = "yend"
+
+    f$x = "x"
+    f$xmin = "xmin"
+    f$xmax = "xmax"
+    f$xend = "xend"
+  } else if (orientation == "vertical") {
+    f$height = "width"
+
+    f$y = "x"
+    f$ymin = "xmin"
+    f$ymax = "xmax"
+    f$yend = "xend"
+
+    f$x = "y"
+    f$xmin = "ymin"
+    f$xmax = "ymax"
+    f$xend = "yend"
+  } else {
+    stop("Unknown orientation: `", orientation, "`")
+  }
+}
+
 
 #' Base ggproto classes for tidybayes
 #'
