@@ -37,7 +37,11 @@ make_draw_key_slabpointinterval_ = function(slab_ = TRUE, point_ = TRUE, interva
 #' of the glyph for the slab, point, and/or interval portion of the geom. Key glyphs can be customized for
 #' individual geoms by providing a geom with the \code{key_glyph} argument (see \code{\link{layer}}).
 #'
+#' The name of these key functions indicates what of the three components of a \code{\link{geom_slabinterval}} it
+#' draws in the key glyph: the slab, point, and/or interval.
+#'
 #' @inheritParams ggplot2::draw_key
+#' @param self A geom
 #' @author Matthew Kay
 #' @seealso See \code{\link{geom_slabinterval}}.
 #' @examples
@@ -46,9 +50,19 @@ make_draw_key_slabpointinterval_ = function(slab_ = TRUE, point_ = TRUE, interva
 #'
 #' @export
 draw_key_slabpointinterval = make_draw_key_slabpointinterval_(TRUE,  TRUE,  TRUE )
+#' @rdname draw_key_slabpointinterval
+#' @export
 draw_key_pointinterval     = make_draw_key_slabpointinterval_(FALSE, TRUE,  TRUE )
+#' @rdname draw_key_slabpointinterval
+#' @export
 draw_key_slabinterval      = make_draw_key_slabpointinterval_(TRUE,  FALSE, TRUE )
+#' @rdname draw_key_slabpointinterval
+#' @export
 draw_key_interval          = make_draw_key_slabpointinterval_(FALSE, FALSE, TRUE )
+#' @rdname draw_key_slabpointinterval
+#' @export
 draw_key_slabpoint         = make_draw_key_slabpointinterval_(TRUE,  TRUE,  FALSE)
 # draw_key_point           = make_draw_key_slabpointinterval_(FALSE, TRUE,  FALSE) # in base ggplot
+#' @rdname draw_key_slabpointinterval
+#' @export
 draw_key_slab              = make_draw_key_slabpointinterval_(TRUE,  FALSE, FALSE)

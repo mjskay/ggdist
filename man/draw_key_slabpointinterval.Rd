@@ -2,11 +2,28 @@
 % Please edit documentation in R/draw_key_slabpointinterval.R
 \name{draw_key_slabpointinterval}
 \alias{draw_key_slabpointinterval}
+\alias{draw_key_pointinterval}
+\alias{draw_key_slabinterval}
+\alias{draw_key_interval}
+\alias{draw_key_slabpoint}
+\alias{draw_key_slab}
 \title{Key glyphs for geom_slabinterval and related geoms}
 \usage{
 draw_key_slabpointinterval(self, data, params, size)
+
+draw_key_pointinterval(self, data, params, size)
+
+draw_key_slabinterval(self, data, params, size)
+
+draw_key_interval(self, data, params, size)
+
+draw_key_slabpoint(self, data, params, size)
+
+draw_key_slab(self, data, params, size)
 }
 \arguments{
+\item{self}{A geom}
+
 \item{data}{A single row data frame containing the scaled aesthetics to
 display in this key}
 
@@ -18,6 +35,10 @@ display in this key}
 Glyph drawing functions for use with \code{\link{geom_slabinterval}}, which draw different combinations
 of the glyph for the slab, point, and/or interval portion of the geom. Key glyphs can be customized for
 individual geoms by providing a geom with the \code{key_glyph} argument (see \code{\link{layer}}).
+}
+\details{
+The name of these key functions indicates what of the three components of a \code{\link{geom_slabinterval}} it
+draws in the key glyph: the slab, point, and/or interval.
 }
 \examples{
 

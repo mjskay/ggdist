@@ -107,7 +107,6 @@ stat_pointinterval = function(
   )
 }
 
-#' @importFrom plyr defaults
 StatPointinterval <- ggproto("StatPointinterval", StatSummary,
   default_aes = aes(
     datatype = "interval",

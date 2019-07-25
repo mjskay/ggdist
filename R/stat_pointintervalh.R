@@ -40,7 +40,6 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @importFrom plyr defaults
 StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
   default_aes = aes(
     size = stat(-.width)
