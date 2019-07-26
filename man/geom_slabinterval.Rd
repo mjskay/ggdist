@@ -7,7 +7,7 @@
 geom_slabinterval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = c("topright", "top", "right",
   "bottomleft", "bottom", "left", "both"), scale = 0.9,
-  orientation = c("horizontal", "vertical"), justification = NULL,
+  orientation = c("vertical", "horizontal"), justification = NULL,
   normalize = c("max_height", "height", "none"),
   interval_size_domain = c(1, 6), interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8, show_slab = TRUE, show_point = TRUE,

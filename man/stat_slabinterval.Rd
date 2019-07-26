@@ -6,10 +6,11 @@
 \usage{
 stat_slabinterval(mapping = NULL, data = NULL, geom = "slabinterval",
   position = "identity", ..., orientation = c("horizontal",
-  "vertical"), slab_function = NULL, slab_args = list(),
-  limits = NULL, n = 101, interval_function = NULL,
-  interval_args = list(), point_interval = NULL, .width = c(0.66,
-  0.95), na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+  "vertical"), limits_function = NULL, limits_args = list(),
+  limits = NULL, slab_function = NULL, slab_args = list(), n = 101,
+  interval_function = NULL, interval_args = list(),
+  point_interval = NULL, .width = c(0.66, 0.95), na.rm = FALSE,
+  show.legend = NA, inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with

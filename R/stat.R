@@ -13,10 +13,13 @@ summarise_by = function(data, by = "group", fun) {
 
     # add back in columns with only one value in them
     for (col in missing_names) {
-      if (all(d[[col]] == d[[col]][[1]]) ||
-        (is.na(d[[col]][[1]]) && all(is.na(x)))
-      ) {
-        new_d[[col]] = d[[col]][[1]]
+      if (length(unique(d[[col]])) == 1) {
+        if (is.list(d[[col]])) {
+          # list columns must be wrapped
+          new_d[[col]] = list(d[[col]][[1]])
+        } else{
+          new_d[[col]] = d[[col]][[1]]
+        }
       }
     }
 

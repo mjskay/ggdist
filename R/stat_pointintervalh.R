@@ -59,7 +59,6 @@ StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
 
     data = summarise_by(data, c("group", "y"), fun)
     data$level = forcats::fct_rev(ordered(data$.width))
-    print(str(data))
     data
   }
 )

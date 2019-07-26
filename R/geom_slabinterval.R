@@ -119,7 +119,7 @@ geom_slabinterval = function(
   # amongst other things
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
   scale = 0.9,
-  orientation = c("horizontal", "vertical"),
+  orientation = c("vertical", "horizontal"),
   justification = NULL,
   normalize = c("max_height", "height", "none"),
   interval_size_domain = c(1, 6),
