@@ -2,7 +2,7 @@
 % Please edit documentation in R/stat_slabinterval.R
 \name{stat_slabinterval}
 \alias{stat_slabinterval}
-\title{Compute slab functions and interval functions (ggplot stat)}
+\title{Meta-stat for compute slab functions and interval functions (ggplot stat)}
 \usage{
 stat_slabinterval(mapping = NULL, data = NULL, geom = "slabinterval",
   position = "identity", ..., orientation = c("horizontal",
@@ -13,56 +13,102 @@ stat_slabinterval(mapping = NULL, data = NULL, geom = "slabinterval",
   show.legend = NA, inherit.aes = TRUE)
 }
 \arguments{
-\item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
-layer level if you are overriding the plot defaults.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
+\code{\link[=aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply \code{mapping} if there is no plot mapping.}
 
-\item{data}{A layer specific dataset - only needed if you want to override
-the plot defaults.}
+\item{data}{The data to be displayed in this layer. There are three
+options:
+
+If \code{NULL}, the default, the data is inherited from the plot
+data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
+
+A \code{data.frame}, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+\code{\link[=fortify]{fortify()}} for which variables will be created.
+
+A \code{function} will be called with a single argument,
+the plot data. The return value must be a \code{data.frame}, and
+will be used as the layer data. A \code{function} can be created
+from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{geom}{Use to override the default connection between
-\code{geom_pointinterval}/\code{geom_pointintervalh} and \code{stat_pointinterval}/\code{stat_pointintervalh}.}
+\code{stat_slabinterval} and \code{\link{geom_slabinterval}}}
 
-\item{position}{The position adjustment to use for overlapping points on this layer.}
+\item{position}{Position adjustment, either as a string, or the result of
+a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.}
+\item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom
+(e.g., \code{\link{geom_pointinterval}})}
 
-\item{point_interval}{A function from the \code{\link{point_interval}} family (e.g., \code{median_qi}, \code{mean_qi}, etc).
-This function should obey the
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
+aesthetic to identify different groups, then for each group uses the \code{x} (resp. \code{y}) aesthetic and the
+\code{thickness} aesthetic to draw a function as an slab, and draws points and intervals horizontally
+(resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp. \code{ymin}, \code{y}, and \code{ymax})
+aesthetics.}
+
+\item{limits_function}{A function that takes a data frame of aesthetics and returns a data frame with
+columns \code{.lower} and \code{.upper} indicating the limits of the input for the slab function for that data frame.}
+
+\item{limits_args}{Additional arguments passed to \code{limits_function}}
+
+\item{limits}{Limits for \code{slab_function}, as a vector of length two. These limits are combined with those
+computed by the \code{limits_function} as well as the limits defined by the scales of the plot to determine the
+limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
+will not be wider than these (but may be narrower).}
+
+\item{slab_function}{A function that takes a data frame of aesthetics and an \code{input} parameter (a vector
+of function inputs), and returns a data frame with
+columns \code{.input} (from the \code{input} vector) and \code{.value} (result of applying the function to
+each value of input). Given the results of \code{slab_function}, \code{.value} will be translated into the
+\code{thickness} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
+automatically depending on the value of \code{orientation}.}
+
+\item{slab_args}{Additional arguments passed to \code{limits_function}}
+
+\item{n}{Number of points at which to evaluate \code{slab_function}}
+
+\item{interval_function}{A function that takes a data frame of aesthetics and a \code{.width} parameter (a vector
+of interval widths), and returns a data frame with
+columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
+(endpoints of the inverals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
+\code{y}-based aesthetics depending on the value of \code{orientation}. If \code{interval_function} is \code{NULL},
+\code{point_interval} is used instead.}
+
+\item{interval_args}{Additional arguments passed to \code{interval_function} or \code{point_interval}.}
+
+\item{point_interval}{A function from the \code{\link{point_interval}} family (e.g., \code{median_qi},
+\code{mean_qi}, etc). This function should take in a vector of value, and should obey the
 \code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
 a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
 depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
 more information.}
 
-\item{.width}{The \code{.width} argument passed to \code{point_interval}.}
+\item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-those that are mapped (the default for most geoms).}
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
 
-\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
-default plot specification, e.g. borders.}
-
-\item{fun.data}{Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
-Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
-are not converted to the correct form automatically.}
-
-\item{.prob}{Deprecated. Use \code{.width} instead.}
-
-\item{fun.args}{Other optional arguments passed to \code{fun.data}.}
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 }
 \description{
-A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and
-\code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} with sensible defaults.
-While the corresponding \code{geom}s are intended for use on
-data frames that have already been summarized using a \code{\link{point_interval}}
-function, these \code{stat}s are intended for use directly on data frames of draws, and
-will perform the summarization using a \code{\link{point_interval}} function.
+A meta-stat for computing slab and interval functions for use with \code{\link{geom_slabinterval}}
+and its derivatives. Generally speaking not intended to be used directly: The API for
+this stat is \strong{experimental and subject to change}. This is used as the basis
+for several other more directly useful stats whose APIs are more stable; it is recommended
+to use those instead.
 }
 \examples{
 
@@ -70,8 +116,7 @@ will perform the summarization using a \code{\link{point_interval}} function.
 
 }
 \seealso{
-See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
-for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
-See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
-point summaries.
+See \code{\link{geom_slabinterval}} for the geom version, intended
+for use on data that has already been translated into funciton evaluations, points, and intervals.
 }
+\keyword{internal}

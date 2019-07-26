@@ -9,55 +9,58 @@
 globalVariables(c("...width.."))
 
 
-#' Compute slab functions and interval functions (ggplot stat)
+#' Meta-stat for compute slab functions and interval functions (ggplot stat)
 #'
-#' A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and
-#' \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} with sensible defaults.
-#' While the corresponding \code{geom}s are intended for use on
-#' data frames that have already been summarized using a \code{\link{point_interval}}
-#' function, these \code{stat}s are intended for use directly on data frames of draws, and
-#' will perform the summarization using a \code{\link{point_interval}} function.
+#' A meta-stat for computing slab and interval functions for use with \code{\link{geom_slabinterval}}
+#' and its derivatives. Generally speaking not intended to be used directly: The API for
+#' this stat is \strong{experimental and subject to change}. This is used as the basis
+#' for several other more directly useful stats whose APIs are more stable; it is recommended
+#' to use those instead.
 #'
-#' @param mapping The aesthetic mapping, usually constructed with
-#' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
-#' layer level if you are overriding the plot defaults.
-#' @param data A layer specific dataset - only needed if you want to override
-#' the plot defaults.
+#' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
-#' \code{geom_pointinterval}/\code{geom_pointintervalh} and \code{stat_pointinterval}/\code{stat_pointintervalh}.
-#' @param position The position adjustment to use for overlapping points on this layer.
-#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
-#' @param point_interval A function from the \code{\link{point_interval}} family (e.g., \code{median_qi}, \code{mean_qi}, etc).
-#'   This function should obey the
+#' \code{stat_slabinterval} and \code{\link{geom_slabinterval}}
+#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom
+#' (e.g., \code{\link{geom_pointinterval}})
+#' @param limits_function A function that takes a data frame of aesthetics and returns a data frame with
+#' columns \code{.lower} and \code{.upper} indicating the limits of the input for the slab function for that data frame.
+#' @param limits_args Additional arguments passed to \code{limits_function}
+#' @param limits Limits for \code{slab_function}, as a vector of length two. These limits are combined with those
+#' computed by the \code{limits_function} as well as the limits defined by the scales of the plot to determine the
+#' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
+#' will not be wider than these (but may be narrower).
+#' @param slab_function A function that takes a data frame of aesthetics and an \code{input} parameter (a vector
+#' of function inputs), and returns a data frame with
+#' columns \code{.input} (from the \code{input} vector) and \code{.value} (result of applying the function to
+#' each value of input). Given the results of \code{slab_function}, \code{.value} will be translated into the
+#' \code{thickness} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
+#' automatically depending on the value of \code{orientation}.
+#' @param slab_args Additional arguments passed to \code{limits_function}
+#' @param n Number of points at which to evaluate \code{slab_function}
+#' @param interval_function A function that takes a data frame of aesthetics and a \code{.width} parameter (a vector
+#' of interval widths), and returns a data frame with
+#' columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
+#' (endpoints of the inverals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
+#' \code{y}-based aesthetics depending on the value of \code{orientation}. If \code{interval_function} is \code{NULL},
+#' \code{point_interval} is used instead.
+#' @param interval_args Additional arguments passed to \code{interval_function} or \code{point_interval}.
+#' @param point_interval A function from the \code{\link{point_interval}} family (e.g., \code{median_qi},
+#'   \code{mean_qi}, etc). This function should take in a vector of value, and should obey the
 #'   \code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
 #'   a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
 #'   \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
 #'   depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
 #'   more information.
-#' @param fun.data Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
-#'   Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
-#'   are not converted to the correct form automatically.
-#' @param .width The \code{.width} argument passed to \code{point_interval}.
-#' @param .prob Deprecated. Use \code{.width} instead.
-#' @param fun.args Other optional arguments passed to \code{fun.data}.
-#' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-#' values are silently removed.
-#' @param show.legend Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-#' to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-#' those that are mapped (the default for most geoms).
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-#' most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
-#' default plot specification, e.g. borders.
-#' @seealso See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
-#' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
-#' See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
-#' point summaries.
+#' @param .width The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.
+#' @seealso See \code{\link{geom_slabinterval}} for the geom version, intended
+#' for use on data that has already been translated into funciton evaluations, points, and intervals.
 #' @examples
 #'
 #' #TODO
 #'
 #' @importFrom rlang as_function
 #' @importFrom dplyr bind_rows
+#' @keywords internal
 #' @export
 stat_slabinterval = function(
   mapping = NULL,
@@ -327,7 +330,7 @@ dist_function = function(
   })
 }
 
-dist_limits_function = function(df, p_limits = c(.001, .999)) {
+dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
   pmap_dfr(df, function(dist, ...) {
     args = args_from_aes(...)
     quantile_fun = match.fun(paste0("q", dist))
