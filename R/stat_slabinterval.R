@@ -4,12 +4,7 @@
 ###############################################################################
 
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c("...width.."))
-
-
-#' Meta-stat for compute slab functions and interval functions (ggplot stat)
+#' Meta-stat for computing slab functions and interval functions (ggplot stat)
 #'
 #' A meta-stat for computing slab and interval functions for use with \code{\link{geom_slabinterval}}
 #' and its derivatives. Generally speaking not intended to be used directly: The API for

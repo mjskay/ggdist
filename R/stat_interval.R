@@ -4,11 +4,6 @@
 ###############################################################################
 
 
-# Names that should be suppressed from global variable check by codetools
-# Names used broadly should be put in _global_variables.R
-globalVariables(c("...width.."))
-
-
 #' Multiple probability interval plots (ggplot stat)
 #'
 #' A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and
