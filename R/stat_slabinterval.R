@@ -128,7 +128,18 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
     size = stat(-.width)
   ),
 
-  compute_panel = function(self, data, scales,
+  optional_aes = c(
+    "x",
+    "y"
+  ),
+
+  aesthetics = function(self) {
+    # for some reason ggplot2::Stat doesn't obey optional_aes the way Geoms do,
+    # so we'll implement that ourselves
+    union(self$optional_aes, ggproto_parent(Stat, self)$aesthetics())
+  },
+
+  default_params = list(
     orientation = "vertical",
 
     limits_function = NULL,
@@ -137,7 +148,7 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
 
     slab_function = NULL,
     slab_args = list(),
-    n = 101,
+    n = 501,
 
     interval_function = NULL,
     interval_args = list(),
@@ -145,6 +156,25 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
     .width = c(.66, .95),
 
     na.rm = FALSE
+  ),
+
+  compute_panel = function(self, data, scales,
+    orientation = self$default_params$orientation,
+
+    limits_function = self$default_params$limits_function,
+    limits_args = self$default_params$limits_args,
+    limits = self$default_params$limits,
+
+    slab_function = self$default_params$slab_function,
+    slab_args = self$default_params$slab_args,
+    n = self$default_params$n,
+
+    interval_function = self$default_params$interval_function,
+    interval_args = self$default_params$interval_args,
+    point_interval = self$default_params$point_interval,
+    .width = self$default_params$.width,
+
+    na.rm = self$default_params$na.rm
   ) {
     define_orientation_variables(orientation)
 
@@ -215,7 +245,9 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
       # we set up the grid in the transformed space
       input = x_trans$inverse(seq(x_trans$transform(limits[[1]]), x_trans$transform(limits[[2]]), length.out = n))
       slab_args[["input"]] = input
+      slab_args[["limits"]] = limits
       slab_args[["n"]] = n
+      slab_args[["orientation"]] = orientation
 
       # evaluate the slab function
       slab_function = as_function(slab_function)
@@ -231,10 +263,7 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
 
 
     # INTERVAL
-    interval_args = modifyList(
-      list(.width = .width),
-      interval_args
-    )
+    interval_args[[".width"]] = .width
 
     draw_interval = FALSE
     if (is.null(interval_function)) {
@@ -249,6 +278,7 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
         draw_interval = TRUE
       }
     } else {
+      interval_args[["orientation"]] = orientation
       interval_function = as_function(interval_function)
       interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
       draw_interval = TRUE
@@ -272,86 +302,3 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
     bind_rows(s_data, i_data)
   }
 )
-
-
-
-# limits, slab, and interval functions for distributions -------------------------
-
-# translate arguments of the form `arg1` ... `arg9` (or from a list column, args) into a single list of arguments
-args_from_aes = function(args = list(), ...) {
-  dot_args = list(...)
-  args_from_dots = list()
-  for (i in 1:9) {
-    arg_name = paste0("arg", i)
-    if (arg_name %in% names(dot_args)) {
-      args_from_dots[[i]] = dot_args[[arg_name]]
-    }
-  }
-
-  c(args_from_dots, args)
-}
-
-dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
-  pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
-      return(data.frame(.lower = NA, .upper = NA))
-    }
-
-    args = args_from_aes(...)
-    quantile_fun = match.fun(paste0("q", dist))
-    limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
-
-    data.frame(
-      .lower = limits[[1]],
-      .upper = limits[[2]]
-    )
-  })
-}
-
-dist_slab_function = function(
-  df, input, type = "pdf", limits = NULL, n = 201, ...
-) {
-  pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
-      return(data.frame(.input = NA, .value = NA))
-    }
-
-    args = args_from_aes(...)
-    dist_fun = switch(type,
-      pdf = match.fun(paste0("d", dist)),
-      cdf = match.fun(paste0("p", dist)),
-      ccdf = {
-        cdf = match.fun(paste0("p", dist));
-        function (...) 1 - cdf(...)
-      }
-    )
-    quantile_fun = match.fun(paste0("q", dist))
-
-    data.frame(
-      .input = input,
-      .value = do.call(dist_fun, c(list(quote(input)), args))
-    )
-  })
-}
-
-dist_interval_function = function(df, .width, ...) {
-  pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
-      return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
-    }
-
-    args = args_from_aes(...)
-    quantile_fun = match.fun(paste0("q", dist))
-
-    intervals = map_dfr(.width, function(w) {
-      quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
-      quantiles = do.call(quantile_fun, quantile_args)
-      data.frame(
-        .value = quantiles[[1]],
-        .lower = quantiles[[2]],
-        .upper = quantiles[[3]],
-        .width = w
-      )
-    })
-  })
-}

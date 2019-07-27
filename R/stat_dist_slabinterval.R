@@ -4,6 +4,90 @@
 ###############################################################################
 
 
+# limits, slab, and interval functions for distributions -------------------------
+
+# translate arguments of the form `arg1` ... `arg9` (or from a list column, args) into a single list of arguments
+args_from_aes = function(args = list(), ...) {
+  dot_args = list(...)
+  args_from_dots = list()
+  for (i in 1:9) {
+    arg_name = paste0("arg", i)
+    if (arg_name %in% names(dot_args)) {
+      args_from_dots[[i]] = dot_args[[arg_name]]
+    }
+  }
+
+  c(args_from_dots, args)
+}
+
+dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
+  pmap_dfr(df, function(dist, ...) {
+    if (is.na(dist)) {
+      return(data.frame(.lower = NA, .upper = NA))
+    }
+
+    args = args_from_aes(...)
+    quantile_fun = match.fun(paste0("q", dist))
+    limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
+
+    data.frame(
+      .lower = limits[[1]],
+      .upper = limits[[2]]
+    )
+  })
+}
+
+dist_slab_function = function(
+  df, input, slab_type = "pdf", limits = NULL, n = 501, ...
+) {
+  pmap_dfr(df, function(dist, ...) {
+    if (is.na(dist)) {
+      return(data.frame(.input = NA, .value = NA))
+    }
+
+    args = args_from_aes(...)
+    dist_fun = switch(slab_type,
+      pdf = match.fun(paste0("d", dist)),
+      cdf = match.fun(paste0("p", dist)),
+      ccdf = {
+        cdf = match.fun(paste0("p", dist));
+        function (...) 1 - cdf(...)
+      }
+    )
+    quantile_fun = match.fun(paste0("q", dist))
+
+    data.frame(
+      .input = input,
+      .value = do.call(dist_fun, c(list(quote(input)), args))
+    )
+  })
+}
+
+dist_interval_function = function(df, .width, ...) {
+  pmap_dfr(df, function(dist, ...) {
+    if (is.na(dist)) {
+      return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
+    }
+
+    args = args_from_aes(...)
+    quantile_fun = match.fun(paste0("q", dist))
+
+    intervals = map_dfr(.width, function(w) {
+      quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
+      quantiles = do.call(quantile_fun, quantile_args)
+      data.frame(
+        .value = quantiles[[1]],
+        .lower = quantiles[[2]],
+        .upper = quantiles[[3]],
+        .width = w
+      )
+    })
+  })
+}
+
+
+# stat_dist_slabinterval --------------------------------------------------
+
 #' Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)
 #'
 #' Stats for computing distribution functions (densities or CDFs) + intervals for use with
@@ -12,6 +96,8 @@
 #' arguments.
 #'
 #' @inheritParams stat_slabinterval
+#' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
+#' cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
 #' limits of the slab. E.g., if this is \code{c(.001, .999)} (the default), then a slab is drawn
 #' for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}.
@@ -21,15 +107,12 @@
 #' will not be wider than these (but may be narrower).Use \code{NA} to leave a limit alone; e.g.
 #' \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either \code{p_limits} or the scale settings.
-#' @seealso See \code{\link{geom_slabinterval}} for more information of the geom this stat
-#' uses by default and some of the options it has.
+#' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
+#' use by default and some of the options they have.
 #' @examples
 #'
 #' #TODO
 #'
-#' @importFrom rlang as_function
-#' @importFrom dplyr bind_rows
-#' @keywords internal
 #' @export
 stat_dist_slabinterval = function(
   mapping = NULL,
@@ -91,16 +174,11 @@ stat_dist_slabinterval = function(
 
 StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
   optional_aes = c(
+    StatSlabinterval$optional_aes,
     "dist",
     "args",
     paste0("arg", 1:9)
   ),
-
-  aesthetics = function(self) {
-    # for some reason ggplot2::Stat doesn't obey optional_aes the way Geoms do,
-    # so we'll implement that ourselves
-    union(self$optional_aes, ggproto_parent(StatSlabinterval, self)$aesthetics())
-  },
 
   extra_params = c(
     StatSlabinterval$extra_params,
@@ -108,15 +186,24 @@ StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
     "p_limits"
   ),
 
+  default_params = modifyList(StatSlabinterval$default_params, list(
+    slab_type = "pdf",
+    p_limits = c(.001, .999),
+
+    limits_function = dist_limits_function,
+    slab_function = dist_slab_function,
+    interval_function = dist_interval_function
+  )),
+
   setup_params = function(self, data, params) {
     params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
 
     params$limits_args = list(
-      p_limits = params$p_limits %||% c(.001, .999)
+      p_limits = params$p_limits %||% self$default_params$p_limits
     )
 
     params$slab_args = list(
-      slab_type = params$slab_type %||% "pdf"
+      slab_type = params$slab_type %||% self$default_params$slab_type
     )
 
     params
@@ -132,6 +219,9 @@ StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
     data
   }
 )
+
+
+# shortcut stats ----------------------------------------------------------
 
 #' @export
 #' @rdname stat_dist_slabinterval
@@ -180,86 +270,4 @@ stat_dist_cdfbarh = function(...,
   stat_dist_slabinterval(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
   )
-}
-
-
-# limits, slab, and interval functions for distributions -------------------------
-
-# translate arguments of the form `arg1` ... `arg9` (or from a list column, args) into a single list of arguments
-args_from_aes = function(args = list(), ...) {
-  dot_args = list(...)
-  args_from_dots = list()
-  for (i in 1:9) {
-    arg_name = paste0("arg", i)
-    if (arg_name %in% names(dot_args)) {
-      args_from_dots[[i]] = dot_args[[arg_name]]
-    }
-  }
-
-  c(args_from_dots, args)
-}
-
-dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
-  pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
-      return(data.frame(.lower = NA, .upper = NA))
-    }
-
-    args = args_from_aes(...)
-    quantile_fun = match.fun(paste0("q", dist))
-    limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
-
-    data.frame(
-      .lower = limits[[1]],
-      .upper = limits[[2]]
-    )
-  })
-}
-
-dist_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 201, ...
-) {
-  pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
-      return(data.frame(.input = NA, .value = NA))
-    }
-
-    args = args_from_aes(...)
-    dist_fun = switch(slab_type,
-      pdf = match.fun(paste0("d", dist)),
-      cdf = match.fun(paste0("p", dist)),
-      ccdf = {
-        cdf = match.fun(paste0("p", dist));
-        function (...) 1 - cdf(...)
-      }
-    )
-    quantile_fun = match.fun(paste0("q", dist))
-
-    data.frame(
-      .input = input,
-      .value = do.call(dist_fun, c(list(quote(input)), args))
-    )
-  })
-}
-
-dist_interval_function = function(df, .width, ...) {
-  pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
-      return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
-    }
-
-    args = args_from_aes(...)
-    quantile_fun = match.fun(paste0("q", dist))
-
-    intervals = map_dfr(.width, function(w) {
-      quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
-      quantiles = do.call(quantile_fun, quantile_args)
-      data.frame(
-        .value = quantiles[[1]],
-        .lower = quantiles[[2]],
-        .upper = quantiles[[3]],
-        .width = w
-      )
-    })
-  })
 }

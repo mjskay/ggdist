@@ -2,10 +2,13 @@
 % Please edit documentation in R/parse_dist.R
 \name{parse_dist}
 \alias{parse_dist}
+\alias{r_dist_name}
 \title{Parse distribution specifications into columns of a data frame}
 \usage{
 parse_dist(object, ..., dist = ".dist", args = ".args",
   to_r_names = TRUE)
+
+r_dist_name(dist_name)
 }
 \arguments{
 \item{object}{A character vector containing distribution specifiations or a data frame with a column
@@ -20,8 +23,11 @@ containing distribution specifications.}
 \item{to_r_names}{If \code{TRUE} (the default), certain common aliases for distribution names are
 automatically translated into names that R can recognize (i.e., names which have functions starting
 with \code{r}, \code{p}, \code{q}, and \code{d} representing random number generators, distribution
-functions, etc. for that distribution). For example, \code{"normal"} is translated into \code{"norm"}
-and \code{"lognormal"} is translated into \code{"lnorm"}.}
+functions, etc. for that distribution), using the \code{r_dist_name} function. For example,
+\code{"normal"} is translated into \code{"norm"} and \code{"lognormal"} is translated into \code{"lnorm"}.}
+
+\item{dist_name}{For \code{r_dist_name}, a character vector of distribution names to be translated into
+distribution names R recognizes. Unrecognized names are left as-is.}
 
 \item{dist_col}{A bare (unquoted) column or column expression that resolves to a character vector
 of distribution specifications.}

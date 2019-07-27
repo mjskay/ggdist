@@ -22,8 +22,10 @@
 #' @param to_r_names If \code{TRUE} (the default), certain common aliases for distribution names are
 #'   automatically translated into names that R can recognize (i.e., names which have functions starting
 #'   with \code{r}, \code{p}, \code{q}, and \code{d} representing random number generators, distribution
-#'   functions, etc. for that distribution). For example, \code{"normal"} is translated into \code{"norm"}
-#'   and \code{"lognormal"} is translated into \code{"lnorm"}.
+#'   functions, etc. for that distribution), using the \code{r_dist_name} function. For example,
+#'   \code{"normal"} is translated into \code{"norm"} and \code{"lognormal"} is translated into \code{"lnorm"}.
+#' @param dist_name For \code{r_dist_name}, a character vector of distribution names to be translated into
+#'   distribution names R recognizes. Unrecognized names are left as-is.
 #' @seealso See \code{\link{stat_dist_slabinterval}} and its shortcut stats, which can easily make use of
 #' the output of this function using the \code{dist} and \code{args} aesthetics.
 #' @examples
@@ -97,51 +99,7 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_
     } else{
       dist_name = as.character(parsed_dist[[1]])
       if (to_r_names) {
-        dist_name = switch(dist_name,
-          normal = "norm",
-          lognormal = "lnorm",
-          exponential = "exp",
-          chi_square = "chisq",
-          uniform = "unif",
-          dist_name
-        )
-      }
-
-      args_list = parsed_dist
-      args_list[[1]] = quote(list)
-
-      tibble(
-        dist = dist_name,
-        args = list(eval(args_list))
-      )
-    }
-  })
-
-  names(result) = c(dist, args)
-  result
-}
-
-#' @export
-parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
-  result = map_dfr(object, function(dist_spec) {
-    parsed_dist = tryCatch(str2lang(dist_spec), error = function(...) NULL)
-
-    if (is.null(parsed_dist)) {
-      tibble(
-        dist = NA,
-        args = list(NA)
-      )
-    } else{
-      dist_name = as.character(parsed_dist[[1]])
-      if (to_r_names) {
-        dist_name = switch(dist_name,
-          normal = "norm",
-          lognormal = "lnorm",
-          exponential = "exp",
-          chi_square = "chisq",
-          uniform = "unif",
-          dist_name
-        )
+        dist_name = r_dist_name(dist_name)
       }
 
       args_list = parsed_dist
@@ -161,4 +119,20 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_
 #' @export
 parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
   parse_dist(as.character(object))
+}
+
+r_dist_lookup = c(
+  normal = "norm",
+  lognormal = "lnorm",
+  exponential = "exp",
+  chi_square = "chisq",
+  uniform = "unif"
+)
+
+#' @rdname parse_dist
+#' @export
+r_dist_name = function(dist_name) {
+  result = ifelse(dist_name %in% names(r_dist_lookup), r_dist_lookup[dist_name], dist_name)
+  names(result) = names(dist_name)
+  result
 }
