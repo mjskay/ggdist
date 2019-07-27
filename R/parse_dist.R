@@ -1,0 +1,163 @@
+# A stat designed for use with geom_slabinterval
+#
+# Author: mjskay
+###############################################################################
+
+
+#' Parse distribution specifications into columns of a data frame
+#'
+#' Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
+#' a data frame, suitable for use with \code{\link{stat_distinterval}}. This format is output
+#' by \code{\link[brms]{get_prior}}, making it particularly useful for visualizing priors from
+#' brms models.
+#'
+#' @param object A character vector containing distribution specifiations or a data frame with a column
+#'  containing distribution specifications.
+#' @param dist_col A bare (unquoted) column or column expression that resolves to a character vector
+#'  of distribution specifications.
+#' @param ...  Arguments passed to other implementations of \code{parse_dist}.
+#' @param dist The name of the output column to contain the distribution name
+#' @param args The name of the output column to contain the arguments to the distribution
+#' @param to_r_names If \code{TRUE} (the default), certain common aliases for distribution names are
+#'   automatically translated into names that R can recognize (i.e., names which have functions starting
+#'   with \code{r}, \code{p}, \code{q}, and \code{d} representing random number generators, distribution
+#'   functions, etc. for that distribution). For example, \code{"normal"} is translated into \code{"norm"}
+#'   and \code{"lognormal"} is translated into \code{"lnorm"}.
+#' @seealso See \code{\link{stat_distinterval}}, which can easily make use of the output of this function
+#' using the \code{dist} and \code{args} aesthetics.
+#' @examples
+#'
+#' library(dplyr)
+#'
+#' # parse dist can operate on strings directly...
+#' parse_dist(c("normal(0,1)", "student_t(3,0,1)"))
+#'
+#' # ... or on columns of a data frame, where it adds the
+#' # parsed specs back on as columns
+#' data.frame(prior = c("normal(0,1)", "student_t(3,0,1)")) %>%
+#'   parse_dist(prior)
+#'
+#' if (
+#'   require("brms", quietly = TRUE)
+#' ) {
+#'
+#'   # parse_dist is particularly useful with brms prior specifications,
+#'   # which follow the same format...
+#'
+#'   # get priors for a brms model
+#'   priors = get_prior(mpg ~ log(hp), data = mtcars, family = lognormal)
+#'
+#'   # The `prior` column output by `get_prior()` is a character vector
+#'   # of distribution specifications. We can parse this directly...
+#'   parse_dist(priors$prior)
+#'
+#'   # ... or we can parse it and have it added back onto the original data frame
+#'   # (this form is likely more useful for plotting, since the other columns
+#'   # are retained)
+#'   parse_dist(priors, prior)
+#'
+#' }
+#'
+#' @importFrom dplyr tibble
+#' @importFrom purrr map_dfr
+#' @export
+parse_dist = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+  UseMethod("parse_dist")
+}
+
+#' @export
+parse_dist.default = function(object, ...) {
+  stop(
+    "Objects of type ", deparse0(class(object)), " are not currently supported by `parse_dist`.\n",
+    "A character vector or a data frame are expected.\n"
+  )
+}
+
+#' @export
+parse_dist.data.frame = function(object, dist_col, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+  dists = eval_tidy(enquo(dist_col), object)
+  parsed_dists = parse_dist(dists, ..., to_r_names = to_r_names)
+
+  object[[dist]] = parsed_dists$.dist
+  object[[args]] = parsed_dists$.args
+  object
+}
+
+#' @export
+parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+  result = map_dfr(object, function(dist_spec) {
+    parsed_dist = tryCatch(str2lang(dist_spec), error = function(...) NULL)
+
+    if (is.null(parsed_dist)) {
+      tibble(
+        dist = NA,
+        args = list(NA)
+      )
+    } else{
+      dist_name = as.character(parsed_dist[[1]])
+      if (to_r_names) {
+        dist_name = switch(dist_name,
+          normal = "norm",
+          lognormal = "lnorm",
+          exponential = "exp",
+          chi_square = "chisq",
+          uniform = "unif",
+          dist_name
+        )
+      }
+
+      args_list = parsed_dist
+      args_list[[1]] = quote(list)
+
+      tibble(
+        dist = dist_name,
+        args = list(eval(args_list))
+      )
+    }
+  })
+
+  names(result) = c(dist, args)
+  result
+}
+
+#' @export
+parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+  result = map_dfr(object, function(dist_spec) {
+    parsed_dist = tryCatch(str2lang(dist_spec), error = function(...) NULL)
+
+    if (is.null(parsed_dist)) {
+      tibble(
+        dist = NA,
+        args = list(NA)
+      )
+    } else{
+      dist_name = as.character(parsed_dist[[1]])
+      if (to_r_names) {
+        dist_name = switch(dist_name,
+          normal = "norm",
+          lognormal = "lnorm",
+          exponential = "exp",
+          chi_square = "chisq",
+          uniform = "unif",
+          dist_name
+        )
+      }
+
+      args_list = parsed_dist
+      args_list[[1]] = quote(list)
+
+      tibble(
+        dist = dist_name,
+        args = list(eval(args_list))
+      )
+    }
+  })
+
+  names(result) = c(dist, args)
+  result
+}
+
+#' @export
+parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+  parse_dist(as.character(object))
+}

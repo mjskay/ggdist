@@ -64,7 +64,7 @@ stat_slabinterval = function(
   position = "identity",
   ...,
 
-  orientation = c("horizontal", "vertical"),
+  orientation = c("vertical", "horizontal"),
 
   limits_function = NULL,
   limits_args = list(),
@@ -72,7 +72,7 @@ stat_slabinterval = function(
 
   slab_function = NULL,
   slab_args = list(),
-  n = 101,
+  n = 501,
 
   interval_function = NULL,
   interval_args = list(),
@@ -124,7 +124,7 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
   ),
 
   compute_panel = function(self, data, scales,
-    orientation = "horizontal",
+    orientation = "vertical",
 
     limits_function = NULL,
     limits_args = list(),
@@ -270,6 +270,9 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
 )
 
 
+
+# limits, slab, and interval functions for distributions -------------------------
+
 # translate arguments of the form `arg1` ... `arg9` (or from a list column, args) into a single list of arguments
 args_from_aes = function(args = list(), ...) {
   dot_args = list(...)
@@ -284,29 +287,31 @@ args_from_aes = function(args = list(), ...) {
   c(args_from_dots, args)
 }
 
-
-dist_interval_function = function(df, .width, ...) {
+dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
   pmap_dfr(df, function(dist, ...) {
+    if (is.na(dist)) {
+      return(data.frame(.lower = NA, .upper = NA))
+    }
+
     args = args_from_aes(...)
     quantile_fun = match.fun(paste0("q", dist))
+    limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
 
-    intervals = map_dfr(.width, function(w) {
-      quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
-      quantiles = do.call(quantile_fun, quantile_args)
-      data.frame(
-        .value = quantiles[[1]],
-        .lower = quantiles[[2]],
-        .upper = quantiles[[3]],
-        .width = w
-      )
-    })
+    data.frame(
+      .lower = limits[[1]],
+      .upper = limits[[2]]
+    )
   })
 }
 
-dist_function = function(
+dist_slab_function = function(
   df, input, type = "pdf", limits = NULL, n = 201, ...
 ) {
   pmap_dfr(df, function(dist, ...) {
+    if (is.na(dist)) {
+      return(data.frame(.input = NA, .value = NA))
+    }
+
     args = args_from_aes(...)
     dist_fun = switch(type,
       pdf = match.fun(paste0("d", dist)),
@@ -325,15 +330,24 @@ dist_function = function(
   })
 }
 
-dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
+dist_interval_function = function(df, .width, ...) {
   pmap_dfr(df, function(dist, ...) {
+    if (is.na(dist)) {
+      return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
+    }
+
     args = args_from_aes(...)
     quantile_fun = match.fun(paste0("q", dist))
-    limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
 
-    data.frame(
-      .lower = limits[[1]],
-      .upper = limits[[2]]
-    )
+    intervals = map_dfr(.width, function(w) {
+      quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
+      quantiles = do.call(quantile_fun, quantile_args)
+      data.frame(
+        .value = quantiles[[1]],
+        .lower = quantiles[[2]],
+        .upper = quantiles[[3]],
+        .width = w
+      )
+    })
   })
 }
