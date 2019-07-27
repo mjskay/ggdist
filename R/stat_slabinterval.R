@@ -23,7 +23,8 @@
 #' @param limits Limits for \code{slab_function}, as a vector of length two. These limits are combined with those
 #' computed by the \code{limits_function} as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-#' will not be wider than these (but may be narrower).
+#' will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
+#' \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.
 #' @param slab_function A function that takes a data frame of aesthetics and an \code{input} parameter (a vector
 #' of function inputs), and returns a data frame with
 #' columns \code{.input} (from the \code{input} vector) and \code{.value} (result of applying the function to
@@ -47,6 +48,9 @@
 #'   depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
 #'   more information.
 #' @param .width The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.
+#' @param show.legend Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
+#' to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
+#' those that are mapped (the default for most geoms).
 #' @seealso See \code{\link{geom_slabinterval}} for the geom version, intended
 #' for use on data that has already been translated into funciton evaluations, points, and intervals.
 #' @examples
@@ -81,7 +85,7 @@ stat_slabinterval = function(
 
   na.rm = FALSE,
 
-  show.legend = NA,
+  show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
   orientation = match.arg(orientation)
@@ -120,7 +124,8 @@ stat_slabinterval = function(
 
 StatSlabinterval <- ggproto("StatSlabinterval", Stat,
   default_aes = aes(
-    datatype = "slab"
+    datatype = "slab",
+    size = stat(-.width)
   ),
 
   compute_panel = function(self, data, scales,
@@ -205,7 +210,6 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
       )
       #default to 0 (min) and 1 (max) for unknown limits
       limits = ifelse(is.na(limits), c(0,1), limits)
-
 
       # now, figure out the points at which the slab functions should be evaluated
       # we set up the grid in the transformed space

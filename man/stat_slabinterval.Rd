@@ -10,7 +10,7 @@ stat_slabinterval(mapping = NULL, data = NULL, geom = "slabinterval",
   limits = NULL, slab_function = NULL, slab_args = list(), n = 501,
   interval_function = NULL, interval_args = list(),
   point_interval = NULL, .width = c(0.66, 0.95), na.rm = FALSE,
-  show.legend = NA, inherit.aes = TRUE)
+  show.legend = c(size = FALSE), inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -57,7 +57,8 @@ columns \code{.lower} and \code{.upper} indicating the limits of the input for t
 \item{limits}{Limits for \code{slab_function}, as a vector of length two. These limits are combined with those
 computed by the \code{limits_function} as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower).}
+will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
+\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
 
 \item{slab_function}{A function that takes a data frame of aesthetics and an \code{input} parameter (a vector
 of function inputs), and returns a data frame with
@@ -92,11 +93,9 @@ more information.}
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{logical. Should this layer be included in the legends?
-\code{NA}, the default, includes if any aesthetics are mapped.
-\code{FALSE} never includes, and \code{TRUE} always includes.
-It can also be a named logical vector to finely select the aesthetics to
-display.}
+\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
+to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
+those that are mapped (the default for most geoms).}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions

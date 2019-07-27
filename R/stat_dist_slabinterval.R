@@ -8,10 +8,19 @@
 #'
 #' Stats for computing distribution functions (densities or CDFs) + intervals for use with
 #' \code{\link{geom_slabinterval}}. Uses \code{dist} aesthetic to specify a distribution name
-#' and \code{arg1}, ... \code{arg9} (or \code{args} as a list column) to specify distribution
+#' and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column) to specify distribution
 #' arguments.
 #'
 #' @inheritParams stat_slabinterval
+#' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
+#' limits of the slab. E.g., if this is \code{c(.001, .999)} (the default), then a slab is drawn
+#' for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}.
+#' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+#' computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
+#' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
+#' will not be wider than these (but may be narrower).Use \code{NA} to leave a limit alone; e.g.
+#' \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
+#' be determined by either \code{p_limits} or the scale settings.
 #' @seealso See \code{\link{geom_slabinterval}} for more information of the geom this stat
 #' uses by default and some of the options it has.
 #' @examples
@@ -22,15 +31,17 @@
 #' @importFrom dplyr bind_rows
 #' @keywords internal
 #' @export
-stat_distinterval = function(
+stat_dist_slabinterval = function(
   mapping = NULL,
   data = NULL,
   geom = "slabinterval",
   position = "identity",
   ...,
 
-  orientation = c("vertical", "horizontal"),
   slab_type = c("pdf", "cdf", "ccdf"),
+  p_limits = c(.001, .999),
+
+  orientation = c("vertical", "horizontal"),
   limits = NULL,
   n = 501,
   .width = c(.66, .95),
@@ -46,7 +57,7 @@ stat_distinterval = function(
   layer(
     data = data,
     mapping = mapping,
-    stat = StatDistinterval,
+    stat = StatDistSlabinterval,
     geom = geom,
     position = position,
 
@@ -55,6 +66,7 @@ stat_distinterval = function(
 
     params = list(
       slab_type = slab_type,
+      p_limits = p_limits,
 
       orientation = orientation,
 
@@ -77,13 +89,32 @@ stat_distinterval = function(
   )
 }
 
-StatDistinterval <- ggproto("StatDistinterval", StatSlabinterval,
-  default_aes = aes(
-    datatype = "slab",
-    size = stat(-.width)
+StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
+  optional_aes = c(
+    "dist",
+    "args",
+    paste0("arg", 1:9)
   ),
 
-  setup_params = function(data, params) {
+  aesthetics = function(self) {
+    # for some reason ggplot2::Stat doesn't obey optional_aes the way Geoms do,
+    # so we'll implement that ourselves
+    union(self$optional_aes, ggproto_parent(StatSlabinterval, self)$aesthetics())
+  },
+
+  extra_params = c(
+    StatSlabinterval$extra_params,
+    "slab_type",
+    "p_limits"
+  ),
+
+  setup_params = function(self, data, params) {
+    params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
+
+    params$limits_args = list(
+      p_limits = params$p_limits %||% c(.001, .999)
+    )
+
     params$slab_args = list(
       slab_type = params$slab_type %||% "pdf"
     )
@@ -91,42 +122,65 @@ StatDistinterval <- ggproto("StatDistinterval", StatSlabinterval,
     params
   },
 
-  extra_params = c(
-    StatSlabinterval$extra_params,
-    "slab_type"
-  )
+  setup_data = function(self, data, params) {
+    data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
+
+    # need to treat dist *and* args as grouping variables (else things will break)
+    group_cols = intersect(c("dist", "args", paste0("arg", 1:9), "group"), names(data))
+    data$group = as.numeric(interaction(data[,group_cols]))
+
+    data
+  }
 )
 
 #' @export
-#' @rdname stat_distinterval
-stat_dist_halfeye = function(...) stat_distinterval(...)
+#' @rdname stat_dist_slabinterval
+stat_dist_halfeye = function(...) stat_dist_slabinterval(...)
 #' @export
-#' @rdname stat_distinterval
-stat_dist_halfeyeh = function(..., orientation = "horizontal") stat_distinterval(..., orientation = orientation)
+#' @rdname stat_dist_slabinterval
+stat_dist_halfeyeh = function(..., orientation = "horizontal") stat_dist_slabinterval(..., orientation = orientation)
+
 #' @export
-#' @rdname stat_distinterval
-stat_dist_eye = function(..., side = "both") stat_distinterval(..., side = side)
+#' @rdname stat_dist_slabinterval
+stat_dist_eye = function(..., side = "both") stat_dist_slabinterval(..., side = side)
 #' @export
-#' @rdname stat_distinterval
+#' @rdname stat_dist_slabinterval
 stat_dist_eyeh = function(..., side = "both", orientation = "horizontal")
-  stat_distinterval(..., side = side, orientation = orientation)
+  stat_dist_slabinterval(..., side = side, orientation = orientation)
+
 #' @export
-#' @rdname stat_distinterval
+#' @rdname stat_dist_slabinterval
 stat_dist_ccdfbar = function(...,
   slab_type = "ccdf", justification = 0.5, side = "left", normalize = "none"
 ) {
-  stat_distinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
-#' @rdname stat_distinterval
+#' @rdname stat_dist_slabinterval
 stat_dist_ccdfbarh = function(...,
   slab_type = "ccdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
 ) {
-  stat_distinterval(...,
+  stat_dist_slabinterval(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
   )
 }
 
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_cdfbar = function(...,
+  slab_type = "cdf", justification = 0.5, side = "left", normalize = "none"
+) {
+  stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+}
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_cdfbarh = function(...,
+  slab_type = "cdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
+) {
+  stat_dist_slabinterval(...,
+    slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
+  )
+}
 
 
 # limits, slab, and interval functions for distributions -------------------------

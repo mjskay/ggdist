@@ -28,7 +28,8 @@ of distribution specifications.}
 }
 \description{
 Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
-a data frame, suitable for use with \code{\link{stat_distinterval}}. This format is output
+a data frame, suitable for use with \code{\link{stat_dist_slabinterval}} and its shortcut stats
+(like \code{stat_dist_halfeye}). This format is output
 by \code{\link[brms]{get_prior}}, making it particularly useful for visualizing priors from
 brms models.
 }
@@ -67,6 +68,6 @@ if (
 
 }
 \seealso{
-See \code{\link{stat_distinterval}}, which can easily make use of the output of this function
-using the \code{dist} and \code{args} aesthetics.
+See \code{\link{stat_dist_slabinterval}} and its shortcut stats, which can easily make use of
+the output of this function using the \code{dist} and \code{args} aesthetics.
 }
