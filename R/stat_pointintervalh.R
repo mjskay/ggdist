@@ -42,6 +42,7 @@ stat_pointintervalh <- function(mapping = NULL, data = NULL,
 
 StatPointintervalh <- ggproto("StatPointintervalh", StatSummary,
   default_aes = aes(
+    datatype = "interval",
     size = stat(-.width)
   ),
 

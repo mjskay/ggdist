@@ -198,7 +198,7 @@ predict_curve_density = function(data, formula, summary = function(...) density_
 #' @importFrom stats density
 #' @export
 density_bins = function(x, n = 101, ...) {
-  d = density(x, n = n, ...)
+  d = density(x, n = n, cut = 0, ...)
 
   mid = d$x
   last_mid = length(mid)

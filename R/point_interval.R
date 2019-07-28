@@ -326,7 +326,7 @@ hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
-  intervals = HDInterval::hdi(density(x, na.rm = na.rm), credMass = .width, allowSplit = TRUE)
+  intervals = HDInterval::hdi(density(x, cut = 0, na.rm = na.rm), credMass = .width, allowSplit = TRUE)
   if (nrow(intervals) == 1) {
     # the above method tends to be a little conservative on unimodal distributions, so if the
     # result is unimodal, switch to the method below (which will be slightly narrower)

@@ -98,11 +98,14 @@ geom_interval = function(
 #' @import ggplot2
 #' @export
 GeomInterval <- ggproto("GeomInterval", GeomSlabinterval,
-  default_aes = modifyList(GeomSlabinterval$default_aes, aes(
-    datatype = "interval",
+  default_key_aes = defaults(aes(
+    datatype = "interval"
+  ), GeomSlabinterval$default_aes),
+
+  default_key_aes = defaults(aes(
     size = 4,
     fill = NA
-  )),
+  ), GeomSlabinterval$default_key_aes),
 
   default_params = modifyList(GeomSlabinterval$default_params, list(
     side = "both",

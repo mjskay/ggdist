@@ -46,6 +46,7 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
 
 StatIntervalh <- ggproto("StatIntervalh", StatPointintervalh,
   default_aes = aes(
+    datatype = "interval",
     color = stat(level)
   )
 )

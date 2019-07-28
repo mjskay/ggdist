@@ -6,8 +6,10 @@
 
 # slab function for samples -------------------------
 
+#' @importFrom rlang missing_arg
 sample_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = "vertical", ...
+  df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = "vertical",
+  adjust = 1, trim = TRUE, ...
 ) {
   x = switch(orientation,
     horizontal = "x",
@@ -16,7 +18,8 @@ sample_slab_function = function(
 
   switch(slab_type,
     pdf = {
-      d = density(df[[x]], n = n)
+      cut = if (trim) 0 else 3
+      d = density(df[[x]], n = n, adjust = adjust, cut = cut)
       data.frame(
         .input = d$x,
         .value = d$y
@@ -48,6 +51,10 @@ sample_slab_function = function(
 #' @inheritParams stat_slabinterval
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 #' cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).
+#' @param adjust If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
+#' by this value. See \code{\link{density}} for more information.
+#' @param trim If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
+#' input data? Default \code{TRUE}.
 #' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
 #' use by default and some of the options they has.
 #' @examples
@@ -63,6 +70,8 @@ stat_sample_slabinterval = function(
   ...,
 
   slab_type = c("pdf", "cdf", "ccdf"),
+  adjust = 1,
+  trim = TRUE,
 
   orientation = c("vertical", "horizontal"),
   limits = NULL,
@@ -90,6 +99,8 @@ stat_sample_slabinterval = function(
 
     params = list(
       slab_type = slab_type,
+      adjust = adjust,
+      trim = trim,
 
       orientation = orientation,
 
@@ -115,11 +126,15 @@ stat_sample_slabinterval = function(
 StatSampleSlabinterval <- ggproto("StatSampleSlabinterval", StatSlabinterval,
   extra_params = c(
     StatSlabinterval$extra_params,
-    "slab_type"
+    "slab_type",
+    "adjust",
+    "trim"
   ),
 
   default_params = defaults(list(
     slab_type = "pdf",
+    adjust = 1,
+    trim = TRUE,
 
     slab_function = sample_slab_function,
     point_interval = median_qi
@@ -129,7 +144,9 @@ StatSampleSlabinterval <- ggproto("StatSampleSlabinterval", StatSlabinterval,
     params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
 
     params$slab_args = list(
-      slab_type = params$slab_type %||% self$default_params$slab_type
+      slab_type = params$slab_type %||% self$default_params$slab_type,
+      adjust = params$adjust %||% self$default_params$adjust,
+      trim = params$trim %||% self$default_params$trim
     )
 
     params

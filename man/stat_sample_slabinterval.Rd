@@ -14,10 +14,10 @@
 \usage{
 stat_sample_slabinterval(mapping = NULL, data = NULL,
   geom = "slabinterval", position = "identity", ...,
-  slab_type = c("pdf", "cdf", "ccdf"), orientation = c("vertical",
-  "horizontal"), limits = NULL, n = 501, point_interval = median_qi,
-  .width = c(0.66, 0.95), na.rm = FALSE, show.legend = c(size =
-  FALSE), inherit.aes = TRUE)
+  slab_type = c("pdf", "cdf", "ccdf"), adjust = 1, trim = TRUE,
+  orientation = c("vertical", "horizontal"), limits = NULL, n = 501,
+  point_interval = median_qi, .width = c(0.66, 0.95), na.rm = FALSE,
+  show.legend = c(size = FALSE), inherit.aes = TRUE)
 
 stat_halfeye(...)
 
@@ -71,6 +71,12 @@ a call to a position adjustment function.}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
+
+\item{adjust}{If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
+by this value. See \code{\link{density}} for more information.}
+
+\item{trim}{If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
+input data? Default \code{TRUE}.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})

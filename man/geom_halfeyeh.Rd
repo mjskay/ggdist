@@ -4,14 +4,11 @@
 \alias{geom_halfeyeh}
 \title{Half-eye plots of densities with point and interval summaries (ggplot geom)}
 \usage{
-geom_halfeyeh(mapping = NULL, data = NULL, position = "identity",
-  trim = TRUE, scale = "area", relative_scale = 1, fill = NULL,
-  density.color = NA, ..., point_interval = median_qi,
-  fun.data = NULL, fun.args = list(), .width = c(0.66, 0.95), .prob,
-  color = NULL, size = NULL, size_domain = NULL, size_range = NULL,
-  fatten_point = NULL)
+geom_halfeyeh(..., orientation = "horizontal")
 }
 \arguments{
+\item{...}{Currently unused.}
+
 \item{mapping}{The aesthetic mapping, usually constructed with
 \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
 layer level if you are overriding the plot defaults.}
@@ -41,8 +38,6 @@ The default, \code{NA}, suppresses the density outline. Set to another value to 
 manually, or set to \code{NULL} if you want the outline color of the density to be determined by the aesthetic
 mapping.}
 
-\item{...}{Currently unused.}
-
 \item{point_interval}{A function that when given a vector should
 return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
 \code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
@@ -59,12 +54,6 @@ are not converted to the correct form automatically.}
 
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 
-\item{color}{Passed to \code{\link{stat_pointintervalh}}. Color of the point
-summary and uncertainty interval.}
-
-\item{size}{Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
-summary and uncertainty interval.}
-
 \item{size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes drawn according to \code{size_range} (see the documentation for that argument, below.)}
 
@@ -76,6 +65,12 @@ the desired output range of the size values (the min and max of the actual sizes
 
 \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest line.}
+
+\item{color}{Passed to \code{\link{stat_pointintervalh}}. Color of the point
+summary and uncertainty interval.}
+
+\item{size}{Passed to \code{\link{stat_pointintervalh}}. Line weight of the point
+summary and uncertainty interval.}
 }
 \description{
 Generates a combination of a density and \code{\link{stat_pointintervalh}}

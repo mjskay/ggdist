@@ -28,6 +28,9 @@ draw_from_chain_and_iteration_ = function(chain, iteration) {
   as.integer(ifelse(is.na(chain), 0, chain - 1) * max_iteration + iteration)
 }
 
+
+# deprecations and warnings -----------------------------------------------
+
 #' @importFrom rlang enexprs
 .Deprecated_arguments = function(old_names, ..., message = "", which = -1, fun = as.character(sys.call(which))[[1]]) {
   deprecated_args = intersect(old_names, names(enexprs(...)))

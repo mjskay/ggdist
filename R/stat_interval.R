@@ -105,6 +105,7 @@ stat_interval = function(mapping = NULL, data = NULL,
 
 StatInterval <- ggproto("StatInterval", StatPointinterval,
   default_aes = aes(
+    datatype = "interval",
     color = stat(level)
   )
 )
