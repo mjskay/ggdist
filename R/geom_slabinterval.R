@@ -287,7 +287,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   default_datatype = "slab",
 
   setup_data = function(self, data, params) {
-    params = modifyList(self$default_params, params)
+    params = defaults(params, self$default_params)
 
     define_orientation_variables(params$orientation)
 
@@ -332,7 +332,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     data
   },
 
-  draw_key = draw_key_slabpointinterval,
+  draw_key = draw_key_slabinterval,
 
   draw_panel = function(self, data, panel_params, coord,
       side = self$default_params$side,

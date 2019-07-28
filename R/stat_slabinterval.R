@@ -131,19 +131,10 @@ stat_slabinterval = function(
 StatSlabinterval <- ggproto("StatSlabinterval", Stat,
   default_aes = aes(
     datatype = "slab",
-    size = stat(-.width)
+    size = stat(-.width),
+    x = NULL,
+    y = NULL
   ),
-
-  optional_aes = c(
-    "x",
-    "y"
-  ),
-
-  aesthetics = function(self) {
-    # for some reason ggplot2::Stat doesn't obey optional_aes the way Geoms do,
-    # so we'll implement that ourselves
-    union(self$optional_aes, ggproto_parent(Stat, self)$aesthetics())
-  },
 
   default_params = list(
     orientation = "vertical",

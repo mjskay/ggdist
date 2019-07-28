@@ -76,7 +76,7 @@ Collate:
     "compose_data.R"
     "data.R"
     "deprecated.R"
-    "draw_key_slabpointinterval.R"
+    "draw_key_slabinterval.R"
     "fitted_draws.R"
     "flip_aes.R"
     "gather_draws.R"

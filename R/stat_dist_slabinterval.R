@@ -181,13 +181,21 @@ stat_dist_slabinterval = function(
   )
 }
 
+#' @importFrom plyr defaults
 StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
-  optional_aes = c(
-    StatSlabinterval$optional_aes,
-    "dist",
-    "args",
-    paste0("arg", 1:9)
-  ),
+  default_aes = defaults(aes(
+    dist = NULL,
+    args = NULL,
+    arg1 = NULL,
+    arg2 = NULL,
+    arg3 = NULL,
+    arg4 = NULL,
+    arg5 = NULL,
+    arg6 = NULL,
+    arg7 = NULL,
+    arg8 = NULL,
+    arg9 = NULL
+  ), StatSlabinterval$default_aes),
 
   extra_params = c(
     StatSlabinterval$extra_params,
@@ -195,14 +203,14 @@ StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
     "p_limits"
   ),
 
-  default_params = modifyList(StatSlabinterval$default_params, list(
+  default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(.001, .999),
 
     limits_function = dist_limits_function,
     slab_function = dist_slab_function,
     interval_function = dist_interval_function
-  )),
+  ), StatSlabinterval$default_params),
 
   setup_params = function(self, data, params) {
     params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
