@@ -9,8 +9,9 @@ stat_slabinterval(mapping = NULL, data = NULL, geom = "slabinterval",
   "horizontal"), limits_function = NULL, limits_args = list(),
   limits = NULL, slab_function = NULL, slab_args = list(), n = 501,
   interval_function = NULL, interval_args = list(),
-  point_interval = NULL, .width = c(0.66, 0.95), na.rm = FALSE,
-  show.legend = c(size = FALSE), inherit.aes = TRUE)
+  point_interval = NULL, .width = c(0.66, 0.95), show_slab = TRUE,
+  show_interval = TRUE, na.rm = FALSE, show.legend = c(size = FALSE),
+  inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -89,6 +90,10 @@ depending on the value of \code{orientation}. See the \code{\link{point_interval
 more information.}
 
 \item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
+
+\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

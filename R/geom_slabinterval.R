@@ -212,31 +212,43 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     alpha = NA,
 
     # shared point and interval aesthetics
-    colour = "black",
+    colour = NULL,
 
     # shared slab and interval aesthetics
-    linetype = "solid",
+    linetype = NULL,
 
     # shared point and slab aesthetics
-    fill = "gray65",
+    fill = NULL,
 
     # point aesthetics
-    shape = 19,
-    stroke = 1,
+    shape = NULL,
+    stroke = NULL,
     point_size = NULL,        # falls back to size
     point_colour = NULL,      # falls back to colour
     point_fill = NULL,        # falls back to fill
 
     # interval aesthetics
-    size = 1,
+    size = NULL,
     interval_size = NULL,     # falls back to size
     interval_linetype = NULL, # falls back to linetype
     interval_colour = NULL,   # falls back to colour
 
     # slab aesthetics
-    outline_colour = NA,         # no outline around the slab by default
-    outline_linetype = NULL,     # falls back to linetype
-    outline_size = 1
+    slab_colour = NA,         # no outline around the slab by default
+    slab_linetype = NULL,     # falls back to linetype
+    slab_size = 1
+  ),
+
+  # default aesthetics as they will actually be set (here or in the key)
+  # this is different from default_aes (above) so that we can identify what
+  # aesthetics are *actually* being asked for when creating the key
+  default_key_aes = aes(
+    colour = "black",
+    linetype = "solid",
+    fill = "gray65",
+    shape = 19,
+    stroke = 1,
+    size = 1
   ),
 
   optional_aes = c(
@@ -337,6 +349,15 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     ) {
 
     define_orientation_variables(orientation)
+
+    # provide defaults for color aesthetics --- we do this here because
+    # doing it with default_aes makes the scales very busy (as all of
+    # these elements get drawn even if they aren't mapped). By
+    # setting the defaults here we can then check if these are present
+    # in draw_key and not draw them if they aren't mapped.
+    for (aesthetic in names(self$default_key_aes)) {
+      data[[aesthetic]] = data[[aesthetic]] %||% self$default_key_aes[[aesthetic]]
+    }
 
     # recover height (position_dodge adjusts ymax/ymix but not height)
     data[[height]] = data[[ymax]] - data[[ymin]]
@@ -468,9 +489,9 @@ get_justification = function(justification, side) {
 # aesthetic overrides -----------------------------------------------------
 
 override_slab_aesthetics = function(s_data) {
-  s_data$colour = s_data$outline_colour
-  s_data$linetype = s_data$outline_linetype %||% s_data$linetype
-  s_data$size = s_data$outline_size
+  s_data$colour = s_data$slab_colour
+  s_data$linetype = s_data$slab_linetype %||% s_data$linetype
+  s_data$size = s_data$slab_size
   s_data
 }
 

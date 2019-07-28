@@ -16,8 +16,8 @@ stat_dist_slabinterval(mapping = NULL, data = NULL,
   geom = "slabinterval", position = "identity", ...,
   slab_type = c("pdf", "cdf", "ccdf"), p_limits = c(0.001, 0.999),
   orientation = c("vertical", "horizontal"), limits = NULL, n = 501,
-  .width = c(0.66, 0.95), na.rm = FALSE, show.legend = c(size =
-  FALSE), inherit.aes = TRUE)
+  .width = c(0.66, 0.95), show_slab = TRUE, show_interval = TRUE,
+  na.rm = FALSE, show.legend = c(size = FALSE), inherit.aes = TRUE)
 
 stat_dist_halfeye(...)
 
@@ -93,6 +93,10 @@ be determined by either \code{p_limits} or the scale settings.}
 \item{n}{Number of points at which to evaluate \code{slab_function}}
 
 \item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
+
+\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

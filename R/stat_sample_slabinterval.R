@@ -118,12 +118,12 @@ StatSampleSlabinterval <- ggproto("StatSampleSlabinterval", StatSlabinterval,
     "slab_type"
   ),
 
-  default_params = list(
+  default_params = modifyList(StatSlabinterval$default_params, list(
     slab_type = "pdf",
 
     slab_function = sample_slab_function,
     point_interval = median_qi
-  ),
+  )),
 
   setup_params = function(self, data, params) {
     params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)

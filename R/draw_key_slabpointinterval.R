@@ -5,21 +5,35 @@
 
 make_draw_key_slabpointinterval_ = function(slab_ = TRUE, point_ = TRUE, interval_ = TRUE) {
   function(self, data, params, size) {
+    for (aesthetic in names(self$default_key_aes)) {
+      data[[aesthetic]] = data[[aesthetic]] %||% NA
+    }
+
     params = modifyList(self$default_params, params)
 
+    line_key = switch(params$orientation,
+      horizontal = draw_key_path,
+      vertical = draw_key_vpath
+    )
+
     s_data = override_slab_aesthetics(data)
-    slab_grob = if(slab_ && params$show_slab && (!is.na(s_data$colour) || !is.na(s_data$fill))) {
-      draw_key_rect(s_data, params, size)
+    # slab_grob = if(slab_ && params$show_slab && (!is.na(s_data$colour) || !is.na(s_data$fill))) {
+    #   draw_key_rect(s_data, params, size)
+    # }
+    slab_fill_grob = NULL
+    slab_line_grob = NULL
+    if (slab_ && params$show_slab) {
+      if (!is.na(s_data$fill)) {
+        slab_fill_grob = draw_key_rect(s_data, params, size)
+      }
+      if (!is.na(s_data$colour)) {
+        slab_line_grob = line_key(s_data, params, size)
+      }
     }
 
     i_data = override_interval_aesthetics(data, params$interval_size_domain, params$interval_size_range)
     interval_grob = if(interval_ && params$show_interval && !is.na(i_data$colour)) {
-      orientation = params$orientation
-      interval_key = switch(orientation,
-        horizontal = draw_key_path,
-        vertical = draw_key_vpath
-      )
-      interval_key(i_data, params, size)
+      line_key(i_data, params, size)
     }
 
     p_data = override_point_aesthetics(data, params$interval_size_domain, params$interval_size_range, params$fatten_point)
@@ -27,7 +41,7 @@ make_draw_key_slabpointinterval_ = function(slab_ = TRUE, point_ = TRUE, interva
       draw_key_point(p_data, params, size)
     }
 
-    gTree(children = gList(slab_grob, interval_grob, point_grob))
+    gTree(children = gList(slab_fill_grob, slab_line_grob, interval_grob, point_grob))
   }
 }
 

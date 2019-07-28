@@ -20,6 +20,7 @@ args_from_aes = function(args = list(), ...) {
   c(args_from_dots, args)
 }
 
+#' @importFrom purrr pmap_dfr
 dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
   pmap_dfr(df, function(dist, ...) {
     if (is.na(dist)) {
@@ -37,6 +38,7 @@ dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
   })
 }
 
+#' @importFrom purrr pmap_dfr
 dist_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, ...
 ) {
@@ -63,6 +65,7 @@ dist_slab_function = function(
   })
 }
 
+#' @importFrom purrr pmap_dfr
 dist_interval_function = function(df, .width, ...) {
   pmap_dfr(df, function(dist, ...) {
     if (is.na(dist)) {
@@ -129,6 +132,9 @@ stat_dist_slabinterval = function(
   n = 501,
   .width = c(.66, .95),
 
+  show_slab = TRUE,
+  show_interval = TRUE,
+
   na.rm = FALSE,
 
   show.legend = c(size = FALSE),
@@ -165,6 +171,9 @@ stat_dist_slabinterval = function(
       interval_args = list(),
       point_interval = NULL,
       .width = .width,
+
+      show_slab = show_slab,
+      show_interval = show_interval,
 
       na.rm = na.rm,
       ...

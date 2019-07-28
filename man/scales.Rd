@@ -16,13 +16,13 @@
 \alias{scale_interval_color_discrete}
 \alias{scale_interval_colour_continuous}
 \alias{scale_interval_color_continuous}
-\alias{scale_outline_colour_discrete}
-\alias{scale_outline_color_discrete}
-\alias{scale_outline_colour_continuous}
-\alias{scale_outline_color_continuous}
-\alias{scale_outline_linetype}
-\alias{scale_outline_size_continuous}
-\alias{scale_outline_size_discrete}
+\alias{scale_slab_colour_discrete}
+\alias{scale_slab_color_discrete}
+\alias{scale_slab_colour_continuous}
+\alias{scale_slab_color_continuous}
+\alias{scale_slab_linetype}
+\alias{scale_slab_size_continuous}
+\alias{scale_slab_size_discrete}
 \alias{guide_colourbar2}
 \alias{guide_colorbar2}
 \title{Custom ggplot scales for geom_slabinterval (and derivatives)}
@@ -61,21 +61,21 @@ scale_interval_colour_continuous(..., aesthetics = "interval_colour",
 scale_interval_color_continuous(..., aesthetics = "interval_colour",
   guide = "colourbar2")
 
-scale_outline_colour_discrete(..., aesthetics = "outline_colour")
+scale_slab_colour_discrete(..., aesthetics = "slab_colour")
 
-scale_outline_color_discrete(..., aesthetics = "outline_colour")
+scale_slab_color_discrete(..., aesthetics = "slab_colour")
 
-scale_outline_colour_continuous(..., aesthetics = "outline_colour",
+scale_slab_colour_continuous(..., aesthetics = "slab_colour",
   guide = "colourbar2")
 
-scale_outline_color_continuous(..., aesthetics = "outline_colour",
+scale_slab_color_continuous(..., aesthetics = "slab_colour",
   guide = "colourbar2")
 
-scale_outline_linetype(..., na.value = "blank")
+scale_slab_linetype(..., na.value = "blank")
 
-scale_outline_size_continuous(..., range = c(1, 6))
+scale_slab_size_continuous(..., range = c(1, 6))
 
-scale_outline_size_discrete(..., range = c(1, 6), na.translate = FALSE)
+scale_slab_size_discrete(..., range = c(1, 6), na.translate = FALSE)
 
 guide_colourbar2(...)
 
@@ -111,8 +111,9 @@ related geoms:
   \item{\code{scale_interval_color_* }}{Interval line color}
   \item{\code{scale_interval_size_* }}{Interval line width}
   \item{\code{scale_interval_linetype_* }}{Interval line type}
-  \item{\code{scale_outline_color_* }}{Outside line color}
-  \item{\code{scale_outline_linetype_* }}{Outside line type}
+  \item{\code{scale_slab_color_* }}{Slab outline color}
+  \item{\code{scale_slab_size_* }}{Slab outline line width}
+  \item{\code{scale_slab_linetype_* }}{Slab outline line type}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.

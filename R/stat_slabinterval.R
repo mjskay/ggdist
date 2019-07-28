@@ -83,6 +83,9 @@ stat_slabinterval = function(
   point_interval = NULL,
   .width = c(.66, .95),
 
+  show_slab = TRUE,
+  show_interval = TRUE,
+
   na.rm = FALSE,
 
   show.legend = c(size = FALSE),
@@ -115,6 +118,9 @@ stat_slabinterval = function(
       interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
+
+      show_slab = show_slab,
+      show_interval = show_interval,
 
       na.rm = na.rm,
       ...
@@ -155,6 +161,9 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
     point_interval = NULL,
     .width = c(.66, .95),
 
+    show_slab = TRUE,
+    show_interval = TRUE,
+
     na.rm = FALSE
   ),
 
@@ -174,6 +183,9 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
     point_interval = self$default_params$point_interval,
     .width = self$default_params$.width,
 
+    show_slab = self$default_params$show_slab,
+    show_interval = self$default_params$show_interval,
+
     na.rm = self$default_params$na.rm
   ) {
     define_orientation_variables(orientation)
@@ -187,7 +199,7 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
 
     # SLAB
     s_data = NULL
-    if (!is.null(slab_function)) {
+    if (show_slab && !is.null(slab_function)) {
 
       # determine limits of the slab function
       # we do this first so we can figure out the overall limits
@@ -263,42 +275,48 @@ StatSlabinterval <- ggproto("StatSlabinterval", Stat,
 
 
     # INTERVAL
-    interval_args[[".width"]] = .width
+    i_data = NULL
+    if (show_interval) {
+      interval_args[[".width"]] = .width
 
-    draw_interval = FALSE
-    if (is.null(interval_function)) {
-      if (!is.null(point_interval)) {
-        # need to set .simple_names here to get .value, .lower, and .upper
-        interval_args$.simple_names = TRUE
+      draw_interval = FALSE
+      if (is.null(interval_function)) {
+        if (!is.null(point_interval)) {
+          # need to set .simple_names here to get .value, .lower, and .upper
+          interval_args$.simple_names = TRUE
 
-        # function is a point_interval, we need to make the version that
-        # can take in a data frame
-        point_interval = as_function(point_interval)
-        interval_fun = function(df) do.call(point_interval, c(list(quote(df[[x]])), interval_args))
+          # function is a point_interval, we need to make the version that
+          # can take in a data frame
+          point_interval = as_function(point_interval)
+          interval_fun = function(df) do.call(point_interval, c(list(quote(df[[x]])), interval_args))
+          draw_interval = TRUE
+        }
+      } else {
+        interval_args[["orientation"]] = orientation
+        interval_function = as_function(interval_function)
+        interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
         draw_interval = TRUE
       }
-    } else {
-      interval_args[["orientation"]] = orientation
-      interval_function = as_function(interval_function)
-      interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
-      draw_interval = TRUE
+
+      if (draw_interval) {
+        i_data = summarise_by(data, c("group", y), interval_fun)
+
+        i_data[[x]] = x_trans$transform(i_data$.value)
+        i_data$.value = NULL
+        i_data[[xmin]] = x_trans$transform(i_data$.lower)
+        i_data$.lower = NULL
+        i_data[[xmax]] = x_trans$transform(i_data$.upper)
+        i_data$.upper = NULL
+
+        i_data$level = forcats::fct_rev(ordered(i_data$.width))
+        i_data$datatype = "interval"
+      }
     }
 
-    i_data = NULL
-    if (draw_interval) {
-      i_data = summarise_by(data, c("group", y), interval_fun)
-
-      i_data[[x]] = x_trans$transform(i_data$.value)
-      i_data$.value = NULL
-      i_data[[xmin]] = x_trans$transform(i_data$.lower)
-      i_data$.lower = NULL
-      i_data[[xmax]] = x_trans$transform(i_data$.upper)
-      i_data$.upper = NULL
-
-      i_data$level = forcats::fct_rev(ordered(i_data$.width))
-      i_data$datatype = "interval"
-    }
-
-    bind_rows(s_data, i_data)
+    results = bind_rows(s_data, i_data)
+    # must ensure there's a .width aesthetic produced even if we don't draw
+    # the interval, otherwise the default aesthetic mapping breaks.
+    results$.width = results$.width %||% NA
+    results
   }
 )
