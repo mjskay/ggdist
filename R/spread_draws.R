@@ -568,7 +568,7 @@ printable_variable_names = function(variable_names) {
 
 # get all variable names from an expression
 # based on http://adv-r.had.co.nz/dsl.html
-all_names <- function(x) {
+all_names = function(x) {
   if (is.atomic(x)) {
     NULL
   } else if (is.name(x)) {

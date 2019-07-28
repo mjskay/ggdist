@@ -6,16 +6,18 @@
 \title{Multiple probability interval plots (ggplot stat)}
 \usage{
 stat_interval(mapping = NULL, data = NULL, geom = "interval",
-  position = "identity", ..., point_interval = median_qi,
-  fun.data = NULL, .width = c(0.5, 0.8, 0.95), .prob,
-  fun.args = list(), na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
+  position = "identity", ..., orientation = "vertical",
+  interval_function = NULL, interval_args = list(),
+  point_interval = median_qi, .width = c(0.5, 0.8, 0.95),
+  show_point = FALSE, show_slab = FALSE, na.rm = FALSE,
+  show.legend = NA, inherit.aes = TRUE, .prob, fun.data, fun.args)
 
-stat_intervalh(mapping = NULL, data = NULL, geom = "intervalh",
-  position = "identity", ..., point_interval = median_qi,
-  fun.data = NULL, .width = c(0.5, 0.8, 0.95), .prob,
-  fun.args = list(), na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
+stat_intervalh(mapping = NULL, data = NULL, geom = "interval",
+  position = "identity", ..., orientation = "horizontal",
+  interval_function = NULL, interval_args = list(),
+  point_interval = median_qi, .width = c(0.5, 0.8, 0.95),
+  show_point = FALSE, show_slab = FALSE, na.rm = FALSE,
+  show.legend = NA, inherit.aes = TRUE, .prob, fun.data, fun.args)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -38,15 +40,7 @@ return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code
 will be converted into the \code{y}-based aesthetics for \code{stat_interval} and the
 \code{x}-based aesthetics for \code{stat_intervalh}. See the \code{point_interval} family of functions.}
 
-\item{fun.data}{Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
-Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
-are not converted to the correct form automatically.}
-
 \item{.width}{The \code{.width} argument passed to \code{point_interval}.}
-
-\item{.prob}{Deprecated. Use \code{.width} instead.}
-
-\item{fun.args}{Other optional arguments passed to \code{fun.data}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
@@ -57,6 +51,14 @@ are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.}
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
 most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
 default plot specification, e.g. borders.}
+
+\item{.prob}{Deprecated. Use \code{.width} instead.}
+
+\item{fun.data}{Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
+Note: if the summary function is passed using \code{fun.data}, the \code{x} and \code{y}-based aesthetics
+are not converted to the correct form automatically.}
+
+\item{fun.args}{Other optional arguments passed to \code{fun.data}.}
 }
 \description{
 A combination of \code{\link{stat_summary}} / \code{\link{stat_summaryh}} and

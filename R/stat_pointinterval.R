@@ -70,19 +70,25 @@ stat_pointinterval = function(
   position = "identity",
   ...,
 
+  orientation = "vertical",
+  interval_function = NULL,
+  interval_args = list(),
   point_interval = median_qi,
-  fun.data = NULL,
   .width = c(.66, .95),
-  .prob,
-  fun.args = list(),
+  show_slab = FALSE,
   na.rm = FALSE,
 
   show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  .width = .Deprecated_argument_alias(.width, .prob)
+  inherit.aes = TRUE,
 
-  fun.data = fun.data %||% vertical_aes(point_interval)
+  #deprecated arguments
+  .prob,
+  fun.data,
+  fun.args
+) {
+  interval_function = .Deprecated_argument_alias(interval_function, fun.data)
+  interval_args = .Deprecated_argument_alias(interval_args, fun.args)
+  .width = .Deprecated_argument_alias(.width, .prob)
 
   layer(
     data = data,
@@ -93,36 +99,24 @@ stat_pointinterval = function(
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      fun.data = fun.data,
+      orientation = orientation,
+      interval_function = interval_function,
+      interval_args = interval_args,
+      point_interval = point_interval,
       .width = .width,
-      fun.args = fun.args,
+      show_slab = show_slab,
       na.rm = na.rm,
       ...
     )
   )
 }
 
-StatPointinterval <- ggproto("StatPointinterval", StatSummary,
-  default_aes = aes(
-    datatype = "interval",
-    size = stat(-.width)
-  ),
+StatPointinterval = ggproto("StatPointinterval", StatSampleSlabinterval,
+  default_aes = defaults(aes(
+    datatype = "interval"
+  ), StatSampleSlabinterval$default_aes),
 
-  compute_panel = function(data, scales, fun.data = median_qi, .width = c(.66, .95),
-    fun.args = list(), na.rm = FALSE
-  ) {
-
-    fun.args = modifyList(list(.width = .width), fun.args)
-
-    # Function that takes complete data frame as input
-    fun.data = match.fun(fun.data)
-    fun = function(df) {
-      do.call(fun.data, c(list(quote(df$y)), fun.args))
-    }
-
-    data = summarise_by(data, c("group", "x"), fun)
-    data$level = forcats::fct_rev(ordered(data$.width))
-    data
-  }
+  default_params = defaults(list(
+    show_slab = FALSE
+  ), StatSampleSlabinterval$default_params)
 )
-

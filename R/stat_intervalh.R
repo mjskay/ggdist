@@ -6,25 +6,33 @@
 
 #' @rdname stat_interval
 #' @export
-stat_intervalh <- function(mapping = NULL, data = NULL,
-  geom = "intervalh", position = "identity",
+stat_intervalh = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "interval",
+  position = "identity",
   ...,
+
+  orientation = "horizontal",
+  interval_function = NULL,
+  interval_args = list(),
   point_interval = median_qi,
-  fun.data = NULL,
   .width = c(.50, .80, .95),
-  .prob,
-  fun.args = list(),
+  show_point = FALSE,
+  show_slab = FALSE,
   na.rm = FALSE,
+
   show.legend = NA,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+
+  #deprecated arguments
+  .prob,
+  fun.data,
+  fun.args
 ) {
+  interval_function = .Deprecated_argument_alias(interval_function, fun.data)
+  interval_args = .Deprecated_argument_alias(interval_args, fun.args)
   .width = .Deprecated_argument_alias(.width, .prob)
-
-  # Probs are drawn on top of each other in order by geom_intervalh, so we have to sort in decreasing order
-  # to make sure the largest interval is not drawn last (over-writing all other intervals)
-  .width %<>% sort(decreasing = TRUE)
-
-  fun.data = fun.data %||% horizontal_aes(point_interval)
 
   layer(
     data = data,
@@ -35,18 +43,21 @@ stat_intervalh <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      fun.data = fun.data,
+      orientation = orientation,
+      interval_function = interval_function,
+      interval_args = interval_args,
+      point_interval = point_interval,
       .width = .width,
-      fun.args = fun.args,
+      show_point = show_point,
+      show_slab = show_slab,
       na.rm = na.rm,
       ...
     )
   )
 }
 
-StatIntervalh <- ggproto("StatIntervalh", StatPointintervalh,
-  default_aes = aes(
-    datatype = "interval",
-    color = stat(level)
-  )
+StatIntervalh = ggproto("StatIntervalh", StatInterval,
+  default_params = defaults(list(
+    orientation = "horizontal"
+  ), StatInterval$default_params)
 )

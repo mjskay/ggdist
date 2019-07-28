@@ -57,11 +57,11 @@ GeomPointintervalh <- ggproto("GeomPointintervalh", GeomSlabinterval,
     fill = NA
   ), GeomSlabinterval$default_key_aes),
 
-  default_params = modifyList(GeomSlabinterval$default_params, list(
+  default_params = defaults(list(
     side = "both",
     orientation = "horizontal",
     show_slab = FALSE
-  )),
+  ), GeomSlabinterval$default_params),
 
   default_datatype = "interval"
 )

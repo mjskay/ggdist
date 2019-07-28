@@ -54,25 +54,30 @@
 #'
 #' @export
 #' @export
-stat_lineribbon <- function(mapping = NULL, data = NULL,
-  geom = "lineribbon", position = "identity",
+stat_lineribbon = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "lineribbon",
+  position = "identity",
   ...,
+
+  interval_function = NULL,
+  interval_args = list(),
   point_interval = median_qi,
-  fun.data = NULL,
-  .width = c(.5, .8, .95),
-  .prob,
-  fun.args = list(),
+  .width = c(.50, .80, .95),
   na.rm = FALSE,
+
   show.legend = NA,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+
+  #deprecated arguments
+  .prob,
+  fun.data,
+  fun.args
 ) {
+  interval_function = .Deprecated_argument_alias(interval_function, fun.data)
+  interval_args = .Deprecated_argument_alias(interval_args, fun.args)
   .width = .Deprecated_argument_alias(.width, .prob)
-
-  # Probs are drawn on top of each other in order by geom_lineribbon, so we have to sort in decreasing order
-  # to make sure the largest interval is not drawn last (over-writing all other intervals)
-  .width %<>% sort()
-
-  fun.data = fun.data %||% vertical_aes(point_interval)
 
   layer(
     data = data,
@@ -83,9 +88,11 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      fun.data = fun.data,
+      interval_function = interval_function,
+      interval_args = interval_args,
+      point_interval = point_interval,
       .width = .width,
-      fun.args = fun.args,
+      show_slab = FALSE,
       na.rm = na.rm,
       ...
     )
@@ -94,7 +101,12 @@ stat_lineribbon <- function(mapping = NULL, data = NULL,
 
 StatLineribbon <- ggproto("StatLineribbon", StatPointinterval,
   default_aes = aes(
+    datatype = "interval",
     group = stat(level),
     fill = stat(level)
-  )
+  ),
+
+  default_params = defaults(list(
+    .width = c(.50, .80, .95)
+  ), StatPointinterval$default_params)
 )

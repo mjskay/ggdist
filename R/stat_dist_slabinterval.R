@@ -98,6 +98,36 @@ dist_interval_function = function(df, .width, ...) {
 #' and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column) to specify distribution
 #' arguments.
 #'
+#' A highly configurable stat for generating a variety of plots that combine a "slab"
+#' that describes a distribution plus an interval. Several "shortcut" stats are provided
+#' which combine multiple options to create useful geoms, particularly \emph{eye plots}
+#' (a combination of a violin plot and interval), \emph{half-eye plots} (a density plus interval),
+#' and \emph{CCDF bar plots} (a complementary CDF plus interval).
+#'
+#' The shortcut stat names follow the pattern \code{stat_dist_[name][h|]}, where the trailing
+#' \code{h} (if present) indicates the horizontal version of the stat.
+#'
+#' Stats include:
+#'
+#' \itemize{
+#'   \item \code{stat_dist_eye} / \code{stat_dist_eyeh}: Eye plots (violin + interval)
+#'   \item \code{stat_dist_halfeye} / \code{stat_dist_halfeyeh}: Half-eye plots (density + interval)
+#'   \item \code{stat_dist_ccdfbar} / \code{stat_dist_ccdfbarh}: CCDF bar plots (CCDF + interval)
+#'   \item \code{stat_dist_cdfbar} / \code{stat_dist_cdfbarh}: CDF bar plots (CDF + interval)
+#' }
+#'
+#' These stats expect a \code{dist} aesthetic to specify a distribution name
+#' and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column) to specify distribution
+#' arguments. Distribution names should correspond to R functions that have \code{"p"}, \code{"q"}, and
+#' \code{"d"} functions; e.g. \code{"norm"} is a valid distribution name because R defines the
+#' \code{\link{pnorm}}, \code{\link{qnorm}}, and \code{\link{dnorm}} functions for Normal distributions.
+#'
+#' See the \code{\link{parse_dist}} function for a useful way to generate \code{dist} and \code{args}
+#' values from human-readable distribution specs (like \code{"normal(0,1)"}). Such specs are also
+#' produced by other packages (like the \code{\link[brms]{get_prior}} function in brms); thus,
+#' \code{\link{parse_dist}} combined with the stats described here can help you visualize the output
+#' of those functions.
+#'
 #' @inheritParams stat_slabinterval
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 #' cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).
@@ -111,7 +141,8 @@ dist_interval_function = function(df, .width, ...) {
 #' \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either \code{p_limits} or the scale settings.
 #' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
-#' use by default and some of the options they have.
+#' use by default and some of the options they have. See \code{\link{stat_sample_slabinterval}}
+#' for the versions of these stats that can be used on samples.
 #' @examples
 #'
 #' #TODO

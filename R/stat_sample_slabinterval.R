@@ -46,7 +46,27 @@ sample_slab_function = function(
 #' Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)
 #'
 #' Stats for computing densities and CDFs + intervals from samples for use with
-#' \code{\link{geom_slabinterval}}.
+#' \code{\link{geom_slabinterval}}. Useful for creating eye plots, halfeye plots,
+#' CCDF bar plots etc.
+#'
+#' A highly configurable stat for generating a variety of plots that combine a "slab"
+#' that summarizes a sample plus an interval. Several "shortcut" stats are provided
+#' which combine multiple options to create useful geoms, particularly \emph{eye} plots
+#' (a combination of a violin plot and interval), \emph{half-eye} plots (a density plus interval),
+#' and \emph{CCDF bar plots} (a complementary CDF plus interval). These can be
+#' handy for visualizing posterior distributions in Bayesian inference, amongst other things.
+#'
+#' The shortcut stat names follow the pattern \code{stat_[name][h|]}, where the trailing
+#' \code{h} (if present) indicates the horizontal version of the stat.
+#'
+#' Stats include:
+#'
+#' \itemize{
+#'   \item \code{stat_eye} / \code{stat_eyeh}: Eye plots (violin + interval)
+#'   \item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
+#'   \item \code{stat_ccdfbar} / \code{stat_ccdfbarh}: CCDF bar plots (CCDF + interval)
+#'   \item \code{stat_cdfbar} / \code{stat_cdfbarh}: CDF bar plots (CDF + interval)
+#' }
 #'
 #' @inheritParams stat_slabinterval
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
@@ -56,7 +76,8 @@ sample_slab_function = function(
 #' @param trim If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
 #' input data? Default \code{TRUE}.
 #' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
-#' use by default and some of the options they has.
+#' use by default and some of the options they have. See \code{\link{stat_dist_slabinterval}}
+#' for the versions of these stats that can be used on analytical distributions.
 #' @examples
 #'
 #' #TODO
@@ -76,6 +97,8 @@ stat_sample_slabinterval = function(
   orientation = c("vertical", "horizontal"),
   limits = NULL,
   n = 501,
+  interval_function = NULL,
+  interval_args = list(),
   point_interval = median_qi,
   .width = c(.66, .95),
 
@@ -112,8 +135,8 @@ stat_sample_slabinterval = function(
       slab_args = list(),
       n = n,
 
-      interval_function = NULL,
-      interval_args = list(),
+      interval_function = interval_function,
+      interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
 

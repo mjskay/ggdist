@@ -128,7 +128,7 @@ stat_slabinterval = function(
   )
 }
 
-StatSlabinterval <- ggproto("StatSlabinterval", Stat,
+StatSlabinterval = ggproto("StatSlabinterval", Stat,
   default_aes = aes(
     datatype = "slab",
     size = stat(-.width),

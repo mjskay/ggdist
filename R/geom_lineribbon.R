@@ -59,7 +59,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @importFrom forcats fct_rev
 #' @import ggplot2
 #' @export
-geom_lineribbon <- function(mapping = NULL, data = NULL,
+geom_lineribbon = function(mapping = NULL, data = NULL,
   stat = "identity", position = "identity",
   ...,
   na.rm = FALSE,
@@ -87,7 +87,7 @@ geom_lineribbon <- function(mapping = NULL, data = NULL,
 }
 
 #' @importFrom grid grobTree
-draw_key_lineribbon <- function(data, params, size) {
+draw_key_lineribbon = function(data, params, size) {
   if (is.na(data$fill)) {
     draw_key_path(data, params, size)
   } else {

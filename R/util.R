@@ -12,7 +12,7 @@ deparse0 = function(expr, width.cutoff = 500, ...) {
 
 # Based on https://stackoverflow.com/a/14838753
 # Escapes a string for inclusion in a regex
-escape_regex <- function(string) {
+escape_regex = function(string) {
   gsub("(\\W)", "\\\\\\1", string)
 }
 
@@ -36,7 +36,7 @@ draw_from_chain_and_iteration_ = function(chain, iteration) {
   deprecated_args = intersect(old_names, names(enexprs(...)))
 
   if (length(deprecated_args) > 0) {
-    warning(
+    stop(
       "\nIn ", fun, "(): The `", deprecated_args[[1]], "` argument is deprecated.\n",
       message,
 
@@ -65,7 +65,7 @@ draw_from_chain_and_iteration_ = function(chain, iteration) {
   }
 }
 
-stop_on_non_generic_arg_ <- function(parent_dot_args, method_type, ..., which = -1, fun = as.character(sys.call(which))[[1]]) {
+stop_on_non_generic_arg_ = function(parent_dot_args, method_type, ..., which = -1, fun = as.character(sys.call(which))[[1]]) {
   old_args = list(...)
 
   if (any(parent_dot_args %in% old_args)) {

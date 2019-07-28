@@ -23,7 +23,6 @@ Imports:
     coda,
     purrr (>= 0.2.3),
     rlang (>= 0.3.0),
-    ggstance (>= 0.3.2),
     scales,
     grid,
     forcats,
@@ -37,6 +36,7 @@ Suggests:
     testthat,
     vdiffr (>= 0.3.0),
     svglite,
+    ggstance (>= 0.3.2),
     rstan (>= 2.17.0),
     runjags,
     rjags,
@@ -85,8 +85,6 @@ Collate:
     "gather_variables.R"
     "geom.R"
     "geom_slabinterval.R"
-    "geom_grouped_violin.R"
-    "geom_grouped_violinh.R"
     "geom_interval.R"
     "geom_intervalh.R"
     "geom_lineribbon.R"
@@ -109,8 +107,6 @@ Collate:
     "stat_dist_slabinterval.R"
     "stat_sample_slabinterval.R"
     "geom_eye.R"
-    "geom_eyeh.R"
-    "geom_halfeyeh.R"
     "stat_pointinterval.R"
     "stat_pointintervalh.R"
     "stat_interval.R"

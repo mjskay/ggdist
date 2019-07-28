@@ -4,8 +4,8 @@
 ###############################################################################
 
 # from ggstance:::ggname
-ggname <- function(prefix, grob) {
-  grob$name <- grobName(grob, prefix)
+ggname = function(prefix, grob) {
+  grob$name = grobName(grob, prefix)
   grob
 }
 

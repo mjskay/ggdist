@@ -16,6 +16,7 @@ stat_sample_slabinterval(mapping = NULL, data = NULL,
   geom = "slabinterval", position = "identity", ...,
   slab_type = c("pdf", "cdf", "ccdf"), adjust = 1, trim = TRUE,
   orientation = c("vertical", "horizontal"), limits = NULL, n = 501,
+  interval_function = NULL, interval_args = list(),
   point_interval = median_qi, .width = c(0.66, 0.95), na.rm = FALSE,
   show.legend = c(size = FALSE), inherit.aes = TRUE)
 
@@ -93,6 +94,15 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 
 \item{n}{Number of points at which to evaluate \code{slab_function}}
 
+\item{interval_function}{A function that takes a data frame of aesthetics and a \code{.width} parameter (a vector
+of interval widths), and returns a data frame with
+columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
+(endpoints of the inverals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
+\code{y}-based aesthetics depending on the value of \code{orientation}. If \code{interval_function} is \code{NULL},
+\code{point_interval} is used instead.}
+
+\item{interval_args}{Additional arguments passed to \code{interval_function} or \code{point_interval}.}
+
 \item{point_interval}{A function from the \code{\link{point_interval}} family (e.g., \code{median_qi},
 \code{mean_qi}, etc). This function should take in a vector of value, and should obey the
 \code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
@@ -117,7 +127,28 @@ the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 }
 \description{
 Stats for computing densities and CDFs + intervals from samples for use with
-\code{\link{geom_slabinterval}}.
+\code{\link{geom_slabinterval}}. Useful for creating eye plots, halfeye plots,
+CCDF bar plots etc.
+}
+\details{
+A highly configurable stat for generating a variety of plots that combine a "slab"
+that summarizes a sample plus an interval. Several "shortcut" stats are provided
+which combine multiple options to create useful geoms, particularly \emph{eye} plots
+(a combination of a violin plot and interval), \emph{half-eye} plots (a density plus interval),
+and \emph{CCDF bar plots} (a complementary CDF plus interval). These can be
+handy for visualizing posterior distributions in Bayesian inference, amongst other things.
+
+The shortcut stat names follow the pattern \code{stat_[name][h|]}, where the trailing
+\code{h} (if present) indicates the horizontal version of the stat.
+
+Stats include:
+
+\itemize{
+  \item \code{stat_eye} / \code{stat_eyeh}: Eye plots (violin + interval)
+  \item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
+  \item \code{stat_ccdfbar} / \code{stat_ccdfbarh}: CCDF bar plots (CCDF + interval)
+  \item \code{stat_cdfbar} / \code{stat_cdfbarh}: CDF bar plots (CDF + interval)
+}
 }
 \examples{
 
@@ -126,5 +157,6 @@ Stats for computing densities and CDFs + intervals from samples for use with
 }
 \seealso{
 See \code{\link{geom_slabinterval}} for more information on the geom these stats
-use by default and some of the options they has.
+use by default and some of the options they have. See \code{\link{stat_dist_slabinterval}}
+for the versions of these stats that can be used on analytical distributions.
 }
