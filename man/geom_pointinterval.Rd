@@ -63,42 +63,6 @@ aesthetics.}
 \item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
 to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
 those that are mapped (the default for most geoms).}
-
-\item{...}{Arguments passed on to \code{geom_slabinterval}
-\describe{
-  \item{scale}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
-slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
-  \item{justification}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-\code{0.5}.}
-  \item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"max_height"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
-groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
- normalization (this should probably only be used with functions whose values are in [0,1]).}
-  \item{interval_size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
-sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
-  \item{interval_size_range}{This geom scales the raw size aesthetic values when drawing interval and point sizes, as
-they tend to be too thick when using the default settings of \code{\link{scale_size_continuous}}, which give sizes
-with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
-(typically this should be equal to the value of the \code{range} argument of the \code{\link{scale_size_continuous}}
-function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
-the actual sizes used to draw intervals).}
-  \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link{scale_point_size_continuous}} or \code{\link{scale_point_size_discrete}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-  \item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
-  \item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
-  \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-values are silently removed.}
-  \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
-rather than combining with them. This is most useful for helper functions
-that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
-}}
 }
 \description{
 Combined point + multiple interval geoms with default aesthetics
