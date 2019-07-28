@@ -359,8 +359,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       data[[aesthetic]] = data[[aesthetic]] %||% self$default_key_aes[[aesthetic]]
     }
 
-    # recover height (position_dodge adjusts ymax/ymix but not height)
+    # recover height: position_dodge adjusts ymax/ymin but not height
     data[[height]] = data[[ymax]] - data[[ymin]]
+
     justification = get_justification(justification, side)
 
     slab_grobs = list()
@@ -373,26 +374,31 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       if (nrow(s_data) > 0) {
         # rescale the data to be within the confines of the bounding box
         # we do this *again* here (rather than in setup_data) because
-        # position_dodge doesn't work if we only do it up there
-        a_scale = scale * s_data[[height]]
+        # position_dodge doesn't work if we only do it up there:
+        # positions (like dodge) might change the heights so they aren't
+        # all the same, and we want to preserve our normalization settings.
+        # so we scale things based on the min height to ensure everything
+        # is the same height
+        thickness_scale = scale * min(s_data[[height]])
+        y_scale = thickness_scale / s_data[[height]]
 
         switch_side(side,
           top = {
             # the slight nudge of justification * s_data[[height]] * (1 - scale) ensures that
             # justifications work properly when scale != 1 (and similarly for other values of `side`)
-            s_data[[y]] = s_data[[ymin]] + justification * s_data[[height]] * (1 - scale)
+            s_data[[y]] = s_data[[ymin]] + justification * s_data[[height]] * (1 - y_scale)
             s_data[[ymin]] = s_data[[y]]
-            s_data[[ymax]] = s_data[[y]] + s_data$thickness * a_scale
+            s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale
           },
           bottom = {
-            s_data[[y]] = s_data[[ymax]] - (1 - justification) * s_data[[height]] * (1 - scale)
-            s_data[[ymin]] = s_data[[y]] - s_data$thickness * a_scale
+            s_data[[y]] = s_data[[ymax]] - (1 - justification) * s_data[[height]] * (1 - y_scale)
+            s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale
             s_data[[ymax]] = s_data[[y]]
           },
           both = {
-            s_data[[y]] = (s_data[[ymin]] + s_data[[ymax]]) / 2 - (0.5 - justification) * s_data[[height]] * (1 - scale)
-            s_data[[ymin]] = s_data[[y]] - s_data$thickness * a_scale / 2
-            s_data[[ymax]] = s_data[[y]] + s_data$thickness * a_scale / 2
+            s_data[[y]] = (s_data[[ymin]] + s_data[[ymax]]) / 2 - (0.5 - justification) * s_data[[height]] * (1 - y_scale)
+            s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale / 2
+            s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale / 2
           }
         )
 
@@ -420,6 +426,12 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
             slab_grob
           }
         })
+
+        # when side = "top", need to invert draw order so that overlaps happen in a sensible way
+        # (only bother doing this when scale > 1 since that's the only time it will matter)
+        if (side == "top" && scale > 1) {
+          slab_grobs = rev(slab_grobs)
+        }
       }
     }
 

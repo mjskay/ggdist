@@ -6,7 +6,7 @@
 library(dplyr)
 library(tidyr)
 
-context("geom_eye")
+context("stat_eye")
 
 test_that("one-parameter eye plots work", {
   skip_if_not_installed("vdiffr")
@@ -55,5 +55,49 @@ test_that("two-parameter eye plots work", {
 
   p = ggplot(df, aes(x = y_int, y = x))
   vdiffr::expect_doppelganger("two-parameter (numeric) vertical eye", p + geom_eye(fatten_point = 3))
+
+})
+
+
+test_that("dodged eye plots work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  set.seed(123)
+  df = data.frame(y = rnorm(500, 1), x = "a", g = c("g1")) %>%
+    rbind(data.frame(y = rnorm(900), x = "b", g = c("g1", "g2", "g3")))
+
+  p = ggplot(df, aes(x = x, y = y))
+
+  vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, right)",
+    p + stat_halfeye(aes(fill = g), position = "dodge"))
+  vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, left)",
+    p + stat_halfeye(aes(fill = g), position = "dodge", side = "bottom"))
+  vdiffr::expect_doppelganger("vertical eye with dodging (3 groups, left)",
+    p + stat_eye(aes(fill = g), position = "dodge"))
+
+  vdiffr::expect_doppelganger("vertical eye with dodging (3 groups, just = 0)",
+    p + stat_eye(aes(fill = g), position = "dodge", justification = 0))
+
+  vdiffr::expect_doppelganger("vertical eye with dodging (3 groups, just = 1, scale = 0.5)",
+    p + stat_halfeye(aes(fill = g), position = "dodge", justification = 1, side = "both", scale = 0.5))
+
+  vdiffr::expect_doppelganger("vertical eye with dodging (3 groups, just = 1, top, scale = 0.5)",
+    p + stat_halfeye(aes(fill = g), position = "dodge", justification = 1, side = "top", scale = 0.5))
+
+  vdiffr::expect_doppelganger("vertical eye with dodging (3 groups, just = 0.5, top, scale = 0.5)",
+    p + stat_halfeye(aes(fill = g), position = "dodge", justification = 0.5, side = "top", scale = 0.5))
+
+  vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, just = 0, top, scale = 1.5)",
+    p + stat_halfeye(aes(fill = g), position = "dodge", side = "top", scale = 1.5))
+
+  vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, just = 0, both, scale = 1.5)",
+    p + stat_halfeye(aes(fill = g), position = "dodge", side = "both", scale = 1.5))
+
+  vdiffr::expect_doppelganger("horizontal halfeye with dodging (3 groups, just = 0, both, scale = 1.5)",
+    p + stat_halfeyeh(aes(x = y, y = x, fill = g), position = ggstance::position_dodgev(), side = "top", scale = 1.5))
+
+  vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, just = 0, bottom, scale = 1.5)",
+    p + stat_halfeye(aes(fill = g), position = "dodge", side = "bottom", scale = 1.5))
 
 })
