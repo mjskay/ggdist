@@ -278,14 +278,14 @@ m %>%
 
 ## Plotting point summaries and intervals
 
-Plotting point summaries and with one interval is straightforward using the `ggplot2::geom_pointrange` or `ggstance::geom_pointrangeh` geoms:
+Plotting point summaries and with one interval is straightforward using the `geom_pointinterval` or `geom_pointintervalh` geoms:
 
 ```{r}
 m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   median_qi(condition_mean = b_Intercept + r_condition) %>%
   ggplot(aes(y = condition, x = condition_mean, xmin = .lower, xmax = .upper)) +
-  geom_pointrangeh()
+  geom_pointintervalh()
 ```
 
 
@@ -299,7 +299,7 @@ m %>%
   median_qi(condition_mean = b_Intercept + r_condition, .width = c(.95, .8, .5))
 ```
 
-The results are in a tidy format: one row per group and uncertainty interval width (`.width`). This facilitates plotting. For example, assigning `-.width` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom, provided by tidybayes, is a shorthand for a `geom_pointrangeh` with `xmin`, `xmax`, and `size` set appropriately based on the `.lower`, `.upper`, and `.width` columns in the data to produce plots of point summaries with multiple probability levels:
+The results are in a tidy format: one row per group and uncertainty interval width (`.width`). This facilitates plotting. For example, assigning `-.width` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom automatically sets the `xmin`, `xmax`, and `size` aesthetics appropriately based on the `.lower`, `.upper`, and `.width` columns in the data to produce plots of points with multiple probability levels:
 
 ```{r}
 m %>%

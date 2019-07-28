@@ -1,4 +1,4 @@
-# A geom_pointrangeh but with sensible defaults for displaying multiple intervals
+# A horizontal version of geom_pointinterval
 #
 # Author: mjskay
 ###############################################################################

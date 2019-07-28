@@ -302,7 +302,7 @@ When given only a single column, `median_qi` will use the names `.lower` and `.u
 
 ### Using `geom_pointinterval`/`geom_pointintervalh`
 
-Plotting medians and intervals is straightforward using the `pointinterval` geom (or its horizontal version, `pointintervalh`), which are a modified versions of `ggplot2::geom_pointrange` and `ggstance::geom_pointrangeh` with sensible defaults for multiple intervals (functionality we will use later):
+Plotting medians and intervals is straightforward using the `pointinterval` geom (or its horizontal version, `pointintervalh`), which are simlar to `ggplot2::geom_pointrange` but with sensible defaults for multiple intervals (functionality we will use later):
 
 ```{r}
 m %>%
@@ -337,7 +337,7 @@ These functions have `.width = c(.66, .95)` by default (showing 66% and 95% inte
 
 #### A note on functions ending in `h`
 
-`tidybayes` follows the naming convention established by `ggstance` for horizontal versions of `geom`s and summary functions. It includes horizontal versions of all `point_interval` functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with `h`. 
+`tidybayes` follows the naming convention established by `ggstance` for horizontal versions of `geom`s, `stat`s, and summary functions. It includes horizontal versions of all `point_interval` functions, which differ only in their behavior when passed a vector instead of a data frame. These functions have the same name as their vertical counterparts, but end with `h`. 
 
 When using `point_interval` family functions with geoms and stats defined by packages _other than of `tidybayes`_, you may need to use the horizontal versions of the `point_interval` functions, like `median_qih` (e.g. in the `fun.data` argument of `ggstance::stat_summaryh`). This is because `median_qi` returns a data frame with `y`, `ymin`, and `ymax` columns when passed a vector (making it suitable for `ggplot2::stat_summary`), and `median_qih` returns a data frame with `x`, `xmin`, and `xmax` columns when passed a vector (making it suitable for `ggstance::stat_summaryh`). __You do not need to use these functions with tidybayes stats and geoms__; the `point_interval` argument to tidybayes stats and geoms (like `stat_pointinterval` and `stat_pointintervalh`) will automatically convert output of summary functions to the correct aesthetics.
 
@@ -407,7 +407,7 @@ m %>%
   geom_pointintervalh()
 ```
 
-Just as the `point_interval` functions can generate an arbitrary number of intervals per distribution, so too can `geom_pointrangeh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `size_range =`, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:
+Just as the `point_interval` functions can generate an arbitrary number of intervals per distribution, so too can `geom_pointintervalh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `size_range =`, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:
 
 ```{r}
 m %>%
@@ -724,7 +724,7 @@ Here, `to_broom_names` will convert `.lower` and `.upper` into `conf.low` and `c
 bind_rows(linear_results, bayes_results) %>%
   mutate(condition = fct_rev(condition)) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-  geom_pointrangeh(position = position_dodgev(height = .3))
+  geom_pointintervalh(position = position_dodgev(height = .3))
 ```
 
 Compatibility with `tidy` also gives compatibility with `dotwhisker::dwplot`:
