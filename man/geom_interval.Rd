@@ -8,12 +8,12 @@
 geom_interval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = "both",
   orientation = "vertical", interval_size_range = c(1, 6),
-  show_slab = FALSE, show_point = FALSE, datatype = "interval")
+  show_slab = FALSE, show_point = FALSE)
 
 geom_intervalh(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = "both",
   orientation = "horizontal", interval_size_range = c(1, 6),
-  show_slab = FALSE, show_point = FALSE, datatype = "interval")
+  show_slab = FALSE, show_point = FALSE)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

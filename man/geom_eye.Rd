@@ -18,6 +18,9 @@ geom_halfeyeh(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale,
 \arguments{
 \item{...}{Arguments passed to \code{\link{stat_sample_slabinterval}}}
 
+\item{scale}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+
 \item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
 
 \item{relative_scale}{Deprecated. Use \code{scale} instead.}

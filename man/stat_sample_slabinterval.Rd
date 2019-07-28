@@ -94,7 +94,8 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 
 \item{n}{Number of points at which to evaluate \code{slab_function}}
 
-\item{interval_function}{A function that takes a data frame of aesthetics and a \code{.width} parameter (a vector
+\item{interval_function}{Custom function for generating intervals (for most common use cases the \code{point_interval}
+argument will be easier to use). This function takes a data frame of aesthetics and a \code{.width} parameter (a vector
 of interval widths), and returns a data frame with
 columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
 (endpoints of the inverals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
@@ -124,6 +125,24 @@ those that are mapped (the default for most geoms).}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+
+\item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"both"} draws the slab mirrored on both sides (as in a violin plot).}
+
+\item{justification}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
+\code{0.5}.}
+
+\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"max_height"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
+groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
+ normalization (this should probably only be used with functions whose values are in [0,1]).}
 }
 \description{
 Stats for computing densities and CDFs + intervals from samples for use with

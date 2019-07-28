@@ -2,11 +2,26 @@
 % Please edit documentation in R/parse_dist.R
 \name{parse_dist}
 \alias{parse_dist}
+\alias{parse_dist.default}
+\alias{parse_dist.data.frame}
+\alias{parse_dist.character}
+\alias{parse_dist.factor}
 \alias{r_dist_name}
 \title{Parse distribution specifications into columns of a data frame}
 \usage{
 parse_dist(object, ..., dist = ".dist", args = ".args",
   to_r_names = TRUE)
+
+\method{parse_dist}{default}(object, ...)
+
+\method{parse_dist}{data.frame}(object, dist_col, ..., dist = ".dist",
+  args = ".args", to_r_names = TRUE)
+
+\method{parse_dist}{character}(object, ..., dist = ".dist",
+  args = ".args", to_r_names = TRUE)
+
+\method{parse_dist}{factor}(object, ..., dist = ".dist",
+  args = ".args", to_r_names = TRUE)
 
 r_dist_name(dist_name)
 }
@@ -26,11 +41,11 @@ with \code{r}, \code{p}, \code{q}, and \code{d} representing random number gener
 functions, etc. for that distribution), using the \code{r_dist_name} function. For example,
 \code{"normal"} is translated into \code{"norm"} and \code{"lognormal"} is translated into \code{"lnorm"}.}
 
-\item{dist_name}{For \code{r_dist_name}, a character vector of distribution names to be translated into
-distribution names R recognizes. Unrecognized names are left as-is.}
-
 \item{dist_col}{A bare (unquoted) column or column expression that resolves to a character vector
 of distribution specifications.}
+
+\item{dist_name}{For \code{r_dist_name}, a character vector of distribution names to be translated into
+distribution names R recognizes. Unrecognized names are left as-is.}
 }
 \description{
 Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of

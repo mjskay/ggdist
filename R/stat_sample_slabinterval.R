@@ -7,6 +7,7 @@
 # slab function for samples -------------------------
 
 #' @importFrom rlang missing_arg
+#' @importFrom stats ecdf
 sample_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = "vertical",
   adjust = 1, trim = TRUE, ...
@@ -69,6 +70,7 @@ sample_slab_function = function(
 #' }
 #'
 #' @inheritParams stat_slabinterval
+#' @inheritParams geom_slabinterval
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 #' cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).
 #' @param adjust If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it

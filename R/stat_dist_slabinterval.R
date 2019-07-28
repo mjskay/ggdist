@@ -129,6 +129,7 @@ dist_interval_function = function(df, .width, ...) {
 #' of those functions.
 #'
 #' @inheritParams stat_slabinterval
+#' @inheritParams geom_slabinterval
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 #' cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper

@@ -68,6 +68,7 @@ parse_dist = function(object, ..., dist = ".dist", args = ".args", to_r_names = 
   UseMethod("parse_dist")
 }
 
+#' @rdname parse_dist
 #' @export
 parse_dist.default = function(object, ...) {
   stop(
@@ -76,6 +77,7 @@ parse_dist.default = function(object, ...) {
   )
 }
 
+#' @rdname parse_dist
 #' @export
 parse_dist.data.frame = function(object, dist_col, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
   dists = eval_tidy(enquo(dist_col), object)
@@ -86,6 +88,7 @@ parse_dist.data.frame = function(object, dist_col, ..., dist = ".dist", args = "
   object
 }
 
+#' @rdname parse_dist
 #' @export
 parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
   result = map_dfr(object, function(dist_spec) {
@@ -116,6 +119,7 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_
   result
 }
 
+#' @rdname parse_dist
 #' @export
 parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
   parse_dist(as.character(object))

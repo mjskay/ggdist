@@ -11,6 +11,7 @@
 #' and \code{\link{stat_halfeyeh}}. Use those functions instead.
 #'
 #' @inheritParams stat_sample_slabinterval
+#' @inheritParams geom_slabinterval
 #' @param ... Arguments passed to \code{\link{stat_sample_slabinterval}}
 #' @param relative_scale Deprecated. Use \code{scale} instead.
 #' @param .prob Deprecated. Use \code{.width} instead.

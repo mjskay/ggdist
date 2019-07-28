@@ -19,8 +19,6 @@ geom_pointintervalh = function(
   orientation = "horizontal",
   show_slab = FALSE,
 
-  datatype = "interval",
-
   show.legend = c(size = FALSE)
 ) {
 
@@ -37,7 +35,7 @@ geom_pointintervalh = function(
     orientation = orientation,
     show_slab = show_slab,
 
-    datatype = datatype,
+    datatype = "interval",
 
     show.legend = show.legend
   )

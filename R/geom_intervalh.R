@@ -19,9 +19,7 @@ geom_intervalh = function(
   orientation = "horizontal",
   interval_size_range = c(1, 6),
   show_slab = FALSE,
-  show_point = FALSE,
-
-  datatype = "interval"
+  show_point = FALSE
 ) {
 
   layer_geom_slabinterval(
@@ -39,7 +37,7 @@ geom_intervalh = function(
     show_slab = show_slab,
     show_point = show_point,
 
-    datatype = datatype
+    datatype = "interval"
   )
 }
 

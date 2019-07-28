@@ -11,32 +11,11 @@
 #' a \code{\link{point_interval}} function, \code{stat_lineribbon} is intended for use directly on data
 #' frames of draws, and will perform the summarization using a \code{\link{point_interval}} function.
 #'
-#' @param mapping The aesthetic mapping, usually constructed with
-#' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
-#' layer level if you are overriding the plot defaults.
-#' @param data A layer specific dataset - only needed if you want to override
-#' the plot defaults.
+#' @inheritParams stat_interval
 #' @param geom Use to override the default connection between
 #' \code{geom_lineribbon} and \code{stat_lineribbon}.
-#' @param position The position adjustment to use for overlapping points on this layer.
-#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom.
-#' @param point_interval A function that when given a vector should
-#'   return a data frame with variables \code{y}, \code{ymin}, \code{ymax}, and \code{.width}; or
-#'   \code{x}, \code{xmin}, \code{xmax}, and \code{.width}. \strong{Either is acceptable}: output
-#'   will be converted into the \code{y}-based aesthetics. See the \code{point_interval} family of functions.
-#' @param fun.data Similar to \code{point_interval}, for compatibility with \code{stat_summary}.
-#'   Note: if the summary function is passed using \code{fun.data}, \code{x}-based aesthetics
-#'   are not converted to the correct form automatically.
-#' @param .width The \code{.width} argument passed to \code{point_interval}.
-#' @param .prob Deprecated. Use \code{.width} instead.
-#' @param fun.args Other optional arguments passed to \code{fun.data}.
-#' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-#' values are silently removed.
 #' @param show.legend Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics
 #' are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-#' most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
-#' default plot specification, e.g. borders.
 #' @seealso See \code{\link{geom_lineribbon}} for the geom version, intended for use on points and intervals that have
 #' already been summarized using a \code{\link{point_interval}} function. See \code{\link{stat_pointinterval}} /
 #' \code{\link{stat_pointintervalh}} for a similar stat intended for point summaries and intervals.
@@ -52,7 +31,6 @@
 #'   stat_lineribbon() +
 #'   scale_fill_brewer()
 #'
-#' @export
 #' @export
 stat_lineribbon = function(
   mapping = NULL,

@@ -33,7 +33,8 @@
 #' automatically depending on the value of \code{orientation}.
 #' @param slab_args Additional arguments passed to \code{limits_function}
 #' @param n Number of points at which to evaluate \code{slab_function}
-#' @param interval_function A function that takes a data frame of aesthetics and a \code{.width} parameter (a vector
+#' @param interval_function Custom function for generating intervals (for most common use cases the \code{point_interval}
+#' argument will be easier to use). This function takes a data frame of aesthetics and a \code{.width} parameter (a vector
 #' of interval widths), and returns a data frame with
 #' columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
 #' (endpoints of the inverals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or

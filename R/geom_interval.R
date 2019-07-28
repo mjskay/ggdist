@@ -68,9 +68,7 @@ geom_interval = function(
   orientation = "vertical",
   interval_size_range = c(1, 6),
   show_slab = FALSE,
-  show_point = FALSE,
-
-  datatype = "interval"
+  show_point = FALSE
 ) {
 
   layer_geom_slabinterval(
@@ -88,7 +86,7 @@ geom_interval = function(
     show_slab = show_slab,
     show_point = show_point,
 
-    datatype = datatype
+    datatype = "interval"
   )
 }
 
