@@ -408,29 +408,26 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
         # build grobs to display the slabs
         slab_grobs = dlply(s_data, c("group", y), function(d) {
           data_order = order(d[[x]])
+          grouped_slab_data = group_slab_data_by_fill(d[data_order,], x, ymin, ymax)
 
-          #raw_slab_data = d[data_order,]
+          slab_data_top = grouped_slab_data
+          slab_data_top[[y]] = slab_data_top[[ymax]]
 
-          do.call(gList, map(split_slab_data(d[data_order,], x, ymin, ymax), function(raw_slab_data) {
-            slab_data_top = raw_slab_data
-            slab_data_top[[y]] = slab_data_top[[ymax]]
+          slab_data_bottom = grouped_slab_data[nrow(grouped_slab_data):1,]
+          slab_data_bottom[[y]] = slab_data_bottom[[ymin]]
 
-            slab_data_bottom = raw_slab_data[nrow(raw_slab_data):1,]
-            slab_data_bottom[[y]] = slab_data_bottom[[ymin]]
+          slab_data = rbind(slab_data_top, slab_data_bottom)
 
-            slab_data = rbind(slab_data_top, slab_data_bottom)
+          slab_grob = GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
 
-            slab_grob = GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
-
-            if (!is.null(slab_data_top$colour) && !all(is.na(slab_data_top$colour))) {
-              # we have an outline to draw around the outside of the slab:
-              # the definition of "outside" depends on the value of `side`:
-              outline_data = switch_side(side, top = slab_data_top, bottom = slab_data_bottom, both = slab_data)
-              gList(slab_grob, GeomPath$draw_panel(outline_data, panel_params, coord))
-            } else {
-              slab_grob
-            }
-          }))
+          if (!is.null(slab_data_top$colour) && !all(is.na(slab_data_top$colour))) {
+            # we have an outline to draw around the outside of the slab:
+            # the definition of "outside" depends on the value of `side`:
+            outline_data = switch_side(side, top = slab_data_top, bottom = slab_data_bottom, both = slab_data)
+            gList(slab_grob, GeomPath$draw_panel(outline_data, panel_params, coord))
+          } else {
+            slab_grob
+          }
         })
 
         # when side = "top", need to invert draw order so that overlaps happen in a sensible way
@@ -538,12 +535,12 @@ get_line_size = function(i_data, size_domain, size_range) {
 
 # gradient helpers --------------------------------------------------------
 
-# splits slab data into components based on fill aesthetic
-# and interpolates at cutpoints
-split_slab_data = function(slab_data, x = "x", ymin = "ymin", ymax = "ymax") {
+# groups slab data into contiguous components based on fill and alpha aesthetics,
+# interpolating values at the cutpoints.
+group_slab_data_by_fill = function(slab_data, x = "x", ymin = "ymin", ymax = "ymax") {
   groups = interaction(slab_data[,c("fill","alpha")])
-  groups = cumsum(groups != lag(groups, default = groups[[1]]))
-  slab_datas = split(slab_data, groups)
+  slab_data$group = cumsum(groups != lag(groups, default = groups[[1]]))
+  slab_datas = split(slab_data, slab_data$group)
 
   if (length(slab_datas) > 1) {
     # more than one group
@@ -563,8 +560,7 @@ split_slab_data = function(slab_data, x = "x", ymin = "ymin", ymax = "ymax") {
       slab_datas[[i]] = rbind(slab_datas[[i]], new_row__i)
       slab_datas[[j]] = rbind(new_row__j, slab_datas[[j]])
     }
-    slab_datas
-  } else {
-    slab_datas
   }
+
+  bind_rows(slab_datas)
 }

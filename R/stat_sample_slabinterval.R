@@ -67,6 +67,7 @@ sample_slab_function = function(
 #'   \item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
 #'   \item \code{stat_ccdfbar} / \code{stat_ccdfbarh}: CCDF bar plots (CCDF + interval)
 #'   \item \code{stat_cdfbar} / \code{stat_cdfbarh}: CDF bar plots (CDF + interval)
+#'   \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
 #' }
 #'
 #' @inheritParams stat_slabinterval
@@ -229,3 +230,46 @@ stat_cdfbarh = function(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
   )
 }
+
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_gradientinterval = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  justification = 0.5,
+  thickness = 1,
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatGradientinterval,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      justification = justification,
+      thickness = thickness,
+      ...
+    )
+  )
+}
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_gradientintervalh = function(..., orientation = "horizontal") {
+  stat_gradientinterval(..., orientation = orientation)
+}
+StatGradientinterval <- ggproto("StatGradientinterval", StatSampleSlabinterval,
+  default_aes = defaults(aes(
+    alpha = stat(f)
+  ), StatSampleSlabinterval$default_aes)
+)

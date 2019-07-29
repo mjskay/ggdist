@@ -160,6 +160,7 @@ Stats include:
   \item \code{stat_dist_halfeye} / \code{stat_dist_halfeyeh}: Half-eye plots (density + interval)
   \item \code{stat_dist_ccdfbar} / \code{stat_dist_ccdfbarh}: CCDF bar plots (CCDF + interval)
   \item \code{stat_dist_cdfbar} / \code{stat_dist_cdfbarh}: CDF bar plots (CDF + interval)
+  \item \code{stat_dist_gradientinterval} / \code{stat_dist_gradientintervalh}: Density gradient + interval plots
 }
 
 These stats expect a \code{dist} aesthetic to specify a distribution name

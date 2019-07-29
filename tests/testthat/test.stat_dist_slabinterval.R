@@ -35,7 +35,7 @@ test_that("multiple fill gradient halfeye works", {
   vdiffr::expect_doppelganger("gradient fill/color halfeye", p)
 })
 
-test_that("gradientinterval works", {
+test_that("stat_dist_gradientinterval works", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
@@ -47,8 +47,8 @@ test_that("gradientinterval works", {
     ggplot(aes(dist = dist, args = args, fill = dist)) +
     scale_alpha_continuous(range = c(0,1))
 
-  vdiffr::expect_doppelganger("gradientinterval with two groups",
+  vdiffr::expect_doppelganger("dist_gradientinterval with two groups",
     p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99)))
-  vdiffr::expect_doppelganger("gradientintervalh with two groups",
+  vdiffr::expect_doppelganger("dist_gradientintervalh with two groups",
     p + stat_dist_gradientintervalh(aes(y = dist), n = 20, p_limits = c(0.01, 0.99)))
 })

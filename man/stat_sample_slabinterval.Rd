@@ -10,6 +10,8 @@
 \alias{stat_ccdfbarh}
 \alias{stat_cdfbar}
 \alias{stat_cdfbarh}
+\alias{stat_gradientinterval}
+\alias{stat_gradientintervalh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)}
 \usage{
 stat_sample_slabinterval(mapping = NULL, data = NULL,
@@ -39,6 +41,13 @@ stat_cdfbar(..., slab_type = "cdf", justification = 0.5,
 
 stat_cdfbarh(..., slab_type = "cdf", justification = 0.5,
   side = "top", orientation = "horizontal", normalize = "none")
+
+stat_gradientinterval(mapping = NULL, data = NULL,
+  geom = "slabinterval", position = "identity", ...,
+  justification = 0.5, thickness = 1, show.legend = c(size = FALSE),
+  inherit.aes = TRUE)
+
+stat_gradientintervalh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -167,6 +176,7 @@ Stats include:
   \item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
   \item \code{stat_ccdfbar} / \code{stat_ccdfbarh}: CCDF bar plots (CCDF + interval)
   \item \code{stat_cdfbar} / \code{stat_cdfbarh}: CDF bar plots (CDF + interval)
+  \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
 }
 }
 \examples{

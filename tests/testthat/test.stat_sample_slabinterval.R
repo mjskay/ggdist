@@ -1,0 +1,28 @@
+# Tests for sample distribution plots
+#
+# Author: mjskay
+###############################################################################
+
+library(dplyr)
+
+context("stat_sample_slabinterval")
+
+test_that("gradientinterval works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  set.seed(1234)
+  p = tribble(
+    ~dist, ~x,
+    "norm", rnorm(100),
+    "t", rt(100, 3)
+  ) %>%
+    unnest() %>%
+    ggplot() +
+    scale_alpha_continuous(range = c(0,1))
+
+  vdiffr::expect_doppelganger("gradientinterval with two groups",
+    p + stat_gradientinterval(aes(x = dist, y = x), n = 20))
+  vdiffr::expect_doppelganger("gradientintervalh with two groups",
+    p + stat_gradientintervalh(aes(y = dist, x = x), n = 20))
+})
