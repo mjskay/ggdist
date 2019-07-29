@@ -78,7 +78,7 @@ do not." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -103,6 +103,9 @@ do not." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
+    </li>
     <li>
       <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
@@ -182,7 +185,9 @@ do not.</p>
 <li><p><code><a href='https://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></code> models</p></li>
 <li><p><code><a href='https://www.rdocumentation.org/packages/rstanarm/topics/rstanarm-package'>rstanarm</a></code> models</p></li>
 </ul>
-    <p>If you install the <a href='https://github.com/mjskay/tidybayes.rethinking'>tidybayes.rethinking</a> package, models from
+    <p><strong>If your model type is not in the above list</strong>, you may still be able to use the <code><a href='add_draws.html'>add_draws</a></code>
+function to turn matrices of predictive draws (or fit draws) into tidy data frames.</p>
+<p>If you install the <a href='https://github.com/mjskay/tidybayes.rethinking'>tidybayes.rethinking</a> package, models from
 the <a href='https://github.com/rmcelreath/rethinking'>rethinking</a> package are also supported. Note that in
 <code>tidybayes.rethinking</code>, <code>tidy_link</code> takes the place of
 <code><a href='add_predicted_draws.html'>add_fitted_draws</a></code> and <code>tidy_sim</code> takes the place of

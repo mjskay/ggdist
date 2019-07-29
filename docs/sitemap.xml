@@ -25,6 +25,9 @@
     <loc>http://mjskay.github.io/tidybayes/reference/density_bins.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/draw_key_slabinterval.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/tidybayes/reference/gather_emmeans_draws.html</loc>
   </url>
   <url>
@@ -37,9 +40,6 @@
     <loc>http://mjskay.github.io/tidybayes/reference/geom_eye.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/tidybayes/reference/geom_halfeyeh.html</loc>
-  </url>
-  <url>
     <loc>http://mjskay.github.io/tidybayes/reference/geom_interval.html</loc>
   </url>
   <url>
@@ -49,10 +49,16 @@
     <loc>http://mjskay.github.io/tidybayes/reference/geom_pointinterval.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/geom_slabinterval.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/tidybayes/reference/get_variables.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/n_prefix.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/parse_dist.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/point_interval.html</loc>
@@ -70,7 +76,13 @@
     <loc>http://mjskay.github.io/tidybayes/reference/sample_draws.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/scales.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/tidybayes/reference/spread_draws.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/stat_dist_slabinterval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/stat_interval.html</loc>
@@ -80,6 +92,12 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/stat_pointinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/stat_sample_slabinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/stat_slabinterval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/theme_tidybayes.html</loc>
@@ -104,6 +122,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/x_at_y.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/articles/slabinterval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/articles/tidy-brms.html</loc>

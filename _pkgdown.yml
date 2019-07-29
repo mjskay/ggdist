@@ -82,9 +82,10 @@ reference:
 - title: Visualizing draws
   desc:  Geoms for visualizing tidy data frames of draws
   contents:
-  - geom_eye
-  - geom_eyeh
-  - geom_halfeyeh
+  - geom_slabinterval,
+  - stat_sample_slabinterval
+  - stat_dist_slabinterval
+  - parse_dist
   - geom_interval
   - geom_intervalh
   - geom_lineribbon
@@ -95,6 +96,7 @@ reference:
   - stat_lineribbon
   - stat_pointinterval
   - stat_pointintervalh
+  - scales
 
 - title: GGplot theme
   desc:  Tidybayes theme for ggplot2
@@ -104,8 +106,16 @@ reference:
   - facet_title_right_horizontal
   - axis_titles_bottom_left
 
-- title: Other
-  desc:  Other functions and documentation
+- title: Model types
+  desc:  Models supported by tidybayes
+  contents:
+  - tidybayes-models
+
+- title: Deprecated functions
+  desc: Deprecated functions
   contents:
   - tidybayes-deprecated
-  - tidybayes-models
+  - geom_eye
+  - geom_eyeh
+  - geom_halfeyeh
+

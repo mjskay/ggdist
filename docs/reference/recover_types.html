@@ -80,7 +80,7 @@ those functions are translated back into useful data types." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -105,6 +105,9 @@ those functions are translated back into useful data types." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
+    </li>
     <li>
       <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
@@ -278,7 +281,7 @@ of the generic function <code>as_constructor</code>.</p>
     <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='point_interval.html'>median_qi</a></span>()
 
-}</div><div class='output co'>#&gt; <span class='message'>rstan (Version 2.18.2, GitRev: 2e1f913d3ca3)</span></div><div class='output co'>#&gt; <span class='message'>For execution on a local, multicore CPU with excess RAM we recommend calling</span>
+}</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'rstan' was built under R version 3.6.1</span></div><div class='output co'>#&gt; <span class='message'>rstan (Version 2.19.2, GitRev: 2e1f913d3ca3)</span></div><div class='output co'>#&gt; <span class='message'>For execution on a local, multicore CPU with excess RAM we recommend calling</span>
 #&gt; <span class='message'>options(mc.cores = parallel::detectCores()).</span>
 #&gt; <span class='message'>To avoid recompilation of unchanged Stan programs, we recommend calling</span>
 #&gt; <span class='message'>rstan_options(auto_write = TRUE)</span></div><div class='output co'>#&gt; <span class='message'>For improved execution time, we recommend calling</span>
@@ -311,10 +314,16 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Chain 1: Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.104 seconds (Warm-up)
-#&gt; Chain 1:                0.097 seconds (Sampling)
-#&gt; Chain 1:                0.201 seconds (Total)
-#&gt; Chain 1: </div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
+#&gt; Chain 1:  Elapsed Time: 0.115 seconds (Warm-up)
+#&gt; Chain 1:                0.106 seconds (Sampling)
+#&gt; Chain 1:                0.221 seconds (Total)
+#&gt; Chain 1: </div><div class='output co'>#&gt; <span class='warning'>Warning: The largest R-hat is 1.08, indicating chains have not mixed.</span>
+#&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
+#&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#r-hat</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>
+#&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
+#&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#bulk-ess</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span>
+#&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
+#&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#tail-ess</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
 #&gt;   condition condition_mean  .lower .upper .width .point .interval
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
 #&gt; </span><span style='color: #555555;'>1</span><span> A                  0.210 -</span><span style='color: #BB0000;'>0.095</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>  0.493   0.95 median qi       

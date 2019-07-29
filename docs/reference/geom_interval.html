@@ -34,8 +34,9 @@
   
 <meta property="og:title" content="Multiple probability interval plots (ggplot geom) — geom_interval" />
 
-<meta property="og:description" content="Modified versions of geom_linerange and geom_linerangeh with default aesthetics
-designed for use with output from point_interval." />
+<meta property="og:description" content="Multiple interval geoms with default aesthetics
+designed for use with output from point_interval.
+Wrapper around geom_slabinterval." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -78,7 +79,7 @@ designed for use with output from point_interval." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -103,6 +104,9 @@ designed for use with output from point_interval." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
+    </li>
     <li>
       <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
@@ -145,79 +149,113 @@ designed for use with output from point_interval." />
 
     <div class="ref-description">
     
-    <p>Modified versions of <code>geom_linerange</code> and <code>geom_linerangeh</code> with default aesthetics
-designed for use with output from <code><a href='point_interval.html'>point_interval</a></code>.</p>
+    <p>Multiple interval geoms with default aesthetics
+designed for use with output from <code><a href='point_interval.html'>point_interval</a></code>.
+Wrapper around <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>geom_interval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>, <span class='kw'>interval_size_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>),
+  <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show_point</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>geom_intervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>interval_size_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>),
+  <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show_point</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>The aesthetic mapping, usually constructed with
-<code>aes</code> or <code>aes_string</code>. Only needs to be set at the
-layer level if you are overriding the plot defaults.</p></td>
+      <td><p>Set of aesthetic mappings created by <code>aes()</code> or
+<code>aes_()</code>. If specified and <code>inherit.aes = TRUE</code> (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>A layer specific dataset - only needed if you want to override
-the plot defaults.</p></td>
+      <td><p>The data to be displayed in this layer. There are three
+options:</p>
+<p>If <code>NULL</code>, the default, the data is inherited from the plot
+data as specified in the call to <code>ggplot()</code>.</p>
+<p>A <code>data.frame</code>, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+<code>fortify()</code> for which variables will be created.</p>
+<p>A <code>function</code> will be called with a single argument,
+the plot data. The return value must be a <code>data.frame</code>, and
+will be used as the layer data. A <code>function</code> can be created
+from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></td>
     </tr>
     <tr>
       <th>stat</th>
-      <td><p>The statistical transformation to use on the data for this layer.</p></td>
+      <td><p>The statistical transformation to use on the data for this
+layer, as a string.</p></td>
     </tr>
     <tr>
       <th>position</th>
-      <td><p>The position adjustment to use for overlapping points on this layer.</p></td>
+      <td><p>The position adjustment to use for overlapping points on this layer. Setting this equal to
+<code>"dodge"</code> or <code>"dodgev"</code> (if the <code>ggstance</code> package is loaded) can be useful if you have
+overlapping intervals.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Other arguments passed to <code>layer</code>.</p></td>
     </tr>
     <tr>
-      <th>na.rm</th>
-      <td><p>If <code>FALSE</code>, the default, missing values are removed with a warning. If <code>TRUE</code>, missing
-values are silently removed.</p></td>
+      <th>side</th>
+      <td><p>Which side to draw the slab on. <code>"topright"</code>, <code>"top"</code>, and <code>"right"</code> are synonyms
+which cause the slab to be drawn on the top or the right depending on if <code>orientation</code> is <code>"horizontal"</code>
+or <code>"vertical"</code>. <code>"bottomleft"</code>, <code>"bottom"</code>, and <code>"left"</code> are synonyms which cause the slab
+to be drawn on the bottom of the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
+<code>"vertical"</code>. <code>"both"</code> draws the slab mirrored on both sides (as in a violin plot).</p></td>
     </tr>
     <tr>
-      <th>show.legend</th>
-      <td><p>Should this layer be included in the legends? <code>NA</code>, the default, includes if any aesthetics
-are mapped. <code>FALSE</code> never includes, and <code>TRUE</code> always includes.</p></td>
+      <th>orientation</th>
+      <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
+vertically (<code>"vertical"</code>). When horizontal (resp. vertical), the geom uses the <code>y</code> (resp. <code>x</code>)
+aesthetic to identify different groups, then for each group uses the <code>x</code> (resp. <code>y</code>) aesthetic and the
+<code>thickness</code> aesthetic to draw a function as an slab, and draws points and intervals horizontally
+(resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp. <code>ymin</code>, <code>y</code>, and <code>ymax</code>)
+aesthetics.</p></td>
     </tr>
     <tr>
-      <th>inherit.aes</th>
-      <td><p>If <code>FALSE</code>, overrides the default aesthetics, rather than combining with them. This is
-most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
-default plot specification, e.g. borders.</p></td>
+      <th>interval_size_range</th>
+      <td><p>This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of <code>scale_size_continuous</code>, which give sizes
+with a range of <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(1, 6)</a></code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
+(typically this should be equal to the value of the <code>range</code> argument of the <code>scale_size_continuous</code>
+function), and <code>interval_size_range</code> indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals).</p></td>
+    </tr>
+    <tr>
+      <th>show_slab</th>
+      <td><p>Should the slab portion of the geom be drawn? Default <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>show_point</th>
+      <td><p>Should the point portion of the geom be drawn? Default <code>TRUE</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>geom_interval</code> is a modified version of <code><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_linerange</a></code>, and <code>geom_intervalh</code> is
-a modified version of <code>geom_linerangeh</code>. These geoms set some default aesthetics equal
+    <p>These geoms are wrappers around <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> with defaults designed to produce
+multiple interval plots. These geoms set some default aesthetics equal
 to the <code>.lower</code>, <code>.upper</code>, and <code>.width</code> columns generated by the <code>point_interval</code> family
-of functions, making them often more convenient than vanilla <code><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_linerange</a></code> or
-<code>geom_linerangeh</code> when used with functions like <code><a href='point_interval.html'>median_qi</a></code>, <code><a href='point_interval.html'>mean_qi</a></code>,
+of functions, making them often more convenient than vanilla <code><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_linerange</a></code>
+when used with functions like <code><a href='point_interval.html'>median_qi</a></code>, <code><a href='point_interval.html'>mean_qi</a></code>,
 <code><a href='point_interval.html'>mode_hdi</a></code>, etc.</p>
 <p>Specifically, <code>geom_interval</code> acts as if its default aesthetics are
-<code><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))</a></code>. <code>geom_intervalh</code> acts as if
-its default aesthetics are <code><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))</a></code>.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))</a></code>. <code>geom_intervalh</code> acts as if
+its default aesthetics are <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))</a></code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code> for a similar geom designed for curves plus probability bands. See
-<code><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange'>geom_linerange</a></code> and <code>geom_linerangeh</code> for the geoms these are based on.</p></div>
+    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for the geom that these geoms wrap. All parameters of that geom are
+available to these geoms.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -230,15 +268,15 @@ its default aesthetics are <code><a href='https://www.rdocumentation.org/package
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
   <span class='fu'>geom_intervalh</span>() +
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_color_brewer</a></span>()</div><div class='img'><img src='geom_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span>()</div><div class='img'><img src='geom_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
   <span class='fu'>geom_interval</span>() +
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer'>scale_color_brewer</a></span>()</div><div class='img'><img src='geom_interval-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span>()</div><div class='img'><img src='geom_interval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

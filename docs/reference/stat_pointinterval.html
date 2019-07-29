@@ -34,8 +34,8 @@
   
 <meta property="og:title" content="Point summary + multiple probability interval plots (ggplot stat) — stat_pointinterval" />
 
-<meta property="og:description" content="A combination of stat_summary / stat_summaryh and
-geom_pointinterval / geom_pointintervalh with sensible defaults.
+<meta property="og:description" content="A combination of stat_sample_slabinterval and
+geom_slabinterval with sensible defaults.
 While the corresponding geoms are intended for use on
 data frames that have already been summarized using a point_interval
 function, these stats are intended for use directly on data frames of draws, and
@@ -82,7 +82,7 @@ will perform the summarization using a point_interval function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -107,6 +107,9 @@ will perform the summarization using a point_interval function." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
+    </li>
     <li>
       <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
     </li>
@@ -149,8 +152,8 @@ will perform the summarization using a point_interval function." />
 
     <div class="ref-description">
     
-    <p>A combination of <code>stat_summary</code> / <code>stat_summaryh</code> and
-<code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code> with sensible defaults.
+    <p>A combination of <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> and
+<code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> with sensible defaults.
 While the corresponding <code>geom</code>s are intended for use on
 data frames that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code>
 function, these <code>stat</code>s are intended for use directly on data frames of draws, and
@@ -160,68 +163,99 @@ will perform the summarization using a <code><a href='point_interval.html'>point
 
     <pre class="usage"><span class='fu'>stat_pointinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
-  <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>,
-  <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>, <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
+  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>.prob</span>, <span class='no'>fun.data</span>,
+  <span class='no'>fun.args</span>)
 
 <span class='fu'>stat_pointintervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointintervalh"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
-  <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>fun.data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>,
-  <span class='fl'>0.95</span>), <span class='no'>.prob</span>, <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
+  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>.prob</span>, <span class='no'>fun.data</span>,
+  <span class='no'>fun.args</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>The aesthetic mapping, usually constructed with
-<code>aes</code> or <code>aes_string</code>. Only needs to be set at the
-layer level if you are overriding the plot defaults.</p></td>
+      <td><p>Set of aesthetic mappings created by <code>aes()</code> or
+<code>aes_()</code>. If specified and <code>inherit.aes = TRUE</code> (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>A layer specific dataset - only needed if you want to override
-the plot defaults.</p></td>
+      <td><p>The data to be displayed in this layer. There are three
+options:</p>
+<p>If <code>NULL</code>, the default, the data is inherited from the plot
+data as specified in the call to <code>ggplot()</code>.</p>
+<p>A <code>data.frame</code>, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+<code>fortify()</code> for which variables will be created.</p>
+<p>A <code>function</code> will be called with a single argument,
+the plot data. The return value must be a <code>data.frame</code>, and
+will be used as the layer data. A <code>function</code> can be created
+from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></td>
     </tr>
     <tr>
       <th>geom</th>
       <td><p>Use to override the default connection between
-<code>geom_pointinterval</code>/<code>geom_pointintervalh</code> and <code>stat_pointinterval</code>/<code>stat_pointintervalh</code>.</p></td>
+<code>stat_slabinterval</code> and <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p></td>
     </tr>
     <tr>
       <th>position</th>
-      <td><p>The position adjustment to use for overlapping points on this layer.</p></td>
+      <td><p>Position adjustment, either as a string, or the result of
+a call to a position adjustment function.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code>layer</code>. They may also be arguments to the paired geom.</p></td>
+      <td><p>Other arguments passed to <code>layer</code>. They may also be arguments to the paired geom
+(e.g., <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code>)</p></td>
+    </tr>
+    <tr>
+      <th>orientation</th>
+      <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
+vertically (<code>"vertical"</code>). When horizontal (resp. vertical), the geom uses the <code>y</code> (resp. <code>x</code>)
+aesthetic to identify different groups, then for each group uses the <code>x</code> (resp. <code>y</code>) aesthetic and the
+<code>thickness</code> aesthetic to draw a function as an slab, and draws points and intervals horizontally
+(resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp. <code>ymin</code>, <code>y</code>, and <code>ymax</code>)
+aesthetics.</p></td>
+    </tr>
+    <tr>
+      <th>interval_function</th>
+      <td><p>Custom function for generating intervals (for most common use cases the <code>point_interval</code>
+argument will be easier to use). This function takes a data frame of aesthetics and a <code>.width</code> parameter (a vector
+of interval widths), and returns a data frame with
+columns <code>.width</code> (from the <code>.width</code> vector), <code>.value</code> (point summary) and <code>.lower</code> and <code>.upper</code>
+(endpoints of the inverals, given the <code>.width</code>). Output will be converted to the appropriate <code>x</code>- or
+<code>y</code>-based aesthetics depending on the value of <code>orientation</code>. If <code>interval_function</code> is <code>NULL</code>,
+<code>point_interval</code> is used instead.</p></td>
+    </tr>
+    <tr>
+      <th>interval_args</th>
+      <td><p>Additional arguments passed to <code>interval_function</code> or <code>point_interval</code>.</p></td>
     </tr>
     <tr>
       <th>point_interval</th>
-      <td><p>A function that when given a vector should
-return a data frame with variables <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>.width</code>; or
-<code>x</code>, <code>xmin</code>, <code>xmax</code>, and <code>.width</code>. <strong>Either is acceptable</strong>: output
-will be converted into the <code>y</code>-based aesthetics for <code>stat_pointinterval</code> and the
-<code>x</code>-based aesthetics for <code>stat_pointintervalh</code>. See the <code>point_interval</code> family of functions.</p></td>
-    </tr>
-    <tr>
-      <th>fun.data</th>
-      <td><p>Similar to <code>point_interval</code>, for compatibility with <code>stat_summary</code>.
-Note: if the summary function is passed using <code>fun.data</code>, the <code>x</code> and <code>y</code>-based aesthetics
-are not converted to the correct form automatically.</p></td>
+      <td><p>A function from the <code><a href='point_interval.html'>point_interval</a></code> family (e.g., <code>median_qi</code>,
+<code>mean_qi</code>, etc). This function should take in a vector of value, and should obey the
+<code>.width</code> and <code>.simple_names</code> parameters of <code><a href='point_interval.html'>point_interval</a></code> functions, such that when given
+a vector with <code>.simple_names = TRUE</code> should return a data frame with variables <code>.value</code>, <code>.lower</code>,
+<code>.upper</code>, and <code>.width</code>. Output will be converted to the appropriate <code>x</code>- or <code>y</code>-based aesthetics
+depending on the value of <code>orientation</code>. See the <code><a href='point_interval.html'>point_interval</a></code> family of functions for
+more information.</p></td>
     </tr>
     <tr>
       <th>.width</th>
-      <td><p>The <code>.width</code> argument passed to <code>point_interval</code>.</p></td>
+      <td><p>The <code>.width</code> argument passed to <code>interval_function</code> or <code>point_interval</code>.</p></td>
     </tr>
     <tr>
-      <th>.prob</th>
-      <td><p>Deprecated. Use <code>.width</code> instead.</p></td>
-    </tr>
-    <tr>
-      <th>fun.args</th>
-      <td><p>Other optional arguments passed to <code>fun.data</code>.</p></td>
+      <th>show_slab</th>
+      <td><p>Should the slab portion of the geom be drawn? Default <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -236,9 +270,22 @@ those that are mapped (the default for most geoms).</p></td>
     </tr>
     <tr>
       <th>inherit.aes</th>
-      <td><p>If <code>FALSE</code>, overrides the default aesthetics, rather than combining with them. This is
-most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
-default plot specification, e.g. borders.</p></td>
+      <td><p>If <code>FALSE</code>, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. <code>borders()</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.prob</th>
+      <td><p>Deprecated. Use <code>.width</code> instead.</p></td>
+    </tr>
+    <tr>
+      <th>fun.data</th>
+      <td><p>Deprecated. Use <code>point_interval</code> or <code>interval_function</code> instead.</p></td>
+    </tr>
+    <tr>
+      <th>fun.args</th>
+      <td><p>Deprecated. Use <code>interval_args</code> instead.</p></td>
     </tr>
     </table>
     
@@ -247,7 +294,8 @@ default plot specification, e.g. borders.</p></td>
     <div class='dont-index'><p>See <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code> for the geom versions, intended
 for use on points and intervals that have already been summarized using a <code><a href='point_interval.html'>point_interval</a></code> function.
 See <code><a href='stat_interval.html'>stat_interval</a></code> / <code><a href='stat_interval.html'>stat_intervalh</a></code> for a similar stat intended for intervals without
-point summaries.</p></div>
+point summaries. See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> for a variety of other
+stats that combine intervals with densities and CDFs.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -259,11 +307,11 @@ point summaries.</p></div>
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
   <span class='fu'>stat_pointintervalh</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
   <span class='fu'>stat_pointinterval</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
