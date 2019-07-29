@@ -539,28 +539,34 @@ get_line_size = function(i_data, size_domain, size_range) {
 # interpolating values at the cutpoints.
 group_slab_data_by_fill = function(slab_data, x = "x", ymin = "ymin", ymax = "ymax") {
   groups = interaction(slab_data[,c("fill","alpha")])
-  slab_data$group = cumsum(groups != lag(groups, default = groups[[1]]))
-  slab_datas = split(slab_data, slab_data$group)
 
-  if (length(slab_datas) > 1) {
-    # more than one group
-    for (i in 1:(length(slab_datas) - 1)) {
-      j = i + 1
-      new_row__i = slab_datas[[i]][nrow(slab_datas[[i]]),]
-      new_row__j = slab_datas[[j]][1,]
-      new_x = (new_row__i[[x]] + new_row__j[[x]]) / 2
-      new_ymin = (new_row__i[[ymin]] + new_row__j[[ymin]]) / 2
-      new_ymax = (new_row__i[[ymax]] + new_row__j[[ymax]]) / 2
-      new_row__i[[x]] = new_x
-      new_row__i[[ymin]] = new_ymin
-      new_row__i[[ymax]] = new_ymax
-      new_row__j[[x]] = new_x
-      new_row__j[[ymin]] = new_ymin
-      new_row__j[[ymax]] = new_ymax
-      slab_datas[[i]] = rbind(slab_datas[[i]], new_row__i)
-      slab_datas[[j]] = rbind(new_row__j, slab_datas[[j]])
-    }
+  if (nlevels(groups) > 1) {
+    last_in_group = groups != lead(groups, default = groups[[length(groups)]])
+    first_in_group = groups != lag(groups, default = groups[[1]])
+    slab_data$group = cumsum(first_in_group)
+
+    # we want the two rows on each side of every cutpoint, row i and row j = i + 1
+    new_row__i = slab_data[last_in_group,]
+    new_row__j = slab_data[first_in_group,]
+    new_x = (new_row__i[[x]] + new_row__j[[x]]) / 2
+    new_ymin = (new_row__i[[ymin]] + new_row__j[[ymin]]) / 2
+    new_ymax = (new_row__i[[ymax]] + new_row__j[[ymax]]) / 2
+    new_row__i[[x]] = new_x
+    new_row__i[[ymin]] = new_ymin
+    new_row__i[[ymax]] = new_ymax
+    new_row__j[[x]] = new_x
+    new_row__j[[ymin]] = new_ymin
+    new_row__j[[ymax]] = new_ymax
+
+    # now we bind things with the new j rows at the beginning (they were first in each
+    # group) and the new i rows at the end (they were last). This ensures that when the rows
+    # are pulled out to draw a given group, they are in order within that group
+    rbind(
+      new_row__j,
+      slab_data,
+      new_row__i
+    )
+  } else {
+    slab_data
   }
-
-  bind_rows(slab_datas)
 }
