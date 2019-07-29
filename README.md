@@ -276,21 +276,21 @@ m %>%
 
 | .chain | .iteration | .draw | condition | condition\_mean | response\_sd |
 | -----: | ---------: | ----: | :-------- | --------------: | -----------: |
-|      1 |          1 |     1 | A         |       0.3656141 |    0.5400360 |
-|      1 |          1 |     1 | B         |       1.0395402 |    0.5400360 |
-|      1 |          1 |     1 | C         |       1.6639880 |    0.5400360 |
-|      1 |          1 |     1 | D         |       0.9140224 |    0.5400360 |
-|      1 |          1 |     1 | E         |     \-0.8706108 |    0.5400360 |
-|      1 |          2 |     2 | A         |       0.3704801 |    0.5135496 |
-|      1 |          2 |     2 | B         |       1.1134818 |    0.5135496 |
-|      1 |          2 |     2 | C         |       1.8316294 |    0.5135496 |
-|      1 |          2 |     2 | D         |       0.9721666 |    0.5135496 |
-|      1 |          2 |     2 | E         |     \-1.1822674 |    0.5135496 |
-|      1 |          3 |     3 | A         |       0.2782690 |    0.4892883 |
-|      1 |          3 |     3 | B         |       0.9946686 |    0.4892883 |
-|      1 |          3 |     3 | C         |       1.6247294 |    0.4892883 |
-|      1 |          3 |     3 | D         |       1.0482952 |    0.4892883 |
-|      1 |          3 |     3 | E         |     \-0.7814636 |    0.4892883 |
+|      1 |          1 |     1 | A         |       0.1264058 |    0.5331877 |
+|      1 |          1 |     1 | B         |       0.9613813 |    0.5331877 |
+|      1 |          1 |     1 | C         |       1.8768678 |    0.5331877 |
+|      1 |          1 |     1 | D         |       1.2310755 |    0.5331877 |
+|      1 |          1 |     1 | E         |     \-1.2789841 |    0.5331877 |
+|      1 |          2 |     2 | A         |       0.2500193 |    0.5418101 |
+|      1 |          2 |     2 | B         |       1.0487896 |    0.5418101 |
+|      1 |          2 |     2 | C         |       1.9597241 |    0.5418101 |
+|      1 |          2 |     2 | D         |       0.7616625 |    0.5418101 |
+|      1 |          2 |     2 | E         |     \-1.2759327 |    0.5418101 |
+|      1 |          3 |     3 | A         |       0.1603645 |    0.5429537 |
+|      1 |          3 |     3 | B         |       0.9749313 |    0.5429537 |
+|      1 |          3 |     3 | C         |       2.0067855 |    0.5429537 |
+|      1 |          3 |     3 | D         |       1.2180539 |    0.5429537 |
+|      1 |          3 |     3 | E         |     \-0.9395891 |    0.5429537 |
 
 </div>
 
@@ -381,11 +381,11 @@ m %>%
 
 | condition | condition\_mean |      .lower |      .upper | .width | .point | .interval |
 | :-------- | --------------: | ----------: | ----------: | -----: | :----- | :-------- |
-| A         |       0.1925031 | \-0.1501714 |   0.5356484 |   0.95 | median | qi        |
-| B         |       0.9947435 |   0.6505535 |   1.3631547 |   0.95 | median | qi        |
-| C         |       1.8368975 |   1.4763869 |   2.1888422 |   0.95 | median | qi        |
-| D         |       1.0128491 |   0.6797698 |   1.3599013 |   0.95 | median | qi        |
-| E         |     \-0.8904511 | \-1.2405663 | \-0.5313393 |   0.95 | median | qi        |
+| A         |       0.1894690 | \-0.1584671 |   0.5459622 |   0.95 | median | qi        |
+| B         |       1.0065091 |   0.6530260 |   1.3523473 |   0.95 | median | qi        |
+| C         |       1.8355453 |   1.4871716 |   2.1951686 |   0.95 | median | qi        |
+| D         |       1.0106941 |   0.6558686 |   1.3625754 |   0.95 | median | qi        |
+| E         |     \-0.8867473 | \-1.2434928 | \-0.5213330 |   0.95 | median | qi        |
 
 </div>
 
@@ -440,11 +440,11 @@ bayes_results
 
 | condition |    estimate |    conf.low |   conf.high | .width | .point | .interval | model |
 | :-------- | ----------: | ----------: | ----------: | -----: | :----- | :-------- | :---- |
-| A         |   0.1925031 | \-0.1501714 |   0.5356484 |   0.95 | median | qi        | Bayes |
-| B         |   0.9947435 |   0.6505535 |   1.3631547 |   0.95 | median | qi        | Bayes |
-| C         |   1.8368975 |   1.4763869 |   2.1888422 |   0.95 | median | qi        | Bayes |
-| D         |   1.0128491 |   0.6797698 |   1.3599013 |   0.95 | median | qi        | Bayes |
-| E         | \-0.8904511 | \-1.2405663 | \-0.5313393 |   0.95 | median | qi        | Bayes |
+| A         |   0.1894690 | \-0.1584671 |   0.5459622 |   0.95 | median | qi        | Bayes |
+| B         |   1.0065091 |   0.6530260 |   1.3523473 |   0.95 | median | qi        | Bayes |
+| C         |   1.8355453 |   1.4871716 |   2.1951686 |   0.95 | median | qi        | Bayes |
+| D         |   1.0106941 |   0.6558686 |   1.3625754 |   0.95 | median | qi        | Bayes |
+| E         | \-0.8867473 | \-1.2434928 | \-0.5213330 |   0.95 | median | qi        | Bayes |
 
 </div>
 
@@ -453,7 +453,7 @@ This makes it easy to bind the two results together and plot them:
 ``` r
 bind_rows(linear_results, bayes_results) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-  geom_pointrangeh(position = position_dodgev(height = .3))
+  geom_pointintervalh(position = position_dodgev(height = .3))
 ```
 
     ## Warning in bind_rows_(x, .id): binding factor and character vector, coercing into
@@ -502,6 +502,8 @@ m %>%
   # data
   geom_point(aes(x = response), data = ABC)
 ```
+
+    ## Warning: Ignoring unknown aesthetics: x
 
 ![](README_files/figure-gfm/pp_intervals-1.png)<!-- -->
 
@@ -638,5 +640,6 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2019). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 1.1.0, <https://mjskay.github.io/tidybayes/>.
-DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
+Models*. R package version 1.1.0.9000,
+<https://mjskay.github.io/tidybayes/>. DOI:
+[10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
