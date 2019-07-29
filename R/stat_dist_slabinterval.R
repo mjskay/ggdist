@@ -263,7 +263,10 @@ StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
 
     # need to treat dist *and* args as grouping variables (else things will break)
     group_cols = intersect(c("dist", "args", paste0("arg", 1:9), "group"), names(data))
-    data$group = as.numeric(interaction(data[,group_cols]))
+    # need to do as.character() here because list columns (as in args) won't work
+    # with interaction()
+    group_data = lapply(data[,group_cols], as.character)
+    data$group = as.numeric(interaction(group_data))
 
     data
   }
