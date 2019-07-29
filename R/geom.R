@@ -24,9 +24,14 @@ add_default_computed_aesthetics = function(l, default_mapping) {
         # we don't use exact matching here because if someone is using ggnewscale
         # then aesthetic "x" will be replaced with "x_new" and we don't want to
         # re-create the default "x" aesthetic mapping in that case.
+        vars_in_mapping = all_names(quo_get_expr(default_mapping[[aesthetic]]))
         if (
-          is.null(self$mapping[[aesthetic, exact = FALSE]]) && (!isTRUE(self$inherit.aes) ||
-              is.null(plot$mapping[[aesthetic, exact = FALSE]]))
+          # only add the aesthetic if it isn't already set and if the variables it uses
+          # are in the provided data and none of them are NA
+          is.null(self$mapping[[aesthetic, exact = FALSE]]) &&
+          (!isTRUE(self$inherit.aes) || is.null(plot$mapping[[aesthetic, exact = FALSE]])) &&
+          all(vars_in_mapping %in% names(data)) &&
+          !(any(is.na(data[,vars_in_mapping])))
         ) {
           self$mapping[[aesthetic]] = default_mapping[[aesthetic]]
         }
