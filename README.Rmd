@@ -5,6 +5,14 @@ output:
     df_print: kable
 ---
 
+```{r chunk_options, include=FALSE}
+if (capabilities("cairo")) {
+  knitr::opts_chunk$set(
+    dev.args = list(png = list(type = "cairo"))
+  )  
+}
+```
+
 # tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
 
 [![Build status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
@@ -330,7 +338,7 @@ This makes it easy to bind the two results together and plot them:
 ```{r broom_bind}
 bind_rows(linear_results, bayes_results) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-  geom_pointrangeh(position = position_dodgev(height = .3))
+  geom_pointintervalh(position = position_dodgev(height = .3), size = 1)
 ```
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
