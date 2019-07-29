@@ -10,6 +10,8 @@
 \alias{stat_dist_ccdfbarh}
 \alias{stat_dist_cdfbar}
 \alias{stat_dist_cdfbarh}
+\alias{stat_dist_gradientinterval}
+\alias{stat_dist_gradientintervalh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)}
 \usage{
 stat_dist_slabinterval(mapping = NULL, data = NULL,
@@ -38,6 +40,13 @@ stat_dist_cdfbar(..., slab_type = "cdf", justification = 0.5,
 
 stat_dist_cdfbarh(..., slab_type = "cdf", justification = 0.5,
   side = "top", orientation = "horizontal", normalize = "none")
+
+stat_dist_gradientinterval(mapping = NULL, data = NULL,
+  geom = "slabinterval", position = "identity", ...,
+  justification = 0.5, thickness = 1, show.legend = c(size = FALSE),
+  inherit.aes = TRUE)
+
+stat_dist_gradientintervalh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

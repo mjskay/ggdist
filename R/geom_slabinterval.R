@@ -209,7 +209,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     datatype = "slab",
 
     # shared aesthetics
-    alpha = NA,
+    alpha = NULL,
 
     # shared point and interval aesthetics
     colour = NULL,
@@ -243,6 +243,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   # this is different from default_aes (above) so that we can identify what
   # aesthetics are *actually* being asked for when creating the key
   default_key_aes = aes(
+    alpha = 1,
     colour = "black",
     linetype = "solid",
     fill = "gray65",
@@ -540,8 +541,8 @@ get_line_size = function(i_data, size_domain, size_range) {
 # splits slab data into components based on fill aesthetic
 # and interpolates at cutpoints
 split_slab_data = function(slab_data, x = "x", ymin = "ymin", ymax = "ymax") {
-  slab_data$fill = as.character(slab_data$fill)
-  groups = cumsum(slab_data$fill != lag(slab_data$fill, default = ""))
+  groups = interaction(slab_data[,c("fill","alpha")])
+  groups = cumsum(groups != lag(groups, default = groups[[1]]))
   slab_datas = split(slab_data, groups)
 
   if (length(slab_datas) > 1) {

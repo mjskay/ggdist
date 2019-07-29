@@ -323,3 +323,46 @@ stat_dist_cdfbarh = function(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
   )
 }
+
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_gradientinterval = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  justification = 0.5,
+  thickness = 1,
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatDistGradientinterval,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      justification = justification,
+      thickness = thickness,
+      ...
+    )
+  )
+}
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_gradientintervalh = function(..., orientation = "horizontal") {
+  stat_dist_gradientinterval(..., orientation = orientation)
+}
+StatDistGradientinterval <- ggproto("StatDistGradientinterval", StatDistSlabinterval,
+  default_aes = defaults(aes(
+    alpha = stat(f)
+  ), StatDistSlabinterval$default_aes)
+)
