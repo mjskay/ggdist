@@ -412,14 +412,14 @@ m %>%
   geom_pointintervalh()
 ```
 
-Just as the `point_interval` functions can generate an arbitrary number of intervals per distribution, so too can `geom_pointintervalh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `size_range =`, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:
+Just as the `point_interval` functions can generate an arbitrary number of intervals per distribution, so too can `geom_pointintervalh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `interval_size_range =`, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:
 
 ```{r}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   median_qi(.width = c(.95, .8, .5)) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_pointintervalh(size_range = c(0.5, 2))
+  geom_pointintervalh(interval_size_range = c(0.5, 2))
 ```
 
 
