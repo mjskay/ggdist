@@ -1,0 +1,403 @@
+---
+title: "Slab + interval stats and geoms"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    df_print: kable
+params:
+  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
+vignette: >
+  %\VignetteIndexEntry{Slab + interval stats and geoms}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+img {
+  border: none;
+}
+</style>
+
+```{r chunk_options, include=FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.height = 4,
+  eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
+)
+if (capabilities("cairo")) {
+  knitr::opts_chunk$set(
+    dev.args = list(png = list(type = "cairo"))
+  )  
+}
+```
+
+## Introduction
+  
+This vignette describes the slab+interval geoms and stats in `tidybayes`. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models) straightforward, and support a range of useful plots, including eye plots (densities + intervals) and CCDF bar plots (complementary cumulative distribution functions + intervals).
+
+## Setup
+  
+The following libraries are required to run this vignette:
+  
+```{r setup, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(tidybayes)
+library(ggplot2)
+library(cowplot)
+library(brms)
+library(ggstance)
+
+theme_set(theme_tidybayes() + panel_border() + background_grid())
+```
+
+```{r hidden_options, include=FALSE}
+options(width = 120)
+```
+
+
+## Roadmap: It all starts with "slabinterval"
+
+Tidybayes has a pantheon of geoms and stats that stem from a common root: `geom_slabinterval()` and `stat_slabinterval()`. These geoms consist of a "slab" (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components. However, using these geoms directly is not necessarily advisable: they are highly configurable, but as a side effect require remembering a bunch of combinations of options to use.
+
+Instead, tidybayes contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:
+
+`[geom|stat|stat_dist]_[name][h|]`
+
+For example, `stat_dist_eye()`, `stat_dist_eyeh`, `stat_eyeh`, `stat_pointinterval`, `geom_pointinterval`, etc. The naming scheme works as follows:
+
+* Geoms starting with `geom_` are meant to be used on already-summarized data (typically data summarized into intervals): things like `geom_pointinterval()` and `geom_interval()`.
+* Stats starting with `stat_` are meant to be used on sample data; e.g. draws from a posterior distribution (or any other distribution, really). These stats compute relevant summaries (densities, CDFs, points, and/or intervals) before forwarding the summaries to their geom. Many have geom counterparts (e.g. `stat_interval()` corresponds to `geom_interval()`, except the former applies to sample data and the latter to already-summarized data). Many of these stats do not currently have geom counterparts (e.g. `stat_ccdfbar`), as they are not really that useful without the summarization step.
+* Stats starting with `stat_dist` can be used to create slab+interval geoms for analytical distributions. They take distribution names (the `dist` aesthetic) and arguments (the `args` aesthetic or `arg1`, ... `arg9` aesthetics) and compute the relevant slabs and intervals. Thus, where `stat_eye` makes an eye plot for sample data, `stat_dist_eye` makes an eye plot for an analytical distribution.
+
+We'll start with one of the most common existing use cases for these kinds geoms: eye plots.
+
+## Eye plots and half-eye plots 
+
+### On sample data: `stat_[half]eye[h]`
+
+Eye plots combine densities (as violins) with intervals to give a more detailed picture of uncertainty than is available just by looking at intervals. 
+
+For these first few demos we'll use these data:
+
+```{r}
+set.seed(1234)
+df = tribble(
+    ~group, ~subgroup, ~value,
+    "a",          "h", rnorm(1000, mean = 5),
+    "b",          "h", rnorm(1000, mean = 7, sd = 1.5),
+    "c",          "h", rnorm(1000, mean = 8),
+    "c",          "i", rnorm(1000, mean = 9),
+    "c",          "j", rnorm(1000, mean = 7)
+  ) %>%
+  unnest()
+```
+
+We can summarize it at the group level using an eye plot with `stat_eye()` (ignoring subgroups for now):
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value)) +
+  stat_eye() +
+  ggtitle("stat_eye()")
+```
+
+(Users of older versions of tidybayes might have used `geom_eye()`, which is the older spelling of `stat_eye()`. Due to the name standardization in this version of tidybayes (see the decription above), `stat_eye()` is now the preferred spelling, though `geom_eye()` will continue to work.)
+
+We can also use `stat_halfeye` instead to just get densities:
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value)) +
+  stat_halfeye() +
+  ggtitle("stat_halfeye()")
+```
+
+Or use the `side` parameter to more finely control where the slab (in this case, the density) is drawn:
+
+```{r, fig.width = 7, fig.height = 4}
+p = df %>%
+  ggplot(aes(x = group, y = value))
+
+plot_grid(ncol = 3, align = "hv",
+  p + stat_eye(side = "left") + labs(title = "stat_eye()", subtitle = "side = 'left'"),
+  p + stat_eye(side = "both") + labs(subtitle = "side = 'both'"),
+  p + stat_eye(side = "right")  + labs(subtitle = "side = 'right'")
+)
+```
+
+Or show a horizontal version by appending `h` to `stat_halfeye()` to get `stat_halfeyeh()`:
+
+```{r}
+df %>%
+  ggplot(aes(x = value, y = group)) +
+  stat_halfeyeh() +
+  ggtitle("stat_halfeyeh()")
+```
+
+This is equivalent to setting `orientation = "horizontal"`:
+
+```{r}
+df %>%
+  ggplot(aes(x = value, y = group)) +
+  stat_halfeye(orientation = "horizontal") +
+  ggtitle("stat_halfeye(orientation = 'horizontal')")
+```
+
+Yielding these combinations:
+
+```{r fig.width = 6, fig.height = 6}
+p = df %>%
+  ggplot(aes(x = group, y = value))
+
+ph = df %>%
+  ggplot(aes(y = group, x = value))
+
+plot_grid(ncol = 2, align = "hv",
+  p + stat_eye() + labs(title = "stat_[half]eye[h]", subtitle = "stat_eye()"),
+  p + stat_halfeye() + labs(subtitle = "stat_halfeye()"),
+  ph + stat_eyeh() + labs(subtitle = "stat_eyeh()"),
+  ph + stat_halfeyeh()  + labs(subtitle = "stat_halfeyeh()")
+)
+```
+
+The `side` parameter works for `stat_halfeye()` as well. `"top"` and `"right"` are considered synonyms, as are `"bottom"` and `"left"`; either form works with both horizontal and vertical versions of the geoms:
+
+```{r, fig.width = 7, fig.height = 3}
+p = df %>%
+  ggplot(aes(x = value, y = group))
+
+plot_grid(ncol = 3, align = "hv", 
+  # side = "left" would give the same result
+  p + stat_eyeh(side = "left") + ggtitle("stat_eyeh()") + labs(subtitle = "side = 'bottom'"),
+  p + stat_eyeh(side = "both") + labs(subtitle = "side = 'both'"),
+  # side = "right" would give the same result
+  p + stat_eyeh(side = "right") + labs(subtitle = "side = 'top'")
+)
+```
+
+Eye plots are also designed to support dodging through the standard mechanism of `position = "dodge"`. 
+Unlike violins in base ggplot, the maximum thickness of the slabs is adjusted so that groups that do not have to be dodged have the same maximum possible with as those that do:
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_eye(position = "dodge") +
+  ggtitle(
+    "stat_eye(position = 'dodge')",
+    subtitle = "Unlike with geom_violin(), densities in groups that are not dodged (here, 'a' and 'b')\nhave the same area and max width as those in groups that are dodged ('c')"
+  )
+```
+
+### On analytical distributions: `stat_dist_[half]eye[h]`
+
+The same set of (half-)eye plot stats designed for sample data described above all have corresponding stats for analytical distributions: simply use `stat_dist_` instead of `stat_` in the name. These stats use the following aesthetics to produce plots of distributions:
+
+* `dist`: the name of the distribution, following R's naming scheme. This is a string which should have `"p"`, `"q"`, and `"d"` functions defined for it: e.g., "norm" is a valid distribution name because the `pnorm()`, `qnorm()`, and `dnorm()` functions define the CDF, quantile function, and density function of the Normal distribution.
+* `args` or `arg1`, ... `arg9`: arguments for the distribution. If you use `args`, it should be a list column where each element is a list containing arguments for the distribution functions; alternatively, you can pass the arguments directly using `arg1`, ... `arg9`.
+
+For example, here are a variety of normal distributions describing the same data from the previous example:
+
+```{r}
+dist_df = tribble(
+    ~group, ~subgroup, ~mean, ~sd,
+    "a",          "h",     5,   1,
+    "b",          "h",     7,   1.5,
+    "c",          "h",     8,   1,
+    "c",          "i",     9,   1,
+    "c",          "j",     7,   1
+)
+```
+
+We can visualize these distributions directly using `stat_dist_eye()`:
+
+```{r}
+dist_df %>%
+  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  stat_dist_eye(position = "dodge") +
+  ggtitle(
+    "stat_dist_eye(position = 'dodge')",
+    subtitle = "aes(dist = 'norm', arg1 = mean, arg2 = sd)"
+  )
+```
+
+This makes it easy to visualize a variety of distributions. E.g., here are some Beta distributions:
+
+```{r}
+data.frame(alpha = seq(5, 100, length.out = 10)) %>%
+  ggplot(aes(y = alpha, dist = "beta", arg1 = alpha, arg2 = 10)) +
+  stat_dist_halfeyeh() +
+  labs(
+    title = "stat_dist_halfeyeh()",
+    subtitle = "aes(y = alpha, dist = 'beta', arg1 = alpha, arg2 = 10)",
+    x = "Beta(alpha,10) distribution"
+  )
+```
+
+If you want to plot all of these on top of each other (instead of stacked), you can turn off plotting of the interval to make the plot easier to read. You can also set the outline color of the slab using the `slab_color` aesthetic, and change the fill color using `fill`:
+
+```{r}
+data.frame(alpha = seq(5, 100, length.out = 10)) %>%
+  ggplot(aes(y = "", dist = "beta", arg1 = alpha, arg2 = 10, slab_color = alpha)) +
+  # show.legend = TRUE is currently necessary here due to a bug in ggplot
+  stat_dist_halfeyeh(show_interval = FALSE, fill = NA, show.legend = TRUE) +
+  labs(
+    title = "stat_dist_halfeyeh(show_interval = FALSE, fill = NA)",
+    subtitle = "aes(dist = 'beta', arg1 = alpha, arg2 = 10, slab_color = alpha)",
+    x = "Beta(alpha,10) distribution",
+    y = NULL
+  ) +
+  coord_cartesian(expand = FALSE) +
+  # you can set color scales on the "slab_color" aesthetic by passing 
+  # `guide` and `aesthetics` parameters to existing color scale functions:
+  scale_color_viridis_c(guide = "colorbar2", aesthetics = "slab_color")
+```
+
+The approach using `arg1`, ... `arg9` can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the `args` aesthetic. We'll use it along with the `brms` package's implementation of the scaled and shifted Student t distribution (`brms::dstudent_t()`, etc):
+
+```{r}
+tribble(
+  ~ dist,      ~ args,
+  "norm",      list(0, 1),
+  "student_t", list(3, 0, 1)
+) %>%
+  ggplot(aes(y = dist, dist = dist, args = args)) +
+  stat_dist_halfeyeh()
+```
+
+A particularly good use of the `dist` stats is to visualize priors. For example, with `brms` you can specify priors using the `brms::prior()` function. E.g., I might set some priors on the betas and the standard deviation in a model:
+
+```{r}
+# NB these priors are made up!
+c(
+  prior(normal(0,1), class = b),
+  prior(lognormal(0,1), class = sigma)
+)
+```
+
+The `parse_dist` function can make it easier to visualize these: it takes in string specifications like those produced by `brms` --- `"normal(0,1)"` and `"lognormal(0,1)"` above --- and translates them into `.dist` and `.args` columns:
+
+```{r}
+c(
+  prior(normal(0,1), class = b),
+  prior(lognormal(0,1), class = sigma)
+) %>%
+  parse_dist(prior)
+```
+
+Notice that it also automatically translate some common distribution names (e.g. "normal" and "lognormal") into their equivalent R function names (`"norm"` and `"lnorm"`). This makes it easy to use them with `stat_dist_eye()` and its variants:
+
+```{r}
+c(
+  prior(normal(0,1), class = b),
+  prior(lognormal(0,1), class = sigma)
+) %>%
+  parse_dist(prior) %>%
+  ggplot(aes(y = class, dist = .dist, args = .args)) +
+  stat_dist_halfeyeh() +
+  labs(
+    title = "stat_dist_halfeyeh()",
+    subtitle = "with brms::prior() %>% tidybayes::parse_dist() to visualize priors",
+    x = NULL
+  )
+```
+
+### Summing up eye plots: `stat_[dist_][half]eye[h]`
+
+All of the above geoms follow the naming scheme `stat_[dist_][half]eye[h]`.
+
+* Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
+* Add `half` to the name to get half-eyes (densities) instead of eyes (violins).
+* Add `h` to the name to get the horizontal version.
+
+## CCDF bar plots
+
+Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These [can be more effective for some decision-making tasks](http://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf) than densities or intervals, and require fewer assumptions to create from sample data than density plots.
+
+For all of the examples above, both on sample data and analytical distributions, you can replace `[half]eye` with `[c]cdfbar` to get a stat that creates a CDF or CCDF bar plot. 
+
+### On sample data: `stat_[c]cdfbar[h]`
+
+For example, replacing `stat_eye()` with `stat_ccdfbar()` produces CCDF bar plots:
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_ccdfbar(position = "dodge") +
+  ggtitle(
+    "stat_ccdfbar(position = 'dodge')",
+    subtitle = "aes(x = group, y = value, fill = subgroup)"
+  )
+```
+
+The extents of the bars are determined automatically by range of the data in the samples. However, for bar charts it is often good practice to draw the bars from a meaningful reference point (this point is often 0). You can use `ggplot2::expand_limits()` to ensure the bar is drawn down to 0:
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_ccdfbar(position = "dodge") +
+  expand_limits(y = 0) +
+  ggtitle(
+    "stat_ccdfbar(position = 'dodge')",
+    subtitle = "aes(x = group, y = value, fill = subgroup)"
+  )
+```
+
+You can also adjust the position of the slab relative to the position of the interval using the `justification` parameter:
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_ccdfbar(position = "dodge", justification = 1) +
+  expand_limits(y = 0) +
+  ggtitle(
+    "stat_ccdfbar(position = 'dodge', justification = 1)",
+    subtitle = "aes(x = group, y = value, fill = subgroup)"
+  )
+```
+
+The `side` parameter also works as with `stat_eye()`. Here we'll demonstrate with `stat_ccdfbarh()`, the horizontal version:
+
+```{r, fig.height = 2.5, fig.width = 7}
+p = df %>%
+  ggplot(aes(x = value, y = group)) +
+  expand_limits(x = 0)
+
+plot_grid(ncol = 3, align = "hv", 
+  # side = "left" would give the same result
+  p + stat_ccdfbarh(side = "bottom") + ggtitle("stat_ccdfbarh()") + labs(subtitle = "side = 'bottom'"),
+  p + stat_ccdfbarh(side = "both") + labs(subtitle = "side = 'both'"),
+  # side = "right" would give the same result
+  p + stat_ccdfbarh(side = "top") + labs(subtitle = "side = 'top'")
+)
+```
+
+### On analytical distributions: `stat_dist_[c]cdfbar[h]`
+
+You can also use `stat_dist_ccdfbar()` instead if you wish to visualize analytical distributions, just as you can use `stat_dist_eye()`.
+
+By default, `stat_dist_ccdfbar()` uses the quantiles at `p = 0.001` and `p = 0.999` in the distributions are used to determine their extrant. You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown as before:
+
+```{r}
+dist_df %>%
+  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  stat_dist_ccdfbar(position = "dodge") +
+  expand_limits(y = 0) +
+  ggtitle(
+    "stat_dist_ccdfbar(position = 'dodge')",
+    subtitle = "aes(dist = 'norm', arg1 = mean, arg2 = sd)"
+  )
+```
+
+### Summing up CDF bar plots: `stat_[dist_][c]cdfbar[h]`
+
+All of the above geoms follow the naming scheme `stat_[dist_][c]cdfbar[h]`.
+
+* Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
+* Add `c` to the name to get CCDFs instead of CDFs.
+* Add `h` to the name to get the horizontal version.
