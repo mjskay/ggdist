@@ -401,3 +401,57 @@ All of the above geoms follow the naming scheme `stat_[dist_][c]cdfinterval[h]`.
 * Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
 * Add `c` to the name to get CCDFs instead of CDFs.
 * Add `h` to the name to get the horizontal version.
+
+## Gradient plots
+
+Finally, an alternative approach to mapping density onto the `thickness` aesthetic of the slab is to instead map it onto its `alpha` value (i.e., opacity). This is what the `stat_[dist_]gradientinterval[h]` family does.
+
+### On sample data: `stat_gradientinterval[h]`
+
+For example, replacing `stat_eye()` with `stat_gradientinterval()` produces gradient + interval plots:
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_gradientinterval(position = "dodge") +
+  scale_alpha_continuous(range = c(0,1)) +
+  ggtitle(
+    "stat_gradientinterval(position = 'dodge')",
+    subtitle = "aes(x = group, y = value, fill = subgroup)"
+  )
+```
+
+Adding `scale_alpha_continuous(range = c(0,1))` above is helpful as without it the gradients have a hard boundary, which may not be desirable:
+
+```{r}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_gradientinterval(position = "dodge") +
+  ggtitle(
+    "stat_gradientinterval(position = 'dodge')",
+    subtitle = "aes(x = group, y = value, fill = subgroup)"
+  )
+```
+
+
+### On analytical distributions: `stat_dist_[c]cdfinterval[h]`
+
+As with other plot types, you can also use `stat_dist_gradientinterval()` instead if you wish to visualize analytical distributions:
+
+```{r}
+dist_df %>%
+  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  stat_dist_gradientinterval(position = "dodge") +
+  scale_alpha_continuous(range = c(0,1)) +
+  ggtitle(
+    "stat_dist_gradientinterval(position = 'dodge')",
+    subtitle = "aes(dist = 'norm', arg1 = mean, arg2 = sd)"
+  )
+```
+
+### Summing up gradient plots: `stat_[dist_]gradientinterval[h]`
+
+All of the above geoms follow the naming scheme `stat_[dist_]gradientinterval[h]`.
+
+* Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
+* Add `h` to the name to get the horizontal version.
