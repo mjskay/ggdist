@@ -18,9 +18,9 @@ test_that("distribution eye plots work with the args aesthetic", {
   ) %>%
     ggplot(aes(dist = dist, args = args))
 
-  vdiffr::expect_doppelganger("vertical half-eye with normal and beta dist (using args)",
+  vdiffr::expect_doppelganger("vertical half-eye using args",
     p + stat_dist_halfeye(aes(x = dist)))
 
-  vdiffr::expect_doppelganger("horizontal half-eye with normal and beta dist (using args)",
+  vdiffr::expect_doppelganger("horizontal half-eye using args",
     p + stat_dist_halfeyeh(aes(y = dist)))
 })
