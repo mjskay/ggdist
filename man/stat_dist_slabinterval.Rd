@@ -43,8 +43,8 @@ stat_dist_cdfbarh(..., slab_type = "cdf", justification = 0.5,
 
 stat_dist_gradientinterval(mapping = NULL, data = NULL,
   geom = "slabinterval", position = "identity", ...,
-  justification = 0.5, thickness = 1, show.legend = c(size = FALSE),
-  inherit.aes = TRUE)
+  justification = 0.5, thickness = 1, p_limits = c(0.005, 0.995),
+  show.legend = c(size = FALSE), inherit.aes = TRUE)
 
 stat_dist_gradientintervalh(..., orientation = "horizontal")
 }
@@ -136,6 +136,9 @@ is \code{NULL} (the default), then it is set automatically based on the value of
 (the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
  normalization (this should probably only be used with functions whose values are in [0,1]).}
+
+\item{thickness}{Override for the \code{thickness} aesthetic in \code{\link{geom_slabinterval}}: the thickness
+of the slab at each x / y value of the slab (depending on \code{orientation}).}
 }
 \description{
 Stats for computing distribution functions (densities or CDFs) + intervals for use with

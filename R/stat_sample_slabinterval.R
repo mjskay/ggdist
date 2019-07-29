@@ -72,8 +72,7 @@ sample_slab_function = function(
 #'
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval
-#' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-#' cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).
+#' @inheritParams stat_dist_slabinterval
 #' @param adjust If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
 #' by this value. See \code{\link{density}} for more information.
 #' @param trim If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the

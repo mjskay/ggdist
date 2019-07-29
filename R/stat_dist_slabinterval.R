@@ -142,6 +142,8 @@ dist_interval_function = function(df, .width, ...) {
 #' will not be wider than these (but may be narrower).Use \code{NA} to leave a limit alone; e.g.
 #' \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either \code{p_limits} or the scale settings.
+#' @param thickness Override for the \code{thickness} aesthetic in \code{\link{geom_slabinterval}}: the thickness
+#' of the slab at each x / y value of the slab (depending on \code{orientation}).
 #' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
 #' use by default and some of the options they have. See \code{\link{stat_sample_slabinterval}}
 #' for the versions of these stats that can be used on samples.
