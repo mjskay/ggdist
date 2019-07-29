@@ -72,7 +72,7 @@ Instead, tidybayes contains a number of pre-configured, easier-to-remember stats
 For example, `stat_dist_eye()`, `stat_dist_eyeh`, `stat_eyeh`, `stat_pointinterval`, `geom_pointinterval`, etc. The naming scheme works as follows:
 
 * Geoms starting with `geom_` are meant to be used on already-summarized data (typically data summarized into intervals): things like `geom_pointinterval()` and `geom_interval()`.
-* Stats starting with `stat_` are meant to be used on sample data; e.g. draws from a posterior distribution (or any other distribution, really). These stats compute relevant summaries (densities, CDFs, points, and/or intervals) before forwarding the summaries to their geom. Many have geom counterparts (e.g. `stat_interval()` corresponds to `geom_interval()`, except the former applies to sample data and the latter to already-summarized data). Many of these stats do not currently have geom counterparts (e.g. `stat_ccdfbar`), as they are not really that useful without the summarization step.
+* Stats starting with `stat_` are meant to be used on sample data; e.g. draws from a posterior distribution (or any other distribution, really). These stats compute relevant summaries (densities, CDFs, points, and/or intervals) before forwarding the summaries to their geom. Many have geom counterparts (e.g. `stat_interval()` corresponds to `geom_interval()`, except the former applies to sample data and the latter to already-summarized data). Many of these stats do not currently have geom counterparts (e.g. `stat_ccdfinterval`), as they are not really that useful without the summarization step.
 * Stats starting with `stat_dist` can be used to create slab+interval geoms for analytical distributions. They take distribution names (the `dist` aesthetic) and arguments (the `args` aesthetic or `arg1`, ... `arg9` aesthetics) and compute the relevant slabs and intervals. Thus, where `stat_eye` makes an eye plot for sample data, `stat_dist_eye` makes an eye plot for an analytical distribution.
 
 We'll start with one of the most common existing use cases for these kinds geoms: eye plots.
@@ -319,18 +319,18 @@ All of the above geoms follow the naming scheme `stat_[dist_][half]eye[h]`.
 
 Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These [can be more effective for some decision-making tasks](http://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf) than densities or intervals, and require fewer assumptions to create from sample data than density plots.
 
-For all of the examples above, both on sample data and analytical distributions, you can replace `[half]eye` with `[c]cdfbar` to get a stat that creates a CDF or CCDF bar plot. 
+For all of the examples above, both on sample data and analytical distributions, you can replace `[half]eye` with `[c]cdfinterval` to get a stat that creates a CDF or CCDF bar plot. 
 
-### On sample data: `stat_[c]cdfbar[h]`
+### On sample data: `stat_[c]cdfinterval[h]`
 
-For example, replacing `stat_eye()` with `stat_ccdfbar()` produces CCDF bar plots:
+For example, replacing `stat_eye()` with `stat_ccdfinterval()` produces CCDF bar plots:
 
 ```{r}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfbar(position = "dodge") +
+  stat_ccdfinterval(position = "dodge") +
   ggtitle(
-    "stat_ccdfbar(position = 'dodge')",
+    "stat_ccdfinterval(position = 'dodge')",
     subtitle = "aes(x = group, y = value, fill = subgroup)"
   )
 ```
@@ -340,10 +340,10 @@ The extents of the bars are determined automatically by range of the data in the
 ```{r}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfbar(position = "dodge") +
+  stat_ccdfinterval(position = "dodge") +
   expand_limits(y = 0) +
   ggtitle(
-    "stat_ccdfbar(position = 'dodge')",
+    "stat_ccdfinterval(position = 'dodge')",
     subtitle = "aes(x = group, y = value, fill = subgroup)"
   )
 ```
@@ -353,15 +353,15 @@ You can also adjust the position of the slab relative to the position of the int
 ```{r}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfbar(position = "dodge", justification = 1) +
+  stat_ccdfinterval(position = "dodge", justification = 1) +
   expand_limits(y = 0) +
   ggtitle(
-    "stat_ccdfbar(position = 'dodge', justification = 1)",
+    "stat_ccdfinterval(position = 'dodge', justification = 1)",
     subtitle = "aes(x = group, y = value, fill = subgroup)"
   )
 ```
 
-The `side` parameter also works as with `stat_eye()`. Here we'll demonstrate with `stat_ccdfbarh()`, the horizontal version:
+The `side` parameter also works as with `stat_eye()`. Here we'll demonstrate with `stat_ccdfintervalh()`, the horizontal version:
 
 ```{r, fig.height = 2.5, fig.width = 7}
 p = df %>%
@@ -370,33 +370,33 @@ p = df %>%
 
 plot_grid(ncol = 3, align = "hv", 
   # side = "left" would give the same result
-  p + stat_ccdfbarh(side = "bottom") + ggtitle("stat_ccdfbarh()") + labs(subtitle = "side = 'bottom'"),
-  p + stat_ccdfbarh(side = "both") + labs(subtitle = "side = 'both'"),
+  p + stat_ccdfintervalh(side = "bottom") + ggtitle("stat_ccdfintervalh()") + labs(subtitle = "side = 'bottom'"),
+  p + stat_ccdfintervalh(side = "both") + labs(subtitle = "side = 'both'"),
   # side = "right" would give the same result
-  p + stat_ccdfbarh(side = "top") + labs(subtitle = "side = 'top'")
+  p + stat_ccdfintervalh(side = "top") + labs(subtitle = "side = 'top'")
 )
 ```
 
-### On analytical distributions: `stat_dist_[c]cdfbar[h]`
+### On analytical distributions: `stat_dist_[c]cdfinterval[h]`
 
-You can also use `stat_dist_ccdfbar()` instead if you wish to visualize analytical distributions, just as you can use `stat_dist_eye()`.
+You can also use `stat_dist_ccdfinterval()` instead if you wish to visualize analytical distributions, just as you can use `stat_dist_eye()`.
 
-By default, `stat_dist_ccdfbar()` uses the quantiles at `p = 0.001` and `p = 0.999` in the distributions are used to determine their extrant. You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown as before:
+By default, `stat_dist_ccdfinterval()` uses the quantiles at `p = 0.001` and `p = 0.999` in the distributions are used to determine their extrant. You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown as before:
 
 ```{r}
 dist_df %>%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
-  stat_dist_ccdfbar(position = "dodge") +
+  stat_dist_ccdfinterval(position = "dodge") +
   expand_limits(y = 0) +
   ggtitle(
-    "stat_dist_ccdfbar(position = 'dodge')",
+    "stat_dist_ccdfinterval(position = 'dodge')",
     subtitle = "aes(dist = 'norm', arg1 = mean, arg2 = sd)"
   )
 ```
 
-### Summing up CDF bar plots: `stat_[dist_][c]cdfbar[h]`
+### Summing up CDF bar plots: `stat_[dist_][c]cdfinterval[h]`
 
-All of the above geoms follow the naming scheme `stat_[dist_][c]cdfbar[h]`.
+All of the above geoms follow the naming scheme `stat_[dist_][c]cdfinterval[h]`.
 
 * Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
 * Add `c` to the name to get CCDFs instead of CDFs.

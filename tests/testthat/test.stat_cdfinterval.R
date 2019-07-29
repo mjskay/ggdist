@@ -1,11 +1,11 @@
-# Tests for CCDF bar plots
+# Tests for CDF bar plots
 #
 # Author: mjskay
 ###############################################################################
 
 library(dplyr)
 
-context("stat_ccdfbar")
+context("stat_cdfinterval")
 
 test_that("dodged ccdf barplots work", {
   skip_if_not_installed("vdiffr")
@@ -18,6 +18,6 @@ test_that("dodged ccdf barplots work", {
   p = ggplot(df, aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("vertical CCDF bar plot with dodging (3 groups)",
-    p + stat_ccdfbar(aes(fill = g), position = "dodge"))
+    p + stat_ccdfinterval(aes(fill = g), position = "dodge"))
 
 })

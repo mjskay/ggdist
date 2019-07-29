@@ -6,10 +6,10 @@
 \alias{stat_halfeyeh}
 \alias{stat_eye}
 \alias{stat_eyeh}
-\alias{stat_ccdfbar}
-\alias{stat_ccdfbarh}
-\alias{stat_cdfbar}
-\alias{stat_cdfbarh}
+\alias{stat_ccdfinterval}
+\alias{stat_ccdfintervalh}
+\alias{stat_cdfinterval}
+\alias{stat_cdfintervalh}
 \alias{stat_gradientinterval}
 \alias{stat_gradientintervalh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)}
@@ -30,16 +30,16 @@ stat_eye(..., side = "both")
 
 stat_eyeh(..., side = "both", orientation = "horizontal")
 
-stat_ccdfbar(..., slab_type = "ccdf", justification = 0.5,
+stat_ccdfinterval(..., slab_type = "ccdf", justification = 0.5,
   side = "left", normalize = "none")
 
-stat_ccdfbarh(..., slab_type = "ccdf", justification = 0.5,
+stat_ccdfintervalh(..., slab_type = "ccdf", justification = 0.5,
   side = "top", orientation = "horizontal", normalize = "none")
 
-stat_cdfbar(..., slab_type = "cdf", justification = 0.5,
+stat_cdfinterval(..., slab_type = "cdf", justification = 0.5,
   side = "left", normalize = "none")
 
-stat_cdfbarh(..., slab_type = "cdf", justification = 0.5,
+stat_cdfintervalh(..., slab_type = "cdf", justification = 0.5,
   side = "top", orientation = "horizontal", normalize = "none")
 
 stat_gradientinterval(mapping = NULL, data = NULL,
@@ -177,8 +177,8 @@ Stats include:
 \itemize{
   \item \code{stat_eye} / \code{stat_eyeh}: Eye plots (violin + interval)
   \item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
-  \item \code{stat_ccdfbar} / \code{stat_ccdfbarh}: CCDF bar plots (CCDF + interval)
-  \item \code{stat_cdfbar} / \code{stat_cdfbarh}: CDF bar plots (CDF + interval)
+  \item \code{stat_ccdfinterval} / \code{stat_ccdfintervalh}: CCDF bar plots (CCDF + interval)
+  \item \code{stat_cdfinterval} / \code{stat_cdfintervalh}: CDF bar plots (CDF + interval)
   \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
 }
 }

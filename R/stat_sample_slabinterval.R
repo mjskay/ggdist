@@ -65,8 +65,8 @@ sample_slab_function = function(
 #' \itemize{
 #'   \item \code{stat_eye} / \code{stat_eyeh}: Eye plots (violin + interval)
 #'   \item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
-#'   \item \code{stat_ccdfbar} / \code{stat_ccdfbarh}: CCDF bar plots (CCDF + interval)
-#'   \item \code{stat_cdfbar} / \code{stat_cdfbarh}: CDF bar plots (CDF + interval)
+#'   \item \code{stat_ccdfinterval} / \code{stat_ccdfintervalh}: CCDF bar plots (CCDF + interval)
+#'   \item \code{stat_cdfinterval} / \code{stat_cdfintervalh}: CDF bar plots (CDF + interval)
 #'   \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
 #' }
 #'
@@ -198,14 +198,14 @@ stat_eyeh = function(..., side = "both", orientation = "horizontal")
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_ccdfbar = function(...,
+stat_ccdfinterval = function(...,
   slab_type = "ccdf", justification = 0.5, side = "left", normalize = "none"
 ) {
   stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_ccdfbarh = function(...,
+stat_ccdfintervalh = function(...,
   slab_type = "ccdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
 ) {
   stat_sample_slabinterval(...,
@@ -215,14 +215,14 @@ stat_ccdfbarh = function(...,
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_cdfbar = function(...,
+stat_cdfinterval = function(...,
   slab_type = "cdf", justification = 0.5, side = "left", normalize = "none"
 ) {
   stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_cdfbarh = function(...,
+stat_cdfintervalh = function(...,
   slab_type = "cdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
 ) {
   stat_sample_slabinterval(...,

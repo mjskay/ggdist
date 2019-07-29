@@ -112,8 +112,8 @@ dist_interval_function = function(df, .width, ...) {
 #' \itemize{
 #'   \item \code{stat_dist_eye} / \code{stat_dist_eyeh}: Eye plots (violin + interval)
 #'   \item \code{stat_dist_halfeye} / \code{stat_dist_halfeyeh}: Half-eye plots (density + interval)
-#'   \item \code{stat_dist_ccdfbar} / \code{stat_dist_ccdfbarh}: CCDF bar plots (CCDF + interval)
-#'   \item \code{stat_dist_cdfbar} / \code{stat_dist_cdfbarh}: CDF bar plots (CDF + interval)
+#'   \item \code{stat_dist_ccdfinterval} / \code{stat_dist_ccdfintervalh}: CCDF bar plots (CCDF + interval)
+#'   \item \code{stat_dist_cdfinterval} / \code{stat_dist_cdfintervalh}: CDF bar plots (CDF + interval)
 #'   \item \code{stat_dist_gradientinterval} / \code{stat_dist_gradientintervalh}: Density gradient + interval plots
 #' }
 #'
@@ -295,14 +295,14 @@ stat_dist_eyeh = function(..., side = "both", orientation = "horizontal")
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_ccdfbar = function(...,
+stat_dist_ccdfinterval = function(...,
   slab_type = "ccdf", justification = 0.5, side = "left", normalize = "none"
 ) {
   stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_ccdfbarh = function(...,
+stat_dist_ccdfintervalh = function(...,
   slab_type = "ccdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
 ) {
   stat_dist_slabinterval(...,
@@ -312,14 +312,14 @@ stat_dist_ccdfbarh = function(...,
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_cdfbar = function(...,
+stat_dist_cdfinterval = function(...,
   slab_type = "cdf", justification = 0.5, side = "left", normalize = "none"
 ) {
   stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_cdfbarh = function(...,
+stat_dist_cdfintervalh = function(...,
   slab_type = "cdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
 ) {
   stat_dist_slabinterval(...,

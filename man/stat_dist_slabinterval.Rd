@@ -6,10 +6,10 @@
 \alias{stat_dist_halfeyeh}
 \alias{stat_dist_eye}
 \alias{stat_dist_eyeh}
-\alias{stat_dist_ccdfbar}
-\alias{stat_dist_ccdfbarh}
-\alias{stat_dist_cdfbar}
-\alias{stat_dist_cdfbarh}
+\alias{stat_dist_ccdfinterval}
+\alias{stat_dist_ccdfintervalh}
+\alias{stat_dist_cdfinterval}
+\alias{stat_dist_cdfintervalh}
 \alias{stat_dist_gradientinterval}
 \alias{stat_dist_gradientintervalh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)}
@@ -29,16 +29,16 @@ stat_dist_eye(..., side = "both")
 
 stat_dist_eyeh(..., side = "both", orientation = "horizontal")
 
-stat_dist_ccdfbar(..., slab_type = "ccdf", justification = 0.5,
+stat_dist_ccdfinterval(..., slab_type = "ccdf", justification = 0.5,
   side = "left", normalize = "none")
 
-stat_dist_ccdfbarh(..., slab_type = "ccdf", justification = 0.5,
+stat_dist_ccdfintervalh(..., slab_type = "ccdf", justification = 0.5,
   side = "top", orientation = "horizontal", normalize = "none")
 
-stat_dist_cdfbar(..., slab_type = "cdf", justification = 0.5,
+stat_dist_cdfinterval(..., slab_type = "cdf", justification = 0.5,
   side = "left", normalize = "none")
 
-stat_dist_cdfbarh(..., slab_type = "cdf", justification = 0.5,
+stat_dist_cdfintervalh(..., slab_type = "cdf", justification = 0.5,
   side = "top", orientation = "horizontal", normalize = "none")
 
 stat_dist_gradientinterval(mapping = NULL, data = NULL,
@@ -161,8 +161,8 @@ Stats include:
 \itemize{
   \item \code{stat_dist_eye} / \code{stat_dist_eyeh}: Eye plots (violin + interval)
   \item \code{stat_dist_halfeye} / \code{stat_dist_halfeyeh}: Half-eye plots (density + interval)
-  \item \code{stat_dist_ccdfbar} / \code{stat_dist_ccdfbarh}: CCDF bar plots (CCDF + interval)
-  \item \code{stat_dist_cdfbar} / \code{stat_dist_cdfbarh}: CDF bar plots (CDF + interval)
+  \item \code{stat_dist_ccdfinterval} / \code{stat_dist_ccdfintervalh}: CCDF bar plots (CCDF + interval)
+  \item \code{stat_dist_cdfinterval} / \code{stat_dist_cdfintervalh}: CDF bar plots (CDF + interval)
   \item \code{stat_dist_gradientinterval} / \code{stat_dist_gradientintervalh}: Density gradient + interval plots
 }
 
