@@ -407,24 +407,29 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
         # build grobs to display the slabs
         slab_grobs = dlply(s_data, c("group", y), function(d) {
           data_order = order(d[[x]])
-          slab_data_top = d[data_order,]
-          slab_data_top[[y]] = slab_data_top[[ymax]]
 
-          slab_data_bottom = d[rev(data_order),]
-          slab_data_bottom[[y]] = slab_data_bottom[[ymin]]
+          #raw_slab_data = d[data_order,]
 
-          slab_data = rbind(slab_data_top, slab_data_bottom)
+          do.call(gList, map(split_slab_data(d[data_order,], x, ymin, ymax), function(raw_slab_data) {
+            slab_data_top = raw_slab_data
+            slab_data_top[[y]] = slab_data_top[[ymax]]
 
-          slab_grob = GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
+            slab_data_bottom = raw_slab_data[nrow(raw_slab_data):1,]
+            slab_data_bottom[[y]] = slab_data_bottom[[ymin]]
 
-          if (!is.null(slab_data_top$colour) && !all(is.na(slab_data_top$colour))) {
-            # we have an outline to draw around the outside of the slab:
-            # the definition of "outside" depends on the value of `side`:
-            outline_data = switch_side(side, top = slab_data_top, bottom = slab_data_bottom, both = slab_data)
-            gList(slab_grob, GeomPath$draw_panel(outline_data, panel_params, coord))
-          } else {
-            slab_grob
-          }
+            slab_data = rbind(slab_data_top, slab_data_bottom)
+
+            slab_grob = GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
+
+            if (!is.null(slab_data_top$colour) && !all(is.na(slab_data_top$colour))) {
+              # we have an outline to draw around the outside of the slab:
+              # the definition of "outside" depends on the value of `side`:
+              outline_data = switch_side(side, top = slab_data_top, bottom = slab_data_bottom, both = slab_data)
+              gList(slab_grob, GeomPath$draw_panel(outline_data, panel_params, coord))
+            } else {
+              slab_grob
+            }
+          }))
         })
 
         # when side = "top", need to invert draw order so that overlaps happen in a sensible way
@@ -527,4 +532,38 @@ get_line_size = function(i_data, size_domain, size_range) {
     (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
     (size_range[[2]] - size_range[[1]]) + size_range[[1]],
   0)
+}
+
+
+# gradient helpers --------------------------------------------------------
+
+# splits slab data into components based on fill aesthetic
+# and interpolates at cutpoints
+split_slab_data = function(slab_data, x = "x", ymin = "ymin", ymax = "ymax") {
+  slab_data$fill = as.character(slab_data$fill)
+  groups = cumsum(slab_data$fill != lag(slab_data$fill, default = ""))
+  slab_datas = split(slab_data, groups)
+
+  if (length(slab_datas) > 1) {
+    # more than one group
+    for (i in 1:(length(slab_datas) - 1)) {
+      j = i + 1
+      new_row__i = slab_datas[[i]][nrow(slab_datas[[i]]),]
+      new_row__j = slab_datas[[j]][1,]
+      new_x = (new_row__i[[x]] + new_row__j[[x]]) / 2
+      new_ymin = (new_row__i[[ymin]] + new_row__j[[ymin]]) / 2
+      new_ymax = (new_row__i[[ymax]] + new_row__j[[ymax]]) / 2
+      new_row__i[[x]] = new_x
+      new_row__i[[ymin]] = new_ymin
+      new_row__i[[ymax]] = new_ymax
+      new_row__j[[x]] = new_x
+      new_row__j[[ymin]] = new_ymin
+      new_row__j[[ymax]] = new_ymax
+      slab_datas[[i]] = rbind(slab_datas[[i]], new_row__i)
+      slab_datas[[j]] = rbind(new_row__j, slab_datas[[j]])
+    }
+    slab_datas
+  } else {
+    slab_datas
+  }
 }

@@ -24,3 +24,13 @@ test_that("distribution eye plots work with the args aesthetic", {
   vdiffr::expect_doppelganger("horizontal half-eye using args",
     p + stat_dist_halfeyeh(aes(y = dist)))
 })
+
+test_that("multiple fill gradient halfeye works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(dist = "norm", mean = 0, sd = 1) %>%
+    ggplot(aes(y = 1, dist = dist, arg1 = mean, arg2 = sd, slab_color = stat(x > 0), fill = stat(x))) +
+    stat_dist_halfeyeh(n = 10)
+  vdiffr::expect_doppelganger("gradient fill/color halfeye", p)
+})
