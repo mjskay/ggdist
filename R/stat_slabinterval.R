@@ -29,7 +29,7 @@
 #' of function inputs), and returns a data frame with
 #' columns \code{.input} (from the \code{input} vector) and \code{.value} (result of applying the function to
 #' each value of input). Given the results of \code{slab_function}, \code{.value} will be translated into the
-#' \code{thickness} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
+#' \code{f} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
 #' automatically depending on the value of \code{orientation}.
 #' @param slab_args Additional arguments passed to \code{limits_function}
 #' @param n Number of points at which to evaluate \code{slab_function}
@@ -132,6 +132,7 @@ stat_slabinterval = function(
 StatSlabinterval = ggproto("StatSlabinterval", Stat,
   default_aes = aes(
     datatype = "slab",
+    thickness = stat(f),
     size = stat(-.width),
     x = NULL,
     y = NULL
@@ -258,7 +259,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
       slab_fun = function(df) do.call(slab_function, c(list(quote(df)), slab_args))
       s_data = summarise_by(data, c("group", y), slab_fun)
 
-      names(s_data)[names(s_data) == ".value"] = "thickness"
+      names(s_data)[names(s_data) == ".value"] = "f"
       s_data[[x]] = x_trans$transform(s_data$.input)
       s_data$.input = NULL
 
@@ -306,8 +307,9 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     }
 
     results = bind_rows(s_data, i_data)
-    # must ensure there's a .width aesthetic produced even if we don't draw
-    # the interval, otherwise the default aesthetic mapping breaks.
+    # must ensure there's an f and a .width aesthetic produced even if we don't draw
+    # the slab or the interval, otherwise the default aesthetic mappings can break.
+    results$f = results$f %||% NA
     results$.width = results$.width %||% NA
     results
   }

@@ -65,7 +65,7 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 of function inputs), and returns a data frame with
 columns \code{.input} (from the \code{input} vector) and \code{.value} (result of applying the function to
 each value of input). Given the results of \code{slab_function}, \code{.value} will be translated into the
-\code{thickness} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
+\code{f} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
 automatically depending on the value of \code{orientation}.}
 
 \item{slab_args}{Additional arguments passed to \code{limits_function}}
