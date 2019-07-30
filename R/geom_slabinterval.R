@@ -253,7 +253,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   ),
 
   optional_aes = c(
-    "ymin", "ymax", "xmin", "xmax", "width", "height", "thickness"
+    "y", "ymin", "ymax", "x", "xmin", "xmax", "width", "height", "thickness"
   ),
 
   extra_params = c(
