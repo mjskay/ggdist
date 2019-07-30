@@ -432,7 +432,7 @@ ABC %>%
 
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
 
-```{r, results = "hide", message = FALSE, warning = FALSE}
+```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars)
 ```
 
@@ -549,7 +549,7 @@ m %>%
 
 Here's an ordinal model with a categorical predictor:
 
-```{r}
+```{r, cache = TRUE}
 data(esoph)
 m_esoph_rs = stan_polr(tobgp ~ agegp, data = esoph, prior = R2(0.25), prior_counts = dirichlet(1))
 ```

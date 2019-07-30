@@ -327,9 +327,27 @@ different levels of a factor</p></td>
       <tr>
         
         <td>
-          <p><code><a href="geom_eye.html">geom_eye()</a></code> <code><a href="geom_eye.html">geom_eyeh()</a></code> <code><a href="geom_eye.html">geom_halfeyeh()</a></code> </p>
+          <p><code><a href="geom_slabinterval.html">geom_slabinterval()</a></code> </p>
         </td>
-        <td><p>Eye plots of densities with point and interval summaries (Deprecated spellings)</p></td>
+        <td><p>Slab + point + interval meta-geom</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="stat_sample_slabinterval.html">stat_sample_slabinterval()</a></code> <code><a href="stat_sample_slabinterval.html">stat_halfeye()</a></code> <code><a href="stat_sample_slabinterval.html">stat_halfeyeh()</a></code> <code><a href="stat_sample_slabinterval.html">stat_eye()</a></code> <code><a href="stat_sample_slabinterval.html">stat_eyeh()</a></code> <code><a href="stat_sample_slabinterval.html">stat_ccdfinterval()</a></code> <code><a href="stat_sample_slabinterval.html">stat_ccdfintervalh()</a></code> <code><a href="stat_sample_slabinterval.html">stat_cdfinterval()</a></code> <code><a href="stat_sample_slabinterval.html">stat_cdfintervalh()</a></code> <code><a href="stat_sample_slabinterval.html">stat_gradientinterval()</a></code> <code><a href="stat_sample_slabinterval.html">stat_gradientintervalh()</a></code> <code><a href="stat_sample_slabinterval.html">stat_histinterval()</a></code> <code><a href="stat_sample_slabinterval.html">stat_histintervalh()</a></code> </p>
+        </td>
+        <td><p>Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="stat_dist_slabinterval.html">stat_dist_slabinterval()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_halfeye()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_halfeyeh()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_eye()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_eyeh()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_ccdfinterval()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_ccdfintervalh()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_cdfinterval()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_cdfintervalh()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_gradientinterval()</a></code> <code><a href="stat_dist_slabinterval.html">stat_dist_gradientintervalh()</a></code> </p>
+        </td>
+        <td><p>Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="parse_dist.html">parse_dist()</a></code> <code><a href="parse_dist.html">r_dist_name()</a></code> </p>
+        </td>
+        <td><p>Parse distribution specifications into columns of a data frame</p></td>
       </tr><tr>
         
         <td>
@@ -366,6 +384,12 @@ different levels of a factor</p></td>
           <p><code><a href="stat_pointinterval.html">stat_pointinterval()</a></code> <code><a href="stat_pointinterval.html">stat_pointintervalh()</a></code> </p>
         </td>
         <td><p>Point summary + multiple probability interval plots (ggplot stat)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="scales.html">scale_point_colour_discrete()</a></code> <code><a href="scales.html">scale_point_color_discrete()</a></code> <code><a href="scales.html">scale_point_colour_continuous()</a></code> <code><a href="scales.html">scale_point_color_continuous()</a></code> <code><a href="scales.html">scale_point_fill_continuous()</a></code> <code><a href="scales.html">scale_point_size_continuous()</a></code> <code><a href="scales.html">scale_point_size_discrete()</a></code> <code><a href="scales.html">scale_interval_size_continuous()</a></code> <code><a href="scales.html">scale_interval_size_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype()</a></code> <code><a href="scales.html">scale_interval_colour_discrete()</a></code> <code><a href="scales.html">scale_interval_color_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_continuous()</a></code> <code><a href="scales.html">scale_interval_color_continuous()</a></code> <code><a href="scales.html">scale_slab_colour_discrete()</a></code> <code><a href="scales.html">scale_slab_color_discrete()</a></code> <code><a href="scales.html">scale_slab_colour_continuous()</a></code> <code><a href="scales.html">scale_slab_color_continuous()</a></code> <code><a href="scales.html">scale_slab_linetype()</a></code> <code><a href="scales.html">scale_slab_size_continuous()</a></code> <code><a href="scales.html">scale_slab_size_discrete()</a></code> <code><a href="scales.html">guide_colourbar2()</a></code> <code><a href="scales.html">guide_colorbar2()</a></code> </p>
+        </td>
+        <td><p>Custom ggplot scales for geom_slabinterval (and derivatives)</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -384,8 +408,22 @@ different levels of a factor</p></td>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-other" class="hasAnchor"><a href="#section-other" class="anchor"></a>Other</h2>
-          <p class="section-desc"><p>Other functions and documentation</p></p>
+          <h2 id="section-model-types" class="hasAnchor"><a href="#section-model-types" class="anchor"></a>Model types</h2>
+          <p class="section-desc"><p>Models supported by tidybayes</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tidybayes-models.html">tidybayes-models</a></code> </p>
+        </td>
+        <td><p>Models supported by tidybayes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-deprecated-functions" class="hasAnchor"><a href="#section-deprecated-functions" class="anchor"></a>Deprecated functions</h2>
+          <p class="section-desc"><p>Deprecated functions</p></p>
         </th>
       </tr>
       <tr>
@@ -397,9 +435,9 @@ different levels of a factor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tidybayes-models.html">tidybayes-models</a></code> </p>
+          <p><code><a href="geom_eye.html">geom_eye()</a></code> <code><a href="geom_eye.html">geom_eyeh()</a></code> <code><a href="geom_eye.html">geom_halfeyeh()</a></code> </p>
         </td>
-        <td><p>Models supported by tidybayes</p></td>
+        <td><p>Eye plots of densities with point and interval summaries (Deprecated spellings)</p></td>
       </tr>
     </tbody>
     </table>
@@ -415,7 +453,8 @@ different levels of a factor</p></td>
       <li><a href="#section-point-summaries-and-intervals">Point summaries and intervals</a></li>
       <li><a href="#section-visualizing-draws">Visualizing draws</a></li>
       <li><a href="#section-ggplot-theme">GGplot theme</a></li>
-      <li><a href="#section-other">Other</a></li>
+      <li><a href="#section-model-types">Model types</a></li>
+      <li><a href="#section-deprecated-functions">Deprecated functions</a></li>
     </ul>
   </div>
 </div>

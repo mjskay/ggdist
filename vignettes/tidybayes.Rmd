@@ -153,7 +153,7 @@ Shunting data from a data frame into a format usable in samplers like JAGS or St
 
 A hierarchical model of our example data might fit an overall mean across the conditions (`overall_mean`), the standard deviation of the condition means (`condition_mean_sd`), the mean within each condition (`condition_mean[condition]`) and the standard deviation of the responses given a condition mean (`response_sd`):
 
-```{stan, output.var = "ABC_stan", results = "hide"}
+```{stan, output.var = "ABC_stan", results = "hide", cache = TRUE}
 data {
   int<lower=1> n;
   int<lower=1> n_condition;
@@ -622,7 +622,7 @@ This result is equivalent in this case to `spread_draws(c(condition_mean, condit
 
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset using `brm`:
 
-```{r, results = "hide", message = FALSE, warning = FALSE}
+```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg = brm(mpg ~ hp * cyl, data = mtcars)
 ```
 

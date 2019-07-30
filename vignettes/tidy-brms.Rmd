@@ -118,7 +118,7 @@ ABC %>%
 
 Let's fit a hierarchical model with shrinkage towards a global mean:
 
-```{r}
+```{r, cache = TRUE}
 m = brm(response ~ (1|condition), data = ABC, control = list(adapt_delta = .99),
   prior = c(
     prior(normal(0, 1), class = Intercept),
@@ -444,7 +444,7 @@ ABC %>%
 
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
 
-```{r, results = "hide", message = FALSE, warning = FALSE}
+```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg = brm(mpg ~ hp * cyl, data = mtcars)
 ```
 
@@ -543,7 +543,7 @@ AB %>%
 
 Here is a model that lets the mean _and standard deviation_ of `response` be dependent on `group`:
 
-```{r}
+```{r, cache = TRUE}
 m_ab = brm(
   bf(
     response ~ group,
@@ -636,7 +636,7 @@ head(mtcars_clean)
 
 Then we'll fit an ordinal regression model:
 
-```{r}
+```{r, cache = TRUE}
 m_cyl = brm(cyl ~ mpg, data = mtcars_clean, family = cumulative, seed = 58393)
 ```
 
@@ -821,7 +821,7 @@ mtcars_clean %>%
 
 Here's an ordinal model with a categorical predictor:
 
-```{r}
+```{r, cache = TRUE}
 data(esoph)
 m_esoph_brm = brm(tobgp ~ agegp, data = esoph, family = cumulative())
 ```

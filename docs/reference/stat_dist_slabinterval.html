@@ -172,17 +172,24 @@ arguments.</p>
 
 <span class='fu'>stat_dist_eyeh</span>(<span class='no'>...</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_dist_ccdfbar</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+<span class='fu'>stat_dist_ccdfinterval</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
 
-<span class='fu'>stat_dist_ccdfbarh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+<span class='fu'>stat_dist_ccdfintervalh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
 
-<span class='fu'>stat_dist_cdfbar</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+<span class='fu'>stat_dist_cdfinterval</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
 
-<span class='fu'>stat_dist_cdfbarh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)</pre>
+<span class='fu'>stat_dist_cdfintervalh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
+
+<span class='fu'>stat_dist_gradientinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
+  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>thickness</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>p_limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.005</span>, <span class='fl'>0.995</span>),
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>stat_dist_gradientintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -310,6 +317,11 @@ is <code>NULL</code> (the default), then it is set automatically based on the va
 groups so that the maximum height in each group is <code>1</code>; if <code>"none"</code>, values are taken as is with no
  normalization (this should probably only be used with functions whose values are in [0,1]).</p></td>
     </tr>
+    <tr>
+      <th>thickness</th>
+      <td><p>Override for the <code>thickness</code> aesthetic in <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>: the thickness
+of the slab at each x / y value of the slab (depending on <code>orientation</code>).</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -325,8 +337,9 @@ and <em>CCDF bar plots</em> (a complementary CDF plus interval).</p>
 <ul>
 <li><p><code>stat_dist_eye</code> / <code>stat_dist_eyeh</code>: Eye plots (violin + interval)</p></li>
 <li><p><code>stat_dist_halfeye</code> / <code>stat_dist_halfeyeh</code>: Half-eye plots (density + interval)</p></li>
-<li><p><code>stat_dist_ccdfbar</code> / <code>stat_dist_ccdfbarh</code>: CCDF bar plots (CCDF + interval)</p></li>
-<li><p><code>stat_dist_cdfbar</code> / <code>stat_dist_cdfbarh</code>: CDF bar plots (CDF + interval)</p></li>
+<li><p><code>stat_dist_ccdfinterval</code> / <code>stat_dist_ccdfintervalh</code>: CCDF bar plots (CCDF + interval)</p></li>
+<li><p><code>stat_dist_cdfinterval</code> / <code>stat_dist_cdfintervalh</code>: CDF bar plots (CDF + interval)</p></li>
+<li><p><code>stat_dist_gradientinterval</code> / <code>stat_dist_gradientintervalh</code>: Density gradient + interval plots</p></li>
 </ul>
     <p>These stats expect a <code>dist</code> aesthetic to specify a distribution name
 and <code>arg1</code>, ... <code>arg9</code> aesthetics (or <code>args</code> as a list column) to specify distribution
