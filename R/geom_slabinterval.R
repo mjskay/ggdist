@@ -248,7 +248,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     linetype = "solid",
     fill = "gray65",
     shape = 19,
-    stroke = 1,
+    stroke = 0.75,
     size = 1
   ),
 
