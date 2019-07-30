@@ -91,13 +91,16 @@ stat_interval = function(
 }
 
 StatInterval = ggproto("StatInterval", StatPointinterval,
-  default_aes = aes(
-    datatype = "interval",
+  default_aes = defaults(aes(
     color = stat(level)
-  ),
+  ), StatPointinterval$default_aes),
 
   default_params = defaults(list(
     show_point = FALSE,
     .width = c(.50, .80, .95)
   ), StatPointinterval$default_params)
 )
+# have to remove this here instead of in call to defaults()
+# because otherwise it stays in the list as a value = NULL
+# instead of being removed
+StatInterval$default_aes$size = NULL
