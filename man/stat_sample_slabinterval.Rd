@@ -12,15 +12,18 @@
 \alias{stat_cdfintervalh}
 \alias{stat_gradientinterval}
 \alias{stat_gradientintervalh}
+\alias{stat_histinterval}
+\alias{stat_histintervalh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)}
 \usage{
 stat_sample_slabinterval(mapping = NULL, data = NULL,
   geom = "slabinterval", position = "identity", ...,
-  slab_type = c("pdf", "cdf", "ccdf"), adjust = 1, trim = TRUE,
-  orientation = c("vertical", "horizontal"), limits = NULL, n = 501,
-  interval_function = NULL, interval_args = list(),
-  point_interval = median_qi, .width = c(0.66, 0.95), na.rm = FALSE,
-  show.legend = c(size = FALSE), inherit.aes = TRUE)
+  slab_type = c("pdf", "cdf", "ccdf", "histogram"), adjust = 1,
+  trim = TRUE, breaks = "Sturges", orientation = c("vertical",
+  "horizontal"), limits = NULL, n = 501, interval_function = NULL,
+  interval_args = list(), point_interval = median_qi,
+  .width = c(0.66, 0.95), na.rm = FALSE, show.legend = c(size =
+  FALSE), inherit.aes = TRUE)
 
 stat_halfeye(...)
 
@@ -48,6 +51,11 @@ stat_gradientinterval(mapping = NULL, data = NULL,
   inherit.aes = TRUE)
 
 stat_gradientintervalh(..., orientation = "horizontal")
+
+stat_histinterval(..., slab_type = "histogram")
+
+stat_histintervalh(..., slab_type = "histogram",
+  orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -80,13 +88,16 @@ a call to a position adjustment function.}
 (e.g., \code{\link{geom_pointinterval}})}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
+cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.}
 
 \item{adjust}{If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
 by this value. See \code{\link{density}} for more information.}
 
 \item{trim}{If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
 input data? Default \code{TRUE}.}
+
+\item{breaks}{If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
+\code{\link{hist}} to determine where to put breaks in the histogram.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})

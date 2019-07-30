@@ -315,6 +315,25 @@ All of the above geoms follow the naming scheme `stat_[dist_][half]eye[h]`.
 * Add `half` to the name to get half-eyes (densities) instead of eyes (violins).
 * Add `h` to the name to get the horizontal version.
 
+## Histogram + interval plots
+
+In some cases you might prefer histograms to density plots. `stat_histinterval[h]` provides an alternative to `stat_halfeye[h]` that uses histograms instead of densities:
+
+```{r fig.width = 6, fig.height = 3}
+p = df %>%
+  ggplot(aes(x = group, y = value))
+
+ph = df %>%
+  ggplot(aes(y = group, x = value))
+
+plot_grid(ncol = 2, align = "hv",
+  p + stat_histinterval() + labs(title = "stat_histinterval[h]", subtitle = "stat_histinterval()"),
+  ph + stat_histintervalh() + labs(subtitle = "stat_histintervalh()")
+)
+```
+
+There are currently no analytical (`stat_dist_`) versions of `stat_histinterval()` / `stat_histintervalh()`.
+
 ## CCDF bar plots
 
 Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These [can be more effective for some decision-making tasks](http://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf) than densities or intervals, and require fewer assumptions to create from sample data than density plots.

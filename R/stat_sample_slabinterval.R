@@ -10,7 +10,7 @@
 #' @importFrom stats ecdf
 sample_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = "vertical",
-  adjust = 1, trim = TRUE, ...
+  adjust = 1, trim = TRUE, breaks = "Sturges", ...
 ) {
   x = switch(orientation,
     horizontal = "x",
@@ -36,6 +36,18 @@ sample_slab_function = function(
       data.frame(
         .input = input,
         .value = 1 - ecdf(df[[x]])(input)
+      )
+    },
+    histogram = {
+      h = hist(df[[x]], breaks = breaks, plot = FALSE)
+      input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
+      input_2 = h$breaks[-1]                 # second edge of bin
+      data.frame(
+        # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
+        # us the bin endpoints --- then just need to repeat the same value of density
+        # for both endpoints of the same bin
+        .input = as.vector(rbind(input_1, input_2)),
+        .value = rep(h$density, each = 2)
       )
     }
   )
@@ -73,10 +85,14 @@ sample_slab_function = function(
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_dist_slabinterval
+#' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
+#' cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.
 #' @param adjust If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
 #' by this value. See \code{\link{density}} for more information.
 #' @param trim If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
 #' input data? Default \code{TRUE}.
+#' @param breaks If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
+#' \code{\link{hist}} to determine where to put breaks in the histogram.
 #' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
 #' use by default and some of the options they have. See \code{\link{stat_dist_slabinterval}}
 #' for the versions of these stats that can be used on analytical distributions.
@@ -92,9 +108,10 @@ stat_sample_slabinterval = function(
   position = "identity",
   ...,
 
-  slab_type = c("pdf", "cdf", "ccdf"),
+  slab_type = c("pdf", "cdf", "ccdf", "histogram"),
   adjust = 1,
   trim = TRUE,
+  breaks = "Sturges",
 
   orientation = c("vertical", "horizontal"),
   limits = NULL,
@@ -126,6 +143,7 @@ stat_sample_slabinterval = function(
       slab_type = slab_type,
       adjust = adjust,
       trim = trim,
+      breaks = breaks,
 
       orientation = orientation,
 
@@ -153,13 +171,15 @@ StatSampleSlabinterval <- ggproto("StatSampleSlabinterval", StatSlabinterval,
     StatSlabinterval$extra_params,
     "slab_type",
     "adjust",
-    "trim"
+    "trim",
+    "breaks"
   ),
 
   default_params = defaults(list(
     slab_type = "pdf",
     adjust = 1,
     trim = TRUE,
+    breaks = "Sturges",
 
     slab_function = sample_slab_function,
     point_interval = median_qi
@@ -171,7 +191,8 @@ StatSampleSlabinterval <- ggproto("StatSampleSlabinterval", StatSlabinterval,
     params$slab_args = list(
       slab_type = params$slab_type %||% self$default_params$slab_type,
       adjust = params$adjust %||% self$default_params$adjust,
-      trim = params$trim %||% self$default_params$trim
+      trim = params$trim %||% self$default_params$trim,
+      breaks = params$breaks %||% self$default_params$breaks
     )
 
     params
@@ -272,3 +293,11 @@ StatGradientinterval <- ggproto("StatGradientinterval", StatSampleSlabinterval,
     alpha = stat(f)
   ), StatSampleSlabinterval$default_aes)
 )
+
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_histinterval = function(..., slab_type = "histogram") stat_sample_slabinterval(..., slab_type = slab_type)
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_histintervalh = function(..., slab_type = "histogram" , orientation = "horizontal")
+  stat_sample_slabinterval(..., slab_type = slab_type, orientation = orientation)

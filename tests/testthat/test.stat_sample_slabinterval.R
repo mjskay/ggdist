@@ -26,3 +26,22 @@ test_that("gradientinterval works", {
   vdiffr::expect_doppelganger("gradientintervalh with two groups",
     p + stat_gradientintervalh(aes(y = dist, x = x), n = 20))
 })
+
+test_that("histinterval works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  set.seed(1234)
+  p = tribble(
+    ~dist, ~x,
+    "norm", rnorm(100),
+    "t", rt(100, 3)
+  ) %>%
+    unnest() %>%
+    ggplot()
+
+  vdiffr::expect_doppelganger("histinterval with outline",
+    p + stat_histinterval(aes(x = dist, y = x), slab_color = "black"))
+  vdiffr::expect_doppelganger("histintervalh with outline",
+    p + stat_histintervalh(aes(y = dist, x = x), slab_color = "black"))
+})
