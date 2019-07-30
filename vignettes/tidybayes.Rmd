@@ -346,7 +346,7 @@ These functions have `.width = c(.66, .95)` by default (showing 66% and 95% inte
 
 When using `point_interval` family functions with geoms and stats defined by packages _other than of `tidybayes`_, you may need to use the horizontal versions of the `point_interval` functions, like `median_qih` (e.g. in the `fun.data` argument of `ggstance::stat_summaryh`). This is because `median_qi` returns a data frame with `y`, `ymin`, and `ymax` columns when passed a vector (making it suitable for `ggplot2::stat_summary`), and `median_qih` returns a data frame with `x`, `xmin`, and `xmax` columns when passed a vector (making it suitable for `ggstance::stat_summaryh`). __You do not need to use these functions with tidybayes stats and geoms__; the `point_interval` argument to tidybayes stats and geoms (like `stat_pointinterval` and `stat_pointintervalh`) will automatically convert output of summary functions to the correct aesthetics.
 
-### Intervals with posterior violins ("eye plots"): `geom_eye` and `geom_eyeh`
+### Intervals with posterior violins ("eye plots"): `stat_eye` and `stat_eyeh`
 
 The `stat_summary` approach to generating intervals makes it easy to add violin plots of posterior densities to the plot using `geom_violin`/`geom_violinh`, forming "eye plots":
 
@@ -358,25 +358,25 @@ m %>%
   stat_pointintervalh(.width = c(.95, .66))
 ```
 
-The `geom_eye` and `geom_eyeh` geoms provide a shortcut to generating eye plots with some sensible defaults:
+The `stat_eye` and `stat_eyeh` geoms provide a shortcut to generating eye plots with some sensible defaults:
 
 ```{r}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_eyeh()
+  stat_eyeh()
 ```
 
 
-### Intervals with posterior densities ("half-eye plots"): `geom_halfeyeh`
+### Intervals with posterior densities ("half-eye plots"): `stat_halfeyeh`
 
-If you prefer densities over violins, you can use `geom_halfeyeh` (the vertical version, not yet available, will be called `geom_halfeye`). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):
+If you prefer densities over violins, you can use `stat_halfeyeh` (the vertical version, not yet available, will be called `stat_halfeye`). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):
 
 ```{r}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_halfeyeh(.width = c(.99, .8))
+  stat_halfeyeh(.width = c(.99, .8))
 ```
 
 
@@ -555,7 +555,7 @@ m %>%
   spread_draws(condition_mean[condition]) %>%
   compare_levels(condition_mean, by = condition) %>%
   ggplot(aes(y = condition, x = condition_mean)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```
 
 
@@ -748,7 +748,7 @@ Functions from other packages might expect draws in the form of a data frame or 
 
 It may be desirable to use the `spread_draws` or `gather_draws` functions to transform your draws in some way, and then convert them *back* into the draw $\times$ variable format to pass them into functions from other packages, like `bayesplot`. The `unspread_draws` and `ungather_draws` functions invert `spread_draws` and `gather_draws` to return a data frame with variable column names that include indices in them and draws as rows.
 
-As an example, let's re-do the previous example of `compare_levels`, but use `bayesplot::mcmc_hist` to plot the results instead of `geom_eyeh`. First, the result of `compare_levels` looks like this:
+As an example, let's re-do the previous example of `compare_levels`, but use `bayesplot::mcmc_hist` to plot the results instead of `stat_eyeh`. First, the result of `compare_levels` looks like this:
 
 ```{r}
 m %>%
@@ -823,7 +823,7 @@ m_rst %>%
   contrast(method = "pairwise") %>%
   gather_emmeans_draws() %>%
   ggplot(aes(x = .value, y = contrast)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```
 
 `gather_emmeans_draws()` also supports `emm_list` objects, which contain estimates from different reference grids (see `emmeans::ref_grid()` for more information on reference grids). An additional column with the default name of `.grid` is added to indicate the reference grid for each row in the output:
@@ -856,5 +856,5 @@ m_glmm %>%
   contrast(method = "pairwise") %>%
   gather_emmeans_draws() %>%
   ggplot(aes(x = .value, y = contrast)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```

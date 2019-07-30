@@ -15,11 +15,14 @@
 #'
 #' @inheritParams stat_pointinterval
 #' @inheritParams geom_slabinterval
-#' @seealso See \code{\link{geom_interval}} / \code{\link{geom_intervalh}} for the geom versions, intended for use on
-#' intervals that have already been summarized using a \code{\link{point_interval}} function.
+#' @seealso See \code{\link{geom_interval}} / \code{\link{geom_intervalh}} for the geom versions, intended
+#' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
 #' See \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}} for a similar stat intended for
-#' point summaries and intervals. See \code{\link{stat_sample_slabinterval}} for a variety of other
+#' point summaries and intervals.
+#' See \code{\link{stat_sample_slabinterval}} for a variety of other
 #' stats that combine intervals with densities and CDFs.
+#' See \code{\link{geom_slabinterval}} for the geom that these geoms wrap. All parameters of that geom are
+#' available to these geoms.
 #' @examples
 #'
 #' library(magrittr)

@@ -23,6 +23,14 @@
 #' See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
 #' point summaries. See \code{\link{stat_sample_slabinterval}} for a variety of other
 #' stats that combine intervals with densities and CDFs.
+#' @seealso See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
+#' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
+#' See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
+#' point summaries.
+#' See \code{\link{stat_sample_slabinterval}} for a variety of other
+#' stats that combine intervals with densities and CDFs.
+#' See \code{\link{geom_slabinterval}} for the geom that these geoms wrap. All parameters of that geom are
+#' available to these geoms.
 #' @examples
 #'
 #' library(magrittr)

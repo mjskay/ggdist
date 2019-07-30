@@ -82,8 +82,8 @@ and visualization tasks common to many models:
   geoms to simplify common combinations of `stats` and `geoms` with sensible
   defaults suitable for visualizing posterior point summaries and intervals (`geom_pointinterval`,
   `geom_pointintervalh`, `stat_pointinterval`, `stat_pointintervalh`), visualizing
-  densities with point summaries and intervals ("eye plots", `geom_eye` and `geom_eyeh`;
-  or "half-eye plots", `geom_halfeyeh`), and visualizing fit lines with an arbitrary 
+  densities with point summaries and intervals ("eye plots", `stat_eye` / `stat_eyeh`;
+  or "half-eye plots", `stat_halfeye` / `stat_halfeyeh`), and visualizing fit lines with an arbitrary 
   number of uncertainty bands (`geom_lineribbon` and `stat_lineribbon`). Combining the
   base-R `quantile` function with `geom_dotplot` also facilitates the construction
   of quantile dotplots of posteriors (see example in this document).
@@ -258,24 +258,24 @@ m %>%
 The condition numbers are automatically turned back into text ("A", "B", "C", ...) and split into their own column. A long-format data frame is returned with a row for every draw $\times$ every combination of indices across all variables given to `spread_draws`; for example, because `response_sd` here is not indexed by `condition`, within the same draw it has the same value for each row corresponding to a different `condition` (some other formats supported by `tidybayes` are discussed in `vignette("tidybayes")`; in particular, the format returned by `gather_draws`).
 
 
-### Plotting posteriors as eye plots: `geom_eye` / `geom_eyeh`
+### Plotting posteriors as eye plots: `stat_eye` / `stat_eyeh`
 
-Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the `tidybayes::geom_eyeh` geom (horizontal version of `tidybayes::geom_eye`), which combines a violin plot of the posterior density, median, 66% and 95% quantile interval to give an "eye plot" of the posterior. The point and interval types are customizable using the `point_interval` family of functions. A "half-eye" plot (non-mirrored density) is also available as `tidybayes::geom_halfeyeh`.
+Automatic splitting of indices into columns makes it easy to plot the condition means here. We will employ the `tidybayes::stat_eyeh` geom (horizontal version of `tidybayes::stat_eye`), which combines a violin plot of the posterior density, median, 66% and 95% quantile interval to give an "eye plot" of the posterior. The point and interval types are customizable using the `point_interval` family of functions. A "half-eye" plot (non-mirrored density) is also available as `tidybayes::stat_halfeyeh`.
 
-```{r geom_eyeh}
+```{r stat_eyeh}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
-  geom_eyeh()
+  stat_eyeh()
 ```
 
 Or one can employ the similar "half-eye" plot:
 
-```{r geom_halfeyeh}
+```{r stat_halfeyeh}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```
 
 ### Plotting posteriors as quantile dotplots

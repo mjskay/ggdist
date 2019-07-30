@@ -331,14 +331,14 @@ m %>%
 
 ## Intervals with densities
 
-To see the density along with the intervals, we can use `geom_eyeh` (horizontal "eye plots", which combine intervals with violin plots), or `geom_halfeyeh` (horizontal interval + density plots):
+To see the density along with the intervals, we can use `stat_eyeh` (horizontal "eye plots", which combine intervals with violin plots), or `stat_halfeyeh` (horizontal interval + density plots):
 
 ```{r}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   mutate(condition_mean = `(Intercept)` + b) %>%
   ggplot(aes(y = group, x = condition_mean)) +
-  geom_halfeyeh() 
+  stat_halfeyeh() 
 ```
 
 
@@ -517,7 +517,7 @@ mtcars %>%
 
 If we wish compare the means from each condition, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences. 
 
-Let's demonstrate `compare_levels` with another plotting geom, `geom_halfeyeh`, which gives horizontal "half-eye" plots, combining intervals with a density plot:
+Let's demonstrate `compare_levels` with another plotting geom, `stat_halfeyeh`, which gives horizontal "half-eye" plots, combining intervals with a density plot:
 
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
@@ -525,7 +525,7 @@ m %>%
   spread_draws(b[,,condition], sep = "[, :]") %>%
   compare_levels(b, by = condition) %>%
   ggplot(aes(y = condition, x = b)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```
 
 If you prefer "caterpillar" plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:
@@ -538,7 +538,7 @@ m %>%
   ungroup() %>%
   mutate(condition = reorder(condition, b)) %>%
   ggplot(aes(y = condition, x = b)) +
-  geom_halfeyeh() +
+  stat_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
 

@@ -35,6 +35,14 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @author Matthew Kay
 #' @seealso See \code{\link{geom_slabinterval}} for the geom that these geoms wrap. All parameters of that geom are
 #' available to these geoms.
+#' @seealso See \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}} for the stat versions, intended
+#' for use on samples from a distribution.
+#' See \code{\link{geom_interval}} / \code{\link{geom_intervalh}} for a similar stat intended for intervals without
+#' point summaries.
+#' See \code{\link{stat_sample_slabinterval}} for a variety of other
+#' stats that combine intervals with densities and CDFs.
+#' See \code{\link{geom_slabinterval}} for the geom that these geoms wrap. All parameters of that geom are
+#' available to these geoms.
 #' @examples
 #'
 #' library(magrittr)

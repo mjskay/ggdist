@@ -230,13 +230,13 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # interval aesthetics
     size = NULL,
     interval_size = NULL,     # falls back to size
-    interval_linetype = NULL, # falls back to linetype
     interval_colour = NULL,   # falls back to colour
+    interval_linetype = NULL, # falls back to linetype
 
     # slab aesthetics
+    slab_size = 1,
     slab_colour = NA,         # no outline around the slab by default
-    slab_linetype = NULL,     # falls back to linetype
-    slab_size = 1
+    slab_linetype = NULL      # falls back to linetype
   ),
 
   # default aesthetics as they will actually be set (here or in the key)

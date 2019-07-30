@@ -38,8 +38,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' \code{ymax} (the upper end of the interval), and \code{.width}, the probability
 #' corresponding to the interval. This behavior allows \code{point_interval}
 #' and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
-#' to be easily used to plot intervals in ggplot using methods like
-#' \code{\link{geom_eye}}, \code{\link{geom_eyeh}}, or \code{\link{stat_summary}}.
+#' to be easily used to plot intervals in ggplot stats using methods like
+#' \code{\link{stat_eye}}, \code{\link{stat_halfeyeh}}, or \code{\link{stat_summary}}.
 #'
 #' The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih})
 #' behave identically to the function without the h, except that when passed a vector,
@@ -48,7 +48,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' \code{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
 #' functions are not necessary if you use the \code{point_interval}
 #' argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
-#' \code{\link{stat_pointintervalh}}, \code{\link{geom_halfeyeh}}, etc), as
+#' \code{\link{stat_pointintervalh}}, \code{\link{stat_halfeyeh}}, etc), as
 #' these automatically adjust the function output to match their required aesthetics.
 #'
 #' \code{median_qi}, \code{mode_hdi}, etc are short forms for
@@ -141,7 +141,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' multimodal_draws %>%
 #'   ggplot(aes(x = x, y = 0)) +
-#'   geom_halfeyeh(fun.data = mode_hdih, .width = c(.66, .95))
+#'   stat_halfeyeh(fun.data = mode_hdih, .width = c(.66, .95))
 #'
 #' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at

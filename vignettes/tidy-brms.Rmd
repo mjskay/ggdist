@@ -317,14 +317,14 @@ m %>%
 
 ## Intervals with densities
 
-To see the density along with the intervals, we can use `geom_eyeh` (horizontal "eye plots", which combine intervals with violin plots), or `geom_halfeyeh` (horizontal interval + density plots):
+To see the density along with the intervals, we can use `stat_eyeh` (horizontal "eye plots", which combine intervals with violin plots), or `stat_halfeyeh` (horizontal interval + density plots):
 
 ```{r}
 m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   mutate(condition_mean = b_Intercept + r_condition) %>%
   ggplot(aes(y = condition, x = condition_mean)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```
 
 
@@ -567,7 +567,7 @@ preds = grid %>%
 
 AB %>%
   ggplot(aes(x = response, y = group)) +
-  geom_halfeyeh(aes(x = .value), relative_scale = 0.7, position = position_nudge(y = 0.1), data = fits) +
+  stat_halfeyeh(aes(x = .value), relative_scale = 0.7, position = position_nudge(y = 0.1), data = fits) +
   stat_intervalh(aes(x = .prediction), data = preds) +
   geom_point(data = AB) +
   scale_color_brewer()
@@ -581,7 +581,7 @@ The predictive intervals in group `b` are larger than in group `a` because the m
 grid %>%
   add_fitted_draws(m_ab, dpar = TRUE) %>%
   ggplot(aes(x = sigma, y = group)) +
-  geom_halfeyeh() +
+  stat_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed")
 ```
 
@@ -592,7 +592,7 @@ By setting `dpar = TRUE`, all distributional parameters are added as additional 
 
 If we wish compare the means from each condition, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences. 
 
-Let's demonstrate `compare_levels` with another plotting geom, `geom_halfeyeh`, which gives horizontal "half-eye" plots, combining intervals with a density plot:
+Let's demonstrate `compare_levels` with another plotting geom, `stat_halfeyeh`, which gives horizontal "half-eye" plots, combining intervals with a density plot:
 
 ```{r, fig.width=7}
 #N.B. the syntax for compare_levels is experimental and may change
@@ -600,7 +600,7 @@ m %>%
   spread_draws(r_condition[condition,]) %>%
   compare_levels(r_condition, by = condition) %>%
   ggplot(aes(y = condition, x = r_condition)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```
 
 If you prefer "caterpillar" plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:
@@ -613,7 +613,7 @@ m %>%
   ungroup() %>%
   mutate(condition = reorder(condition, r_condition)) %>%
   ggplot(aes(y = condition, x = r_condition)) +
-  geom_halfeyeh() +
+  stat_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
 

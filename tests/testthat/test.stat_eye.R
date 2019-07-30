@@ -15,19 +15,22 @@ test_that("one-parameter eye plots work", {
   set.seed(123)
   df = data.frame(x = rnorm(1000), y = 1)
 
+  # using geom_[half]eyeh here to test deprecated aliases
   p = ggplot(df, aes(x = x, y = y))
   vdiffr::expect_doppelganger("one-parameter horizontal eye", p + geom_eyeh())
   vdiffr::expect_doppelganger("one-parameter horizontal half-eye", p + geom_halfeyeh())
 
+  # using geom_[half]eye here to test deprecated aliases
   p = ggplot(df, aes(x = y, y = x))
   vdiffr::expect_doppelganger("one-parameter vertical eye", p + geom_eye())
+  vdiffr::expect_doppelganger("one-parameter vertical halfeye", p + geom_halfeye())
 
   p = ggplot(df, aes(x = x, y = y))
-  vdiffr::expect_doppelganger("one-parameter horizontal eye (mode_hdi)", p + geom_eyeh(point_interval = mode_hdi))
-  vdiffr::expect_doppelganger("one-parameter horizontal half-eye (mode_hdi)", p + geom_halfeyeh(point_interval = mode_hdi))
+  vdiffr::expect_doppelganger("one-parameter horizontal eye (mode_hdi)", p + stat_eyeh(point_interval = mode_hdi))
+  vdiffr::expect_doppelganger("one-parameter horizontal half-eye (mode_hdi)", p + stat_halfeyeh(point_interval = mode_hdi))
 
   p = ggplot(df, aes(x = y, y = x))
-  vdiffr::expect_doppelganger("one-parameter vertical eye (mode_hdi)", p + geom_eye(point_interval = mode_hdi))
+  vdiffr::expect_doppelganger("one-parameter vertical eye (mode_hdi)", p + stat_eye(point_interval = mode_hdi))
 
 })
 
@@ -41,20 +44,20 @@ test_that("two-parameter eye plots work", {
     rbind(data.frame(x = rnorm(1000, 1), y = "b", y_int = 2))
 
   p = ggplot(df, aes(x = x, y = y))
-  vdiffr::expect_doppelganger("two-parameter (factor) horizontal eye", p + geom_eyeh(scale = 0.5))
-  vdiffr::expect_doppelganger("two-parameter (factor) horizontal half-eye", p + geom_halfeyeh(scale = 0.5))
-  vdiffr::expect_doppelganger("two-parameter (factor) horizontal eye (fill)", p + geom_eyeh(aes(fill = y), scale = 0.5))
+  vdiffr::expect_doppelganger("two-parameter (factor) horizontal eye", p + stat_eyeh(scale = 0.5))
+  vdiffr::expect_doppelganger("two-parameter (factor) horizontal half-eye", p + stat_halfeyeh(scale = 0.5))
+  vdiffr::expect_doppelganger("two-parameter (factor) horizontal eye (fill)", p + stat_eyeh(aes(fill = y), scale = 0.5))
 
   p = ggplot(df, aes(x = y, y = x))
-  vdiffr::expect_doppelganger("two-parameter (factor) vertical eye (fill)", p + geom_eye(aes(fill = y), scale = 0.5))
+  vdiffr::expect_doppelganger("two-parameter (factor) vertical eye (fill)", p + stat_eye(aes(fill = y), scale = 0.5))
 
   p = ggplot(df, aes(x = x, y = y_int))
-  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal eye", p + geom_eyeh(fatten_point = 3))
-  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal half-eye", p + geom_halfeyeh(fatten_point = 3))
-  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal half-eye (fill)", p + geom_halfeyeh(aes(fill = y_int), fatten_point = 3, show.legend = c(size = FALSE)))
+  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal eye", p + stat_eyeh(fatten_point = 3))
+  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal half-eye", p + stat_halfeyeh(fatten_point = 3))
+  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal half-eye (fill)", p + stat_halfeyeh(aes(fill = y_int), fatten_point = 3, show.legend = c(size = FALSE)))
 
   p = ggplot(df, aes(x = y_int, y = x))
-  vdiffr::expect_doppelganger("two-parameter (numeric) vertical eye", p + geom_eye(fatten_point = 3))
+  vdiffr::expect_doppelganger("two-parameter (numeric) vertical eye", p + stat_eye(fatten_point = 3))
 
 })
 
