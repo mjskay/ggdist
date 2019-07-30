@@ -34,7 +34,7 @@ draw_key_slabinterval = function(self, data, params, size) {
   slab_line_grob = NULL
   if (params$show_slab) {
     s_key_data = override_slab_aesthetics(key_data)
-    if (!is.na(s_data$fill)) {
+    if (any(!is.na(s_data[c("fill","alpha")]))) {
       slab_fill_grob = draw_key_rect(s_key_data, params, size)
     }
     if (any(!is.na(s_data[c("colour","linetype","size")]))) {

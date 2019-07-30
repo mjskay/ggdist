@@ -25,7 +25,7 @@ test_that("distribution eye plots work with the args aesthetic", {
     p + stat_dist_halfeyeh(aes(y = dist)))
 })
 
-test_that("multiple fill gradient halfeye works", {
+test_that("stat fill aesthetic on halfeye works", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
