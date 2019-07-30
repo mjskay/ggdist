@@ -20,10 +20,10 @@ test_that("one-parameter eye plots work", {
   vdiffr::expect_doppelganger("one-parameter horizontal eye", p + geom_eyeh())
   vdiffr::expect_doppelganger("one-parameter horizontal half-eye", p + geom_halfeyeh())
 
-  # using geom_[half]eye here to test deprecated aliases
+  # using geom_eye here to test deprecated alias (there never was a geom_halfeye())
   p = ggplot(df, aes(x = y, y = x))
   vdiffr::expect_doppelganger("one-parameter vertical eye", p + geom_eye())
-  vdiffr::expect_doppelganger("one-parameter vertical halfeye", p + geom_halfeye())
+  vdiffr::expect_doppelganger("one-parameter vertical halfeye", p + stat_halfeye())
 
   p = ggplot(df, aes(x = x, y = y))
   vdiffr::expect_doppelganger("one-parameter horizontal eye (mode_hdi)", p + stat_eyeh(point_interval = mode_hdi))
