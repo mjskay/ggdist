@@ -13,6 +13,7 @@
 #' function, these \code{stat}s are intended for use directly on data frames of draws, and
 #' will perform the summarization using a \code{\link{point_interval}} function.
 #'
+#' @eval rd_slabinterval_aesthetics(geom = GeomPointinterval, geom_name = "geom_pointinterval", stat = StatPointinterval)
 #' @inheritParams stat_sample_slabinterval
 #' @inheritParams geom_slabinterval
 #' @param .prob Deprecated. Use \code{.width} instead.

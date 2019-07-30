@@ -152,6 +152,43 @@ Wrapper geoms and stats include:
 Typically, the \code{geom_*} versions are meant for use with already-summarized data (such as intervals) and the
 \code{stat_*} versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
 }
+\section{Aesthetics}{
+
+These geoms support the following aesthetics:
+\itemize{
+  \item \code{datatype}
+  \item \code{alpha}
+  \item \code{colour}
+  \item \code{linetype}
+  \item \code{fill}
+  \item \code{shape}
+  \item \code{stroke}
+  \item \code{point_size}
+  \item \code{point_colour}
+  \item \code{point_fill}
+  \item \code{size}
+  \item \code{interval_size}
+  \item \code{interval_colour}
+  \item \code{interval_linetype}
+  \item \code{slab_size}
+  \item \code{slab_colour}
+  \item \code{slab_linetype}
+  \item \code{y}
+  \item \code{ymin}
+  \item \code{ymax}
+  \item \code{x}
+  \item \code{xmin}
+  \item \code{xmax}
+  \item \code{width}
+  \item \code{height}
+  \item \code{thickness}
+  \item \code{group}
+}
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}. 
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation. 
+Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
+}
+
 \examples{
 
 # TODO
@@ -159,7 +196,8 @@ Typically, the \code{geom_*} versions are meant for use with already-summarized 
 }
 \seealso{
 See \code{\link{geom_lineribbon}} for a combination geom designed for fit curves plus probability bands.
-See \code{\link{scales}} for more information on custom aesthetics that this geom supports.
+See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+built on top of this geom for common use cases (like \code{stat_halfeyeh}).
 }
 \author{
 Matthew Kay

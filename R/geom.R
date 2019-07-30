@@ -78,6 +78,37 @@ define_orientation_variables = function(orientation) {
   }
 }
 
+# provides aesthetic documentation for slabintervals
+rd_slabinterval_aesthetics <- function(geom = GeomSlabinterval, geom_name = "geom_slabinterval", stat = NULL) {
+  stat_aesthetics = if (is.null(stat)) {
+    "These geoms support the following aesthetics:"
+  } else {
+    c(
+      "These stats support the following aesthetics:",
+      "\\itemize{",
+      paste0("  \\item \\code{", stat$aesthetics(), "}"),
+      "}",
+      paste0("In addition, in their default configuration (paired with ", geom_name, ") ",
+        "the following aesthetics are supported by the underlying geom:")
+    )
+  }
+
+  geom_aesthetics = c(
+    "\\itemize{",
+      paste0("  \\item \\code{", geom$aesthetics(), "}"),
+    "}"
+  )
+
+  c(
+    "@section Aesthetics:",
+    stat_aesthetics,
+    geom_aesthetics,
+    "See examples of some of these aesthetics in action in \\code{vignette(\"slabinterval\")}. ",
+    "Learn more about the sub-geom aesthetics (like \\code{interval_color}) in the \\link[tidybayes]{scales} documentation. ",
+    "Learn more about basic ggplot aesthetics in \\code{vignette(\"ggplot2-specs\")}. "
+  )
+}
+
 
 #' Base ggproto classes for tidybayes
 #'

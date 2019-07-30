@@ -82,6 +82,7 @@ sample_slab_function = function(
 #'   \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
 #' }
 #'
+#' @eval rd_slabinterval_aesthetics(stat = StatSampleSlabinterval)
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_dist_slabinterval

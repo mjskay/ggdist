@@ -50,6 +50,7 @@
 #' Typically, the \code{geom_*} versions are meant for use with already-summarized data (such as intervals) and the
 #' \code{stat_*} versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
 #'
+#' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to \code{\link{layer}}.
 #' @param side Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
@@ -94,7 +95,8 @@
 #' values are silently removed.
 #' @author Matthew Kay
 #' @seealso See \code{\link{geom_lineribbon}} for a combination geom designed for fit curves plus probability bands.
-#' See \code{\link{scales}} for more information on custom aesthetics that this geom supports.
+#' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+#' built on top of this geom for common use cases (like \code{stat_halfeyeh}).
 #' @examples
 #'
 #' # TODO

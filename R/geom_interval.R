@@ -26,6 +26,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' \code{aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))}. \code{geom_intervalh} acts as if
 #' its default aesthetics are \code{aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))}.
 #'
+#' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval")
 #' @inheritParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
 #' \code{"dodge"} or \code{"dodgev"} (if the \code{ggstance} package is loaded) can be useful if you have

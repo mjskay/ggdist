@@ -129,6 +129,7 @@ dist_interval_function = function(df, .width, ...) {
 #' \code{\link{parse_dist}} combined with the stats described here can help you visualize the output
 #' of those functions.
 #'
+#' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),

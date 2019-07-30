@@ -12,6 +12,7 @@
 #' for several other more directly useful stats whose APIs are more stable; it is recommended
 #' to use those instead.
 #'
+#' @eval rd_slabinterval_aesthetics(stat = StatSlabinterval)
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
 #' \code{stat_slabinterval} and \code{\link{geom_slabinterval}}
@@ -53,7 +54,9 @@
 #' to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
 #' those that are mapped (the default for most geoms).
 #' @seealso See \code{\link{geom_slabinterval}} for the geom version, intended
-#' for use on data that has already been translated into funciton evaluations, points, and intervals.
+#' for use on data that has already been translated into function evaluations, points, and intervals.
+#' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+#' built on top of this stat for common use cases (like \code{stat_halfeyeh}).
 #' @examples
 #'
 #' #TODO

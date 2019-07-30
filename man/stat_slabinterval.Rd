@@ -115,6 +115,52 @@ this stat is \strong{experimental and subject to change}. This is used as the ba
 for several other more directly useful stats whose APIs are more stable; it is recommended
 to use those instead.
 }
+\section{Aesthetics}{
+
+These stats support the following aesthetics:
+\itemize{
+  \item \code{x}
+  \item \code{y}
+  \item \code{datatype}
+  \item \code{thickness}
+  \item \code{size}
+  \item \code{group}
+}
+In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:
+\itemize{
+  \item \code{datatype}
+  \item \code{alpha}
+  \item \code{colour}
+  \item \code{linetype}
+  \item \code{fill}
+  \item \code{shape}
+  \item \code{stroke}
+  \item \code{point_size}
+  \item \code{point_colour}
+  \item \code{point_fill}
+  \item \code{size}
+  \item \code{interval_size}
+  \item \code{interval_colour}
+  \item \code{interval_linetype}
+  \item \code{slab_size}
+  \item \code{slab_colour}
+  \item \code{slab_linetype}
+  \item \code{y}
+  \item \code{ymin}
+  \item \code{ymax}
+  \item \code{x}
+  \item \code{xmin}
+  \item \code{xmax}
+  \item \code{width}
+  \item \code{height}
+  \item \code{thickness}
+  \item \code{group}
+}
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}. 
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation. 
+Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
+}
+
 \examples{
 
 #TODO
@@ -122,6 +168,8 @@ to use those instead.
 }
 \seealso{
 See \code{\link{geom_slabinterval}} for the geom version, intended
-for use on data that has already been translated into funciton evaluations, points, and intervals.
+for use on data that has already been translated into function evaluations, points, and intervals.
+See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+built on top of this stat for common use cases (like \code{stat_halfeyeh}).
 }
 \keyword{internal}

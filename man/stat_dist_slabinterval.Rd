@@ -178,6 +178,63 @@ produced by other packages (like the \code{\link[brms]{get_prior}} function in b
 \code{\link{parse_dist}} combined with the stats described here can help you visualize the output
 of those functions.
 }
+\section{Aesthetics}{
+
+These stats support the following aesthetics:
+\itemize{
+  \item \code{dist}
+  \item \code{args}
+  \item \code{arg1}
+  \item \code{arg2}
+  \item \code{arg3}
+  \item \code{arg4}
+  \item \code{arg5}
+  \item \code{arg6}
+  \item \code{arg7}
+  \item \code{arg8}
+  \item \code{arg9}
+  \item \code{x}
+  \item \code{y}
+  \item \code{datatype}
+  \item \code{thickness}
+  \item \code{size}
+  \item \code{group}
+}
+In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:
+\itemize{
+  \item \code{datatype}
+  \item \code{alpha}
+  \item \code{colour}
+  \item \code{linetype}
+  \item \code{fill}
+  \item \code{shape}
+  \item \code{stroke}
+  \item \code{point_size}
+  \item \code{point_colour}
+  \item \code{point_fill}
+  \item \code{size}
+  \item \code{interval_size}
+  \item \code{interval_colour}
+  \item \code{interval_linetype}
+  \item \code{slab_size}
+  \item \code{slab_colour}
+  \item \code{slab_linetype}
+  \item \code{y}
+  \item \code{ymin}
+  \item \code{ymax}
+  \item \code{x}
+  \item \code{xmin}
+  \item \code{xmax}
+  \item \code{width}
+  \item \code{height}
+  \item \code{thickness}
+  \item \code{group}
+}
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}. 
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation. 
+Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
+}
+
 \examples{
 
 #TODO

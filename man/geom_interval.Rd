@@ -86,6 +86,43 @@ Specifically, \code{geom_interval} acts as if its default aesthetics are
 \code{aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))}. \code{geom_intervalh} acts as if
 its default aesthetics are \code{aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))}.
 }
+\section{Aesthetics}{
+
+These geoms support the following aesthetics:
+\itemize{
+  \item \code{datatype}
+  \item \code{alpha}
+  \item \code{colour}
+  \item \code{linetype}
+  \item \code{fill}
+  \item \code{shape}
+  \item \code{stroke}
+  \item \code{point_size}
+  \item \code{point_colour}
+  \item \code{point_fill}
+  \item \code{size}
+  \item \code{interval_size}
+  \item \code{interval_colour}
+  \item \code{interval_linetype}
+  \item \code{slab_size}
+  \item \code{slab_colour}
+  \item \code{slab_linetype}
+  \item \code{y}
+  \item \code{ymin}
+  \item \code{ymax}
+  \item \code{x}
+  \item \code{xmin}
+  \item \code{xmax}
+  \item \code{width}
+  \item \code{height}
+  \item \code{thickness}
+  \item \code{group}
+}
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}. 
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation. 
+Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
+}
+
 \examples{
 
 library(magrittr)
