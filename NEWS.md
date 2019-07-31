@@ -1,3 +1,12 @@
+# tidybayes 1.1.0.9000
+
+* meta-geom (and everything that goes with that...) (#84 and others: #162 #163 #56 #83 #136 #180)
+* trimmed hdis (#165)
+* exprs in compare_levels (#174 #175)
+* lineribbon now works with ggnewscale (and other default computed aesthetic stuff, #178)
+* more helpful error messages on unsupported models for fitted/predicted_draws (#177)
+
+
 # tidybayes 1.1.0
 
 New features and documentation:
