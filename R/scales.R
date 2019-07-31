@@ -49,6 +49,9 @@
 #' @seealso \code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
 #' @examples
 #'
+#' library(dplyr)
+#' library(ggplot2)
+#'
 #' # This plot shows how to set multiple specific aesthetics
 #' # NB it is very ugly and is only for demo purposes.
 #' data.frame(distribution = "Normal(1,2)") %>%

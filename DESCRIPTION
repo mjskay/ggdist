@@ -100,7 +100,7 @@ Collate:
     "recover_types.R"
     "residual_draws.R"
     "sample_draws.R"
-    "scale_.R"
+    "scales.R"
     "spread_draws.R"
     "stat.R"
     "stat_slabinterval.R"
