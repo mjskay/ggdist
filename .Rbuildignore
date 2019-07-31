@@ -25,3 +25,4 @@
 ^inst/WORDLIST$
 ^data-raw$
 ^figures-source$
+^vignettes/.*_cache$

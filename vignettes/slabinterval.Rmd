@@ -63,9 +63,92 @@ options(width = 120)
 
 ## Roadmap: It all starts with "slabinterval"
 
-Tidybayes has a pantheon of geoms and stats that stem from a common root: `geom_slabinterval()` and `stat_slabinterval()`. These geoms consist of a "slab" (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components. However, using these geoms directly is not necessarily advisable: they are highly configurable, but as a side effect require remembering a bunch of combinations of options to use.
+```{r fig.height = 5, fig.width = 6.5, echo = FALSE}
+dists_df = tibble(
+  # enforce order
+  geom = rev(c(
+    "halfeye[h]", 
+    "eye[h]",
+    "gradientinterval[h]", 
+    "ccdfinterval[h]", 
+    "cdfinterval[h]",
+    "interval[h]",
+    "pointinterval[h]",
+    "histinterval[h]"
+    )) %>%
+    factor(., levels = .),
+  dist = "norm",
+  args = list(list(4, 1))
+)
 
-Instead, tidybayes contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:
+hist_df = tibble(
+  geom = "histinterval[h]",
+  x = qnorm(ppoints(1000), 4, 1),
+  dist = NA,
+  args = NA
+)
+
+dists_plot = dists_df %>%
+  ggplot(aes(y = geom, dist = dist, args = args)) +
+  geom_blank() + # ensures order
+  stat_dist_eyeh(data = . %>% filter(geom == "eye[h]")) +
+  stat_dist_halfeyeh(data = . %>% filter(geom == "halfeye[h]"), position = position_nudge(y = - 0.2)) +
+  stat_dist_gradientintervalh(data = . %>% filter(geom == "gradientinterval[h]"), scale = .5) +
+  stat_dist_ccdfintervalh(data = . %>% filter(geom == "ccdfinterval[h]"), scale = .5) +
+  stat_dist_cdfintervalh(data = . %>% filter(geom == "cdfinterval[h]"), scale = .5) +
+  stat_histintervalh(aes(x = x), data = hist_df, position = position_nudge(y = - 0.4)) +
+  stat_pointintervalh(aes(x = x, y = "pointinterval[h]"), data = hist_df) +
+  stat_intervalh(aes(x = x, y = "interval[h]"), data = hist_df, color = "gray65", alpha = 1/3, size = 10,
+    position = position_nudge(y = -.1)) +
+  scale_alpha_continuous(range = c(0,1), guide = FALSE) +
+  scale_x_continuous(limits = c(0,8), expand = c(0,0)) +
+  labs(
+    subtitle = "The stat_slabinterval / geom_slabinterval family",
+    x = NULL,
+    y = NULL
+  )
+
+line_annotations = tribble(
+  ~x,   ~y, ~x2, ~y2,
+  # stat only
+   1, 0.4,  1, 1.5,
+   0, 0.4,  1, 0.4,
+   0, 1.5,  1, 1.5,
+  # stat and geom
+   1, 1.7,  1, 3.3,
+   0, 1.7,  1, 1.7,
+   0, 3.3,  1, 3.3,
+  # stat and stat_dist
+   1, 3.5,  1, 8.5,
+   0, 3.5,  1, 3.5,
+   0, 8.5,  1, 8.5
+)
+
+label_annotations = tribble(
+  ~x, ~y, ~label,
+  2, 1, "stat_... only",
+  2, 2.5, "stat_... and geom_...",
+  2, 6, "stat_... and stat_dist_...",
+)
+
+annotation_plot = line_annotations %>%
+  ggplot(aes(x, y)) +
+  geom_segment(aes(xend = x2, yend = y2), lineend = "square", color = "gray70") +
+  scale_y_continuous(limits = c(0.4, nlevels(dists_df$geom) + 0.6), breaks = NULL) +
+  scale_x_continuous(limits = c(0, 20), breaks = NULL) +
+  geom_text(aes(label = label), data = label_annotations, hjust = 0, vjust = 0.3, size = 3.5, color = "gray30") +
+  coord_cartesian(expand = FALSE, clip = "off") +
+  labs(x = NULL, y = NULL)
+
+plot_grid(ncol = 2, align = "h", rel_widths = c(0.7, 0.3),
+  dists_plot,
+  annotation_plot
+)
+```
+
+Tidybayes has a pantheon of geoms and stats that stem from a common root: `geom_slabinterval()` and `stat_slabinterval()`. These geoms consist of a "slab" (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components. 
+
+Using `geom_slabinterval()` and `stat_slabinterval()` directly is not necessarily advisable: they are highly configurable on their own, but this configurability requires remembering a bunch of combinations of options to use. Instead, tidybayes contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:
 
 `[geom|stat|stat_dist]_[name][h|]`
 
