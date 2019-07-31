@@ -328,6 +328,15 @@ m %>%
 ```
 
 
+## Other visualizations of distributions: `stat_slabinterval`
+
+There are a variety of additional stats for visualizing distributions in the `geom_slabinterval()` family of stats and geoms:
+
+![The slabinterval family of geoms and stats](slabinterval_family.png)
+
+See `vignette("slabinterval")` for an overview.
+
+
 ## Posterior fits
 
 Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_draws`, which is analogous to `brms::fitted.brmsfit` or `brms::posterior_linpred` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of draws from posterior fits:
@@ -841,18 +850,28 @@ esoph %>%
 It is hard to see the changes in categories in the above plot; let's try something that gives a better gist of the distribution within each year:
 
 ```{r fig.height = 2.25, fig.width = 8}
-esoph %>%
+esoph_plot = esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_brm) %>%
   ggplot(aes(x = .value, y = .category)) +
-  stat_summaryh(fun.x = median, geom = "barh", fill = "gray75", width = 1, color = "white") +
-  stat_pointintervalh() +
   coord_cartesian(expand = FALSE) +
   facet_grid(. ~ agegp, switch = "x") +
   theme_classic() +
   theme(strip.background = element_blank(), strip.placement = "outside") +
   ggtitle("P(tobacco consumption category | age group)") +
   xlab("age group")
+
+esoph_plot +
+  stat_summaryh(fun.x = median, geom = "barh", fill = "gray75", width = 1, color = "white") +
+  stat_pointintervalh()
+```
+
+The bars in this case might present a false sense of precision, so we could also try CCDF barplots instead:
+
+```{r fig.height = 2.25, fig.width = 8}
+esoph_plot +
+  stat_ccdfintervalh() +
+  expand_limits(x = 0) #ensure bars go to 0
 ```
 
 This output should be very similar to the output from the corresponding `m_esoph_rs` model in `vignette("tidy-rstanarm")` (modulo different priors), though brms does more of the work for us to produce it than `rstanarm` does.

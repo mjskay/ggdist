@@ -38,7 +38,7 @@ if (capabilities("cairo")) {
 
 ## Introduction
   
-This vignette describes the slab+interval geoms and stats in `tidybayes`. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models) straightforward, and support a range of useful plots, including eye plots (densities + intervals) and CCDF bar plots (complementary cumulative distribution functions + intervals).
+This vignette describes the slab+interval geoms and stats in `tidybayes`. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models, or even sampling distributions from other models) straightforward, and support a range of useful plots, including intervals, eye plots (densities + intervals), CCDF bar plots (complementary cumulative distribution functions + intervals), gradient plots, and histograms.
 
 ## Setup
   
@@ -63,7 +63,7 @@ options(width = 120)
 
 ## Roadmap: It all starts with "slabinterval"
 
-```{r fig.height = 5, fig.width = 6.5, echo = FALSE}
+```{r slabinterval_family, fig.height = 5, fig.width = 6.5, echo = FALSE}
 dists_df = tibble(
   # enforce order
   geom = rev(c(
@@ -168,7 +168,7 @@ Eye plots combine densities (as violins) with intervals to give a more detailed 
 
 For these first few demos we'll use these data:
 
-```{r}
+```{r sample_data}
 set.seed(1234)
 df = tribble(
     ~group, ~subgroup, ~value,
@@ -183,7 +183,7 @@ df = tribble(
 
 We can summarize it at the group level using an eye plot with `stat_eye()` (ignoring subgroups for now):
 
-```{r}
+```{r group_eye}
 df %>%
   ggplot(aes(x = group, y = value)) +
   stat_eye() +
@@ -194,7 +194,7 @@ df %>%
 
 We can also use `stat_halfeye` instead to just get densities:
 
-```{r}
+```{r group_halfeye}
 df %>%
   ggplot(aes(x = group, y = value)) +
   stat_halfeye() +
@@ -203,7 +203,7 @@ df %>%
 
 Or use the `side` parameter to more finely control where the slab (in this case, the density) is drawn:
 
-```{r, fig.width = 7, fig.height = 4}
+```{r eye_side, fig.width = 7, fig.height = 4}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -217,7 +217,7 @@ plot_grid(ncol = 3, align = "hv",
 
 Or show a horizontal version by appending `h` to `stat_halfeye()` to get `stat_halfeyeh()`:
 
-```{r}
+```{r halfeyeh}
 df %>%
   ggplot(aes(x = value, y = group)) +
   stat_halfeyeh() +
@@ -226,7 +226,7 @@ df %>%
 
 This is equivalent to setting `orientation = "horizontal"`:
 
-```{r}
+```{r eye_orientation}
 df %>%
   ggplot(aes(x = value, y = group)) +
   stat_halfeye(orientation = "horizontal") +
@@ -235,7 +235,7 @@ df %>%
 
 Yielding these combinations:
 
-```{r fig.width = 6, fig.height = 6}
+```{r halfeyeh_family, fig.width = 6, fig.height = 6}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -254,7 +254,7 @@ plot_grid(ncol = 2, align = "hv",
 
 The `side` parameter works for `stat_halfeye()` as well. `"top"` and `"right"` are considered synonyms, as are `"bottom"` and `"left"`; either form works with both horizontal and vertical versions of the geoms:
 
-```{r, fig.width = 7, fig.height = 3}
+```{r eyeh_side, fig.width = 7, fig.height = 3}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
   panel_border()
@@ -271,7 +271,7 @@ plot_grid(ncol = 3, align = "hv",
 Eye plots are also designed to support dodging through the standard mechanism of `position = "dodge"`. 
 Unlike with geom_violin(), densities in groups that are not dodged (here, 'a' and 'b')\nhave the same area and max width as those in groups that are dodged ('c'):
 
-```{r}
+```{r eye_dodge}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_eye(position = "dodge") +
@@ -287,7 +287,7 @@ The same set of (half-)eye plot stats designed for sample data described above a
 
 For example, here are a variety of normal distributions describing the same data from the previous example:
 
-```{r}
+```{r dist_data}
 dist_df = tribble(
     ~group, ~subgroup, ~mean, ~sd,
     "a",          "h",     5,   1,
@@ -300,7 +300,7 @@ dist_df = tribble(
 
 We can visualize these distributions directly using `stat_dist_eye()`:
 
-```{r}
+```{r dist_eye_dodge}
 dist_df %>%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
   stat_dist_eye(position = "dodge") +
@@ -309,7 +309,7 @@ dist_df %>%
 
 This makes it easy to visualize a variety of distributions. E.g., here are some Beta distributions:
 
-```{r}
+```{r beta_stacked}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   ggplot(aes(y = alpha, dist = "beta", arg1 = alpha, arg2 = 10)) +
   stat_dist_halfeyeh() +
@@ -321,7 +321,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
 
 If you want to plot all of these on top of each other (instead of stacked), you can turn off plotting of the interval to make the plot easier to read. You can also set the outline color of the slab using the `slab_color` aesthetic, and change the fill color using `fill`:
 
-```{r}
+```{r beta_overplotted}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   ggplot(aes(y = "", dist = "beta", arg1 = alpha, arg2 = 10, slab_color = alpha)) +
   # show.legend = TRUE is currently necessary here due to a bug in ggplot
@@ -339,7 +339,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
 
 The approach using `arg1`, ... `arg9` can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the `args` aesthetic. We'll use it along with the `brms` package's implementation of the scaled and shifted Student t distribution (`brms::dstudent_t()`, etc):
 
-```{r}
+```{r norm_vs_t}
 tribble(
   ~ dist,      ~ args,
   "norm",      list(0, 1),
@@ -352,7 +352,7 @@ tribble(
 
 A particularly good use of the `dist` stats is to visualize priors. For example, with `brms` you can specify priors using the `brms::prior()` function. E.g., I might set some priors on the betas and the standard deviation in a model:
 
-```{r}
+```{r priors}
 # NB these priors are made up!
 c(
   prior(normal(0,1), class = b),
@@ -362,7 +362,7 @@ c(
 
 The `parse_dist` function can make it easier to visualize these: it takes in string specifications like those produced by `brms` --- `"normal(0,1)"` and `"lognormal(0,1)"` above --- and translates them into `.dist` and `.args` columns:
 
-```{r}
+```{r parse_dist}
 c(
   prior(normal(0,1), class = b),
   prior(lognormal(0,1), class = sigma)
@@ -372,7 +372,7 @@ c(
 
 Notice that it also automatically translate some common distribution names (e.g. "normal" and "lognormal") into their equivalent R function names (`"norm"` and `"lnorm"`). This makes it easy to use them with `stat_dist_eye()` and its variants:
 
-```{r}
+```{r prior_dist_halfeyeh}
 c(
   prior(normal(0,1), class = b),
   prior(lognormal(0,1), class = sigma)
@@ -399,7 +399,7 @@ All of the above geoms follow the naming scheme `stat_[dist_][half]eye[h]`.
 
 In some cases you might prefer histograms to density plots. `stat_histinterval[h]` provides an alternative to `stat_halfeye[h]` that uses histograms instead of densities:
 
-```{r fig.width = 6, fig.height = 3}
+```{r stat_histintervalh, fig.width = 6, fig.height = 3}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -426,7 +426,7 @@ For all of the examples above, both on sample data and analytical distributions,
 
 `stat_[c]cdfinterval[h]` has the following basic combinations:
 
-```{r fig.width = 6, fig.height = 6}
+```{r cdfinterval_family, fig.width = 6, fig.height = 6}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -445,7 +445,7 @@ plot_grid(ncol = 2, align = "hv",
 
 The CCDF interval plots are probably more useful in general, as the bars typical grow up from the baseline. For example, replacing `stat_eye()` with `stat_ccdfinterval()` in our previous subgroup plot produces CCDF bar plots:
 
-```{r}
+```{r ccdf_barplot}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_ccdfinterval(position = "dodge") +
@@ -454,7 +454,7 @@ df %>%
 
 The extents of the bars are determined automatically by range of the data in the samples. However, for bar charts it is often good practice to draw the bars from a meaningful reference point (this point is often 0). You can use `ggplot2::expand_limits()` to ensure the bar is drawn down to 0:
 
-```{r}
+```{r ccdf_dodge}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_ccdfinterval(position = "dodge") +
@@ -466,7 +466,7 @@ df %>%
 
 You can also adjust the position of the slab relative to the position of the interval using the `justification` parameter:
 
-```{r}
+```{r ccdf_justification}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_ccdfinterval(position = "dodge", justification = 1) +
@@ -478,7 +478,7 @@ df %>%
 
 The `side` parameter also works as with `stat_eye()`. Here we'll demonstrate with `stat_ccdfintervalh()`, the horizontal version:
 
-```{r, fig.height = 2.5, fig.width = 7}
+```{r ccdf_side, fig.height = 2.5, fig.width = 7}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
   expand_limits(x = 0) +
@@ -499,7 +499,7 @@ You can also use `stat_dist_ccdfinterval()` instead if you wish to visualize ana
 
 By default, `stat_dist_ccdfinterval()` uses the quantiles at `p = 0.001` and `p = 0.999` in the distributions are used to determine their extrant. You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown as before:
 
-```{r}
+```{r dist_ccdf_dodge}
 dist_df %>%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
   stat_dist_ccdfinterval(position = "dodge") +
@@ -524,7 +524,7 @@ Finally, an alternative approach to mapping density onto the `thickness` aesthet
 
 For example, replacing `stat_eye()` with `stat_gradientinterval()` produces gradient + interval plots:
 
-```{r}
+```{r gradient_dodge}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_gradientinterval(position = "dodge") +
@@ -537,7 +537,7 @@ df %>%
 
 Adding `scale_alpha_continuous(range = c(0,1))` above is helpful as without it the gradients have a hard boundary, which may not be desirable:
 
-```{r}
+```{r gradient_dodge_bad_alpha}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_gradientinterval(position = "dodge") +
@@ -552,7 +552,7 @@ df %>%
 
 As with other plot types, you can also use `stat_dist_gradientinterval()` instead if you wish to visualize analytical distributions:
 
-```{r}
+```{r dist_gradient_dodge}
 dist_df %>%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
   stat_dist_gradientinterval(position = "dodge") +

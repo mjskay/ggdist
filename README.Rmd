@@ -76,17 +76,23 @@ and visualization tasks common to many models:
   intervals *from* tidy data frames of draws, they *return* tidy data frames,
   and they **respect data frame groups**.
 
-* __Visualizing posteriors__. The focus on tidy data makes the output from tidybayes
+* __Visualizing priors and posteriors__. The focus on tidy data makes the output from tidybayes
   easy to visualize using `ggplot`. Existing `geom`s (like `geom_pointrange` and 
   `geom_linerange`) can give useful output, but `tidybayes` also includes several
-  geoms to simplify common combinations of `stats` and `geoms` with sensible
-  defaults suitable for visualizing posterior point summaries and intervals (`geom_pointinterval`,
-  `geom_pointintervalh`, `stat_pointinterval`, `stat_pointintervalh`), visualizing
-  densities with point summaries and intervals ("eye plots", `stat_eye` / `stat_eyeh`;
-  or "half-eye plots", `stat_halfeye` / `stat_halfeyeh`), and visualizing fit lines with an arbitrary 
-  number of uncertainty bands (`geom_lineribbon` and `stat_lineribbon`). Combining the
+  geoms and stats to simplify common combinations of `stats` and `geoms` with sensible
+  defaults suitable for visualizing posterior point summaries and intervals (`geom_pointinterval()`,
+  `geom_pointintervalh()`, `stat_pointinterval()`, `stat_pointintervalh()`), visualizing
+  distributions with point summaries and intervals (the `stat_sample_slabinterval()` family of
+  stats, including eye plots, half-eye plots, CCDF bar plots, gradient plots, and histograms), 
+  and visualizing fit lines with an arbitrary number of uncertainty bands (`geom_lineribbon` 
+  and `stat_lineribbon`). Priors can also be visualized in the same way using the 
+  `stat_dist_slabinterval()` family of stats. Combining the
   base-R `quantile` function with `geom_dotplot` also facilitates the construction
   of quantile dotplots of posteriors (see example in this document).
+  
+  ![The slabinterval family of geoms and stats](man/figures/slabinterval_family.png)
+
+  See `vignette("slabinterval")` for more information.
 
 * __Comparing a variable across levels of a factor__, which often means first
   generating pairs of levels of a factor (according to some desired set of 
@@ -277,6 +283,8 @@ m %>%
   ggplot(aes(x = condition_mean, y = condition)) +
   stat_halfeyeh()
 ```
+
+A variety of other stats and geoms for visualizing priors and posteriors are available; see `vignette("slabinterval")` for an overview of them.
 
 ### Plotting posteriors as quantile dotplots
 

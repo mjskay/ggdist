@@ -379,6 +379,13 @@ m %>%
   stat_halfeyeh(.width = c(.99, .8))
 ```
 
+### Other visualizations of distributions: `stat_slabinterval`
+
+There are a variety of additional stats for visualizing distributions in the `geom_slabinterval()` family of stats and geoms:
+
+![The slabinterval family of geoms and stats](slabinterval_family.png)
+
+See `vignette("slabinterval")` for an overview.
 
 ### Intervals with multiple probability levels: the `.width =` argument
 
