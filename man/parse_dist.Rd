@@ -54,6 +54,17 @@ a data frame, suitable for use with \code{\link{stat_dist_slabinterval}} and its
 by \code{\link[brms]{get_prior}}, making it particularly useful for visualizing priors from
 brms models.
 }
+\details{
+\code{parse_dist()} can be applied to character vectors or to a data frame + bare column name of the
+column to parse, and returns a data frame with \code{".dist"} and \code{".args"} columns added.
+\code{parse_dist()} uses \code{r_dist_name()} to translate distribution names into names reconized
+by R.
+
+\code{r_dist_name()} takes a character vector of names and translates common names into R
+distribution names. Character case, \code{.}, \code{_}, \code{-}, and spaces are ignored when
+translating names, so \code{"lognormal"}, \code{"LogNormal"}, \code{"log_normal"},
+\code{"log-Normal"}, and any number of other variants all get translated into \code{"lnorm"}.
+}
 \examples{
 
 library(dplyr)

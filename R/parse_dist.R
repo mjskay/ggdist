@@ -12,6 +12,16 @@
 #' by \code{\link[brms]{get_prior}}, making it particularly useful for visualizing priors from
 #' brms models.
 #'
+#' \code{parse_dist()} can be applied to character vectors or to a data frame + bare column name of the
+#' column to parse, and returns a data frame with \code{".dist"} and \code{".args"} columns added.
+#' \code{parse_dist()} uses \code{r_dist_name()} to translate distribution names into names reconized
+#' by R.
+#'
+#' \code{r_dist_name()} takes a character vector of names and translates common names into R
+#' distribution names. Character case, \code{.}, \code{_}, \code{-}, and spaces are ignored when
+#' translating names, so \code{"lognormal"}, \code{"LogNormal"}, \code{"log_normal"},
+#' \code{"log-Normal"}, and any number of other variants all get translated into \code{"lnorm"}.
+#'
 #' @param object A character vector containing distribution specifiations or a data frame with a column
 #'  containing distribution specifications.
 #' @param dist_col A bare (unquoted) column or column expression that resolves to a character vector
@@ -129,14 +139,14 @@ r_dist_lookup = c(
   normal = "norm",
   lognormal = "lnorm",
   exponential = "exp",
-  chi_square = "chisq",
+  chisquare = "chisq",
   uniform = "unif"
 )
 
 #' @rdname parse_dist
 #' @export
 r_dist_name = function(dist_name) {
-  result = ifelse(dist_name %in% names(r_dist_lookup), r_dist_lookup[dist_name], dist_name)
-  names(result) = names(dist_name)
-  result
+  r_name = r_dist_lookup[tolower(gsub("[ ._-]+", "", dist_name))]
+  names(r_name) = names(dist_name)
+  ifelse(is.na(r_name), dist_name, r_name)
 }
