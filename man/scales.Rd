@@ -131,7 +131,28 @@ this is what \code{guide_colorbar2} is for:
 }
 \examples{
 
-# TODO
+# This plot shows how to set multiple specific aesthetics
+# NB it is very ugly and is only for demo purposes.
+data.frame(distribution = "Normal(1,2)") \%>\%
+  parse_dist(distribution) \%>\%
+  ggplot(aes(y = distribution, dist = .dist, args = .args)) +
+  stat_dist_halfeyeh(
+    shape = 21,  # this point shape has a fill and outline
+    point_color = "red",
+    point_fill = "black",
+    point_size = 6,
+    stroke = 2,
+    interval_color = "blue",
+    # interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default
+    # see the interval_size_range option in help("geom_slabinterval")
+    interval_size = 8,
+    interval_linetype = "dashed",
+    # fill sets the fill color of the slab (here the density)
+    fill = "gray90",
+    slab_color = "green",
+    slab_size = 3,
+    slab_linetype = "dotted"
+  )
 
 }
 \seealso{
