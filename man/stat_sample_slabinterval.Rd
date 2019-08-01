@@ -213,15 +213,19 @@ In addition, in their default configuration (paired with geom_slabinterval) the 
   \item \code{fill}
   \item \code{shape}
   \item \code{stroke}
-  \item \code{point_size}
   \item \code{point_colour}
   \item \code{point_fill}
+  \item \code{point_alpha}
+  \item \code{point_size}
   \item \code{size}
-  \item \code{interval_size}
   \item \code{interval_colour}
+  \item \code{interval_alpha}
+  \item \code{interval_size}
   \item \code{interval_linetype}
   \item \code{slab_size}
   \item \code{slab_colour}
+  \item \code{slab_fill}
+  \item \code{slab_alpha}
   \item \code{slab_linetype}
   \item \code{y}
   \item \code{ymin}

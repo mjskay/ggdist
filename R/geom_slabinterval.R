@@ -225,19 +225,23 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # point aesthetics
     shape = NULL,
     stroke = NULL,
-    point_size = NULL,        # falls back to size
     point_colour = NULL,      # falls back to colour
     point_fill = NULL,        # falls back to fill
+    point_alpha = NULL,       # falls back to alpha
+    point_size = NULL,        # falls back to size
 
     # interval aesthetics
     size = NULL,
-    interval_size = NULL,     # falls back to size
     interval_colour = NULL,   # falls back to colour
+    interval_alpha = NULL,    # falls back to alpha
+    interval_size = NULL,     # falls back to size
     interval_linetype = NULL, # falls back to linetype
 
     # slab aesthetics
-    slab_size = 1,
+    slab_size = 1,            # no fallback
     slab_colour = NA,         # no outline around the slab by default
+    slab_fill = NULL,         # falls back to fill
+    slab_alpha = NULL,        # falls back to alpha
     slab_linetype = NULL      # falls back to linetype
   ),
 
@@ -507,20 +511,24 @@ get_justification = function(justification, side) {
 
 override_slab_aesthetics = function(s_data) {
   s_data$colour = s_data$slab_colour
-  s_data$linetype = s_data$slab_linetype %||% s_data$linetype
+  s_data$fill = s_data$slab_fill %||% s_data$fill
+  s_data$alpha = s_data$slab_alpha %||% s_data$alpha
   s_data$size = s_data$slab_size
+  s_data$linetype = s_data$slab_linetype %||% s_data$linetype
   s_data
 }
 
 override_point_aesthetics = function(p_data, size_domain, size_range, fatten_point) {
   p_data$colour = p_data$point_colour %||% p_data$colour
   p_data$fill = p_data$point_fill %||% p_data$fill
+  p_data$alpha = p_data$point_alpha %||% p_data$alpha
   p_data$size = p_data$point_size %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
   p_data
 }
 
 override_interval_aesthetics = function(i_data, size_domain, size_range) {
   i_data$colour = i_data$interval_colour %||% i_data$colour
+  i_data$alpha = i_data$interval_alpha %||% i_data$alpha
   i_data$size = get_line_size(i_data, size_domain, size_range)
   i_data$linetype = i_data$interval_linetype %||% i_data$linetype
   i_data

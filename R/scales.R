@@ -3,6 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
+
+# scale_point_... ---------------------------------------------------------
+
 #' Custom ggplot scales for geom_slabinterval (and derivatives)
 #'
 #' These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_slabinterval}}
@@ -19,6 +22,7 @@
 #'   \item{\code{scale_interval_size_* }}{Interval line width}
 #'   \item{\code{scale_interval_linetype_* }}{Interval line type}
 #'   \item{\code{scale_slab_color_* }}{Slab outline color}
+#'   \item{\code{scale_slab_fill_* }}{Slab fill color}
 #'   \item{\code{scale_slab_size_* }}{Slab outline line width}
 #'   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
 #' }
@@ -78,33 +82,42 @@
 #' @export
 scale_point_colour_discrete =
   function(..., aesthetics = "point_colour") scale_colour_discrete(..., aesthetics = aesthetics)
-
 #' @rdname scales
 #' @export
 scale_point_color_discrete = scale_point_colour_discrete
-
 #' @rdname scales
 #' @export
 scale_point_colour_continuous = function(..., aesthetics = "point_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
-
 #' @rdname scales
 #' @export
 scale_point_color_continuous = scale_point_colour_continuous
 
+
+#' @rdname scales
+#' @export
+scale_point_fill_discrete =
+  function(..., aesthetics = "point_fill") scale_colour_discrete(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
 scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
+
+#' @rdname scales
+#' @importFrom scales rescale_pal
+#' @export
+scale_point_alpha_continuous =
+  function(..., range = c(0.1, 1)) continuous_scale("point_alpha", "point_alpha_c", rescale_pal(range), ...)
+
+
 #' @rdname scales
 #' @importFrom scales area_pal
 #' @export
 scale_point_size_continuous =
-  function (..., range = c(1, 6)) continuous_scale("point_size", "point_size_c", area_pal(range), ...)
-
+  function(..., range = c(1, 6)) continuous_scale("point_size", "point_size_c", area_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
@@ -113,12 +126,38 @@ scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE)
     na.translate = na.translate, ...)
 }
 
+
+# scale_interval_... ------------------------------------------------------
+
+#' @export
+#' @rdname scales
+scale_interval_colour_discrete =
+  function(..., aesthetics = "interval_colour") scale_colour_discrete(..., aesthetics = aesthetics)
+#' @rdname scales
+#' @export
+scale_interval_color_discrete = scale_interval_colour_discrete
+#' @rdname scales
+#' @export
+scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = "colourbar2") {
+  scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
+}
+#' @rdname scales
+#' @export
+scale_interval_color_continuous = scale_interval_colour_continuous
+
+
+#' @rdname scales
+#' @importFrom scales rescale_pal
+#' @export
+scale_interval_alpha_continuous =
+  function(..., range = c(0.1, 1)) continuous_scale("interval_alpha", "interval_alpha_c", rescale_pal(range), ...)
+
+
 #' @rdname scales
 #' @importFrom scales area_pal
 #' @export
 scale_interval_size_continuous =
-  function (..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", area_pal(range), ...)
-
+  function(..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", area_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
@@ -127,6 +166,7 @@ scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FAL
     na.translate = na.translate, ...)
 }
 
+
 #' @rdname scales
 #' @importFrom scales linetype_pal
 #' @export
@@ -134,57 +174,49 @@ scale_interval_linetype = function(..., na.value = "blank") {
   discrete_scale("interval_linetype", "interval_linetype_d", linetype_pal(), na.value = na.value, ...)
 }
 
-#' @export
-#' @rdname scales
-scale_interval_colour_discrete =
-  function(..., aesthetics = "interval_colour") scale_colour_discrete(..., aesthetics = aesthetics)
 
-#' @rdname scales
-#' @export
-scale_interval_color_discrete = scale_interval_colour_discrete
-
-#' @rdname scales
-#' @export
-scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = "colourbar2") {
-  scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
-}
-
-#' @rdname scales
-#' @export
-scale_interval_color_continuous = scale_interval_colour_continuous
+# scale_slab_... ----------------------------------------------------------
 
 #' @export
 #' @rdname scales
 scale_slab_colour_discrete =
   function(..., aesthetics = "slab_colour") scale_colour_discrete(..., aesthetics = aesthetics)
-
 #' @rdname scales
 #' @export
 scale_slab_color_discrete = scale_slab_colour_discrete
-
 #' @rdname scales
 #' @export
 scale_slab_colour_continuous = function(..., aesthetics = "slab_colour", guide = "colourbar2") {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
-
 #' @rdname scales
 #' @export
 scale_slab_color_continuous = scale_slab_colour_continuous
 
+
 #' @rdname scales
-#' @importFrom scales linetype_pal
 #' @export
-scale_slab_linetype = function(..., na.value = "blank") {
-  discrete_scale("slab_linetype", "slab_linetype_d", linetype_pal(), na.value = na.value, ...)
+scale_slab_fill_discrete =
+  function(..., aesthetics = "slab_fill") scale_colour_discrete(..., aesthetics = aesthetics)
+#' @rdname scales
+#' @export
+scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = "colourbar2") {
+  scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
+
+
+#' @rdname scales
+#' @importFrom scales rescale_pal
+#' @export
+scale_slab_alpha_continuous =
+  function(..., range = c(0.1, 1)) continuous_scale("slab_alpha", "slab_alpha_c", rescale_pal(range), ...)
+
 
 #' @rdname scales
 #' @importFrom scales area_pal
 #' @export
 scale_slab_size_continuous =
-  function (..., range = c(1, 6)) continuous_scale("slab_size", "slab_size_c", area_pal(range), ...)
-
+  function(..., range = c(1, 6)) continuous_scale("slab_size", "slab_size_c", area_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
@@ -193,19 +225,32 @@ scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) 
     na.translate = na.translate, ...)
 }
 
+
+#' @rdname scales
+#' @importFrom scales linetype_pal
+#' @export
+scale_slab_linetype = function(..., na.value = "blank") {
+  discrete_scale("slab_linetype", "slab_linetype_d", linetype_pal(), na.value = na.value, ...)
+}
+
+
+
+# guide_colorbar2 ---------------------------------------------------------
+
 #' @rdname scales
 #' @export
 guide_colourbar2 = function(...) {
   # the default colourbar throws an error when asked to draw color bars for these aesthetics
   # even though it seems perfectly capable of doing so. This fixes that...
-  colourbar = ggplot2::guide_colourbar(...)
-  colourbar$available_aes = union(colourbar$available_aes, c(
-    "point_color",
-    "point_fill",
-    "interval_colour",
-    "slab_colour"
-  ))
-  colourbar
+  guide_colourbar(
+    available_aes = union(guide_colourbar()$available_aes,
+      "point_colour",
+      "point_fill",
+      "interval_colour",
+      "slab_colour",
+      "slab_fill"
+    )
+  )
 }
 
 #' @rdname scales
