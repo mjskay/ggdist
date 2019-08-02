@@ -9,6 +9,7 @@
 \alias{scale_point_fill_discrete}
 \alias{scale_point_fill_continuous}
 \alias{scale_point_alpha_continuous}
+\alias{scale_point_alpha_discrete}
 \alias{scale_point_size_continuous}
 \alias{scale_point_size_discrete}
 \alias{scale_interval_colour_discrete}
@@ -16,9 +17,11 @@
 \alias{scale_interval_colour_continuous}
 \alias{scale_interval_color_continuous}
 \alias{scale_interval_alpha_continuous}
+\alias{scale_interval_alpha_discrete}
 \alias{scale_interval_size_continuous}
 \alias{scale_interval_size_discrete}
-\alias{scale_interval_linetype}
+\alias{scale_interval_linetype_discrete}
+\alias{scale_interval_linetype_continuous}
 \alias{scale_slab_colour_discrete}
 \alias{scale_slab_color_discrete}
 \alias{scale_slab_colour_continuous}
@@ -26,9 +29,11 @@
 \alias{scale_slab_fill_discrete}
 \alias{scale_slab_fill_continuous}
 \alias{scale_slab_alpha_continuous}
+\alias{scale_slab_alpha_discrete}
 \alias{scale_slab_size_continuous}
 \alias{scale_slab_size_discrete}
-\alias{scale_slab_linetype}
+\alias{scale_slab_linetype_discrete}
+\alias{scale_slab_linetype_continuous}
 \alias{guide_colourbar2}
 \alias{guide_colorbar2}
 \title{Custom ggplot scales for geom_slabinterval (and derivatives)}
@@ -50,6 +55,8 @@ scale_point_fill_continuous(..., aesthetics = "point_fill",
 
 scale_point_alpha_continuous(..., range = c(0.1, 1))
 
+scale_point_alpha_discrete(..., range = c(0.1, 1))
+
 scale_point_size_continuous(..., range = c(1, 6))
 
 scale_point_size_discrete(..., range = c(1, 6), na.translate = FALSE)
@@ -66,12 +73,16 @@ scale_interval_color_continuous(..., aesthetics = "interval_colour",
 
 scale_interval_alpha_continuous(..., range = c(0.1, 1))
 
+scale_interval_alpha_discrete(..., range = c(0.1, 1))
+
 scale_interval_size_continuous(..., range = c(1, 6))
 
 scale_interval_size_discrete(..., range = c(1, 6),
   na.translate = FALSE)
 
-scale_interval_linetype(..., na.value = "blank")
+scale_interval_linetype_discrete(..., na.value = "blank")
+
+scale_interval_linetype_continuous(...)
 
 scale_slab_colour_discrete(..., aesthetics = "slab_colour")
 
@@ -90,11 +101,15 @@ scale_slab_fill_continuous(..., aesthetics = "slab_fill",
 
 scale_slab_alpha_continuous(..., range = c(0.1, 1))
 
+scale_slab_alpha_discrete(..., range = c(0.1, 1))
+
 scale_slab_size_continuous(..., range = c(1, 6))
 
 scale_slab_size_discrete(..., range = c(1, 6), na.translate = FALSE)
 
-scale_slab_linetype(..., na.value = "blank")
+scale_slab_linetype_discrete(..., na.value = "blank")
+
+scale_slab_linetype_continuous(...)
 
 guide_colourbar2(...)
 
@@ -126,12 +141,15 @@ related geoms:
 \enumerate{
   \item{\code{scale_point_color_* }}{Point color}
   \item{\code{scale_point_fill_* }}{Point fill color}
+  \item{\code{scale_point_alpha_* }}{Point alpha level / opacity}
   \item{\code{scale_point_size_* }}{Point size}
   \item{\code{scale_interval_color_* }}{Interval line color}
+  \item{\code{scale_interval_alpha_* }}{Interval alpha level / opacity}
   \item{\code{scale_interval_size_* }}{Interval line width}
   \item{\code{scale_interval_linetype_* }}{Interval line type}
   \item{\code{scale_slab_color_* }}{Slab outline color}
   \item{\code{scale_slab_fill_* }}{Slab fill color}
+  \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity}
   \item{\code{scale_slab_size_* }}{Slab outline line width}
   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
 }
@@ -163,6 +181,7 @@ data.frame(distribution = "Normal(1,2)") \%>\%
     shape = 21,  # this point shape has a fill and outline
     point_color = "red",
     point_fill = "black",
+    point_alpha = .1,
     point_size = 6,
     stroke = 2,
     interval_color = "blue",
@@ -170,11 +189,13 @@ data.frame(distribution = "Normal(1,2)") \%>\%
     # see the interval_size_range option in help("geom_slabinterval")
     interval_size = 8,
     interval_linetype = "dashed",
+    interval_alpha = .25,
     # fill sets the fill color of the slab (here the density)
-    fill = "gray90",
     slab_color = "green",
+    slab_fill = "purple",
     slab_size = 3,
-    slab_linetype = "dotted"
+    slab_linetype = "dotted",
+    slab_alpha = .5
   )
 
 }

@@ -17,12 +17,15 @@
 #' \enumerate{
 #'   \item{\code{scale_point_color_* }}{Point color}
 #'   \item{\code{scale_point_fill_* }}{Point fill color}
+#'   \item{\code{scale_point_alpha_* }}{Point alpha level / opacity}
 #'   \item{\code{scale_point_size_* }}{Point size}
 #'   \item{\code{scale_interval_color_* }}{Interval line color}
+#'   \item{\code{scale_interval_alpha_* }}{Interval alpha level / opacity}
 #'   \item{\code{scale_interval_size_* }}{Interval line width}
 #'   \item{\code{scale_interval_linetype_* }}{Interval line type}
 #'   \item{\code{scale_slab_color_* }}{Slab outline color}
 #'   \item{\code{scale_slab_fill_* }}{Slab fill color}
+#'   \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity}
 #'   \item{\code{scale_slab_size_* }}{Slab outline line width}
 #'   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
 #' }
@@ -65,6 +68,7 @@
 #'     shape = 21,  # this point shape has a fill and outline
 #'     point_color = "red",
 #'     point_fill = "black",
+#'     point_alpha = .1,
 #'     point_size = 6,
 #'     stroke = 2,
 #'     interval_color = "blue",
@@ -72,11 +76,13 @@
 #'     # see the interval_size_range option in help("geom_slabinterval")
 #'     interval_size = 8,
 #'     interval_linetype = "dashed",
+#'     interval_alpha = .25,
 #'     # fill sets the fill color of the slab (here the density)
-#'     fill = "gray90",
 #'     slab_color = "green",
+#'     slab_fill = "purple",
 #'     slab_size = 3,
-#'     slab_linetype = "dotted"
+#'     slab_linetype = "dotted",
+#'     slab_alpha = .5
 #'   )
 #'
 #' @export
@@ -109,8 +115,14 @@ scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = "
 #' @rdname scales
 #' @importFrom scales rescale_pal
 #' @export
-scale_point_alpha_continuous =
-  function(..., range = c(0.1, 1)) continuous_scale("point_alpha", "point_alpha_c", rescale_pal(range), ...)
+scale_point_alpha_continuous = function(..., range = c(0.1, 1)) {
+  continuous_scale("point_alpha", "point_alpha_c", rescale_pal(range), ...)
+}
+#' @rdname scales
+#' @export
+scale_point_alpha_discrete = function(..., range = c(0.1, 1)) {
+  discrete_scale("point_alpha", "point_alpha_d", function(n) seq(range[1], range[2], length.out = n), ...)
+}
 
 
 #' @rdname scales
@@ -149,8 +161,14 @@ scale_interval_color_continuous = scale_interval_colour_continuous
 #' @rdname scales
 #' @importFrom scales rescale_pal
 #' @export
-scale_interval_alpha_continuous =
-  function(..., range = c(0.1, 1)) continuous_scale("interval_alpha", "interval_alpha_c", rescale_pal(range), ...)
+scale_interval_alpha_continuous = function(..., range = c(0.1, 1)) {
+  continuous_scale("interval_alpha", "interval_alpha_c", rescale_pal(range), ...)
+}
+#' @rdname scales
+#' @export
+scale_interval_alpha_discrete = function(..., range = c(0.1, 1)) {
+  discrete_scale("interval_alpha", "interval_alpha_d", function(n) seq(range[1], range[2], length.out = n), ...)
+}
 
 
 #' @rdname scales
@@ -170,8 +188,13 @@ scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FAL
 #' @rdname scales
 #' @importFrom scales linetype_pal
 #' @export
-scale_interval_linetype = function(..., na.value = "blank") {
+scale_interval_linetype_discrete = function(..., na.value = "blank") {
   discrete_scale("interval_linetype", "interval_linetype_d", linetype_pal(), na.value = na.value, ...)
+}
+#' @rdname scales
+#' @export
+scale_interval_linetype_continuous = function(...) {
+  stop("A continuous variable cannot be mapped to linetype", call. = FALSE)
 }
 
 
@@ -208,8 +231,14 @@ scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = "co
 #' @rdname scales
 #' @importFrom scales rescale_pal
 #' @export
-scale_slab_alpha_continuous =
-  function(..., range = c(0.1, 1)) continuous_scale("slab_alpha", "slab_alpha_c", rescale_pal(range), ...)
+scale_slab_alpha_continuous = function(..., range = c(0.1, 1)) {
+  continuous_scale("slab_alpha", "slab_alpha_c", rescale_pal(range), ...)
+}
+#' @rdname scales
+#' @export
+scale_slab_alpha_discrete = function(..., range = c(0.1, 1)) {
+  discrete_scale("slab_alpha", "slab_alpha_d", function(n) seq(range[1], range[2], length.out = n), ...)
+}
 
 
 #' @rdname scales
@@ -229,8 +258,13 @@ scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) 
 #' @rdname scales
 #' @importFrom scales linetype_pal
 #' @export
-scale_slab_linetype = function(..., na.value = "blank") {
+scale_slab_linetype_discrete = function(..., na.value = "blank") {
   discrete_scale("slab_linetype", "slab_linetype_d", linetype_pal(), na.value = na.value, ...)
+}
+#' @rdname scales
+#' @export
+scale_slab_linetype_continuous = function(...) {
+  stop("A continuous variable cannot be mapped to linetype", call. = FALSE)
 }
 
 
@@ -242,15 +276,13 @@ scale_slab_linetype = function(..., na.value = "blank") {
 guide_colourbar2 = function(...) {
   # the default colourbar throws an error when asked to draw color bars for these aesthetics
   # even though it seems perfectly capable of doing so. This fixes that...
-  guide_colourbar(
-    available_aes = union(guide_colourbar()$available_aes,
-      "point_colour",
-      "point_fill",
-      "interval_colour",
-      "slab_colour",
-      "slab_fill"
-    )
-  )
+  guide_colourbar(available_aes = union(guide_colourbar()$available_aes, c(
+    "point_colour",
+    "point_fill",
+    "interval_colour",
+    "slab_colour",
+    "slab_fill"
+  )))
 }
 
 #' @rdname scales

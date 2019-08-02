@@ -100,7 +100,7 @@ dists_plot = dists_df %>%
   stat_pointintervalh(aes(x = x, y = "pointinterval[h]"), data = hist_df) +
   stat_intervalh(aes(x = x, y = "interval[h]"), data = hist_df, color = "gray65", alpha = 1/3, size = 10,
     position = position_nudge(y = -.1)) +
-  scale_alpha_continuous(range = c(0,1), guide = FALSE) +
+  scale_slab_alpha_continuous(range = c(0,1), guide = FALSE) +
   scale_x_continuous(limits = c(0,8), expand = c(0,0)) +
   labs(
     subtitle = "The stat_slabinterval / geom_slabinterval family",
@@ -528,14 +528,14 @@ For example, replacing `stat_eye()` with `stat_gradientinterval()` produces grad
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_gradientinterval(position = "dodge") +
-  scale_alpha_continuous(range = c(0,1)) +
+  scale_slab_alpha_continuous(range = c(0,1)) +
   labs(
     title = "stat_gradientinterval(position = 'dodge')",
     alpha = "density"
   )
 ```
 
-Adding `scale_alpha_continuous(range = c(0,1))` above is helpful as without it the gradients have a hard boundary, which may not be desirable:
+Adding `scale_slab_alpha_continuous(range = c(0,1))` above is helpful as without it the gradients have a hard boundary, which may not be desirable:
 
 ```{r gradient_dodge_bad_alpha}
 df %>%
@@ -556,7 +556,7 @@ As with other plot types, you can also use `stat_dist_gradientinterval()` instea
 dist_df %>%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
   stat_dist_gradientinterval(position = "dodge") +
-  scale_alpha_continuous(range = c(0,1)) +
+  scale_slab_alpha_continuous(range = c(0,1)) +
   labs(
     title = "stat_dist_gradientinterval(position = 'dodge')",
     alpha = "density"

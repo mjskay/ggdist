@@ -369,6 +369,6 @@ stat_dist_gradientintervalh = function(..., orientation = "horizontal") {
 }
 StatDistGradientinterval <- ggproto("StatDistGradientinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
-    alpha = stat(f)
+    slab_alpha = stat(f)
   ), StatDistSlabinterval$default_aes)
 )

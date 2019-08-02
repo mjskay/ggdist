@@ -19,7 +19,8 @@ test_that("distribution eye plots work with the args aesthetic", {
     ggplot(aes(dist = dist, args = args))
 
   vdiffr::expect_doppelganger("vertical half-eye using args",
-    p + stat_dist_halfeye(aes(x = dist)))
+    p + stat_dist_halfeye(aes(x = dist))
+  )
 
   vdiffr::expect_doppelganger("horizontal half-eye using args",
     p + stat_dist_halfeyeh(aes(y = dist)))
@@ -45,10 +46,12 @@ test_that("stat_dist_gradientinterval works", {
     "t", list(3)
   ) %>%
     ggplot(aes(dist = dist, args = args, fill = dist)) +
-    scale_alpha_continuous(range = c(0,1))
+    scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("dist_gradientinterval with two groups",
-    p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99)))
+    p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99))
+  )
   vdiffr::expect_doppelganger("dist_gradientintervalh with two groups",
-    p + stat_dist_gradientintervalh(aes(y = dist), n = 20, p_limits = c(0.01, 0.99)))
+    p + stat_dist_gradientintervalh(aes(y = dist), n = 20, p_limits = c(0.01, 0.99))
+  )
 })

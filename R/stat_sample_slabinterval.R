@@ -291,7 +291,7 @@ stat_gradientintervalh = function(..., orientation = "horizontal") {
 }
 StatGradientinterval <- ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
-    alpha = stat(f)
+    slab_alpha = stat(f)
   ), StatSampleSlabinterval$default_aes)
 )
 

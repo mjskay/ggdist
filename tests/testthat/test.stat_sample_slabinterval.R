@@ -19,7 +19,7 @@ test_that("gradientinterval works", {
   ) %>%
     unnest() %>%
     ggplot() +
-    scale_alpha_continuous(range = c(0,1))
+    scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("gradientinterval with two groups",
     p + stat_gradientinterval(aes(x = dist, y = x), n = 20))

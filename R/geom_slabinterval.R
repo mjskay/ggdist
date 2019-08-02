@@ -479,6 +479,11 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 )
 
 
+# drawing functions -------------------------------------------------------
+
+
+
+
 # side and justification calculations -------------------------------------
 
 switch_side = function(side, top, bottom, both) {
