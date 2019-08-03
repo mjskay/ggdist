@@ -103,7 +103,7 @@
       <h1>Slab + interval stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2019-07-31</h4>
+            <h4 class="date">2019-08-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
@@ -142,7 +142,7 @@ img {
 <div id="roadmap-it-all-starts-with-slabinterval" class="section level2">
 <h2 class="hasAnchor">
 <a href="#roadmap-it-all-starts-with-slabinterval" class="anchor"></a>Roadmap: It all starts with “slabinterval”</h2>
-<p><img src="slabinterval_files/figure-html/slabinterval_family-1.png" width="624"></p>
+<p><img src="slabinterval_files/figure-html/slabinterval_family-1.png" width="672"></p>
 <p>Tidybayes has a pantheon of geoms and stats that stem from a common root: <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>. These geoms consist of a “slab” (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components.</p>
 <p>Using <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> directly is not necessarily advisable: they are highly configurable on their own, but this configurability requires remembering a bunch of combinations of options to use. Instead, tidybayes contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:</p>
 <p><code>[geom|stat|stat_dist]_[name][h|]</code></p>
@@ -462,7 +462,7 @@ img {
 <div id="gradient-plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#gradient-plots" class="anchor"></a>Gradient plots</h2>
-<p>Finally, an alternative approach to mapping density onto the <code>thickness</code> aesthetic of the slab is to instead map it onto its <code>alpha</code> value (i.e., opacity). This is what the <code>stat_[dist_]gradientinterval[h]</code> family does.</p>
+<p>Finally, an alternative approach to mapping density onto the <code>thickness</code> aesthetic of the slab is to instead map it onto its <code>alpha</code> value (i.e., opacity). This is what the <code>stat_[dist_]gradientinterval[h]</code> family does (actually, it uses <code>slab_alpha</code>, a variant of the <code>alpha</code> aesthetic).</p>
 <div id="on-sample-data-stat_gradientintervalh" class="section level3">
 <h3 class="hasAnchor">
 <a href="#on-sample-data-stat_gradientintervalh" class="anchor"></a>On sample data: <code>stat_gradientinterval[h]</code>
@@ -471,35 +471,19 @@ img {
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb28-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span><span class="kw">scale_alpha_continuous</span>(<span class="dt">range =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-5" title="5"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb28-6" title="6">    <span class="dt">title =</span> <span class="st">"stat_gradientinterval(position = 'dodge')"</span>,</a>
-<a class="sourceLine" id="cb28-7" title="7">    <span class="dt">alpha =</span> <span class="st">"density"</span></a>
-<a class="sourceLine" id="cb28-8" title="8">  )</a></code></pre></div>
+<a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_gradientinterval(position = 'dodge')"</span>)</a></code></pre></div>
 <p><img src="slabinterval_files/figure-html/gradient_dodge-1.png" width="576"></p>
-<p>Adding <code>scale_alpha_continuous(range = c(0,1))</code> above is helpful as without it the gradients have a hard boundary, which may not be desirable:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb29-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb29-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb29-4" title="4"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb29-5" title="5">    <span class="dt">title =</span> <span class="st">"stat_gradientinterval(position = 'dodge')"</span>,</a>
-<a class="sourceLine" id="cb29-6" title="6">    <span class="dt">alpha =</span> <span class="st">"density"</span></a>
-<a class="sourceLine" id="cb29-7" title="7">  )</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/gradient_dodge_bad_alpha-1.png" width="576"></p>
+<p><code><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval()</a></code> maps density onto the <code>slab_alpha</code> aesthetic, which is a variant of the ggplot <code>alpha</code> scale that specifically targets alpha (opacity) values of the slab portion of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code>. This aesthetic has default ranges and limits that are a little different from the base ggplot <code>alpha</code> scale and which ensure that densities of 0 are mapped onto opacities of 0. You can use <code><a href="../reference/scales.html">scale_slab_alpha_continuous()</a></code> to adjust this scale’s settings.</p>
 </div>
 <div id="on-analytical-distributions-stat_dist_ccdfintervalh-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#on-analytical-distributions-stat_dist_ccdfintervalh-1" class="anchor"></a>On analytical distributions: <code>stat_dist_[c]cdfinterval[h]</code>
 </h3>
 <p>As with other plot types, you can also use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval()</a></code> instead if you wish to visualize analytical distributions:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">dist_df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-4" title="4"><span class="st">  </span><span class="kw">scale_alpha_continuous</span>(<span class="dt">range =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-5" title="5"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb30-6" title="6">    <span class="dt">title =</span> <span class="st">"stat_dist_gradientinterval(position = 'dodge')"</span>,</a>
-<a class="sourceLine" id="cb30-7" title="7">    <span class="dt">alpha =</span> <span class="st">"density"</span></a>
-<a class="sourceLine" id="cb30-8" title="8">  )</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">dist_df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb29-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dist_gradientinterval(position = 'dodge')"</span>)</a></code></pre></div>
 <p><img src="slabinterval_files/figure-html/dist_gradient_dodge-1.png" width="576"></p>
 </div>
 <div id="summing-up-gradient-plots-stat_dist_gradientintervalh" class="section level3">

@@ -73,20 +73,28 @@ manipulation and visualization tasks common to many models:
     intervals *from* tidy data frames of draws, they *return* tidy data
     frames, and they **respect data frame groups**.
 
-  - **Visualizing posteriors**. The focus on tidy data makes the output
-    from tidybayes easy to visualize using `ggplot`. Existing `geom`s
-    (like `geom_pointrange` and `geom_linerange`) can give useful
-    output, but `tidybayes` also includes several geoms to simplify
-    common combinations of `stats` and `geoms` with sensible defaults
-    suitable for visualizing posterior point summaries and intervals
-    (`geom_pointinterval`, `geom_pointintervalh`, `stat_pointinterval`,
-    `stat_pointintervalh`), visualizing densities with point summaries
-    and intervals (“eye plots”, `geom_eye` and `geom_eyeh`; or “half-eye
-    plots”, `geom_halfeyeh`), and visualizing fit lines with an
-    arbitrary number of uncertainty bands (`geom_lineribbon` and
-    `stat_lineribbon`). Combining the base-R `quantile` function with
+  - **Visualizing priors and posteriors**. The focus on tidy data makes
+    the output from tidybayes easy to visualize using `ggplot`. Existing
+    `geom`s (like `geom_pointrange` and `geom_linerange`) can give
+    useful output, but `tidybayes` also includes several geoms and stats
+    to simplify common combinations of `stats` and `geoms` with sensible
+    defaults suitable for visualizing posterior point summaries and
+    intervals (`geom_pointinterval()`, `geom_pointintervalh()`,
+    `stat_pointinterval()`, `stat_pointintervalh()`), visualizing
+    distributions with point summaries and intervals (the
+    `stat_sample_slabinterval()` family of stats, including eye plots,
+    half-eye plots, CCDF bar plots, gradient plots, and histograms), and
+    visualizing fit lines with an arbitrary number of uncertainty bands
+    (`geom_lineribbon` and `stat_lineribbon`). Priors can also be
+    visualized in the same way using the `stat_dist_slabinterval()`
+    family of stats. Combining the base-R `quantile` function with
     `geom_dotplot` also facilitates the construction of quantile
     dotplots of posteriors (see example in this document).
+    
+    ![The slabinterval family of geoms and
+    stats](man/figures/slabinterval_family.png)
+    
+    See `vignette("slabinterval")` for more information.
 
   - **Comparing a variable across levels of a factor**, which often
     means first generating pairs of levels of a factor (according to
@@ -304,25 +312,25 @@ different `condition` (some other formats supported by `tidybayes` are
 discussed in `vignette("tidybayes")`; in particular, the format returned
 by `gather_draws`).
 
-### Plotting posteriors as eye plots: `geom_eye` / `geom_eyeh`
+### Plotting posteriors as eye plots: `stat_eye` / `stat_eyeh`
 
 Automatic splitting of indices into columns makes it easy to plot the
-condition means here. We will employ the `tidybayes::geom_eyeh` geom
-(horizontal version of `tidybayes::geom_eye`), which combines a violin
+condition means here. We will employ the `tidybayes::stat_eyeh` geom
+(horizontal version of `tidybayes::stat_eye`), which combines a violin
 plot of the posterior density, median, 66% and 95% quantile interval to
 give an “eye plot” of the posterior. The point and interval types are
 customizable using the `point_interval` family of functions. A
 “half-eye” plot (non-mirrored density) is also available as
-`tidybayes::geom_halfeyeh`.
+`tidybayes::stat_halfeyeh`.
 
 ``` r
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
-  geom_eyeh()
+  stat_eyeh()
 ```
 
-![](README_files/figure-gfm/geom_eyeh-1.png)<!-- -->
+![](README_files/figure-gfm/stat_eyeh-1.png)<!-- -->
 
 Or one can employ the similar “half-eye” plot:
 
@@ -330,10 +338,13 @@ Or one can employ the similar “half-eye” plot:
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
-  geom_halfeyeh()
+  stat_halfeyeh()
 ```
 
-![](README_files/figure-gfm/geom_halfeyeh-1.png)<!-- -->
+![](README_files/figure-gfm/stat_halfeyeh-1.png)<!-- -->
+
+A variety of other stats and geoms for visualizing priors and posteriors
+are available; see `vignette("slabinterval")` for an overview of them.
 
 ### Plotting posteriors as quantile dotplots
 
@@ -502,8 +513,6 @@ m %>%
   # data
   geom_point(aes(x = response), data = ABC)
 ```
-
-    ## Warning: Ignoring unknown aesthetics: x
 
 ![](README_files/figure-gfm/pp_intervals-1.png)<!-- -->
 
