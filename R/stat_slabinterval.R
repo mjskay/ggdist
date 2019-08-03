@@ -194,119 +194,18 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     }
 
     # SLAB
-    s_data = NULL
-    if (show_slab && !is.null(slab_function)) {
-
-      # determine limits of the slab function
-      # we do this first so we can figure out the overall limits
-      # based on the min/max limits over the entire input data
-
-      # manually-defined limits we want to obey as maximums
-      # (the limits are *at most* these)
-      max_limits = limits
-      if (is.null(max_limits)) {
-        if (is.null(scales[[x]]$limits)) {
-          max_limits = c(NA, NA)
-        } else{
-          max_limits = x_trans$inverse(scales[[x]]$limits)
-        }
-      }
-
-      # data-defined limits we want to obey as minimums
-      # (the limits are *at least* these, unless the
-      # max_limits are more narrow)
-      min_limits = if (is.null(scales[[x]])) {
-        c(NA, NA)
-      } else {
-        x_trans$inverse(scales[[x]]$dimension())
-      }
-
-      # for making versions of min/max that ignore NAs but also
-      # return NA if there are no values / no non-NA values
-      na_ = function(m_, ...) {
-        values = na.omit(c(...))
-        if (length(values) == 0) NA
-        else m_(values)
-      }
-
-      # if a limits function was provided, we also want to account
-      # for the limits suggested by that function based on the data
-      # these will adjust min_limits
-      if (!is.null(limits_function)) {
-        limits_function = as_function(limits_function)
-        limits_fun = function(df) do.call(limits_function, c(list(quote(df)), limits_args))
-        l_data = summarise_by(data, c("group", y), limits_fun)
-        min_limits = c(
-          na_(min, l_data$.lower, min_limits[[1]]),
-          na_(max, l_data$.upper, min_limits[[2]])
-        )
-      }
-
-      limits = c(
-        na_(max, min_limits[[1]], max_limits[[1]]),
-        na_(min, min_limits[[2]], max_limits[[2]])
+    s_data = if (show_slab && !is.null(slab_function)) {
+      compute_slabs(data, scales, x_trans,
+        orientation, limits_function, limits_args, limits, slab_function, slab_args, n
       )
-      #default to 0 (min) and 1 (max) for unknown limits
-      limits = ifelse(is.na(limits), c(0,1), limits)
-
-      # now, figure out the points at which the slab functions should be evaluated
-      # we set up the grid in the transformed space
-      input = x_trans$inverse(seq(x_trans$transform(limits[[1]]), x_trans$transform(limits[[2]]), length.out = n))
-      slab_args[["input"]] = input
-      slab_args[["limits"]] = limits
-      slab_args[["n"]] = n
-      slab_args[["orientation"]] = orientation
-
-      # evaluate the slab function
-      slab_function = as_function(slab_function)
-      slab_fun = function(df) do.call(slab_function, c(list(quote(df)), slab_args))
-      s_data = summarise_by(data, c("group", y), slab_fun)
-
-      names(s_data)[names(s_data) == ".value"] = "f"
-      s_data[[x]] = x_trans$transform(s_data$.input)
-      s_data$.input = NULL
-
-      s_data$datatype = "slab"
     }
 
 
     # INTERVAL
-    i_data = NULL
-    if (show_interval) {
-      interval_args[[".width"]] = .width
-
-      draw_interval = FALSE
-      if (is.null(interval_function)) {
-        if (!is.null(point_interval)) {
-          # need to set .simple_names here to get .value, .lower, and .upper
-          interval_args$.simple_names = TRUE
-
-          # function is a point_interval, we need to make the version that
-          # can take in a data frame
-          point_interval = as_function(point_interval)
-          interval_fun = function(df) do.call(point_interval, c(list(quote(df[[x]])), interval_args))
-          draw_interval = TRUE
-        }
-      } else {
-        interval_args[["orientation"]] = orientation
-        interval_function = as_function(interval_function)
-        interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
-        draw_interval = TRUE
-      }
-
-      if (draw_interval) {
-        i_data = summarise_by(data, c("group", y), interval_fun)
-
-        i_data[[x]] = x_trans$transform(i_data$.value)
-        i_data$.value = NULL
-        i_data[[xmin]] = x_trans$transform(i_data$.lower)
-        i_data$.lower = NULL
-        i_data[[xmax]] = x_trans$transform(i_data$.upper)
-        i_data$.upper = NULL
-
-        i_data$level = forcats::fct_rev(ordered(i_data$.width))
-        i_data$datatype = "interval"
-      }
+    i_data = if (show_interval) {
+      compute_intervals(data, scales, x_trans,
+        orientation, interval_function, interval_args, point_interval, .width
+      )
     }
 
     results = bind_rows(s_data, i_data)
@@ -317,3 +216,131 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     results
   }
 )
+
+
+
+# stat computation functions ----------------------------------------------
+
+# for making versions of min/max that ignore NAs but also
+# return NA if there are no values / no non-NA values
+# (in compute_slab)
+na_ = function(m_, ...) {
+  values = na.omit(c(...))
+  if (length(values) == 0) NA
+  else m_(values)
+}
+
+
+compute_slabs = function(data, scales, x_trans,
+  orientation, limits_function, limits_args, limits, slab_function, slab_args, n
+) {
+  define_orientation_variables(orientation)
+
+  # LIMITS
+  # determine limits of the slab function
+  # we do this first so we can figure out the overall limits
+  # based on the min/max limits over the entire input data
+
+  # manually-defined limits we want to obey as maximums
+  # (the limits are *at most* these)
+  max_limits = limits
+  if (is.null(max_limits)) {
+    if (is.null(scales[[x]]$limits)) {
+      max_limits = c(NA, NA)
+    } else{
+      max_limits = x_trans$inverse(scales[[x]]$limits)
+    }
+  }
+
+  # data-defined limits we want to obey as minimums
+  # (the limits are *at least* these, unless the
+  # max_limits are more narrow)
+  min_limits = if (is.null(scales[[x]])) {
+    c(NA, NA)
+  } else {
+    x_trans$inverse(scales[[x]]$dimension())
+  }
+
+  # if a limits function was provided, we also want to account
+  # for the limits suggested by that function based on the data
+  # these will adjust min_limits
+  if (!is.null(limits_function)) {
+    limits_function = as_function(limits_function)
+    limits_fun = function(df) do.call(limits_function, c(list(quote(df)), limits_args))
+    l_data = summarise_by(data, c("group", y), limits_fun)
+    min_limits = c(
+      na_(min, l_data$.lower, min_limits[[1]]),
+      na_(max, l_data$.upper, min_limits[[2]])
+    )
+  }
+
+  limits = c(
+    na_(max, min_limits[[1]], max_limits[[1]]),
+    na_(min, min_limits[[2]], max_limits[[2]])
+  )
+  #default to 0 (min) and 1 (max) for unknown limits
+  limits = ifelse(is.na(limits), c(0,1), limits)
+
+
+  # SLABS
+  # now, figure out the points at which the slab functions should be evaluated
+  # we set up the grid in the transformed space
+  input = x_trans$inverse(seq(x_trans$transform(limits[[1]]), x_trans$transform(limits[[2]]), length.out = n))
+  slab_args[["input"]] = input
+  slab_args[["limits"]] = limits
+  slab_args[["n"]] = n
+  slab_args[["orientation"]] = orientation
+
+  # evaluate the slab function
+  slab_function = as_function(slab_function)
+  slab_fun = function(df) do.call(slab_function, c(list(quote(df)), slab_args))
+  s_data = summarise_by(data, c("group", y), slab_fun)
+
+  names(s_data)[names(s_data) == ".value"] = "f"
+  s_data[[x]] = x_trans$transform(s_data$.input)
+  s_data$.input = NULL
+
+  s_data$datatype = "slab"
+  s_data
+}
+
+
+compute_intervals = function(data, scales, x_trans,
+  orientation, interval_function, interval_args, point_interval, .width
+) {
+  define_orientation_variables(orientation)
+
+  interval_args[[".width"]] = .width
+
+  if (is.null(interval_function)) {
+    if (!is.null(point_interval)) {
+      # need to set .simple_names here to get .value, .lower, and .upper
+      interval_args$.simple_names = TRUE
+
+      # function is a point_interval, we need to make the version that
+      # can take in a data frame
+      point_interval = as_function(point_interval)
+      interval_fun = function(df) do.call(point_interval, c(list(quote(df[[x]])), interval_args))
+    } else {
+      # no value for interval_function or pointinterval => no interval to draw
+      return(NULL)
+    }
+  } else {
+    interval_args[["orientation"]] = orientation
+    interval_function = as_function(interval_function)
+    interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
+  }
+
+  i_data = summarise_by(data, c("group", y), interval_fun)
+
+  i_data[[x]] = x_trans$transform(i_data$.value)
+  i_data$.value = NULL
+  i_data[[xmin]] = x_trans$transform(i_data$.lower)
+  i_data$.lower = NULL
+  i_data[[xmax]] = x_trans$transform(i_data$.upper)
+  i_data$.upper = NULL
+
+  i_data$level = forcats::fct_rev(ordered(i_data$.width))
+  i_data$datatype = "interval"
+  i_data
+}
