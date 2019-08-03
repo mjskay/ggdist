@@ -47,8 +47,8 @@ stat_cdfintervalh(..., slab_type = "cdf", justification = 0.5,
 
 stat_gradientinterval(mapping = NULL, data = NULL,
   geom = "slabinterval", position = "identity", ...,
-  justification = 0.5, thickness = 1, show.legend = c(size = FALSE),
-  inherit.aes = TRUE)
+  justification = 0.5, thickness = 1, show.legend = c(size = FALSE,
+  slab_alpha = FALSE), inherit.aes = TRUE)
 
 stat_gradientintervalh(..., orientation = "horizontal")
 

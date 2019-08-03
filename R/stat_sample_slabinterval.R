@@ -264,7 +264,7 @@ stat_gradientinterval = function(
   justification = 0.5,
   thickness = 1,
 
-  show.legend = c(size = FALSE),
+  show.legend = c(size = FALSE, slab_alpha = FALSE),
   inherit.aes = TRUE
 ) {
   layer(
@@ -291,8 +291,13 @@ stat_gradientintervalh = function(..., orientation = "horizontal") {
 }
 StatGradientinterval <- ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
+    thickness = 1,
     slab_alpha = stat(f)
-  ), StatSampleSlabinterval$default_aes)
+  ), StatSampleSlabinterval$default_aes),
+
+  default_params = defaults(list(
+    justification = 0.5
+  ), StatSampleSlabinterval$default_params)
 )
 
 #' @export

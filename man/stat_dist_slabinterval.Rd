@@ -43,8 +43,8 @@ stat_dist_cdfintervalh(..., slab_type = "cdf", justification = 0.5,
 
 stat_dist_gradientinterval(mapping = NULL, data = NULL,
   geom = "slabinterval", position = "identity", ...,
-  justification = 0.5, thickness = 1, p_limits = c(0.005, 0.995),
-  show.legend = c(size = FALSE), inherit.aes = TRUE)
+  justification = 0.5, thickness = 1, show.legend = c(size = FALSE,
+  slab_alpha = FALSE), inherit.aes = TRUE)
 
 stat_dist_gradientintervalh(..., orientation = "horizontal")
 }

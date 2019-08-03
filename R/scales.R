@@ -25,7 +25,10 @@
 #'   \item{\code{scale_interval_linetype_* }}{Interval line type}
 #'   \item{\code{scale_slab_color_* }}{Slab outline color}
 #'   \item{\code{scale_slab_fill_* }}{Slab fill color}
-#'   \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity}
+#'   \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
+#'   \code{scale_slab_alpha_continuous} differ from \code{\link{scale_alpha_continuous}} and
+#'   are designed for gradient plots (e.g. \code{\link{stat_gradientinterval}}) by ensuring that
+#'   densities of 0 get mapped to 0 in the output.}
 #'   \item{\code{scale_slab_size_* }}{Slab outline line width}
 #'   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
 #' }
@@ -43,6 +46,7 @@
 #'
 #' \code{scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")}
 #'
+#' @inheritParams ggplot2::continuous_scale
 #' @param ... Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
 #' passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.
 #' @param aesthetics Names of aesthetics to set scales for.
@@ -231,8 +235,8 @@ scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = "co
 #' @rdname scales
 #' @importFrom scales rescale_pal
 #' @export
-scale_slab_alpha_continuous = function(..., range = c(0.1, 1)) {
-  continuous_scale("slab_alpha", "slab_alpha_c", rescale_pal(range), ...)
+scale_slab_alpha_continuous = function(..., limits = function(l) c(min(0, l[[1]]), l[[2]]), range = c(0, 1)) {
+  continuous_scale("slab_alpha", "slab_alpha_c", rescale_pal(range), limits = limits, ...)
 }
 #' @rdname scales
 #' @export

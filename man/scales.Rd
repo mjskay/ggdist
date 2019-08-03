@@ -99,7 +99,8 @@ scale_slab_fill_discrete(..., aesthetics = "slab_fill")
 scale_slab_fill_continuous(..., aesthetics = "slab_fill",
   guide = "colourbar2")
 
-scale_slab_alpha_continuous(..., range = c(0.1, 1))
+scale_slab_alpha_continuous(..., limits = function(l) c(min(0, l[[1]]),
+  l[[2]]), range = c(0, 1))
 
 scale_slab_alpha_discrete(..., range = c(0.1, 1))
 
@@ -129,6 +130,18 @@ after transformation.}
 \item{na.translate}{In discrete scales, should we show missing values?}
 
 \item{na.value}{When na.translate is true, what value should be shown?}
+
+\item{limits}{One of:
+\itemize{
+\item \code{NULL} to use the default scale range
+\item A numeric vector of length two providing limits of the scale.
+Use \code{NA} to refer to the existing minimum or maximum
+\item A function that accepts the existing (automatic) limits and returns
+new limits
+Note that setting limits on positional scales will \strong{remove} data outside of the limits.
+If the purpose is to zoom, use the limit argument in the coordinate system
+(see \code{\link[=coord_cartesian]{coord_cartesian()}}).
+}}
 }
 \description{
 These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_slabinterval}}
@@ -149,7 +162,10 @@ related geoms:
   \item{\code{scale_interval_linetype_* }}{Interval line type}
   \item{\code{scale_slab_color_* }}{Slab outline color}
   \item{\code{scale_slab_fill_* }}{Slab fill color}
-  \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity}
+  \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
+  \code{scale_slab_alpha_continuous} differ from \code{\link{scale_alpha_continuous}} and
+  are designed for gradient plots (e.g. \code{\link{stat_gradientinterval}}) by ensuring that
+  densities of 0 get mapped to 0 in the output.}
   \item{\code{scale_slab_size_* }}{Slab outline line width}
   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
 }
