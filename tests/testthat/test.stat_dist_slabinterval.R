@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("stat_dist_slabinterval")
+context("stat_dist_")
 
 test_that("distribution eye plots work with the args aesthetic", {
   skip_if_not_installed("vdiffr")
@@ -65,28 +65,29 @@ test_that("scale transformation works", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
-  vdiffr::expect_doppelganger("log scale pdf transformation works",
-    # this setup should yield a 95% interval from a little above 1e-3 to a little below 1e+5
-    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
-      stat_dist_halfeyeh() +
-      scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+  # this setup should yield a 95% interval from a little above 1e-3 to a little below 1e+5
+  p_log = data.frame(dist = "lnorm") %>%
+    ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+    scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+
+  vdiffr::expect_doppelganger("dist_halfeyeh log scale transform",
+    p_log + stat_dist_halfeyeh()
   )
 
-  vdiffr::expect_doppelganger("log scale cdf transformation works",
-    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
-      stat_dist_ccdfintervalh() +
-      scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+  vdiffr::expect_doppelganger("dist_ccdfintervalh log scale transform",
+    p_log + stat_dist_ccdfintervalh()
   )
 
-  vdiffr::expect_doppelganger("reverse scale pdf transformation works",
-    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = 1, arg2 = 0.5)) +
-      stat_dist_halfeyeh() +
-      scale_x_reverse()
+
+  p_rev = data.frame(dist = "lnorm") %>%
+    ggplot(aes(y = 1, dist = dist, arg1 = 1, arg2 = 0.5)) +
+    scale_x_reverse()
+
+  vdiffr::expect_doppelganger("dist_halfeyeh reverse scale transform",
+    p_rev + stat_dist_halfeyeh()
   )
 
-  vdiffr::expect_doppelganger("reverse scale cdf transformation works",
-    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = 1, arg2 = 0.5)) +
-      stat_dist_ccdfintervalh() +
-      scale_x_reverse()
+  vdiffr::expect_doppelganger("dist_ccdfintervalh reverse scale transform",
+    p_rev + stat_dist_ccdfintervalh()
   )
 })

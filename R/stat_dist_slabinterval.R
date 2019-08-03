@@ -89,7 +89,7 @@ dist_slab_function = function(
 }
 
 #' @importFrom purrr pmap_dfr
-dist_interval_function = function(df, .width, ...) {
+dist_interval_function = function(df, .width, trans, ...) {
   pmap_dfr(df, function(dist, ...) {
     if (is.na(dist)) {
       return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
@@ -102,9 +102,9 @@ dist_interval_function = function(df, .width, ...) {
       quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
       quantiles = do.call(quantile_fun, quantile_args)
       data.frame(
-        .value = quantiles[[1]],
-        .lower = quantiles[[2]],
-        .upper = quantiles[[3]],
+        .value = trans$transform(quantiles[[1]]),
+        .lower = trans$transform(quantiles[[2]]),
+        .upper = trans$transform(quantiles[[3]]),
         .width = w
       )
     })

@@ -10,7 +10,7 @@
 #' @importFrom stats ecdf
 sample_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = "vertical",
-  adjust = 1, trim = TRUE, breaks = "Sturges", ...
+  adjust = 1, trim = TRUE, breaks = "Sturges", trans = scales::identity_trans(), ...
 ) {
   x = switch(orientation,
     horizontal = "x",
@@ -20,22 +20,23 @@ sample_slab_function = function(
   switch(slab_type,
     pdf = {
       cut = if (trim) 0 else 3
+      # calculate on the transformed scale to ensure density is correct
       d = density(df[[x]], n = n, adjust = adjust, cut = cut)
       data.frame(
-        .input = d$x,
+        .input = trans$inverse(d$x),
         .value = d$y
       )
     },
     cdf = {
       data.frame(
         .input = input,
-        .value = ecdf(df[[x]])(input)
+        .value = ecdf(df[[x]])(trans$transform(input))
       )
     },
     ccdf = {
       data.frame(
         .input = input,
-        .value = 1 - ecdf(df[[x]])(input)
+        .value = 1 - ecdf(df[[x]])(trans$transform(input))
       )
     },
     histogram = {
@@ -46,7 +47,7 @@ sample_slab_function = function(
         # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
         # us the bin endpoints --- then just need to repeat the same value of density
         # for both endpoints of the same bin
-        .input = as.vector(rbind(input_1, input_2)),
+        .input = trans$inverse(as.vector(rbind(input_1, input_2))),
         .value = rep(h$density, each = 2)
       )
     }

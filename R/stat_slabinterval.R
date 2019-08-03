@@ -320,24 +320,27 @@ compute_intervals = function(data, scales, x_trans,
       # function is a point_interval, we need to make the version that
       # can take in a data frame
       point_interval = as_function(point_interval)
-      interval_fun = function(df) do.call(point_interval, c(list(quote(df[[x]])), interval_args))
+      interval_fun = function(df) {
+        do.call(point_interval, c(list(quote(df[[x]])), interval_args))
+      }
     } else {
       # no value for interval_function or pointinterval => no interval to draw
       return(NULL)
     }
   } else {
     interval_args[["orientation"]] = orientation
+    interval_args[["trans"]] = x_trans
     interval_function = as_function(interval_function)
     interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
   }
 
   i_data = summarise_by(data, c("group", y), interval_fun)
 
-  i_data[[x]] = x_trans$transform(i_data$.value)
+  i_data[[x]] = i_data$.value
   i_data$.value = NULL
-  i_data[[xmin]] = x_trans$transform(i_data$.lower)
+  i_data[[xmin]] = i_data$.lower
   i_data$.lower = NULL
-  i_data[[xmax]] = x_trans$transform(i_data$.upper)
+  i_data[[xmax]] = i_data$.upper
   i_data$.upper = NULL
 
   i_data$level = forcats::fct_rev(ordered(i_data$.width))
