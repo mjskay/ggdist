@@ -239,20 +239,48 @@ Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \li
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 
+\section{Computed Variables}{
+
+\itemize{
+  \item \code{x} or \code{y}: For slabs, the input values to the slab function.
+    For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
+  \item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
+  \item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
+  \item \code{f}: For slabs, the output values from the slab function.
+}
+}
+
 \examples{
 
-#TODO
+library(dplyr)
+library(ggplot2)
 
-# the stat_dist_... family applies a Jacobian adjustment to the density
-# when plotting on transformed scales. E.g. here is a log-Normal distribution
-# plotted on the log scale, where it will appear Normal:
-data.frame(dist = "lnorm") \%>\% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+tribble(
+  ~group, ~subgroup, ~mean, ~sd,
+  "a",          "h",     5,   1,
+  "b",          "h",     7,   1.5,
+  "c",          "h",     8,   1,
+  "c",          "i",     9,   1,
+  "c",          "j",     7,   1
+) \%>\%
+  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  stat_dist_eye(position = "dodge")
+
+# the stat_dist_... family applies a Jacobian adjustment to densities
+# when plotting on transformed scales in order to plot them correctly.
+# For example, here is a log-Normal distribution plotted on the log
+# scale, where it will appear Normal:
+data.frame(dist = "lnorm") \%>\%
+  ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
   stat_dist_halfeyeh() +
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+
+# see vignette("slabinterval") for many more examples.
 
 }
 \seealso{
 See \code{\link{geom_slabinterval}} for more information on the geom these stats
 use by default and some of the options they have. See \code{\link{stat_sample_slabinterval}}
 for the versions of these stats that can be used on samples.
+See \code{vignette("slabinterval")} for a variety of examples of use.
 }

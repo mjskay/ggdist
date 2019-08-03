@@ -57,9 +57,13 @@
 #' for use on data that has already been translated into function evaluations, points, and intervals.
 #' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
 #' built on top of this stat for common use cases (like \code{stat_halfeyeh}).
+#' See \code{vignette("slabinterval")} for a variety of examples of use.
 #' @examples
 #'
-#' #TODO
+#' # stat_slabinterval() is typically not that useful on its own.
+#' # See vignette("slabinterval") for a variety of examples of the use of its
+#' # shortcut geoms and stats, which are more useful than using
+#' # stat_slabinterval() directly.
 #'
 #' @importFrom rlang as_function
 #' @importFrom dplyr bind_rows

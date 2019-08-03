@@ -195,13 +195,17 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 
 \examples{
 
-# TODO
+# geom_slabinterval() is typically not that useful on its own.
+# See vignette("slabinterval") for a variety of examples of the use of its
+# shortcut geoms and stats, which are more useful than using
+# geom_slabinterval() directly.
 
 }
 \seealso{
 See \code{\link{geom_lineribbon}} for a combination geom designed for fit curves plus probability bands.
 See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
 built on top of this geom for common use cases (like \code{stat_halfeyeh}).
+See \code{vignette("slabinterval")} for a variety of examples of use.
 }
 \author{
 Matthew Kay
