@@ -61,9 +61,10 @@ column to parse, and returns a data frame with \code{".dist"} and \code{".args"}
 by R.
 
 \code{r_dist_name()} takes a character vector of names and translates common names into R
-distribution names. Character case, \code{"."}, \code{"_"}, \code{"-"}, \code{"'"}, and spaces are ignored when
-translating names, so \code{"lognormal"}, \code{"LogNormal"}, \code{"log_normal"},
-\code{"log-Normal"}, and any number of other variants all get translated into \code{"lnorm"}.
+distribution names. Names are first made into valid R names using \code{\link{make.names}},
+then translated (ignoring character case, \code{"."}, and \code{"_"}). Thus, \code{"lognormal"},
+\code{"LogNormal"}, \code{"log_normal"}, \code{"log-Normal"}, and any number of other variants
+all get translated into \code{"lnorm"}.
 }
 \examples{
 

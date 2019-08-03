@@ -18,9 +18,10 @@
 #' by R.
 #'
 #' \code{r_dist_name()} takes a character vector of names and translates common names into R
-#' distribution names. Character case, \code{"."}, \code{"_"}, \code{"-"}, \code{"'"}, and spaces are ignored when
-#' translating names, so \code{"lognormal"}, \code{"LogNormal"}, \code{"log_normal"},
-#' \code{"log-Normal"}, and any number of other variants all get translated into \code{"lnorm"}.
+#' distribution names. Names are first made into valid R names using \code{\link{make.names}},
+#' then translated (ignoring character case, \code{"."}, and \code{"_"}). Thus, \code{"lognormal"},
+#' \code{"LogNormal"}, \code{"log_normal"}, \code{"log-Normal"}, and any number of other variants
+#' all get translated into \code{"lnorm"}.
 #'
 #' @param object A character vector containing distribution specifiations or a data frame with a column
 #'  containing distribution specifications.
@@ -149,13 +150,23 @@ r_dist_lookup = c(
   chisquare = "chisq",
   uniform = "unif",
   studentt = "student_t",  # for brms::student_t
-  studentst = "student_t"
+  studentst = "student_t",
+  binomial = "binom",
+  geometric = "geom",
+  hypergeometric = "hyper",
+  multinomial = "multinom",
+  negbinomial = "nbinom",
+  negativebinomial = "nbinom",
+  poisson = "pois",
+  weibull = "weibull"
 )
 
 #' @rdname parse_dist
 #' @export
 r_dist_name = function(dist_name) {
-  r_name = r_dist_lookup[tolower(gsub("[ ._-]|'", "", dist_name))]
+  # clean up names and make lowercase
+  dist_name[!is.na(dist_name)] = make.names(dist_name[!is.na(dist_name)])
+  r_name = r_dist_lookup[tolower(gsub("[_.]", "", dist_name))]
   names(r_name) = names(dist_name)
   ifelse(is.na(r_name), dist_name, r_name)
 }
