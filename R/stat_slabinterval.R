@@ -193,15 +193,14 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
       scales[[x]]$trans
     }
 
-    # SLAB
+    # SLABS
     s_data = if (show_slab && !is.null(slab_function)) {
       compute_slabs(data, scales, x_trans,
         orientation, limits_function, limits_args, limits, slab_function, slab_args, n
       )
     }
 
-
-    # INTERVAL
+    # INTERVALS
     i_data = if (show_interval) {
       compute_intervals(data, scales, x_trans,
         orientation, interval_function, interval_args, point_interval, .width

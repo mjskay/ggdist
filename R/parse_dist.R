@@ -18,7 +18,7 @@
 #' by R.
 #'
 #' \code{r_dist_name()} takes a character vector of names and translates common names into R
-#' distribution names. Character case, \code{.}, \code{_}, \code{-}, and spaces are ignored when
+#' distribution names. Character case, \code{.}, \code{_}, \code{-}, \code{'}, and spaces are ignored when
 #' translating names, so \code{"lognormal"}, \code{"LogNormal"}, \code{"log_normal"},
 #' \code{"log-Normal"}, and any number of other variants all get translated into \code{"lnorm"}.
 #'
@@ -101,26 +101,33 @@ parse_dist.data.frame = function(object, dist_col, ..., dist = ".dist", args = "
 #' @rdname parse_dist
 #' @export
 parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+  na_spec = tibble( # for unparseable specs
+    dist = NA,
+    args = list(NA)
+  )
+
   result = map_dfr(object, function(dist_spec) {
-    parsed_dist = tryCatch(str2lang(dist_spec), error = function(...) NULL)
+    # split into name and arg list components
+    # e.g. "Normal(0,1)" => "Normal", "0,1)"
+    parsed_dist = strsplit(dist_spec, "(", fixed = TRUE)[[1]]
 
-    if (is.null(parsed_dist)) {
-      tibble(
-        dist = NA,
-        args = list(NA)
-      )
-    } else{
-      dist_name = as.character(parsed_dist[[1]])
-      if (to_r_names) {
-        dist_name = r_dist_name(dist_name)
-      }
+    # check for at least "XXX(YYY..." format
+    if (length(parsed_dist) != 2) return(na_spec)
 
-      args_list = parsed_dist
-      args_list[[1]] = quote(list)
+    dist_name = parsed_dist[[1]]
+    if (to_r_names) {
+      dist_name = r_dist_name(dist_name)
+    }
 
+    args_spec = paste0("list(", parsed_dist[[2]])
+    args_list = tryCatch(eval(str2lang(args_spec)), error = function(...) NULL)
+
+    if (is.null(args_list)) {
+      na_spec
+    } else {
       tibble(
         dist = dist_name,
-        args = list(eval(args_list))
+        args = list(args_list)
       )
     }
   })
@@ -140,13 +147,15 @@ r_dist_lookup = c(
   lognormal = "lnorm",
   exponential = "exp",
   chisquare = "chisq",
-  uniform = "unif"
+  uniform = "unif",
+  studentt = "student_t",  # for brms::student_t
+  studentst = "student_t"
 )
 
 #' @rdname parse_dist
 #' @export
 r_dist_name = function(dist_name) {
-  r_name = r_dist_lookup[tolower(gsub("[ ._-]+", "", dist_name))]
+  r_name = r_dist_lookup[tolower(gsub("[ ._-]|'", "", dist_name))]
   names(r_name) = names(dist_name)
   ifelse(is.na(r_name), dist_name, r_name)
 }
