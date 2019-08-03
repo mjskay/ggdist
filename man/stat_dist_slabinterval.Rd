@@ -243,6 +243,13 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 
 #TODO
 
+# the stat_dist_... family applies a Jacobian adjustment to the density
+# when plotting on transformed scales. E.g. here is a log-Normal distribution
+# plotted on the log scale, where it will appear Normal:
+data.frame(dist = "lnorm") \%>\% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+  stat_dist_halfeyeh() +
+  scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+
 }
 \seealso{
 See \code{\link{geom_slabinterval}} for more information on the geom these stats

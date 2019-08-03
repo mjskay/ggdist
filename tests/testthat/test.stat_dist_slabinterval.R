@@ -55,3 +55,38 @@ test_that("stat_dist_gradientinterval works", {
     p + stat_dist_gradientintervalh(aes(y = dist), n = 20, p_limits = c(0.01, 0.99))
   )
 })
+
+test_that("density transformation works", {
+  expect_equal(transform_pdf(dnorm, 1:5, scales::exp_trans()), dlnorm(1:5))
+  expect_equal(transform_pdf(dlnorm, -2:2, scales::log_trans()), dnorm(-2:2))
+})
+
+test_that("scale transformation works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  vdiffr::expect_doppelganger("log scale pdf transformation works",
+    # this setup should yield a 95% interval from a little above 1e-3 to a little below 1e+5
+    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+      stat_dist_halfeyeh() +
+      scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+  )
+
+  vdiffr::expect_doppelganger("log scale cdf transformation works",
+    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+      stat_dist_ccdfintervalh() +
+      scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+  )
+
+  vdiffr::expect_doppelganger("reverse scale pdf transformation works",
+    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = 1, arg2 = 0.5)) +
+      stat_dist_halfeyeh() +
+      scale_x_reverse()
+  )
+
+  vdiffr::expect_doppelganger("reverse scale cdf transformation works",
+    data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = 1, arg2 = 0.5)) +
+      stat_dist_ccdfintervalh() +
+      scale_x_reverse()
+  )
+})

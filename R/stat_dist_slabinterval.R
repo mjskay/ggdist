@@ -38,9 +38,24 @@ dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
   })
 }
 
+# return a version of the provided density function f_X(...)
+# transformed according to transformation trans
+transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) {
+  # based on the fact that for Y = g(X),
+  # f_Y(y) = f_X(g^−1(y)) * | g^-1'(y) |
+
+  g_inverse = trans$inverse
+
+  # need to convert y to numeric in case it's an integer (numericDeriv doesn't like ints)
+  y = as.numeric(y)
+  g_inverse_deriv_at_y = diag(attr(numericDeriv(quote(g_inverse(y)), "y"), "gradient"))
+
+  f_X(g_inverse_at_y, ...) * abs(g_inverse_deriv_at_y)
+}
+
 #' @importFrom purrr pmap_dfr
 dist_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 501, ...
+  df, input, slab_type = "pdf", limits = NULL, n = 501, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr(df, function(dist, ...) {
     if (is.na(dist)) {
@@ -49,7 +64,15 @@ dist_slab_function = function(
 
     args = args_from_aes(...)
     dist_fun = switch(slab_type,
-      pdf = match.fun(paste0("d", dist)),
+      pdf = {
+        pdf = match.fun(paste0("d", dist))
+        if (trans$name == "identity") {
+          pdf
+        } else {
+          # must transform the density according to the scale transformation
+          function(x, ...) transform_pdf(pdf, trans$transform(x), trans, g_inverse_at_y = x, ...)
+        }
+      },
       cdf = match.fun(paste0("p", dist)),
       ccdf = {
         cdf = match.fun(paste0("p", dist));
@@ -151,6 +174,13 @@ dist_interval_function = function(df, .width, ...) {
 #' @examples
 #'
 #' #TODO
+#'
+#' # the stat_dist_... family applies a Jacobian adjustment to the density
+#' # when plotting on transformed scales. E.g. here is a log-Normal distribution
+#' # plotted on the log scale, where it will appear Normal:
+#' data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+#'   stat_dist_halfeyeh() +
+#'   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 #'
 #' @export
 stat_dist_slabinterval = function(

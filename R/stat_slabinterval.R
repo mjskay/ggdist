@@ -289,6 +289,7 @@ compute_slabs = function(data, scales, x_trans,
   slab_args[["limits"]] = limits
   slab_args[["n"]] = n
   slab_args[["orientation"]] = orientation
+  slab_args[["trans"]] = x_trans
 
   # evaluate the slab function
   slab_function = as_function(slab_function)

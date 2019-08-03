@@ -45,3 +45,12 @@ test_that("histinterval works", {
   vdiffr::expect_doppelganger("histintervalh with outline",
     p + stat_histintervalh(aes(y = dist, x = x), slab_color = "black"))
 })
+
+test_that("scale transformation works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  vdiffr::expect_doppelganger("scale transformation works",
+    data.frame(x = qlnorm(ppoints(100))) %>% ggplot(aes(y = "a", x = x)) + stat_halfeyeh() + scale_x_log10()
+  )
+})

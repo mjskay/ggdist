@@ -379,6 +379,16 @@ c(
   )
 ```
 
+The `stat_dist_...` family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:
+
+```{r prior_dist_halfeyeh}
+data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+  stat_dist_halfeyeh() +
+  scale_x_log10(breaks = 10^seq(-5,7, by = 2))
+```
+
+As expected, a log-Normal density plotted on the log scale appears Normal. The Jacobian for the scale transformation is applied to the density so that the correct density is shown on the log scale. Internally, numerical differentiation is used to calculate the Jacobian so that the `stat_dist_...` family works generically across the different scale transformations supported by ggplot.
+
 ### Summing up eye plots: `stat_[dist_][half]eye[h]`
 
 All of the above geoms follow the naming scheme `stat_[dist_][half]eye[h]`.
