@@ -36,3 +36,26 @@ test_that("group_slab_data_by_fill works", {
   expect_equal(group_slab_data_by_fill(df), df)
 
 })
+
+
+test_that("group_slab works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = tibble(
+    x = seq(-4,4, length.out = 50),
+    d = dnorm(x)
+  ) %>%
+    ggplot(aes(thickness = d))
+
+  vdiffr::expect_doppelganger("geom_slab one group",
+    p + geom_slab(aes(x = 1, y = x))
+  )
+
+  vdiffr::expect_doppelganger("geom_slabh one group",
+    p + geom_slabh(aes(x = x, y = 1))
+  )
+
+})
+
+

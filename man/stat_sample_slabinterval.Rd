@@ -14,6 +14,8 @@
 \alias{stat_gradientintervalh}
 \alias{stat_histinterval}
 \alias{stat_histintervalh}
+\alias{stat_slab}
+\alias{stat_slabh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)}
 \usage{
 stat_sample_slabinterval(mapping = NULL, data = NULL,
@@ -56,6 +58,10 @@ stat_histinterval(..., slab_type = "histogram")
 
 stat_histintervalh(..., slab_type = "histogram",
   orientation = "horizontal")
+
+stat_slab(..., show_interval = FALSE)
+
+stat_slabh(..., show_interval = FALSE, orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -166,6 +172,8 @@ groups so that the maximum height in each group is \code{1}; if \code{"none"}, v
 
 \item{thickness}{Override for the \code{thickness} aesthetic in \code{\link{geom_slabinterval}}: the thickness
 of the slab at each x / y value of the slab (depending on \code{orientation}).}
+
+\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
 }
 \description{
 Stats for computing densities and CDFs + intervals from samples for use with
@@ -192,6 +200,8 @@ Stats include:
   \item \code{stat_cdfinterval} / \code{stat_cdfintervalh}: CDF bar plots (CDF + interval)
   \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
   \item \code{stat_histinterval} / \code{stat_histintervalh}: Histogram + interval plots
+  \item \code{stat_pointinterval} / \code{stat_pointintervalh}: Point + interval plots
+  \item \code{stat_interval} / \code{stat_intervalh}: Interval plots
 }
 }
 \section{Aesthetics}{

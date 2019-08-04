@@ -142,7 +142,7 @@ and stats/geoms based on it (like eye plots)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Custom ggplot scales for geom_slabinterval (and derivatives)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/scale_.R'><code>R/scale_.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/scales.R'><code>R/scales.R</code></a></small>
     <div class="hidden name"><code>scales.Rd</code></div>
     </div>
 
@@ -163,19 +163,18 @@ and stats/geoms based on it (like eye plots).</p>
 <span class='fu'>scale_point_color_continuous</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"point_colour"</span>,
   <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"colourbar2"</span>)
 
+<span class='fu'>scale_point_fill_discrete</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"point_fill"</span>)
+
 <span class='fu'>scale_point_fill_continuous</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"point_fill"</span>,
   <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"colourbar2"</span>)
+
+<span class='fu'>scale_point_alpha_continuous</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>1</span>))
+
+<span class='fu'>scale_point_alpha_discrete</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>1</span>))
 
 <span class='fu'>scale_point_size_continuous</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>))
 
 <span class='fu'>scale_point_size_discrete</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>), <span class='kw'>na.translate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='fu'>scale_interval_size_continuous</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>))
-
-<span class='fu'>scale_interval_size_discrete</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>),
-  <span class='kw'>na.translate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='fu'>scale_interval_linetype</span>(<span class='no'>...</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='st'>"blank"</span>)
 
 <span class='fu'>scale_interval_colour_discrete</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"interval_colour"</span>)
 
@@ -187,6 +186,19 @@ and stats/geoms based on it (like eye plots).</p>
 <span class='fu'>scale_interval_color_continuous</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"interval_colour"</span>,
   <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"colourbar2"</span>)
 
+<span class='fu'>scale_interval_alpha_continuous</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>1</span>))
+
+<span class='fu'>scale_interval_alpha_discrete</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>1</span>))
+
+<span class='fu'>scale_interval_size_continuous</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>))
+
+<span class='fu'>scale_interval_size_discrete</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>),
+  <span class='kw'>na.translate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>scale_interval_linetype_discrete</span>(<span class='no'>...</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='st'>"blank"</span>)
+
+<span class='fu'>scale_interval_linetype_continuous</span>(<span class='no'>...</span>)
+
 <span class='fu'>scale_slab_colour_discrete</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"slab_colour"</span>)
 
 <span class='fu'>scale_slab_color_discrete</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"slab_colour"</span>)
@@ -197,11 +209,23 @@ and stats/geoms based on it (like eye plots).</p>
 <span class='fu'>scale_slab_color_continuous</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"slab_colour"</span>,
   <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"colourbar2"</span>)
 
-<span class='fu'>scale_slab_linetype</span>(<span class='no'>...</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='st'>"blank"</span>)
+<span class='fu'>scale_slab_fill_discrete</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"slab_fill"</span>)
+
+<span class='fu'>scale_slab_fill_continuous</span>(<span class='no'>...</span>, <span class='kw'>aesthetics</span> <span class='kw'>=</span> <span class='st'>"slab_fill"</span>,
+  <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"colourbar2"</span>)
+
+<span class='fu'>scale_slab_alpha_continuous</span>(<span class='no'>...</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>l</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='fl'>0</span>, <span class='no'>l</span><span class='kw'>[[</span><span class='fl'>1</span>]]),
+  <span class='no'>l</span><span class='kw'>[[</span><span class='fl'>2</span>]]), <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>))
+
+<span class='fu'>scale_slab_alpha_discrete</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>1</span>))
 
 <span class='fu'>scale_slab_size_continuous</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>))
 
 <span class='fu'>scale_slab_size_discrete</span>(<span class='no'>...</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>), <span class='kw'>na.translate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>scale_slab_linetype_discrete</span>(<span class='no'>...</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='st'>"blank"</span>)
+
+<span class='fu'>scale_slab_linetype_continuous</span>(<span class='no'>...</span>)
 
 <span class='fu'>guide_colourbar2</span>(<span class='no'>...</span>)
 
@@ -236,6 +260,19 @@ after transformation.</p></td>
       <th>na.value</th>
       <td><p>When na.translate is true, what value should be shown?</p></td>
     </tr>
+    <tr>
+      <th>limits</th>
+      <td><p>One of:</p><ul>
+<li><p><code>NULL</code> to use the default scale range</p></li>
+<li><p>A numeric vector of length two providing limits of the scale.
+Use <code>NA</code> to refer to the existing minimum or maximum</p></li>
+<li><p>A function that accepts the existing (automatic) limits and returns
+new limits
+Note that setting limits on positional scales will <strong>remove</strong> data outside of the limits.
+If the purpose is to zoom, use the limit argument in the coordinate system
+(see <code>coord_cartesian()</code>).</p></li>
+</ul></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -245,32 +282,65 @@ related geoms:</p>
 <ol>
 <li><p><code>scale_point_color_* </code>Point color</p></li>
 <li><p><code>scale_point_fill_* </code>Point fill color</p></li>
+<li><p><code>scale_point_alpha_* </code>Point alpha level / opacity</p></li>
 <li><p><code>scale_point_size_* </code>Point size</p></li>
 <li><p><code>scale_interval_color_* </code>Interval line color</p></li>
+<li><p><code>scale_interval_alpha_* </code>Interval alpha level / opacity</p></li>
 <li><p><code>scale_interval_size_* </code>Interval line width</p></li>
 <li><p><code>scale_interval_linetype_* </code>Interval line type</p></li>
 <li><p><code>scale_slab_color_* </code>Slab outline color</p></li>
+<li><p><code>scale_slab_fill_* </code>Slab fill color</p></li>
+<li><p><code>scale_slab_alpha_* </code>Slab alpha level / opacity. The default settings of
+  <code>scale_slab_alpha_continuous</code> differ from <code><a href='https://ggplot2.tidyverse.org/reference/scale_alpha.html'>scale_alpha_continuous</a></code> and
+  are designed for gradient plots (e.g. <code><a href='stat_sample_slabinterval.html'>stat_gradientinterval</a></code>) by ensuring that
+  densities of 0 get mapped to 0 in the output.</p></li>
 <li><p><code>scale_slab_size_* </code>Slab outline line width</p></li>
 <li><p><code>scale_slab_linetype_* </code>Slab outline line type</p></li>
 </ol>
     <p>See the corresponding scale documentation in ggplot for more information; e.g.
-<code>scale_color_discrete</code>, <code>scale_color_continuous</code>, etc.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous</a></code>, etc.</p>
 <p>Other scale functions can be used with the aesthetics/scales defined here by using the <code>aesthetics</code>
 argument to that scale function. For example, to use color brewer scales with the <code>point_color</code> aesthetic:</p>
-<p><code>scale_color_brewer(..., aesthetics = "point_color")</code></p>
+<p><code><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer(..., aesthetics = "point_color")</a></code></p>
 <p>With continuous color scales, you may also need to provide a guide as the default guide does not work properly;
 this is what <code>guide_colorbar2</code> is for:</p>
-<p><code>scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")</code></p>
+<p><code><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")</a></code></p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>scale_color_discrete</code>, <code>scale_color_continuous</code>, etc.</p></div>
+    <div class='dont-index'><p><code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous</a></code>, etc.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-# TODO
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
 
+<span class='co'># This plot shows how to set multiple specific aesthetics</span>
+<span class='co'># NB it is very ugly and is only for demo purposes.</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>distribution</span> <span class='kw'>=</span> <span class='st'>"Normal(1,2)"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span>(<span class='no'>distribution</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>distribution</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>.dist</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='no'>.args</span>)) +
+  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeyeh</a></span>(
+    <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>21</span>,  <span class='co'># this point shape has a fill and outline</span>
+    <span class='kw'>point_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
+    <span class='kw'>point_fill</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
+    <span class='kw'>point_alpha</span> <span class='kw'>=</span> <span class='fl'>.1</span>,
+    <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+    <span class='kw'>stroke</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+    <span class='kw'>interval_color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>,
+    <span class='co'># interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default</span>
+    <span class='co'># see the interval_size_range option in help("geom_slabinterval")</span>
+    <span class='kw'>interval_size</span> <span class='kw'>=</span> <span class='fl'>8</span>,
+    <span class='kw'>interval_linetype</span> <span class='kw'>=</span> <span class='st'>"dashed"</span>,
+    <span class='kw'>interval_alpha</span> <span class='kw'>=</span> <span class='fl'>.25</span>,
+    <span class='co'># fill sets the fill color of the slab (here the density)</span>
+    <span class='kw'>slab_color</span> <span class='kw'>=</span> <span class='st'>"green"</span>,
+    <span class='kw'>slab_fill</span> <span class='kw'>=</span> <span class='st'>"purple"</span>,
+    <span class='kw'>slab_size</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+    <span class='kw'>slab_linetype</span> <span class='kw'>=</span> <span class='st'>"dotted"</span>,
+    <span class='kw'>slab_alpha</span> <span class='kw'>=</span> <span class='fl'>.5</span>
+  )</div><div class='img'><img src='scales-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -139,6 +139,8 @@ dist_interval_function = function(df, .width, trans, ...) {
 #'   \item \code{stat_dist_ccdfinterval} / \code{stat_dist_ccdfintervalh}: CCDF bar plots (CCDF + interval)
 #'   \item \code{stat_dist_cdfinterval} / \code{stat_dist_cdfintervalh}: CDF bar plots (CDF + interval)
 #'   \item \code{stat_dist_gradientinterval} / \code{stat_dist_gradientintervalh}: Density gradient + interval plots
+#'   \item \code{stat_dist_pointinterval} / \code{stat_dist_pointintervalh}: Point + interval plots
+#'   \item \code{stat_dist_interval} / \code{stat_dist_intervalh}: Interval plots
 #' }
 #'
 #' These stats expect a \code{dist} aesthetic to specify a distribution name
@@ -432,3 +434,74 @@ StatDistGradientinterval <- ggproto("StatDistGradientinterval", StatDistSlabinte
     justification = 0.5
   ), StatDistSlabinterval$default_params)
 )
+
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_pointinterval = function(..., show_slab = FALSE) stat_dist_slabinterval(..., show_slab = show_slab)
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_pointintervalh = function(..., show_slab = FALSE, orientation = "horizontal") {
+  stat_dist_slabinterval(..., show_slab = show_slab, orientation = orientation)
+}
+
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_interval = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "interval",
+  position = "identity",
+  ...,
+
+  show_slab = FALSE,
+  show_point = FALSE,
+
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatDistInterval,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      show_point = show_point,
+      show_slab = show_slab,
+      ...
+    )
+  )
+}
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_intervalh = function(..., orientation = "horizontal") {
+  stat_dist_interval(..., orientation = orientation)
+}
+StatDistInterval = ggproto("StatDistInterval", StatDistSlabinterval,
+  default_aes = defaults(aes(
+    color = stat(level)
+  ), StatDistSlabinterval$default_aes),
+
+  default_params = defaults(list(
+    show_slab = FALSE,
+    show_point = FALSE,
+    .width = c(.50, .80, .95)
+  ), StatDistSlabinterval$default_params)
+)
+# have to remove this here instead of in call to defaults()
+# because otherwise it stays in the list as a value = NULL
+# instead of being removed
+StatDistInterval$default_aes$size = NULL
+
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_slab = function(..., show_interval = FALSE) stat_dist_slabinterval(..., show_interval = show_interval)
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_slabh = function(..., show_interval = FALSE, orientation = "horizontal") {
+  stat_dist_slabinterval(..., show_interval = show_interval, orientation = orientation)
+}

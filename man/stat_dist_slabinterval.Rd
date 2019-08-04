@@ -12,6 +12,12 @@
 \alias{stat_dist_cdfintervalh}
 \alias{stat_dist_gradientinterval}
 \alias{stat_dist_gradientintervalh}
+\alias{stat_dist_pointinterval}
+\alias{stat_dist_pointintervalh}
+\alias{stat_dist_interval}
+\alias{stat_dist_intervalh}
+\alias{stat_dist_slab}
+\alias{stat_dist_slabh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)}
 \usage{
 stat_dist_slabinterval(mapping = NULL, data = NULL,
@@ -47,6 +53,21 @@ stat_dist_gradientinterval(mapping = NULL, data = NULL,
   slab_alpha = FALSE), inherit.aes = TRUE)
 
 stat_dist_gradientintervalh(..., orientation = "horizontal")
+
+stat_dist_pointinterval(..., show_slab = FALSE)
+
+stat_dist_pointintervalh(..., show_slab = FALSE,
+  orientation = "horizontal")
+
+stat_dist_interval(mapping = NULL, data = NULL, geom = "interval",
+  position = "identity", ..., show_slab = FALSE, show_point = FALSE,
+  show.legend = NA, inherit.aes = TRUE)
+
+stat_dist_intervalh(..., orientation = "horizontal")
+
+stat_dist_slab(..., show_interval = FALSE)
+
+stat_dist_slabh(..., show_interval = FALSE, orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -139,6 +160,8 @@ groups so that the maximum height in each group is \code{1}; if \code{"none"}, v
 
 \item{thickness}{Override for the \code{thickness} aesthetic in \code{\link{geom_slabinterval}}: the thickness
 of the slab at each x / y value of the slab (depending on \code{orientation}).}
+
+\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
 }
 \description{
 Stats for computing distribution functions (densities or CDFs) + intervals for use with
@@ -164,6 +187,8 @@ Stats include:
   \item \code{stat_dist_ccdfinterval} / \code{stat_dist_ccdfintervalh}: CCDF bar plots (CCDF + interval)
   \item \code{stat_dist_cdfinterval} / \code{stat_dist_cdfintervalh}: CDF bar plots (CDF + interval)
   \item \code{stat_dist_gradientinterval} / \code{stat_dist_gradientintervalh}: Density gradient + interval plots
+  \item \code{stat_dist_pointinterval} / \code{stat_dist_pointintervalh}: Point + interval plots
+  \item \code{stat_dist_interval} / \code{stat_dist_intervalh}: Interval plots
 }
 
 These stats expect a \code{dist} aesthetic to specify a distribution name

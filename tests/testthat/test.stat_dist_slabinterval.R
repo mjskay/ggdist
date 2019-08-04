@@ -56,6 +56,40 @@ test_that("stat_dist_gradientinterval works", {
   )
 })
 
+test_that("stat_dist_pointinterval, interval, and slab work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = tribble(
+    ~dist, ~args,
+    "norm", list(0, 1),
+    "t", list(3)
+  ) %>%
+    ggplot(aes(dist = dist, args = args)) +
+    scale_color_brewer()
+
+  vdiffr::expect_doppelganger("dist_pointinterval with two groups",
+    p + stat_dist_pointinterval(aes(x = dist))
+  )
+  vdiffr::expect_doppelganger("dist_pointintervalh with two groups",
+    p + stat_dist_pointintervalh(aes(y = dist))
+  )
+
+  vdiffr::expect_doppelganger("dist_interval with two groups",
+    p + stat_dist_interval(aes(x = dist))
+  )
+  vdiffr::expect_doppelganger("dist_intervalh with two groups",
+    p + stat_dist_intervalh(aes(y = dist))
+  )
+
+  vdiffr::expect_doppelganger("dist_slab with two groups",
+    p + stat_dist_slab(aes(x = dist))
+  )
+  vdiffr::expect_doppelganger("dist_slabh with two groups",
+    p + stat_dist_slabh(aes(y = dist))
+  )
+})
+
 test_that("density transformation works", {
   expect_equal(transform_pdf(dnorm, 1:5, scales::exp_trans()), dlnorm(1:5))
   expect_equal(transform_pdf(dlnorm, -2:2, scales::log_trans()), dnorm(-2:2))

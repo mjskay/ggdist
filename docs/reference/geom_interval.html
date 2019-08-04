@@ -252,9 +252,54 @@ when used with functions like <code><a href='point_interval.html'>median_qi</a><
 <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))</a></code>. <code>geom_intervalh</code> acts as if
 its default aesthetics are <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))</a></code>.</p>
     
+    <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
+
+    
+    <p>These geoms support the following aesthetics:</p><ul>
+<li><p><code>datatype</code></p></li>
+<li><p><code>alpha</code></p></li>
+<li><p><code>colour</code></p></li>
+<li><p><code>linetype</code></p></li>
+<li><p><code>fill</code></p></li>
+<li><p><code>shape</code></p></li>
+<li><p><code>stroke</code></p></li>
+<li><p><code>point_colour</code></p></li>
+<li><p><code>point_fill</code></p></li>
+<li><p><code>point_alpha</code></p></li>
+<li><p><code>point_size</code></p></li>
+<li><p><code>size</code></p></li>
+<li><p><code>interval_colour</code></p></li>
+<li><p><code>interval_alpha</code></p></li>
+<li><p><code>interval_size</code></p></li>
+<li><p><code>interval_linetype</code></p></li>
+<li><p><code>slab_size</code></p></li>
+<li><p><code>slab_colour</code></p></li>
+<li><p><code>slab_fill</code></p></li>
+<li><p><code>slab_alpha</code></p></li>
+<li><p><code>slab_linetype</code></p></li>
+<li><p><code>y</code></p></li>
+<li><p><code>ymin</code></p></li>
+<li><p><code>ymax</code></p></li>
+<li><p><code>x</code></p></li>
+<li><p><code>xmin</code></p></li>
+<li><p><code>xmax</code></p></li>
+<li><p><code>width</code></p></li>
+<li><p><code>height</code></p></li>
+<li><p><code>thickness</code></p></li>
+<li><p><code>group</code></p></li>
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for the geom that these geoms wrap. All parameters of that geom are
+    <div class='dont-index'><p>See <code><a href='stat_interval.html'>stat_interval</a></code> / <code><a href='stat_interval.html'>stat_intervalh</a></code> for the stat versions, intended
+for use on samples from a distribution.
+See <code>geom_interval</code> / <code>geom_intervalh</code> for a similar geom intended for intervals without
+point summaries.
+See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> for a variety of other
+stats that combine intervals with densities and CDFs.
+See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for the geom that these geoms wrap. All parameters of that geom are
 available to these geoms.</p></div>
     
 
@@ -285,6 +330,8 @@ available to these geoms.</p></div>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#aesthetics">Aesthetics</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

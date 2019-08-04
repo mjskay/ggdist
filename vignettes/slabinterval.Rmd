@@ -63,7 +63,7 @@ options(width = 120)
 
 ## Roadmap: It all starts with "slabinterval"
 
-```{r slabinterval_family, fig.height = 5, fig.width = 7, echo = FALSE}
+```{r slabinterval_family, fig.height = 5.25, fig.width = 7, echo = FALSE}
 dists_df = tibble(
   # enforce order
   geom = rev(c(
@@ -74,6 +74,7 @@ dists_df = tibble(
     "cdfinterval[h]",
     "interval[h]",
     "pointinterval[h]",
+    "slab[h]",
     "histinterval[h]"
     )) %>%
     factor(., levels = .),
@@ -96,10 +97,11 @@ dists_plot = dists_df %>%
   stat_dist_gradientintervalh(data = . %>% filter(geom == "gradientinterval[h]"), scale = .5) +
   stat_dist_ccdfintervalh(data = . %>% filter(geom == "ccdfinterval[h]"), scale = .5) +
   stat_dist_cdfintervalh(data = . %>% filter(geom == "cdfinterval[h]"), scale = .5) +
-  stat_histintervalh(aes(x = x), data = hist_df, position = position_nudge(y = - 0.4)) +
-  stat_pointintervalh(aes(x = x, y = "pointinterval[h]"), data = hist_df) +
   stat_intervalh(aes(x = x, y = "interval[h]"), data = hist_df, color = "gray65", alpha = 1/3, size = 10,
     position = position_nudge(y = -.1)) +
+  stat_pointintervalh(aes(x = x, y = "pointinterval[h]"), data = hist_df) +
+  stat_dist_slabh(data = . %>% filter(geom == "slab[h]"), position = position_nudge(y = - 0.2)) +
+  stat_histintervalh(aes(x = x), data = hist_df, position = position_nudge(y = - 0.4)) +
   scale_slab_alpha_continuous(guide = FALSE) +
   scale_x_continuous(limits = c(0,8), expand = c(0,0)) +
   labs(
@@ -115,8 +117,9 @@ annotation_plot = tribble(
     "gradientinterval[h]", c("stat_...", "stat_dist_..."),
     "ccdfinterval[h]",     c("stat_...", "stat_dist_..."),
     "cdfinterval[h]",      c("stat_...", "stat_dist_..."),
-    "interval[h]",         c("stat_...", "geom_..."),
-    "pointinterval[h]",    c("stat_...", "geom_..."),
+    "interval[h]",         c("stat_...", "stat_dist_...", "geom_..."),
+    "pointinterval[h]",    c("stat_...", "stat_dist_...", "geom_..."),
+    "slab[h]",             c("stat_...", "stat_dist_...", "geom_..."),
     "histinterval[h]",     c("stat_..."),
   ) %>%
   unnest() %>%
@@ -381,7 +384,7 @@ c(
 
 The `stat_dist_...` family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:
 
-```{r prior_dist_halfeyeh}
+```{r dist_halfeyeh_log_scale}
 data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
   stat_dist_halfeyeh() +
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))

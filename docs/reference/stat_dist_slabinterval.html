@@ -186,10 +186,25 @@ arguments.</p>
 
 <span class='fu'>stat_dist_gradientinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
-  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>thickness</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>p_limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.005</span>, <span class='fl'>0.995</span>),
-  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>thickness</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>slab_alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>stat_dist_gradientintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
+<span class='fu'>stat_dist_gradientintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+
+<span class='fu'>stat_dist_pointinterval</span>(<span class='no'>...</span>, <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>stat_dist_pointintervalh</span>(<span class='no'>...</span>, <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+
+<span class='fu'>stat_dist_interval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"interval"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show_point</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>stat_dist_intervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+
+<span class='fu'>stat_dist_slab</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>stat_dist_slabh</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -322,6 +337,10 @@ groups so that the maximum height in each group is <code>1</code>; if <code>"non
       <td><p>Override for the <code>thickness</code> aesthetic in <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>: the thickness
 of the slab at each x / y value of the slab (depending on <code>orientation</code>).</p></td>
     </tr>
+    <tr>
+      <th>show_point</th>
+      <td><p>Should the point portion of the geom be drawn? Default <code>TRUE</code>.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -340,6 +359,8 @@ and <em>CCDF bar plots</em> (a complementary CDF plus interval).</p>
 <li><p><code>stat_dist_ccdfinterval</code> / <code>stat_dist_ccdfintervalh</code>: CCDF bar plots (CCDF + interval)</p></li>
 <li><p><code>stat_dist_cdfinterval</code> / <code>stat_dist_cdfintervalh</code>: CDF bar plots (CDF + interval)</p></li>
 <li><p><code>stat_dist_gradientinterval</code> / <code>stat_dist_gradientintervalh</code>: Density gradient + interval plots</p></li>
+<li><p><code>stat_dist_pointinterval</code> / <code>stat_dist_pointintervalh</code>: Point + interval plots</p></li>
+<li><p><code>stat_dist_interval</code> / <code>stat_dist_intervalh</code>: Interval plots</p></li>
 </ul>
     <p>These stats expect a <code>dist</code> aesthetic to specify a distribution name
 and <code>arg1</code>, ... <code>arg9</code> aesthetics (or <code>args</code> as a list column) to specify distribution
@@ -352,16 +373,106 @@ produced by other packages (like the <code><a href='https://www.rdocumentation.o
 <code><a href='parse_dist.html'>parse_dist</a></code> combined with the stats described here can help you visualize the output
 of those functions.</p>
     
+    <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
+
+    
+    <p>These stats support the following aesthetics:</p><ul>
+<li><p><code>dist</code></p></li>
+<li><p><code>args</code></p></li>
+<li><p><code>arg1</code></p></li>
+<li><p><code>arg2</code></p></li>
+<li><p><code>arg3</code></p></li>
+<li><p><code>arg4</code></p></li>
+<li><p><code>arg5</code></p></li>
+<li><p><code>arg6</code></p></li>
+<li><p><code>arg7</code></p></li>
+<li><p><code>arg8</code></p></li>
+<li><p><code>arg9</code></p></li>
+<li><p><code>x</code></p></li>
+<li><p><code>y</code></p></li>
+<li><p><code>datatype</code></p></li>
+<li><p><code>thickness</code></p></li>
+<li><p><code>size</code></p></li>
+<li><p><code>group</code></p></li>
+</ul><p>In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:</p><ul>
+<li><p><code>datatype</code></p></li>
+<li><p><code>alpha</code></p></li>
+<li><p><code>colour</code></p></li>
+<li><p><code>linetype</code></p></li>
+<li><p><code>fill</code></p></li>
+<li><p><code>shape</code></p></li>
+<li><p><code>stroke</code></p></li>
+<li><p><code>point_colour</code></p></li>
+<li><p><code>point_fill</code></p></li>
+<li><p><code>point_alpha</code></p></li>
+<li><p><code>point_size</code></p></li>
+<li><p><code>size</code></p></li>
+<li><p><code>interval_colour</code></p></li>
+<li><p><code>interval_alpha</code></p></li>
+<li><p><code>interval_size</code></p></li>
+<li><p><code>interval_linetype</code></p></li>
+<li><p><code>slab_size</code></p></li>
+<li><p><code>slab_colour</code></p></li>
+<li><p><code>slab_fill</code></p></li>
+<li><p><code>slab_alpha</code></p></li>
+<li><p><code>slab_linetype</code></p></li>
+<li><p><code>y</code></p></li>
+<li><p><code>ymin</code></p></li>
+<li><p><code>ymax</code></p></li>
+<li><p><code>x</code></p></li>
+<li><p><code>xmin</code></p></li>
+<li><p><code>xmax</code></p></li>
+<li><p><code>width</code></p></li>
+<li><p><code>height</code></p></li>
+<li><p><code>thickness</code></p></li>
+<li><p><code>group</code></p></li>
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
+    
+    <h2 class="hasAnchor" id="computed-variables"><a class="anchor" href="#computed-variables"></a>Computed Variables</h2>
+
+    
+    <ul>
+<li><p><code>x</code> or <code>y</code>: For slabs, the input values to the slab function.
+    For intervals, the point summary from the interval function. Whether it is <code>x</code> or <code>y</code> depends on <code>orientation</code></p></li>
+<li><p><code>xmin</code> or <code>ymin</code>: For intervals, the lower end of the interval from the interval function.</p></li>
+<li><p><code>xmax</code> or <code>ymax</code>: For intervals, the upper end of the interval from the interval function.</p></li>
+<li><p><code>f</code>: For slabs, the output values from the slab function.</p></li>
+</ul>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for more information on the geom these stats
 use by default and some of the options they have. See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code>
-for the versions of these stats that can be used on samples.</p></div>
+for the versions of these stats that can be used on samples.
+See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-#TODO
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
+  ~<span class='no'>group</span>, ~<span class='no'>subgroup</span>, ~<span class='no'>mean</span>, ~<span class='no'>sd</span>,
+  <span class='st'>"a"</span>,          <span class='st'>"h"</span>,     <span class='fl'>5</span>,   <span class='fl'>1</span>,
+  <span class='st'>"b"</span>,          <span class='st'>"h"</span>,     <span class='fl'>7</span>,   <span class='fl'>1.5</span>,
+  <span class='st'>"c"</span>,          <span class='st'>"h"</span>,     <span class='fl'>8</span>,   <span class='fl'>1</span>,
+  <span class='st'>"c"</span>,          <span class='st'>"i"</span>,     <span class='fl'>9</span>,   <span class='fl'>1</span>,
+  <span class='st'>"c"</span>,          <span class='st'>"j"</span>,     <span class='fl'>7</span>,   <span class='fl'>1</span>
+) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>group</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"norm"</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='no'>sd</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>subgroup</span>)) +
+  <span class='fu'>stat_dist_eye</span>(<span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodge"</span>)</div><div class='img'><img src='stat_dist_slabinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># the stat_dist_... family applies a Jacobian adjustment to densities</span>
+<span class='co'># when plotting on transformed scales in order to plot them correctly.</span>
+<span class='co'># For example, here is a log-Normal distribution plotted on the log</span>
+<span class='co'># scale, where it will appear Normal:</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"lnorm"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>dist</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log</a></span>(<span class='fl'>10</span>), <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='fl'>2</span>*<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log</a></span>(<span class='fl'>10</span>))) +
+  <span class='fu'>stat_dist_halfeyeh</span>() +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='fl'>10</span>^<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(-<span class='fl'>5</span>,<span class='fl'>7</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>2</span>))</div><div class='img'><img src='stat_dist_slabinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
+# see vignette("slabinterval") for many more examples.
 
 </div></pre>
   </div>
@@ -371,6 +482,10 @@ for the versions of these stats that can be used on samples.</p></div>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#aesthetics">Aesthetics</a></li>
+
+      <li><a href="#computed-variables">Computed Variables</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

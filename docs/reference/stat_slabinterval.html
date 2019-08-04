@@ -306,15 +306,67 @@ the default plot specification, e.g. <code>borders()</code>.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
+
+    
+    <p>These stats support the following aesthetics:</p><ul>
+<li><p><code>x</code></p></li>
+<li><p><code>y</code></p></li>
+<li><p><code>datatype</code></p></li>
+<li><p><code>thickness</code></p></li>
+<li><p><code>size</code></p></li>
+<li><p><code>group</code></p></li>
+</ul><p>In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:</p><ul>
+<li><p><code>datatype</code></p></li>
+<li><p><code>alpha</code></p></li>
+<li><p><code>colour</code></p></li>
+<li><p><code>linetype</code></p></li>
+<li><p><code>fill</code></p></li>
+<li><p><code>shape</code></p></li>
+<li><p><code>stroke</code></p></li>
+<li><p><code>point_colour</code></p></li>
+<li><p><code>point_fill</code></p></li>
+<li><p><code>point_alpha</code></p></li>
+<li><p><code>point_size</code></p></li>
+<li><p><code>size</code></p></li>
+<li><p><code>interval_colour</code></p></li>
+<li><p><code>interval_alpha</code></p></li>
+<li><p><code>interval_size</code></p></li>
+<li><p><code>interval_linetype</code></p></li>
+<li><p><code>slab_size</code></p></li>
+<li><p><code>slab_colour</code></p></li>
+<li><p><code>slab_fill</code></p></li>
+<li><p><code>slab_alpha</code></p></li>
+<li><p><code>slab_linetype</code></p></li>
+<li><p><code>y</code></p></li>
+<li><p><code>ymin</code></p></li>
+<li><p><code>ymax</code></p></li>
+<li><p><code>x</code></p></li>
+<li><p><code>xmin</code></p></li>
+<li><p><code>xmax</code></p></li>
+<li><p><code>width</code></p></li>
+<li><p><code>height</code></p></li>
+<li><p><code>thickness</code></p></li>
+<li><p><code>group</code></p></li>
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for the geom version, intended
-for use on data that has already been translated into funciton evaluations, points, and intervals.</p></div>
+for use on data that has already been translated into function evaluations, points, and intervals.
+See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> and <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval</a></code> for families of stats
+built on top of this stat for common use cases (like <code>stat_halfeyeh</code>).
+See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-#TODO
+# stat_slabinterval() is typically not that useful on its own.
+# See vignette("slabinterval") for a variety of examples of the use of its
+# shortcut geoms and stats, which are more useful than using
+# stat_slabinterval() directly.
 
 </div></pre>
   </div>
@@ -323,6 +375,8 @@ for use on data that has already been translated into funciton evaluations, poin
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#aesthetics">Aesthetics</a></li>
+
       <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>

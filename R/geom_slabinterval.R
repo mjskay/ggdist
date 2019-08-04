@@ -598,3 +598,17 @@ group_slab_data_by_fill = function(slab_data, x = "x", ymin = "ymin", ymax = "ym
     slab_data
   }
 }
+
+
+# shortcut geoms ----------------------------------------------------------
+
+#' @export
+#' @rdname geom_slabinterval
+geom_slab = function(..., show_interval = FALSE) {
+  geom_slabinterval(..., show_interval = show_interval)
+}
+#' @export
+#' @rdname geom_slabinterval
+geom_slabh = function(..., show_interval = FALSE, orientation = "horizontal") {
+  geom_slabinterval(..., show_interval = show_interval, orientation = orientation)
+}

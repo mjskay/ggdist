@@ -167,7 +167,11 @@ corresponding intervals.</p>
   <span class='kw'>interval_size_domain</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>), <span class='kw'>interval_size_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.6</span>, <span class='fl'>1.4</span>),
   <span class='kw'>fatten_point</span> <span class='kw'>=</span> <span class='fl'>1.8</span>, <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_point</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>geom_slab</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>geom_slabh</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -334,15 +338,59 @@ use case.</p>
     <p>Typically, the <code>geom_*</code> versions are meant for use with already-summarized data (such as intervals) and the
 <code>stat_*</code> versions are summarize the data themselves (usually draws from a distribution) to produce the geom.</p>
     
+    <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
+
+    
+    <p>These geoms support the following aesthetics:</p><ul>
+<li><p><code>datatype</code></p></li>
+<li><p><code>alpha</code></p></li>
+<li><p><code>colour</code></p></li>
+<li><p><code>linetype</code></p></li>
+<li><p><code>fill</code></p></li>
+<li><p><code>shape</code></p></li>
+<li><p><code>stroke</code></p></li>
+<li><p><code>point_colour</code></p></li>
+<li><p><code>point_fill</code></p></li>
+<li><p><code>point_alpha</code></p></li>
+<li><p><code>point_size</code></p></li>
+<li><p><code>size</code></p></li>
+<li><p><code>interval_colour</code></p></li>
+<li><p><code>interval_alpha</code></p></li>
+<li><p><code>interval_size</code></p></li>
+<li><p><code>interval_linetype</code></p></li>
+<li><p><code>slab_size</code></p></li>
+<li><p><code>slab_colour</code></p></li>
+<li><p><code>slab_fill</code></p></li>
+<li><p><code>slab_alpha</code></p></li>
+<li><p><code>slab_linetype</code></p></li>
+<li><p><code>y</code></p></li>
+<li><p><code>ymin</code></p></li>
+<li><p><code>ymax</code></p></li>
+<li><p><code>x</code></p></li>
+<li><p><code>xmin</code></p></li>
+<li><p><code>xmax</code></p></li>
+<li><p><code>width</code></p></li>
+<li><p><code>height</code></p></li>
+<li><p><code>thickness</code></p></li>
+<li><p><code>group</code></p></li>
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>See <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code> for a combination geom designed for fit curves plus probability bands.
-See <code><a href='scales.html'>scales</a></code> for more information on custom aesthetics that this geom supports.</p></div>
+See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> and <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval</a></code> for families of stats
+built on top of this geom for common use cases (like <code>stat_halfeyeh</code>).
+See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-# TODO
+# geom_slabinterval() is typically not that useful on its own.
+# See vignette("slabinterval") for a variety of examples of the use of its
+# shortcut geoms and stats, which are more useful than using
+# geom_slabinterval() directly.
 
 </div></pre>
   </div>
@@ -352,6 +400,8 @@ See <code><a href='scales.html'>scales</a></code> for more information on custom
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#aesthetics">Aesthetics</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

@@ -86,6 +86,8 @@ sample_slab_function = function(
 #'   \item \code{stat_cdfinterval} / \code{stat_cdfintervalh}: CDF bar plots (CDF + interval)
 #'   \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
 #'   \item \code{stat_histinterval} / \code{stat_histintervalh}: Histogram + interval plots
+#'   \item \code{stat_pointinterval} / \code{stat_pointintervalh}: Point + interval plots
+#'   \item \code{stat_interval} / \code{stat_intervalh}: Interval plots
 #' }
 #'
 #' @eval rd_slabinterval_aesthetics(stat = StatSampleSlabinterval)
@@ -355,3 +357,12 @@ stat_histinterval = function(..., slab_type = "histogram") stat_sample_slabinter
 #' @rdname stat_sample_slabinterval
 stat_histintervalh = function(..., slab_type = "histogram" , orientation = "horizontal")
   stat_sample_slabinterval(..., slab_type = slab_type, orientation = orientation)
+
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_slab = function(..., show_interval = FALSE) stat_sample_slabinterval(..., show_interval = show_interval)
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_slabh = function(..., show_interval = FALSE, orientation = "horizontal") {
+  stat_sample_slabinterval(..., show_interval = show_interval, orientation = orientation)
+}

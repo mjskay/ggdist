@@ -2,6 +2,8 @@
 % Please edit documentation in R/geom_slabinterval.R
 \name{geom_slabinterval}
 \alias{geom_slabinterval}
+\alias{geom_slab}
+\alias{geom_slabh}
 \title{Slab + point + interval meta-geom}
 \usage{
 geom_slabinterval(mapping = NULL, data = NULL, stat = "identity",
@@ -13,6 +15,10 @@ geom_slabinterval(mapping = NULL, data = NULL, stat = "identity",
   fatten_point = 1.8, show_slab = TRUE, show_point = TRUE,
   show_interval = TRUE, na.rm = FALSE, show.legend = NA,
   inherit.aes = TRUE)
+
+geom_slab(..., show_interval = FALSE)
+
+geom_slabh(..., show_interval = FALSE, orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
