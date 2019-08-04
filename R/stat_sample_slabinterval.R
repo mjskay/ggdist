@@ -6,6 +6,7 @@
 
 # slab function for samples -------------------------
 
+#' @importFrom stats approxfun
 weighted_ecdf = function(x, weights = NULL) {
   n = length(x)
   if (n < 1) stop("Need at least 1 or more values to calculate an ECDF")
