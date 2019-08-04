@@ -40,6 +40,7 @@ dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
 
 # return a version of the provided density function f_X(...)
 # transformed according to transformation trans
+#' @importFrom stats numericDeriv
 transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) {
   # based on the fact that for Y = g(X),
   # f_Y(y) = f_X(g^−1(y)) * | g^-1'(y) |

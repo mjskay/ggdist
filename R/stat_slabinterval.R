@@ -227,6 +227,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 # for making versions of min/max that ignore NAs but also
 # return NA if there are no values / no non-NA values
 # (in compute_slab)
+#' @importFrom stats na.omit
 na_ = function(m_, ...) {
   values = na.omit(c(...))
   if (length(values) == 0) NA
