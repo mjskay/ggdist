@@ -6,6 +6,22 @@
 
 # slab function for samples -------------------------
 
+weighted_ecdf = function(x, weights = NULL) {
+  n = length(x)
+  if (n < 1) stop("Need at least 1 or more values to calculate an ECDF")
+
+  #sort x
+  sort_order = order(x)
+  x = x[sort_order]
+
+  # calculate weighted cumulative probabilities
+  weights = if (is.null(weights)) rep(1, n) else weights
+  weights = weights[sort_order]
+  p = cumsum(weights) / sum(weights)
+
+  approxfun(x, p, yleft = 0, yright = 1, ties = list("ordered", max))
+}
+
 #' @importFrom rlang missing_arg
 #' @importFrom stats ecdf
 sample_slab_function = function(
@@ -31,14 +47,14 @@ sample_slab_function = function(
     cdf = {
       data.frame(
         .input = input,
-        .value = ecdf(df[[x]])(trans$transform(input)),
+        .value = weighted_ecdf(df[[x]])(trans$transform(input)),
         n = nrow(df)
       )
     },
     ccdf = {
       data.frame(
         .input = input,
-        .value = 1 - ecdf(df[[x]])(trans$transform(input)),
+        .value = 1 - weighted_ecdf(df[[x]])(trans$transform(input)),
         n = nrow(df)
       )
     },
