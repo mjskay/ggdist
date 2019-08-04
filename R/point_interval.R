@@ -209,7 +209,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       # return multiple intervals, hence map() here and unnest() below
       data[[".lower"]] = map(intervals, ~ .[, 1])
       data[[".upper"]] = map(intervals, ~ .[, 2])
-      data = unnest(data, .lower, .upper)
+      data = unnest(data, c(".lower", ".upper"))
 
       data[[".width"]] = p
 

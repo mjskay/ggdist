@@ -5,6 +5,7 @@
 * exprs in compare_levels (#174 #175)
 * lineribbon now works with ggnewscale (and other default computed aesthetic stuff, #178)
 * more helpful error messages on unsupported models for fitted/predicted_draws (#177)
+* kruschke-style distribution-of-distribution plots now easier to construct with stat_dist_slabh
 
 
 # tidybayes 1.1.0

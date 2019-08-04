@@ -339,7 +339,7 @@ p = cens_df %>%
     p_residual = list(runif(k, p_lower, p_upper)),
     residual_draw = list(1:k)
   ) %>%
-  unnest() %>%
+  unnest(c(p_residual, residual_draw)) %>%
   mutate(z_residual = qnorm(p_residual)) %>%
   ggplot(aes(sample = z_residual)) +
   geom_qq() +
@@ -452,7 +452,7 @@ p = cens_df_t %>%
     p_residual = list(runif(k, p_lower, p_upper)),
     residual_draw = list(1:k)
   ) %>%
-  unnest() %>%
+  unnest(c(p_residual, residual_draw)) %>%
   mutate(z_residual = qnorm(p_residual)) %>%
   ggplot(aes(sample = z_residual)) +
   geom_qq() +
@@ -500,7 +500,7 @@ p = cens_df_t %>%
     p_residual = list(runif(k, p_lower, p_upper)),
     residual_draw = list(1:k)
   ) %>%
-  unnest() %>%
+  unnest(c(p_residual, residual_draw)) %>%
   mutate(z_residual = qnorm(p_residual)) %>%
   ggplot(aes(sample = z_residual)) +
   geom_qq() +
@@ -595,7 +595,7 @@ p = cens_df_o %>%
     p_residual = list(runif(k, p_lower, p_upper)),
     residual_draw = list(1:k)
   ) %>%
-  unnest() %>%
+  unnest(c(p_residual, residual_draw)) %>%
   mutate(z_residual = qnorm(p_residual)) %>%
   ggplot(aes(sample = z_residual)) +
   geom_qq() +
@@ -641,7 +641,7 @@ make_probability_residuals = function(data, prediction, y, y_upper = NA, n = 1) 
       .p_residual = map2(.p_lower, .p_upper, runif, n = !!n),
       .residual_draw = map(.p_residual, seq_along)
     ) %>%
-    unnest(.p_residual, .residual_draw, .drop = FALSE) %>%
+    unnest(c(.p_residual, .residual_draw)) %>%
     mutate(.z_residual = qnorm(.p_residual))
 }
 ```

@@ -74,12 +74,10 @@ globalVariables(".draw")
 #' @importFrom tibble is_tibble
 #' @export
 add_draws = function(data, draws, value = ".value") {
-  .value = as.name(value)
-
   groups = union(colnames(data), ".row")
 
   add_draws_list(data, draws, value = value) %>%
-    unnest(.draw, !!.value, .drop = FALSE) %>%
+    unnest(c(.draw, !!value)) %>%
     group_by_at(groups)
 }
 

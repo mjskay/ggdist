@@ -219,7 +219,7 @@ test_that("multiple-response intervals work", {
       .point = "mode",
       .interval = "hdi"
     ) %>%
-    unnest()
+    unnest(c(.lower, .upper))
 
   expect_equal(mode_hdi(dd, x, .width = .5), ref)
 })

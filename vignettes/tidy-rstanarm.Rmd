@@ -560,7 +560,7 @@ Here's an ordinal model with a categorical predictor:
 
 ```{r, cache = TRUE}
 data(esoph)
-m_esoph_rs = stan_polr(tobgp ~ agegp, data = esoph, prior = R2(0.25), prior_counts = dirichlet(1))
+m_esoph_rs = stan_polr(tobgp ~ agegp, data = esoph, prior = R2(0.25), prior_counts = rstanarm::dirichlet(1))
 ```
 
 The `rstanarm::posterior_linpred` function for ordinal regression models in rstanarm returns only the link-level prediction for each draw (in contrast to `brms::fitted.brmsfit`, which returns one prediction per category for ordinal models, see the ordinal regression examples in `vignette("tidy-brms")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal `rstanarm` models, `add_fitted_draws` just returns the link-level prediction (**Note**: setting `scale = "response"` for such models will not usually make sense). 
@@ -635,7 +635,7 @@ esoph %>%
       plogis(lag(alpha, default = -Inf) - beta_x)
     )) %>%
   mutate(.category = list(levels(esoph$tobgp))) %>%
-  unnest() %>%
+  unnest(c(threshold, `P(Y = category)`, .category)) %>%
   ggplot(aes(x = agegp, y = `P(Y = category)`, color = .category)) +
   stat_pointinterval(position = position_dodge(width = .4)) +
   scale_size_continuous(guide = FALSE) +
@@ -655,7 +655,7 @@ esoph_plot = esoph %>%
       plogis(lag(alpha, default = -Inf) - beta_x)
     )) %>%
   mutate(.category = list(levels(esoph$tobgp))) %>%
-  unnest() %>%
+  unnest(c(threshold, `P(Y = category)`, .category)) %>%
   ggplot(aes(x = `P(Y = category)`, y = .category)) +
   coord_cartesian(expand = FALSE) +
   facet_grid(. ~ agegp, switch = "x") +

@@ -122,7 +122,7 @@ annotation_plot = tribble(
     "slab[h]",             c("stat_...", "stat_dist_...", "geom_..."),
     "histinterval[h]",     c("stat_..."),
   ) %>%
-  unnest() %>%
+  unnest(prefix) %>%
   mutate(
     geom = factor(geom, levels = levels(dists_df$geom)),
     prefix = factor(prefix, levels = c("stat_...", "stat_dist_...", "geom_..."))
@@ -173,7 +173,7 @@ df = tribble(
     "c",          "i", rnorm(1000, mean = 9),
     "c",          "j", rnorm(1000, mean = 7)
   ) %>%
-  unnest()
+  unnest(value)
 ```
 
 We can summarize it at the group level using an eye plot with `stat_eye()` (ignoring subgroups for now):

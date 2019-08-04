@@ -13,18 +13,20 @@ test_that("gradientinterval works", {
 
   set.seed(1234)
   p = tribble(
-    ~dist, ~x,
+    ~dist,  ~x,
     "norm", rnorm(100),
-    "t", rt(100, 3)
+    "t",    rt(100, 3)
   ) %>%
-    unnest() %>%
+    unnest(x) %>%
     ggplot() +
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("gradientinterval with two groups",
-    p + stat_gradientinterval(aes(x = dist, y = x), n = 20))
+    p + stat_gradientinterval(aes(x = dist, y = x), n = 20)
+  )
   vdiffr::expect_doppelganger("gradientintervalh with two groups",
-    p + stat_gradientintervalh(aes(y = dist, x = x), n = 20))
+    p + stat_gradientintervalh(aes(y = dist, x = x), n = 20)
+  )
 })
 
 test_that("histinterval and slab work", {
@@ -33,11 +35,11 @@ test_that("histinterval and slab work", {
 
   set.seed(1234)
   p = tribble(
-    ~dist, ~x,
+    ~dist,  ~x,
     "norm", rnorm(100),
-    "t", rt(100, 3)
+    "t",    rt(100, 3)
   ) %>%
-    unnest() %>%
+    unnest(x) %>%
     ggplot()
 
   vdiffr::expect_doppelganger("histinterval with outline",

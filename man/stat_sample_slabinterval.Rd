@@ -282,7 +282,7 @@ df = tribble(
   "c",          "i", rnorm(500, mean = 9),
   "c",          "j", rnorm(500, mean = 7)
 ) \%>\%
-  unnest()
+  unnest(value)
 
 # here are vertical eyes:
 df \%>\%
