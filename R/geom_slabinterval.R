@@ -316,7 +316,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       },
       height = {
         # normalize so height in each group is 1
-        data = ddply(data, c("group", y), function(d) {
+        data = plyr::ddply(data, c("group", y), function(d) {
           finite_thickness = d$thickness[d$datatype == "slab" & is.finite(d$thickness)]
           if (length(finite_thickness) > 0) {
             d$thickness = d$thickness / max(finite_thickness)

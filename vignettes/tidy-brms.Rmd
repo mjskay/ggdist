@@ -443,6 +443,20 @@ ABC %>%
 
 For a more detailed description of these charts (and some useful variations on them), see [Solomon Kurz's excellent blog post on the topic](https://solomonkurz.netlify.com/post/make-rotated-gaussians-kruschke-style/).
 
+We could even combine the Kruschke-style plots of predictive distributions with halfeyes showing the posterior means:
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  add_fitted_draws(m, dpar = c("mu", "sigma")) %>%
+  ggplot(aes(x = condition)) +
+  stat_dist_slab(aes(dist = "norm", arg1 = mu, arg2 = sigma), 
+    slab_color = "gray65", alpha = 1/10, fill = NA, data = . %>% sample_draws(30), scale = .5
+  ) +
+  stat_halfeye(aes(y = .value), side = "bottom", scale = .5) +
+  geom_point(aes(y = response), data = ABC, shape = 21, fill = "#9ECAE1", size = 2, position = position_nudge(x = -.1))
+```
+
 ## Fit/prediction curves
 
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
