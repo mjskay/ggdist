@@ -437,6 +437,26 @@ ABC %>%
   scale_color_brewer()
 ```
 
+## Posterior predictions, Kruschke-style
+
+The above approach to posterior predictions integrates over the parameter uncertainty to give a single posterior predictive distribution. Another approach, often used by John Kruschke in his book [Doing Bayesian Data Analysis](https://sites.google.com/site/doingbayesiandataanalysis/), is to attempt to show both the predictive uncertainty and the parameter uncertainty simultaneously by showing several possible predictive distributions implied by the posterior.
+
+We can do this pretty easily by asking for the distributional parameters for a given prediction implied by the posterior. We'll do it explicitly here by setting `dpar = c("mu", "sigma")` in `add_fitted_draws`. Rather than specifying the parameters explicitly, you can also just set `dpar = TRUE` to get draws from all distributional parameters in a model, and this will work for any response distribution supported by brms. Then, we can select a small number of draws using `sample_draws()` and then use `stat_dist_slabh()` to visualize each predictive distribution implied by the values of `mu` and `sigma`:
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  add_fitted_draws(m, dpar = c("mu", "sigma")) %>%
+  sample_draws(30) %>%
+  ggplot(aes(y = condition)) +
+  stat_dist_slabh(aes(dist = "norm", arg1 = mu, arg2 = sigma), 
+    slab_color = "gray65", alpha = 1/10, fill = NA
+  ) +
+  geom_point(aes(x = response), data = ABC, shape = 21, fill = "#9ECAE1", size = 2)
+```
+
+For a more detailed description of these charts (and some useful variations on them), see [Solomon Kurz's excellent blog post on the topic](https://solomonkurz.netlify.com/post/make-rotated-gaussians-kruschke-style/).
+
 ## Fit/prediction curves
 
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
