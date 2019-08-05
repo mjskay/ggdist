@@ -8,9 +8,9 @@ library(dplyr)
 context("geom_slabinterval")
 
 
-# group_slab_data_by_fill -------------------------------------------------
+# group_slab_data_by_colour -------------------------------------------------
 
-test_that("group_slab_data_by_fill works", {
+test_that("group_slab_data_by_colour works", {
 
   df = data.frame(
     x = 1:8,
@@ -29,11 +29,11 @@ test_that("group_slab_data_by_fill works", {
     group = c(rep(0, 4), rep(1, 6), rep(2,2))
   )
 
-  grouped_slab_data = arrange(group_slab_data_by_fill(df), group, x)
+  grouped_slab_data = arrange(group_slab_data_by_colour(df), group, x)
   expect_equal(grouped_slab_data, ref)
 
   df$fill = "a"
-  expect_equal(group_slab_data_by_fill(df), df)
+  expect_equal(group_slab_data_by_colour(df), df)
 
 })
 
