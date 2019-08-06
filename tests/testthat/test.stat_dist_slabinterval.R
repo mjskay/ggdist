@@ -14,16 +14,50 @@ test_that("distribution eye plots work with the args aesthetic", {
   p = tribble(
     ~dist, ~args,
     "norm", list(0, 1),
-    "beta", list(5, 5)
+    "beta", list(5, 5),
+    NA, NA
   ) %>%
     ggplot(aes(dist = dist, args = args))
 
+  expect_warning(
+    vdiffr::expect_doppelganger("vertical eye using args without na.rm",
+      p + stat_dist_eye(aes(x = dist))
+    ),
+    "Removed 2 rows containing missing values"
+  )
+
+  vdiffr::expect_doppelganger("vertical eye using args",
+    p + stat_dist_eye(aes(x = dist), na.rm = TRUE)
+  )
+
+  vdiffr::expect_doppelganger("horizontal eye using args",
+    p + stat_dist_eyeh(aes(y = dist), na.rm = TRUE)
+  )
+
   vdiffr::expect_doppelganger("vertical half-eye using args",
-    p + stat_dist_halfeye(aes(x = dist))
+    p + stat_dist_halfeye(aes(x = dist), na.rm = TRUE)
   )
 
   vdiffr::expect_doppelganger("horizontal half-eye using args",
-    p + stat_dist_halfeyeh(aes(y = dist)))
+    p + stat_dist_halfeyeh(aes(y = dist), na.rm = TRUE)
+  )
+
+  vdiffr::expect_doppelganger("ccdfinterval using args",
+    p + stat_dist_ccdfinterval(aes(x = dist), na.rm = TRUE)
+  )
+
+  vdiffr::expect_doppelganger("ccdfintervalh using args",
+    p + stat_dist_ccdfintervalh(aes(y = dist), na.rm = TRUE)
+  )
+
+  vdiffr::expect_doppelganger("cdfinterval using args",
+    p + stat_dist_cdfinterval(aes(x = dist), na.rm = TRUE)
+  )
+
+  vdiffr::expect_doppelganger("cdfintervalh using args",
+    p + stat_dist_cdfintervalh(aes(y = dist), na.rm = TRUE)
+  )
+
 })
 
 test_that("stat fill aesthetic on halfeye works", {

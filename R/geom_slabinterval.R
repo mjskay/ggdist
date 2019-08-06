@@ -294,7 +294,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     fatten_point = 1.8,
     show_slab = TRUE,
     show_point = TRUE,
-    show_interval = TRUE
+    show_interval = TRUE,
+    na.rm = FALSE
   ),
 
   default_datatype = "slab",
@@ -358,7 +359,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       fatten_point = self$default_params$fatten_point,
       show_slab = self$default_params$show_slab,
       show_point = self$default_params$show_point,
-      show_interval = self$default_params$show_interval
+      show_interval = self$default_params$show_interval,
+      na.rm = self$default_params$na.rm
     ) {
 
     define_orientation_variables(orientation)
@@ -384,7 +386,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     point_interval_grobs = if (show_interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       draw_point_intervals(data[data$datatype == "interval",], panel_params, coord,
-        orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point)
+        orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm)
     }
 
     ggname("geom_slabinterval",
@@ -468,7 +470,7 @@ draw_slabs = function(s_data, panel_params, coord, side, scale, orientation, jus
 
 
 draw_point_intervals = function(i_data,panel_params, coord, orientation, justification,
-  interval_size_domain, interval_size_range, fatten_point, show_point
+  interval_size_domain, interval_size_range, fatten_point, show_point, na.rm
 ) {
   if (nrow(i_data) == 0) return(list())
   define_orientation_variables(orientation)
@@ -485,14 +487,14 @@ draw_point_intervals = function(i_data,panel_params, coord, orientation, justifi
 
     point_grobs = if (show_point) {
       p_data = override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
-      point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord))
+      point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, na.rm = na.rm))
     }
 
     i_data[[x]] = i_data[[xmin]]
     i_data[[xend]] = i_data[[xmax]]
     i_data[[yend]] = i_data[[y]]
     i_data = override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
-    interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt"))
+    interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm))
   }
 
   c(interval_grobs, point_grobs)
