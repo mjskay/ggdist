@@ -20,23 +20,10 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' often more convenient than a vanilla \code{\link{geom_ribbon}} + \code{\link{geom_line}}.
 #'
 #' Specifically, \code{geom_lineribbon} acts as if its default aesthetics are
-#' \code{aes(ymin = .lower, ymax = .upper, size = -.width)}.
+#' \code{aes(ymin = .lower, ymax = .upper, forcats::fct_rev(ordered(.width)))}.
 #'
-#' @param mapping The aesthetic mapping, usually constructed with
-#' \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set at the
-#' layer level if you are overriding the plot defaults.
-#' @param data A layer specific dataset - only needed if you want to override
-#' the plot defaults.
-#' @param stat The statistical transformation to use on the data for this layer.
-#' @param position The position adjustment to use for overlapping points on this layer.
+#' @inheritParams ggplot2::geom_line
 #' @param ...  Other arguments passed to \code{\link{layer}}.
-#' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-#' values are silently removed.
-#' @param show.legend Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics
-#' are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them. This is
-#' most useful for helper functions that define both data and aesthetics and shouldn't inherit behavior from the
-#' default plot specification, e.g. borders.
 #' @author Matthew Kay
 #' @seealso See \code{\link{stat_lineribbon}} for a version that does summarizing of samples into points and intervals
 #' within ggplot. See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for a similar geom intended

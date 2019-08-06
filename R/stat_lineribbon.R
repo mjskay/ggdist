@@ -4,12 +4,14 @@
 ###############################################################################
 
 
-#' Line + multiple probability ribbon stat for ggplot
+#' Line + multiple probability ribbon plots (ggplot stat)
 #'
-#' A combination of \code{\link{stat_summary}} and \code{\link{geom_lineribbon}} with sensible defaults.
+#' A combination of \code{\link{stat_slabinterval}} and \code{\link{geom_lineribbon}} with sensible defaults.
 #' While \code{geom_lineribbon} is intended for use on data frames that have already been summarized using
 #' a \code{\link{point_interval}} function, \code{stat_lineribbon} is intended for use directly on data
-#' frames of draws, and will perform the summarization using a \code{\link{point_interval}} function.
+#' frames of draws, and will perform the summarization using a \code{\link{point_interval}} function;
+#' \code{stat_dist_lineribbon} is intended for use on analytical distributions through the \code{dist},
+#' \code{arg1}, ... \code{arg9}, and \code{args} aesthetics.
 #'
 #' @inheritParams stat_interval
 #' @param geom Use to override the default connection between
@@ -29,6 +31,14 @@
 #'   do(tibble(y = rnorm(100, .$x))) %>%
 #'   ggplot(aes(x = x, y = y)) +
 #'   stat_lineribbon() +
+#'   scale_fill_brewer()
+#'
+#' tibble(
+#'   x = 1:10,
+#'   sd = seq(1, 3, length.out = 10)
+#' ) %>%
+#'   ggplot(aes(x = x, dist = "norm", arg1 = x, arg2 = sd)) +
+#'   stat_dist_lineribbon() +
 #'   scale_fill_brewer()
 #'
 #' @export
@@ -88,3 +98,72 @@ StatLineribbon <- ggproto("StatLineribbon", StatPointinterval,
     .width = c(.50, .80, .95)
   ), StatPointinterval$default_params)
 )
+
+
+#' @rdname stat_lineribbon
+#' @export
+stat_dist_lineribbon = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "lineribbon",
+  position = "identity",
+  ...,
+
+  n = 501,
+  .width = c(.50, .80, .95),
+
+  na.rm = FALSE,
+
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatDistLineribbon,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      orientation = "vertical",
+
+      limits_function = dist_limits_function,
+      limits_args = list(),
+
+      slab_function = dist_slab_function,
+      slab_args = list(),
+      n = n,
+
+      interval_function = dist_interval_function,
+      interval_args = list(),
+      point_interval = NULL,
+      .width = .width,
+
+      show_slab = FALSE,
+      show_interval = TRUE,
+
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+
+StatDistLineribbon <- ggproto("StatDistLineribbon", StatDistSlabinterval,
+  default_aes = defaults(aes(
+    datatype = "interval",
+    group = stat(level),
+    fill = stat(level)
+  ), StatDistSlabinterval$default_aes),
+
+  default_params = defaults(list(
+    show_slab = FALSE,
+    .width = c(.50, .80, .95)
+  ), StatDistSlabinterval$default_params)
+)
+# have to remove this here instead of in call to defaults()
+# because otherwise it stays in the list as a value = NULL
+# instead of being removed
+StatDistLineribbon$default_aes$size = NULL

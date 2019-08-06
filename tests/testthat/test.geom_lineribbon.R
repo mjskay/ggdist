@@ -96,3 +96,18 @@ test_that("two-group stat_lineribbons work", {
     guides(fill = guide_legend(order = 1), color = guide_legend(order = 2), linetype = guide_legend(order = 2))
   )
 })
+
+test_that("stat_dist_lineribbon works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  vdiffr::expect_doppelganger("basic stat_dist_lineribbon",
+    tibble(
+      x = 1:10,
+      sd = seq(1, 3, length.out = 10)
+    ) %>%
+      ggplot(aes(x = x, dist = "norm", arg1 = x, arg2 = sd)) +
+      stat_dist_lineribbon() +
+      scale_fill_brewer()
+  )
+})

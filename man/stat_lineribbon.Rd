@@ -2,13 +2,19 @@
 % Please edit documentation in R/stat_lineribbon.R
 \name{stat_lineribbon}
 \alias{stat_lineribbon}
-\title{Line + multiple probability ribbon stat for ggplot}
+\alias{stat_dist_lineribbon}
+\title{Line + multiple probability ribbon plots (ggplot stat)}
 \usage{
 stat_lineribbon(mapping = NULL, data = NULL, geom = "lineribbon",
   position = "identity", ..., interval_function = NULL,
   interval_args = list(), point_interval = median_qi, .width = c(0.5,
   0.8, 0.95), na.rm = FALSE, show.legend = NA, inherit.aes = TRUE,
   .prob, fun.data, fun.args)
+
+stat_dist_lineribbon(mapping = NULL, data = NULL,
+  geom = "lineribbon", position = "identity", ..., n = 501,
+  .width = c(0.5, 0.8, 0.95), na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -78,10 +84,12 @@ the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 \item{fun.args}{Deprecated. Use \code{interval_args} instead.}
 }
 \description{
-A combination of \code{\link{stat_summary}} and \code{\link{geom_lineribbon}} with sensible defaults.
+A combination of \code{\link{stat_slabinterval}} and \code{\link{geom_lineribbon}} with sensible defaults.
 While \code{geom_lineribbon} is intended for use on data frames that have already been summarized using
 a \code{\link{point_interval}} function, \code{stat_lineribbon} is intended for use directly on data
-frames of draws, and will perform the summarization using a \code{\link{point_interval}} function.
+frames of draws, and will perform the summarization using a \code{\link{point_interval}} function;
+\code{stat_dist_lineribbon} is intended for use on analytical distributions through the \code{dist},
+\code{arg1}, ... \code{arg9}, and \code{args} aesthetics.
 }
 \examples{
 
@@ -93,6 +101,14 @@ tibble(x = 1:10) \%>\%
   do(tibble(y = rnorm(100, .$x))) \%>\%
   ggplot(aes(x = x, y = y)) +
   stat_lineribbon() +
+  scale_fill_brewer()
+
+tibble(
+  x = 1:10,
+  sd = seq(1, 3, length.out = 10)
+) \%>\%
+  ggplot(aes(x = x, dist = "norm", arg1 = x, arg2 = sd)) +
+  stat_dist_lineribbon() +
   scale_fill_brewer()
 
 }
