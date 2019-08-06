@@ -21,19 +21,20 @@ test_that("group_slab_data_by_colour works", {
   )
 
   ref = data.frame(
-    x = c(1:3, 3.5, 3.5, 4:7, 7.5, 7.5, 8),
-    ymin = c(1:3, 3.5, 3.5, 4:7, 7.5, 7.5, 8) + 1,
-    ymax = c(1:3, 3.5, 3.5, 4:7, 7.5, 7.5, 8) + 2,
-    fill = c(rep("a", 4), rep("b", 6), rep("a", 2)),
+    x =    c(1:3, 3.5, 3.5, 3:1,   3.5, 4:7, 7.5, 7.5, 7:4, 3.5,    7.5, 8, 8, 7.5),
+    ymin = c(1:3, 3.5, 3.5, 3:1,   3.5, 4:7, 7.5, 7.5, 7:4, 3.5,    7.5, 8, 8, 7.5) + 1,
+    ymax = c(1:3, 3.5, 3.5, 3:1,   3.5, 4:7, 7.5, 7.5, 7:4, 3.5,    7.5, 8, 8, 7.5) + 2,
+    fill = c(rep("a", 8), rep("b", 12), rep("a", 4)),
     alpha = 1,
-    group = c(rep(0, 4), rep(1, 6), rep(2,2))
+    group = c(rep(0, 8), rep(1, 12), rep(2,4)),
+    y    = c(3:5, 5.5, 4.5, 4:2,   5.5, 6:9, 9.5, 8.5, 8:5, 4.5,    9.5, 10, 9, 8.5)
   )
 
-  grouped_slab_data = arrange(group_slab_data_by_colour(df), group, x)
+  grouped_slab_data = arrange(group_slab_data_by(df, side = "both"), group)
   expect_equal(grouped_slab_data, ref)
 
   df$fill = "a"
-  expect_equal(group_slab_data_by_colour(df), df)
+  expect_equal(group_slab_data_by(df, side = "top"), mutate(df, y = ymax))
 
 })
 

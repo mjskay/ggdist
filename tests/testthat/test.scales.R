@@ -64,99 +64,103 @@ test_that("mapping custom aesthetics works", {
 
   # POINT
   vdiffr::expect_doppelganger("point_color discrete mapping",
-    p + geom_slabinterval(aes(point_color = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_color = x), normalize = "none", point_size = 5, shape = 21, stroke = 2)
   )
   vdiffr::expect_doppelganger("point_color continuous mapping",
-    p + geom_slabinterval(aes(point_color = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_color = x_num), normalize = "none", point_size = 5, shape = 21, stroke = 2)
   )
 
   vdiffr::expect_doppelganger("point_fill discrete mapping",
-    p + geom_slabinterval(aes(point_fill = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_fill = x), normalize = "none", point_size = 5, shape = 21, stroke = 2)
   )
   vdiffr::expect_doppelganger("point_fill continuous mapping",
-    p + geom_slabinterval(aes(point_fill = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_fill = x_num), normalize = "none", point_size = 5, shape = 21, stroke = 2)
   )
 
   vdiffr::expect_doppelganger("point_alpha discrete mapping",
-    p + geom_slabinterval(aes(point_alpha = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_alpha = x), normalize = "none", point_size = 5, shape = 21, stroke = 2)
   )
   vdiffr::expect_doppelganger("point_alpha continuous mapping",
-    p + geom_slabinterval(aes(point_alpha = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_alpha = x_num), normalize = "none", point_size = 5, shape = 21, stroke = 2)
   )
 
   vdiffr::expect_doppelganger("point_size discrete mapping",
-    p + geom_slabinterval(aes(point_size = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_size = x), normalize = "none", shape = 21, stroke = 2)
   )
   vdiffr::expect_doppelganger("point_size continuous mapping",
-    p + geom_slabinterval(aes(point_size = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(point_size = x_num), normalize = "none", shape = 21, stroke = 2)
   )
 
   # INTERVAL
   vdiffr::expect_doppelganger("interval_color discrete mapping",
-    p + geom_slabinterval(aes(interval_color = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(interval_color = x), normalize = "none")
   )
   vdiffr::expect_doppelganger("interval_color continuous mapping",
-    p + geom_slabinterval(aes(interval_color = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(interval_color = x_num), normalize = "none")
   )
 
   vdiffr::expect_doppelganger("interval_alpha discrete mapping",
-    p + geom_slabinterval(aes(interval_alpha = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(interval_alpha = x), normalize = "none")
   )
   vdiffr::expect_doppelganger("interval_alpha continuous mapping",
-    p + geom_slabinterval(aes(interval_alpha = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(interval_alpha = x_num), normalize = "none")
   )
 
   vdiffr::expect_doppelganger("interval_size discrete mapping",
-    p + geom_slabinterval(aes(interval_size = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(interval_size = x), normalize = "none")
   )
   vdiffr::expect_doppelganger("interval_size continuous mapping",
-    p + geom_slabinterval(aes(interval_size = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(interval_size = x_num), normalize = "none")
   )
 
   vdiffr::expect_doppelganger("interval_linetype discrete mapping",
-    p + geom_slabinterval(aes(interval_linetype = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(interval_linetype = x), normalize = "none")
   )
   expect_error(
-    print(p + geom_slabinterval(aes(interval_linetype = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)),
+    print(p + geom_slabinterval(aes(interval_linetype = x_num), normalize = "none")),
     "A continuous variable cannot be mapped to linetype"
   )
 
 
   # SLAB
   vdiffr::expect_doppelganger("slab_color discrete mapping",
-    p + geom_slabinterval(aes(slab_color = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(slab_color = x), normalize = "none")
   )
   vdiffr::expect_doppelganger("slab_color continuous mapping",
-    p + geom_slabinterval(aes(slab_color = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(slab_color = x_num), normalize = "none")
   )
 
   vdiffr::expect_doppelganger("slab_fill discrete mapping",
-    p + geom_slabinterval(aes(slab_fill = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(slab_fill = x), normalize = "none")
   )
   vdiffr::expect_doppelganger("slab_fill continuous mapping",
-    p + geom_slabinterval(aes(slab_fill = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(slab_fill = x_num), normalize = "none")
   )
 
   vdiffr::expect_doppelganger("slab_alpha discrete mapping",
-    p + geom_slabinterval(aes(slab_alpha = x), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(slab_alpha = x), normalize = "none")
   )
   vdiffr::expect_doppelganger("slab_alpha continuous mapping",
-    p + geom_slabinterval(aes(slab_alpha = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)
+    p + geom_slabinterval(aes(slab_alpha = x_num), normalize = "none")
   )
 
   vdiffr::expect_doppelganger("slab_size discrete mapping",
-    p + geom_slabinterval(aes(slab_size = x), normalize = "none", size = 10, shape = 21, stroke = 2, slab_color = "black")
+    p + geom_slabinterval(aes(slab_size = x), normalize = "none", slab_color = "black")
   )
   vdiffr::expect_doppelganger("slab_size continuous mapping",
-    p + geom_slabinterval(aes(slab_size = x_num), normalize = "none", size = 10, shape = 21, stroke = 2, slab_color = "black")
+    p + geom_slabinterval(aes(slab_size = x_num), normalize = "none", slab_color = "black")
   )
 
   vdiffr::expect_doppelganger("slab_linetype discrete mapping",
-    p + geom_slabinterval(aes(slab_linetype = x), normalize = "none", size = 10, shape = 21, stroke = 2, slab_color = "black")
+    p + geom_slabinterval(aes(slab_linetype = x), normalize = "none", slab_color = "black")
   )
   expect_error(
     print(p + geom_slabinterval(aes(slab_linetype = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)),
     "A continuous variable cannot be mapped to linetype"
+  )
+
+  vdiffr::expect_doppelganger("slab_linetype plus slab_color mapping",
+    p + geom_slabinterval(aes(slab_color = x == "a", slab_linetype = x), normalize = "none")
   )
 
 })

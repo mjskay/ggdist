@@ -20,6 +20,8 @@ draw_key_slabinterval = function(self, data, params, size) {
   key_data = data
   for (aesthetic in names(self$default_key_aes)) {
     key_data[[aesthetic]] = key_data[[aesthetic]] %||% self$default_key_aes[[aesthetic]]
+  }
+  for (aesthetic in self$aesthetics()) {
     data[[aesthetic]] = data[[aesthetic]] %||% NA
   }
 
@@ -30,29 +32,28 @@ draw_key_slabinterval = function(self, data, params, size) {
     vertical = draw_key_vpath
   )
 
-  s_data = override_slab_aesthetics(data)
   # size is not in this list because if size it set but colour is not then there's nothing to draw,
   # so use size can only occur in cases where colour is alos set (so we can just check colour)
-  slab_grob = if (params$show_slab && any(!is.na(s_data[c("colour","fill","alpha","linetype")]))) {
+  slab_grob = if (params$show_slab && any(!is.na(data[,c("fill","alpha","slab_fill","slab_colour","slab_size","slab_linetype","slab_alpha")]))) {
     s_key_data = override_slab_aesthetics(key_data)
-    if (!is.na(s_key_data$size) && !is.na(s_key_data$colour)) {
-      draw_key_polygon(s_key_data, params, size)
-    } else {
-      draw_key_rect(s_key_data, params, size)
+
+    if (any(!is.na(data[,c("slab_size","slab_linetype")])) && is.na(s_key_data$colour)) {
+      # because the default slab_colour is NA, if we want to draw a key for size / linetype we need to reset the colour to its default
+      s_key_data$colour = self$default_key_aes$colour
     }
+    draw_key_polygon(s_key_data, params, size)
   }
 
-  i_data = override_interval_aesthetics(data, params$interval_size_domain, params$interval_size_range)
-  interval_grob = if(params$show_interval && any(!is.na(i_data[c("colour","alpha","size","linetype")]))) {
+  interval_grob = if(params$show_interval && any(!is.na(data[c("colour","alpha","size","linetype","interval_colour","interval_alpha","interval_size","interval_linetype")]))) {
     i_key_data = override_interval_aesthetics(key_data, params$interval_size_domain, params$interval_size_range)
     line_key(i_key_data, params, size)
   }
 
-  p_data = override_point_aesthetics(data, params$interval_size_domain, params$interval_size_range, params$fatten_point)
   point_grob = if(params$show_point && (
-      any(!is.na(p_data[c("shape","stroke","colour","alpha","size")])) ||
+      any(!is.na(data[c("shape","stroke","colour","alpha","size","point_colour","point_fill","point_alpha","point_size")])) ||
       # only draw point for `fill` aesthetic if a shape that has a fill colour is used
-      (!is.na(p_data$fill) && length(intersect(p_data$shape, c(21:25))) > 0)
+      (!is.na(data$fill) && length(intersect(data$shape, c(21:25))) > 0) ||
+      (!is.na(data$point_fill) && length(intersect(data$shape, c(21:25))) > 0)
   )) {
     p_key_data = override_point_aesthetics(key_data,
       params$interval_size_domain, params$interval_size_range, params$fatten_point)
