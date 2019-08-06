@@ -38,7 +38,7 @@ if (capabilities("cairo")) {
 
 ## Introduction
   
-This vignette shows how to combine the `tidybayes` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize sampling distributions. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
+This vignette shows how to combine the `tidybayes` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize sampling distributions instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
 
 ## Setup
   
@@ -49,7 +49,7 @@ library(dplyr)
 library(tidyr)
 library(tidybayes)
 library(ggplot2)
-library(brms)
+library(brms)       # needed for dstudent_t(), etc; not for model fitting
 library(broom)
 library(modelr)
 
@@ -97,13 +97,19 @@ The default summary is not great from an uncertainty communication perspective:
 summary(m_ABC)
 ```
 
-So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeyeh()` to plot them. The sampling distribution for a parameter from an `lm` model is a scaled-and-shifted t distribution, with:
+So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeyeh()` to plot them. The sampling distribution for parameter $i$, $\beta_i$, from an `lm` model is a scaled-and-shifted t distribution:
 
-- degrees of freedom equal to `df.residual(m_ABC)`
-- location equal to the estimate of the parameter
-- scale equal to the standard error of the parameter
+$$
+\beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\beta_i}\right)
+$$
 
-We can get the latter two easily by using `broom::tidy()`:
+With:
+
+- $\nu$: *degrees of freedom*, equal to `df.residual(m_ABC)`
+- $\hat\beta_i$: *location*, equal to the point estimate of the parameter (`estimate` column from `broom::tidy()`)
+- $\sigma_{\beta_i}$: *scale*, equal to the standard error of the parameter estimate (`std.error` column from `broom::tidy()`)
+
+We can get the estimates and standard errors easily by using `broom::tidy()`:
 
 ```{r}
 tidy(m_ABC)
@@ -120,8 +126,19 @@ m_ABC %>%
   )
 ```
 
-If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models):
+If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models). Here we want the sampling distribution for the mean in condition $c$, $\mu_c$:
 
+$$
+\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\mu_c} \right)
+$$
+
+With:
+
+- $\nu$: *degrees of freedom*, equal to `df.residual(m_ABC)`
+- $\hat\mu_c$: *location*, equal to the point estimate of the mean in condition $c$ (`.fitted` column from `broom::augment()`)
+- $\sigma_{\mu_c}$: *scale*, equal to the standard error of the mean in condition $c$ (`.se.fit` column from `broom::augment()`)
+
+Putting everything together, we have:
 
 ```{r}
 ABC %>%
@@ -132,7 +149,7 @@ ABC %>%
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
     scale = .5
   ) +
-  # we'll add the data back in too (scale = .5 above adjust the halfeye height so
+  # we'll add the data back in too (scale = .5 above adjusts the halfeye height so
   # that the data fit in as well)
   geom_point(aes(x = response), data = ABC, pch = "|", size = 2, position = position_nudge(y = -.15))
 ```
@@ -163,7 +180,7 @@ Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ
 ```{r}
 mtcars %>%
   group_by(cyl) %>%
-  data_grid(hp = seq_range(hp, n = 5)) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
   augment(m_mpg, newdata = .) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   stat_dist_lineribbon(
