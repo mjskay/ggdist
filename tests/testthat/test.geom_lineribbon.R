@@ -101,13 +101,18 @@ test_that("stat_dist_lineribbon works", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
+  p = tibble(
+    x = 1:10,
+    sd = seq(1, 3, length.out = 10),
+    g = rep(c("a","b"), 5)
+  ) %>%
+    ggplot(aes(x = x, dist = "norm", arg1 = x, arg2 = sd))
+
   vdiffr::expect_doppelganger("basic stat_dist_lineribbon",
-    tibble(
-      x = 1:10,
-      sd = seq(1, 3, length.out = 10)
-    ) %>%
-      ggplot(aes(x = x, dist = "norm", arg1 = x, arg2 = sd)) +
-      stat_dist_lineribbon() +
-      scale_fill_brewer()
+    p + stat_dist_lineribbon() + scale_fill_brewer()
+  )
+
+  vdiffr::expect_doppelganger("two group stat_dist_lineribbon",
+    p + stat_dist_lineribbon(aes(arg1 = x + ifelse(g == "a", 6, 0), fill = g, color = g), alpha = 1/4)
   )
 })

@@ -298,6 +298,13 @@ StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
     "p_limits"
   ),
 
+  # interval parameter used to determine if the stat re-groups
+  # data by the combination of input group + dist + args. For
+  # most use cases this should be TRUE, but for some corner
+  # cases (like lineribbons), this needs to be FALSE or weird
+  # things will happen.
+  group_by_dist = TRUE,
+
   default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(.001, .999),
@@ -324,12 +331,14 @@ StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
   setup_data = function(self, data, params) {
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
 
-    # need to treat dist *and* args as grouping variables (else things will break)
-    group_cols = intersect(c("dist", "args", paste0("arg", 1:9), "group"), names(data))
-    # need to do as.character() here because list columns (as in args) won't work
-    # with interaction()
-    group_data = lapply(data[,group_cols], as.character)
-    data$group = as.numeric(interaction(group_data))
+    if (self$group_by_dist) {
+      # need to treat dist *and* args as grouping variables (else things will break)
+      group_cols = intersect(c("dist", "args", paste0("arg", 1:9), "group"), names(data))
+      # need to do as.character() here because list columns (as in args) won't work
+      # with interaction()
+      group_data = lapply(data[,group_cols], as.character)
+      data$group = as.numeric(interaction(group_data))
+    }
 
     data
   }

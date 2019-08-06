@@ -161,7 +161,9 @@ StatDistLineribbon <- ggproto("StatDistLineribbon", StatDistSlabinterval,
   default_params = defaults(list(
     show_slab = FALSE,
     .width = c(.50, .80, .95)
-  ), StatDistSlabinterval$default_params)
+  ), StatDistSlabinterval$default_params),
+
+  group_by_dist = FALSE
 )
 # have to remove this here instead of in call to defaults()
 # because otherwise it stays in the list as a value = NULL

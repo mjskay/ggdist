@@ -1,0 +1,174 @@
+---
+title: "Frequentist uncertainty visualization"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    df_print: kable
+params:
+  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
+vignette: >
+  %\VignetteIndexEntry{Frequentist uncertainty visualization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+img {
+  border: none;
+}
+</style>
+
+```{r chunk_options, include=FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.height = 4,
+  eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
+)
+if (capabilities("cairo")) {
+  knitr::opts_chunk$set(
+    dev.args = list(png = list(type = "cairo"))
+  )  
+}
+```
+
+## Introduction
+  
+This vignette shows how to combine the `tidybayes` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize sampling distributions. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
+
+## Setup
+  
+The following libraries are required to run this vignette:
+  
+```{r setup, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(tidybayes)
+library(ggplot2)
+library(brms)
+library(broom)
+library(modelr)
+
+theme_set(theme_tidybayes())
+```
+
+```{r hidden_options, include=FALSE}
+options(width = 120)
+```
+
+
+## Point estimates
+
+We'll start with an ordinary least squares (OLS) linear regression analysis of the simple `ABC` dataset used in `vignette("tidybayes")`:
+
+```{r}
+set.seed(5)
+n = 10
+n_condition = 5
+ABC =
+  tibble(
+    condition = rep(c("A","B","C","D","E"), n),
+    response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
+  )
+```
+
+This is a typical tidy format data frame: one observation per row. Graphically:
+
+```{r}
+ABC %>%
+  ggplot(aes(x = response, y = fct_rev(condition))) +
+  geom_point(alpha = 0.5) +
+  ylab("condition")
+```
+
+And a simple linear regression of the data is fit as follows:
+
+```{r}
+m_ABC = lm(response ~ condition, data = ABC)
+```
+
+The default summary is not great from an uncertainty communication perspective:
+
+```{r}
+summary(m_ABC)
+```
+
+So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeyeh()` to plot them. The sampling distribution for a parameter is then a scaled-and-shifted t distribution, with:
+
+- degrees of freedom equal to `df.residual(m_ABC)`
+- location equal to the estimate of a parameter
+- scales equal to the standard error of a parameter
+
+We can get the latter two easily by using `broom::tidy()`:
+
+```{r}
+tidy(m_ABC)
+```
+
+Putting everything together, we have:
+
+```{r}
+m_ABC %>%
+  tidy() %>%
+  ggplot(aes(y = term)) +
+  stat_dist_halfeyeh(aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = estimate, arg3 = std.error))
+```
+
+If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we use `modelr::data_grid()` along with `tidybayes::add_fitted_draws()` for the Bayesian case):
+
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  augment(m, newdata = .) %>%
+  ggplot(aes(y = condition)) +
+  stat_dist_halfeyeh(aes(dist = "student_t", arg1 = df.residual(m), arg2 = .fitted, arg3 = .se.fit), scale = .5) +
+  # we'll add the data back in too (scale = .5 above adjust the halfeye height so
+  # that the data fit in as well)
+  geom_point(aes(x = response), data = ABC, pch = "|", size = 2, position = position_nudge(y = -.15))
+```
+
+Of course, this works with the entire `stat_dist_...` family. Here are gradient plots instead:
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  augment(m, newdata = .) %>%
+  ggplot(aes(y = condition)) +
+  stat_dist_gradientintervalh(aes(dist = "student_t", arg1 = df.residual(m), arg2 = .fitted, arg3 = .se.fit), scale = .5)
+```
+
+## For a fit line
+
+The same principle of reconstructing the sampling distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms")`, but using `lm()` instead:
+
+```{r}
+m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
+```
+
+Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ `stat_dist_lineribbon()`:
+
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 5)) %>%
+  augment(m_mpg, newdata = .) %>%
+  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
+  stat_dist_lineribbon(
+    aes(dist = "student_t", arg1 = df.residual(m_mpg), arg2 = .fitted, arg3 = .se.fit), 
+    alpha = 1/4
+  ) +
+  geom_point(aes(y = mpg), data = mtcars) +
+  
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Dark2") +
+  labs(
+    color = "cyl",
+    fill = "cyl",
+    y = "mpg"
+  )
+```
