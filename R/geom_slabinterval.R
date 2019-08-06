@@ -242,8 +242,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     interval_linetype = NULL, # falls back to linetype
 
     # slab aesthetics
-    slab_size = 1,            # no fallback
-    slab_colour = NA,         # no outline around the slab by default
+    slab_size = NULL,         # no fallback
+    slab_colour = NULL,       # no fallback
     slab_fill = NULL,         # falls back to fill
     slab_alpha = NULL,        # falls back to alpha
     slab_linetype = NULL      # falls back to linetype
@@ -259,7 +259,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     fill = "gray65",
     shape = 19,
     stroke = 0.75,
-    size = 1
+    size = 1,
+    slab_size = 1,
+    slab_colour = NA
   ),
 
   optional_aes = c(
@@ -433,26 +435,22 @@ draw_slabs = function(s_data, panel_params, coord, side, scale, orientation, jus
   # build groups for the slabs
   # must group within both group and y for the polygon and path drawing functions to work
   slab_grobs = dlply(s_data, c("group", y), function(d) {
-    data_order = order(d[[x]])
-    grouped_slab_data = group_slab_data_by_colour(d[data_order,], x, ymin, ymax)
+    d = d[order(d[[x]]),]
 
-    slab_data_top = grouped_slab_data
-    slab_data_top[[y]] = slab_data_top[[ymax]]
-
-    slab_data_bottom = grouped_slab_data[nrow(grouped_slab_data):1,]
-    slab_data_bottom[[y]] = slab_data_bottom[[ymin]]
-
-    slab_data_both = bind_rows(slab_data_top, slab_data_bottom)
-
-    slab_grob = if (!is.null(slab_data_top$fill) && !all(is.na(slab_data_top$fill))) {
+    slab_grob = if (!is.null(d$fill) && !all(is.na(d$fill))) {
       # only bother drawing the slab if it has some fill colour to it
-      GeomPolygon$draw_panel(transform(slab_data_both, colour = NA), panel_params, coord)
+
+      #split out slab data according to aesthetics that we want to be able to
+      # vary along the length of the slab, then assemble the top and bottom lines
+      # into a single entity
+      slab_data = group_slab_data_by(d, c("fill", "alpha"), x, y, ymin, ymax, "both")
+      GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
     }
 
-    if (!is.null(slab_data_top$colour) && !all(is.na(slab_data_top$colour))) {
+    if (!is.null(d$colour) && !all(is.na(d$colour))) {
       # we have an outline to draw around the outside of the slab:
       # the definition of "outside" depends on the value of `side`:
-      outline_data = switch_side(side, top = slab_data_top, bottom = slab_data_bottom, both = slab_data_both)
+      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), x, y, ymin, ymax, side)
       gList(slab_grob, draw_path(outline_data, panel_params, coord))
     } else {
       slab_grob
@@ -588,12 +586,16 @@ get_line_size = function(i_data, size_domain, size_range) {
 
 # gradient helpers --------------------------------------------------------
 
-# groups slab data into contiguous components based on fill, colour, and alpha aesthetics,
-# interpolating values at the cutpoints.
-group_slab_data_by_colour = function(slab_data, x = "x", ymin = "ymin", ymax = "ymax") {
-  groups = factor(paste(slab_data$fill, slab_data$alpha, slab_data$colour))
+# groups slab data into contiguous components based on (usually) fill, colour, and alpha aesthetics,
+# interpolating values ymin/ymax values at the cutpoints, then returns the necessary data frame
+# (depending on `side`) that has top, bottom, or both sides to it
+group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha"), x = "x", y = "y", ymin = "ymin", ymax = "ymax", side = "top") {
+  aesthetics = intersect(aesthetics, names(slab_data))
+  groups = factor(do.call(paste, slab_data[,aesthetics]))
 
   if (nlevels(groups) > 1) {
+    # need to split into groups based on varying aesthetics
+
     last_in_group = groups != lead(groups, default = groups[[length(groups)]])
     first_in_group = groups != lag(groups, default = groups[[1]])
     slab_data$group = cumsum(first_in_group)
@@ -614,14 +616,28 @@ group_slab_data_by_colour = function(slab_data, x = "x", ymin = "ymin", ymax = "
     # now we bind things with the new j rows at the beginning (they were first in each
     # group) and the new i rows at the end (they were last). This ensures that when the rows
     # are pulled out to draw a given group, they are in order within that group
-    bind_rows(
+    slab_data = bind_rows(
       new_row__j,
       slab_data,
       new_row__i
     )
-  } else {
+  }
+
+  # only calculate top / bottom as needed depending on `side`
+  top = function() {
+    slab_data[[y]] = slab_data[[ymax]]
     slab_data
   }
+  bottom = function() {
+    slab_data = slab_data[nrow(slab_data):1,]
+    slab_data[[y]] = slab_data[[ymin]]
+    slab_data
+  }
+  switch_side(side,
+    top = top(),
+    bottom = bottom(),
+    both = bind_rows(top(), bottom())
+  )
 }
 
 
