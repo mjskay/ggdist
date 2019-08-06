@@ -82,6 +82,8 @@ the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 \item{fun.data}{Deprecated. Use \code{point_interval} or \code{interval_function} instead.}
 
 \item{fun.args}{Deprecated. Use \code{interval_args} instead.}
+
+\item{n}{Number of points at which to evaluate \code{slab_function}}
 }
 \description{
 A combination of \code{\link{stat_slabinterval}} and \code{\link{geom_lineribbon}} with sensible defaults.

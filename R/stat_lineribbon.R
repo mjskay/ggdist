@@ -14,6 +14,7 @@
 #' \code{arg1}, ... \code{arg9}, and \code{args} aesthetics.
 #'
 #' @inheritParams stat_interval
+#' @inheritParams stat_slabinterval
 #' @param geom Use to override the default connection between
 #' \code{geom_lineribbon} and \code{stat_lineribbon}.
 #' @param show.legend Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics
