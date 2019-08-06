@@ -80,7 +80,7 @@ This is a typical tidy format data frame: one observation per row. Graphically:
 
 ```{r}
 ABC %>%
-  ggplot(aes(x = response, y = fct_rev(condition))) +
+  ggplot(aes(x = response, y = condition)) +
   geom_point(alpha = 0.5) +
   ylab("condition")
 ```
@@ -97,11 +97,11 @@ The default summary is not great from an uncertainty communication perspective:
 summary(m_ABC)
 ```
 
-So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeyeh()` to plot them. The sampling distribution for a parameter is then a scaled-and-shifted t distribution, with:
+So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeyeh()` to plot them. The sampling distribution for a parameter from an `lm` model is a scaled-and-shifted t distribution, with:
 
 - degrees of freedom equal to `df.residual(m_ABC)`
-- location equal to the estimate of a parameter
-- scales equal to the standard error of a parameter
+- location equal to the estimate of the parameter
+- scale equal to the standard error of the parameter
 
 We can get the latter two easily by using `broom::tidy()`:
 
@@ -115,18 +115,23 @@ Putting everything together, we have:
 m_ABC %>%
   tidy() %>%
   ggplot(aes(y = term)) +
-  stat_dist_halfeyeh(aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = estimate, arg3 = std.error))
+  stat_dist_halfeyeh(
+    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = estimate, arg3 = std.error)
+  )
 ```
 
-If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we use `modelr::data_grid()` along with `tidybayes::add_fitted_draws()` for the Bayesian case):
+If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models):
 
 
 ```{r}
 ABC %>%
   data_grid(condition) %>%
-  augment(m, newdata = .) %>%
+  augment(m_ABC, newdata = .) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_halfeyeh(aes(dist = "student_t", arg1 = df.residual(m), arg2 = .fitted, arg3 = .se.fit), scale = .5) +
+  stat_dist_halfeyeh(
+    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
+    scale = .5
+  ) +
   # we'll add the data back in too (scale = .5 above adjust the halfeye height so
   # that the data fit in as well)
   geom_point(aes(x = response), data = ABC, pch = "|", size = 2, position = position_nudge(y = -.15))
@@ -137,9 +142,12 @@ Of course, this works with the entire `stat_dist_...` family. Here are gradient 
 ```{r}
 ABC %>%
   data_grid(condition) %>%
-  augment(m, newdata = .) %>%
+  augment(m_ABC, newdata = .) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_gradientintervalh(aes(dist = "student_t", arg1 = df.residual(m), arg2 = .fitted, arg3 = .se.fit), scale = .5)
+  stat_dist_gradientintervalh(
+    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
+    scale = .5
+  )
 ```
 
 ## For a fit line
