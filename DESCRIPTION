@@ -93,6 +93,7 @@ Collate:
     "geom_pointintervalh.R"
     "get_variables.R"
     "global_variables.R"
+    "lkjcorr_marginal.R"
     "onAttach.R"
     "parse_dist.R"
     "point_interval.R"
