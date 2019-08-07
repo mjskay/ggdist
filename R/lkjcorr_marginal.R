@@ -23,6 +23,9 @@
 #' In other words, \eqn{r_{ij}}{r[i,j]} is marginally distributed according to the above Beta
 #' distribution scaled into \eqn{(-1,1)}{(-1,1)}.
 #'
+#' @inheritParams stats::dnorm
+#' @param eta Parameter controlling the shape of the distribution
+#' @param K Dimension of the correlation matrix. Must be greater than or equal to 2.
 #' @references
 #'   Lewandowski, D., Kurowicka, D., & Joe, H. (2009). Generating random correlation matrices based on vines
 #'   and extended onion method. \emph{Journal of Multivariate Analysis}, 100(9), 1989--2001.
