@@ -37,6 +37,7 @@
 #' # TODO
 #'
 #' @name lkjcorr_marginal
+#' @importFrom stats dbeta pbeta qbeta rbeta
 #' @export
 dlkjcorr_marginal = function(x, eta, K, log = FALSE) {
   alpha = lkjcorr_marginal_alpha(eta, K)
@@ -69,7 +70,7 @@ qlkjcorr_marginal = function(p, eta, K, lower.tail = TRUE, log.p = FALSE) {
 #' @export
 rlkjcorr_marginal = function(n, eta, K) {
   alpha = lkjcorr_marginal_alpha(eta, K)
-  rbeta(n, alpha, alpha, lower.tail = lower.tail, log.p = log.p) * 2 - 1
+  rbeta(n, alpha, alpha) * 2 - 1
 }
 
 #' @importFrom rlang is_integerish
