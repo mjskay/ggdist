@@ -103,6 +103,9 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' family of ggplot2 stats.
 #'
 #' @inheritParams lkjcorr_marginal
+#' @param data A data frame containing a column with distribution names (\code{".dist"} by default)
+#' and a list column of distribution arguments (\code{".args"} by default), such as output by
+#' \code{\link{parse_dist}}.
 #' @param dist The name of the column containing distribution names. See \code{\link{parse_dist}}.
 #' @param args The name of the column containing distribution arguments. See \code{\link{parse_dist}}.
 #' @seealso \code{\link{parse_dist}}, \code{\link{lkjcorr_marginal}}

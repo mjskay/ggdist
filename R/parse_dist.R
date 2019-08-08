@@ -201,6 +201,7 @@ check_dist_name = function(dist) {
 }
 
 # get list of available distributions
+#' @importFrom utils lsf.str
 get_dist_names = function() {
   functions = unlist(lapply(search(), function(namespace) as.vector(lsf.str(namespace))))
   d_names = substring(functions[startsWith(functions, "d")], 2)

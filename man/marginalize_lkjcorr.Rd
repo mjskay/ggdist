@@ -7,6 +7,10 @@
 marginalize_lkjcorr(data, K, dist = ".dist", args = ".args")
 }
 \arguments{
+\item{data}{A data frame containing a column with distribution names (\code{".dist"} by default)
+and a list column of distribution arguments (\code{".args"} by default), such as output by
+\code{\link{parse_dist}}.}
+
 \item{K}{Dimension of the correlation matrix. Must be greater than or equal to 2.}
 
 \item{dist}{The name of the column containing distribution names. See \code{\link{parse_dist}}.}
