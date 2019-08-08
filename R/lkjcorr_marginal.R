@@ -94,11 +94,18 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' Turns specs for an LKJ correlation matrix distribution as returned by
 #' \code{\link{parse_dist}} into specs for the marginal distribution of
 #' a single cell in an LKJ-distributed correlation matrix (i.e., \code{\link{lkjcorr_marginal}}).
+#' Useful for visualizing prior correlations from LKJ distributions.
+#'
+#' The LKJ(eta) prior on a correlation matrix induces a marginal prior on each correlation
+#' in the matrix that depends on both the value of \code{eta} \emph{and} \code{K},the dimension
+#' of the \eqn{K \times K}{KxK} correlation matrix. Thus to visualize the marginal prior
+#' on the correlations, it is necessary to specify the value of \code{K}, which depends
+#' on what your model specification looks like.
 #'
 #' Given a data frame representing parsed distribution specifications (such
-#' as returned by \code{\link{parse_dist}}), updates any rows with \code{.dist == "lkjcorr"}
-#' so that the first argument to the distribution is equal to the dimension
-#' of the matrix (\code{K}) and changes the distribution name to \code{"lkjcorr_marginal"},
+#' as returned by \code{\link{parse_dist}}), this function updates any rows with \code{.dist == "lkjcorr"}
+#' so that the first argument to the distribution is equal to the specified dimension
+#' of the correlation matrix (\code{K}) and changes the distribution name to \code{"lkjcorr_marginal"},
 #' allowing the distribution to be easily visualized using the \code{\link{stat_dist_slabinterval}}
 #' family of ggplot2 stats.
 #'
@@ -114,6 +121,8 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' library(dplyr)
 #' library(ggplot2)
 #'
+#' # Say we have an LKJ(3) prior on a 2x2 correlation matrix. We can visualize
+#' # its marginal distribution as follows...
 #' data.frame(prior = "lkjcorr(3)") %>%
 #'   parse_dist(prior) %>%
 #'   marginalize_lkjcorr(K = 2) %>%
