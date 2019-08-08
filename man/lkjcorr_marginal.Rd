@@ -8,20 +8,20 @@
 \alias{rlkjcorr_marginal}
 \title{Marginal distribution of a single correlation from an LKJ distribution}
 \usage{
-dlkjcorr_marginal(x, eta, K, log = FALSE)
+dlkjcorr_marginal(x, K, eta, log = FALSE)
 
-plkjcorr_marginal(q, eta, K, lower.tail = TRUE, log.p = FALSE)
+plkjcorr_marginal(q, K, eta, lower.tail = TRUE, log.p = FALSE)
 
-qlkjcorr_marginal(p, eta, K, lower.tail = TRUE, log.p = FALSE)
+qlkjcorr_marginal(p, K, eta, lower.tail = TRUE, log.p = FALSE)
 
-rlkjcorr_marginal(n, eta, K)
+rlkjcorr_marginal(n, K, eta)
 }
 \arguments{
 \item{x}{vector of quantiles.}
 
-\item{eta}{Parameter controlling the shape of the distribution}
-
 \item{K}{Dimension of the correlation matrix. Must be greater than or equal to 2.}
+
+\item{eta}{Parameter controlling the shape of the distribution}
 
 \item{log}{logical; if TRUE, probabilities p are given as log(p).}
 
@@ -58,7 +58,15 @@ distribution scaled into \eqn{(-1,1)}{(-1,1)}.
 }
 \examples{
 
-# TODO
+library(dplyr)
+library(ggplot2)
+
+data.frame(prior = "lkjcorr_marginal(2, 3)") \%>\%
+  parse_dist(prior) \%>\%
+  ggplot(aes(y = prior, dist = .dist, args = .args)) +
+  stat_dist_halfeyeh() +
+  xlim(-1, 1) +
+  xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
 
 }
 \references{
@@ -67,6 +75,6 @@ Lewandowski, D., Kurowicka, D., & Joe, H. (2009). Generating random correlation 
   \doi{10.1016/j.jmva.2009.04.008}.
 }
 \seealso{
-\code{\link{parse_dist}} for parsing distribution specs and the \code{\link{stat_dist_slabinterval}}
-family of stats for visualizing them.
+\code{\link{parse_dist}} and \code{\link{marginalize_lkjcorr}} for parsing specs that use the
+LKJ correlation distribution and the \code{\link{stat_dist_slabinterval}} family of stats for visualizing them.
 }

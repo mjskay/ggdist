@@ -10,7 +10,7 @@ context("geom_slabinterval")
 
 # group_slab_data_by_colour -------------------------------------------------
 
-test_that("group_slab_data_by_colour works", {
+test_that("group_slab_data_by works", {
 
   df = data.frame(
     x = 1:8,

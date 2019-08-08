@@ -331,6 +331,9 @@ StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
   setup_data = function(self, data, params) {
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
 
+    # ignore unknown distributions (with a warning)
+    data$dist = check_dist_name(data$dist)
+
     if (self$group_by_dist) {
       # need to treat dist *and* args as grouping variables (else things will break)
       group_cols = intersect(c("dist", "args", paste0("arg", 1:9), "group"), names(data))

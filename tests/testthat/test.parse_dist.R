@@ -25,3 +25,19 @@ test_that("parse_dist works on data frames", {
     as.data.frame(tibble(p = dists, .dist = c("norm", "lnorm", "student_t"), .args = list(list(0,1), list(2,3), list(3,0,1))))
   )
 })
+
+test_that("parse_dist + marginalize_lkjcorr produces correct results", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  vdiffr::expect_doppelganger("LKJ marginalization works",
+    data.frame(prior = "lkjcorr(3)") %>%
+      parse_dist(prior) %>%
+      marginalize_lkjcorr(K = 2) %>%
+      ggplot(aes(y = prior, dist = .dist, args = .args)) +
+      stat_dist_halfeyeh() +
+      xlim(-1, 1) +
+      xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
+  )
+})
+

@@ -101,6 +101,9 @@ test_that("grouped intervals work", {
 })
 
 test_that("multimodal intervals work with stat_interval", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
   set.seed(1234)
   df = data.frame(x = c(rnorm(300), rnorm(300, 5)) + c(0,.5), g = c("a","b"))
 

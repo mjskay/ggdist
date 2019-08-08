@@ -143,6 +143,10 @@ parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", to_r_n
   parse_dist(as.character(object))
 }
 
+
+
+# r_dist_name -------------------------------------------------------------
+
 r_dist_lookup = c(
   normal = "norm",
   lognormal = "lnorm",
@@ -158,7 +162,8 @@ r_dist_lookup = c(
   negbinomial = "nbinom",
   negativebinomial = "nbinom",
   poisson = "pois",
-  weibull = "weibull"
+  weibull = "weibull",
+  lkj = "lkjcorr"
 )
 
 #' @rdname parse_dist
@@ -169,4 +174,37 @@ r_dist_name = function(dist_name) {
   r_name = r_dist_lookup[tolower(gsub("[_.]", "", dist_name))]
   names(r_name) = names(dist_name)
   ifelse(is.na(r_name), dist_name, r_name)
+}
+
+
+
+# check_dist_name ---------------------------------------------------------
+
+# check that distribution names are valid and replace
+# invalid ones with NA
+check_dist_name = function(dist) {
+  invalid =
+    is.na(mget(paste0("d", dist), inherits = TRUE, ifnotfound = NA)) |
+    is.na(mget(paste0("p", dist), inherits = TRUE, ifnotfound = NA)) |
+    is.na(mget(paste0("q", dist), inherits = TRUE, ifnotfound = NA))
+  failed_names = dist[invalid & !is.na(dist)]
+  if (length(failed_names) > 0) {
+    warning(
+      "The following distribution names were not recognized and were ignored: \n",
+      "    ", paste(failed_names, collapse = ", "), "\n",
+      "  See help('stat_dist_slabinterval') for information on specifying distribution names.",
+      if ("lkjcorr" %in% failed_names) "\n  See help('marginalize_lkjcorr') for help visualizing LKJ distributions."
+    )
+  }
+  dist[invalid] = NA
+  dist
+}
+
+# get list of available distributions
+get_dist_names = function() {
+  functions = unlist(lapply(search(), function(namespace) as.vector(lsf.str(namespace))))
+  d_names = substring(functions[startsWith(functions, "d")], 2)
+  p_names = substring(functions[startsWith(functions, "p")], 2)
+  q_names = substring(functions[startsWith(functions, "q")], 2)
+  sort(intersect(intersect(d_names, p_names), q_names))
 }
