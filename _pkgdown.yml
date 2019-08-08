@@ -22,6 +22,11 @@ reference:
   - n_prefix
   - x_at_y
 
+- title: Model types
+  desc:  Models supported by tidybayes
+  contents:
+  - tidybayes-models
+
 - title: Extracting posteriors
   desc:  Get tidy draws of posterior distributions from objects (and helper functions for examining objects)
   contents:
@@ -50,19 +55,17 @@ reference:
 - title: Manipulating tidy data frames of draws
   desc:  Convenience functions for common data manipulation tasks with tidy data frames of draws
   contents:
-  - combine_chains
-  - compare_levels
-  - gather_pairs
-  - gather_variables
   - sample_draws
-  - density_bins
-  - histogram_bins
-  - predict_curve
-  - predict_curve_density
+  - compare_levels
+  - gather_variables
+  - gather_pairs
   - to_broom_names
   - from_broom_names
   - to_ggmcmc_names
   - from_ggmcmc_names
+  - combine_chains
+  - density_bins
+  - histogram_bins
 
 - title: Point summaries and intervals
   desc:  Calculate point summaries and intervals on (grouped) data frames of draws
@@ -94,7 +97,6 @@ reference:
   - stat_lineribbon
   - stat_pointinterval
   - stat_pointintervalh
-  - scales
 
 - title: Visualizing analytical distributions
   desc:  Stats, geoms, and helper functions for visualizing analytical distributions, such as priors
@@ -104,6 +106,11 @@ reference:
   - lkjcorr_marginal
   - marginalize_lkjcorr
 
+- title: GGplot scales
+  desc:  Scales for custom aesthetics used by tidybayes geoms and stats
+  contents:
+  - scales
+
 - title: GGplot theme
   desc:  Tidybayes theme for ggplot2
   contents:
@@ -112,11 +119,6 @@ reference:
   - facet_title_right_horizontal
   - axis_titles_bottom_left
 
-- title: Model types
-  desc:  Models supported by tidybayes
-  contents:
-  - tidybayes-models
-
 - title: Deprecated functions
   desc: Deprecated functions
   contents:
@@ -124,4 +126,5 @@ reference:
   - geom_eye
   - geom_eyeh
   - geom_halfeyeh
-
+  - predict_curve
+  - predict_curve_density

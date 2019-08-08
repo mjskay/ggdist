@@ -76,6 +76,7 @@ Collate:
     "compare_levels.R"
     "compose_data.R"
     "data.R"
+    "density_bins.R"
     "deprecated.R"
     "draw_key_slabinterval.R"
     "fitted_draws.R"

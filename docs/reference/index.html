@@ -187,6 +187,20 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-model-types" class="hasAnchor"><a href="#section-model-types" class="anchor"></a>Model types</h2>
+          <p class="section-desc"><p>Models supported by tidybayes</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tidybayes-models.html">tidybayes-models</a></code> </p>
+        </td>
+        <td><p>Models supported by tidybayes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-extracting-posteriors" class="hasAnchor"><a href="#section-extracting-posteriors" class="anchor"></a>Extracting posteriors</h2>
           <p class="section-desc"><p>Get tidy draws of posterior distributions from objects (and helper functions for examining objects)</p></p>
         </th>
@@ -259,9 +273,9 @@ a Bayesian model fit.</p></td>
       <tr>
         
         <td>
-          <p><code><a href="combine_chains.html">combine_chains()</a></code> </p>
+          <p><code><a href="sample_draws.html">sample_draws()</a></code> </p>
         </td>
-        <td><p>Combine the chain and iteration columns of tidy data frames of draws</p></td>
+        <td><p>Sample draws from a tidy-format data frame of draws</p></td>
       </tr><tr>
         
         <td>
@@ -272,39 +286,33 @@ different levels of a factor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="gather_pairs.html">gather_pairs()</a></code> </p>
-        </td>
-        <td><p>Gather pairwise combinations of values from key/value columns in a long-format data frame</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="gather_variables.html">gather_variables()</a></code> </p>
         </td>
         <td><p>Gather variables from a tidy data frame of draws from variables into a single column</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="sample_draws.html">sample_draws()</a></code> </p>
+          <p><code><a href="gather_pairs.html">gather_pairs()</a></code> </p>
         </td>
-        <td><p>Sample draws from a tidy-format data frame of draws</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="density_bins.html">density_bins()</a></code> <code><a href="density_bins.html">histogram_bins()</a></code> </p>
-        </td>
-        <td><p>Density bins as data frames suitable for use with predict_curve</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="predict_curve.html">predict_curve()</a></code> <code><a href="predict_curve.html">predict_curve_density()</a></code> </p>
-        </td>
-        <td><p>Deprecated: Prediction curves for arbitrary functions of posteriors</p></td>
+        <td><p>Gather pairwise combinations of values from key/value columns in a long-format data frame</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="tidy-format-translators.html">to_broom_names()</a></code> <code><a href="tidy-format-translators.html">from_broom_names()</a></code> <code><a href="tidy-format-translators.html">to_ggmcmc_names()</a></code> <code><a href="tidy-format-translators.html">from_ggmcmc_names()</a></code> </p>
         </td>
         <td><p>Translate between different tidy data frame formats for draws from distributions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="combine_chains.html">combine_chains()</a></code> </p>
+        </td>
+        <td><p>Combine the chain and iteration columns of tidy data frames of draws</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="density_bins.html">density_bins()</a></code> <code><a href="density_bins.html">histogram_bins()</a></code> </p>
+        </td>
+        <td><p>Density bins and histogram bins as data frames</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -375,12 +383,6 @@ different levels of a factor</p></td>
           <p><code><a href="stat_pointinterval.html">stat_pointinterval()</a></code> <code><a href="stat_pointinterval.html">stat_pointintervalh()</a></code> </p>
         </td>
         <td><p>Point summary + multiple probability interval plots (ggplot stat)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="scales.html">scale_point_colour_discrete()</a></code> <code><a href="scales.html">scale_point_color_discrete()</a></code> <code><a href="scales.html">scale_point_colour_continuous()</a></code> <code><a href="scales.html">scale_point_color_continuous()</a></code> <code><a href="scales.html">scale_point_fill_discrete()</a></code> <code><a href="scales.html">scale_point_fill_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_discrete()</a></code> <code><a href="scales.html">scale_point_size_continuous()</a></code> <code><a href="scales.html">scale_point_size_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_discrete()</a></code> <code><a href="scales.html">scale_interval_color_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_continuous()</a></code> <code><a href="scales.html">scale_interval_color_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_discrete()</a></code> <code><a href="scales.html">scale_interval_size_continuous()</a></code> <code><a href="scales.html">scale_interval_size_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_continuous()</a></code> <code><a href="scales.html">scale_slab_colour_discrete()</a></code> <code><a href="scales.html">scale_slab_color_discrete()</a></code> <code><a href="scales.html">scale_slab_colour_continuous()</a></code> <code><a href="scales.html">scale_slab_color_continuous()</a></code> <code><a href="scales.html">scale_slab_fill_discrete()</a></code> <code><a href="scales.html">scale_slab_fill_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_discrete()</a></code> <code><a href="scales.html">scale_slab_size_continuous()</a></code> <code><a href="scales.html">scale_slab_size_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_continuous()</a></code> <code><a href="scales.html">guide_colourbar2()</a></code> <code><a href="scales.html">guide_colorbar2()</a></code> </p>
-        </td>
-        <td><p>Custom ggplot scales for geom_slabinterval (and derivatives)</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -417,6 +419,20 @@ different levels of a factor</p></td>
     </tbody><tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-ggplot-scales" class="hasAnchor"><a href="#section-ggplot-scales" class="anchor"></a>GGplot scales</h2>
+          <p class="section-desc"><p>Scales for custom aesthetics used by tidybayes geoms and stats</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="scales.html">scale_point_colour_discrete()</a></code> <code><a href="scales.html">scale_point_color_discrete()</a></code> <code><a href="scales.html">scale_point_colour_continuous()</a></code> <code><a href="scales.html">scale_point_color_continuous()</a></code> <code><a href="scales.html">scale_point_fill_discrete()</a></code> <code><a href="scales.html">scale_point_fill_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_discrete()</a></code> <code><a href="scales.html">scale_point_size_continuous()</a></code> <code><a href="scales.html">scale_point_size_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_discrete()</a></code> <code><a href="scales.html">scale_interval_color_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_continuous()</a></code> <code><a href="scales.html">scale_interval_color_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_discrete()</a></code> <code><a href="scales.html">scale_interval_size_continuous()</a></code> <code><a href="scales.html">scale_interval_size_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_continuous()</a></code> <code><a href="scales.html">scale_slab_colour_discrete()</a></code> <code><a href="scales.html">scale_slab_color_discrete()</a></code> <code><a href="scales.html">scale_slab_colour_continuous()</a></code> <code><a href="scales.html">scale_slab_color_continuous()</a></code> <code><a href="scales.html">scale_slab_fill_discrete()</a></code> <code><a href="scales.html">scale_slab_fill_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_discrete()</a></code> <code><a href="scales.html">scale_slab_size_continuous()</a></code> <code><a href="scales.html">scale_slab_size_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_continuous()</a></code> <code><a href="scales.html">guide_colourbar2()</a></code> <code><a href="scales.html">guide_colorbar2()</a></code> </p>
+        </td>
+        <td><p>Custom ggplot scales for geom_slabinterval (and derivatives)</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-ggplot-theme" class="hasAnchor"><a href="#section-ggplot-theme" class="anchor"></a>GGplot theme</h2>
           <p class="section-desc"><p>Tidybayes theme for ggplot2</p></p>
         </th>
@@ -427,20 +443,6 @@ different levels of a factor</p></td>
           <p><code><a href="theme_tidybayes.html">theme_tidybayes()</a></code> <code><a href="theme_tidybayes.html">facet_title_left_horizontal()</a></code> <code><a href="theme_tidybayes.html">facet_title_right_horizontal()</a></code> <code><a href="theme_tidybayes.html">axis_titles_bottom_left()</a></code> </p>
         </td>
         <td><p>Simple, light ggplot2 theme for tidybayes</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-model-types" class="hasAnchor"><a href="#section-model-types" class="anchor"></a>Model types</h2>
-          <p class="section-desc"><p>Models supported by tidybayes</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="tidybayes-models.html">tidybayes-models</a></code> </p>
-        </td>
-        <td><p>Models supported by tidybayes</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -461,6 +463,12 @@ different levels of a factor</p></td>
           <p><code><a href="geom_eye.html">geom_eye()</a></code> <code><a href="geom_eye.html">geom_eyeh()</a></code> <code><a href="geom_eye.html">geom_halfeyeh()</a></code> </p>
         </td>
         <td><p>Eye plots of densities with point and interval summaries (Deprecated spellings)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="predict_curve.html">predict_curve()</a></code> <code><a href="predict_curve.html">predict_curve_density()</a></code> </p>
+        </td>
+        <td><p>Deprecated: Prediction curves for arbitrary functions of posteriors</p></td>
       </tr>
     </tbody>
     </table>
@@ -470,14 +478,15 @@ different levels of a factor</p></td>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#section-composing-data-for-input-to-a-model">Composing data for input to a model</a></li>
+      <li><a href="#section-model-types">Model types</a></li>
       <li><a href="#section-extracting-posteriors">Extracting posteriors</a></li>
       <li><a href="#section-extracting-fits-predictions-and-residuals">Extracting fits, predictions, and residuals</a></li>
       <li><a href="#section-manipulating-tidy-data-frames-of-draws">Manipulating tidy data frames of draws</a></li>
       <li><a href="#section-point-summaries-and-intervals">Point summaries and intervals</a></li>
       <li><a href="#section-visualizing-draws">Visualizing draws</a></li>
       <li><a href="#section-visualizing-analytical-distributions">Visualizing analytical distributions</a></li>
+      <li><a href="#section-ggplot-scales">GGplot scales</a></li>
       <li><a href="#section-ggplot-theme">GGplot theme</a></li>
-      <li><a href="#section-model-types">Model types</a></li>
       <li><a href="#section-deprecated-functions">Deprecated functions</a></li>
     </ul>
   </div>

@@ -36,7 +36,8 @@
 
 <meta property="og:description" content="Turns specs for an LKJ correlation matrix distribution as returned by
 parse_dist into specs for the marginal distribution of
-a single cell in an LKJ-distributed correlation matrix (i.e., lkjcorr_marginal)." />
+a single cell in an LKJ-distributed correlation matrix (i.e., lkjcorr_marginal).
+Useful for visualizing prior correlations from LKJ distributions." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -154,7 +155,8 @@ a single cell in an LKJ-distributed correlation matrix (i.e., lkjcorr_marginal).
     
     <p>Turns specs for an LKJ correlation matrix distribution as returned by
 <code><a href='parse_dist.html'>parse_dist</a></code> into specs for the marginal distribution of
-a single cell in an LKJ-distributed correlation matrix (i.e., <code><a href='lkjcorr_marginal.html'>lkjcorr_marginal</a></code>).</p>
+a single cell in an LKJ-distributed correlation matrix (i.e., <code><a href='lkjcorr_marginal.html'>lkjcorr_marginal</a></code>).
+Useful for visualizing prior correlations from LKJ distributions.</p>
     
     </div>
 
@@ -185,10 +187,15 @@ and a list column of distribution arguments (<code>".args"</code> by default), s
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a data frame representing parsed distribution specifications (such
-as returned by <code><a href='parse_dist.html'>parse_dist</a></code>), updates any rows with <code>.dist == "lkjcorr"</code>
-so that the first argument to the distribution is equal to the dimension
-of the matrix (<code>K</code>) and changes the distribution name to <code>"lkjcorr_marginal"</code>,
+    <p>The LKJ(eta) prior on a correlation matrix induces a marginal prior on each correlation
+in the matrix that depends on both the value of <code>eta</code> <em>and</em> <code>K</code>,the dimension
+of the \(K \times K\) correlation matrix. Thus to visualize the marginal prior
+on the correlations, it is necessary to specify the value of <code>K</code>, which depends
+on what your model specification looks like.</p>
+<p>Given a data frame representing parsed distribution specifications (such
+as returned by <code><a href='parse_dist.html'>parse_dist</a></code>), this function updates any rows with <code>.dist == "lkjcorr"</code>
+so that the first argument to the distribution is equal to the specified dimension
+of the correlation matrix (<code>K</code>) and changes the distribution name to <code>"lkjcorr_marginal"</code>,
 allowing the distribution to be easily visualized using the <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval</a></code>
 family of ggplot2 stats.</p>
     
@@ -202,6 +209,8 @@ family of ggplot2 stats.</p>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
 
+<span class='co'># Say we have an LKJ(3) prior on a 2x2 correlation matrix. We can visualize</span>
+<span class='co'># its marginal distribution as follows...</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>prior</span> <span class='kw'>=</span> <span class='st'>"lkjcorr(3)"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='parse_dist.html'>parse_dist</a></span>(<span class='no'>prior</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>marginalize_lkjcorr</span>(<span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>2</span>) <span class='kw'>%&gt;%</span>
