@@ -104,6 +104,9 @@ and stats/geoms based on it (like eye plots)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a>
+    </li>
+    <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
     <li>
@@ -267,10 +270,7 @@ after transformation.</p></td>
 <li><p>A numeric vector of length two providing limits of the scale.
 Use <code>NA</code> to refer to the existing minimum or maximum</p></li>
 <li><p>A function that accepts the existing (automatic) limits and returns
-new limits
-Note that setting limits on positional scales will <strong>remove</strong> data outside of the limits.
-If the purpose is to zoom, use the limit argument in the coordinate system
-(see <code>coord_cartesian()</code>).</p></li>
+new limits</p></li>
 </ul></td>
     </tr>
     </table>
@@ -298,7 +298,7 @@ related geoms:</p>
 <li><p><code>scale_slab_linetype_* </code>Slab outline line type</p></li>
 </ol>
     <p>See the corresponding scale documentation in ggplot for more information; e.g.
-<code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous</a></code>, etc.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_color_continuous</a></code>, etc.</p>
 <p>Other scale functions can be used with the aesthetics/scales defined here by using the <code>aesthetics</code>
 argument to that scale function. For example, to use color brewer scales with the <code>point_color</code> aesthetic:</p>
 <p><code><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer(..., aesthetics = "point_color")</a></code></p>
@@ -308,7 +308,7 @@ this is what <code>guide_colorbar2</code> is for:</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous</a></code>, etc.</p></div>
+    <div class='dont-index'><p><code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_color_continuous</a></code>, etc.</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

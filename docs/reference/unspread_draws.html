@@ -104,6 +104,9 @@ results that look like tidy_draws." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a>
+    </li>
+    <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
     <li>
@@ -221,7 +224,7 @@ a data frame whose column names are variables with dimensions in them.</p>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>unspread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-intervals.html'>mcmc_areas</a></span>()</div><div class='output co'>#&gt; <span class='warning'>Warning: `expand_scale()` is deprecated; use `expansion()` instead.</span></div><div class='img'><img src='unspread_draws-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-intervals.html'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_draws-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># As another example, we could use compare_levels to plot all pairwise comparisons</span>
 <span class='co'># of b[1,j] for j in 1:3</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
@@ -229,7 +232,7 @@ a data frame whose column names are variables with dimensions in them.</p>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>i</span> <span class='kw'>==</span> <span class='fl'>1</span>, <span class='no'>j</span> <span class='kw'>%in%</span> <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='compare_levels.html'>compare_levels</a></span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>j</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>unspread_draws</span>(<span class='no'>b</span>[<span class='no'>j</span>], <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-intervals.html'>mcmc_areas</a></span>()</div><div class='output co'>#&gt; <span class='warning'>Warning: `expand_scale()` is deprecated; use `expansion()` instead.</span></div><div class='img'><img src='unspread_draws-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='kw pkg'>bayesplot</span><span class='kw ns'>::</span><span class='fu'><a href='https://mc-stan.org/bayesplot/reference/MCMC-intervals.html'>mcmc_areas</a></span>()</div><div class='img'><img src='unspread_draws-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

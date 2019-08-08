@@ -64,6 +64,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a>
+    </li>
+    <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
     <li>
@@ -103,7 +106,7 @@
       <h1>Using tidy data with Bayesian models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2019-07-31</h4>
+            <h4 class="date">2019-08-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes.Rmd</code></div>
@@ -285,7 +288,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.00 -0.89 -0.77 -0.52  3885 1.00
 ## response_sd        0.56    0.00 0.06  0.46  0.52  0.56  0.60  0.70  1589 1.00
 ## 
-## Samples were drawn using NUTS(diag_e) at Wed Jul 31 11:53:46 2019.
+## Samples were drawn using NUTS(diag_e) at Thu Aug 08 00:01:39 2019.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -300,24 +303,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the draws out in a tidy format! The default methods in Stan for extracting draws from the model do so in a nested format:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(rstan<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/rstan/topics/stanfit-method-extract">extract</a></span>(m))</a></code></pre></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.3773 1.6252 0.5536 -0.0572 -0.5083 ...
+##  $ overall_mean     : num [1:4000(1d)] 1.021 0.234 -0.521 1.048 0.571 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.171 -0.849 -0.511 0.257 0.389 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.5888 -0.0046 0.2059 -0.644 -0.3198 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.506 0.544 0.61 0.498 0.479 ...
+##  $ response_sd      : num [1:4000(1d)] 0.644 0.632 0.468 0.618 0.658 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 0.576 1.507 1.284 0.828 1.58 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.125 1.254 2.785 0.711 1.887 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] 0.279 0.346 -0.103 0.155 0.106 ...
+##  $ condition_mean   : num [1:4000, 1:5] 0.3583 0.2284 0.052 0.5902 -0.0326 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] -2.272 1.772 -1.776 -0.204 0.697 ...
+##  $ lp__             : num [1:4000(1d)] -0.376 2.587 2.389 -4.462 1.423 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting draws as matrices or data frames in Stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -522,7 +525,7 @@ model {
 <div class="figure">
 <img src="slabinterval_family.png" alt="The slabinterval family of geoms and stats"><p class="caption">The slabinterval family of geoms and stats</p>
 </div>
-<p>See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for more an overview.</p>
+<p>See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for an overview.</p>
 </div>
 <div id="intervals-with-multiple-probability-levels-the--width-argument" class="section level3">
 <h3 class="hasAnchor">
@@ -982,7 +985,6 @@ model {
 <a class="sourceLine" id="cb82-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/compare_levels.html">compare_levels</a></span>(condition_mean, <span class="dt">by =</span> condition) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb82-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/unspread_draws.html">unspread_draws</a></span>(condition_mean[condition], <span class="dt">drop_indices =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb82-5" title="5"><span class="st">  </span><span class="kw">mcmc_areas</span>()</a></code></pre></div>
-<pre><code>## Warning: `expand_scale()` is deprecated; use `expansion()` instead.</code></pre>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-55-1.png" width="576"></p>
 <p>If you are instead working with tidy draws generated by <code>gather_draws</code> or <code>gather_variables</code>, the <code>ungather_draws</code> function will transform those draws into the draw <span class="math inline">\(\times\)</span> variable format. It has the same syntax as <code>unspread_draws</code>.</p>
 </div>
@@ -996,12 +998,12 @@ model {
 </h4>
 <p>Both <code>rstanarm</code> and <code>brms</code> behave similarly when used with <code>emmeans</code>. The example below uses <code>rstanarm</code>, but should work similarly for <code>brms</code>.</p>
 <p>Given this <code>rstanarm</code> model:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" title="1">m_rst =<span class="st"> </span><span class="kw">stan_glm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC)</a></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1">m_rst =<span class="st"> </span><span class="kw">stan_glm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC)</a></code></pre></div>
 <p>We can use <code><a href="https://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> to get conditional means with uncertainty:</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" title="1">m_rst <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb85-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb85-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb85-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" title="1">m_rst <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb84-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb84-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb84-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</a></code></pre></div>
 <pre><code>## # A tibble: 5 x 7
 ##   condition .value .lower .upper .width .point .interval
 ##   &lt;fct&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -1011,11 +1013,11 @@ model {
 ## 4 D          1.03   0.674  1.37    0.95 median qi       
 ## 5 E         -0.930 -1.28  -0.583   0.95 median qi</code></pre>
 <p>Or <code><a href="https://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans::emmeans</a></code> with <code><a href="https://www.rdocumentation.org/packages/emmeans/topics/contrast">emmeans::contrast</a></code> to do all pairwise comparisons:</p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1">m_rst <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb87-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb87-3" title="3"><span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb87-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb87-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" title="1">m_rst <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb86-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb86-3" title="3"><span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb86-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb86-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 7
 ##    contrast  .value .lower .upper .width .point .interval
 ##    &lt;fct&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -1031,18 +1033,18 @@ model {
 ## 10 D - E     1.96    1.46   2.45    0.95 median qi</code></pre>
 <p>See <code>?pairwise.emmc</code> for a list of the numerous contrast types supported by <code>emmeans</code>.</p>
 <p>As before, we can plot the results instead of using a table:</p>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1">m_rst <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb89-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb89-3" title="3"><span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb89-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb89-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> contrast)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb89-6" title="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1">m_rst <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb88-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb88-3" title="3"><span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb88-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb88-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> contrast)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb88-6" title="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()</a></code></pre></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-59-1.png" width="576"></p>
 <p><code><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws()</a></code> also supports <code>emm_list</code> objects, which contain estimates from different reference grids (see <code><a href="https://www.rdocumentation.org/packages/emmeans/topics/ref_grid">emmeans::ref_grid()</a></code> for more information on reference grids). An additional column with the default name of <code>.grid</code> is added to indicate the reference grid for each row in the output:</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" title="1">m_rst <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb90-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>(pairwise <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb90-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb90-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1">m_rst <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb89-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>(pairwise <span class="op">~</span><span class="st"> </span>condition) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb89-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb89-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>()</a></code></pre></div>
 <pre><code>## # A tibble: 15 x 9
 ## # Groups:   condition, contrast [15]
 ##    condition contrast .grid      .value .lower .upper .width .point .interval
@@ -1069,16 +1071,16 @@ model {
 </h4>
 <p>Let’s do the same example as above again, this time using <code>MCMCglmm</code> instead of <code>rstanarm</code>. The only different when using <code>MCMCglmm</code> is that to use <code>MCMCglmm</code> with <code>emmeans</code> you must also pass the original data used to fit the model to the <code>emmeans</code> call (see <code>vignette("models", package = "emmeans"))</code> for more information).</p>
 <p>First, we’ll fit the model:</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" title="1"><span class="co"># MCMCglmm does not support tibbles directly,</span></a>
-<a class="sourceLine" id="cb92-2" title="2"><span class="co"># so we convert ABC to a data.frame on the way in</span></a>
-<a class="sourceLine" id="cb92-3" title="3">m_glmm =<span class="st"> </span><span class="kw">MCMCglmm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(ABC))</a></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" title="1"><span class="co"># MCMCglmm does not support tibbles directly,</span></a>
+<a class="sourceLine" id="cb91-2" title="2"><span class="co"># so we convert ABC to a data.frame on the way in</span></a>
+<a class="sourceLine" id="cb91-3" title="3">m_glmm =<span class="st"> </span><span class="kw">MCMCglmm</span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(ABC))</a></code></pre></div>
 <p>Now we can use <code>emmeans</code> and <code>gather_emmeans_draws</code> exactly as we did with <code>rstanarm</code>, but we need to include a <code>data</code> argument in the <code>emmeans</code> call:</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" title="1">m_glmm <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb93-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb93-3" title="3"><span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb93-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb93-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> contrast)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb93-6" title="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" title="1">m_glmm <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb92-2" title="2"><span class="st">  </span><span class="kw">emmeans</span>( <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb92-3" title="3"><span class="st">  </span><span class="kw">contrast</span>(<span class="dt">method =</span> <span class="st">"pairwise"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb92-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb92-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> contrast)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb92-6" title="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()</a></code></pre></div>
 </div>
 </div>
 </div>

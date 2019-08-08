@@ -17,7 +17,7 @@
 #' Each off-diagonal entry of \eqn{R}{R}, \eqn{r_{ij}: i \ne j}{r[i,j]: i != j}, has the
 #' following marginal distribution (Lewandowski, Kurowicka, and Joe 2009):
 #'
-#' \deqn{\frac{r_{ij} + 1}{2} \sim \textrm{Beta}(\eta - 1 + K/2, \eta - 1 + K/2)
+#' \deqn{\frac{r_{ij} + 1}{2} \sim \textrm{Beta}\left(\eta - 1 + \frac{K}{2}, \eta - 1 + \frac{K}{2}\right)
 #' }{(r[i,j] + 1)/2 ~ Beta(eta - 1 + K/2, eta - 1 + K/2)}
 #'
 #' In other words, \eqn{r_{ij}}{r[i,j]} is marginally distributed according to the above Beta

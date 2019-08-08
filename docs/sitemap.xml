@@ -55,6 +55,12 @@
     <loc>http://mjskay.github.io/tidybayes/reference/get_variables.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/lkjcorr_marginal.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/marginalize_lkjcorr.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/tidybayes/reference/n_prefix.html</loc>
   </url>
   <url>
@@ -122,6 +128,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/x_at_y.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/articles/freq-uncertainty-vis.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/articles/slabinterval.html</loc>

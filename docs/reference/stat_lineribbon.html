@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Line + multiple probability ribbon stat for ggplot — stat_lineribbon • tidybayes</title>
+<title>Line + multiple probability ribbon plots (ggplot stat) — stat_lineribbon • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,12 +32,14 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Line + multiple probability ribbon stat for ggplot — stat_lineribbon" />
+<meta property="og:title" content="Line + multiple probability ribbon plots (ggplot stat) — stat_lineribbon" />
 
-<meta property="og:description" content="A combination of stat_summary and geom_lineribbon with sensible defaults.
+<meta property="og:description" content="A combination of stat_slabinterval and geom_lineribbon with sensible defaults.
 While geom_lineribbon is intended for use on data frames that have already been summarized using
 a point_interval function, stat_lineribbon is intended for use directly on data
-frames of draws, and will perform the summarization using a point_interval function." />
+frames of draws, and will perform the summarization using a point_interval function;
+stat_dist_lineribbon is intended for use on analytical distributions through the dist,
+arg1, ... arg9, and args aesthetics." />
 
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -106,6 +108,9 @@ frames of draws, and will perform the summarization using a point_interval funct
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a>
+    </li>
+    <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
     <li>
@@ -143,17 +148,19 @@ frames of draws, and will perform the summarization using a point_interval funct
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Line + multiple probability ribbon stat for ggplot</h1>
+    <h1>Line + multiple probability ribbon plots (ggplot stat)</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/stat_lineribbon.R'><code>R/stat_lineribbon.R</code></a></small>
     <div class="hidden name"><code>stat_lineribbon.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A combination of <code>stat_summary</code> and <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code> with sensible defaults.
+    <p>A combination of <code><a href='stat_slabinterval.html'>stat_slabinterval</a></code> and <code><a href='geom_lineribbon.html'>geom_lineribbon</a></code> with sensible defaults.
 While <code>geom_lineribbon</code> is intended for use on data frames that have already been summarized using
 a <code><a href='point_interval.html'>point_interval</a></code> function, <code>stat_lineribbon</code> is intended for use directly on data
-frames of draws, and will perform the summarization using a <code><a href='point_interval.html'>point_interval</a></code> function.</p>
+frames of draws, and will perform the summarization using a <code><a href='point_interval.html'>point_interval</a></code> function;
+<code>stat_dist_lineribbon</code> is intended for use on analytical distributions through the <code>dist</code>,
+<code>arg1</code>, ... <code>arg9</code>, and <code>args</code> aesthetics.</p>
     
     </div>
 
@@ -161,7 +168,12 @@ frames of draws, and will perform the summarization using a <code><a href='point
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.5</span>,
   <span class='fl'>0.8</span>, <span class='fl'>0.95</span>), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>.prob</span>, <span class='no'>fun.data</span>, <span class='no'>fun.args</span>)</pre>
+  <span class='no'>.prob</span>, <span class='no'>fun.data</span>, <span class='no'>fun.args</span>)
+
+<span class='fu'>stat_dist_lineribbon</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"lineribbon"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>501</span>,
+  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>0.8</span>, <span class='fl'>0.95</span>), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -259,6 +271,10 @@ the default plot specification, e.g. <code>borders()</code>.</p></td>
       <th>fun.args</th>
       <td><p>Deprecated. Use <code>interval_args</code> instead.</p></td>
     </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Number of points at which to evaluate <code>slab_function</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -279,6 +295,13 @@ already been summarized using a <code><a href='point_interval.html'>point_interv
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>)) +
   <span class='fu'>stat_lineribbon</span>() +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_fill_brewer</a></span>()</div><div class='img'><img src='stat_lineribbon-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tibble</a></span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>,
+  <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"norm"</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='no'>sd</span>)) +
+  <span class='fu'>stat_dist_lineribbon</span>() +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_fill_brewer</a></span>()</div><div class='img'><img src='stat_lineribbon-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

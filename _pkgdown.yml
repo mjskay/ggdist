@@ -80,12 +80,10 @@ reference:
   - ends_with("qih")
 
 - title: Visualizing draws
-  desc:  Geoms for visualizing tidy data frames of draws
+  desc:  Stats and geoms for visualizing tidy data frames of draws
   contents:
   - geom_slabinterval
   - stat_sample_slabinterval
-  - stat_dist_slabinterval
-  - parse_dist
   - geom_interval
   - geom_intervalh
   - geom_lineribbon
@@ -97,6 +95,14 @@ reference:
   - stat_pointinterval
   - stat_pointintervalh
   - scales
+
+- title: Visualizing analytical distributions
+  desc:  Stats, geoms, and helper functions for visualizing analytical distributions, such as priors
+  contents:
+  - stat_dist_slabinterval
+  - parse_dist
+  - lkjcorr_marginal
+  - marginalize_lkjcorr
 
 - title: GGplot theme
   desc:  Tidybayes theme for ggplot2

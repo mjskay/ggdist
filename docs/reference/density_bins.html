@@ -105,6 +105,9 @@ distributions using predict_curve." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a>
+    </li>
+    <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
     <li>
@@ -219,7 +222,9 @@ function may be deprecated in the future.</p></div>
 #&gt; <span class='message'>    is_null</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: 'tidyr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:magrittr':</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    extract</span></div><div class='input'>
+#&gt; <span class='message'>    extract</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:testthat':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    matches</span></div><div class='input'>
 <span class='kw'>if</span> (
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='st'>"rstanarm"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&amp;&amp;</span>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='st'>"modelr"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -236,7 +241,7 @@ function may be deprecated in the future.</p></div>
     <span class='fu'><a href='add_predicted_draws.html'>add_predicted_draws</a></span>(<span class='no'>m_mpg</span>) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_all</a></span>(<span class='no'>list</span>) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>densities</span> <span class='kw'>=</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>.prediction</span>, <span class='no'>density_bins</span>)) <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='https://tidyr.tidyverse.org/reference/unnest.html'>unnest</a></span>(<span class='no'>densities</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://tidyr.tidyverse.org/reference/nest.html'>unnest</a></span>(<span class='no'>densities</span>) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_rect</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(
       <span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>hp</span> - <span class='no'>step</span>/<span class='fl'>2</span>, <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>lower</span>, <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>upper</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>hp</span> + <span class='no'>step</span>/<span class='fl'>2</span>,
@@ -266,9 +271,9 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.45 seconds (Warm-up)
-#&gt; Chain 1:                0.382 seconds (Sampling)
-#&gt; Chain 1:                0.832 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.401 seconds (Warm-up)
+#&gt; Chain 1:                0.334 seconds (Sampling)
+#&gt; Chain 1:                0.735 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -291,9 +296,9 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.453 seconds (Warm-up)
-#&gt; Chain 2:                0.457 seconds (Sampling)
-#&gt; Chain 2:                0.91 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.473 seconds (Warm-up)
+#&gt; Chain 2:                0.46 seconds (Sampling)
+#&gt; Chain 2:                0.933 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -316,9 +321,9 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.502 seconds (Warm-up)
-#&gt; Chain 3:                0.529 seconds (Sampling)
-#&gt; Chain 3:                1.031 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.472 seconds (Warm-up)
+#&gt; Chain 3:                0.492 seconds (Sampling)
+#&gt; Chain 3:                0.964 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -341,9 +346,9 @@ function may be deprecated in the future.</p></div>
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.476 seconds (Warm-up)
-#&gt; Chain 4:                0.48 seconds (Sampling)
-#&gt; Chain 4:                0.956 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.508 seconds (Warm-up)
+#&gt; Chain 4:                0.447 seconds (Sampling)
+#&gt; Chain 4:                0.955 seconds (Total)
 #&gt; Chain 4: </div><div class='img'><img src='density_bins-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

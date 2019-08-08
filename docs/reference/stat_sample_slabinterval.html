@@ -105,6 +105,9 @@ CCDF bar plots etc." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/freq-uncertainty-vis.html">Frequentist uncertainty visualization</a>
+    </li>
+    <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
     <li>
@@ -465,7 +468,7 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
   <span class='st'>"c"</span>,          <span class='st'>"i"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>9</span>),
   <span class='st'>"c"</span>,          <span class='st'>"j"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>7</span>)
 ) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/unnest.html'>unnest</a></span>()
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/nest.html'>unnest</a></span>(<span class='no'>value</span>)
 
 <span class='co'># here are vertical eyes:</span>
 <span class='no'>df</span> <span class='kw'>%&gt;%</span>
