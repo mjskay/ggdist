@@ -57,7 +57,7 @@ library(rstan)
 library(brms)
 library(gganimate)
 
-theme_set(theme_tidybayes() + panel_border() + background_grid())
+theme_set(theme_tidybayes() + panel_border())
 ```
 
 These options help Stan run faster:
@@ -133,7 +133,8 @@ uncensored_plot = cens_df %>%
   geom_density_ridges(bandwidth = 0.5, scale = 1.5) +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
-  scale_x_continuous(breaks = -4:4, limits = c(-4, 4))
+  scale_x_continuous(breaks = -4:4, limits = c(-4, 4)) +
+  background_grid("x")
 
 censored_plot = cens_df %>%
   ggplot(aes(y = "", x = (y_lower + y_upper)/2)) +
@@ -149,7 +150,8 @@ censored_plot = cens_df %>%
   ) +
   ylab(NULL) +
   xlab("interval-censored y") +
-  scale_x_continuous(breaks = -4:4, limits = c(-4, 4))
+  scale_x_continuous(breaks = -4:4, limits = c(-4, 4)) +
+  background_grid("x")
 
 plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
   uncensored_plot,
@@ -376,7 +378,8 @@ uncensored_plot = cens_df_t %>%
   geom_density_ridges(bandwidth = 0.5, scale = 1.5) +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
-  scale_x_continuous(breaks = -10:10, limits = c(-10, 10))
+  scale_x_continuous(breaks = -10:10, limits = c(-10, 10)) +
+  background_grid("x")
 
 censored_plot = cens_df_t %>%
   ggplot(aes(y = "", x = (y_lower + y_upper)/2)) +
@@ -392,7 +395,8 @@ censored_plot = cens_df_t %>%
   ) +
   ylab(NULL) +
   xlab("interval-censored y") +
-  scale_x_continuous(breaks = -10:10, limits = c(-10, 10))
+  scale_x_continuous(breaks = -10:10, limits = c(-10, 10)) +
+  background_grid("x")
 
 plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
   uncensored_plot,

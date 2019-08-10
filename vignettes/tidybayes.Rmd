@@ -96,7 +96,7 @@ library(cowplot)
 library(RColorBrewer)
 library(gganimate)
 
-theme_set(theme_tidybayes() + panel_border() + background_grid())
+theme_set(theme_tidybayes() + panel_border())
 ```
 
 These options help Stan run faster:

@@ -133,7 +133,7 @@ annotation_plot = tribble(
   scale_x_discrete(position = "top") +
   scale_y_discrete(breaks = NULL, expand = c(0,.6)) +
   labs(y = NULL, x = NULL) +
-  theme(axis.line.x = element_blank(), axis.ticks = element_blank()) 
+  theme(axis.line.x = element_blank(), axis.line.y = element_blank(), axis.ticks = element_blank()) 
 
 plot_grid(ncol = 2, align = "h", rel_widths = c(0.65, 0.35),
   dists_plot,
