@@ -4,6 +4,139 @@
 ###############################################################################
 
 
+# drawing functions -------------------------------------------------------
+
+rescale_slab_thickness = function(s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax) {
+  # rescale the slab data to be within the confines of the bounding box
+  # we do this *again* here (rather than in setup_data) because
+  # position_dodge doesn't work if we only do it up there:
+  # positions (like dodge) might change the heights so they aren't
+  # all the same, and we want to preserve our normalization settings.
+  # so we scale things based on the min height to ensure everything
+  # is the same height
+  thickness_scale = scale * min(s_data[[height]])
+  y_scale = thickness_scale / s_data[[height]]
+
+  switch_side(side,
+    top = {
+      # the slight nudge of justification * s_data[[height]] * (1 - y_scale) ensures that
+      # justifications work properly when scale != 1 (and similarly for other values of `side`)
+      s_data[[y]] = s_data[[ymin]] + justification * s_data[[height]] * (1 - y_scale)
+      s_data[[ymin]] = s_data[[y]]
+      s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale
+    },
+    bottom = {
+      s_data[[y]] = s_data[[ymax]] - (1 - justification) * s_data[[height]] * (1 - y_scale)
+      s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale
+      s_data[[ymax]] = s_data[[y]]
+    },
+    both = {
+      s_data[[y]] = (s_data[[ymin]] + s_data[[ymax]]) / 2 - (0.5 - justification) * s_data[[height]] * (1 - y_scale)
+      s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale / 2
+      s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale / 2
+    }
+  )
+
+  s_data
+}
+
+draw_slabs = function(self, s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
+  define_orientation_variables(orientation)
+
+  s_data = override_slab_aesthetics(rescale_slab_thickness(
+    s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax
+  ))
+
+  # build groups for the slabs
+  # must group within both group and y for the polygon and path drawing functions to work
+  slab_grobs = dlply(s_data, c("group", y), function(d) {
+    d = d[order(d[[x]]),]
+
+    slab_grob = if (!is.null(d$fill) && !all(is.na(d$fill))) {
+      # only bother drawing the slab if it has some fill colour to it
+
+      #split out slab data according to aesthetics that we want to be able to
+      # vary along the length of the slab, then assemble the top and bottom lines
+      # into a single entity
+      slab_data = group_slab_data_by(d, c("fill", "alpha"), x, y, ymin, ymax, "both")
+      GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
+    }
+
+    if (!is.null(d$colour) && !all(is.na(d$colour))) {
+      # we have an outline to draw around the outside of the slab:
+      # the definition of "outside" depends on the value of `side`:
+      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), x, y, ymin, ymax, side)
+      gList(slab_grob, draw_path(outline_data, panel_params, coord))
+    } else {
+      slab_grob
+    }
+  })
+
+  # when side = "top", need to invert draw order so that overlaps happen in a sensible way
+  # (only bother doing this when scale > 1 since that's the only time it will matter)
+  if (side == "top" && scale > 1) {
+    rev(slab_grobs)
+  } else {
+    slab_grobs
+  }
+}
+
+
+draw_pointintervals = function(self, i_data, panel_params, coord, orientation, justification,
+  interval_size_domain, interval_size_range, fatten_point, show_point, na.rm
+) {
+  if (nrow(i_data) == 0) return(list())
+  define_orientation_variables(orientation)
+
+  interval_grobs = list()
+  point_grobs = list()
+
+  # adjust y position based on justification
+  i_data[[y]] = i_data[[ymin]] + justification * i_data[[height]]
+
+  if (nrow(i_data) > 0) {
+    # reorder by interval width so largest intervals are drawn first
+    i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
+
+    point_grobs = if (show_point) {
+      p_data = override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
+      point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, na.rm = na.rm))
+    }
+
+    i_data[[x]] = i_data[[xmin]]
+    i_data[[xend]] = i_data[[xmax]]
+    i_data[[yend]] = i_data[[y]]
+    i_data = override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
+    interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm))
+  }
+
+  c(interval_grobs, point_grobs)
+}
+
+
+draw_path = function(data, panel_params, coord) {
+  do.call(gList, dlply(data, "group", function(outline_data) {
+    munched_path = ggplot2::coord_munch(coord, outline_data, panel_params)
+    grid::polylineGrob(
+      munched_path$x,
+      munched_path$y,
+      default.units = "native",
+      gp = grid::gpar(
+        col = munched_path$colour,
+        alpha = munched_path$alpha,
+        lwd = munched_path$size * .pt,
+        lty = munched_path$linetype,
+        lineend = "butt",
+        linejoin = "round",
+        linemitre = 10
+      )
+    )
+  }))
+}
+
+
+# geom_slabinterval -------------------------------------------------------
+
 #' Slab + point + interval meta-geom
 #'
 #' This meta-geom supports drawing combinations of functions (as slabs, aka ridge plots or joy plots), points, and
@@ -41,6 +174,8 @@
 #' Wrapper geoms and stats include:
 #'
 #' \itemize{
+#'   \item \code{\link{stat_sample_slabinterval}} and associated stats
+#'   \item \code{\link{stat_dist_slabinterval}} and associated stats
 #'   \item \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}}
 #'   \item \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}}
 #'   \item \code{\link{geom_interval}} / \code{\link{geom_intervalh}}
@@ -348,6 +483,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
   draw_key = draw_key_slabinterval,
 
+  draw_slabs = draw_slabs,
+
+  draw_pointintervals = draw_pointintervals,
+
   draw_panel = function(self, data, panel_params, coord,
       side = self$default_params$side,
       scale = self$default_params$scale,
@@ -381,11 +520,15 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     slab_grobs = if (show_slab && !is.null(data$thickness)) {
       # thickness values were provided, draw the slabs
-      draw_slabs(data[data$datatype == "slab",], panel_params, coord, side, scale, orientation, justification, normalize)
+      s_data = data[data$datatype == "slab",]
+      if (nrow(s_data) > 0) {
+        self$draw_slabs(s_data, panel_params, coord,
+          side, scale, orientation, justification, normalize)
+      }
     }
 
     point_interval_grobs = if (show_interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
-      draw_point_intervals(data[data$datatype == "interval",], panel_params, coord,
+      self$draw_pointintervals(data[data$datatype == "interval",], panel_params, coord,
         orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm)
     }
 
@@ -394,132 +537,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     )
   }
 )
-
-
-# drawing functions -------------------------------------------------------
-
-draw_slabs = function(s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
-  if (nrow(s_data) == 0) return(list())
-  define_orientation_variables(orientation)
-
-  # rescale the data to be within the confines of the bounding box
-  # we do this *again* here (rather than in setup_data) because
-  # position_dodge doesn't work if we only do it up there:
-  # positions (like dodge) might change the heights so they aren't
-  # all the same, and we want to preserve our normalization settings.
-  # so we scale things based on the min height to ensure everything
-  # is the same height
-  thickness_scale = scale * min(s_data[[height]])
-  y_scale = thickness_scale / s_data[[height]]
-
-  switch_side(side,
-    top = {
-      # the slight nudge of justification * s_data[[height]] * (1 - y_scale) ensures that
-      # justifications work properly when scale != 1 (and similarly for other values of `side`)
-      s_data[[y]] = s_data[[ymin]] + justification * s_data[[height]] * (1 - y_scale)
-      s_data[[ymin]] = s_data[[y]]
-      s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale
-    },
-    bottom = {
-      s_data[[y]] = s_data[[ymax]] - (1 - justification) * s_data[[height]] * (1 - y_scale)
-      s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale
-      s_data[[ymax]] = s_data[[y]]
-    },
-    both = {
-      s_data[[y]] = (s_data[[ymin]] + s_data[[ymax]]) / 2 - (0.5 - justification) * s_data[[height]] * (1 - y_scale)
-      s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale / 2
-      s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale / 2
-    }
-  )
-
-  s_data = override_slab_aesthetics(s_data)
-
-  # build groups for the slabs
-  # must group within both group and y for the polygon and path drawing functions to work
-  slab_grobs = dlply(s_data, c("group", y), function(d) {
-    d = d[order(d[[x]]),]
-
-    slab_grob = if (!is.null(d$fill) && !all(is.na(d$fill))) {
-      # only bother drawing the slab if it has some fill colour to it
-
-      #split out slab data according to aesthetics that we want to be able to
-      # vary along the length of the slab, then assemble the top and bottom lines
-      # into a single entity
-      slab_data = group_slab_data_by(d, c("fill", "alpha"), x, y, ymin, ymax, "both")
-      GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
-    }
-
-    if (!is.null(d$colour) && !all(is.na(d$colour))) {
-      # we have an outline to draw around the outside of the slab:
-      # the definition of "outside" depends on the value of `side`:
-      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), x, y, ymin, ymax, side)
-      gList(slab_grob, draw_path(outline_data, panel_params, coord))
-    } else {
-      slab_grob
-    }
-  })
-
-  # when side = "top", need to invert draw order so that overlaps happen in a sensible way
-  # (only bother doing this when scale > 1 since that's the only time it will matter)
-  if (side == "top" && scale > 1) {
-    rev(slab_grobs)
-  } else {
-    slab_grobs
-  }
-}
-
-
-draw_point_intervals = function(i_data,panel_params, coord, orientation, justification,
-  interval_size_domain, interval_size_range, fatten_point, show_point, na.rm
-) {
-  if (nrow(i_data) == 0) return(list())
-  define_orientation_variables(orientation)
-
-  interval_grobs = list()
-  point_grobs = list()
-
-  # adjust y position based on justification
-  i_data[[y]] = i_data[[ymin]] + justification * i_data[[height]]
-
-  if (nrow(i_data) > 0) {
-    # reorder by interval width so largest intervals are drawn first
-    i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
-
-    point_grobs = if (show_point) {
-      p_data = override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
-      point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, na.rm = na.rm))
-    }
-
-    i_data[[x]] = i_data[[xmin]]
-    i_data[[xend]] = i_data[[xmax]]
-    i_data[[yend]] = i_data[[y]]
-    i_data = override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
-    interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm))
-  }
-
-  c(interval_grobs, point_grobs)
-}
-
-
-draw_path = function(data, panel_params, coord) {
-  do.call(gList, dlply(data, "group", function(outline_data) {
-    munched_path = ggplot2::coord_munch(coord, outline_data, panel_params)
-    grid::polylineGrob(
-      munched_path$x,
-      munched_path$y,
-      default.units = "native",
-      gp = grid::gpar(
-        col = munched_path$colour,
-        alpha = munched_path$alpha,
-        lwd = munched_path$size * .pt,
-        lty = munched_path$linetype,
-        lineend = "butt",
-        linejoin = "round",
-        linemitre = 10
-      )
-    )
-  }))
-}
 
 
 # side and justification calculations -------------------------------------
@@ -558,6 +575,9 @@ override_slab_aesthetics = function(s_data) {
   s_data$alpha = s_data$slab_alpha %||% s_data$alpha
   s_data$size = s_data$slab_size
   s_data$linetype = s_data$slab_linetype %||% s_data$linetype
+  #for geom_qdot
+  s_data$shape = s_data$slab_shape
+  s_data$stroke = s_data$slab_stroke
   s_data
 }
 

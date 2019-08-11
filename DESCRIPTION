@@ -92,6 +92,7 @@ Collate:
     "geom_lineribbon.R"
     "geom_pointinterval.R"
     "geom_pointintervalh.R"
+    "geom_qdot.R"
     "get_variables.R"
     "global_variables.R"
     "lkjcorr_marginal.R"

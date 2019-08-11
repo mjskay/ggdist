@@ -149,6 +149,8 @@ use case.
 Wrapper geoms and stats include:
 
 \itemize{
+  \item \code{\link{stat_sample_slabinterval}} and associated stats
+  \item \code{\link{stat_dist_slabinterval}} and associated stats
   \item \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}}
   \item \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}}
   \item \code{\link{geom_interval}} / \code{\link{geom_intervalh}}
