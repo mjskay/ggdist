@@ -7,16 +7,112 @@
 
 # drawing functions -------------------------------------------------------
 
+wilkinson_bin_to_right = function(x, width, direction = 1) {
+  if (length(x) == 0) return(integer(0))
+
+  # determine bins and midpoints of bins
+  bins = c(1L, rep(NA_integer_, length(x) - 1))
+  bin_midpoint = c()
+  current_bin = 1L
+  first_x = x[[1]]
+  n = 1
+  for (i in seq_along(x)[-1]) {
+    if (abs(x[[i]] - first_x) >= width) {
+      bin_midpoint[[current_bin]] = (x[[i - 1]] + first_x) / 2
+      current_bin = current_bin + 1L
+      first_x = x[[i]]
+    }
+    bins[[i]] = current_bin
+  }
+  if (length(bin_midpoint) < current_bin) {
+    # calculate midpoint for last bin
+    bin_midpoint[[current_bin]] = (x[[length(x)]] + first_x) / 2
+  }
+
+  # nudge bin midpoints as necessary to ensure they are at least `width` apart
+  prev_bin_midpoint = lag(bin_midpoint, default = -Inf)
+  bin_midpoint = bin_midpoint + direction * pmax(width - abs(bin_midpoint - prev_bin_midpoint), 0)
+
+  list(
+    bins = bins,
+    midpoint = bin_midpoint[bins]
+  )
+}
+
+wilkinson_bin_to_left = function(x, width) {
+  binning = wilkinson_bin_to_right(rev(x), width, direction = -1)
+  list(
+    bins = rev(binning$bins),
+    midpoint = rev(binning$midpoint)
+  )
+}
+
+# a variant of wilkinson-style binning that expands outward from the center of the data
+# x must be sorted
+wilkinson_bin_from_center = function(x, width) {
+  if (length(x) == 0) {
+    integer(0)
+  } else if (length(x) == 1) {
+    1
+  } else if (all(x == x[[1]])) {
+    rep(1L, length(x))
+  } else if (length(x) %% 2 == 0) {
+    # even number of items => even number of bins
+    left = wilkinson_bin_to_left(x[1:(length(x)/2)], width)
+    right = wilkinson_bin_to_right(x[(length(x)/2 + 1):length(x)], width)
+    list(
+      bins = c(left$bins, max(left$bins) + right$bins),
+      midpoint = c(left$midpoint, right$midpoint)
+    )
+  } else {
+    # odd number of items => odd number of bins
+    # construct center bin first
+    center_i = ceiling(length(x) / 2)
+    edge_offset_from_center = 0
+    for (offset in 1:floor(length(x) / 2)) {
+      if (abs(x[[center_i + offset]] - x[[center_i - offset]]) < width) {
+        # can add both points
+        edge_offset_from_center = offset
+      } else {
+        break
+      }
+    }
+    center_bins = rep(1, 1 + edge_offset_from_center * 2)
+    center_midpoint = rep(
+      (x[[center_i - edge_offset_from_center]] + x[[center_i + edge_offset_from_center]])/2,
+      1 + edge_offset_from_center * 2
+    )
+    if (length(center_bins) == length(x)) {
+      # everything was in the center bin
+      list(
+        bins = center_bins,
+        midpoint = center_midpoint
+      )
+    } else {
+      left = wilkinson_bin_to_left(x[1:(center_i - edge_offset_from_center - 1)], width)
+      right = wilkinson_bin_to_right(x[(center_i + edge_offset_from_center + 1):length(x)], width)
+      list(
+        bins = c(1 + left$bins, center_bins, 1 + max(left$bins) + right$bins),
+        midpoint = c(left$midpoint, center_midpoint, right$midpoint)
+      )
+    }
+  }
+}
+
+
 #' @importFrom ggplot2 .stroke .pt
 qdot_grob = function(d, max_height, x, y,
   name=NULL, gp=NULL, vp=NULL
 ) {
+  d = arrange_at(d, x)
   gTree(
     d = d, max_height = max_height, x = x, y = y,
     name = name, gp = gp, vp = vp, cl = "qdot_grob"
   )
 }
 
+#' @importFrom grDevices nclass.Sturges
+#' @importFrom grid convertUnit convertY gpar pointsGrob setChildren
 makeContent.qdot_grob = function(gr) {
   d = gr$d
   max_height = gr$max_height
@@ -34,12 +130,13 @@ makeContent.qdot_grob = function(gr) {
     # this ensures that datasets with an even (resp odd) number of items have an
     # even (resp odd) number of bins so that symmetrical distributions look symmetrical.
     nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
-    max_width = xspread / nbins
-    breaks = seq(xrange[[1]], xrange[[2]], by = max_width)
-    bins = cut(d[[x]], breaks, include.lowest = TRUE)
-    d$bins = bins
-    max_bin_size = max(unlist(dlply(d, "bins", nrow)))
-    dot_size = convertUnit(unit(max_width, "native"),
+    bin_width = xspread / nbins
+    binning = wilkinson_bin_from_center(d[[x]], bin_width)
+    # breaks = seq(xrange[[1]], xrange[[2]], by = bin_width)
+    # bins = cut(d[[x]], breaks, include.lowest = TRUE)
+    d$bins = binning$bins
+    max_bin_count = max(unlist(dlply(d, "bins", nrow)))
+    dot_size = convertUnit(unit(bin_width, "native"),
       "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
       size_ratio
     y_spacing = convertUnit(unit(dot_size, "native"),
@@ -49,7 +146,7 @@ makeContent.qdot_grob = function(gr) {
     as.list(environment())
   }
   is_valid_heap_spec = function(h) {
-    h$max_bin_size * h$y_spacing <= max_height
+    h$max_bin_count * h$y_spacing <= max_height
   }
 
   # figure out a reasonable minimum number of bins based on histogram binning
@@ -95,13 +192,16 @@ makeContent.qdot_grob = function(gr) {
     h = min_h
   }
 
-  d$bins = h$bins
+  d$bins = h$binning$bins
+  d$midpoint = h$binning$midpoint
   dot_points = max(
     convertY(unit(h$dot_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
     0.5
   )
   children = do.call(gList, dlply(d, "bins", function (bin_df) {
-    bin_df[[x]] = mean(bin_df[[x]])
+    bin_df[[x]] = bin_df$midpoint
+    # bin_xrange = range(bin_df[[x]])
+    # bin_df[[x]] = (bin_xrange[[2]] + bin_xrange[[1]])/2
     bin_df[[y]] = bin_df[[y]] + h$y_spacing/stack_ratio/size_ratio/size_ratio * .5 +
       seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
 
@@ -113,30 +213,6 @@ makeContent.qdot_grob = function(gr) {
 
   setChildren(gr, children)
 }
-
-
-qdot_grob_old = function(d, max_height, x, y) {
-
-
-  nbins = nclass.Sturges(d[[x]])
-  xrange = range(d[[x]])
-  max_width = (xrange[[2]] - xrange[[1]])/nbins
-  breaks = seq(xrange[[1]], xrange[[2]], by = max_width)
-  d$bins = cut(d[[x]], breaks, include.lowest = TRUE)
-  max_bin_size = max(unlist(dlply(d, "bins", nrow)))
-  y_spacing = if (max_bin_size <= 1) 0 else 1/(max_bin_size - 1)
-  dlply(d, "bins", function (bin_df) {
-    bin_df[[x]] = mean(bin_df[[x]])
-    bin_df[[y]] = bin_df[[y]] + max_height *
-      seq(0, y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
-
-    pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
-      gp = gpar(col = alpha(bin_df$colour, bin_df$alpha), fill = alpha(bin_df$fill,
-        bin_df$alpha), fontsize = bin_df$size * .pt + bin_df$stroke *
-          .stroke/2, lwd = bin_df$stroke * .stroke/2))
-  })
-}
-
 
 
 draw_slabs_qdot = function(self, s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
@@ -157,9 +233,6 @@ draw_slabs_qdot = function(self, s_data, panel_params, coord, side, scale, orien
     define_orientation_variables(orientation)
   }
   s_data = coord$transform(s_data, panel_params)
-
-
-
 
   # build groups for the slabs
   # must group within both group and y for the polygon and path drawing functions to work
