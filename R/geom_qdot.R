@@ -29,10 +29,6 @@ wilkinson_bin_to_right = function(x, width, direction = 1) {
     bin_midpoints[[current_bin]] = (x[[length(x)]] + first_x) / 2
   }
 
-  # # nudge bin midpoints as necessary to ensure they are at least `width` apart
-  # prev_bin_midpoint = lag(bin_midpoint, default = -Inf)
-  # bin_midpoint = bin_midpoint + direction * pmax(width - abs(bin_midpoint - prev_bin_midpoint), 0)
-
   list(
     bins = bins,
     bin_midpoints = bin_midpoints
@@ -79,10 +75,6 @@ wilkinson_bin_from_center = function(x, width) {
       }
     }
     n_center = 1 + edge_offset_from_center * 2 # number of items in center bin
-    # center_midpoint = rep(
-    #   (x[[center_i - edge_offset_from_center]] + x[[center_i + edge_offset_from_center]])/2,
-    #   1 + edge_offset_from_center * 2
-    # )
     center_midpoint = (x[[center_i - edge_offset_from_center]] + x[[center_i + edge_offset_from_center]])/2
 
     if (n_center == length(x)) {
@@ -92,6 +84,7 @@ wilkinson_bin_from_center = function(x, width) {
         bin_midpoints = center_midpoint
       )
     } else {
+      # construct bins for regions left / right of center
       left = wilkinson_bin_to_left(x[1:(center_i - edge_offset_from_center - 1)], width)
       right = wilkinson_bin_to_right(x[(center_i + edge_offset_from_center + 1):length(x)], width)
       center_bin_i = length(left$bin_midpoints) + 1
@@ -108,44 +101,19 @@ hist_bin = function(x, width) {
   breaks = seq(xrange[[1]], xrange[[2]], by = width)
   bins = as.numeric(cut(x, breaks, include.lowest = TRUE))
 
-  # first_in_group = bins != lag(bins, default = 0)
-  # left_edge = ifelse(first_in_group, x, lag(x))
-  # last_in_group = bins != lead(bins, default = 0)
-  # right_edge = ifelse(last_in_group, x, lead(x))
-  # midpoint = (left_edge + right_edge)/2
-
   binned_xs = split(x, bins)
   bin_midpoints = sapply(binned_xs, function(x) {
     (x[[1]] + x[[length(x)]])/2
   })
-  # if (length(bin_midpoint) >= 2) {
-  #   if (length(bin_midpoint) %% 2 == 0) {
-  #     # even number of bins
-  #     left_center_bin = length(bin_midpoint) / 2 - 1
-  #     right_center_bin = length(bin_midpoint) / 2
-  #
-  #     print("****")
-  #     print(bin_midpoint)
-  #     center_bin_nudge = max((width - abs(bin_midpoint[[left_center_bin]] - bin_midpoint[[right_center_bin]]))/2, 0)
-  #     bin_midpoint[[left_center_bin]] = bin_midpoint[[left_center_bin]] - center_bin_nudge
-  #     bin_midpoint[[right_center_bin]] = bin_midpoint[[right_center_bin]] + center_bin_nudge
-  #
-  #     left_bins_i = left_center_bin:1
-  #     bin_midpoint[left_bins_i] = bin_midpoint[left_bins_i] -
-  #       pmax(width - abs(bin_midpoint[left_bins_i] - lag(bin_midpoint[left_bins_i], default = -Inf)), 0)
-  #     right_bins_i = right_center_bin:length(bin_midpoint)
-  #     bin_midpoint[right_bins_i] = bin_midpoint[right_bins_i] +
-  #       pmax(width - abs(bin_midpoint[right_bins_i] - lag(bin_midpoint[right_bins_i], default = -Inf)), 0)
-  #     print(bin_midpoint)
-  #     print("****")
-  #   }
-  # }
+
   list(
     bins = bins,
     bin_midpoints = bin_midpoints
   )
 }
 
+# given a binning produced by one of the binning methods, nudge
+# bin midpoints to ensure they are `width` apart
 nudge_bins = function(binning, width) {
   bin_midpoints = binning$bin_midpoints
 
@@ -196,7 +164,8 @@ qdot_grob = function(d, max_height, x, y,
 
 #' @importFrom grDevices nclass.Sturges
 #' @importFrom grid convertUnit convertY gpar pointsGrob setChildren
-makeContent.qdot_grob = function(gr) {
+makeContent.qdot_grob = function(x) {
+  gr = x
   d = gr$d
   max_height = gr$max_height
   x = gr$x
@@ -214,11 +183,9 @@ makeContent.qdot_grob = function(gr) {
     # even (resp odd) number of bins so that symmetrical distributions look symmetrical.
     nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
     bin_width = xspread / nbins
+    # binning = hist_bin(d[[x]], bin_width)
     binning = wilkinson_bin_from_center(d[[x]], bin_width)
     binning = nudge_bins(binning, bin_width)
-    # binning = hist_bin(d[[x]], bin_width)
-    # breaks = seq(xrange[[1]], xrange[[2]], by = bin_width)
-    # bins = cut(d[[x]], breaks, include.lowest = TRUE)
     d$bins = binning$bins
     max_bin_count = max(unlist(dlply(d, "bins", nrow)))
     dot_size = convertUnit(unit(bin_width, "native"),
