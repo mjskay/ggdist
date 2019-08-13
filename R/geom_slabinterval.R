@@ -43,7 +43,7 @@ rescale_slab_thickness = function(s_data, side, scale, orientation, justificatio
 draw_slabs = function(self, s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
   define_orientation_variables(orientation)
 
-  s_data = override_slab_aesthetics(rescale_slab_thickness(
+  s_data = self$override_slab_aesthetics(rescale_slab_thickness(
     s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax
   ))
 
@@ -99,14 +99,14 @@ draw_pointintervals = function(self, i_data, panel_params, coord, orientation, j
     i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
 
     point_grobs = if (show_point) {
-      p_data = override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
+      p_data = self$override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
       point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, na.rm = na.rm))
     }
 
     i_data[[x]] = i_data[[xmin]]
     i_data[[xend]] = i_data[[xmax]]
     i_data[[yend]] = i_data[[y]]
-    i_data = override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
+    i_data = self$override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
     interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm))
   }
 
@@ -132,6 +132,42 @@ draw_path = function(data, panel_params, coord) {
       )
     )
   }))
+}
+
+
+# aesthetic overrides -----------------------------------------------------
+
+override_slab_aesthetics = function(self, s_data) {
+  s_data$colour = s_data$slab_colour
+  s_data$fill = s_data$slab_fill %||% s_data$fill
+  s_data$alpha = s_data$slab_alpha %||% s_data$alpha
+  s_data$size = s_data$slab_size
+  s_data$linetype = s_data$slab_linetype %||% s_data$linetype
+  s_data
+}
+
+override_point_aesthetics = function(self, p_data, size_domain, size_range, fatten_point) {
+  p_data$colour = p_data$point_colour %||% p_data$colour
+  p_data$fill = p_data$point_fill %||% p_data$fill
+  p_data$alpha = p_data$point_alpha %||% p_data$alpha
+  p_data$size = p_data$point_size %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
+  p_data
+}
+
+override_interval_aesthetics = function(self, i_data, size_domain, size_range) {
+  i_data$colour = i_data$interval_colour %||% i_data$colour
+  i_data$alpha = i_data$interval_alpha %||% i_data$alpha
+  i_data$size = get_line_size(i_data, size_domain, size_range)
+  i_data$linetype = i_data$interval_linetype %||% i_data$linetype
+  i_data
+}
+
+get_line_size = function(i_data, size_domain, size_range) {
+  size = i_data$interval_size %||% i_data$size
+  pmax(
+    (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
+      (size_range[[2]] - size_range[[1]]) + size_range[[1]],
+    0)
 }
 
 
@@ -403,6 +439,12 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     "y", "ymin", "ymax", "x", "xmin", "xmax", "width", "height", "thickness"
   ),
 
+  override_slab_aesthetics = override_slab_aesthetics,
+
+  override_point_aesthetics = override_point_aesthetics,
+
+  override_interval_aesthetics = override_interval_aesthetics,
+
   extra_params = c(
     "side",
     "scale",
@@ -564,45 +606,6 @@ get_justification = function(justification, side) {
   } else {
     justification
   }
-}
-
-
-# aesthetic overrides -----------------------------------------------------
-
-override_slab_aesthetics = function(s_data) {
-  s_data$colour = s_data$slab_colour
-  s_data$fill = s_data$slab_fill %||% s_data$fill
-  s_data$alpha = s_data$slab_alpha %||% s_data$alpha
-  s_data$size = s_data$slab_size
-  s_data$linetype = s_data$slab_linetype %||% s_data$linetype
-  #for geom_qdot
-  s_data$shape = s_data$slab_shape
-  s_data$stroke = s_data$slab_stroke
-  s_data
-}
-
-override_point_aesthetics = function(p_data, size_domain, size_range, fatten_point) {
-  p_data$colour = p_data$point_colour %||% p_data$colour
-  p_data$fill = p_data$point_fill %||% p_data$fill
-  p_data$alpha = p_data$point_alpha %||% p_data$alpha
-  p_data$size = p_data$point_size %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
-  p_data
-}
-
-override_interval_aesthetics = function(i_data, size_domain, size_range) {
-  i_data$colour = i_data$interval_colour %||% i_data$colour
-  i_data$alpha = i_data$interval_alpha %||% i_data$alpha
-  i_data$size = get_line_size(i_data, size_domain, size_range)
-  i_data$linetype = i_data$interval_linetype %||% i_data$linetype
-  i_data
-}
-
-get_line_size = function(i_data, size_domain, size_range) {
-  size = i_data$interval_size %||% i_data$size
-  pmax(
-    (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
-    (size_range[[2]] - size_range[[1]]) + size_range[[1]],
-  0)
 }
 
 

@@ -35,7 +35,7 @@ draw_key_slabinterval = function(self, data, params, size) {
   # size is not in this list because if size it set but colour is not then there's nothing to draw,
   # so use size can only occur in cases where colour is alos set (so we can just check colour)
   slab_grob = if (params$show_slab && any(!is.na(data[,c("fill","alpha","slab_fill","slab_colour","slab_size","slab_linetype","slab_alpha")]))) {
-    s_key_data = override_slab_aesthetics(key_data)
+    s_key_data = self$override_slab_aesthetics(key_data)
 
     if (any(!is.na(data[,c("slab_size","slab_linetype")])) && is.na(s_key_data$colour)) {
       # because the default slab_colour is NA, if we want to draw a key for size / linetype we need to reset the colour to its default
@@ -45,7 +45,7 @@ draw_key_slabinterval = function(self, data, params, size) {
   }
 
   interval_grob = if(params$show_interval && any(!is.na(data[c("colour","alpha","size","linetype","interval_colour","interval_alpha","interval_size","interval_linetype")]))) {
-    i_key_data = override_interval_aesthetics(key_data, params$interval_size_domain, params$interval_size_range)
+    i_key_data = self$override_interval_aesthetics(key_data, params$interval_size_domain, params$interval_size_range)
     line_key(i_key_data, params, size)
   }
 
@@ -55,7 +55,7 @@ draw_key_slabinterval = function(self, data, params, size) {
       (!is.na(data$fill) && length(intersect(data$shape, c(21:25))) > 0) ||
       (!is.na(data$point_fill) && length(intersect(data$shape, c(21:25))) > 0)
   )) {
-    p_key_data = override_point_aesthetics(key_data,
+    p_key_data = self$override_point_aesthetics(key_data,
       params$interval_size_domain, params$interval_size_range, params$fatten_point)
     draw_key_point(p_key_data, params, size)
   }

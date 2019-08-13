@@ -1,11 +1,11 @@
-# Geom for quick / quantile dotplots
+#Geom for quick / quantile dotplots
 #
 # Author: mjskay
 ###############################################################################
 
 
 
-# drawing functions -------------------------------------------------------
+# binning functions -------------------------------------------------------
 
 wilkinson_bin_to_right = function(x, width, direction = 1) {
   if (length(x) == 0) return(integer(0))
@@ -113,15 +113,15 @@ hist_bin = function(x, width) {
 }
 
 # given a binning produced by one of the binning methods, nudge
-# bin midpoints to ensure they are `width` apart
+# bin midpoints to ensure they are at least `width` apart
 nudge_bins = function(binning, width) {
   bin_midpoints = binning$bin_midpoints
 
   if (length(bin_midpoints) >= 2) {
     if (length(bin_midpoints) %% 2 == 0) {
       # even number of bins => ensure the two center bins are proper width apart
-      right_center_bin = length(bin_midpoints) / 2
-      left_center_bin = right_center_bin - 1
+      left_center_bin = length(bin_midpoints) / 2
+      right_center_bin = left_center_bin + 1
 
       # ensure the two center bins are proper width apart
       center_bin_nudge = max((width - abs(bin_midpoints[[left_center_bin]] - bin_midpoints[[right_center_bin]]))/2, 0)
@@ -129,19 +129,28 @@ nudge_bins = function(binning, width) {
       bin_midpoints[[right_center_bin]] = bin_midpoints[[right_center_bin]] + center_bin_nudge
     } else {
       # odd number of bins => don't need to adjust the center
-      right_center_bin = ceiling(length(bin_midpoints) / 2)
-      left_center_bin = right_center_bin
+      left_center_bin = ceiling(length(bin_midpoints) / 2)
+      right_center_bin = left_center_bin
     }
 
     # nudge the left bins (those below the center) apart as necessary
-    left_bins_i = left_center_bin:1
-    bin_midpoints[left_bins_i] = bin_midpoints[left_bins_i] -
-      pmax(width - abs(bin_midpoints[left_bins_i] - lag(bin_midpoints[left_bins_i], default = -Inf)), 0)
+    # can't use lag here since we're changing the values as we go
+    for (i in left_center_bin:1) {
+      bin_midpoints[[i]] = bin_midpoints[[i]] -
+        max(width - abs(bin_midpoints[[i]] - bin_midpoints[[i + 1]]), 0)
+    }
+    # left_bins_i = left_center_bin:1
+    # bin_midpoints[left_bins_i] = bin_midpoints[left_bins_i] -
+      # pmax(width - abs(bin_midpoints[left_bins_i] - lag(bin_midpoints[left_bins_i], default = -Inf)), 0)
 
     # nudge the right bins (those above the center) apart as necessary
-    right_bins_i = right_center_bin:length(bin_midpoints)
-    bin_midpoints[right_bins_i] = bin_midpoints[right_bins_i] +
-      pmax(width - abs(bin_midpoints[right_bins_i] - lag(bin_midpoints[right_bins_i], default = -Inf)), 0)
+    for (i in right_center_bin:length(bin_midpoints)) {
+      bin_midpoints[[i]] = bin_midpoints[[i]] +
+        max(width - abs(bin_midpoints[[i]] - bin_midpoints[[i - 1]]), 0)
+    }
+    # right_bins_i = right_center_bin:length(bin_midpoints)
+    # bin_midpoints[right_bins_i] = bin_midpoints[right_bins_i] +
+    #   pmax(width - abs(bin_midpoints[right_bins_i] - lag(bin_midpoints[right_bins_i], default = -Inf)), 0)
 
     binning$bin_midpoints = bin_midpoints
   }
@@ -150,50 +159,63 @@ nudge_bins = function(binning, width) {
 }
 
 
+
+# heap_grob ---------------------------------------------------------------
+
 #' @importFrom ggplot2 .stroke .pt
-qdot_grob = function(d, max_height, x, y,
-  name=NULL, gp=NULL, vp=NULL
+#' @importFrom grid gTree grob
+heap_grob = function(data, max_height, x, y,
+  name = NULL, gp = gpar(), vp = NULL
 ) {
-  d = arrange_at(d, x)
+  datas = data %>%
+    arrange_at(x) %>%
+    group_by_at(c("group", y)) %>%
+    group_split()
+
   gTree(
-    d = d, max_height = max_height, x = x, y = y,
-    name = name, gp = gp, vp = vp, cl = "qdot_grob"
+    datas = datas, max_height = max_height, x_ = x, y_ = y,
+    name = name, gp = gp, vp = vp, cl = "heap_grob"
   )
 }
 
-
 #' @importFrom grDevices nclass.Sturges
-#' @importFrom grid convertUnit convertY gpar pointsGrob setChildren
-makeContent.qdot_grob = function(x) {
-  gr = x
-  d = gr$d
-  max_height = gr$max_height
-  x = gr$x
-  y = gr$y
+#' @importFrom grid convertUnit convertY gpar pointsGrob setChildren grid.draw makeContent
+#' @export
+makeContent.heap_grob = function(x) {
+  grob_ = x
+  datas = grob_$datas
+  max_height = grob_$max_height
+  x = grob_$x_
+  y = grob_$y_
+  bin_method = wilkinson_bin_from_center
 
-  size_ratio = 1.2
-  stack_ratio = 1/size_ratio
+  size_ratio = 1.45
+  stack_ratio = 1/.9#/size_ratio
+  dot_size = .9
 
-  xrange = range(d[[x]])
-  xspread = xrange[[2]] - xrange[[1]]
-
-  heap_spec = function(nbins) {
-    nbins = floor(nbins)
-    # this ensures that datasets with an even (resp odd) number of items have an
-    # even (resp odd) number of bins so that symmetrical distributions look symmetrical.
-    nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
-    bin_width = xspread / nbins
-    # binning = hist_bin(d[[x]], bin_width)
-    binning = wilkinson_bin_from_center(d[[x]], bin_width)
-    binning = nudge_bins(binning, bin_width)
-    d$bins = binning$bins
-    max_bin_count = max(unlist(dlply(d, "bins", nrow)))
+  # create a specification for a heap of dots, which includes things like
+  # what the bins are, what the dot widths are, etc.
+  heap_spec = function(d, nbins = NULL, bin_width = NULL) {
+    xrange = range(d[[x]])
+    xspread = xrange[[2]] - xrange[[1]]
+    if (is.null(bin_width)) {
+      nbins = floor(nbins)
+      # this ensures that datasets with an even (resp odd) number of items have an
+      # even (resp odd) number of bins so that symmetrical distributions look symmetrical.
+      nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
+      bin_width = xspread / nbins
+    } else {
+      nbins = xspread / bin_width
+      nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
+    }
+    binning = bin_method(d[[x]], bin_width)
+    max_bin_count = max(tabulate(binning$bins)) #max(unlist(dlply(d, "bins", nrow)))
     dot_size = convertUnit(unit(bin_width, "native"),
       "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
-      size_ratio
+      size_ratio * dot_size
     y_spacing = convertUnit(unit(dot_size, "native"),
       "native", axisFrom = "y", axisTo = y, typeFrom = "dimension", valueOnly = TRUE) *
-      stack_ratio
+      stack_ratio / size_ratio
 
     as.list(environment())
   }
@@ -201,83 +223,99 @@ makeContent.qdot_grob = function(x) {
     h$max_bin_count * h$y_spacing <= max_height
   }
 
-  # figure out a reasonable minimum number of bins based on histogram binning
-  min_h = heap_spec(nclass.Sturges(d[[x]]))
+  # find the best bin widths across all the heaps we are going to draw
+  bin_widths = map_dbl(datas, function(d) {
+    xrange = range(d[[x]])
+    xspread = xrange[[2]] - xrange[[1]]
 
-  if (!is_valid_heap_spec(min_h)) {
-    # figure out a maxiumum number of bins based on data resolution
-    max_h = heap_spec(xspread / resolution(d[[x]]))
+    # figure out a reasonable minimum number of bins based on histogram binning
+    min_h = heap_spec(d, nclass.Sturges(d[[x]]))
 
-    # N.B. we search in increments of 2 instead of 1 here because heap_spec
-    # guarantees that datasets with an even (resp odd) number of items have
-    # an even (resp odd) number of bins, which both guarantees symmetrical
-    # distributions look symmetrical and cuts our search space in half.
-    if (max_h$nbins <= min_h$nbins) {
-      # even at data resolution there aren't enough bins, not much we can do...
-      h = min_h
-    } else if (max_h$nbins == min_h$nbins + 2) {
-      # nowhere to search, use maximum number of bins
-      h = max_h
-    } else {
-      # use binary search to find a reasonable number of bins
-      repeat {
-        h = heap_spec((min_h$nbins + max_h$nbins) / 2)
-        if (is_valid_heap_spec(h)) {
-          # heap spec is valid, search downwards
-          if (h$nbins - 2 <= min_h$nbins) {
-            # found it, we're done
-            break
+    if (!is_valid_heap_spec(min_h)) {
+      # figure out a maxiumum number of bins based on data resolution
+      max_h = heap_spec(d, xspread / resolution(d[[x]]))
+
+      # N.B. we search in increments of 2 instead of 1 here because heap_spec
+      # guarantees that datasets with an even (resp odd) number of items have
+      # an even (resp odd) number of bins, which both guarantees symmetrical
+      # distributions look symmetrical and cuts our search space in half.
+      if (max_h$nbins <= min_h$nbins) {
+        # even at data resolution there aren't enough bins, not much we can do...
+        h = min_h
+      } else if (max_h$nbins == min_h$nbins + 2) {
+        # nowhere to search, use maximum number of bins
+        h = max_h
+      } else {
+        # use binary search to find a reasonable number of bins
+        repeat {
+          h = heap_spec(d, (min_h$nbins + max_h$nbins) / 2)
+          if (is_valid_heap_spec(h)) {
+            # heap spec is valid, search downwards
+            if (h$nbins - 2 <= min_h$nbins) {
+              # found it, we're done
+              break
+            }
+            max_h = h
+          } else {
+            # heap spec is not valid, search upwards
+            if (h$nbins + 2 >= max_h$nbins) {
+              # found it, we're done
+              h = max_h
+              break
+            }
+            min_h = h
           }
-          max_h = h
-        } else {
-          # heap spec is not valid, search upwards
-          if (h$nbins + 2 >= max_h$nbins) {
-            # found it, we're done
-            h = max_h
-            break
-          }
-          min_h = h
         }
       }
+    } else {
+      h = min_h
     }
-  } else {
-    h = min_h
-  }
 
-  d$bins = h$binning$bins
-  d$midpoint = h$binning$bin_midpoints[h$binning$bins]
-  dot_points = max(
-    convertY(unit(h$dot_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
-    0.5
-  )
-  children = do.call(gList, dlply(d, "bins", function (bin_df) {
-    bin_df[[x]] = bin_df$midpoint
-    # bin_xrange = range(bin_df[[x]])
-    # bin_df[[x]] = (bin_xrange[[2]] + bin_xrange[[1]])/2
-    bin_df[[y]] = bin_df[[y]] + h$y_spacing/stack_ratio/size_ratio/size_ratio * .5 +
-      seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+    h$bin_width
+  })
 
-    pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
-      gp = gpar(col = alpha(bin_df$colour, bin_df$alpha),
-        fill = alpha(bin_df$fill, bin_df$alpha),
-        fontsize = dot_points, lwd = bin_df$stroke * .stroke/2))
-  }))
+  bin_width = min(bin_widths)
 
-  setChildren(gr, children)
+  # now, draw all the heaps using the same bin width
+  children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
+    h = heap_spec(d, bin_width = bin_width)
+    h$binning = nudge_bins(h$binning, bin_width)
+    d$bins = h$binning$bins
+    d$midpoint = h$binning$bin_midpoints[h$binning$bins]
+    dot_points = max(
+      convertY(unit(h$dot_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
+      0.5
+    )
+    dlply(d, "bins", function (bin_df) {
+      bin_df[[x]] = bin_df$midpoint
+      bin_df[[y]] = bin_df[[y]] + h$y_spacing * .5 +
+        seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+
+      pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
+        gp = gpar(col = alpha(bin_df$colour, bin_df$alpha),
+          fill = alpha(bin_df$fill, bin_df$alpha),
+          fontsize = dot_points, lwd = bin_df$stroke * .stroke/2))
+    })
+  })))
+
+  setChildren(grob_, children)
 }
 
 
-draw_slabs_qdot = function(self, s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
+
+# panel drawing function -------------------------------------------------------
+
+draw_slabs_heap = function(self, s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
   define_orientation_variables(orientation)
 
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
-  s_data = override_slab_aesthetics(rescale_slab_thickness(
+  s_data = self$override_slab_aesthetics(rescale_slab_thickness(
     s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax
   ))
 
   if (!coord$is_linear()) {
-    stop("geom_qdot does not work properly with non-linear coordinates.")
+    stop("geom_heap does not work properly with non-linear coordinates.")
   }
   # Swap axes if using coord_flip
   if (inherits(coord, "CoordFlip")) {
@@ -286,12 +324,9 @@ draw_slabs_qdot = function(self, s_data, panel_params, coord, side, scale, orien
   }
   s_data = coord$transform(s_data, panel_params)
 
-  # build groups for the slabs
-  # must group within both group and y for the polygon and path drawing functions to work
-  slab_grobs = dlply(s_data, c("group", y), function(d) {
-    max_height = max(d[[ymax]] - d[[ymin]])
-    qdot_grob(d, max_height, x, y)
-  })
+  # draw the heap grob (which will draw dotplots for all the slabs)
+  max_height = max(s_data[[ymax]] - s_data[[ymin]])
+  slab_grobs = list(heap_grob(s_data, max_height, x, y))
 
   # when side = "top", need to invert draw order so that overlaps happen in a sensible way
   # (only bother doing this when scale > 1 since that's the only time it will matter)
@@ -303,7 +338,7 @@ draw_slabs_qdot = function(self, s_data, panel_params, coord, side, scale, orien
 }
 
 
-# geom_qdot ---------------------------------------------------------------
+# geom_heap ---------------------------------------------------------------
 
 #' Quick / Quantile dotplots (ggplot geom)
 #'
@@ -363,7 +398,7 @@ draw_slabs_qdot = function(self, s_data, panel_params, coord, side, scale, orien
 #' @importFrom plyr dlply
 #' @importFrom rlang %||%
 #' @export
-geom_qdot = function(
+geom_heap = function(
   mapping = NULL,
   data = NULL,
   stat = "identity",
@@ -378,7 +413,7 @@ geom_qdot = function(
     data = data,
     stat = stat,
     position = position,
-    geom = GeomQdot,
+    geom = GeomHeap,
 
     normalize = "none",
     ...,
@@ -389,7 +424,7 @@ geom_qdot = function(
 }
 
 
-GeomQdot = ggproto("GeomQdot", GeomSlabinterval,
+GeomHeap = ggproto("GeomHeap", GeomSlabinterval,
   default_aes = defaults(aes(
     slab_shape = NULL,
     slab_stroke = NULL
@@ -400,6 +435,13 @@ GeomQdot = ggproto("GeomQdot", GeomSlabinterval,
     slab_stroke = 0.75
   ), GeomSlabinterval$default_key_aes),
 
+  override_slab_aesthetics = function(self, s_data) {
+    s_data = ggproto_parent(GeomSlabinterval, self)$override_slab_aesthetics(s_data)
+    s_data$shape = s_data$slab_shape
+    s_data$stroke = s_data$slab_stroke
+    s_data
+  },
+
   default_params = defaults(list(
     normalize = "none"
   ), GeomSlabinterval$default_params),
@@ -408,11 +450,11 @@ GeomQdot = ggproto("GeomQdot", GeomSlabinterval,
     data = ggproto_parent(GeomSlabinterval, self)$setup_data(data, params)
 
     # override any thickness values --- all thicknesses must be == 1 since we
-    # don't actually show a function (for this geom it is just used ot determine positioning)
+    # don't actually show a function (for this geom it is just used to determine positioning)
     data$thickness = 1
 
     data
   },
 
-  draw_slabs = draw_slabs_qdot
+  draw_slabs = draw_slabs_heap
 )
