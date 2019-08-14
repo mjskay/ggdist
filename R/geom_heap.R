@@ -163,7 +163,7 @@ nudge_bins = function(binning, width) {
 # heap_grob ---------------------------------------------------------------
 
 #' @importFrom ggplot2 .stroke .pt
-#' @importFrom grid gTree grob
+#' @importFrom grid gTree
 heap_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL
 ) {
@@ -178,8 +178,9 @@ heap_grob = function(data, max_height, x, y,
   )
 }
 
+
 #' @importFrom grDevices nclass.Sturges
-#' @importFrom grid convertUnit convertY gpar pointsGrob setChildren grid.draw makeContent
+#' @importFrom grid convertUnit convertY gpar pointsGrob setChildren
 #' @export
 makeContent.heap_grob = function(x) {
   grob_ = x
@@ -300,7 +301,6 @@ makeContent.heap_grob = function(x) {
 
   setChildren(grob_, children)
 }
-
 
 
 # panel drawing function -------------------------------------------------------
