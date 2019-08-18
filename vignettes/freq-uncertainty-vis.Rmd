@@ -167,6 +167,33 @@ ABC %>%
   )
 ```
 
+Or complementary cumulative distribution function (CCDF) bar plots:
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  augment(m_ABC, newdata = .) %>%
+  ggplot(aes(y = condition)) +
+  stat_dist_ccdfintervalh(
+    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
+  )
+```
+
+We can also create quantile dotplots by using the `heap` family of geoms. Quantile dotplots show quantiles from a distribution (in this case, the sampling distribution), employing a *frequency framing* approach to uncertainty communication that can be easier for people to interpret ([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes et al. 2018](https://doi.org/10.1145/3173574.3173718)):
+
+```{r}
+ABC %>%
+  data_grid(condition) %>%
+  augment(m_ABC, newdata = .) %>%
+  ggplot(aes(y = condition)) +
+  stat_dist_heaph(
+    quantiles = 100,
+    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
+  )
+```
+
+See `vignette("slabinterval")` for more examples of uncertainty geoms and stats in the slabinterval family.
+
 ## For a fit line
 
 The same principle of reconstructing the sampling distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms")`, but using `lm()` instead:
