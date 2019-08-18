@@ -6,6 +6,7 @@
 
 # slab function for samples -------------------------
 
+#' @importFrom stats ppoints
 heap_sample_slab_function = function(
   df, input, limits = NULL, quantiles = NA, orientation = "vertical",
   trans = scales::identity_trans(), ...
@@ -33,6 +34,7 @@ heap_sample_slab_function = function(
 
 # slab functions for distributions -------------------------
 
+#' @importFrom stats ppoints
 #' @importFrom purrr pmap_dfr
 heap_dist_slab_function = function(
   df, input, quantiles = 100, trans = scales::identity_trans(), ...

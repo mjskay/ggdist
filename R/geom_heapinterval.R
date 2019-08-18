@@ -220,7 +220,7 @@ makeContent.heap_grob = function(x) {
       nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
     }
     binning = bin_method(d[[x]], bin_width)
-    max_bin_count = max(tabulate(binning$bins)) #max(unlist(dlply(d, "bins", nrow)))
+    max_bin_count = max(tabulate(binning$bins))
 
     point_size = convertUnit(unit(bin_width, "native"),
       "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
@@ -389,61 +389,60 @@ draw_slabs_heap = function(self, s_data, panel_params, coord,
 
 # geom_heapinterval ---------------------------------------------------------------
 
-#' Quick / Quantile dotplots (ggplot geom)
+#' Automatic dotplots ("heaps"), heap + intervals, and quantile dotplots (ggplot geom)
 #'
-#' Geom for quick / quantile dotplots
+#' Geoms and stats for creating dotplots ("heaps") that automatically determines a bin width that
+#' ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
+#' generation of quantile dotplots using the \code{quantiles} argument to \code{stat_heapinterval}/\code{stat_heap}
+#' and \code{stat_dist_heapinterval}/\code{stat_dist_heap}. Generally follows the naming scheme and
+#' arguments of the \code{\link{geom_slabinterval}} and \code{\link{stat_slabinterval}} family of
+#' geoms and stats.
 #'
-#' @inheritParams ggplot2::layer
+#' The "heap" geoms are similar to \code{\link{geom_dotplot}} but with a number of differences:
+#'
+#' \itemize{
+#'   \item Heaps act like slabs in \code{\link{geom_slabinterval}} and can be given x positions (or y positions when
+#'   in a horizontal orientation).
+#'   \item Given the available space to lay out dots, heaps will automatically determine how many bins to use to fit
+#'   the available space.
+#'   \item Heaps use a center-out layout algorithm that guarantees that symmetrical data results in a symmetrical
+#'   plot and avoids overlapping dots.
+#'   \item The shape of the dots in a heap can be changed using the \code{slab_shape} aesthetic (when using the
+#'   \code{heapinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{heap} family)
+#' }
+#'
+#' The \code{stat_...} and \code{stat_dist_...} versions of the stats when used with the \code{quantiles} argument
+#' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
+#' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
+#'
+#' @eval rd_slabinterval_aesthetics(geom = GeomHeapinterval, geom_name = "geom_heapinterval", stat = StatHeapinterval)
+#' @inheritParams geom_slabinterval
+#' @inheritParams stat_slabinterval
 #' @param ...  Other arguments passed to \code{\link{layer}}.
-#' @param side Which side to draw the dots on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-#' which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-#' or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-#' to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
-#' \code{"vertical"}. \code{"both"} draws the slab mirrored on both sides (as in a violin plot).
-#' @param scale What proportion of the region allocated to this geom to use to draw the dots. If \code{scale = 1},
-#' slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
-#' @param orientation Whether this geom is drawn horizontally (\code{"horizontal"}) or
-#' vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
-#' aesthetic to identify different groups, then for each group uses the \code{x} (resp. \code{y}) aesthetic and the
-#' \code{thickness} aesthetic to draw a function as an slab, and draws points and intervals horizontally
-#' (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp. \code{ymin}, \code{y}, and \code{ymax})
-#' aesthetics.
-#' @param justification Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-#' justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-#' is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-#' \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-#' \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-#' \code{0.5}.
-#' @param interval_size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
-#' sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)
-#' @param interval_size_range This geom scales the raw size aesthetic values when drawing interval and point sizes, as
-#' they tend to be too thick when using the default settings of \code{\link{scale_size_continuous}}, which give sizes
-#' with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
-#' (typically this should be equal to the value of the \code{range} argument of the \code{\link{scale_size_continuous}}
-#' function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
-#' the actual sizes used to draw intervals).
-#' @param fatten_point A multiplicative factor used to adjust the size of the point relative to the size of the
-#' thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-#' aesthetic and \code{\link{scale_point_size_continuous}} or \code{\link{scale_point_size_discrete}}; sizes
-#' specified with that aesthetic will not be adjusted using \code{fatten_point}.
-#' @param show_dots Should the slab portion of the geom be drawn? Default \code{TRUE}.
-#' @param show_point Should the point portion of the geom be drawn? Default \code{TRUE}.
-#' @param show_interval Should the interval portion of the geom be drawn? Default \code{TRUE}.
-#' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-#' values are silently removed.
 #' @author Matthew Kay
-#' @seealso See \code{\link{geom_lineribbon}} for a combination geom designed for fit curves plus probability bands.
-#' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
-#' built on top of this geom for common use cases (like \code{stat_halfeyeh}).
+#' @param dotsize The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as
+#' wide as the bin width.
+#' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
+#' default, \code{1}, makes dots in the same stack just touch each other.
+#' @param quantiles For the \code{stat_} and \code{stat_dist_} stats, setting this to a value other than \code{NA}
+#' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for \code{stat_}) or a dotplot
+#' of quantiles from the distribution (for \code{stat_dist_}). The value of \code{quantiles} determines the number
+#' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
+#' @references
+#'   Kay, M., Kola, T., Hullman, J. R., & Munson, S. A. (2016). When (ish) is My Bus? User-centered Visualizations
+#'   of Uncertainty in Everyday, Mobile Predictive Systems. \emph{Conference on Human Factors
+#'   in Computing Systems - CHI '16}, 5092--5103. \doi{10.1145/2858036.2858558}.
+#'
+#'   Fernandes, M., Walls, L., Munson, S., Hullman, J., & Kay, M. (2018). Uncertainty Displays Using Quantile Dotplots
+#'   or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Computing Systems - CHI '18}.
+#'   \doi{10.1145/3173574.3173718}.
+#' @seealso See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of other
+#' stats built on top of \code{\link{geom_slabinterval}}.
 #' See \code{vignette("slabinterval")} for a variety of examples of use.
 #' @examples
 #'
-#' # geom_slabinterval() is typically not that useful on its own.
-#' # See vignette("slabinterval") for a variety of examples of the use of its
-#' # shortcut geoms and stats, which are more useful than using
-#' # geom_slabinterval() directly.
+#' # TODO
 #'
-#' @importFrom ggplot2 GeomSegment GeomPolygon
 #' @importFrom plyr dlply
 #' @importFrom rlang %||%
 #' @import grid
