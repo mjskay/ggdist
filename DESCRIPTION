@@ -87,7 +87,7 @@ Collate:
     "gather_variables.R"
     "geom.R"
     "geom_slabinterval.R"
-    "geom_heap.R"
+    "geom_heapinterval.R"
     "geom_interval.R"
     "geom_intervalh.R"
     "geom_lineribbon.R"

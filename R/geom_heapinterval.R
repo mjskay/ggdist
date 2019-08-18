@@ -8,7 +8,12 @@
 # binning functions -------------------------------------------------------
 
 wilkinson_bin_to_right = function(x, width, direction = 1) {
-  if (length(x) == 0) return(integer(0))
+  if (length(x) == 0) {
+    return(list(
+      bins = integer(0),
+      bin_midpoints = NULL
+    ))
+  }
 
   # determine bins and midpoints of bins
   bins = c(1L, rep(NA_integer_, length(x) - 1))
@@ -48,11 +53,15 @@ wilkinson_bin_to_left = function(x, width) {
 # x must be sorted
 wilkinson_bin_from_center = function(x, width) {
   if (length(x) == 0) {
-    integer(0)
-  } else if (length(x) == 1) {
-    1
+    list(
+      bins = integer(0),
+      bin_midpoints = NULL
+    )
   } else if (all(x == x[[1]])) {
-    rep(1L, length(x))
+    list(
+      bins = 1,
+      bin_midpoints = (x[[1]] + x[[length(x)]]) / 2
+    )
   } else if (length(x) %% 2 == 0) {
     # even number of items => even number of bins
     left = wilkinson_bin_to_left(x[1:(length(x)/2)], width)
@@ -163,7 +172,6 @@ nudge_bins = function(binning, width) {
 # heap_grob ---------------------------------------------------------------
 
 #' @importFrom ggplot2 .stroke .pt
-#' @importFrom grid gTree
 heap_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL
 ) {
@@ -180,7 +188,6 @@ heap_grob = function(data, max_height, x, y,
 
 
 #' @importFrom grDevices nclass.Sturges
-#' @importFrom grid convertUnit convertY gpar pointsGrob setChildren
 #' @export
 makeContent.heap_grob = function(x) {
   grob_ = x
@@ -192,7 +199,7 @@ makeContent.heap_grob = function(x) {
 
   size_ratio = 1.45
   stack_ratio = 1/.9#/size_ratio
-  dot_size = .9
+  dot_size = 1
 
   # create a specification for a heap of dots, which includes things like
   # what the bins are, what the dot widths are, etc.
@@ -211,12 +218,26 @@ makeContent.heap_grob = function(x) {
     }
     binning = bin_method(d[[x]], bin_width)
     max_bin_count = max(tabulate(binning$bins)) #max(unlist(dlply(d, "bins", nrow)))
+
     dot_size = convertUnit(unit(bin_width, "native"),
       "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
       size_ratio * dot_size
     y_spacing = convertUnit(unit(dot_size, "native"),
       "native", axisFrom = "y", axisTo = y, typeFrom = "dimension", valueOnly = TRUE) *
       stack_ratio / size_ratio
+
+    if (nbins == 1) {
+      # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
+      # let's back out a max bin size based on that...
+      max_y_spacing = max_height / max_bin_count
+      max_dot_size = convertUnit(unit(max_y_spacing * size_ratio / stack_ratio, "native"),
+        "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
+      max_bin_width = convertUnit(unit(max_dot_size / dot_size / size_ratio, "native"), "native",
+        axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
+    } else {
+      # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
+      max_bin_width = bin_width
+    }
 
     as.list(environment())
   }
@@ -225,7 +246,7 @@ makeContent.heap_grob = function(x) {
   }
 
   # find the best bin widths across all the heaps we are going to draw
-  bin_widths = map_dbl(datas, function(d) {
+  max_bin_widths = map_dbl(datas, function(d) {
     xrange = range(d[[x]])
     xspread = xrange[[2]] - xrange[[1]]
 
@@ -272,10 +293,10 @@ makeContent.heap_grob = function(x) {
       h = min_h
     }
 
-    h$bin_width
+    h$max_bin_width
   })
 
-  bin_width = min(bin_widths)
+  bin_width = min(max_bin_widths)
 
   # now, draw all the heaps using the same bin width
   children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
@@ -293,9 +314,13 @@ makeContent.heap_grob = function(x) {
         seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
 
       pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
-        gp = gpar(col = alpha(bin_df$colour, bin_df$alpha),
+        gp = gpar(
+          col = alpha(bin_df$colour, bin_df$alpha),
           fill = alpha(bin_df$fill, bin_df$alpha),
-          fontsize = dot_points, lwd = bin_df$stroke * .stroke/2))
+          fontsize = dot_points,
+          lwd = bin_df$size * .stroke/2,
+          lty = bin_df$linetype
+        ))
     })
   })))
 
@@ -315,7 +340,7 @@ draw_slabs_heap = function(self, s_data, panel_params, coord, side, scale, orien
   ))
 
   if (!coord$is_linear()) {
-    stop("geom_heap does not work properly with non-linear coordinates.")
+    stop("geom_heapinterval does not work properly with non-linear coordinates.")
   }
   # Swap axes if using coord_flip
   if (inherits(coord, "CoordFlip")) {
@@ -338,7 +363,7 @@ draw_slabs_heap = function(self, s_data, panel_params, coord, side, scale, orien
 }
 
 
-# geom_heap ---------------------------------------------------------------
+# geom_heapinterval ---------------------------------------------------------------
 
 #' Quick / Quantile dotplots (ggplot geom)
 #'
@@ -397,48 +422,54 @@ draw_slabs_heap = function(self, s_data, panel_params, coord, side, scale, orien
 #' @importFrom ggplot2 GeomSegment GeomPolygon
 #' @importFrom plyr dlply
 #' @importFrom rlang %||%
+#' @import grid
 #' @export
-geom_heap = function(
+geom_heapinterval = function(
   mapping = NULL,
   data = NULL,
   stat = "identity",
   position = "identity",
+
   ...,
+
+  na.rm = FALSE,
 
   show.legend = NA,
   inherit.aes = TRUE
 ) {
-  layer_geom_slabinterval(
+  layer(
     mapping = mapping,
     data = data,
     stat = stat,
     position = position,
-    geom = GeomHeap,
-
-    normalize = "none",
-    ...,
-
+    geom = GeomHeapinterval,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
+
+    params = list(
+      normalize = "none",
+
+      na.rm = na.rm,
+      ...
+    )
   )
 }
 
 
-GeomHeap = ggproto("GeomHeap", GeomSlabinterval,
+GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
   default_aes = defaults(aes(
-    slab_shape = NULL,
-    slab_stroke = NULL
+    slab_shape = NULL
   ), GeomSlabinterval$default_aes),
 
   default_key_aes = defaults(aes(
     slab_shape = 21,
-    slab_stroke = 0.75
+    slab_size = 0.75,
+    slab_colour = "gray65"
   ), GeomSlabinterval$default_key_aes),
 
   override_slab_aesthetics = function(self, s_data) {
     s_data = ggproto_parent(GeomSlabinterval, self)$override_slab_aesthetics(s_data)
     s_data$shape = s_data$slab_shape
-    s_data$stroke = s_data$slab_stroke
     s_data
   },
 
@@ -456,5 +487,101 @@ GeomHeap = ggproto("GeomHeap", GeomSlabinterval,
     data
   },
 
-  draw_slabs = draw_slabs_heap
+  draw_slabs = draw_slabs_heap,
+
+  draw_key_slab = function(self, data, key_data, params, size) {
+    # slab key is different from usual - it's actually a point!
+    # size is not in this list because if size it set but colour is not then there's nothing to draw,
+    # so use size can only occur in cases where colour is alos set (so we can just check colour)
+    if (
+      params$show_slab &&
+      any(!is.na(data[,c(
+        "fill","alpha","slab_fill","slab_colour","slab_size",
+        "slab_linetype","slab_alpha","slab_shape"
+      )]))
+    ) {
+      s_key_data = self$override_slab_aesthetics(key_data)
+
+      # what point calls "stroke" is what we call "size", since "size" is determined automatically
+      s_key_data$stroke = s_key_data$size
+      s_key_data$size = 2
+      draw_key_point(s_key_data, params, size)
+    }
+  }
 )
+
+
+# shortcut geoms ----------------------------------------------------------
+#' @export
+#' @rdname geom_heapinterval
+geom_heap = function(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+
+  ...,
+
+  na.rm = FALSE,
+
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    geom = GeomHeap,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      normalize = "none",
+      show_point = FALSE,
+      show_interval = FALSE,
+
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+GeomHeap = ggproto("GeomHeap", GeomHeapinterval,
+  # override these from GeomSlabinterval instead of GeomHeapinterval
+  # because we want to directly change the base versions, which in geom_heap
+  # correspond to shape/size/colour of the dots in the heap but in
+  # geom_heapinterval do not
+  default_key_aes = defaults(aes(
+    shape = 21,
+    size = 0.75,
+    colour = "gray65"
+  ), GeomSlabinterval$default_key_aes),
+
+  override_slab_aesthetics = function(self, s_data) {
+    # we define these differently from geom_heapinterval to make this easier to use on its own
+    s_data$colour = s_data$slab_colour %||% s_data$colour
+    s_data$fill = s_data$slab_fill %||% s_data$fill
+    s_data$alpha = s_data$slab_alpha %||% s_data$alpha
+    s_data$size = s_data$slab_size %||% s_data$size
+    s_data$shape = s_data$slab_shape %||% s_data$shape
+    s_data
+  },
+
+  default_params = defaults(list(
+    show_point = FALSE,
+    show_interval = FALSE
+  ), GeomHeapinterval$default_params),
+
+  draw_key = function(self, data, params, size) {
+    # can drop all the complicated checks from this key since it's just one geom
+    s_key_data = self$override_slab_aesthetics(data)
+
+    # what point calls "stroke" is what we call "size", since "size" is determined automatically
+    s_key_data$stroke = s_key_data$size
+    s_key_data$size = 2
+    draw_key_point(s_key_data, params, size)
+  }
+)
+# have to unset these here because defaults() does not treat NULLs as unsetting values
+GeomHeap$default_key_aes$slab_colour = NULL
+GeomHeap$default_key_aes$slab_size = NULL

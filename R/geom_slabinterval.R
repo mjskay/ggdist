@@ -523,10 +523,12 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     data
   },
 
-  draw_key = draw_key_slabinterval,
+  draw_key = draw_key_slabinterval_,
+  draw_key_slab = draw_key_slab_,
+  draw_key_point = draw_key_point_,
+  draw_key_interval = draw_key_interval_,
 
   draw_slabs = draw_slabs,
-
   draw_pointintervals = draw_pointintervals,
 
   draw_panel = function(self, data, panel_params, coord,

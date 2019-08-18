@@ -34,6 +34,8 @@
 \alias{scale_slab_size_discrete}
 \alias{scale_slab_linetype_discrete}
 \alias{scale_slab_linetype_continuous}
+\alias{scale_slab_shape_discrete}
+\alias{scale_slab_shape_continuous}
 \alias{guide_colourbar2}
 \alias{guide_colorbar2}
 \title{Custom ggplot scales for geom_slabinterval (and derivatives)}
@@ -112,6 +114,10 @@ scale_slab_linetype_discrete(..., na.value = "blank")
 
 scale_slab_linetype_continuous(...)
 
+scale_slab_shape_discrete(..., solid = TRUE)
+
+scale_slab_shape_continuous(...)
+
 guide_colourbar2(...)
 
 guide_colorbar2(...)
@@ -165,6 +171,7 @@ related geoms:
   densities of 0 get mapped to 0 in the output.}
   \item{\code{scale_slab_size_* }}{Slab outline line width}
   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
+  \item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_heapinterval}})}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.

@@ -31,6 +31,7 @@
 #'   densities of 0 get mapped to 0 in the output.}
 #'   \item{\code{scale_slab_size_* }}{Slab outline line width}
 #'   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
+#'   \item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_heapinterval}})}
 #' }
 #'
 #' See the corresponding scale documentation in ggplot for more information; e.g.
@@ -271,6 +272,18 @@ scale_slab_linetype_continuous = function(...) {
   stop("A continuous variable cannot be mapped to linetype", call. = FALSE)
 }
 
+
+#' @rdname scales
+#' @importFrom scales shape_pal
+#' @export
+scale_slab_shape_discrete = function(..., solid = TRUE) {
+  discrete_scale("slab_shape", "slab_shape_d", shape_pal(solid), ...)
+}
+#' @rdname scales
+#' @export
+scale_slab_shape_continuous = function (...) {
+  stop("A continuous variable cannot be mapped to shape", call. = FALSE)
+}
 
 
 # guide_colorbar2 ---------------------------------------------------------

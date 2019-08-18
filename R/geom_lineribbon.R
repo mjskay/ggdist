@@ -84,7 +84,6 @@ draw_key_lineribbon = function(data, params, size) {
 #' @rdname tidybayes-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom grid grobName gTree gList
 #' @importFrom plyr dlply
 #' @importFrom purrr map map_dbl
 #' @import ggplot2
