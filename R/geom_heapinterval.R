@@ -174,7 +174,7 @@ nudge_bins = function(binning, width) {
 #' @importFrom ggplot2 .stroke .pt
 heap_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL,
-  dotsize = 1, stackratio = 1
+  dotsize = 1, stackratio = 1, side = "top"
 ) {
   datas = data %>%
     arrange_at(x) %>%
@@ -183,7 +183,7 @@ heap_grob = function(data, max_height, x, y,
 
   gTree(
     datas = datas, max_height = max_height, x_ = x, y_ = y,
-    dotsize = dotsize, stackratio = stackratio,
+    dotsize = dotsize, stackratio = stackratio, side = side,
     name = name, gp = gp, vp = vp, cl = "heap_grob"
   )
 }
@@ -198,6 +198,7 @@ makeContent.heap_grob = function(x) {
   x = grob_$x_
   y = grob_$y_
   bin_method = wilkinson_bin_from_center
+  side = grob_$side
 
   sizeratio = 1.43
   stackratio = 1.07 * grob_$stackratio
@@ -312,8 +313,22 @@ makeContent.heap_grob = function(x) {
     )
     dlply(d, "bins", function (bin_df) {
       bin_df[[x]] = bin_df$midpoint
-      bin_df[[y]] = bin_df[[y]] + h$y_spacing * .5 +
-        seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+
+      y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+      switch_side(side,
+        top = {
+          y_start = h$y_spacing / 2
+        },
+        bottom = {
+          y_offset = - y_offset
+          y_start = - h$y_spacing / 2
+        },
+        both = {
+          y_offset = y_offset - h$y_spacing * (nrow(bin_df) - 1) / 2
+          y_start = 0
+        }
+      )
+      bin_df[[y]] = bin_df[[y]] + y_start + y_offset
 
       pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
         gp = gpar(
@@ -358,7 +373,8 @@ draw_slabs_heap = function(self, s_data, panel_params, coord,
   max_height = max(s_data[[ymax]] - s_data[[ymin]])
   slab_grobs = list(heap_grob(s_data, max_height, x, y,
       dotsize = child_params$dotsize,
-      stackratio = child_params$stackratio
+      stackratio = child_params$stackratio,
+      side = side
     ))
 
   # when side = "top", need to invert draw order so that overlaps happen in a sensible way
@@ -547,7 +563,7 @@ GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
   draw_key_slab = function(self, data, key_data, params, size) {
     # slab key is different from usual - it's actually a point!
     # size is not in this list because if size it set but colour is not then there's nothing to draw,
-    # so use size can only occur in cases where colour is alos set (so we can just check colour)
+    # so size can only occur in cases where colour is also set (so we can just check colour)
     if (
       params$show_slab &&
       any(!is.na(data[,c(
@@ -632,9 +648,9 @@ GeomHeap = ggproto("GeomHeap", GeomHeapinterval,
     show_interval = FALSE
   ), GeomHeapinterval$default_params),
 
-  draw_key = function(self, data, params, size) {
+  draw_key_slab = function(self, data, key_data, params, size) {
     # can drop all the complicated checks from this key since it's just one geom
-    s_key_data = self$override_slab_aesthetics(data)
+    s_key_data = self$override_slab_aesthetics(key_data)
 
     # what point calls "stroke" is what we call "size", since "size" is determined automatically
     s_key_data$stroke = s_key_data$size

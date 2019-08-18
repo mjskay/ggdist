@@ -7,7 +7,7 @@
 # slab function for samples -------------------------
 
 heap_sample_slab_function = function(
-  df, input, limits = NULL, quantiles = NULL, orientation = "vertical",
+  df, input, limits = NULL, quantiles = NA, orientation = "vertical",
   trans = scales::identity_trans(), ...
 ) {
   x = switch(orientation,
@@ -15,12 +15,12 @@ heap_sample_slab_function = function(
     vertical = "y"
   )
 
-  if (!is.null(quantiles)) {
+  if (is.null(quantiles) || is.na(quantiles)) {
+    input = df[[x]]
+  } else {
     # ppoints() with a = 1/2 corresponds to quantile() with type = 5
     # and ensures that if quantiles == length(df[[x]]) then input == df[[x]]
     input = quantile(df[[x]], ppoints(quantiles, a = 1/2), type = 5)
-  } else {
-    input = df[[x]]
   }
 
   data.frame(
@@ -69,7 +69,7 @@ stat_heapinterval = function(
   position = "identity",
   ...,
 
-  quantiles = 100,
+  quantiles = NA,
 
   point_interval = median_qi,
 
@@ -107,7 +107,7 @@ StatHeapinterval = ggproto("StatHeapinterval", StatSlabinterval,
   ),
 
   default_params = defaults(list(
-    quantiles = 100,
+    quantiles = NA,
 
     slab_function = heap_sample_slab_function,
     point_interval = median_qi

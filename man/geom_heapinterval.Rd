@@ -28,7 +28,7 @@ geom_heap(mapping = NULL, data = NULL, stat = "identity",
 geom_heaph(..., orientation = "horizontal")
 
 stat_heapinterval(mapping = NULL, data = NULL, geom = "heapinterval",
-  position = "identity", ..., quantiles = 100,
+  position = "identity", ..., quantiles = NA,
   point_interval = median_qi, na.rm = FALSE, show.legend = c(size =
   FALSE), inherit.aes = TRUE)
 

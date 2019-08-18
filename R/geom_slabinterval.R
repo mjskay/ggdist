@@ -735,17 +735,12 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
     show_interval = FALSE
   ), GeomSlabinterval$default_params),
 
-  draw_key = function(self, data, params, size) {
+  draw_key_slab = function(self, data, key_data, params, size) {
     # can drop all the complicated checks from this key since it's just one geom
-    s_key_data = self$override_slab_aesthetics(data)
+    s_key_data = self$override_slab_aesthetics(key_data)
 
     # what point calls "stroke" is what we call "size", since "size" is determined automatically
-    if (is.na(s_key_data$colour) &&
-      (
-        (is.null(s_key_data$size) || is.na(s_key_data$size)) ||
-        (is.null(s_key_data$linetype) || is.na(s_key_data$linetype))
-      )
-    ) {
+    if (is.na(data$colour) && (!is.na(data$size) || !is.na(data$linetype))) {
       # because the default colour is NA, if we want to draw a key for size / linetype we need to
       # reset the colour to something reasonable
       s_key_data$colour = "black"
