@@ -16,9 +16,11 @@ geom_slabinterval(mapping = NULL, data = NULL, stat = "identity",
   show_interval = TRUE, na.rm = FALSE, show.legend = NA,
   inherit.aes = TRUE)
 
-geom_slab(..., show_interval = FALSE)
+geom_slab(mapping = NULL, data = NULL, stat = "identity",
+  position = "identity", ..., na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE)
 
-geom_slabh(..., show_interval = FALSE, orientation = "horizontal")
+geom_slabh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

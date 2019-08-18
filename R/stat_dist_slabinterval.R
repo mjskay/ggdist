@@ -488,11 +488,6 @@ stat_dist_interval = function(
     )
   )
 }
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_intervalh = function(..., orientation = "horizontal") {
-  stat_dist_interval(..., orientation = orientation)
-}
 StatDistInterval = ggproto("StatDistInterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     color = stat(level)
@@ -508,12 +503,50 @@ StatDistInterval = ggproto("StatDistInterval", StatDistSlabinterval,
 # because otherwise it stays in the list as a value = NULL
 # instead of being removed
 StatDistInterval$default_aes$size = NULL
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_intervalh = function(..., orientation = "horizontal") {
+  stat_dist_interval(..., orientation = orientation)
+}
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_slab = function(..., show_interval = FALSE) stat_dist_slabinterval(..., show_interval = show_interval)
+stat_dist_slab = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slab",
+  position = "identity",
+  ...,
+
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatDistSlab,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      show_point = FALSE,
+      show_interval = FALSE,
+      ...
+    )
+  )
+}
+StatDistSlab <- ggproto("StatDistSlab", StatDistSlabinterval,
+  default_params = defaults(list(
+    show_point = FALSE,
+    show_interval = FALSE
+  ), StatDistSlabinterval$default_params)
+)
+StatDistSlab$default_aes$size = NULL
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_slabh = function(..., show_interval = FALSE, orientation = "horizontal") {
-  stat_dist_slabinterval(..., show_interval = show_interval, orientation = orientation)
+stat_dist_slabh = function(..., orientation = "horizontal") {
+  stat_dist_slab(..., orientation = orientation)
 }

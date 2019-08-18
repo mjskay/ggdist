@@ -672,11 +672,81 @@ group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha
 
 #' @export
 #' @rdname geom_slabinterval
-geom_slab = function(..., show_interval = FALSE) {
-  geom_slabinterval(..., show_interval = show_interval)
+geom_slab = function(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+
+  ...,
+
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    geom = GeomSlab,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      show_point = FALSE,
+      show_interval = FALSE,
+
+      na.rm = na.rm,
+      ...
+    )
+  )
 }
+GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
+  default_key_aes = defaults(aes(
+    size = 1,
+    colour = NA
+  ), GeomSlabinterval$default_key_aes),
+
+  override_slab_aesthetics = function(self, s_data) {
+    # we define these differently from geom_slabinterval to make this easier to use on its own
+    s_data$colour = s_data$slab_colour %||% s_data$colour
+    s_data$fill = s_data$slab_fill %||% s_data$fill
+    s_data$alpha = s_data$slab_alpha %||% s_data$alpha
+    s_data$size = s_data$slab_size %||% s_data$size
+    s_data$linetype = s_data$slab_linetype %||% s_data$linetype
+    s_data
+  },
+
+  default_params = defaults(list(
+    show_point = FALSE,
+    show_interval = FALSE
+  ), GeomSlabinterval$default_params),
+
+  draw_key = function(self, data, params, size) {
+    # can drop all the complicated checks from this key since it's just one geom
+    s_key_data = self$override_slab_aesthetics(data)
+
+    # what point calls "stroke" is what we call "size", since "size" is determined automatically
+    if (is.na(s_key_data$colour) &&
+      (
+        (is.null(s_key_data$size) || is.na(s_key_data$size)) ||
+        (is.null(s_key_data$linetype) || is.na(s_key_data$linetype))
+      )
+    ) {
+      # because the default colour is NA, if we want to draw a key for size / linetype we need to
+      # reset the colour to something reasonable
+      s_key_data$colour = "black"
+    }
+    draw_key_polygon(s_key_data, params, size)
+  }
+)
+# have to unset these here because defaults() does not treat NULLs as unsetting values
+GeomSlab$default_key_aes$slab_colour = NULL
+GeomSlab$default_key_aes$slab_size = NULL
+
 #' @export
 #' @rdname geom_slabinterval
-geom_slabh = function(..., show_interval = FALSE, orientation = "horizontal") {
-  geom_slabinterval(..., show_interval = show_interval, orientation = orientation)
+geom_slabh = function(..., orientation = "horizontal") {
+  geom_slab(..., orientation = orientation)
 }

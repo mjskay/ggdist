@@ -454,8 +454,6 @@ geom_heapinterval = function(
     )
   )
 }
-
-
 GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
   default_aes = defaults(aes(
     slab_shape = NULL
@@ -523,7 +521,6 @@ geom_heap = function(
   ...,
 
   na.rm = FALSE,
-
   show.legend = NA,
   inherit.aes = TRUE
 ) {

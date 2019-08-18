@@ -314,7 +314,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   )
 ```
 
-If you want to plot all of these on top of each other (instead of stacked), you can turn off plotting of the interval to make the plot easier to read. You can also set the outline color of the slab using the `slab_color` aesthetic, and change the fill color using `fill`:
+If you want to plot all of these on top of each other (instead of stacked), you could turn off plotting of the interval to make the plot easier to read using `stat_dist_halfeyeh(show_interval = FALSE, ...)`. You can also set the outline color of the slab using the `slab_color` aesthetic, and change the fill color using `fill`:
 
 ```{r beta_overplotted}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
@@ -330,6 +330,21 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
     x = "Beta(alpha,10) distribution",
     y = NULL
   ) 
+```
+
+`stat_dist_slabh()` is a shortcut geom for something like `stat_dist_halfeyeh(show_interval = FALSE, ...)`, with some simplifications: since it does not have the interval attached to it, it does not require you to use `slab_color` to target the outliine color; you can use `color` directly. This simplifies things somewhat:
+
+```{r}
+data.frame(alpha = seq(5, 100, length.out = 10)) %>%
+  ggplot(aes(y = "", dist = "beta", arg1 = alpha, arg2 = 10, color = alpha)) +
+  stat_dist_slabh(fill = NA) +
+  coord_cartesian(expand = FALSE) +
+  scale_color_viridis_c() +
+  labs(
+    title = "stat_dist_slabh(fill = NA)",
+    x = "Beta(alpha,10) distribution",
+    y = NULL
+  )
 ```
 
 The approach using `arg1`, ... `arg9` can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the `args` aesthetic. We'll use it along with the `brms` package's implementation of the scaled and shifted Student t distribution (`brms::dstudent_t()`, etc):

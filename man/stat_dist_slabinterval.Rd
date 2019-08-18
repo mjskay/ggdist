@@ -65,9 +65,10 @@ stat_dist_interval(mapping = NULL, data = NULL, geom = "interval",
 
 stat_dist_intervalh(..., orientation = "horizontal")
 
-stat_dist_slab(..., show_interval = FALSE)
+stat_dist_slab(mapping = NULL, data = NULL, geom = "slab",
+  position = "identity", ..., show.legend = NA, inherit.aes = TRUE)
 
-stat_dist_slabh(..., show_interval = FALSE, orientation = "horizontal")
+stat_dist_slabh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

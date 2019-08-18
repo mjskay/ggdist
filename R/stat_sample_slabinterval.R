@@ -351,11 +351,6 @@ stat_gradientinterval = function(
     )
   )
 }
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_gradientintervalh = function(..., orientation = "horizontal") {
-  stat_gradientinterval(..., orientation = orientation)
-}
 StatGradientinterval <- ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     thickness = 1,
@@ -366,6 +361,11 @@ StatGradientinterval <- ggproto("StatGradientinterval", StatSampleSlabinterval,
     justification = 0.5
   ), StatSampleSlabinterval$default_params)
 )
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_gradientintervalh = function(..., orientation = "horizontal") {
+  stat_gradientinterval(..., orientation = orientation)
+}
 
 #' @export
 #' @rdname stat_sample_slabinterval
@@ -377,9 +377,42 @@ stat_histintervalh = function(..., slab_type = "histogram" , orientation = "hori
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_slab = function(..., show_interval = FALSE) stat_sample_slabinterval(..., show_interval = show_interval)
+stat_slab = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slab",
+  position = "identity",
+  ...,
+
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatSlab,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      show_point = FALSE,
+      show_interval = FALSE,
+      ...
+    )
+  )
+}
+StatSlab <- ggproto("StatSlab", StatSampleSlabinterval,
+  default_params = defaults(list(
+    show_point = FALSE,
+    show_interval = FALSE
+  ), StatSampleSlabinterval$default_params)
+)
+StatSlab$default_aes$size = NULL
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_slabh = function(..., show_interval = FALSE, orientation = "horizontal") {
-  stat_sample_slabinterval(..., show_interval = show_interval, orientation = orientation)
+stat_slabh = function(..., orientation = "horizontal") {
+  stat_slab(..., orientation = orientation)
 }
