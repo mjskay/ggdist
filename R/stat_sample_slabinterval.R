@@ -234,7 +234,7 @@ stat_sample_slabinterval = function(
   )
 }
 
-StatSampleSlabinterval <- ggproto("StatSampleSlabinterval", StatSlabinterval,
+StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
   extra_params = c(
     StatSlabinterval$extra_params,
     "slab_type",
@@ -351,7 +351,7 @@ stat_gradientinterval = function(
     )
   )
 }
-StatGradientinterval <- ggproto("StatGradientinterval", StatSampleSlabinterval,
+StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     thickness = 1,
     slab_alpha = stat(f)
@@ -404,7 +404,7 @@ stat_slab = function(
     )
   )
 }
-StatSlab <- ggproto("StatSlab", StatSampleSlabinterval,
+StatSlab = ggproto("StatSlab", StatSampleSlabinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE

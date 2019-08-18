@@ -88,7 +88,7 @@ stat_lineribbon = function(
   )
 }
 
-StatLineribbon <- ggproto("StatLineribbon", StatPointinterval,
+StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
   default_aes = aes(
     datatype = "interval",
     group = stat(level),
@@ -152,7 +152,7 @@ stat_dist_lineribbon = function(
   )
 }
 
-StatDistLineribbon <- ggproto("StatDistLineribbon", StatDistSlabinterval,
+StatDistLineribbon = ggproto("StatDistLineribbon", StatDistSlabinterval,
   default_aes = defaults(aes(
     datatype = "interval",
     group = stat(level),

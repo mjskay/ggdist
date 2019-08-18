@@ -88,7 +88,7 @@ draw_key_lineribbon = function(data, params, size) {
 #' @importFrom purrr map map_dbl
 #' @import ggplot2
 #' @export
-GeomLineribbon <- ggproto("GeomLineribbon", Geom,
+GeomLineribbon = ggproto("GeomLineribbon", Geom,
   default_aes = aes(colour = "black", size = 1.25, linetype = 1, shape = 19,
     fill = NA, alpha = NA, stroke = 1),
 

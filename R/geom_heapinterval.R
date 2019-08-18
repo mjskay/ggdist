@@ -173,7 +173,8 @@ nudge_bins = function(binning, width) {
 
 #' @importFrom ggplot2 .stroke .pt
 heap_grob = function(data, max_height, x, y,
-  name = NULL, gp = gpar(), vp = NULL
+  name = NULL, gp = gpar(), vp = NULL,
+  dotsize = 1, stackratio = 1
 ) {
   datas = data %>%
     arrange_at(x) %>%
@@ -182,6 +183,7 @@ heap_grob = function(data, max_height, x, y,
 
   gTree(
     datas = datas, max_height = max_height, x_ = x, y_ = y,
+    dotsize = dotsize, stackratio = stackratio,
     name = name, gp = gp, vp = vp, cl = "heap_grob"
   )
 }
@@ -197,9 +199,9 @@ makeContent.heap_grob = function(x) {
   y = grob_$y_
   bin_method = wilkinson_bin_from_center
 
-  size_ratio = 1.45
-  stack_ratio = 1/.9#/size_ratio
-  dot_size = 1
+  sizeratio = 1.43
+  stackratio = 1.07 * grob_$stackratio
+  dotsize = grob_$dotsize
 
   # create a specification for a heap of dots, which includes things like
   # what the bins are, what the dot widths are, etc.
@@ -219,20 +221,20 @@ makeContent.heap_grob = function(x) {
     binning = bin_method(d[[x]], bin_width)
     max_bin_count = max(tabulate(binning$bins)) #max(unlist(dlply(d, "bins", nrow)))
 
-    dot_size = convertUnit(unit(bin_width, "native"),
+    point_size = convertUnit(unit(bin_width, "native"),
       "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
-      size_ratio * dot_size
-    y_spacing = convertUnit(unit(dot_size, "native"),
+      sizeratio * dotsize
+    y_spacing = convertUnit(unit(point_size, "native"),
       "native", axisFrom = "y", axisTo = y, typeFrom = "dimension", valueOnly = TRUE) *
-      stack_ratio / size_ratio
+      stackratio / sizeratio
 
     if (nbins == 1) {
       # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
       # let's back out a max bin size based on that...
       max_y_spacing = max_height / max_bin_count
-      max_dot_size = convertUnit(unit(max_y_spacing * size_ratio / stack_ratio, "native"),
+      max_point_size = convertUnit(unit(max_y_spacing * sizeratio / stackratio, "native"),
         "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
-      max_bin_width = convertUnit(unit(max_dot_size / dot_size / size_ratio, "native"), "native",
+      max_bin_width = convertUnit(unit(max_point_size / dotsize / sizeratio, "native"), "native",
         axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
     } else {
       # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
@@ -304,8 +306,8 @@ makeContent.heap_grob = function(x) {
     h$binning = nudge_bins(h$binning, bin_width)
     d$bins = h$binning$bins
     d$midpoint = h$binning$bin_midpoints[h$binning$bins]
-    dot_points = max(
-      convertY(unit(h$dot_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
+    point_fontsize = max(
+      convertY(unit(h$point_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
       0.5
     )
     dlply(d, "bins", function (bin_df) {
@@ -317,7 +319,7 @@ makeContent.heap_grob = function(x) {
         gp = gpar(
           col = alpha(bin_df$colour, bin_df$alpha),
           fill = alpha(bin_df$fill, bin_df$alpha),
-          fontsize = dot_points,
+          fontsize = point_fontsize,
           lwd = bin_df$size * .stroke/2,
           lty = bin_df$linetype
         ))
@@ -330,7 +332,10 @@ makeContent.heap_grob = function(x) {
 
 # panel drawing function -------------------------------------------------------
 
-draw_slabs_heap = function(self, s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
+draw_slabs_heap = function(self, s_data, panel_params, coord,
+  side, scale, orientation, justification, normalize,
+  child_params
+) {
   define_orientation_variables(orientation)
 
   # slab thickness is fixed to 1 for dotplots
@@ -351,7 +356,10 @@ draw_slabs_heap = function(self, s_data, panel_params, coord, side, scale, orien
 
   # draw the heap grob (which will draw dotplots for all the slabs)
   max_height = max(s_data[[ymax]] - s_data[[ymin]])
-  slab_grobs = list(heap_grob(s_data, max_height, x, y))
+  slab_grobs = list(heap_grob(s_data, max_height, x, y,
+      dotsize = child_params$dotsize,
+      stackratio = child_params$stackratio
+    ))
 
   # when side = "top", need to invert draw order so that overlaps happen in a sensible way
   # (only bother doing this when scale > 1 since that's the only time it will matter)
@@ -431,6 +439,8 @@ geom_heapinterval = function(
   position = "identity",
 
   ...,
+  dotsize = 1,
+  stackratio = 1,
 
   na.rm = FALSE,
 
@@ -471,9 +481,56 @@ GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
     s_data
   },
 
+  extra_params = c(GeomSlabinterval$extra_params,
+    "dotsize",
+    "stackratio"
+  ),
+
   default_params = defaults(list(
-    normalize = "none"
+    normalize = "none",
+    dotsize = 1,
+    stackratio = 1
   ), GeomSlabinterval$default_params),
+
+  draw_panel = function(self, data, panel_params, coord,
+    side = self$default_params$side,
+    scale = self$default_params$scale,
+    orientation = self$default_params$orientation,
+    justification = self$default_params$justification,
+    normalize = self$default_params$normalize,
+    interval_size_domain = self$default_params$interval_size_domain,
+    interval_size_range = self$default_params$interval_size_range,
+    fatten_point = self$default_params$fatten_point,
+    show_slab = self$default_params$show_slab,
+    show_point = self$default_params$show_point,
+    show_interval = self$default_params$show_interval,
+    na.rm = self$default_params$na.rm,
+
+    dotsize = self$default_params$dotsize,
+    stackratio = self$default_params$stackratio,
+
+    child_params = list()
+  ) {
+    ggproto_parent(GeomSlabinterval, self)$draw_panel(data, panel_params, coord,
+      side = side,
+      scale = scale,
+      orientation = orientation,
+      justification = justification,
+      normalize = normalize,
+      interval_size_domain = interval_size_domain,
+      interval_size_range = interval_size_range,
+      fatten_point = fatten_point,
+      show_slab = show_slab,
+      show_point = show_point,
+      show_interval = show_interval,
+      na.rm = na.rm,
+
+      child_params = list(
+        dotsize = dotsize,
+        stackratio = stackratio
+      )
+    )
+  },
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(GeomSlabinterval, self)$setup_data(data, params)
@@ -510,6 +567,12 @@ GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
 
 
 # shortcut geoms ----------------------------------------------------------
+#' @export
+#' @rdname geom_heapinterval
+geom_heapintervalh = function(..., orientation = "horizontal") {
+  geom_heapinterval(..., orientation = orientation)
+}
+
 #' @export
 #' @rdname geom_heapinterval
 geom_heap = function(
@@ -582,3 +645,8 @@ GeomHeap = ggproto("GeomHeap", GeomHeapinterval,
 # have to unset these here because defaults() does not treat NULLs as unsetting values
 GeomHeap$default_key_aes$slab_colour = NULL
 GeomHeap$default_key_aes$slab_size = NULL
+#' @export
+#' @rdname geom_heapinterval
+geom_heaph = function(..., orientation = "horizontal") {
+  geom_heap(..., orientation = orientation)
+}

@@ -40,7 +40,10 @@ rescale_slab_thickness = function(s_data, side, scale, orientation, justificatio
   s_data
 }
 
-draw_slabs = function(self, s_data, panel_params, coord, side, scale, orientation, justification, normalize) {
+draw_slabs = function(self, s_data, panel_params, coord,
+  side, scale, orientation, justification, normalize,
+  child_params
+) {
   define_orientation_variables(orientation)
 
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
@@ -82,8 +85,9 @@ draw_slabs = function(self, s_data, panel_params, coord, side, scale, orientatio
 }
 
 
-draw_pointintervals = function(self, i_data, panel_params, coord, orientation, justification,
-  interval_size_domain, interval_size_range, fatten_point, show_point, na.rm
+draw_pointintervals = function(self, i_data, panel_params, coord,
+  orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm,
+  child_params
 ) {
   if (nrow(i_data) == 0) return(list())
   define_orientation_variables(orientation)
@@ -543,7 +547,11 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       show_slab = self$default_params$show_slab,
       show_point = self$default_params$show_point,
       show_interval = self$default_params$show_interval,
-      na.rm = self$default_params$na.rm
+      na.rm = self$default_params$na.rm,
+      # because draw_panel cannot take ... for some reason (!!), if we
+      # want child geoms to add their own parameters we need some way to
+      # pass them along
+      child_params = list()
     ) {
 
     define_orientation_variables(orientation)
@@ -567,13 +575,17 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       s_data = data[data$datatype == "slab",]
       if (nrow(s_data) > 0) {
         self$draw_slabs(s_data, panel_params, coord,
-          side, scale, orientation, justification, normalize)
+          side, scale, orientation, justification, normalize,
+          child_params
+        )
       }
     }
 
     point_interval_grobs = if (show_interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       self$draw_pointintervals(data[data$datatype == "interval",], panel_params, coord,
-        orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm)
+        orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm,
+        child_params
+      )
     }
 
     ggname("geom_slabinterval",

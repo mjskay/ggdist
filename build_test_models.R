@@ -95,7 +95,7 @@ saveRDS(strip_brms_model(brms.m_nlpar), "tests/models/models.brms.m_nlpar.rds", 
 
 # simple brms model with multiple dpars
 set.seed(1234)
-df_dpars <- data.frame(
+df_dpars = data.frame(
   count = rpois(236, lambda = 20),
   visit = rep(1:4, each = 59),
   patient = factor(rep(1:59, 4)),
@@ -105,7 +105,7 @@ df_dpars <- data.frame(
   Exp = sample(1:5, 236, TRUE),
   volume = rnorm(236)
 )
-brms.m_dpars <- brm(
+brms.m_dpars = brm(
   bf(count ~ Age + (1|visit), mu2 ~ Age), data = df_dpars,
   family = mixture(gaussian, brms::exponential),
   prior = c(prior(normal(0, 10), Intercept, dpar = mu1),

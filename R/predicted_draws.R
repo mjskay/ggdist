@@ -228,7 +228,7 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
   )
 
   if (!is.null(seed)) set.seed(seed)
-  fits_preds <- if (is_brms) {
+  fits_preds = if (is_brms) {
     # only brms has/needs the summary argument
     f_fitted_predicted(model, newdata = newdata, summary = FALSE, ...)
   } else {

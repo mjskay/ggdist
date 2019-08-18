@@ -580,7 +580,7 @@ all_names = function(x) {
       name
     }
   } else if (is.call(x) || is.pairlist(x)) {
-    children <- lapply(x[-1], all_names)
+    children = lapply(x[-1], all_names)
     unique(unlist(children))
   } else {
     stop("Don't know how to handle type `", typeof(x), "`",

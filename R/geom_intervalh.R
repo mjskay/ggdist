@@ -46,7 +46,7 @@ geom_intervalh = function(
 #' @usage NULL
 #' @import ggplot2
 #' @export
-GeomIntervalh <- ggproto("GeomIntervalh", GeomSlabinterval,
+GeomIntervalh = ggproto("GeomIntervalh", GeomSlabinterval,
   default_aes = defaults(aes(
     datatype = "interval"
   ), GeomSlabinterval$default_aes),

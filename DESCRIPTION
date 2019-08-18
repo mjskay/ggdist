@@ -111,6 +111,7 @@ Collate:
     "stat_dist_slabinterval.R"
     "stat_sample_slabinterval.R"
     "geom_eye.R"
+    "stat_heapinterval.R"
     "stat_pointinterval.R"
     "stat_pointintervalh.R"
     "stat_interval.R"

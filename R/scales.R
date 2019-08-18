@@ -48,6 +48,7 @@
 #' \code{scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")}
 #'
 #' @inheritParams ggplot2::continuous_scale
+#' @inheritParams ggplot2::scale_shape
 #' @param ... Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
 #' passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.
 #' @param aesthetics Names of aesthetics to set scales for.

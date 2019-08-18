@@ -80,7 +80,7 @@ define_orientation_variables = function(orientation) {
 }
 
 # provides aesthetic documentation for slabintervals
-rd_slabinterval_aesthetics <- function(geom = GeomSlabinterval, geom_name = "geom_slabinterval", stat = NULL) {
+rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom_slabinterval", stat = NULL) {
   stat_aesthetics = if (is.null(stat)) {
     "These geoms support the following aesthetics:"
   } else {

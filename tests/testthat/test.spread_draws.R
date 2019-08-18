@@ -219,7 +219,7 @@ test_that("spread_draws correctly extracts multiple variables simultaneously", {
 
 test_that("spread_draws correctly extracts multiple variables simultaneously when those variables have no dimensions", {
   RankCorr_t = RankCorr_s
-  dimnames(RankCorr_t)[[2]][[1]] <- "tr2"
+  dimnames(RankCorr_t)[[2]][[1]] = "tr2"
 
   ref1 = spread_draws(RankCorr_t, typical_r)
   expect_equal(spread_draws(RankCorr_t, c(typical_r)), ref1)

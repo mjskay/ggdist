@@ -277,7 +277,7 @@ stat_dist_slabinterval = function(
 }
 
 #' @importFrom plyr defaults
-StatDistSlabinterval <- ggproto("StatDistSlabinterval", StatSlabinterval,
+StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_aes = defaults(aes(
     dist = NULL,
     args = NULL,
@@ -436,7 +436,7 @@ stat_dist_gradientinterval = function(
 stat_dist_gradientintervalh = function(..., orientation = "horizontal") {
   stat_dist_gradientinterval(..., orientation = orientation)
 }
-StatDistGradientinterval <- ggproto("StatDistGradientinterval", StatDistSlabinterval,
+StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     thickness = 1,
     slab_alpha = stat(f)
@@ -538,7 +538,7 @@ stat_dist_slab = function(
     )
   )
 }
-StatDistSlab <- ggproto("StatDistSlab", StatDistSlabinterval,
+StatDistSlab = ggproto("StatDistSlab", StatDistSlabinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE

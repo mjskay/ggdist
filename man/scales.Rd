@@ -145,6 +145,9 @@ Use \code{NA} to refer to the existing minimum or maximum
 \item A function that accepts the existing (automatic) limits and returns
 new limits
 }}
+
+\item{solid}{Should the shapes be solid, \code{TRUE}, or hollow,
+\code{FALSE}?}
 }
 \description{
 These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_slabinterval}}
