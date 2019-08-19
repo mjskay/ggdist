@@ -83,12 +83,12 @@ and visualization tasks common to many models:
   defaults suitable for visualizing posterior point summaries and intervals (`geom_pointinterval()`,
   `geom_pointintervalh()`, `stat_pointinterval()`, `stat_pointintervalh()`), visualizing
   distributions with point summaries and intervals (the `stat_sample_slabinterval()` family of
-  stats, including eye plots, half-eye plots, CCDF bar plots, gradient plots, and histograms), 
+  stats, including eye plots, half-eye plots, CCDF bar plots, gradient plots, dotplots, and histograms), 
   and visualizing fit lines with an arbitrary number of uncertainty bands (`geom_lineribbon` 
   and `stat_lineribbon`). Priors can also be visualized in the same way using the 
-  `stat_dist_slabinterval()` family of stats. Combining the
-  base-R `quantile` function with `geom_dotplot` also facilitates the construction
-  of quantile dotplots of posteriors (see example in this document).
+  `stat_dist_slabinterval()` family of stats. The `geom_heapinterval()` family also
+  automatically finds good binning parameters for dotplots, and can be used to easily construct
+  quantile dotplots of posteriors (see example in this document).
   
   ![The slabinterval family of geoms and stats](man/figures/slabinterval_family.png)
 
@@ -288,18 +288,15 @@ A variety of other stats and geoms for visualizing priors and posteriors are ava
 
 ### Plotting posteriors as quantile dotplots
 
-Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating [quantile dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, here 100):
+Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating [quantile dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md) ([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes et al. 2018](https://doi.org/10.1145/3173574.3173718)), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, 100 in the example below). 
+
+Within the slabinterval family of geoms in tidybayes is the `heap` and `heapinterval` family, which automatically determine appropriate bin sizes for dotplots and can calculate quantiles from samples to construct quantile dotplots. `stat_heaph()` is the horizontal variant designed for use on samples:
 
 ```{r quantile_dotplots}
 m %>%
   spread_draws(condition_mean[condition]) %>%
-  do(tibble(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
-  ggplot(aes(x = condition_mean)) +
-  geom_dotplot(binwidth = .04) +
-  facet_grid(rows = vars(fct_rev(condition)), switch = "y") +
-  facet_title_left_horizontal() +
-  scale_y_continuous(breaks = NULL) +
-  ylab(NULL)
+  ggplot(aes(x = condition_mean, y = condition)) +
+  stat_heaph(quantiles = 100) 
 ```
 
 The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
