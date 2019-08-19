@@ -4,7 +4,8 @@
 \alias{marginalize_lkjcorr}
 \title{Turn spec for LKJ distribution into spec for marginal LKJ distribution}
 \usage{
-marginalize_lkjcorr(data, K, dist = ".dist", args = ".args")
+marginalize_lkjcorr(data, K, predicate = NULL, dist = ".dist",
+  args = ".args")
 }
 \arguments{
 \item{data}{A data frame containing a column with distribution names (\code{".dist"} by default)
@@ -12,6 +13,12 @@ and a list column of distribution arguments (\code{".args"} by default), such as
 \code{\link{parse_dist}}.}
 
 \item{K}{Dimension of the correlation matrix. Must be greater than or equal to 2.}
+
+\item{predicate}{a bare expression for selecting the rows of \code{data} to modify. This is useful
+if \code{data} contains more than one row with an LKJ prior in it and you only want to modify some
+of the distributions; if this is the case, give row a predicate expression (such as you might supply
+to \code{\link[dplyr]{filter}}) that evaluates to \code{TRUE} on the rows you want to modify.
+If \code{NULL} (the default), all \code{lkjcorr} distributions in \code{data} are modified.}
 
 \item{dist}{The name of the column containing distribution names. See \code{\link{parse_dist}}.}
 
@@ -51,6 +58,14 @@ data.frame(prior = "lkjcorr(3)") \%>\%
   stat_dist_halfeyeh() +
   xlim(-1, 1) +
   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
+
+# Say our prior list has multiple LKJ priors on correlation matrices
+# of different sizes, we can supply a predicate expression to select
+# only those rows we want to modify
+data.frame(coef = c("a", "b"), prior = "lkjcorr(3)") \%>\%
+  parse_dist(prior) \%>\%
+  marginalize_lkjcorr(K = 2, coef == "a") \%>\%
+  marginalize_lkjcorr(K = 4, coef == "b")
 
 }
 \seealso{

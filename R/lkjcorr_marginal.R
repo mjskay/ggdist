@@ -113,6 +113,11 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' @param data A data frame containing a column with distribution names (\code{".dist"} by default)
 #' and a list column of distribution arguments (\code{".args"} by default), such as output by
 #' \code{\link{parse_dist}}.
+#' @param predicate a bare expression for selecting the rows of \code{data} to modify. This is useful
+#' if \code{data} contains more than one row with an LKJ prior in it and you only want to modify some
+#' of the distributions; if this is the case, give row a predicate expression (such as you might supply
+#' to \code{\link[dplyr]{filter}}) that evaluates to \code{TRUE} on the rows you want to modify.
+#' If \code{NULL} (the default), all \code{lkjcorr} distributions in \code{data} are modified.
 #' @param dist The name of the column containing distribution names. See \code{\link{parse_dist}}.
 #' @param args The name of the column containing distribution arguments. See \code{\link{parse_dist}}.
 #' @seealso \code{\link{parse_dist}}, \code{\link{lkjcorr_marginal}}
@@ -131,9 +136,24 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #'   xlim(-1, 1) +
 #'   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
 #'
+#' # Say our prior list has multiple LKJ priors on correlation matrices
+#' # of different sizes, we can supply a predicate expression to select
+#' # only those rows we want to modify
+#' data.frame(coef = c("a", "b"), prior = "lkjcorr(3)") %>%
+#'   parse_dist(prior) %>%
+#'   marginalize_lkjcorr(K = 2, coef == "a") %>%
+#'   marginalize_lkjcorr(K = 4, coef == "b")
+#'
+#' @importFrom rlang quo_get_expr
 #' @export
-marginalize_lkjcorr = function(data, K, dist = ".dist", args = ".args") {
+marginalize_lkjcorr = function(data, K, predicate = NULL, dist = ".dist", args = ".args") {
   li = !is.na(data[[dist]]) & data[[dist]] == "lkjcorr"
+
+  .predicate = enquo(predicate)
+  if (!is.null(quo_get_expr(.predicate))) {
+    li = li & eval_tidy(.predicate, data)
+  }
+
   data[[args]][li] = lapply(data[[args]][li], function(x) c(list(K), x))
   data[[dist]][li] = "lkjcorr_marginal"
   data
