@@ -327,6 +327,18 @@ m %>%
   stat_halfeyeh()
 ```
 
+Or say you want to annotate portions of the densities in color; the `fill` aesthetic can vary within a slab in all geoms and stats in the `geom_slabinterval()` family, including `stat_halfeyeh()`. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:
+
+```{r}
+m %>%
+  spread_draws(b_Intercept, r_condition[condition,]) %>%
+  mutate(condition_mean = b_Intercept + r_condition) %>%
+  ggplot(aes(y = condition, x = condition_mean, fill = stat(abs(x) < .8))) +
+  stat_halfeyeh() +
+  geom_vline(xintercept = c(-.8, .8), linetype = "dashed") +
+  scale_fill_manual(values = c("gray80", "skyblue"))
+```
+
 
 ## Other visualizations of distributions: `stat_slabinterval`
 
