@@ -199,9 +199,10 @@ CCDF bar plots etc.</p>
 <span class='fu'>stat_histintervalh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"histogram"</span>,
   <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_slab</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>stat_slab</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slab"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>stat_slabh</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
+<span class='fu'>stat_slabh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -357,10 +358,6 @@ groups so that the maximum height in each group is <code>1</code>; if <code>"non
       <th>thickness</th>
       <td><p>Override for the <code>thickness</code> aesthetic in <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>: the thickness
 of the slab at each x / y value of the slab (depending on <code>orientation</code>).</p></td>
-    </tr>
-    <tr>
-      <th>show_interval</th>
-      <td><p>Should the interval portion of the geom be drawn? Default <code>TRUE</code>.</p></td>
     </tr>
     </table>
     

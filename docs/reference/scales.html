@@ -230,6 +230,10 @@ and stats/geoms based on it (like eye plots).</p>
 
 <span class='fu'>scale_slab_linetype_continuous</span>(<span class='no'>...</span>)
 
+<span class='fu'>scale_slab_shape_discrete</span>(<span class='no'>...</span>, <span class='kw'>solid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>scale_slab_shape_continuous</span>(<span class='no'>...</span>)
+
 <span class='fu'>guide_colourbar2</span>(<span class='no'>...</span>)
 
 <span class='fu'>guide_colorbar2</span>(<span class='no'>...</span>)</pre>
@@ -273,6 +277,11 @@ Use <code>NA</code> to refer to the existing minimum or maximum</p></li>
 new limits</p></li>
 </ul></td>
     </tr>
+    <tr>
+      <th>solid</th>
+      <td><p>Should the shapes be solid, <code>TRUE</code>, or hollow,
+<code>FALSE</code>?</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -296,6 +305,7 @@ related geoms:</p>
   densities of 0 get mapped to 0 in the output.</p></li>
 <li><p><code>scale_slab_size_* </code>Slab outline line width</p></li>
 <li><p><code>scale_slab_linetype_* </code>Slab outline line type</p></li>
+<li><p><code>scale_slab_shape_* </code>Slab dot shape (for <code><a href='geom_heapinterval.html'>geom_heapinterval</a></code>)</p></li>
 </ol>
     <p>See the corresponding scale documentation in ggplot for more information; e.g.
 <code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_color_continuous</a></code>, etc.</p>

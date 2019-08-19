@@ -160,7 +160,8 @@ Useful for visualizing prior correlations from LKJ distributions.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>marginalize_lkjcorr</span>(<span class='no'>data</span>, <span class='no'>K</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>".dist"</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='st'>".args"</span>)</pre>
+    <pre class="usage"><span class='fu'>marginalize_lkjcorr</span>(<span class='no'>data</span>, <span class='no'>K</span>, <span class='kw'>predicate</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>".dist"</span>,
+  <span class='kw'>args</span> <span class='kw'>=</span> <span class='st'>".args"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,6 +175,14 @@ and a list column of distribution arguments (<code>".args"</code> by default), s
     <tr>
       <th>K</th>
       <td><p>Dimension of the correlation matrix. Must be greater than or equal to 2.</p></td>
+    </tr>
+    <tr>
+      <th>predicate</th>
+      <td><p>a bare expression for selecting the rows of <code>data</code> to modify. This is useful
+if <code>data</code> contains more than one row with an LKJ prior in it and you only want to modify some
+of the distributions; if this is the case, give row a predicate expression (such as you might supply
+to <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></code>) that evaluates to <code>TRUE</code> on the rows you want to modify.
+If <code>NULL</code> (the default), all <code>lkjcorr</code> distributions in <code>data</code> are modified.</p></td>
     </tr>
     <tr>
       <th>dist</th>
@@ -218,6 +227,15 @@ family of ggplot2 stats.</p>
   <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeyeh</a></span>() +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>xlim</a></span>(-<span class='fl'>1</span>, <span class='fl'>1</span>) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span>(<span class='st'>"Marginal correlation for LKJ(3) prior on 2x2 correlation matrix"</span>)</div><div class='img'><img src='marginalize_lkjcorr-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># Say our prior list has multiple LKJ priors on correlation matrices</span>
+<span class='co'># of different sizes, we can supply a predicate expression to select</span>
+<span class='co'># only those rows we want to modify</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>coef</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>), <span class='kw'>prior</span> <span class='kw'>=</span> <span class='st'>"lkjcorr(3)"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span>(<span class='no'>prior</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>marginalize_lkjcorr</span>(<span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>coef</span> <span class='kw'>==</span> <span class='st'>"a"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>marginalize_lkjcorr</span>(<span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>coef</span> <span class='kw'>==</span> <span class='st'>"b"</span>)</div><div class='output co'>#&gt;   coef      prior            .dist .args
+#&gt; 1    a lkjcorr(3) lkjcorr_marginal  2, 3
+#&gt; 2    b lkjcorr(3) lkjcorr_marginal  4, 3</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

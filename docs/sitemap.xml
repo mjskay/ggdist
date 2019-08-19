@@ -25,9 +25,6 @@
     <loc>http://mjskay.github.io/tidybayes/reference/density_bins.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/tidybayes/reference/draw_key_slabinterval.html</loc>
-  </url>
-  <url>
     <loc>http://mjskay.github.io/tidybayes/reference/gather_emmeans_draws.html</loc>
   </url>
   <url>
@@ -38,6 +35,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/geom_eye.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/geom_heapinterval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/geom_interval.html</loc>

@@ -218,9 +218,17 @@ functions may be deprecated in the future.</p></div>
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>purrr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)
-
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>purrr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'purrr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:magrittr':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    set_names</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:testthat':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    is_null</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'tidyr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:magrittr':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    extract</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:testthat':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    matches</span></div><div class='input'>
 <span class='kw'>if</span> (
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='st'>"rstanarm"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&amp;&amp;</span>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='st'>"modelr"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -266,9 +274,9 @@ functions may be deprecated in the future.</p></div>
 #&gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.647 seconds (Warm-up)
-#&gt; Chain 1:                0.565 seconds (Sampling)
-#&gt; Chain 1:                1.212 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.31 seconds (Warm-up)
+#&gt; Chain 1:                0.236 seconds (Sampling)
+#&gt; Chain 1:                0.546 seconds (Total)
 #&gt; Chain 1: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -291,9 +299,9 @@ functions may be deprecated in the future.</p></div>
 #&gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.606 seconds (Warm-up)
-#&gt; Chain 2:                0.655 seconds (Sampling)
-#&gt; Chain 2:                1.261 seconds (Total)
+#&gt; Chain 2:  Elapsed Time: 0.364 seconds (Warm-up)
+#&gt; Chain 2:                0.364 seconds (Sampling)
+#&gt; Chain 2:                0.728 seconds (Total)
 #&gt; Chain 2: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -316,9 +324,9 @@ functions may be deprecated in the future.</p></div>
 #&gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 3: 
-#&gt; Chain 3:  Elapsed Time: 0.631 seconds (Warm-up)
-#&gt; Chain 3:                0.626 seconds (Sampling)
-#&gt; Chain 3:                1.257 seconds (Total)
+#&gt; Chain 3:  Elapsed Time: 0.353 seconds (Warm-up)
+#&gt; Chain 3:                0.372 seconds (Sampling)
+#&gt; Chain 3:                0.725 seconds (Total)
 #&gt; Chain 3: 
 #&gt; 
 #&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -341,9 +349,9 @@ functions may be deprecated in the future.</p></div>
 #&gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #&gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #&gt; Chain 4: 
-#&gt; Chain 4:  Elapsed Time: 0.714 seconds (Warm-up)
-#&gt; Chain 4:                0.549 seconds (Sampling)
-#&gt; Chain 4:                1.263 seconds (Total)
+#&gt; Chain 4:  Elapsed Time: 0.382 seconds (Warm-up)
+#&gt; Chain 4:                0.334 seconds (Sampling)
+#&gt; Chain 4:                0.716 seconds (Total)
 #&gt; Chain 4: </div><div class='img'><img src='density_bins-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

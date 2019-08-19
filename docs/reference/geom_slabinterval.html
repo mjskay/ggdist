@@ -172,9 +172,11 @@ corresponding intervals.</p>
   <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>geom_slab</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>geom_slab</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>geom_slabh</span>(<span class='no'>...</span>, <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
+<span class='fu'>geom_slabh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -333,6 +335,8 @@ usually set this aesthetic for you as needed, and their use is recommended unles
 use case.</p>
 <p>Wrapper geoms and stats include:</p>
 <ul>
+<li><p><code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> and associated stats</p></li>
+<li><p><code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval</a></code> and associated stats</p></li>
 <li><p><code><a href='geom_pointinterval.html'>geom_pointinterval</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh</a></code></p></li>
 <li><p><code><a href='stat_pointinterval.html'>stat_pointinterval</a></code> / <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code></p></li>
 <li><p><code><a href='geom_interval.html'>geom_interval</a></code> / <code><a href='geom_interval.html'>geom_intervalh</a></code></p></li>
