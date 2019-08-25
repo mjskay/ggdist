@@ -72,6 +72,7 @@ LazyData: true
 Encoding: UTF-8
 Collate:
     "add_draws.R"
+    "binning_methods.R"
     "combine_chains.R"
     "compare_levels.R"
     "compose_data.R"
