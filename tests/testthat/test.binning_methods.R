@@ -50,5 +50,11 @@ test_that("binning works on symmetric distributions", {
     list(bins = c(1, 2, 2, 3), bin_midpoints = c(1, 2, 3))
   )
 
+  expect_equal(automatic_bin(c(1,2), width = 1.01),
+    list(bins = c(1, 1), bin_midpoints = 1.5)
+  )
 
+  expect_equal(automatic_bin(c(1,2), width = 1),
+    list(bins = c(1, 2), bin_midpoints = c(1, 2))
+  )
 })

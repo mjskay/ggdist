@@ -33,7 +33,7 @@ makeContent.heap_grob = function(x) {
   max_height = grob_$max_height
   x = grob_$x_
   y = grob_$y_
-  bin_method = get_bin_method(x)
+  bin_method = automatic_bin
   side = grob_$side
 
   sizeratio = 1.43

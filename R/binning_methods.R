@@ -66,9 +66,10 @@ wilkinson_bin_from_center = function(x, width) {
       bins = integer(0),
       bin_midpoints = NULL
     )
-  } else if (all(x == x[[1]])) {
+  } else if (abs(x[[length(x)]] - x[[1]]) < width) {
+    # everything is in 1 bin
     list(
-      bins = 1,
+      bins = rep(1, length(x)),
       bin_midpoints = (x[[1]] + x[[length(x)]]) / 2
     )
   } else {
