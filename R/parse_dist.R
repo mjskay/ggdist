@@ -199,13 +199,3 @@ check_dist_name = function(dist) {
   dist[invalid] = NA
   dist
 }
-
-# get list of available distributions
-#' @importFrom utils lsf.str
-get_dist_names = function() {
-  functions = unlist(lapply(search(), function(namespace) as.vector(lsf.str(namespace))))
-  d_names = substring(functions[startsWith(functions, "d")], 2)
-  p_names = substring(functions[startsWith(functions, "p")], 2)
-  q_names = substring(functions[startsWith(functions, "q")], 2)
-  sort(intersect(intersect(d_names, p_names), q_names))
-}

@@ -7,6 +7,25 @@ library(dplyr)
 
 context("stat_sample_")
 
+test_that("vanilla stat_slabinterval works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  set.seed(1234)
+  p = tribble(
+    ~dist,  ~x,
+    "norm", rnorm(100),
+    "t",    rt(100, 3)
+  ) %>%
+    unnest(x) %>%
+    ggplot() +
+    scale_slab_alpha_continuous(range = c(0,1))
+
+  vdiffr::expect_doppelganger("vanilla stat_slabinterval",
+    p + stat_slabinterval(aes(x = dist, y = x), n = 20, slab_function = sample_slab_function)
+  )
+})
+
 test_that("gradientinterval works", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")

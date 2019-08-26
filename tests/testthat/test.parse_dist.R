@@ -41,3 +41,19 @@ test_that("parse_dist + marginalize_lkjcorr produces correct results", {
   )
 })
 
+test_that("unsupported objects throw error with parse_dist", {
+  expect_error(
+    parse_dist(list()),
+    'Objects of type "list" are not currently supported by `parse_dist`.'
+  )
+})
+
+
+# check_dist_name ---------------------------------------------------------
+
+test_that("check_dist ignores unknown distributions", {
+  expect_warning(
+    expect_equal(check_dist_name(c("norm","foo","bar","t")), c("norm",NA,NA,"t")),
+    "The following distribution names were not recognized and were ignored:.*foo, bar"
+  )
+})

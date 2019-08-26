@@ -73,7 +73,7 @@ wilkinson_bin_from_center = function(x, width) {
       bins = integer(0),
       bin_midpoints = NULL
     )
-  } else if (abs(x[[length(x)]] - x[[1]]) < width) {
+  } else if (length(x) == 1 || abs(x[[length(x)]] - x[[1]]) < width) {
     # everything is in 1 bin
     list(
       bins = rep(1, length(x)),
@@ -154,18 +154,14 @@ hist_bin = function(x, width) {
 # dynamic binning method selection ----------------------------------------
 
 # examines a vector x and determines an appropriate binning method based on its properties
-get_bin_method = function(x) {
+automatic_bin = function(x, width) {
   diff_x = diff(x)
   if (isTRUE(all.equal(diff_x, rev(diff_x), check.attributes = FALSE))) {
     # x is symmetric, used centered binning
-    wilkinson_bin_from_center
+    wilkinson_bin_from_center(x, width)
   } else {
-    wilkinson_bin_to_right
+    wilkinson_bin_to_right(x, width)
   }
-}
-
-automatic_bin = function(x, width) {
-  get_bin_method(x)(x, width)
 }
 
 
