@@ -49,6 +49,13 @@ wilkinson_bin_to_right = function(x, width, direction = 1) {
 # the basic wilkinson method, but sweeping right-to-left
 # x must be sorted
 wilkinson_bin_to_left = function(x, width) {
+  if (length(x) == 0) {
+    return(list(
+      bins = integer(0),
+      bin_midpoints = NULL
+    ))
+  }
+
   binning = wilkinson_bin_to_right(rev(x), width, direction = -1)
   list(
     # renumber bins so 1,2,3,3 => 3,2,1,1 (then reverse so it matches original vector order)
@@ -110,22 +117,15 @@ wilkinson_bin_from_center = function(x, width) {
     n_center = 1 + edge_offset_from_center * 2 # number of items in center bin
     center_midpoint = (x[[center_i - edge_offset_from_center]] + x[[center_i + edge_offset_from_center]])/2
 
-    if (n_center == length(x)) {
-      # everything was in the center bin
-      list(
-        bins = rep(1, n_center),
-        bin_midpoints = center_midpoint
-      )
-    } else {
-      # construct bins for regions left / right of center
-      left = wilkinson_bin_to_left(x[1:(center_i - edge_offset_from_center - 1)], width)
-      right = wilkinson_bin_to_right(x[(center_i + edge_offset_from_center + 1):length(x)], width)
-      center_bin_i = length(left$bin_midpoints) + 1
-      list(
-        bins = c(left$bins, rep(center_bin_i, n_center), center_bin_i + right$bins),
-        bin_midpoints = c(left$bin_midpoints, center_midpoint, right$bin_midpoints)
-      )
-    }
+    # construct bins for regions left / right of center
+    left = wilkinson_bin_to_left(x[1:(center_i - edge_offset_from_center - 1)], width)
+    right = wilkinson_bin_to_right(x[(center_i + edge_offset_from_center + 1):length(x)], width)
+
+    center_bin_i = length(left$bin_midpoints) + 1
+    list(
+      bins = c(left$bins, rep(center_bin_i, n_center), center_bin_i + right$bins),
+      bin_midpoints = c(left$bin_midpoints, center_midpoint, right$bin_midpoints)
+    )
   }
 }
 
@@ -189,8 +189,8 @@ nudge_bins = function(binning, width) {
       bin_midpoints[[right_center_bin]] = bin_midpoints[[right_center_bin]] + center_bin_nudge
     } else {
       # odd number of bins => don't need to adjust the center
-      left_center_bin = ceiling(length(bin_midpoints) / 2)
-      right_center_bin = left_center_bin
+      left_center_bin = floor(length(bin_midpoints) / 2)
+      right_center_bin = left_center_bin + 2
     }
 
     # nudge the left bins (those below the center) apart as necessary
