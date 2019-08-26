@@ -31,7 +31,7 @@
 #'   densities of 0 get mapped to 0 in the output.}
 #'   \item{\code{scale_slab_size_* }}{Slab outline line width}
 #'   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
-#'   \item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_heapinterval}})}
+#'   \item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_dotsinterval}})}
 #' }
 #'
 #' See the corresponding scale documentation in ggplot for more information; e.g.

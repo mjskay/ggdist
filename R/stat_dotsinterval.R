@@ -1,4 +1,4 @@
-# stats for heapintervals
+# stats for dotsintervals
 #
 # Author: mjskay
 ###############################################################################
@@ -7,7 +7,7 @@
 # slab function for samples -------------------------
 
 #' @importFrom stats ppoints
-heap_sample_slab_function = function(
+dots_sample_slab_function = function(
   df, input, limits = NULL, quantiles = NA, orientation = "vertical",
   trans = scales::identity_trans(), ...
 ) {
@@ -36,7 +36,7 @@ heap_sample_slab_function = function(
 
 #' @importFrom stats ppoints
 #' @importFrom purrr pmap_dfr
-heap_dist_slab_function = function(
+dots_dist_slab_function = function(
   df, input, quantiles = 100, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr(df, function(dist, ...) {
@@ -60,14 +60,14 @@ heap_dist_slab_function = function(
 }
 
 
-# stat_heapinterval[h] ------------------------------------------------
+# stat_dotsinterval[h] ------------------------------------------------
 
-#' @rdname geom_heapinterval
+#' @rdname geom_dotsinterval
 #' @export
-stat_heapinterval = function(
+stat_dotsinterval = function(
   mapping = NULL,
   data = NULL,
-  geom = "heapinterval",
+  geom = "dotsinterval",
   position = "identity",
   ...,
 
@@ -82,7 +82,7 @@ stat_heapinterval = function(
   layer(
     data = data,
     mapping = mapping,
-    stat = StatHeapinterval,
+    stat = StatDotsinterval,
     geom = geom,
     position = position,
 
@@ -92,7 +92,7 @@ stat_heapinterval = function(
     params = list(
       quantiles = quantiles,
 
-      slab_function = heap_sample_slab_function,
+      slab_function = dots_sample_slab_function,
       slab_args = list(),
 
       point_interval = point_interval,
@@ -102,7 +102,7 @@ stat_heapinterval = function(
     )
   )
 }
-StatHeapinterval = ggproto("StatHeapinterval", StatSlabinterval,
+StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
   extra_params = c(
     StatSlabinterval$extra_params,
     "quantiles"
@@ -111,7 +111,7 @@ StatHeapinterval = ggproto("StatHeapinterval", StatSlabinterval,
   default_params = defaults(list(
     quantiles = NA,
 
-    slab_function = heap_sample_slab_function,
+    slab_function = dots_sample_slab_function,
     point_interval = median_qi
   ), StatSlabinterval$default_params),
 
@@ -126,17 +126,17 @@ StatHeapinterval = ggproto("StatHeapinterval", StatSlabinterval,
   }
 )
 #' @export
-#' @rdname geom_heapinterval
-stat_heapintervalh = function(..., orientation = "horizontal") {
-  stat_heapinterval(..., orientation = orientation)
+#' @rdname geom_dotsinterval
+stat_dotsintervalh = function(..., orientation = "horizontal") {
+  stat_dotsinterval(..., orientation = orientation)
 }
 
 #' @export
-#' @rdname geom_heapinterval
-stat_heap = function(
+#' @rdname geom_dotsinterval
+stat_dots = function(
   mapping = NULL,
   data = NULL,
-  geom = "heap",
+  geom = "dots",
   position = "identity",
   ...,
 
@@ -146,7 +146,7 @@ stat_heap = function(
   layer(
     data = data,
     mapping = mapping,
-    stat = StatHeap,
+    stat = StatDots,
     geom = geom,
     position = position,
 
@@ -160,28 +160,28 @@ stat_heap = function(
     )
   )
 }
-StatHeap = ggproto("StatHeap", StatHeapinterval,
+StatDots = ggproto("StatDots", StatDotsinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
-  ), StatHeapinterval$default_params)
+  ), StatDotsinterval$default_params)
 )
-StatHeap$default_aes$size = NULL
+StatDots$default_aes$size = NULL
 #' @export
-#' @rdname geom_heapinterval
-stat_heaph = function(..., orientation = "horizontal") {
-  stat_heap(..., orientation = orientation)
+#' @rdname geom_dotsinterval
+stat_dotsh = function(..., orientation = "horizontal") {
+  stat_dots(..., orientation = orientation)
 }
 
 
-# stat_dist_heapinterval[h] -----------------------------------------------
+# stat_dist_dotsinterval[h] -----------------------------------------------
 
-#' @rdname geom_heapinterval
+#' @rdname geom_dotsinterval
 #' @export
-stat_dist_heapinterval = function(
+stat_dist_dotsinterval = function(
   mapping = NULL,
   data = NULL,
-  geom = "heapinterval",
+  geom = "dotsinterval",
   position = "identity",
   ...,
 
@@ -194,7 +194,7 @@ stat_dist_heapinterval = function(
   layer(
     data = data,
     mapping = mapping,
-    stat = StatDistHeapinterval,
+    stat = StatDistDotsinterval,
     geom = geom,
     position = position,
 
@@ -206,7 +206,7 @@ stat_dist_heapinterval = function(
 
       limits_function = NULL,
 
-      slab_function = heap_dist_slab_function,
+      slab_function = dots_dist_slab_function,
       slab_args = list(),
 
       interval_function = dist_interval_function,
@@ -219,7 +219,7 @@ stat_dist_heapinterval = function(
   )
 }
 #' @importFrom plyr defaults
-StatDistHeapinterval = ggproto("StatDistHeapinterval", StatDistSlabinterval,
+StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   extra_params = c(
     StatDistSlabinterval$extra_params,
     "quantiles"
@@ -229,7 +229,7 @@ StatDistHeapinterval = ggproto("StatDistHeapinterval", StatDistSlabinterval,
     quantiles = 100,
 
     limits_function = NULL,
-    slab_function = heap_dist_slab_function,
+    slab_function = dots_dist_slab_function,
     interval_function = dist_interval_function
   ), StatDistSlabinterval$default_params),
 
@@ -244,17 +244,17 @@ StatDistHeapinterval = ggproto("StatDistHeapinterval", StatDistSlabinterval,
   }
 )
 #' @export
-#' @rdname geom_heapinterval
-stat_dist_heapintervalh = function(..., orientation = "horizontal") {
-  stat_dist_heapinterval(..., orientation = orientation)
+#' @rdname geom_dotsinterval
+stat_dist_dotsintervalh = function(..., orientation = "horizontal") {
+  stat_dist_dotsinterval(..., orientation = orientation)
 }
 
 #' @export
-#' @rdname geom_heapinterval
-stat_dist_heap = function(
+#' @rdname geom_dotsinterval
+stat_dist_dots = function(
   mapping = NULL,
   data = NULL,
-  geom = "heap",
+  geom = "dots",
   position = "identity",
   ...,
 
@@ -264,7 +264,7 @@ stat_dist_heap = function(
   layer(
     data = data,
     mapping = mapping,
-    stat = StatDistHeap,
+    stat = StatDistDots,
     geom = geom,
     position = position,
 
@@ -278,17 +278,17 @@ stat_dist_heap = function(
     )
   )
 }
-StatDistHeap = ggproto("StatDistHeap", StatDistHeapinterval,
+StatDistDots = ggproto("StatDistDots", StatDistDotsinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
-  ), StatDistHeapinterval$default_params)
+  ), StatDistDotsinterval$default_params)
 )
-StatDistHeap$default_aes$size = NULL
+StatDistDots$default_aes$size = NULL
 #' @export
-#' @rdname geom_heapinterval
-stat_dist_heaph = function(..., orientation = "horizontal") {
-  stat_dist_heap(..., orientation = orientation)
+#' @rdname geom_dotsinterval
+stat_dist_dotsh = function(..., orientation = "horizontal") {
+  stat_dist_dots(..., orientation = orientation)
 }
 
 

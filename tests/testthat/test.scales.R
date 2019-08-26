@@ -164,16 +164,16 @@ test_that("mapping custom aesthetics works", {
   )
 
 
-  # HEAP
+  # DOTS
   p = data.frame(x = qnorm(ppoints(100)), y = "a") %>%
     rbind(data.frame(x = qnorm(ppoints(100), 3, 2), y = "b")) %>%
     ggplot(aes(x = x, y = y, group = NA))
 
-  vdiffr::expect_doppelganger("heap: slab_color plus slab_shape mapping",
-    p + geom_heap(aes(color = x > 2.5, shape = x > 2.5), orientation = "horizontal")
+  vdiffr::expect_doppelganger("dots: slab_color plus slab_shape mapping",
+    p + geom_dots(aes(color = x > 2.5, shape = x > 2.5), orientation = "horizontal")
   )
-  vdiffr::expect_doppelganger("heapinterval: slab_color plus slab_shape mapping",
-    p + geom_heapinterval(aes(slab_color = x > 2.5, slab_shape = x > 2.5), orientation = "horizontal")
+  vdiffr::expect_doppelganger("dotsinterval: slab_color plus slab_shape mapping",
+    p + geom_dotsinterval(aes(slab_color = x > 2.5, slab_shape = x > 2.5), orientation = "horizontal")
   )
 
 })

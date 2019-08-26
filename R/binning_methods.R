@@ -1,4 +1,4 @@
-# binning methods for use with heap geom
+# binning methods for use with dots geom
 #
 # Author: mjskay
 ###############################################################################

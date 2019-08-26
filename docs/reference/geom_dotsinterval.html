@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Automatic dotplots ("heaps"), heap + intervals, and quantile dotplots (ggplot geom) — geom_heapinterval • tidybayes</title>
+<title>Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom) — geom_dotsinterval • tidybayes</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,12 +32,12 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Automatic dotplots ("heaps"), heap + intervals, and quantile dotplots (ggplot geom) — geom_heapinterval" />
+<meta property="og:title" content="Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom) — geom_dotsinterval" />
 
-<meta property="og:description" content="Geoms and stats for creating dotplots (&quot;heaps&quot;) that automatically determines a bin width that
+<meta property="og:description" content="Geoms and stats for creating dotplots that automatically determines a bin width that
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-generation of quantile dotplots using the quantiles argument to stat_heapinterval/stat_heap
-and stat_dist_heapinterval/stat_dist_heap. Generally follows the naming scheme and
+generation of quantile dotplots using the quantiles argument to stat_dotsinterval/stat_dots
+and stat_dist_dotsinterval/stat_dist_dots. Generally follows the naming scheme and
 arguments of the geom_slabinterval and stat_slabinterval family of
 geoms and stats." />
 
@@ -148,56 +148,56 @@ geoms and stats." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Automatic dotplots ("heaps"), heap + intervals, and quantile dotplots (ggplot geom)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/geom_heapinterval.R'><code>R/geom_heapinterval.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/stat_heapinterval.R'><code>R/stat_heapinterval.R</code></a></small>
-    <div class="hidden name"><code>geom_heapinterval.Rd</code></div>
+    <h1>Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/geom_dotsinterval.R'><code>R/geom_dotsinterval.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/stat_dotsinterval.R'><code>R/stat_dotsinterval.R</code></a></small>
+    <div class="hidden name"><code>geom_dotsinterval.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Geoms and stats for creating dotplots ("heaps") that automatically determines a bin width that
+    <p>Geoms and stats for creating dotplots that automatically determines a bin width that
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-generation of quantile dotplots using the <code>quantiles</code> argument to <code>stat_heapinterval</code>/<code>stat_heap</code>
-and <code>stat_dist_heapinterval</code>/<code>stat_dist_heap</code>. Generally follows the naming scheme and
+generation of quantile dotplots using the <code>quantiles</code> argument to <code>stat_dotsinterval</code>/<code>stat_dots</code>
+and <code>stat_dist_dotsinterval</code>/<code>stat_dist_dots</code>. Generally follows the naming scheme and
 arguments of the <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> and <code><a href='stat_slabinterval.html'>stat_slabinterval</a></code> family of
 geoms and stats.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>geom_heapinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+    <pre class="usage"><span class='fu'>geom_dotsinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>dotsize</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>stackratio</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>geom_heapintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+<span class='fu'>geom_dotsintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>geom_heap</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+<span class='fu'>geom_dots</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>geom_heaph</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+<span class='fu'>geom_dotsh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_heapinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"heapinterval"</span>,
+<span class='fu'>stat_dotsinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dotsinterval"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span>
   <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>stat_heapintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+<span class='fu'>stat_dotsintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_heap</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"heap"</span>,
+<span class='fu'>stat_dots</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dots"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>stat_heaph</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+<span class='fu'>stat_dotsh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_dist_heapinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"heapinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+<span class='fu'>stat_dist_dotsinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dotsinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>100</span>,
   <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>stat_dist_heapintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+<span class='fu'>stat_dist_dotsintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_dist_heap</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"heap"</span>,
+<span class='fu'>stat_dist_dots</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dots"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>stat_dist_heaph</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
+<span class='fu'>stat_dist_dotsh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -302,16 +302,17 @@ more information.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The "heap" geoms are similar to <code>geom_dotplot</code> but with a number of differences:</p>
+    <p>The dots geoms are similar to <code>geom_dotplot</code> but with a number of differences:</p>
 <ul>
-<li><p>Heaps act like slabs in <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> and can be given x positions (or y positions when
+<li><p>Dots geoms act like slabs in <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> and can be given x positions (or y positions when
   in a horizontal orientation).</p></li>
-<li><p>Given the available space to lay out dots, heaps will automatically determine how many bins to use to fit
-  the available space.</p></li>
-<li><p>Heaps use a center-out layout algorithm that guarantees that symmetrical data results in a symmetrical
-  plot and avoids overlapping dots.</p></li>
-<li><p>The shape of the dots in a heap can be changed using the <code>slab_shape</code> aesthetic (when using the
-  <code>heapinterval</code> family) or the <code>shape</code> or <code>slab_shape</code> aesthetic (when using the <code>heap</code> family)</p></li>
+<li><p>Given the available space to lay out dots, the dots geoms will automatically determine how many bins to
+  use to fit the available space.</p></li>
+<li><p>Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
+  symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
+  dots from overlapping each other.</p></li>
+<li><p>The shape of the dots in a in these geoms can be changed using the <code>slab_shape</code> aesthetic (when using the
+  <code>dotsinterval</code> family) or the <code>shape</code> or <code>slab_shape</code> aesthetic (when using the <code>dots</code> family)</p></li>
 </ul>
     <p>The <code>stat_...</code> and <code>stat_dist_...</code> versions of the stats when used with the <code>quantiles</code> argument
 are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
@@ -327,7 +328,7 @@ using a frequency framing that may be easier for laypeople to understand (Kay et
 <li><p><code>thickness</code></p></li>
 <li><p><code>size</code></p></li>
 <li><p><code>group</code></p></li>
-</ul><p>In addition, in their default configuration (paired with geom_heapinterval) the following aesthetics are supported by the underlying geom:</p><ul>
+</ul><p>In addition, in their default configuration (paired with geom_dotsinterval) the following aesthetics are supported by the underlying geom:</p><ul>
 <li><p><code>slab_shape</code></p></li>
 <li><p><code>datatype</code></p></li>
 <li><p><code>alpha</code></p></li>

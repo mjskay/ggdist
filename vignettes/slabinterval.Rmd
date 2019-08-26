@@ -75,8 +75,8 @@ dists_df = tibble(
     "interval[h]",
     "pointinterval[h]",
     "slab[h]",
-    "heap[h]",
-    "heapinterval[h]",
+    "dots[h]",
+    "dotsinterval[h]",
     "histinterval[h]"
     )) %>%
     factor(., levels = .),
@@ -103,8 +103,8 @@ dists_plot = dists_df %>%
     position = position_nudge(y = -.1)) +
   stat_pointintervalh(aes(x = x, y = "pointinterval[h]"), data = hist_df) +
   stat_dist_slabh(data = . %>% filter(geom == "slab[h]"), position = position_nudge(y = - 0.2)) +
-  stat_dist_heapintervalh(data = . %>% filter(geom == "heapinterval[h]"), position = position_nudge(y = - 0.3)) +
-  stat_dist_heaph(data = . %>% filter(geom == "heap[h]"), position = position_nudge(y = - 0.3)) +
+  stat_dist_dotsintervalh(data = . %>% filter(geom == "dotsinterval[h]"), position = position_nudge(y = - 0.3)) +
+  stat_dist_dotsh(data = . %>% filter(geom == "dots[h]"), position = position_nudge(y = - 0.3)) +
   stat_histintervalh(aes(x = x), data = hist_df, position = position_nudge(y = - 0.4)) +
   scale_slab_alpha_continuous(guide = FALSE) +
   scale_x_continuous(limits = c(0,8), expand = c(0,0)) +
@@ -124,8 +124,8 @@ annotation_plot = tribble(
     "interval[h]",         c("stat_...", "stat_dist_...", "geom_..."),
     "pointinterval[h]",    c("stat_...", "stat_dist_...", "geom_..."),
     "slab[h]",             c("stat_...", "stat_dist_...", "geom_..."),
-    "heapinterval[h]",     c("stat_...", "stat_dist_...", "geom_..."),
-    "heap[h]",             c("stat_...", "stat_dist_...", "geom_..."),
+    "dotsinterval[h]",     c("stat_...", "stat_dist_...", "geom_..."),
+    "dots[h]",             c("stat_...", "stat_dist_...", "geom_..."),
     "histinterval[h]",     c("stat_..."),
   ) %>%
   unnest(prefix) %>%

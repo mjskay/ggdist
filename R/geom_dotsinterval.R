@@ -5,10 +5,10 @@
 
 
 
-# heap_grob ---------------------------------------------------------------
+# dots_grob ---------------------------------------------------------------
 
 #' @importFrom ggplot2 .stroke .pt
-heap_grob = function(data, max_height, x, y,
+dots_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1, stackratio = 1, side = "top"
 ) {
@@ -20,14 +20,14 @@ heap_grob = function(data, max_height, x, y,
   gTree(
     datas = datas, max_height = max_height, x_ = x, y_ = y,
     dotsize = dotsize, stackratio = stackratio, side = side,
-    name = name, gp = gp, vp = vp, cl = "heap_grob"
+    name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
 }
 
 
 #' @importFrom grDevices nclass.Sturges
 #' @export
-makeContent.heap_grob = function(x) {
+makeContent.dots_grob = function(x) {
   grob_ = x
   datas = grob_$datas
   max_height = grob_$max_height
@@ -183,7 +183,7 @@ makeContent.heap_grob = function(x) {
 
 # panel drawing function -------------------------------------------------------
 
-draw_slabs_heap = function(self, s_data, panel_params, coord,
+draw_slabs_dots = function(self, s_data, panel_params, coord,
   side, scale, orientation, justification, normalize,
   child_params
 ) {
@@ -196,7 +196,7 @@ draw_slabs_heap = function(self, s_data, panel_params, coord,
   ))
 
   if (!coord$is_linear()) {
-    stop("geom_heapinterval does not work properly with non-linear coordinates.")
+    stop("geom_dotsinterval does not work properly with non-linear coordinates.")
   }
   # Swap axes if using coord_flip
   if (inherits(coord, "CoordFlip")) {
@@ -205,9 +205,9 @@ draw_slabs_heap = function(self, s_data, panel_params, coord,
   }
   s_data = coord$transform(s_data, panel_params)
 
-  # draw the heap grob (which will draw dotplots for all the slabs)
+  # draw the dots grob (which will draw dotplots for all the slabs)
   max_height = max(s_data[[ymax]] - s_data[[ymin]])
-  slab_grobs = list(heap_grob(s_data, max_height, x, y,
+  slab_grobs = list(dots_grob(s_data, max_height, x, y,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,
       side = side
@@ -223,35 +223,36 @@ draw_slabs_heap = function(self, s_data, panel_params, coord,
 }
 
 
-# geom_heapinterval ---------------------------------------------------------------
+# geom_dotsinterval ---------------------------------------------------------------
 
-#' Automatic dotplots ("heaps"), heap + intervals, and quantile dotplots (ggplot geom)
+#' Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)
 #'
-#' Geoms and stats for creating dotplots ("heaps") that automatically determines a bin width that
+#' Geoms and stats for creating dotplots that automatically determines a bin width that
 #' ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-#' generation of quantile dotplots using the \code{quantiles} argument to \code{stat_heapinterval}/\code{stat_heap}
-#' and \code{stat_dist_heapinterval}/\code{stat_dist_heap}. Generally follows the naming scheme and
+#' generation of quantile dotplots using the \code{quantiles} argument to \code{stat_dotsinterval}/\code{stat_dots}
+#' and \code{stat_dist_dotsinterval}/\code{stat_dist_dots}. Generally follows the naming scheme and
 #' arguments of the \code{\link{geom_slabinterval}} and \code{\link{stat_slabinterval}} family of
 #' geoms and stats.
 #'
-#' The "heap" geoms are similar to \code{\link{geom_dotplot}} but with a number of differences:
+#' The dots geoms are similar to \code{\link{geom_dotplot}} but with a number of differences:
 #'
 #' \itemize{
-#'   \item Heaps act like slabs in \code{\link{geom_slabinterval}} and can be given x positions (or y positions when
+#'   \item Dots geoms act like slabs in \code{\link{geom_slabinterval}} and can be given x positions (or y positions when
 #'   in a horizontal orientation).
-#'   \item Given the available space to lay out dots, heaps will automatically determine how many bins to use to fit
-#'   the available space.
-#'   \item Heaps use a center-out layout algorithm that guarantees that symmetrical data results in a symmetrical
-#'   plot and avoids overlapping dots.
-#'   \item The shape of the dots in a heap can be changed using the \code{slab_shape} aesthetic (when using the
-#'   \code{heapinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{heap} family)
+#'   \item Given the available space to lay out dots, the dots geoms will automatically determine how many bins to
+#'   use to fit the available space.
+#'   \item Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
+#'   symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
+#'   dots from overlapping each other.
+#'   \item The shape of the dots in a in these geoms can be changed using the \code{slab_shape} aesthetic (when using the
+#'   \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
 #' }
 #'
 #' The \code{stat_...} and \code{stat_dist_...} versions of the stats when used with the \code{quantiles} argument
 #' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
 #' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 #'
-#' @eval rd_slabinterval_aesthetics(geom = GeomHeapinterval, geom_name = "geom_heapinterval", stat = StatHeapinterval)
+#' @eval rd_slabinterval_aesthetics(geom = GeomDotsinterval, geom_name = "geom_dotsinterval", stat = StatDotsinterval)
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_slabinterval
 #' @param ...  Other arguments passed to \code{\link{layer}}.
@@ -283,7 +284,7 @@ draw_slabs_heap = function(self, s_data, panel_params, coord,
 #' @importFrom rlang %||%
 #' @import grid
 #' @export
-geom_heapinterval = function(
+geom_dotsinterval = function(
   mapping = NULL,
   data = NULL,
   stat = "identity",
@@ -303,7 +304,7 @@ geom_heapinterval = function(
     data = data,
     stat = stat,
     position = position,
-    geom = GeomHeapinterval,
+    geom = GeomDotsinterval,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
 
@@ -315,7 +316,7 @@ geom_heapinterval = function(
     )
   )
 }
-GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
+GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   default_aes = defaults(aes(
     slab_shape = NULL
   ), GeomSlabinterval$default_aes),
@@ -393,7 +394,7 @@ GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
     data
   },
 
-  draw_slabs = draw_slabs_heap,
+  draw_slabs = draw_slabs_dots,
 
   draw_key_slab = function(self, data, key_data, params, size) {
     # slab key is different from usual - it's actually a point!
@@ -419,14 +420,14 @@ GeomHeapinterval = ggproto("GeomHeapinterval", GeomSlabinterval,
 
 # shortcut geoms ----------------------------------------------------------
 #' @export
-#' @rdname geom_heapinterval
-geom_heapintervalh = function(..., orientation = "horizontal") {
-  geom_heapinterval(..., orientation = orientation)
+#' @rdname geom_dotsinterval
+geom_dotsintervalh = function(..., orientation = "horizontal") {
+  geom_dotsinterval(..., orientation = orientation)
 }
 
 #' @export
-#' @rdname geom_heapinterval
-geom_heap = function(
+#' @rdname geom_dotsinterval
+geom_dots = function(
   mapping = NULL,
   data = NULL,
   stat = "identity",
@@ -443,7 +444,7 @@ geom_heap = function(
     data = data,
     stat = stat,
     position = position,
-    geom = GeomHeap,
+    geom = GeomDots,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
 
@@ -457,11 +458,11 @@ geom_heap = function(
     )
   )
 }
-GeomHeap = ggproto("GeomHeap", GeomHeapinterval,
-  # override these from GeomSlabinterval instead of GeomHeapinterval
-  # because we want to directly change the base versions, which in geom_heap
-  # correspond to shape/size/colour of the dots in the heap but in
-  # geom_heapinterval do not
+GeomDots = ggproto("GeomDots", GeomDotsinterval,
+  # override these from GeomSlabinterval instead of GeomDotsinterval
+  # because we want to directly change the base versions, which in geom_dots
+  # correspond to shape/size/colour of the dots in the geom but in
+  # geom_dotsinterval do not
   default_key_aes = defaults(aes(
     shape = 21,
     size = 0.75,
@@ -469,7 +470,7 @@ GeomHeap = ggproto("GeomHeap", GeomHeapinterval,
   ), GeomSlabinterval$default_key_aes),
 
   override_slab_aesthetics = function(self, s_data) {
-    # we define these differently from geom_heapinterval to make this easier to use on its own
+    # we define these differently from geom_dotsinterval to make this easier to use on its own
     s_data$colour = s_data$slab_colour %||% s_data$colour
     s_data$fill = s_data$slab_fill %||% s_data$fill
     s_data$alpha = s_data$slab_alpha %||% s_data$alpha
@@ -481,7 +482,7 @@ GeomHeap = ggproto("GeomHeap", GeomHeapinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
-  ), GeomHeapinterval$default_params),
+  ), GeomDotsinterval$default_params),
 
   draw_key_slab = function(self, data, key_data, params, size) {
     # can drop all the complicated checks from this key since it's just one geom
@@ -494,10 +495,10 @@ GeomHeap = ggproto("GeomHeap", GeomHeapinterval,
   }
 )
 # have to unset these here because defaults() does not treat NULLs as unsetting values
-GeomHeap$default_key_aes$slab_colour = NULL
-GeomHeap$default_key_aes$slab_size = NULL
+GeomDots$default_key_aes$slab_colour = NULL
+GeomDots$default_key_aes$slab_size = NULL
 #' @export
-#' @rdname geom_heapinterval
-geom_heaph = function(..., orientation = "horizontal") {
-  geom_heap(..., orientation = orientation)
+#' @rdname geom_dotsinterval
+geom_dotsh = function(..., orientation = "horizontal") {
+  geom_dots(..., orientation = orientation)
 }

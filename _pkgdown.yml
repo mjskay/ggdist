@@ -92,16 +92,19 @@ reference:
   - geom_lineribbon
   - geom_pointinterval
   - geom_pointintervalh
+  - geom_dotsinterval
   - stat_interval
   - stat_intervalh
   - stat_lineribbon
   - stat_pointinterval
   - stat_pointintervalh
+  - stat_dotsinterval
 
 - title: Visualizing analytical distributions
   desc:  Stats, geoms, and helper functions for visualizing analytical distributions, such as priors
   contents:
   - stat_dist_slabinterval
+  - stat_dist_dotsinterval
   - parse_dist
   - lkjcorr_marginal
   - marginalize_lkjcorr
