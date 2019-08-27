@@ -47,13 +47,9 @@ makeContent.dots_grob = function(x) {
     xspread = xrange[[2]] - xrange[[1]]
     if (is.null(bin_width)) {
       nbins = floor(nbins)
-      # this ensures that datasets with an even (resp odd) number of items have an
-      # even (resp odd) number of bins so that symmetrical distributions look symmetrical.
-      nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
       bin_width = xspread / nbins
     } else {
-      nbins = xspread / bin_width
-      nbins = nbins + (nbins %% 2 != nrow(d) %% 2)
+      nbins = max(floor(xspread / bin_width), 1)
     }
     binning = bin_method(d[[x]], bin_width)
     max_bin_count = max(tabulate(binning$bins))
@@ -75,13 +71,14 @@ makeContent.dots_grob = function(x) {
         axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
     } else {
       # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
+      max_y_spacing = y_spacing
       max_bin_width = bin_width
     }
 
     as.list(environment())
   }
   is_valid_heap_spec = function(h) {
-    h$max_bin_count * h$y_spacing <= max_height
+    h$max_bin_count * h$max_y_spacing <= max_height
   }
 
   # find the best bin widths across all the heaps we are going to draw
@@ -90,20 +87,20 @@ makeContent.dots_grob = function(x) {
     xspread = xrange[[2]] - xrange[[1]]
 
     # figure out a reasonable minimum number of bins based on histogram binning
-    min_h = heap_spec(d, nclass.Sturges(d[[x]]))
+    if (nrow(d) <= 1) {
+      min_h = heap_spec(d, nbins = 1)
+    } else {
+      min_h = heap_spec(d, nbins = min(nclass.scott(d[[x]]), nclass.FD(d[[x]]), nclass.Sturges(d[[x]])))
+    }
 
     if (!is_valid_heap_spec(min_h)) {
-      # figure out a maxiumum number of bins based on data resolution
-      max_h = heap_spec(d, xspread / resolution(d[[x]]))
+      # figure out a maximum number of bins based on data resolution
+      max_h = heap_spec(d, bin_width = resolution(d[[x]]))
 
-      # N.B. we search in increments of 2 instead of 1 here because heap_spec
-      # guarantees that datasets with an even (resp odd) number of items have
-      # an even (resp odd) number of bins, which both guarantees symmetrical
-      # distributions look symmetrical and cuts our search space in half.
       if (max_h$nbins <= min_h$nbins) {
         # even at data resolution there aren't enough bins, not much we can do...
         h = min_h
-      } else if (max_h$nbins == min_h$nbins + 2) {
+      } else if (max_h$nbins == min_h$nbins + 1) {
         # nowhere to search, use maximum number of bins
         h = max_h
       } else {
@@ -112,14 +109,14 @@ makeContent.dots_grob = function(x) {
           h = heap_spec(d, (min_h$nbins + max_h$nbins) / 2)
           if (is_valid_heap_spec(h)) {
             # heap spec is valid, search downwards
-            if (h$nbins - 2 <= min_h$nbins) {
+            if (h$nbins - 1 <= min_h$nbins) {
               # found it, we're done
               break
             }
             max_h = h
           } else {
             # heap spec is not valid, search upwards
-            if (h$nbins + 2 >= max_h$nbins) {
+            if (h$nbins + 1 >= max_h$nbins) {
               # found it, we're done
               h = max_h
               break

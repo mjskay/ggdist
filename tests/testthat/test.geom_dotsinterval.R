@@ -40,6 +40,10 @@ test_that("vanilla dots geoms and stats work", {
     p + stat_dotsh(aes(y = dist, x = x, color = x > 2.45))
   )
 
+  vdiffr::expect_doppelganger("stat_dotsh with a group with 2 dots",
+    p + stat_dotsh(aes(y = dist, x = x, color = x > 2.41))
+  )
+
 })
 
 test_that("stat_dist_dots[interval] works", {
