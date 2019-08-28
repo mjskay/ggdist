@@ -17,7 +17,8 @@
 \usage{
 geom_dotsinterval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., dotsize = 1, stackratio = 1,
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+  binwidth = NA, na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE)
 
 geom_dotsintervalh(..., orientation = "horizontal")
 
@@ -84,6 +85,9 @@ wide as the bin width.}
 
 \item{stackratio}{The distance between the center of the dots in the same stack relative to the bin height. The
 default, \code{1}, makes dots in the same stack just touch each other.}
+
+\item{binwidth}{The binwidth to use for drawing the dotplots. The default value, \code{NA}, will dynamically select
+a binwidth based on the size of the plot when drawn.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

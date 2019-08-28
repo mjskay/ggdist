@@ -57,11 +57,13 @@ define_orientation_variables = function(orientation) {
     f$ymin = "ymin"
     f$ymax = "ymax"
     f$yend = "yend"
+    f$y.range = "y.range"
 
     f$x = "x"
     f$xmin = "xmin"
     f$xmax = "xmax"
     f$xend = "xend"
+    f$x.range = "x.range"
   } else if (orientation == "vertical") {
     f$height = "width"
 
@@ -69,11 +71,13 @@ define_orientation_variables = function(orientation) {
     f$ymin = "xmin"
     f$ymax = "xmax"
     f$yend = "xend"
+    f$y.range = "x.range"
 
     f$x = "y"
     f$xmin = "ymin"
     f$xmax = "ymax"
     f$xend = "yend"
+    f$x.range = "y.range"
   } else {
     stop("Unknown orientation: `", orientation, "`")
   }

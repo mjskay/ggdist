@@ -10,7 +10,8 @@
 #' @importFrom ggplot2 .stroke .pt
 dots_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL,
-  dotsize = 1, stackratio = 1, side = "top"
+  dotsize = 1, stackratio = 1, binwidth = NA,
+  side = "top"
 ) {
   datas = data %>%
     arrange_at(x) %>%
@@ -19,7 +20,8 @@ dots_grob = function(data, max_height, x, y,
 
   gTree(
     datas = datas, max_height = max_height, x_ = x, y_ = y,
-    dotsize = dotsize, stackratio = stackratio, side = side,
+    dotsize = dotsize, stackratio = stackratio, binwidth = binwidth,
+    side = side,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
 }
@@ -39,6 +41,7 @@ makeContent.dots_grob = function(x) {
   sizeratio = 1.43
   stackratio = 1.07 * grob_$stackratio
   dotsize = grob_$dotsize
+  bin_width = grob_$binwidth
 
   # create a specification for a heap of dots, which includes things like
   # what the bins are, what the dot widths are, etc.
@@ -81,58 +84,60 @@ makeContent.dots_grob = function(x) {
     h$max_bin_count * h$max_y_spacing <= max_height
   }
 
-  # find the best bin widths across all the heaps we are going to draw
-  max_bin_widths = map_dbl(datas, function(d) {
-    xrange = range(d[[x]])
-    xspread = xrange[[2]] - xrange[[1]]
+  if (is.na(bin_width)) {
+    # find the best bin widths across all the heaps we are going to draw
+    max_bin_widths = map_dbl(datas, function(d) {
+      xrange = range(d[[x]])
+      xspread = xrange[[2]] - xrange[[1]]
 
-    # figure out a reasonable minimum number of bins based on histogram binning
-    if (nrow(d) <= 1) {
-      min_h = heap_spec(d, nbins = 1)
-    } else {
-      min_h = heap_spec(d, nbins = min(nclass.scott(d[[x]]), nclass.FD(d[[x]]), nclass.Sturges(d[[x]])))
-    }
-
-    if (!is_valid_heap_spec(min_h)) {
-      # figure out a maximum number of bins based on data resolution
-      max_h = heap_spec(d, bin_width = resolution(d[[x]]))
-
-      if (max_h$nbins <= min_h$nbins) {
-        # even at data resolution there aren't enough bins, not much we can do...
-        h = min_h
-      } else if (max_h$nbins == min_h$nbins + 1) {
-        # nowhere to search, use maximum number of bins
-        h = max_h
+      # figure out a reasonable minimum number of bins based on histogram binning
+      if (nrow(d) <= 1) {
+        min_h = heap_spec(d, nbins = 1)
       } else {
-        # use binary search to find a reasonable number of bins
-        repeat {
-          h = heap_spec(d, (min_h$nbins + max_h$nbins) / 2)
-          if (is_valid_heap_spec(h)) {
-            # heap spec is valid, search downwards
-            if (h$nbins - 1 <= min_h$nbins) {
-              # found it, we're done
-              break
+        min_h = heap_spec(d, nbins = min(nclass.scott(d[[x]]), nclass.FD(d[[x]]), nclass.Sturges(d[[x]])))
+      }
+
+      if (!is_valid_heap_spec(min_h)) {
+        # figure out a maximum number of bins based on data resolution
+        max_h = heap_spec(d, bin_width = resolution(d[[x]]))
+
+        if (max_h$nbins <= min_h$nbins) {
+          # even at data resolution there aren't enough bins, not much we can do...
+          h = min_h
+        } else if (max_h$nbins == min_h$nbins + 1) {
+          # nowhere to search, use maximum number of bins
+          h = max_h
+        } else {
+          # use binary search to find a reasonable number of bins
+          repeat {
+            h = heap_spec(d, (min_h$nbins + max_h$nbins) / 2)
+            if (is_valid_heap_spec(h)) {
+              # heap spec is valid, search downwards
+              if (h$nbins - 1 <= min_h$nbins) {
+                # found it, we're done
+                break
+              }
+              max_h = h
+            } else {
+              # heap spec is not valid, search upwards
+              if (h$nbins + 1 >= max_h$nbins) {
+                # found it, we're done
+                h = max_h
+                break
+              }
+              min_h = h
             }
-            max_h = h
-          } else {
-            # heap spec is not valid, search upwards
-            if (h$nbins + 1 >= max_h$nbins) {
-              # found it, we're done
-              h = max_h
-              break
-            }
-            min_h = h
           }
         }
+      } else {
+        h = min_h
       }
-    } else {
-      h = min_h
-    }
 
-    h$max_bin_width
-  })
+      h$max_bin_width
+    })
 
-  bin_width = min(max_bin_widths)
+    bin_width = min(max_bin_widths)
+  }
 
   # now, draw all the heaps using the same bin width
   children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
@@ -202,11 +207,17 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
   s_data = coord$transform(s_data, panel_params)
 
+  if (!is.na(child_params$binwidth)) {
+    #binwidth is expressed in terms of data coordinates, need to translate into standardized space
+    child_params$binwidth = child_params$binwidth / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
+  }
+
   # draw the dots grob (which will draw dotplots for all the slabs)
   max_height = max(s_data[[ymax]] - s_data[[ymin]])
   slab_grobs = list(dots_grob(s_data, max_height, x, y,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,
+      binwidth = child_params$binwidth,
       side = side
     ))
 
@@ -258,6 +269,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' wide as the bin width.
 #' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
 #' default, \code{1}, makes dots in the same stack just touch each other.
+#' @param binwidth The binwidth to use for drawing the dotplots. The default value, \code{NA}, will dynamically select
+#' a binwidth based on the size of the plot when drawn.
 #' @param quantiles For the \code{stat_} and \code{stat_dist_} stats, setting this to a value other than \code{NA}
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for \code{stat_}) or a dotplot
 #' of quantiles from the distribution (for \code{stat_dist_}). The value of \code{quantiles} determines the number
@@ -290,6 +303,7 @@ geom_dotsinterval = function(
   ...,
   dotsize = 1,
   stackratio = 1,
+  binwidth = NA,
 
   na.rm = FALSE,
 
@@ -307,6 +321,10 @@ geom_dotsinterval = function(
 
     params = list(
       normalize = "none",
+
+      dotsize = dotsize,
+      stackratio = stackratio,
+      binwidth = binwidth,
 
       na.rm = na.rm,
       ...
@@ -332,13 +350,15 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
   extra_params = c(GeomSlabinterval$extra_params,
     "dotsize",
-    "stackratio"
+    "stackratio",
+    "binwidth"
   ),
 
   default_params = defaults(list(
     normalize = "none",
     dotsize = 1,
-    stackratio = 1
+    stackratio = 1,
+    binwidth = NA
   ), GeomSlabinterval$default_params),
 
   draw_panel = function(self, data, panel_params, coord,
@@ -357,6 +377,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
     dotsize = self$default_params$dotsize,
     stackratio = self$default_params$stackratio,
+    binwidth = self$default_params$binwidth,
 
     child_params = list()
   ) {
@@ -376,7 +397,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
       child_params = list(
         dotsize = dotsize,
-        stackratio = stackratio
+        stackratio = stackratio,
+        binwidth = binwidth
       )
     )
   },
