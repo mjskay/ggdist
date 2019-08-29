@@ -46,7 +46,7 @@ add_default_computed_aesthetics = function(l, default_mapping) {
 # function (for convenience): these are variables (typically aesthetics)
 # that differ depending on whether the geom's orientation is horizontal
 # or vertical. They are named assuming a horizontal orientation.
-globalVariables(c("height", "y", "ymin", "ymax", "yend", "x", "xmin", "xmax", "xend"))
+globalVariables(c("height", "y", "ymin", "ymax", "yend", "x", "xmin", "xmax", "xend","x.range","y.range"))
 define_orientation_variables = function(orientation) {
   f = parent.frame()
 

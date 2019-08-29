@@ -27,7 +27,7 @@ dots_grob = function(data, max_height, x, y,
 }
 
 
-#' @importFrom grDevices nclass.Sturges
+#' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
 #' @export
 makeContent.dots_grob = function(x) {
   grob_ = x
