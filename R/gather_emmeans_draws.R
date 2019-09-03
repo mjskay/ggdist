@@ -105,7 +105,7 @@ gather_emmeans_samples = function(...) {
 #' }
 #' @importFrom magrittr %>%
 #' @importFrom purrr map_dfr
-#' @importFrom dplyr as_tibble
+#' @importFrom tibble as_tibble
 #' @importFrom rlang syms
 #' @export
 gather_emmeans_draws = function(object, value = ".value", ...) UseMethod("gather_emmeans_draws")

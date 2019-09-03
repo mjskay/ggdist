@@ -36,7 +36,8 @@
 #'   compose_data(site = x_at_y(site, plot))
 #'
 #' @importFrom rlang enquo quo_label is_integerish
-#' @importFrom dplyr tibble group_by slice distinct left_join
+#' @importFrom dplyr group_by slice distinct left_join
+#' @importFrom tibble tibble
 #' @importFrom magrittr %$%
 #' @export
 x_at_y = function(x, y, missing = NA) {

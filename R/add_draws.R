@@ -70,8 +70,8 @@ globalVariables(".draw")
 #' }
 #' @importFrom magrittr %>%
 #' @importFrom tidyr unnest
-#' @importFrom dplyr tibble bind_cols
-#' @importFrom tibble is_tibble
+#' @importFrom dplyr bind_cols
+#' @importFrom tibble tibble is_tibble
 #' @export
 add_draws = function(data, draws, value = ".value") {
   groups = union(colnames(data), ".row")

@@ -72,7 +72,7 @@
 #'
 #' }
 #'
-#' @importFrom dplyr tibble
+#' @importFrom tibble tibble
 #' @importFrom purrr map_dfr
 #' @export
 parse_dist = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
