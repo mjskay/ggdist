@@ -69,15 +69,16 @@ globalVariables(".draw")
 #' }
 #' }
 #' @importFrom magrittr %>%
-#' @importFrom tidyr unnest
+#' @importFrom tidyr unnest_legacy
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble tibble is_tibble
+#' @importFrom rlang sym
 #' @export
 add_draws = function(data, draws, value = ".value") {
   groups = union(colnames(data), ".row")
 
   add_draws_list(data, draws, value = value) %>%
-    unnest(c(.draw, !!value)) %>%
+    unnest_legacy(.draw, !!sym(value)) %>%
     group_by_at(groups)
 }
 

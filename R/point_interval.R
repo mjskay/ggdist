@@ -145,7 +145,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at
-#' @importFrom tidyr unnest
+#' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @export
 point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
@@ -209,7 +209,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       # return multiple intervals, hence map() here and unnest() below
       data[[".lower"]] = map(intervals, ~ .[, 1])
       data[[".upper"]] = map(intervals, ~ .[, 2])
-      data = unnest(data, c(".lower", ".upper"))
+      data = unnest_legacy(data, .lower, .upper)
 
       data[[".width"]] = p
 

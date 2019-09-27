@@ -178,7 +178,7 @@ tidy_draws.stanreg = function(model) {
   mcmc_list = as.mcmc.list(lapply(seq_len(n_chain), function(chain) as.mcmc(sample_matrix[, chain, ]))) # nolint
   parameter_draws = tidy_draws(mcmc_list)
 
-  diagnostics_draws = map_dfr(rstan::get_sampler_params(model$stanfit, inc_warmup = FALSE), as_tibble)
+  diagnostics_draws = map_dfr(rstan::get_sampler_params(model$stanfit, inc_warmup = FALSE), as.data.frame)
 
   bind_cols(parameter_draws, diagnostics_draws)
 }
@@ -210,7 +210,7 @@ tidy_draws.brmsfit = function(model) {
 
   parameter_draws = tidy_draws(brms::as.mcmc(model))
 
-  diagnostics_draws = map_dfr(rstan::get_sampler_params(model$fit, inc_warmup = FALSE), as_tibble)
+  diagnostics_draws = map_dfr(rstan::get_sampler_params(model$fit, inc_warmup = FALSE), as.data.frame)
 
   bind_cols(parameter_draws, diagnostics_draws)
 }

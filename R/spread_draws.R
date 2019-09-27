@@ -424,12 +424,11 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
         stringsAsFactors = FALSE
       )))
 
-    long_draws = long_draws %>%
-      #next, split dimensions in variable names into columns
-      separate_(".variable", c(".variable", ".dimensions"), sep = "\\[|\\]") %>%
-      separate_(".dimensions", temp_dimension_names, sep = dimension_sep_regex,
-        convert = TRUE #converts dimensions to numerics if applicable
-      )
+    #next, split dimensions in variable names into columns
+    long_draws = separate(long_draws, ".variable", c(".variable", ".dimensions"), sep = "\\[|\\]")
+    long_draws = separate(long_draws, ".dimensions", temp_dimension_names, sep = dimension_sep_regex,
+      convert = TRUE #converts dimensions to numerics if applicable
+    )
 
 
     if (length(nested_dimension_names) > 0) {
@@ -437,13 +436,12 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
       long_draws = nest_dimensions_(long_draws, temp_dimension_names, nested_dimension_names)
     }
 
-    long_draws %>%
-      #now, make the value of each variable a column
-      spread_(".variable", ".value") %>%
-      #drop the columns that correpond to blank dimensions in the original spec
-      select(-starts_with(".drop")) %>%
-      #group by the desired dimensions so that we return a pre-grouped data frame to the user
-      group_by_at(dimension_names)
+    #now, make the value of each variable a column
+    long_draws = spread(long_draws, ".variable", ".value")
+    #drop the columns that correspond to blank dimensions in the original spec
+    long_draws[, grep("^\\.drop", names(long_draws), value = TRUE)] = NULL
+    #group by the desired dimensions so that we return a pre-grouped data frame to the user
+    group_by_at(long_draws, dimension_names)
   }
 }
 
