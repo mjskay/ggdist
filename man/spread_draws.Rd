@@ -5,9 +5,11 @@
 \alias{spread_draws}
 \title{Extract draws of variables in a Bayesian model fit into a tidy data format}
 \usage{
-gather_draws(model, ..., regex = FALSE, sep = "[, ]")
+gather_draws(model, ..., regex = FALSE, sep = "[, ]", n = NULL,
+  seed = NULL)
 
-spread_draws(model, ..., regex = FALSE, sep = "[, ]")
+spread_draws(model, ..., regex = FALSE, sep = "[, ]", n = NULL,
+  seed = NULL)
 }
 \arguments{
 \item{model}{A supported Bayesian model fit. Tidybayes supports a variety of model objects;
@@ -20,6 +22,10 @@ for a full list of supported models, see \link{tidybayes-models}.}
 regular expression and number of dimensions are included in the output. Default \code{FALSE}.}
 
 \item{sep}{Separator used to separate dimensions in variable names, as a regular expression.}
+
+\item{n}{The number of draws to return, or \code{NULL} to return all draws.}
+
+\item{seed}{A seed to use when subsampling draws (i.e. when \code{n} is not \code{NULL}).}
 }
 \value{
 A data frame.

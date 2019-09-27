@@ -227,6 +227,8 @@ spread_samples = function(...) {
 #' @param regex If \code{TRUE}, variable names are treated as regular expressions and all column matching the
 #' regular expression and number of dimensions are included in the output. Default \code{FALSE}.
 #' @param sep Separator used to separate dimensions in variable names, as a regular expression.
+#' @param n The number of draws to return, or \code{NULL} to return all draws.
+#' @param seed A seed to use when subsampling draws (i.e. when \code{n} is not \code{NULL}).
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{recover_types}}, \code{\link{compose_data}}.
@@ -257,7 +259,11 @@ spread_samples = function(...) {
 #' @importFrom dplyr inner_join group_by_at
 #' @rdname spread_draws
 #' @export
-spread_draws = function(model, ..., regex = FALSE, sep = "[, ]") {
+spread_draws = function(model, ..., regex = FALSE, sep = "[, ]", n = NULL, seed = NULL) {
+  if (!is.null(n)) {
+    model = sample_draws_from_model_(model, n, seed)
+  }
+
   tidysamples = lapply(enquos(...), function(variable_spec) {
     spread_draws_(model, variable_spec, regex = regex, sep = sep)
   })
@@ -556,6 +562,16 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
 
 
 # helpers -----------------------------------------------------------------
+
+# sample draws froma model, keeping prototype constructor information
+sample_draws_from_model_ = function(model, n, seed) {
+  if (!is.null(seed)) set.seed(seed)
+
+  constructors = attr(model, "constructors")
+  model = sample_n(tidy_draws(model), n)
+  attr(model, "constructors") = constructors
+  model
+}
 
 # get a string for printing variable names in specs for error
 printable_variable_names = function(variable_names) {
