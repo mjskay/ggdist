@@ -78,7 +78,7 @@ test_that("tidy_draws works with rstan", {
 # jags --------------------------------------------------------------------
 test_that("tidy_draws works with runjags", {
   # runjags will still load without JAGS, it just fails later (so skipping on runjags alone will
-  # not work correctly if runjags is installed but the system does not have JAGS). So we skip if 
+  # not work correctly if runjags is installed but the system does not have JAGS). So we skip if
   # rjags does not load as well, as rjags will correctly fail to load if JAGS isn't installed.
   skip_if_not_installed("rjags")
   skip_if_not_installed("runjags")
@@ -157,4 +157,56 @@ test_that("tidy_draws works with jagsUI", {
     as_tibble()
 
   expect_equal(tidy_draws(m), draws_tidy)
+})
+
+
+
+# existing data frames ----------------------------------------------------
+test_that("tidy_draws is idempotent on existing data frames", {
+  data(RankCorr)
+
+  tidy_rc = tidy_draws(RankCorr)
+
+  expect_identical(tidy_draws(tidy_rc), tidy_rc)
+})
+
+test_that("tidy_draws works on existing data frames with numeric columns", {
+  data(RankCorr)
+
+  tidy_rc = tidy_draws(RankCorr)
+  tidy_rc_n = tidy_rc
+  tidy_rc_n$.chain = as.numeric(tidy_rc_n$.chain)
+  tidy_rc_n$.iteration = as.numeric(tidy_rc_n$.iteration)
+  tidy_rc_n$.draw = as.numeric(tidy_rc_n$.draw)
+
+  expect_identical(tidy_draws(tidy_rc_n), tidy_rc)
+
+  tidy_rc$.chain = NA_integer_
+  tidy_rc$.iteration = NA_integer_
+  tidy_rc_n$.chain = NA
+  tidy_rc_n$.iteration = NA
+
+  expect_identical(tidy_draws(tidy_rc_n), tidy_rc)
+})
+
+test_that("tidy_draws fails on existing data frames with incorrect column types", {
+  data(RankCorr)
+
+  tidy_rc = tidy_draws(RankCorr)
+  tidy_rc$.chain = "a"
+
+  expect_error(tidy_draws(tidy_rc), "The following columns are not integer-like.*\\.chain")
+
+  tidy_rc$.chain = NULL
+
+  expect_error(tidy_draws(tidy_rc), "The following columns.*are missing.*\\.chain")
+})
+
+test_that("tidy_draws fails on existing data frames with incorrect column types", {
+  data(RankCorr)
+
+  tidy_rc = tidy_draws(RankCorr)
+  tidy_rc$.draw = 1
+
+  expect_error(tidy_draws(tidy_rc), "The `\\.draw` column in the input data frame has more than one row per draw")
 })

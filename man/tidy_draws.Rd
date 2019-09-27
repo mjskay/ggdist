@@ -3,6 +3,7 @@
 \name{tidy_draws}
 \alias{tidy_draws}
 \alias{tidy_draws.default}
+\alias{tidy_draws.data.frame}
 \alias{tidy_draws.mcmc.list}
 \alias{tidy_draws.stanfit}
 \alias{tidy_draws.stanreg}
@@ -16,6 +17,8 @@
 tidy_draws(model)
 
 \method{tidy_draws}{default}(model)
+
+\method{tidy_draws}{data.frame}(model)
 
 \method{tidy_draws}{mcmc.list}(model)
 
@@ -58,6 +61,14 @@ To provide support for new models in tidybayes,
 you must provide an implementation of this function \emph{or} an implementation
 of \code{\link[coda]{as.mcmc.list}} (\code{tidy_draws} should work on any model
 with an implementation of \code{\link[coda]{as.mcmc.list}})
+
+\code{tidy_draws} can be applied to a data frame that is already a tidy-format data frame
+of draws, provided it has one row per draw. In other words, it can be applied to data frames
+that have the same format it returns, and it will return the same data frame back, while
+checking to ensure the \code{.chain}, \code{.iteration}, and \code{.draw} columns are all
+integers (converting if possible) and that the \code{.draw} column is unique. This allows
+you to pass already-tidy-format data frames into other tidybayes functions, like
+\code{\link{spread_draws}} or \code{\link{gather_draws}}.
 }
 \examples{
 

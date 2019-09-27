@@ -45,6 +45,14 @@ as_sample_data_frame = function(...) {
 #' of \code{\link[coda]{as.mcmc.list}} (\code{tidy_draws} should work on any model
 #' with an implementation of \code{\link[coda]{as.mcmc.list}})
 #'
+#' \code{tidy_draws} can be applied to a data frame that is already a tidy-format data frame
+#' of draws, provided it has one row per draw. In other words, it can be applied to data frames
+#' that have the same format it returns, and it will return the same data frame back, while
+#' checking to ensure the \code{.chain}, \code{.iteration}, and \code{.draw} columns are all
+#' integers (converting if possible) and that the \code{.draw} column is unique. This allows
+#' you to pass already-tidy-format data frames into other tidybayes functions, like
+#' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
+#'
 #' @param model A supported Bayesian model fit object. See \code{\link{tidybayes-models}} for a list of supported
 #' models.
 #' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
@@ -73,6 +81,51 @@ tidy_draws = function(model) UseMethod("tidy_draws")
 #' @export
 tidy_draws.default = function(model) {
   tidy_draws(as.mcmc.list(model))
+}
+
+#' @rdname tidy_draws
+#' @export
+tidy_draws.data.frame = function(model) {
+  stop_message = paste0(
+    "To use a data frame directly with `tidy_draws()`, it must already be a\n",
+    "  tidy-format data frame of draws: it must have integer-like `.chain`\n",
+    "  `.iteration`, and `.draw` columns with one row per draw.\n",
+    "\n"
+  )
+
+  # iterate over draw index columns to check they are integers, recording if they passed the check
+  # (and cleaning as necessary)
+  check_cols = c(".chain", ".iteration", ".draw")
+  passed = sapply(check_cols, function(col) {
+    col_value = model[[col]]
+
+    if (is.null(col_value)) return(FALSE)
+    if (is.integer(col_value)) return(TRUE)
+    if (is.logical(col_value) || is_integerish(col_value)) {
+      model[[col]] <<- as.integer(col_value)
+      return(TRUE)
+    }
+
+    # if we make it this far, the column did not pass all checks
+    FALSE
+  })
+
+  failed_cols = check_cols[!passed]
+  if (length(failed_cols) > 0) {
+    stop(stop_message,
+      "  The following columns are not integer-like (or are missing):\n",
+      "    ", paste0("`", failed_cols, "`", collapse = ", ")
+    )
+  }
+
+  if (length(unique(model[[".draw"]])) != nrow(model)) {
+    stop(stop_message,
+      "  The `.draw` column in the input data frame has more than one row per draw\n",
+      "  (its values are not unique)."
+    )
+  }
+
+  model
 }
 
 #' @rdname tidy_draws
