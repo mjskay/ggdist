@@ -341,7 +341,7 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
 ## draws: tidy draws, such as reutrned by tidy_draws()
 ## variable_names: a character vector of names of variables
 ## dimension_names: a character vector of dimension names
-#' @importFrom tidyr spread_ separate_ gather_
+#' @importFrom tidyr spread_ separate gather_
 #' @import dplyr
 spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FALSE, sep = "[, ]") {
   if (!regex) {
