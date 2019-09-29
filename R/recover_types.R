@@ -141,15 +141,15 @@ apply_prototypes = function(...) {
 #' }
 #' @export
 recover_types = function(model, ...) {
-  if (!is.list(attr(model, "constructors"))) {
-    attr(model, "constructors") = list()
+  if (!is.list(attr(model, "tidybayes_constructors"))) {
+    attr(model, "tidybayes_constructors") = list()
   }
 
   for (prototypes in list(...)) {
     #we iterate this way instead of building a list directly
     #so that existing names are overwritten
     for (variable_name in names(prototypes)) {
-      attr(model, "constructors")[[variable_name]] = as_constructor(prototypes[[variable_name]])
+      attr(model, "tidybayes_constructors")[[variable_name]] = as_constructor(prototypes[[variable_name]])
     }
   }
 

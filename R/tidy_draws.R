@@ -80,7 +80,9 @@ tidy_draws = function(model) UseMethod("tidy_draws")
 #' @rdname tidy_draws
 #' @export
 tidy_draws.default = function(model) {
-  tidy_draws(as.mcmc.list(model))
+  draws = tidy_draws(as.mcmc.list(model))
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
@@ -92,6 +94,9 @@ tidy_draws.data.frame = function(model) {
     "  `.iteration`, and `.draw` columns with one row per draw.\n",
     "\n"
   )
+
+  # keep the constructors around in case they were set on the original model
+  constructors = attr(model, "tidybayes_constructors")
 
   # iterate over draw index columns to check they are integers, recording if they passed the check
   # (and cleaning as necessary)
@@ -125,13 +130,14 @@ tidy_draws.data.frame = function(model) {
     )
   }
 
+  attr(model, "tidybayes_constructors") = constructors
   model
 }
 
 #' @rdname tidy_draws
 #' @export
 tidy_draws.mcmc.list = function(model) {
-  map_dfr(seq_along(model), function(chain) {
+  draws = map_dfr(seq_along(model), function(chain) {
     #putting tibble() or as_tibble() in here makes this slower, so we put it outside
     #after all the chains have been combined
     n = nrow(model[[chain]])
@@ -149,6 +155,9 @@ tidy_draws.mcmc.list = function(model) {
     )
   }) %>%
     as_tibble()
+
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
@@ -162,7 +171,10 @@ tidy_draws.stanfit = function(model) {
 
   diagnostics_draws = map_dfr(rstan::get_sampler_params(model, inc_warmup = FALSE), as.data.frame)
 
-  bind_cols(parameter_draws, diagnostics_draws)
+  draws = bind_cols(parameter_draws, diagnostics_draws)
+
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
@@ -180,7 +192,10 @@ tidy_draws.stanreg = function(model) {
 
   diagnostics_draws = map_dfr(rstan::get_sampler_params(model$stanfit, inc_warmup = FALSE), as.data.frame)
 
-  bind_cols(parameter_draws, diagnostics_draws)
+  draws = bind_cols(parameter_draws, diagnostics_draws)
+
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
@@ -189,7 +204,9 @@ tidy_draws.runjags = function(model) {
   if (!requireNamespace("runjags", quietly = TRUE)) {
     stop("The `runjags` package is needed for `tidy_draws` to support `runjags` objects.", call. = FALSE) # nocov
   }
-  tidy_draws(as.mcmc.list(model)) # nolint
+  draws = tidy_draws(as.mcmc.list(model))
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
@@ -198,7 +215,9 @@ tidy_draws.jagsUI = function(model) {
   if (!requireNamespace("jagsUI", quietly = TRUE)) {
     stop("The `jagsUI` package is needed for `tidy_draws` to support `jagsUI` objects.", call. = FALSE) # nocov
   }
-  tidy_draws(model$samples)
+  draws = tidy_draws(as.mcmc.list(model$samples))
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
@@ -212,14 +231,20 @@ tidy_draws.brmsfit = function(model) {
 
   diagnostics_draws = map_dfr(rstan::get_sampler_params(model$fit, inc_warmup = FALSE), as.data.frame)
 
-  bind_cols(parameter_draws, diagnostics_draws)
+  draws = bind_cols(parameter_draws, diagnostics_draws)
+
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
 #' @export
 tidy_draws.matrix = function(model) {
   # assume matrix indexed by [iterations, variables]
-  tidy_draws(as.mcmc.list(as.mcmc(model))) # nolint
+  draws = tidy_draws(as.mcmc.list(as.mcmc(model)))
+
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
 
 #' @rdname tidy_draws
@@ -239,8 +264,11 @@ tidy_draws.MCMCglmm = function(model) {
       tidy_draws(draws)
     })
 
-  sol_draws %>%
+  draws = sol_draws %>%
     list() %>%
     c(other_draws) %>%
     reduce(inner_join, by = c(".chain", ".iteration", ".draw"))
+
+  attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
+  draws
 }
