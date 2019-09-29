@@ -24,14 +24,10 @@ gather_samples = function(...) {
 #' @importFrom rlang enquos
 #' @export
 gather_draws = function(model, ..., regex = FALSE, sep = "[, ]", n = NULL, seed = NULL) {
-  if (!is.null(n)) {
-    model = sample_draws_from_model_(model, n, seed)
-  }
+  draws = sample_draws_from_model_(model, n, seed)
 
   tidysamples = lapply(enquos(...), function(variable_spec) {
-    model %>%
-      spread_draws_(variable_spec, regex = regex, sep = sep) %>%
-      gather_variables()
+    gather_variables(spread_draws_(draws, variable_spec, regex = regex, sep = sep))
   })
 
   #get the groups from all the samples --- when we bind them together,

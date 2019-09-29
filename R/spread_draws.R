@@ -260,12 +260,10 @@ spread_samples = function(...) {
 #' @rdname spread_draws
 #' @export
 spread_draws = function(model, ..., regex = FALSE, sep = "[, ]", n = NULL, seed = NULL) {
-  if (!is.null(n)) {
-    model = sample_draws_from_model_(model, n, seed)
-  }
+  draws = sample_draws_from_model_(model, n, seed)
 
   tidysamples = lapply(enquos(...), function(variable_spec) {
-    spread_draws_(model, variable_spec, regex = regex, sep = sep)
+    spread_draws_(draws, variable_spec, regex = regex, sep = sep)
   })
 
   #get the groups from all the samples --- when we join them together,
@@ -287,7 +285,7 @@ spread_draws = function(model, ..., regex = FALSE, sep = "[, ]", n = NULL, seed 
 #' @import dplyr
 #' @importFrom tidyr spread_
 #' @importFrom rlang has_name
-spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
+spread_draws_ = function(draws, variable_spec, regex = FALSE, sep = "[, ]") {
   #parse a variable spec in the form variable_name[dimension_name_1, dimension_name_2, ..] | wide_dimension
   spec = parse_variable_spec(variable_spec)
   variable_names = spec[[1]]
@@ -295,15 +293,15 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   wide_dimension_name = spec[[3]]
 
   #extract the draws into a long format data frame
-  draws = spread_draws_long_(tidy_draws(model), variable_names, dimension_names, regex = regex, sep = sep)
+  long_draws = spread_draws_long_(draws, variable_names, dimension_names, regex = regex, sep = sep)
 
   #convert variable and/or dimensions back into usable data types
-  constructors = attr(model, "constructors")
+  constructors = attr(draws, "tidybayes_constructors")
   if (is.null(constructors)) constructors = list()
   for (column_name in c(variable_names, dimension_names)) {
     if (column_name %in% names(constructors)) {
       #we have a data type constructor for this dimension, convert it
-      draws[[column_name]] = constructors[[column_name]](draws[[column_name]])
+      long_draws[[column_name]] = constructors[[column_name]](long_draws[[column_name]])
     }
   }
 
@@ -314,16 +312,15 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
     if (length(variable_names) != 1) {
       stop("Cannot extract draws from multiple variables in wide format.")
     }
-    draws %>%
-      spread_(wide_dimension_name, variable_names)
+    spread_(long_draws, wide_dimension_name, variable_names)
   }
-  else if (has_name(draws, "..")) {
+  else if (has_name(long_draws, "..")) {
     #a column named ".." is present, use it to form a wide version of the data
     #with numbered names based on the variable name
     if (length(variable_names) != 1) {
       stop("Cannot extract draws from multiple variables in wide format.")
     }
-    draws %>%
+    long_draws %>%
       #the ".." column will have been set as a grouping column because it was
       #specified as a dimension; therefore before we can modify it we have to
       #remove it from the grouping columns on this table (mutate does not
@@ -334,7 +331,7 @@ spread_draws_ = function(model, variable_spec, regex = FALSE, sep = "[, ]") {
   }
   else {
     #no wide column => just return long version
-    draws
+    long_draws
   }
 }
 
@@ -360,7 +357,7 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
     }
 
     variable_names = colnames(draws)[variable_names_index]
-    draws[, c(".chain", ".iteration", ".draw", variable_names)]
+    unnest_legacy(draws[, c(".chain", ".iteration", ".draw", variable_names)])
   }
   else {
     dimension_sep_regex = sep
@@ -409,27 +406,20 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
     # remove nested dimensions from the final grouping dimensions (since they will not be columns after nesting)
     dimension_names = setdiff(dimension_names, c(nested_dimension_names, "."))
 
-    # Make long format data frame of the variables we want to split.
-    # The following code chunk is approximately equivalent to this:
-    #
-    #   long_draws = draws[, c(".chain", ".iteration", ".draw", variable_names)] %>%
-    #     gather_(".variable", ".value", variable_names)
-    #
-    # but takes half as long to run (makes a difference with large samples):
-    long_draws = draws[,c(".chain",".iteration",".draw")] %>%
-      cbind(map_dfr(variable_names, function(variable_name) data.frame(
-        .variable = variable_name,
-        .value = draws[[variable_name]],
-
-        stringsAsFactors = FALSE
-      )))
+    # Make nested data frame of the variables we want to split. Nesting first makes the time for separate()
+    # depend on the number of parameters instead of number of parameters * number of draws
+    nested_draws = draws[, c(".chain", ".iteration", ".draw", variable_names)] %>%
+      summarise_all(list) %>%
+      gather_(".variable", ".value", variable_names)
 
     #next, split dimensions in variable names into columns
-    long_draws = separate(long_draws, ".variable", c(".variable", ".dimensions"), sep = "\\[|\\]")
-    long_draws = separate(long_draws, ".dimensions", temp_dimension_names, sep = dimension_sep_regex,
+    nested_draws = separate(nested_draws, ".variable", c(".variable", ".dimensions"), sep = "\\[|\\]")
+    nested_draws = separate(nested_draws, ".dimensions", temp_dimension_names, sep = dimension_sep_regex,
       convert = TRUE #converts dimensions to numerics if applicable
     )
 
+    # Now go to a long format for everything else...
+    long_draws = unnest_legacy(nested_draws)
 
     if (length(nested_dimension_names) > 0) {
       # some dimensions were requested to be nested as list columns containing arrays
@@ -561,14 +551,16 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
 
 # helpers -----------------------------------------------------------------
 
-# sample draws froma model, keeping prototype constructor information
-sample_draws_from_model_ = function(model, n, seed) {
-  if (!is.null(seed)) set.seed(seed)
+# sample draws from a model
+sample_draws_from_model_ = function(model, n = NULL, seed = NULL) {
+  draws = tidy_draws(model)
 
-  constructors = attr(model, "constructors")
-  model = sample_n(tidy_draws(model), n)
-  attr(model, "constructors") = constructors
-  model
+  if (!is.null(n)) {
+    if (!is.null(seed)) set.seed(seed)
+    draws = sample_n(draws, n)
+  }
+
+  draws
 }
 
 # get a string for printing variable names in specs for error
