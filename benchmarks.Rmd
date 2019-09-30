@@ -1,0 +1,88 @@
+---
+title: "Benchmarks"
+output:  
+  github_document:
+    toc: true
+---
+
+Some rough benchmarks for testing how long things take...
+
+## Setup
+
+```{r setup}
+library(tidyverse)
+library(tidybayes)
+```
+
+## `spread/gather_draws`
+
+```{r}
+k = 50000
+set.seed(1234)
+df = data.frame(
+  .chain = NA,
+  .iteration = NA,
+  .draw = 1:k,
+  `a[2]` = rnorm(k),
+  `b[2]` = rnorm(k),
+  `c[2]` = rnorm(k),
+  `d[2]` = rnorm(k),
+  `e[2]` = rnorm(k),
+  `f[2]` = rnorm(k),
+  `g[2]` = rnorm(k),
+  `h[2]` = rnorm(k),
+  `i[2]` = rnorm(k),
+  `j[2]` = rnorm(k),
+  `k[2]` = rnorm(k),
+  `l[2]` = rnorm(k),
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+) %>%
+  as_tibble()
+df
+```
+
+### Spreading with indices
+
+This should be fairly fast. Last test was ~= 0.03 seconds on `monarch`.
+
+```{r}
+system.time(spread_draws(df, `.`[index], regex = TRUE))
+```
+
+#### Separate-spec version
+
+This is definitely slower than it could be, likely due to use of joins with chain information involved. This could almost
+definitely be made faster if nesting was used all the way up the spread_draws pipeline and chain information added
+at the last possible moment. Last test was ~= 0.35 seconds on `monarch`.
+
+```{r}
+system.time(spread_draws(df, 
+  a[index], b[index], c[index], d[index], e[index], f[index], 
+  g[index], h[index], i[index], j[index], k[index], l[index]
+))
+```
+
+#### Using gather_draws
+
+This is slower than the spread_draws version even though it shouldn't really have to be. This is a result of spread_draws_long_ doing a spread that is later undone by gather_draws. Could either use a flag to skip this (although that is a little complicated as the `|` syntax might need the spread anyway) or rely on switching to nesting throughout the entire pipeline to just make the spread/gather round trip not so costly. Last test was ~= 0.13 seconds on `monarch`.
+
+```{r}
+system.time(gather_draws(df, `.`[index], regex = TRUE))
+```
+
+
+### Array columns
+
+This tends to be slower than spreading without array columns. Last test was ~0.08 seconds on `monarch`.
+
+```{r}
+data(RankCorr)
+system.time(spread_draws(RankCorr, b[.,.]))
+```
+
+And this is currently very slow. Last test was ~0.5 seconds on `monarch`.
+
+```{r}
+system.time(spread_draws(df, a[.]))
+```

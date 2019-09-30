@@ -9,3 +9,4 @@ vignettes/ABC.rda
 vignettes/ABC.rds
 vignettes/*_cache/
 README_cache/
+benchmarks.md
