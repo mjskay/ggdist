@@ -406,9 +406,10 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
     # remove nested dimensions from the final grouping dimensions (since they will not be columns after nesting)
     dimension_names = setdiff(dimension_names, c(nested_dimension_names, "."))
 
-    # Make nested data frame of the variables we want to split. Nesting first makes the time for separate()
-    # depend on the number of parameters instead of number of parameters * number of draws
-    nested_draws = draws[, c(".chain", ".iteration", ".draw", variable_names)] %>%
+    # Make nested data frame of just the variables we want to split, without chain indices (these are
+    # all the same anyway and carrying them around adds a bunch of overhead). Nesting first makes the time
+    # for separate() depend on the number of parameters instead of number of parameters * number of draws
+    nested_draws = draws[, variable_names] %>%
       summarise_all(list) %>%
       gather_(".variable", ".value", variable_names)
 
@@ -419,15 +420,33 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
     )
 
     # Now go to a long format for everything else...
-    long_draws = unnest_legacy(nested_draws)
-
+    # We have three things to accomplish here:
+    # 1. SPREAD so variable names are back as columns
+    # 2. UNNEST so draws and chain info are no longer list columns
+    # 3. ADD CHAIN INFO (.chain, .iteration, .draw) back into the data frame
+    # The order we will take depends on whether or not the user has requested nested columns (e.g.
+    # array output), because order 1/2/3 is fast but doesn't currently work for doing nested columns.
     if (length(nested_dimension_names) > 0) {
-      # some dimensions were requested to be nested as list columns containing arrays
+      # some dimensions were requested to be nested as list columns containing arrays.
+      # thus we have to UNNEST then ADD CHAIN INFO, then NEST DIMENSIONS then SPREAD
+      # 2. UNNEST
+      long_draws = unnest_legacy(nested_draws)
+      # 3. ADD CHAIN INFO
+      long_draws[,c(".chain", ".iteration", ".draw")] = draws[,c(".chain", ".iteration", ".draw")]
+      # NEST DIMENSIONS
       long_draws = nest_dimensions_(long_draws, temp_dimension_names, nested_dimension_names)
+      # 1. SPREAD
+      long_draws = spread(long_draws, ".variable", ".value")
+    } else {
+      # no nested dimensions, so we can do the SPREAD then UNNEST then ADD CHAIN INFO
+      # 1. SPREAD
+      nested_draws = spread(nested_draws, ".variable", ".value")
+      # 2. UNNEST
+      long_draws = unnest_legacy(nested_draws)
+      # 3. ADD CHAIN INFO
+      long_draws[,c(".chain", ".iteration", ".draw")] = draws[,c(".chain", ".iteration", ".draw")]
     }
 
-    #now, make the value of each variable a column
-    long_draws = spread(long_draws, ".variable", ".value")
     #drop the columns that correspond to blank dimensions in the original spec
     long_draws[, grep("^\\.drop", names(long_draws), value = TRUE)] = NULL
     #group by the desired dimensions so that we return a pre-grouped data frame to the user
@@ -454,15 +473,14 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
     }
   }
 
-  long_draws %<>%
-    group_by_at(
-      c(".chain", ".iteration", ".draw", ".variable", dimension_names) %>%
+  long_draws = group_by_at(long_draws,
+    c(".chain", ".iteration", ".draw", ".variable", dimension_names) %>%
       # nested dimension names must come at the end of the group list
       # (minus the last nested dimension) so that we summarise in the
       # correct order
       setdiff(nested_dimension_names) %>%
       c(nested_dimension_names[-length(nested_dimension_names)])
-    )
+  )
 
   # go from last dimension up
   nested_dimension_names = rev(nested_dimension_names)
@@ -471,8 +489,7 @@ nest_dimensions_ = function(long_draws, dimension_names, nested_dimension_names)
     dimension_name = nested_dimension_names[[i]]
     dimension = as.name(dimension_name)
 
-    long_draws %<>%
-      summarise_at(c(dimension_name, value_name), list)
+    long_draws = summarise_at(long_draws, c(dimension_name, value_name), list)
 
     # pull out the indices from the first draw to verify we can use them as array indices
     first_draw_indices = filter(long_draws, .draw == .draw[[1]])[[dimension_name]]
