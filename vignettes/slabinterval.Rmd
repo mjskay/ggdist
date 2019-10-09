@@ -576,3 +576,66 @@ All of the above geoms follow the naming scheme `stat_[dist_]gradientinterval[h]
 
 * Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
 * Add `h` to the name to get the horizontal version.
+
+
+## Custom plots
+
+The `slabinterval` family of stats and geoms is designed to be very flexible. Most of the shortcut geoms above can be created simply by setting particular combinations of options and aesthetic mappings using the basic `geom_slabinterval()`, `stat_sample_slabinterval()`, and `stat_dist_slabinterval()`. Some useful combinations do not have specific shortcut geoms currently, but can be created manually with only a bit of additional effort.
+
+### Gradients of alpha, color, and fill
+
+Two aesthetics of particular use for creating custom geoms are `slab_alpha`, which changes the alpha transparency of the slab portion of the geom, `slab_color`, which changes its outline color, and `fill`, which changes its fill color. All of these aesthetics can be mapped to variables along the length of the geom (that is, the color does not have to be constant over the entire geom), which allows you to create gradients or to highlight meaningful regions of the data (amongst other things).
+
+### CCDF Gradients
+
+For example, `stat_ccdfinterval` maps the output of the evaluated function (in its case, the CCDF) onto the `thickness` aesthetic of the `slabinterval` geom, which determines how thick the slab is. This is the equivalent of setting `aes(thickness = stat(f))`. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping `stat(f)` onto the `slab_alpha` aesthetic instead, and setting `thickness` to a constant (1):
+
+```{r ccdf_gradient}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_ccdfinterval(aes(thickness = 1, slab_alpha = stat(f)), position = "dodge") +
+  expand_limits(y = 0) +
+  # plus coord_cartesian so there is no space between bars and axis
+  coord_cartesian(expand = FALSE) +
+  ggtitle("stat_ccdfinterval(aes(thickness = 1, slab_alpha = stat(f)))")
+```
+
+### Highlighting and other combinations
+
+The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight subregions of a plot. Take the earlier example of visualizing priors:
+
+```{r norm_vs_t_2}
+priors = tribble(
+  ~ dist,      ~ args,
+  "norm",      list(0, 1),
+  "student_t", list(3, 0, 1)
+) 
+
+priors %>%
+  ggplot(aes(y = dist, dist = dist, args = args)) +
+  stat_dist_halfeyeh() +
+  ggtitle("stat_dist_halfeyeh()")
+```
+
+We can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
+
+```{r norm_vs_t_highlight}
+priors %>%
+  ggplot(aes(y = dist, dist = dist, args = args)) +
+  stat_dist_halfeyeh(aes(fill = stat(abs(x) < 1.5))) +
+  ggtitle("stat_dist_halfeyeh(aes(fill = stat(abs(x) < 1.5)))") +
+  # we'll use a nicer palette than the default for highlighting:
+  scale_fill_manual(values = c("gray85", "skyblue"))
+```
+
+We could also combine these aesthetics arbitrarily. Here is a (probably not very useful) eye plot + gradient plot combination, with the portion of the distribution above 1 highlighted:
+
+```{r norm_vs_t_gradient_eye}
+priors %>%
+  ggplot(aes(y = dist, dist = dist, args = args)) +
+  stat_dist_eyeh(aes(alpha = stat(f), fill = stat(x > 1))) +
+  ggtitle("stat_dist_eyeh(aes(alpha = stat(f), fill = stat(x > 1)))") +
+  # we'll use a nicer palette than the default for highlighting:
+  scale_fill_manual(values = c("gray75", "skyblue"))
+```
+
