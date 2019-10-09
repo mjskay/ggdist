@@ -101,13 +101,19 @@ lmcmc = coda::mcmc.list(
 )
 ```
 
+Faster than it used to be, but still slow. Last test was ~.77 on monarch.
+
 ```{r}
 system.time(tidy_draws(lmcmc))
 ```
 
+Last test was ~.95 on monarch
+
 ```{r}
 system.time(spread_draws(lmcmc, a[i], b[i]))
 ```
+
+Note how a lot of the slowdown here is due to tidy_draws. Last test was ~.08 on monarch.
 
 ```{r}
 system.time(spread_draws(ldf, a[i], b[i]))
@@ -123,7 +129,7 @@ data(RankCorr)
 system.time(spread_draws(RankCorr, b[.,.]))
 ```
 
-And this is currently very slow. Last test was ~0.5 seconds on `monarch`.
+And this is currently very slow. Last test was ~0.55 seconds on `monarch`.
 
 ```{r}
 system.time(spread_draws(df, a[.]))

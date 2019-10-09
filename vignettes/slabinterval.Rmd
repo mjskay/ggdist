@@ -593,11 +593,11 @@ For example, `stat_ccdfinterval` maps the output of the evaluated function (in i
 ```{r ccdf_gradient}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfinterval(aes(thickness = 1, slab_alpha = stat(f)), position = "dodge") +
+  stat_ccdfinterval(aes(slab_alpha = stat(f)), thickness = 1, position = "dodge") +
   expand_limits(y = 0) +
   # plus coord_cartesian so there is no space between bars and axis
   coord_cartesian(expand = FALSE) +
-  ggtitle("stat_ccdfinterval(aes(thickness = 1, slab_alpha = stat(f)))")
+  ggtitle("stat_ccdfinterval(aes(slab_alpha = stat(f)), thickness = 1)")
 ```
 
 ### Highlighting and other combinations
