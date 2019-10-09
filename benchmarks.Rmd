@@ -75,7 +75,7 @@ system.time(gather_draws(df, `.`[index], regex = TRUE))
 ### Spread with a lot of levels in an index
 
 ```{r}
-k = 5000
+k = 2500
 l = 40
 nuisance = 9000 - l
 set.seed(1234)
@@ -91,17 +91,26 @@ for (i in 1:l) {
 for (i in 1:nuisance) {
   ldf[[paste0("p", i)]] = rnorm(k)
 }
-ldf
+head(ldf[,1:10])
 ```
 
 ```{r}
-lmcmc = mcmc(select(ldf, -.chain, -.iteration, -.draw))
+lmcmc = coda::mcmc.list(
+  coda::mcmc(select(ldf, -.chain, -.iteration, -.draw)),
+  coda::mcmc(select(ldf, -.chain, -.iteration, -.draw))
+)
 ```
 
-
+```{r}
+system.time(tidy_draws(lmcmc))
+```
 
 ```{r}
-spread_draws(lmcmc, a[i], b[i])
+system.time(spread_draws(lmcmc, a[i], b[i]))
+```
+
+```{r}
+system.time(spread_draws(ldf, a[i], b[i]))
 ```
 
 
