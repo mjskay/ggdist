@@ -72,6 +72,39 @@ system.time(gather_draws(df, `.`[index], regex = TRUE))
 ```
 
 
+### Spread with a lot of levels in an index
+
+```{r}
+k = 5000
+l = 40
+nuisance = 9000 - l
+set.seed(1234)
+ldf = tibble(
+  .chain = NA,
+  .iteration = NA,
+  .draw = 1:k
+)
+for (i in 1:l) {
+  ldf[[paste0("a[", i, "]")]] = rnorm(k)
+  ldf[[paste0("b[", i, "]")]] = rnorm(k)
+}
+for (i in 1:nuisance) {
+  ldf[[paste0("p", i)]] = rnorm(k)
+}
+ldf
+```
+
+```{r}
+lmcmc = mcmc(select(ldf, -.chain, -.iteration, -.draw))
+```
+
+
+
+```{r}
+spread_draws(lmcmc, a[i], b[i])
+```
+
+
 ### Array columns
 
 This tends to be slower than spreading without array columns. Last test was ~0.08 seconds on `monarch`.

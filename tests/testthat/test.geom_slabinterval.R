@@ -60,3 +60,34 @@ test_that("group_slab works", {
 })
 
 
+
+# normalization -----------------------------------------------------------
+
+test_that("normalize works", {
+  p = tribble(
+    ~y, ~id, ~p, ~ dist, ~ mu, ~ sigma,
+    1,  "A",  1, "norm",    0,       1,
+    1,  "B",  1, "norm",    8,       2,
+    2,  "A",  1, "norm",    0,       2,
+    2,  "A",  2, "norm",    0,       2,
+    1,  "B",  2, "norm",    8,       2,
+  ) %>%
+    ggplot(aes(y = y, dist = dist, arg1 = mu, arg2 = sigma, fill = id)) +
+    facet_grid(~p)
+
+  vdiffr::expect_doppelganger("halfeye with normalize = all",
+    p + stat_dist_halfeyeh(normalize = "all")
+  )
+  vdiffr::expect_doppelganger("halfeye with normalize = panels",
+    p + stat_dist_halfeyeh(normalize = "panels")
+  )
+  vdiffr::expect_doppelganger("halfeye with normalize = xy",
+    p + stat_dist_halfeyeh(normalize = "xy")
+  )
+  vdiffr::expect_doppelganger("halfeye with normalize = groups",
+    p + stat_dist_halfeyeh(normalize = "groups")
+  )
+  vdiffr::expect_doppelganger("halfeye with normalize = none",
+    p + stat_dist_halfeyeh(normalize = "none")
+  )
+})

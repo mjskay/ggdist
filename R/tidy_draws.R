@@ -135,8 +135,18 @@ tidy_draws.data.frame = function(model) {
 }
 
 #' @rdname tidy_draws
+#' @importFrom tibble add_column
 #' @export
 tidy_draws.mcmc.list = function(model) {
+  # draws = as_tibble(as.matrix(model, iters = TRUE, chains = TRUE))
+  # names(draws)[[1]] = ".chain"
+  # names(draws)[[2]] = ".iteration"
+  # draws[[".chain"]] = as.integer(draws[[".chain"]])
+  # draws[[".iteration"]] = as.integer(draws[[".iteration"]])
+  # draws = add_column(draws, .draw = draw_from_chain_and_iteration_(draws[[".chain"]], draws[[".iteration"]]), .after = 2)
+  # draws[[".draw"]] =
+
+
   draws = map_dfr(seq_along(model), function(chain) {
     #putting tibble() or as_tibble() in here makes this slower, so we put it outside
     #after all the chains have been combined
@@ -148,7 +158,7 @@ tidy_draws.mcmc.list = function(model) {
       .draw = draw_from_chain_and_iteration_(chain, iteration),
       # the implementation of as.data.frame for mcmc objects takes ~ twice as long as as.matrix (!!),
       # so using as.matrix here speeds things up considerably for large samples
-      as.matrix(model[[chain]]),
+      as.matrix(model[[chain]]), #as.data.frame(model[[chain]], stringsAsFactors = FALSE),
 
       check.names = FALSE,
       stringsAsFactors = FALSE

@@ -247,10 +247,13 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
 #' \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
 #' \code{0.5}.
-#' @param normalize How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"max_height"}
-#' (the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
+#' @param normalize How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
+#' (the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
+#' panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
+#' the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
+#' opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 #' groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
-#'  normalization (this should probably only be used with functions whose values are in [0,1]).
+#' normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).
 #' @param interval_size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
 #' sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)
 #' @param interval_size_range This geom scales the raw size aesthetic values when drawing interval and point sizes, as
@@ -303,7 +306,7 @@ geom_slabinterval = function(
   scale = 0.9,
   orientation = c("vertical", "horizontal"),
   justification = NULL,
-  normalize = c("max_height", "height", "none"),
+  normalize = c("all", "panels", "xy", "groups", "none"),
   interval_size_domain = c(1, 6),
   interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8,
@@ -469,7 +472,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     scale = 0.9,
     orientation = "vertical",
     justification = NULL,
-    normalize = "max_height",
+    normalize = "all",
     interval_size_domain = c(1, 6),
     interval_size_range = c(0.6, 1.4),
     fatten_point = 1.8,
@@ -490,17 +493,24 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     # normalize functions according to how we want to scale them
     switch(params$normalize,
-      max_height = {
-        # normalize so max height across all is 1
+      all = {
+        # normalize so max height across all data is 1
         # this preserves slabs across groups in slab plots
         finite_thickness = data$thickness[data$datatype == "slab" & is.finite(data$thickness)]
         if (length(finite_thickness) > 0) {
           data$thickness = data$thickness / max(finite_thickness)
         }
       },
-      height = {
-        # normalize so height in each group is 1
-        data = plyr::ddply(data, c("group", y), function(d) {
+      panels = ,
+      xy = ,
+      groups = {
+        # normalize so height in each group or panel is 1
+        normalization_groups = switch(params$normalize,
+          panels = "PANEL",
+          xy = c("PANEL", y),
+          groups = c("PANEL", y, "group")
+        )
+        data = plyr::ddply(data, normalization_groups, function(d) {
           finite_thickness = d$thickness[d$datatype == "slab" & is.finite(d$thickness)]
           if (length(finite_thickness) > 0) {
             d$thickness = d$thickness / max(finite_thickness)
@@ -508,7 +518,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
           d
         })
       },
-      none =,
+      none = {},
+      stop('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
     )
 
     # figure out the bounding rectangles for each group
