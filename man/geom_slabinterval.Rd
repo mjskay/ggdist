@@ -10,7 +10,7 @@ geom_slabinterval(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", ..., side = c("topright", "top", "right",
   "bottomleft", "bottom", "left", "both"), scale = 0.9,
   orientation = c("vertical", "horizontal"), justification = NULL,
-  normalize = c("max_height", "height", "none"),
+  normalize = c("all", "panels", "xy", "groups", "none"),
   interval_size_domain = c(1, 6), interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8, show_slab = TRUE, show_point = TRUE,
   show_interval = TRUE, na.rm = FALSE, show.legend = NA,
@@ -74,10 +74,13 @@ is \code{NULL} (the default), then it is set automatically based on the value of
 \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
 \code{0.5}.}
 
-\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"max_height"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
+\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
+panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
+the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
+opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
- normalization (this should probably only be used with functions whose values are in [0,1]).}
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
 
 \item{interval_size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}

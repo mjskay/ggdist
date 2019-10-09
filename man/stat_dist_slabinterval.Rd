@@ -154,10 +154,13 @@ is \code{NULL} (the default), then it is set automatically based on the value of
 \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
 \code{0.5}.}
 
-\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"max_height"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"height"}, normalize within
+\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
+panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
+the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
+opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
- normalization (this should probably only be used with functions whose values are in [0,1]).}
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
 
 \item{thickness}{Override for the \code{thickness} aesthetic in \code{\link{geom_slabinterval}}: the thickness
 of the slab at each x / y value of the slab (depending on \code{orientation}).}

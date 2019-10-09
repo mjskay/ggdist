@@ -141,7 +141,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' multimodal_draws %>%
 #'   ggplot(aes(x = x, y = 0)) +
-#'   stat_halfeyeh(fun.data = mode_hdih, .width = c(.66, .95))
+#'   stat_halfeyeh(point_interval = mode_hdi, .width = c(.66, .95))
 #'
 #' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at

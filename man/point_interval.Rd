@@ -232,7 +232,7 @@ multimodal_draws \%>\%
 
 multimodal_draws \%>\%
   ggplot(aes(x = x, y = 0)) +
-  stat_halfeyeh(fun.data = mode_hdih, .width = c(.66, .95))
+  stat_halfeyeh(point_interval = mode_hdi, .width = c(.66, .95))
 
 }
 \author{
