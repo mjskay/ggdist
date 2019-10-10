@@ -32,7 +32,7 @@ knitr::opts_chunk$set(
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))
-  )  
+  )
 }
 ```
 
@@ -473,7 +473,7 @@ The CCDF interval plots are probably more useful in general, as the bars typical
 
 ```{r ccdf_barplot}
 df %>%
-  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  ggplot(aes(x = group, y = value, fill = subgroup, group = subgroup)) +
   stat_ccdfinterval(position = "dodge") +
   ggtitle("stat_ccdfinterval(position = 'dodge')") 
 ```
@@ -544,7 +544,7 @@ All of the above geoms follow the naming scheme `stat_[dist_][c]cdfinterval[h]`.
 
 ## Gradient plots
 
-Finally, an alternative approach to mapping density onto the `thickness` aesthetic of the slab is to instead map it onto its `alpha` value (i.e., opacity). This is what the `stat_[dist_]gradientinterval[h]` family does (actually, it uses `slab_alpha`, a variant of the `alpha` aesthetic).
+An alternative approach to mapping density onto the `thickness` aesthetic of the slab is to instead map it onto its `alpha` value (i.e., opacity). This is what the `stat_[dist_]gradientinterval[h]` family does (actually, it uses `slab_alpha`, a variant of the `alpha` aesthetic).
 
 ### On sample data: `stat_gradientinterval[h]`
 
@@ -575,6 +575,83 @@ dist_df %>%
 All of the above geoms follow the naming scheme `stat_[dist_]gradientinterval[h]`.
 
 * Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
+* Add `h` to the name to get the horizontal version.
+
+
+## Dotplots
+
+The encodings thus far are *continuous* probability encodings: they map probabilities or probability densities onto aesthetics like x/y position or transparency. An alternative is *discrete* or *frequency-framing* uncertainty visualizations, such as *dotplots* and *quantile dotplots*. These represent distributions as number of discrete possible outcomes.
+
+### On sample data: `stat_dots[h]`
+
+For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots:
+
+```{r dots_dodge}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_dots(position = "dodge") +
+  labs(title = "stat_dots(position = 'dodge')")
+```
+
+Unlike the base `ggplot2::geom_dotplot()` geom, `tidybayes::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, it makes sense to turn off the outline color (`slab_color`) of the dots:
+
+```{r dots_dodge_nocolor}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_dots(position = "dodge", slab_color = NA) +
+  labs(title = "stat_dots(slab_color = NA)")
+```
+
+### Quantile dotplots
+
+The above plots are a bit hard to read due to the large number of dots. Particularly when summarizing posterior distributions or predictive distributions, it can make sense to plot a smaller number of dots (say 20, 50 or 100) that are *representative* of the full sample. One such approach is to plot *quantiles*, thereby creating *quantile dotplots*, which can help people make decisions under uncertainty ([Kay 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes 2018](https://doi.org/10.1145/3173574.3173718)).
+
+The `quantiles` argument to `stat_dots` constructs a quantile dotplot with the specified number of quantiles. Here is one with 50 quantiles, so each dot represents approximately a 2% (1/50) chance:
+
+```{r quantile_dots_dodge}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_dots(position = "dodge", quantiles = 50) +
+  labs(title = "stat_dots(quantiles = 50)")
+```
+
+### On analytical distributions: `stat_dist_dots[h]`
+
+As with other plot types, you can also use `stat_dist_dots()` instead if you wish to visualize analytical distributions. Analytical dotplots default to 100-dot quantile dotplots (as above, this can be adjusted with the `quantiles` argument):
+
+```{r dist_dots_dodge}
+dist_df %>%
+  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  stat_dist_dots(position = "dodge") +
+  labs(title = "stat_dist_dots(position = 'dodge')")
+```
+
+Shapes of the dots can also be changed using the `shape` aesthetic, and as with all slabinterval geoms, fill and color aesthetics can be varied within the geoms:
+
+```{r dist_dots_shape_color}
+dist_df %>%
+  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = stat(y < 5), shape = subgroup)) +
+  stat_dist_dots(position = "dodge") +
+  labs(title = "stat_dist_dots(aes(fill = stat(y < 5), shape = subgroup))") +
+  # we'll use these shapes since they retain outlines
+  scale_shape_manual(values = c(21,22,23))
+```
+
+As with other slabinterval geoms, the `side` argument can also be used to construct violin-style dotplots. This example also shows the use of `dotsinterval` in place of `dots` to construct a combined quantile dotplot violin + interval plot. We also set `slab_color = NA` to turn off the outline on the dots:
+
+```{r dist_dots_violin}
+dist_df %>%
+  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  stat_dist_dotsinterval(position = "dodge", side = "both", slab_color = NA) +
+  labs(title = "stat_dist_dotsinterval(side = 'both', slab_color = NA)") 
+```
+
+### Summing up dotplots: `stat_[dist_]dots[interval][h]`
+
+All of the above geoms follow the naming scheme `stat_[dist_]dots[interval][h]`.
+
+* Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
+* Add `interval` to the name to get the version with a point+interval geom overlaid.
 * Add `h` to the name to get the horizontal version.
 
 
