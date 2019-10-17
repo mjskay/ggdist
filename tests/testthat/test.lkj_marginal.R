@@ -30,7 +30,7 @@ test_that("rlkjcorr_marginal is correct", {
   ref = rbeta(10, 3, 3) * 2 - 1
 
   set.seed(1234)
-  expect_equal(rlkjcorr_marginal(x, 4, 2), ref)
+  expect_equal(rlkjcorr_marginal(10, 4, 2), ref)
 })
 
 test_that("lkjcorr_marginal throws an error for invalid K", {
