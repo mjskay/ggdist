@@ -186,13 +186,13 @@ The shortcut stat names follow the pattern \code{stat_dist_[name][h|]}, where th
 Stats include:
 
 \itemize{
-  \item \code{stat_dist_eye} / \code{stat_dist_eyeh}: Eye plots (violin + interval)
-  \item \code{stat_dist_halfeye} / \code{stat_dist_halfeyeh}: Half-eye plots (density + interval)
-  \item \code{stat_dist_ccdfinterval} / \code{stat_dist_ccdfintervalh}: CCDF bar plots (CCDF + interval)
-  \item \code{stat_dist_cdfinterval} / \code{stat_dist_cdfintervalh}: CDF bar plots (CDF + interval)
-  \item \code{stat_dist_gradientinterval} / \code{stat_dist_gradientintervalh}: Density gradient + interval plots
-  \item \code{stat_dist_pointinterval} / \code{stat_dist_pointintervalh}: Point + interval plots
-  \item \code{stat_dist_interval} / \code{stat_dist_intervalh}: Interval plots
+\item \code{stat_dist_eye} / \code{stat_dist_eyeh}: Eye plots (violin + interval)
+\item \code{stat_dist_halfeye} / \code{stat_dist_halfeyeh}: Half-eye plots (density + interval)
+\item \code{stat_dist_ccdfinterval} / \code{stat_dist_ccdfintervalh}: CCDF bar plots (CCDF + interval)
+\item \code{stat_dist_cdfinterval} / \code{stat_dist_cdfintervalh}: CDF bar plots (CDF + interval)
+\item \code{stat_dist_gradientinterval} / \code{stat_dist_gradientintervalh}: Density gradient + interval plots
+\item \code{stat_dist_pointinterval} / \code{stat_dist_pointintervalh}: Point + interval plots
+\item \code{stat_dist_interval} / \code{stat_dist_intervalh}: Interval plots
 }
 
 These stats expect a \code{dist} aesthetic to specify a distribution name
@@ -211,71 +211,71 @@ of those functions.
 
 These stats support the following aesthetics:
 \itemize{
-  \item \code{dist}
-  \item \code{args}
-  \item \code{arg1}
-  \item \code{arg2}
-  \item \code{arg3}
-  \item \code{arg4}
-  \item \code{arg5}
-  \item \code{arg6}
-  \item \code{arg7}
-  \item \code{arg8}
-  \item \code{arg9}
-  \item \code{x}
-  \item \code{y}
-  \item \code{datatype}
-  \item \code{thickness}
-  \item \code{size}
-  \item \code{group}
+\item \code{dist}
+\item \code{args}
+\item \code{arg1}
+\item \code{arg2}
+\item \code{arg3}
+\item \code{arg4}
+\item \code{arg5}
+\item \code{arg6}
+\item \code{arg7}
+\item \code{arg8}
+\item \code{arg9}
+\item \code{x}
+\item \code{y}
+\item \code{datatype}
+\item \code{thickness}
+\item \code{size}
+\item \code{group}
 }
 In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:
 \itemize{
-  \item \code{datatype}
-  \item \code{alpha}
-  \item \code{colour}
-  \item \code{linetype}
-  \item \code{fill}
-  \item \code{shape}
-  \item \code{stroke}
-  \item \code{point_colour}
-  \item \code{point_fill}
-  \item \code{point_alpha}
-  \item \code{point_size}
-  \item \code{size}
-  \item \code{interval_colour}
-  \item \code{interval_alpha}
-  \item \code{interval_size}
-  \item \code{interval_linetype}
-  \item \code{slab_size}
-  \item \code{slab_colour}
-  \item \code{slab_fill}
-  \item \code{slab_alpha}
-  \item \code{slab_linetype}
-  \item \code{y}
-  \item \code{ymin}
-  \item \code{ymax}
-  \item \code{x}
-  \item \code{xmin}
-  \item \code{xmax}
-  \item \code{width}
-  \item \code{height}
-  \item \code{thickness}
-  \item \code{group}
+\item \code{datatype}
+\item \code{alpha}
+\item \code{colour}
+\item \code{linetype}
+\item \code{fill}
+\item \code{shape}
+\item \code{stroke}
+\item \code{point_colour}
+\item \code{point_fill}
+\item \code{point_alpha}
+\item \code{point_size}
+\item \code{size}
+\item \code{interval_colour}
+\item \code{interval_alpha}
+\item \code{interval_size}
+\item \code{interval_linetype}
+\item \code{slab_size}
+\item \code{slab_colour}
+\item \code{slab_fill}
+\item \code{slab_alpha}
+\item \code{slab_linetype}
+\item \code{y}
+\item \code{ymin}
+\item \code{ymax}
+\item \code{x}
+\item \code{xmin}
+\item \code{xmax}
+\item \code{width}
+\item \code{height}
+\item \code{thickness}
+\item \code{group}
 }
-See examples of some of these aesthetics in action in \code{vignette("slabinterval")}. 
-Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation. 
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation.
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 
 \section{Computed Variables}{
 
 \itemize{
-  \item \code{x} or \code{y}: For slabs, the input values to the slab function.
-    For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
-  \item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
-  \item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
-  \item \code{f}: For slabs, the output values from the slab function.
+\item \code{x} or \code{y}: For slabs, the input values to the slab function.
+For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
+\item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
+\item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
+\item \code{f}: For slabs, the output values from the slab function.
 }
 }
 

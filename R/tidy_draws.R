@@ -34,7 +34,7 @@ as_sample_data_frame = function(...) {
 #' as columns. While this function can be useful for quick glances at models (especially
 #' combined with \code{\link{gather_variables}} and \code{\link{median_qi}}), it is
 #' generally speaking not as useful as \code{\link{spread_draws}} or
-#' \code{\link{gather_draws}} for most applications, and is mainly used internally (see `Details`).
+#' \code{\link{gather_draws}} for most applications, and is mainly used internally (see *Details*).
 #'
 #' In practice, apart from quick looks at a model you will probably not call this directly;
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}}, which are build on top of this

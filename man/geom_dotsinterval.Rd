@@ -138,15 +138,15 @@ geoms and stats.
 The dots geoms are similar to \code{\link{geom_dotplot}} but with a number of differences:
 
 \itemize{
-  \item Dots geoms act like slabs in \code{\link{geom_slabinterval}} and can be given x positions (or y positions when
-  in a horizontal orientation).
-  \item Given the available space to lay out dots, the dots geoms will automatically determine how many bins to
-  use to fit the available space.
-  \item Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
-  symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
-  dots from overlapping each other.
-  \item The shape of the dots in a in these geoms can be changed using the \code{slab_shape} aesthetic (when using the
-  \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
+\item Dots geoms act like slabs in \code{\link{geom_slabinterval}} and can be given x positions (or y positions when
+in a horizontal orientation).
+\item Given the available space to lay out dots, the dots geoms will automatically determine how many bins to
+use to fit the available space.
+\item Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
+symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
+dots from overlapping each other.
+\item The shape of the dots in a in these geoms can be changed using the \code{slab_shape} aesthetic (when using the
+\code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
 }
 
 The \code{stat_...} and \code{stat_dist_...} versions of the stats when used with the \code{quantiles} argument
@@ -157,50 +157,50 @@ using a frequency framing that may be easier for laypeople to understand (Kay et
 
 These stats support the following aesthetics:
 \itemize{
-  \item \code{x}
-  \item \code{y}
-  \item \code{datatype}
-  \item \code{thickness}
-  \item \code{size}
-  \item \code{group}
+\item \code{x}
+\item \code{y}
+\item \code{datatype}
+\item \code{thickness}
+\item \code{size}
+\item \code{group}
 }
 In addition, in their default configuration (paired with geom_dotsinterval) the following aesthetics are supported by the underlying geom:
 \itemize{
-  \item \code{slab_shape}
-  \item \code{datatype}
-  \item \code{alpha}
-  \item \code{colour}
-  \item \code{linetype}
-  \item \code{fill}
-  \item \code{shape}
-  \item \code{stroke}
-  \item \code{point_colour}
-  \item \code{point_fill}
-  \item \code{point_alpha}
-  \item \code{point_size}
-  \item \code{size}
-  \item \code{interval_colour}
-  \item \code{interval_alpha}
-  \item \code{interval_size}
-  \item \code{interval_linetype}
-  \item \code{slab_size}
-  \item \code{slab_colour}
-  \item \code{slab_fill}
-  \item \code{slab_alpha}
-  \item \code{slab_linetype}
-  \item \code{y}
-  \item \code{ymin}
-  \item \code{ymax}
-  \item \code{x}
-  \item \code{xmin}
-  \item \code{xmax}
-  \item \code{width}
-  \item \code{height}
-  \item \code{thickness}
-  \item \code{group}
+\item \code{slab_shape}
+\item \code{datatype}
+\item \code{alpha}
+\item \code{colour}
+\item \code{linetype}
+\item \code{fill}
+\item \code{shape}
+\item \code{stroke}
+\item \code{point_colour}
+\item \code{point_fill}
+\item \code{point_alpha}
+\item \code{point_size}
+\item \code{size}
+\item \code{interval_colour}
+\item \code{interval_alpha}
+\item \code{interval_size}
+\item \code{interval_linetype}
+\item \code{slab_size}
+\item \code{slab_colour}
+\item \code{slab_fill}
+\item \code{slab_alpha}
+\item \code{slab_linetype}
+\item \code{y}
+\item \code{ymin}
+\item \code{ymax}
+\item \code{x}
+\item \code{xmin}
+\item \code{xmax}
+\item \code{width}
+\item \code{height}
+\item \code{thickness}
+\item \code{group}
 }
-See examples of some of these aesthetics in action in \code{vignette("slabinterval")}. 
-Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation. 
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation.
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 
@@ -211,12 +211,12 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 \references{
 Kay, M., Kola, T., Hullman, J. R., & Munson, S. A. (2016). When (ish) is My Bus? User-centered Visualizations
-  of Uncertainty in Everyday, Mobile Predictive Systems. \emph{Conference on Human Factors
-  in Computing Systems - CHI '16}, 5092--5103. \doi{10.1145/2858036.2858558}.
+of Uncertainty in Everyday, Mobile Predictive Systems. \emph{Conference on Human Factors
+in Computing Systems - CHI '16}, 5092--5103. \doi{10.1145/2858036.2858558}.
 
-  Fernandes, M., Walls, L., Munson, S., Hullman, J., & Kay, M. (2018). Uncertainty Displays Using Quantile Dotplots
-  or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Computing Systems - CHI '18}.
-  \doi{10.1145/3173574.3173718}.
+Fernandes, M., Walls, L., Munson, S., Hullman, J., & Kay, M. (2018). Uncertainty Displays Using Quantile Dotplots
+or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Computing Systems - CHI '18}.
+\doi{10.1145/3173574.3173718}.
 }
 \seealso{
 See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of other

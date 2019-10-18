@@ -110,49 +110,49 @@ will perform the summarization using a \code{\link{point_interval}} function.
 
 These stats support the following aesthetics:
 \itemize{
-  \item \code{colour}
-  \item \code{datatype}
-  \item \code{x}
-  \item \code{y}
-  \item \code{thickness}
-  \item \code{group}
+\item \code{colour}
+\item \code{datatype}
+\item \code{x}
+\item \code{y}
+\item \code{thickness}
+\item \code{group}
 }
 In addition, in their default configuration (paired with geom_interval) the following aesthetics are supported by the underlying geom:
 \itemize{
-  \item \code{datatype}
-  \item \code{alpha}
-  \item \code{colour}
-  \item \code{linetype}
-  \item \code{fill}
-  \item \code{shape}
-  \item \code{stroke}
-  \item \code{point_colour}
-  \item \code{point_fill}
-  \item \code{point_alpha}
-  \item \code{point_size}
-  \item \code{size}
-  \item \code{interval_colour}
-  \item \code{interval_alpha}
-  \item \code{interval_size}
-  \item \code{interval_linetype}
-  \item \code{slab_size}
-  \item \code{slab_colour}
-  \item \code{slab_fill}
-  \item \code{slab_alpha}
-  \item \code{slab_linetype}
-  \item \code{y}
-  \item \code{ymin}
-  \item \code{ymax}
-  \item \code{x}
-  \item \code{xmin}
-  \item \code{xmax}
-  \item \code{width}
-  \item \code{height}
-  \item \code{thickness}
-  \item \code{group}
+\item \code{datatype}
+\item \code{alpha}
+\item \code{colour}
+\item \code{linetype}
+\item \code{fill}
+\item \code{shape}
+\item \code{stroke}
+\item \code{point_colour}
+\item \code{point_fill}
+\item \code{point_alpha}
+\item \code{point_size}
+\item \code{size}
+\item \code{interval_colour}
+\item \code{interval_alpha}
+\item \code{interval_size}
+\item \code{interval_linetype}
+\item \code{slab_size}
+\item \code{slab_colour}
+\item \code{slab_fill}
+\item \code{slab_alpha}
+\item \code{slab_linetype}
+\item \code{y}
+\item \code{ymin}
+\item \code{ymax}
+\item \code{x}
+\item \code{xmin}
+\item \code{xmax}
+\item \code{width}
+\item \code{height}
+\item \code{thickness}
+\item \code{group}
 }
-See examples of some of these aesthetics in action in \code{vignette("slabinterval")}. 
-Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation. 
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation.
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 

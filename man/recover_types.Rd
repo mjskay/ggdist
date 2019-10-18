@@ -13,7 +13,7 @@ for a full list of supported models, see \link{tidybayes-models}.}
 
 \item{...}{Lists (or data frames) providing data prototypes used to convert
 columns returned by \code{\link{spread_draws}} and \code{\link{gather_draws}} back into useful data types.
-See `Details`.}
+See \emph{Details}.}
 }
 \value{
 A decorated version of \code{model}.

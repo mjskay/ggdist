@@ -34,20 +34,20 @@ prefixed with \code{from_} translate from that format back to the tidybayes form
 \code{to_broom_names()} / \code{from_broom_names()}:
 
 \itemize{
-   \item \code{.variable} <-> \code{term}
-   \item \code{.value} <-> \code{estimate}
-   \item \code{.prediction} <-> \code{.fitted}
-   \item \code{.lower} <-> \code{conf.low}
-   \item \code{.upper} <-> \code{conf.high}
+\item \code{.variable} <-> \code{term}
+\item \code{.value} <-> \code{estimate}
+\item \code{.prediction} <-> \code{.fitted}
+\item \code{.lower} <-> \code{conf.low}
+\item \code{.upper} <-> \code{conf.high}
 }
 
 \code{to_ggmcmc_names()} / \code{from_ggmcmc_names()}:
 
 \itemize{
-   \item \code{.chain} <-> \code{Chain}
-   \item \code{.iteration} <-> \code{Iteration}
-   \item \code{.variable} <-> \code{Parameter}
-   \item \code{.value} <-> \code{value}
+\item \code{.chain} <-> \code{Chain}
+\item \code{.iteration} <-> \code{Iteration}
+\item \code{.variable} <-> \code{Parameter}
+\item \code{.value} <-> \code{value}
 }
 }
 \examples{

@@ -27,28 +27,28 @@ This function gathers every column except grouping columns and those matching th
 
 Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[i,v])}, like this:
 \itemize{
-     \item column \code{".chain"}: the chain number
-     \item column \code{".iteration"}: the iteration number
-     \item column \code{".draw"}: the draw number
-     \item column \code{"i"}: value in \code{1:5}
-     \item column \code{"v"}: value in \code{1:10}
-     \item column \code{"a"}: value of \code{"a[i]"} for draw number \code{".draw"}
-     \item column \code{"b"}: value of \code{"b[i,v]"} for draw number \code{".draw"}
- }
+\item column \code{".chain"}: the chain number
+\item column \code{".iteration"}: the iteration number
+\item column \code{".draw"}: the draw number
+\item column \code{"i"}: value in \code{1:5}
+\item column \code{"v"}: value in \code{1:10}
+\item column \code{"a"}: value of \code{"a[i]"} for draw number \code{".draw"}
+\item column \code{"b"}: value of \code{"b[i,v]"} for draw number \code{".draw"}
+}
 
 \code{gather_variables(data)} on that data frame would return a grouped
 data frame (grouped by \code{i} and \code{v}), with:
 \itemize{
-     \item column \code{".chain"}: the chain number
-     \item column \code{".iteration"}: the iteration number
-     \item column \code{".draw"}: the draw number
-     \item column \code{"i"}: value in \code{1:5}
-     \item column \code{"v"}: value in \code{1:10}
-     \item column \code{".variable"}: value in \code{c("a", "b")}.
-     \item column \code{".value"}: value of \code{"a[i]"} (when \code{".variable"} is \code{"a"};
-         repeated for every value of \code{"v"}) or \code{"b[i,v]"} (when \code{".variable"} is
-         \code{"b"}) for draw number \code{".draw"}
- }
+\item column \code{".chain"}: the chain number
+\item column \code{".iteration"}: the iteration number
+\item column \code{".draw"}: the draw number
+\item column \code{"i"}: value in \code{1:5}
+\item column \code{"v"}: value in \code{1:10}
+\item column \code{".variable"}: value in \code{c("a", "b")}.
+\item column \code{".value"}: value of \code{"a[i]"} (when \code{".variable"} is \code{"a"};
+repeated for every value of \code{"v"}) or \code{"b[i,v]"} (when \code{".variable"} is
+\code{"b"}) for draw number \code{".draw"}
+}
 
 In this example, this call:
 

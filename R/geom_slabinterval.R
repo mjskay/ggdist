@@ -253,7 +253,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
 #' opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 #' groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
-#' normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).
+#' normalization (this should probably only be used with functions whose values are in \[0,1\], such as CDFs).
 #' @param interval_size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
 #' sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)
 #' @param interval_size_range This geom scales the raw size aesthetic values when drawing interval and point sizes, as

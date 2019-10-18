@@ -110,8 +110,8 @@ spread_samples = function(...) {
 #'
 #' For variables that do not share the same subscripts (or share
 #' some but not all subscripts), we can supply their specifications separately.
-#' For example, if we have a variable d[i] with the same i subscript
-#' as b[i,v], and a variable x with no subscripts, we could do this:
+#' For example, if we have a variable `d[i]` with the same `i` subscript
+#' as `b[i,v]`, and a variable `x` with no subscripts, we could do this:
 #'
 #' \preformatted{spread_draws(fit, x, d[i], b[i,v])}
 #'
@@ -223,7 +223,7 @@ spread_samples = function(...) {
 #' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ... Expressions in the form of
-#' \code{variable_name[dimension_1, dimension_2, ...] | wide_dimension}. See `Details`.
+#' \code{variable_name[dimension_1, dimension_2, ...] | wide_dimension}. See *Details*.
 #' @param regex If \code{TRUE}, variable names are treated as regular expressions and all column matching the
 #' regular expression and number of dimensions are included in the output. Default \code{FALSE}.
 #' @param sep Separator used to separate dimensions in variable names, as a regular expression.

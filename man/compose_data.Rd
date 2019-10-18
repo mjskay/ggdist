@@ -35,28 +35,28 @@ This function recursively translates each argument into list elements using
 \code{\link{as_data_list}}, merging all resulting lists together. By
 default this means that:
 \itemize{
-     \item numerics are included as-is.
-     \item logicals are translated into numeric using \code{\link{as.numeric}}.
-     \item factors are translated into numeric using \code{\link{as.numeric}},
-         and an additional element named \code{.n_name(argument_name)} is added
-         with the number of levels in the factor. The default \code{.n_name}
-         function prefixes \code{"n_"} before the factor name; e.g. a factor
-         named \code{foo} will have an element named \code{n_foo} added containing
-         the number of levels in \code{foo}.
-     \item character vectors are converted into factors then translated into numeric
-         in the same manner as factors are.
-     \item lists are translated by translating all elements of the list
-         (recursively) and adding them to the result.
-     \item data.frames are translated by translating every column of the data.frame
-         and adding them to the result.  A variable named \code{"n"} (or
-         \code{.n_name(argument_name)} if the data.frame is passed as a named
-         argument \code{argument_name}) is also added containing the number of rows
-         in the data frame.
-     \item \code{NULL} values are dropped. Setting a named argument to \code{NULL}
-         can be used to drop that item from the resulting list (if an unwanted
-         element was added to the list by a previous argument, such as a column
-         from a data frame that is not needed in the model).
-     \item all other types are dropped (and a warning given)
+\item numerics are included as-is.
+\item logicals are translated into numeric using \code{\link{as.numeric}}.
+\item factors are translated into numeric using \code{\link{as.numeric}},
+and an additional element named \code{.n_name(argument_name)} is added
+with the number of levels in the factor. The default \code{.n_name}
+function prefixes \code{"n_"} before the factor name; e.g. a factor
+named \code{foo} will have an element named \code{n_foo} added containing
+the number of levels in \code{foo}.
+\item character vectors are converted into factors then translated into numeric
+in the same manner as factors are.
+\item lists are translated by translating all elements of the list
+(recursively) and adding them to the result.
+\item data.frames are translated by translating every column of the data.frame
+and adding them to the result.  A variable named \code{"n"} (or
+\code{.n_name(argument_name)} if the data.frame is passed as a named
+argument \code{argument_name}) is also added containing the number of rows
+in the data frame.
+\item \code{NULL} values are dropped. Setting a named argument to \code{NULL}
+can be used to drop that item from the resulting list (if an unwanted
+element was added to the list by a previous argument, such as a column
+from a data frame that is not needed in the model).
+\item all other types are dropped (and a warning given)
 }
 
 As in functions like \code{\link{mutate}}, each expression is evaluated in an

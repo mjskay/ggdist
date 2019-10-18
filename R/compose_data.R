@@ -10,7 +10,7 @@
 #' input into a Bayesian modeling function. \strong{These functions typically should not be called directly}
 #' (instead use \code{\link{compose_data}}), but are exposed for the rare cases in which
 #' you may need to provide your own conversion routines for a data type not already
-#' supported (see `Details`).
+#' supported (see *Details*).
 #'
 #' \code{data_list} creates a list with class \code{c("data_list", "list")}
 #' instead of \code{c("list")}, but largely otherwise acts like the \code{\link{list}}
@@ -38,7 +38,7 @@
 #' implementations of \code{as_data_list.numeric}, \code{as_data_list.logical},
 #' etc for examples.
 #'
-#' @param object The object to convert (see `Details`).
+#' @param object The object to convert (see *Details*).
 #' @param name The name of the element in the returned list corresponding to
 #' this object.
 #' @param scalar_as_array If \code{TRUE}, returns single scalars as an

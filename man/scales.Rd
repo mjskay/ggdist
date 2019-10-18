@@ -158,23 +158,23 @@ The following additional scales / aesthetics are defined for use with \code{\lin
 related geoms:
 
 \enumerate{
-  \item{\code{scale_point_color_* }}{Point color}
-  \item{\code{scale_point_fill_* }}{Point fill color}
-  \item{\code{scale_point_alpha_* }}{Point alpha level / opacity}
-  \item{\code{scale_point_size_* }}{Point size}
-  \item{\code{scale_interval_color_* }}{Interval line color}
-  \item{\code{scale_interval_alpha_* }}{Interval alpha level / opacity}
-  \item{\code{scale_interval_size_* }}{Interval line width}
-  \item{\code{scale_interval_linetype_* }}{Interval line type}
-  \item{\code{scale_slab_color_* }}{Slab outline color}
-  \item{\code{scale_slab_fill_* }}{Slab fill color}
-  \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
-  \code{scale_slab_alpha_continuous} differ from \code{\link{scale_alpha_continuous}} and
-  are designed for gradient plots (e.g. \code{\link{stat_gradientinterval}}) by ensuring that
-  densities of 0 get mapped to 0 in the output.}
-  \item{\code{scale_slab_size_* }}{Slab outline line width}
-  \item{\code{scale_slab_linetype_* }}{Slab outline line type}
-  \item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_dotsinterval}})}
+\item{\code{scale_point_color_* }}{Point color}
+\item{\code{scale_point_fill_* }}{Point fill color}
+\item{\code{scale_point_alpha_* }}{Point alpha level / opacity}
+\item{\code{scale_point_size_* }}{Point size}
+\item{\code{scale_interval_color_* }}{Interval line color}
+\item{\code{scale_interval_alpha_* }}{Interval alpha level / opacity}
+\item{\code{scale_interval_size_* }}{Interval line width}
+\item{\code{scale_interval_linetype_* }}{Interval line type}
+\item{\code{scale_slab_color_* }}{Slab outline color}
+\item{\code{scale_slab_fill_* }}{Slab fill color}
+\item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
+\code{scale_slab_alpha_continuous} differ from \code{\link{scale_alpha_continuous}} and
+are designed for gradient plots (e.g. \code{\link{stat_gradientinterval}}) by ensuring that
+densities of 0 get mapped to 0 in the output.}
+\item{\code{scale_slab_size_* }}{Slab outline line width}
+\item{\code{scale_slab_linetype_* }}{Slab outline line type}
+\item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_dotsinterval}})}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.

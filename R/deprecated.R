@@ -17,7 +17,7 @@
 #' functions use \code{.variable} and \code{.value}; or they set \code{.iteration} even
 #' when iteration information is not available --- new functions always set \code{.draw}
 #' but may not set \code{.iteration}), so be careful when upgrading to new function names.
-#' See `Deprecated Arguments and Column Names`, below, for more information.
+#' See *Deprecated Arguments and Column Names*, below, for more information.
 #'
 #' Deprecated functions are:
 #'

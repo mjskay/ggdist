@@ -16,7 +16,7 @@ spread_draws(model, ..., regex = FALSE, sep = "[, ]", n = NULL,
 for a full list of supported models, see \link{tidybayes-models}.}
 
 \item{...}{Expressions in the form of
-\code{variable_name[dimension_1, dimension_2, ...] | wide_dimension}. See `Details`.}
+\code{variable_name[dimension_1, dimension_2, ...] | wide_dimension}. See \emph{Details}.}
 
 \item{regex}{If \code{TRUE}, variable names are treated as regular expressions and all column matching the
 regular expression and number of dimensions are included in the output. Default \code{FALSE}.}
@@ -57,31 +57,31 @@ results through functions like \code{\link{to_broom_names}} or \code{\link{to_gg
 For example, \code{spread_draws(fit, a[i], b[i,v])} might return a grouped
 data frame (grouped by \code{i} and \code{v}), with:
 \itemize{
-   \item column \code{".chain"}: the chain number. \code{NA} if not applicable to the model
-     type; this is typically only applicable to MCMC algorithms.
-   \item column \code{".iteration"}: the iteration number. Guaranteed to be unique within-chain only.
-     \code{NA} if not applicable to the model type; this is typically only applicable to MCMC algorithms.
-   \item column \code{".draw"}: a unique number for each draw from the posterior. Order is not
-     guaranteed to be meaningful.
-   \item column \code{"i"}: value in \code{1:5}
-   \item column \code{"v"}: value in \code{1:10}
-   \item column \code{"a"}: value of \code{"a[i]"} for draw \code{".draw"}
-   \item column \code{"b"}: value of \code{"b[i,v]"} for draw \code{".draw"}
- }
+\item column \code{".chain"}: the chain number. \code{NA} if not applicable to the model
+type; this is typically only applicable to MCMC algorithms.
+\item column \code{".iteration"}: the iteration number. Guaranteed to be unique within-chain only.
+\code{NA} if not applicable to the model type; this is typically only applicable to MCMC algorithms.
+\item column \code{".draw"}: a unique number for each draw from the posterior. Order is not
+guaranteed to be meaningful.
+\item column \code{"i"}: value in \code{1:5}
+\item column \code{"v"}: value in \code{1:10}
+\item column \code{"a"}: value of \code{"a[i]"} for draw \code{".draw"}
+\item column \code{"b"}: value of \code{"b[i,v]"} for draw \code{".draw"}
+}
 
 \code{gather_draws(fit, a[i], b[i,v])} on the same fit would return a grouped
 data frame (grouped by \code{i} and \code{v}), with:
 \itemize{
-   \item column \code{".chain"}: the chain number
-   \item column \code{".iteration"}: the iteration number
-   \item column \code{".draw"}: the draw number
-   \item column \code{"i"}: value in \code{1:5}
-   \item column \code{"v"}: value in \code{1:10}, or \code{NA}
-     if \code{".variable"} is \code{"a"}.
-   \item column \code{".variable"}: value in \code{c("a", "b")}.
-   \item column \code{".value"}: value of \code{"a[i]"} (when \code{".variable"} is \code{"a"})
-     or \code{"b[i,v]"} (when \code{".variable"} is \code{"b"}) for draw \code{".draw"}
- }
+\item column \code{".chain"}: the chain number
+\item column \code{".iteration"}: the iteration number
+\item column \code{".draw"}: the draw number
+\item column \code{"i"}: value in \code{1:5}
+\item column \code{"v"}: value in \code{1:10}, or \code{NA}
+if \code{".variable"} is \code{"a"}.
+\item column \code{".variable"}: value in \code{c("a", "b")}.
+\item column \code{".value"}: value of \code{"a[i]"} (when \code{".variable"} is \code{"a"})
+or \code{"b[i,v]"} (when \code{".variable"} is \code{"b"}) for draw \code{".draw"}
+}
 
 \code{spread_draws} and \code{gather_draws} can use type information
 applied to the \code{fit} object by \code{\link{recover_types}} to convert columns
@@ -100,8 +100,8 @@ would be a value in \code{c("a","b","c")} instead of \code{1:3}.
 
 For variables that do not share the same subscripts (or share
 some but not all subscripts), we can supply their specifications separately.
-For example, if we have a variable d[i] with the same i subscript
-as b[i,v], and a variable x with no subscripts, we could do this:
+For example, if we have a variable \code{d[i]} with the same \code{i} subscript
+as \code{b[i,v]}, and a variable \code{x} with no subscripts, we could do this:
 
 \preformatted{spread_draws(fit, x, d[i], b[i,v])}
 
@@ -151,13 +151,13 @@ into a wide format and whose names will be the base variable name, plus a dot
 \code{spread_draws(fit, b[i,..])} would return a grouped data frame
 (grouped by \code{i}), with:
 \itemize{
- \item column \code{".chain"}: the chain number
- \item column \code{".iteration"}: the iteration number
- \item column \code{".draw"}: the draw number
- \item column \code{"i"}: value in \code{1:20}
- \item column \code{"b.1"}: value of \code{"b[i,1]"} for draw \code{".draw"}
- \item column \code{"b.2"}: value of \code{"b[i,2]"} for draw \code{".draw"}
- \item column \code{"b.3"}: value of \code{"b[i,3]"} for draw \code{".draw"}
+\item column \code{".chain"}: the chain number
+\item column \code{".iteration"}: the iteration number
+\item column \code{".draw"}: the draw number
+\item column \code{"i"}: value in \code{1:20}
+\item column \code{"b.1"}: value of \code{"b[i,1]"} for draw \code{".draw"}
+\item column \code{"b.2"}: value of \code{"b[i,2]"} for draw \code{".draw"}
+\item column \code{"b.3"}: value of \code{"b[i,3]"} for draw \code{".draw"}
 }
 
 An optional clause in the form \code{| wide_dimension} can also be used to put
@@ -177,13 +177,13 @@ columns with nicer names. For example:
 \code{fit \%>\% recover_types(data) \%>\% spread_draws(b[i,v] | v)} would return a grouped data frame
 (grouped by \code{i}), with:
 \itemize{
- \item column \code{".chain"}: the chain number
- \item column \code{".iteration"}: the iteration number
- \item column \code{".draw"}: the draw number
- \item column \code{"i"}: value in \code{1:20}
- \item column \code{"a"}: value of \code{"b[i,1]"} for draw \code{".draw"}
- \item column \code{"b"}: value of \code{"b[i,2]"} for draw \code{".draw"}
- \item column \code{"c"}: value of \code{"b[i,3]"} for draw \code{".draw"}
+\item column \code{".chain"}: the chain number
+\item column \code{".iteration"}: the iteration number
+\item column \code{".draw"}: the draw number
+\item column \code{"i"}: value in \code{1:20}
+\item column \code{"a"}: value of \code{"b[i,1]"} for draw \code{".draw"}
+\item column \code{"b"}: value of \code{"b[i,2]"} for draw \code{".draw"}
+\item column \code{"c"}: value of \code{"b[i,3]"} for draw \code{".draw"}
 }
 
 The shorthand \code{.} can be used to specify columns that should be nested
@@ -193,12 +193,12 @@ are specified with \code{.}).
 For example, \code{spread_draws(fit, a[.], b[.,.])} might return a
 data frame, with:
 \itemize{
-   \item column \code{".chain"}: the chain number.
-   \item column \code{".iteration"}: the iteration number.
-   \item column \code{".draw"}: a unique number for each draw from the posterior.
-   \item column \code{"a"}: a list column of vectors.
-   \item column \code{"b"}: a list column of matrices.
- }
+\item column \code{".chain"}: the chain number.
+\item column \code{".iteration"}: the iteration number.
+\item column \code{".draw"}: a unique number for each draw from the posterior.
+\item column \code{"a"}: a list column of vectors.
+\item column \code{"b"}: a list column of matrices.
+}
 
 Ragged arrays are turned into non-ragged arrays with
 missing entries given the value \code{NA}.
@@ -207,7 +207,7 @@ Finally, variable names can be regular expressions by setting \code{regex = TRUE
 
 \code{spread_draws(fit, `b_.*`[i], regex = TRUE)}
 
-Would return a tidy data frame with variables starting with `b_` and having one dimension.
+Would return a tidy data frame with variables starting with \code{b_} and having one dimension.
 }
 \examples{
 

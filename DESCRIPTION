@@ -125,3 +125,4 @@ Collate:
     "unspread_draws.R"
     "util.R"
     "x_at_y.R"
+Roxygen: list(markdown = TRUE)

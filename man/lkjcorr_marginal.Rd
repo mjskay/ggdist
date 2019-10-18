@@ -71,8 +71,8 @@ data.frame(prior = "lkjcorr_marginal(2, 3)") \%>\%
 }
 \references{
 Lewandowski, D., Kurowicka, D., & Joe, H. (2009). Generating random correlation matrices based on vines
-  and extended onion method. \emph{Journal of Multivariate Analysis}, 100(9), 1989--2001.
-  \doi{10.1016/j.jmva.2009.04.008}.
+and extended onion method. \emph{Journal of Multivariate Analysis}, 100(9), 1989--2001.
+\doi{10.1016/j.jmva.2009.04.008}.
 }
 \seealso{
 \code{\link{parse_dist}} and \code{\link{marginalize_lkjcorr}} for parsing specs that use the

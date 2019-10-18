@@ -14,17 +14,17 @@ do not.
 \code{\link{tidy_draws}}, \code{\link{spread_draws}}, and \code{\link{gather_draws}}. These models/formats include:
 
 \itemize{
-  \item \code{\link[rstan:stan]{rstan}} models
-  \item \code{\link[brms]{brm}} models
-  \item \code{\link[rstanarm:rstanarm-package]{rstanarm}} models
-  \item \code{\link[runjags]{runjags}} models
-  \item \code{\link[rjags]{jags.model}} models, if sampled using \code{\link[rjags]{coda.samples}}
-  \item \code{\link[jagsUI]{jags}} models
-  \item \code{\link[MCMCglmm]{MCMCglmm}} models
-  \item \code{\link[coda]{mcmc}} and \code{\link[coda]{mcmc.list}} objects, which are output by several model
-    types.
-  \item Any object with an implementation of \code{\link[coda]{as.mcmc.list}}. For a list of those available in your
-    environment, run \code{methods(as.mcmc.list)}
+\item \code{\link[rstan:stan]{rstan}} models
+\item \code{\link[brms]{brm}} models
+\item \code{\link[rstanarm:rstanarm-package]{rstanarm}} models
+\item \code{\link[runjags]{runjags}} models
+\item \code{\link[rjags]{jags.model}} models, if sampled using \code{\link[rjags]{coda.samples}}
+\item \code{\link[jagsUI]{jags}} models
+\item \code{\link[MCMCglmm]{MCMCglmm}} models
+\item \code{\link[coda]{mcmc}} and \code{\link[coda]{mcmc.list}} objects, which are output by several model
+types.
+\item Any object with an implementation of \code{\link[coda]{as.mcmc.list}}. For a list of those available in your
+environment, run \code{methods(as.mcmc.list)}
 }
 
 If you install the \code{tidybayes.rethinking} package (available at
@@ -39,8 +39,8 @@ In addition, the \strong{following models support fit and prediction} extraction
 \code{\link{add_fitted_draws}} and \code{\link{add_predicted_draws}}:
 
 \itemize{
-  \item \code{\link[brms]{brm}} models
-  \item \code{\link[rstanarm:rstanarm-package]{rstanarm}} models
+\item \code{\link[brms]{brm}} models
+\item \code{\link[rstanarm:rstanarm-package]{rstanarm}} models
 }
 
 \strong{If your model type is not in the above list}, you may still be able to use the \code{\link{add_draws}}

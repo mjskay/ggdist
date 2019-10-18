@@ -60,7 +60,7 @@ apply_prototypes = function(...) {
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ...  Lists (or data frames) providing data prototypes used to convert
 #' columns returned by \code{\link{spread_draws}} and \code{\link{gather_draws}} back into useful data types.
-#' See `Details`.
+#' See *Details*.
 #' @return A decorated version of \code{model}.
 #' @author Matthew Kay
 #' @aliases apply_prototypes

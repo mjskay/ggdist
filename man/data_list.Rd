@@ -40,7 +40,7 @@ as_data_list(object, name = "", ...)
 \item{...}{Additional arguments passed to other implementations of
 \code{as_data_list}, or for \code{data_list}, passed to \code{\link{list}}.}
 
-\item{object}{The object to convert (see `Details`).}
+\item{object}{The object to convert (see \emph{Details}).}
 
 \item{name}{The name of the element in the returned list corresponding to
 this object.}
@@ -66,7 +66,7 @@ Functions used by \code{\link{compose_data}} to create lists of data suitable fo
 input into a Bayesian modeling function. \strong{These functions typically should not be called directly}
 (instead use \code{\link{compose_data}}), but are exposed for the rare cases in which
 you may need to provide your own conversion routines for a data type not already
-supported (see `Details`).
+supported (see \emph{Details}).
 }
 \details{
 \code{data_list} creates a list with class \code{c("data_list", "list")}
@@ -77,17 +77,17 @@ function.
 concatenating all resulting lists together. By default this means that:
 
 \itemize{
- \item numerics are included as-is.
- \item logicals are translated into numeric using \code{\link{as.numeric}}.
- \item factors are translated into numeric using \code{\link{as.numeric}}, and an additional element named
-   \code{.n_name(name)} is added with the number of levels in the factor.
- \item character vectors are converted into factors then translated into numeric in the same manner as factors are.
- \item lists are translated by translating all elements of the list
-   (recursively) and adding them to the result.
- \item data.frames are translated by translating every column of the data.frame and adding them to
-   the result. A variable named \code{"n"} (or \code{.n_name(name)} if \code{name} is not \code{""})
-   is also added containing the number of rows in the data frame.
- \item all other types are dropped (and a warning given)
+\item numerics are included as-is.
+\item logicals are translated into numeric using \code{\link{as.numeric}}.
+\item factors are translated into numeric using \code{\link{as.numeric}}, and an additional element named
+\code{.n_name(name)} is added with the number of levels in the factor.
+\item character vectors are converted into factors then translated into numeric in the same manner as factors are.
+\item lists are translated by translating all elements of the list
+(recursively) and adding them to the result.
+\item data.frames are translated by translating every column of the data.frame and adding them to
+the result. A variable named \code{"n"} (or \code{.n_name(name)} if \code{name} is not \code{""})
+is also added containing the number of rows in the data frame.
+\item all other types are dropped (and a warning given)
 }
 
 If you wish to add support for additional types not described above, provide

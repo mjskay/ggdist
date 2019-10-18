@@ -30,7 +30,7 @@ result of this function.}
 
 \item{comparison}{One of (a) the comparison types \code{ordered},
 \code{control}, \code{pairwise}, or \code{default} (may also be given as
-strings, e.g. \code{"ordered"}), see `Details`; (b) a user-specified
+strings, e.g. \code{"ordered"}), see \emph{Details}; (b) a user-specified
 function that takes a \code{factor} and returns a list of pairs of names of
 levels to compare (as strings) and/or unevaluated expressions containing
 representing the comparisons to make; or (c) a list of pairs of names of
