@@ -11,28 +11,28 @@ globalVariables(".draw")
 #' Add draws to a data frame in tidy format
 #'
 #' Add draws from a matrix of draws (usually draws from a predictive distribution) to a data frame in tidy format. This is
-#' a generic version of \code{\link{add_fitted_draws}}/\code{\link{add_predicted_draws}} that can be used with model types
+#' a generic version of [add_fitted_draws()]/[add_predicted_draws()] that can be used with model types
 #' that have their own prediction functions that are not yet supported by tidybayes.
 #'
 #' Given a data frame with M rows and an N by M matrix of N draws, adds a `.row`, `.draw`, and `.value`
 #' column (or another name if `value` is set) to `data`, and expands `data` into a long-format dataframe of draws.
 #'
-#' \code{\link{add_fitted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_linpred(m, newdata = df, summary = FALSE))}, except
+#' `add_fitted_draws(df, m)` is roughly equivalent to `add_draws(df, posterior_linpred(m, newdata = df, summary = FALSE))`, except
 #' that `add_fitted_draws` standardizes argument names and values across packages and has additional features for some
 #' model types (like handling ordinal responses and distributional parameters in brms).
 #'
-#' \code{\link{add_predicted_draws}(df, m)} is roughly equivalent to \code{\link{add_draws}(df, posterior_predict(m, newdata = df, summary = FALSE))}, except
+#' `add_predicted_draws(df, m)` is roughly equivalent to `add_draws(df, posterior_predict(m, newdata = df, summary = FALSE))`, except
 #' that `add_predicted_draws` standardizes argument names and values across packages.
 #'
 #' @param data Data frame to add draws to, with M rows.
 #' @param draws N by M matrix of draws, with M columns corresponding to the M rows in `data`, and N draws in each column.
 #' @param value The name of the output column; default `".value"`.
-#' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a `.row` column (a
+#' @return A data frame (actually, a [tibble][tibble::tibble]) with a `.row` column (a
 #' factor grouping rows from the input `data`), a `.draw` column (a unique index corresponding to each draw
 #' from the distribution), and a column with its name specified by the `value` argument (default is `.value`)
 #' containing the values of draws from `draws`. The data frame is grouped by all rows in `data` plus the `.row` column.
 #' @author Matthew Kay
-#' @seealso \code{\link{add_fitted_draws}}, \code{\link{add_predicted_draws}}
+#' @seealso [add_fitted_draws()], [add_predicted_draws()], [add_draws()]
 #' @keywords manip
 #' @examples
 #' \donttest{

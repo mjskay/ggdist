@@ -203,7 +203,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
 #' through the `interval_size_domain`, `interval_size_range`, and `fatten_point` parameters.
 #' These scaling factors are designed to give multiple probability intervals reasonable
-#' scaling at the default settings for \code{\link{scale_size_continuous}}.
+#' scaling at the default settings for [scale_size_continuous()].
 #'
 #' As a combination geom, this geom expects a `datatype` aesthetic specifying which part of the geom a given
 #' row in the input data corresponds to: `"slab"` or `"interval"`. However, specifying this aesthetic
@@ -214,12 +214,12 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' Wrapper geoms and stats include:
 #'
 #' \itemize{
-#'   \item \code{\link{stat_sample_slabinterval}} and associated stats
-#'   \item \code{\link{stat_dist_slabinterval}} and associated stats
-#'   \item \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}}
-#'   \item \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}}
-#'   \item \code{\link{geom_interval}} / \code{\link{geom_intervalh}}
-#'   \item \code{\link{stat_interval}} / \code{\link{stat_intervalh}}
+#'   \item [stat_sample_slabinterval()] and associated stats
+#'   \item [stat_dist_slabinterval()] and associated stats
+#'   \item [geom_pointinterval()] / [geom_pointintervalh()]
+#'   \item [stat_pointinterval()] / [stat_pointintervalh()]
+#'   \item [geom_interval()] / [geom_intervalh()]
+#'   \item [stat_interval()] / [stat_intervalh()]
 #' }
 #'
 #' Typically, the `geom_*` versions are meant for use with already-summarized data (such as intervals) and the
@@ -227,7 +227,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #'
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
-#' @param ...  Other arguments passed to \code{\link{layer}}.
+#' @param ...  Other arguments passed to [layer()].
 #' @param side Which side to draw the slab on. `"topright"`, `"top"`, and `"right"` are synonyms
 #' which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`
 #' or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab
@@ -257,14 +257,14 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @param interval_size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
 #' sizes for intervals drawn according to `interval_size_range` (see the documentation for that argument.)
 #' @param interval_size_range This geom scales the raw size aesthetic values when drawing interval and point sizes, as
-#' they tend to be too thick when using the default settings of \code{\link{scale_size_continuous}}, which give sizes
+#' they tend to be too thick when using the default settings of [scale_size_continuous()], which give sizes
 #' with a range of `c(1, 6)`. The `interval_size_domain` value indicates the input domain of raw size values
-#' (typically this should be equal to the value of the `range` argument of the \code{\link{scale_size_continuous}}
+#' (typically this should be equal to the value of the `range` argument of the [scale_size_continuous()]
 #' function), and `interval_size_range` indicates the desired output range of the size values (the min and max of
 #' the actual sizes used to draw intervals).
 #' @param fatten_point A multiplicative factor used to adjust the size of the point relative to the size of the
 #' thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
-#' aesthetic and \code{\link{scale_point_size_continuous}} or \code{\link{scale_point_size_discrete}}; sizes
+#' aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
 #' specified with that aesthetic will not be adjusted using `fatten_point`.
 #' @param show_slab Should the slab portion of the geom be drawn? Default `TRUE`.
 #' @param show_point Should the point portion of the geom be drawn? Default `TRUE`.
@@ -272,8 +272,8 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @param na.rm	If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
 #' values are silently removed.
 #' @author Matthew Kay
-#' @seealso See \code{\link{geom_lineribbon}} for a combination geom designed for fit curves plus probability bands.
-#' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+#' @seealso See [geom_lineribbon()] for a combination geom designed for fit curves plus probability bands.
+#' See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of stats
 #' built on top of this geom for common use cases (like `stat_halfeyeh`).
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples

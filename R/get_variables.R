@@ -20,18 +20,18 @@ parameters = function(model) {
 #' Get the names of the variables in a fitted Bayesian model
 #'
 #' Get a character vector of the names of the variables in a variety of fitted
-#' Bayesian model types. All models supported by \code{\link{tidy_draws}} are
+#' Bayesian model types. All models supported by [tidy_draws()] are
 #' supported.
 #'
 #' This function is often useful for inspecting a model interactively in order
-#' to construct calls to \code{\link{spread_draws}} or \code{\link{gather_draws}}
+#' to construct calls to [spread_draws()] or [gather_draws()]
 #' in order to extract draws from models in a tidy format.
 #'
 #' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
-#' for a full list of supported models, see \link{tidybayes-models}.
+#' for a full list of supported models, see [tidybayes-models].
 #' @return A character vector of variable names in the fitted model.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}.
+#' @seealso [spread_draws()], [gather_draws()].
 #' @keywords manip
 #' @examples
 #'

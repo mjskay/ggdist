@@ -17,7 +17,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' If `.data` is a data frame, then `...` is a list of bare names of
 #' columns (or expressions derived from columns) of `.data`, on which
 #' the point and interval summaries are derived. Column expressions are processed
-#' using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
+#' using the tidy evaluation framework (see [rlang::eval_tidy()]).
 #'
 #' For a column named `x`, the resulting data frame will have a column
 #' named `x` containing its point summary. If there is a single
@@ -29,7 +29,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' end of the interval). Finally, the output will have a `.width` column
 #' containing the' probability for the interval on each output row.
 #'
-#' If `.data` includes groups (see e.g. \code{\link[dplyr]{group_by}}),
+#' If `.data` includes groups (see e.g. [dplyr::group_by()]),
 #' the points and intervals are calculated within the groups.
 #'
 #' If `.data` is a vector, `...` is ignored and the result is a
@@ -39,7 +39,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' corresponding to the interval. This behavior allows `point_interval`
 #' and its derived functions (like `median_qi`, `mean_qi`, `mode_hdi`, etc)
 #' to be easily used to plot intervals in ggplot stats using methods like
-#' \code{\link{stat_eye}}, \code{\link{stat_halfeyeh}}, or \code{\link{stat_summary}}.
+#' [stat_eye()], [stat_halfeyeh()], or [stat_summary()].
 #'
 #' The functions ending in `h` (e.g., `point_intervalh`, `median_qih`)
 #' behave identically to the function without the h, except that when passed a vector,
@@ -48,7 +48,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' `fun.data = ` argument of `stat_summaryh`. **Note:** these
 #' functions are not necessary if you use the `point_interval`
 #' argument of `stat`s and `geom`s in the `tidybayes` package (e.g.
-#' \code{\link{stat_pointintervalh}}, \code{\link{stat_halfeyeh}}, etc), as
+#' [stat_pointintervalh()], [stat_halfeyeh()], etc), as
 #' these automatically adjust the function output to match their required aesthetics.
 #'
 #' `median_qi`, `mode_hdi`, etc are short forms for
@@ -62,16 +62,16 @@ globalVariables(c("y", "ymin", "ymax"))
 #' intervals for each probability level (these will be spread over rows). You may wish to use
 #' `hdci` (below) instead if you want a single highest-density interval, with the caveat that when
 #' the distribution is multimodal `hdci` is not a highest-density interval. Internally `hdi` uses
-#' \code{\link[HDInterval]{hdi}} with `allowSplit = TRUE` (when multimodal) and with
+#' [HDInterval::hdi()] with `allowSplit = TRUE` (when multimodal) and with
 #' `allowSplit = FALSE` (when not multimodal).
 #'
 #' `hdci` yields the highest-density *continuous* interval. **Note:** If the distribution
 #' is multimodal, this may not actually be the highest-density interval (there may be a higher-density
 #' discontinuous interval). Internally `hdci` uses
-#' \code{\link[HDInterval]{hdi}} with `allowSplit = FALSE`; see that function for more
+#' [HDInterval::hdi()] with `allowSplit = FALSE`; see that function for more
 #' information on multimodality and continuous versus discontinuous intervals.
 #'
-#' @param .data Data frame (or grouped data frame as returned by \code{\link{group_by}})
+#' @param .data Data frame (or grouped data frame as returned by [group_by()])
 #' that contains draws to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
 #' `.data`, represent draws to summarize. If this is empty, then by default all
@@ -83,10 +83,10 @@ globalVariables(c("y", "ymin", "ymax"))
 #' a different probability interval (and value of the corresponding `.width` column).
 #' @param .prob Deprecated. Use `.width` instead.
 #' @param .point Point summary function, which takes a vector and returns a single
-#' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
+#' value, e.g. [mean()], [median()], or [Mode()].
 #' @param .interval Interval function, which takes a vector and a probability
 #' (`.width`) and returns a two-element vector representing the lower and upper
-#' bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}
+#' bound of an interval; e.g. [qi()], [hdi()]
 #' @param .simple_names When `TRUE` and only a single column / vector is to be summarized, use the
 #' name `.lower` for the lower end of the interval and `.upper` for the
 #' upper end. If `.data` is a vector and this is `TRUE`, this will also set the column name

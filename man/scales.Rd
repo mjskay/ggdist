@@ -124,7 +124,7 @@ guide_colorbar2(...)
 }
 \arguments{
 \item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
-passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.}
+passes arguments to \code{\link[=scale_color_discrete]{scale_color_discrete()}}. See those functions for more details.}
 
 \item{aesthetics}{Names of aesthetics to set scales for.}
 
@@ -150,11 +150,11 @@ new limits
 \code{FALSE}?}
 }
 \description{
-These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_slabinterval}}
+These scales allow more specific aesthetic mappings to be made when using \code{\link[=geom_slabinterval]{geom_slabinterval()}}
 and stats/geoms based on it (like eye plots).
 }
 \details{
-The following additional scales / aesthetics are defined for use with \code{\link{geom_slabinterval}} and
+The following additional scales / aesthetics are defined for use with \code{\link[=geom_slabinterval]{geom_slabinterval()}} and
 related geoms:
 
 \enumerate{
@@ -169,16 +169,16 @@ related geoms:
 \item{\code{scale_slab_color_* }}{Slab outline color}
 \item{\code{scale_slab_fill_* }}{Slab fill color}
 \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
-\code{scale_slab_alpha_continuous} differ from \code{\link{scale_alpha_continuous}} and
-are designed for gradient plots (e.g. \code{\link{stat_gradientinterval}}) by ensuring that
+\code{scale_slab_alpha_continuous} differ from \code{\link[=scale_alpha_continuous]{scale_alpha_continuous()}} and
+are designed for gradient plots (e.g. \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}) by ensuring that
 densities of 0 get mapped to 0 in the output.}
 \item{\code{scale_slab_size_* }}{Slab outline line width}
 \item{\code{scale_slab_linetype_* }}{Slab outline line type}
-\item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_dotsinterval}})}
+\item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link[=geom_dotsinterval]{geom_dotsinterval()}})}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.
-\code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
+\code{\link[=scale_color_discrete]{scale_color_discrete()}}, \code{\link[=scale_color_continuous]{scale_color_continuous()}}, etc.
 
 Other scale functions can be used with the aesthetics/scales defined here by using the \code{aesthetics}
 argument to that scale function. For example, to use color brewer scales with the \code{point_color} aesthetic:
@@ -223,7 +223,7 @@ data.frame(distribution = "Normal(1,2)") \%>\%
 
 }
 \seealso{
-\code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
+\code{\link[=scale_color_discrete]{scale_color_discrete()}}, \code{\link[=scale_color_continuous]{scale_color_continuous()}}, etc.
 }
 \author{
 Matthew Kay

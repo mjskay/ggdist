@@ -78,7 +78,7 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link{layer}}.}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
 
 \item{dotsize}{The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as
 wide as the bin width.}
@@ -111,19 +111,19 @@ aesthetic to identify different groups, then for each group uses the \code{x} (r
 aesthetics.}
 
 \item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link{geom_slabinterval}}}
+\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
 \item{quantiles}{For the \code{stat_} and \code{stat_dist_} stats, setting this to a value other than \code{NA}
 will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for \code{stat_}) or a dotplot
 of quantiles from the distribution (for \code{stat_dist_}). The value of \code{quantiles} determines the number
 of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.}
 
-\item{point_interval}{A function from the \code{\link{point_interval}} family (e.g., \code{median_qi},
+\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, etc). This function should take in a vector of value, and should obey the
-\code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
+\code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
 a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
-depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
+depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 }
 \description{
@@ -131,14 +131,14 @@ Geoms and stats for creating dotplots that automatically determines a bin width 
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
 generation of quantile dotplots using the \code{quantiles} argument to \code{stat_dotsinterval}/\code{stat_dots}
 and \code{stat_dist_dotsinterval}/\code{stat_dist_dots}. Generally follows the naming scheme and
-arguments of the \code{\link{geom_slabinterval}} and \code{\link{stat_slabinterval}} family of
+arguments of the \code{\link[=geom_slabinterval]{geom_slabinterval()}} and \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of
 geoms and stats.
 }
 \details{
-The dots geoms are similar to \code{\link{geom_dotplot}} but with a number of differences:
+The dots geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
 
 \itemize{
-\item Dots geoms act like slabs in \code{\link{geom_slabinterval}} and can be given x positions (or y positions when
+\item Dots geoms act like slabs in \code{\link[=geom_slabinterval]{geom_slabinterval()}} and can be given x positions (or y positions when
 in a horizontal orientation).
 \item Given the available space to lay out dots, the dots geoms will automatically determine how many bins to
 use to fit the available space.
@@ -219,8 +219,8 @@ or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Co
 \doi{10.1145/3173574.3173718}.
 }
 \seealso{
-See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of other
-stats built on top of \code{\link{geom_slabinterval}}.
+See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} for families of other
+stats built on top of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }
 \author{

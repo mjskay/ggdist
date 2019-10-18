@@ -6,23 +6,23 @@
 
 #' Multiple probability interval plots (ggplot stat)
 #'
-#' A combination of \code{\link{stat_sample_slabinterval}} and
-#' \code{\link{geom_slabinterval}} with sensible defaults.
+#' A combination of [stat_sample_slabinterval()] and
+#' [geom_slabinterval()] with sensible defaults.
 #' While the corresponding `geom`s are intended for use on
-#' data frames that have already been summarized using a \code{\link{point_interval}}
+#' data frames that have already been summarized using a [point_interval()]
 #' function, these `stat`s are intended for use directly on data frames of draws, and
-#' will perform the summarization using a \code{\link{point_interval}} function.
+#' will perform the summarization using a [point_interval()] function.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval", stat = StatInterval)
 #' @inheritParams stat_pointinterval
 #' @inheritParams geom_slabinterval
-#' @seealso See \code{\link{geom_interval}} / \code{\link{geom_intervalh}} for the geom versions, intended
-#' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
-#' See \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}} for a similar stat intended for
+#' @seealso See [geom_interval()] / [geom_intervalh()] for the geom versions, intended
+#' for use on points and intervals that have already been summarized using a [point_interval()] function.
+#' See [stat_pointinterval()] / [stat_pointintervalh()] for a similar stat intended for
 #' point summaries and intervals.
-#' See \code{\link{stat_sample_slabinterval}} for a variety of other
+#' See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
-#' See \code{\link{geom_slabinterval}} for the geom that these geoms wrap. All parameters of that geom are
+#' See [geom_slabinterval()] for the geom that these geoms wrap. All parameters of that geom are
 #' available to these geoms.
 #' @examples
 #'

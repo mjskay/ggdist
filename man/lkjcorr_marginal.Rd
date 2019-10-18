@@ -75,6 +75,6 @@ and extended onion method. \emph{Journal of Multivariate Analysis}, 100(9), 1989
 \doi{10.1016/j.jmva.2009.04.008}.
 }
 \seealso{
-\code{\link{parse_dist}} and \code{\link{marginalize_lkjcorr}} for parsing specs that use the
-LKJ correlation distribution and the \code{\link{stat_dist_slabinterval}} family of stats for visualizing them.
+\code{\link[=parse_dist]{parse_dist()}} and \code{\link[=marginalize_lkjcorr]{marginalize_lkjcorr()}} for parsing specs that use the
+LKJ correlation distribution and the \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} family of stats for visualizing them.
 }

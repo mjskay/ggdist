@@ -117,7 +117,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
 
 #' Base ggproto classes for tidybayes
 #'
-#' @seealso \link{ggproto}
+#' @seealso [ggproto]
 #' @keywords internal
 #' @name tidybayes-ggproto
 NULL

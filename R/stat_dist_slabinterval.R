@@ -118,7 +118,7 @@ dist_interval_function = function(df, .width, trans, ...) {
 #' Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)
 #'
 #' Stats for computing distribution functions (densities or CDFs) + intervals for use with
-#' \code{\link{geom_slabinterval}}. Uses `dist` aesthetic to specify a distribution name
+#' [geom_slabinterval()]. Uses `dist` aesthetic to specify a distribution name
 #' and `arg1`, ... `arg9` aesthetics (or `args` as a list column) to specify distribution
 #' arguments.
 #'
@@ -147,12 +147,12 @@ dist_interval_function = function(df, .width, trans, ...) {
 #' and `arg1`, ... `arg9` aesthetics (or `args` as a list column) to specify distribution
 #' arguments. Distribution names should correspond to R functions that have `"p"`, `"q"`, and
 #' `"d"` functions; e.g. `"norm"` is a valid distribution name because R defines the
-#' \code{\link{pnorm}}, \code{\link{qnorm}}, and \code{\link{dnorm}} functions for Normal distributions.
+#' [pnorm()], [qnorm()], and [dnorm()] functions for Normal distributions.
 #'
-#' See the \code{\link{parse_dist}} function for a useful way to generate `dist` and `args`
+#' See the [parse_dist()] function for a useful way to generate `dist` and `args`
 #' values from human-readable distribution specs (like `"normal(0,1)"`). Such specs are also
-#' produced by other packages (like the \code{\link[brms]{get_prior}} function in brms); thus,
-#' \code{\link{parse_dist}} combined with the stats described here can help you visualize the output
+#' produced by other packages (like the [brms::get_prior()] function in brms); thus,
+#' [parse_dist()] combined with the stats described here can help you visualize the output
 #' of those functions.
 #'
 #' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
@@ -178,10 +178,10 @@ dist_interval_function = function(df, .width, trans, ...) {
 #' will not be wider than these (but may be narrower).Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
-#' @param thickness Override for the `thickness` aesthetic in \code{\link{geom_slabinterval}}: the thickness
+#' @param thickness Override for the `thickness` aesthetic in [geom_slabinterval()]: the thickness
 #' of the slab at each x / y value of the slab (depending on `orientation`).
-#' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
-#' use by default and some of the options they have. See \code{\link{stat_sample_slabinterval}}
+#' @seealso See [geom_slabinterval()] for more information on the geom these stats
+#' use by default and some of the options they have. See [stat_sample_slabinterval()]
 #' for the versions of these stats that can be used on samples.
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples

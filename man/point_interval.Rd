@@ -90,7 +90,7 @@ mode_hdci(.data, ..., .width = 0.95)
 mode_hdcih(...)
 }
 \arguments{
-\item{.data}{Data frame (or grouped data frame as returned by \code{\link{group_by}})
+\item{.data}{Data frame (or grouped data frame as returned by \code{\link[=group_by]{group_by()}})
 that contains draws to summarize.}
 
 \item{...}{Bare column names or expressions that, when evaluated in the context of
@@ -104,11 +104,11 @@ If multiple probabilities are provided, multiple rows per group are generated, e
 a different probability interval (and value of the corresponding \code{.width} column).}
 
 \item{.point}{Point summary function, which takes a vector and returns a single
-value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.}
+value, e.g. \code{\link[=mean]{mean()}}, \code{\link[=median]{median()}}, or \code{\link[=Mode]{Mode()}}.}
 
 \item{.interval}{Interval function, which takes a vector and a probability
 (\code{.width}) and returns a two-element vector representing the lower and upper
-bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}}
+bound of an interval; e.g. \code{\link[=qi]{qi()}}, \code{\link[=hdi]{hdi()}}}
 
 \item{.simple_names}{When \code{TRUE} and only a single column / vector is to be summarized, use the
 name \code{.lower} for the lower end of the interval and \code{.upper} for the
@@ -139,7 +139,7 @@ multiple groups in a grouped data frame).
 If \code{.data} is a data frame, then \code{...} is a list of bare names of
 columns (or expressions derived from columns) of \code{.data}, on which
 the point and interval summaries are derived. Column expressions are processed
-using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
+using the tidy evaluation framework (see \code{\link[rlang:eval_tidy]{rlang::eval_tidy()}}).
 
 For a column named \code{x}, the resulting data frame will have a column
 named \code{x} containing its point summary. If there is a single
@@ -151,7 +151,7 @@ Otherwise, for every summarized column \code{x}, the output will contain
 end of the interval). Finally, the output will have a \code{.width} column
 containing the' probability for the interval on each output row.
 
-If \code{.data} includes groups (see e.g. \code{\link[dplyr]{group_by}}),
+If \code{.data} includes groups (see e.g. \code{\link[dplyr:group_by]{dplyr::group_by()}}),
 the points and intervals are calculated within the groups.
 
 If \code{.data} is a vector, \code{...} is ignored and the result is a
@@ -161,7 +161,7 @@ data frame with one row per value of \code{.width} and three columns:
 corresponding to the interval. This behavior allows \code{point_interval}
 and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 to be easily used to plot intervals in ggplot stats using methods like
-\code{\link{stat_eye}}, \code{\link{stat_halfeyeh}}, or \code{\link{stat_summary}}.
+\code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_halfeyeh]{stat_halfeyeh()}}, or \code{\link[=stat_summary]{stat_summary()}}.
 
 The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih})
 behave identically to the function without the h, except that when passed a vector,
@@ -170,7 +170,7 @@ they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 \code{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
 functions are not necessary if you use the \code{point_interval}
 argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
-\code{\link{stat_pointintervalh}}, \code{\link{stat_halfeyeh}}, etc), as
+\code{\link[=stat_pointintervalh]{stat_pointintervalh()}}, \code{\link[=stat_halfeyeh]{stat_halfeyeh()}}, etc), as
 these automatically adjust the function output to match their required aesthetics.
 
 \code{median_qi}, \code{mode_hdi}, etc are short forms for
@@ -184,13 +184,13 @@ density interval). \strong{Note:} If the distribution is multimodal, \code{hdi} 
 intervals for each probability level (these will be spread over rows). You may wish to use
 \code{hdci} (below) instead if you want a single highest-density interval, with the caveat that when
 the distribution is multimodal \code{hdci} is not a highest-density interval. Internally \code{hdi} uses
-\code{\link[HDInterval]{hdi}} with \code{allowSplit = TRUE} (when multimodal) and with
+\code{\link[HDInterval:hdi]{HDInterval::hdi()}} with \code{allowSplit = TRUE} (when multimodal) and with
 \code{allowSplit = FALSE} (when not multimodal).
 
 \code{hdci} yields the highest-density \emph{continuous} interval. \strong{Note:} If the distribution
 is multimodal, this may not actually be the highest-density interval (there may be a higher-density
 discontinuous interval). Internally \code{hdci} uses
-\code{\link[HDInterval]{hdi}} with \code{allowSplit = FALSE}; see that function for more
+\code{\link[HDInterval:hdi]{HDInterval::hdi()}} with \code{allowSplit = FALSE}; see that function for more
 information on multimodality and continuous versus discontinuous intervals.
 }
 \examples{

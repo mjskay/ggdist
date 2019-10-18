@@ -42,12 +42,12 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' the data frame in a long format.
 #'
 #' `add_fitted_draws` adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to
-#' the data. It corresponds to \code{\link[rstanarm]{posterior_linpred}} in `rstanarm` or
-#' \code{\link[brms]{fitted.brmsfit}} in `brms`.
+#' the data. It corresponds to [rstanarm::posterior_linpred()] in `rstanarm` or
+#' [brms::fitted.brmsfit()] in `brms`.
 #'
 #' `add_predicted_draws` adds draws from posterior predictions to
-#' the data. It corresponds to \code{\link[rstanarm]{posterior_predict}} in `rstanarm` or
-#' \code{\link[brms]{predict.brmsfit}} in `brms`.
+#' the data. It corresponds to [rstanarm::posterior_predict()] in `rstanarm` or
+#' [brms::predict.brmsfit()] in `brms`.
 #'
 #' `add_fitted_draws` and `fitted_draws` are alternate spellings of the
 #' same function with opposite order of the first two arguments to facilitate use in data
@@ -59,13 +59,13 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #'
 #' `add_linpred_draws` and `linpred_draws` are alternative spellings of `fitted_draws`
 #' and `add_fitted_draws` for consistency with `rstanarm` terminology (specifically
-#' \code{\link[rstanarm]{posterior_linpred}}).
+#' [rstanarm::posterior_linpred()]).
 #'
 #' @param newdata Data frame to generate predictions from. If omitted, most model types will
 #' generate predictions from the data used to fit the model.
 #' @param model A supported Bayesian model fit that can provide fits and predictions. Supported models
-#' are listed in the second section of \link{tidybayes-models}: *Models Supporting Prediction*. While other
-#' functions in this package (like \code{\link{spread_draws}}) support a wider range of models, to work with
+#' are listed in the second section of [tidybayes-models]: *Models Supporting Prediction*. While other
+#' functions in this package (like [spread_draws()]) support a wider range of models, to work with
 #' `add_fitted_draws` and `add_predicted_draws` a model must provide an interface for generating
 #' predictions, thus more generic Bayesian modeling interfaces like `runjags` and `rstan` are not directly
 #' supported for these functions (only wrappers around those languages that provide predictions, like `rstanarm`
@@ -79,12 +79,12 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' @param seed A seed to use when subsampling draws (i.e. when `n` is not `NULL`).
 #' @param re_formula formula containing group-level effects to be considered in the prediction.
 #' If `NULL` (default), include all group-level effects; if `NA`, include no group-level effects.
-#' Some model types (such as \code{\link[brms]{brm}} and \code{\link[rstanarm]{stanreg-objects}}) allow
+#' Some model types (such as [brms::brmsfit] and [rstanarm::stanreg-objects]) allow
 #' marginalizing over grouping factors by specifying new levels of a factor in `newdata`. In the case of
-#' \code{\link[brms]{brm}}, you must also pass `allow_new_levels = TRUE` here to include new levels (see
-#' \code{\link[brms]{predict.brmsfit}}).
-#' @param category For *some* ordinal, multinomial, and multivariate models (notably, \code{\link[brms]{brm}} models but
-#' *not* \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per input row for
+#' [brms::brm()], you must also pass `allow_new_levels = TRUE` here to include new levels (see
+#' [brms::predict.brmsfit()]).
+#' @param category For *some* ordinal, multinomial, and multivariate models (notably, [brms::brm()] models but
+#' *not* [rstanarm::stan_polr()] models), multiple sets of rows will be returned per input row for
 #' `fitted_draws` or `predicted_draws`, depending on the model type. For ordinal/multinomial models,
 #' these rows correspond to different categories of the response variable. For multivariate models, these correspond to
 #' different response variables. The `category` argument specifies the name of the column
@@ -105,7 +105,7 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' @param scale Either `"response"` or `"linear"`. If `"response"`, results are returned
 #' on the scale of the response variable. If `"linear"`, fitted values are returned on the scale of
 #' the linear predictor.
-#' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a `.row` column (a
+#' @return A data frame (actually, a [tibble][tibble::tibble]) with a `.row` column (a
 #' factor grouping rows from the input `newdata`), `.chain` column (the chain
 #' each draw came from, or `NA` if the model does not provide chain information),
 #' `.iteration` column (the iteration the draw came from, or `NA` if the model does
@@ -115,8 +115,8 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' and `predicted_draws` contains a `.prediction` column containing draws from the posterior predictive
 #' distribution. For convenience, the resulting data frame comes grouped by the original input rows.
 #' @author Matthew Kay
-#' @seealso \code{\link{add_draws}} for the variant of these functions for use with packages that do not have
-#' explicit support for these functions yet. See \code{\link{spread_draws}} for manipulating posteriors directly.
+#' @seealso [add_draws()] for the variant of these functions for use with packages that do not have
+#' explicit support for these functions yet. See [spread_draws()] for manipulating posteriors directly.
 #' @keywords manip
 #' @examples
 #' \donttest{

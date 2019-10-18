@@ -50,7 +50,7 @@ line \%>\%
 
 }
 \seealso{
-\code{\link[emmeans]{emmeans}}
+\code{\link[emmeans:emmeans]{emmeans::emmeans()}}
 }
 \author{
 Matthew Kay

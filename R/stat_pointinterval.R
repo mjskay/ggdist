@@ -6,12 +6,12 @@
 
 #' Point summary + multiple probability interval plots (ggplot stat)
 #'
-#' A combination of \code{\link{stat_sample_slabinterval}} and
-#' \code{\link{geom_slabinterval}} with sensible defaults.
+#' A combination of [stat_sample_slabinterval()] and
+#' [geom_slabinterval()] with sensible defaults.
 #' While the corresponding `geom`s are intended for use on
-#' data frames that have already been summarized using a \code{\link{point_interval}}
+#' data frames that have already been summarized using a [point_interval()]
 #' function, these `stat`s are intended for use directly on data frames of draws, and
-#' will perform the summarization using a \code{\link{point_interval}} function.
+#' will perform the summarization using a [point_interval()] function.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomPointinterval, geom_name = "geom_pointinterval", stat = StatPointinterval)
 #' @inheritParams stat_sample_slabinterval
@@ -19,18 +19,18 @@
 #' @param .prob Deprecated. Use `.width` instead.
 #' @param fun.data Deprecated. Use `point_interval` or `interval_function` instead.
 #' @param fun.args Deprecated. Use `interval_args` instead.
-#' @seealso See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
-#' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
-#' See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
-#' point summaries. See \code{\link{stat_sample_slabinterval}} for a variety of other
+#' @seealso See [geom_pointinterval()] / [geom_pointintervalh()] for the geom versions, intended
+#' for use on points and intervals that have already been summarized using a [point_interval()] function.
+#' See [stat_interval()] / [stat_intervalh()] for a similar stat intended for intervals without
+#' point summaries. See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
-#' @seealso See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
-#' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
-#' See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without
+#' @seealso See [geom_pointinterval()] / [geom_pointintervalh()] for the geom versions, intended
+#' for use on points and intervals that have already been summarized using a [point_interval()] function.
+#' See [stat_interval()] / [stat_intervalh()] for a similar stat intended for intervals without
 #' point summaries.
-#' See \code{\link{stat_sample_slabinterval}} for a variety of other
+#' See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
-#' See \code{\link{geom_slabinterval}} for the geom that these geoms wrap. All parameters of that geom are
+#' See [geom_slabinterval()] for the geom that these geoms wrap. All parameters of that geom are
 #' available to these geoms.
 #' @examples
 #'

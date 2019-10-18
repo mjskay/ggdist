@@ -7,7 +7,7 @@
 #' Generate lookup vectors for composing nested indices
 #'
 #' Generates a lookup vector such that `x_at_y(x, y)[y] == x`. Particularly useful
-#' for generating lookup tables for nested indices in conjunction with \code{\link{compose_data}}.
+#' for generating lookup tables for nested indices in conjunction with [compose_data()].
 #'
 #' `x_at_y(x, y)` returns a vector `k` such that `k[y] == x`. It also
 #' fills in missing values in `y`: if `y` is an integer, `k` will contain
@@ -21,7 +21,7 @@
 #' @param missing Missing levels from `y` will be filled in with this value
 #' in the resulting lookup vector. Default `NA`.
 #' @author Matthew Kay
-#' @seealso \code{\link{compose_data}}.
+#' @seealso [compose_data()].
 #' @examples
 #'
 #' library(magrittr)

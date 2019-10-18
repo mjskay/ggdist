@@ -62,7 +62,7 @@ spread_samples = function(...) {
 #' be spread across the data frame as column names, whereas `gather_draws` will
 #' gather variables into a single column named `".variable"` and place values of variables into a
 #' column named `".value"`. To use naming schemes from other packages (such as `broom`), consider passing
-#' results through functions like \code{\link{to_broom_names}} or \code{\link{to_ggmcmc_names}}.
+#' results through functions like [to_broom_names()] or [to_ggmcmc_names()].
 #'
 #' For example, `spread_draws(fit, a[i], b[i,v])` might return a grouped
 #' data frame (grouped by `i` and `v`), with:
@@ -94,7 +94,7 @@ spread_samples = function(...) {
 #'  }
 #'
 #' `spread_draws` and `gather_draws` can use type information
-#' applied to the `fit` object by \code{\link{recover_types}} to convert columns
+#' applied to the `fit` object by [recover_types()] to convert columns
 #' back into their original types. This is particularly helpful if some of the dimensions in
 #' your model were originally factors. For example, if the `v` dimension
 #' in the original data frame `data` was a factor with levels `c("a","b","c")`,
@@ -182,7 +182,7 @@ spread_samples = function(...) {
 #'
 #' The main difference between using the `|` syntax instead of the
 #' `..` syntax is that the `|` syntax respects prototypes applied to
-#' dimensions with \code{\link{recover_types}}, and thus can be used to get
+#' dimensions with [recover_types()], and thus can be used to get
 #' columns with nicer names. For example:
 #'
 #' ```
@@ -225,7 +225,7 @@ spread_samples = function(...) {
 #' Would return a tidy data frame with variables starting with `b_` and having one dimension.
 #'
 #' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
-#' for a full list of supported models, see \link{tidybayes-models}.
+#' for a full list of supported models, see [tidybayes-models].
 #' @param ... Expressions in the form of
 #' `variable_name[dimension_1, dimension_2, ...] | wide_dimension`. See *Details*.
 #' @param regex If `TRUE`, variable names are treated as regular expressions and all column matching the
@@ -235,7 +235,7 @@ spread_samples = function(...) {
 #' @param seed A seed to use when subsampling draws (i.e. when `n` is not `NULL`).
 #' @return A data frame.
 #' @author Matthew Kay
-#' @seealso \code{\link{recover_types}}, \code{\link{compose_data}}.
+#' @seealso [recover_types()], [compose_data()].
 #' @keywords manip
 #' @examples
 #'

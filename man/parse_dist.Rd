@@ -49,9 +49,9 @@ distribution names R recognizes. Unrecognized names are left as-is.}
 }
 \description{
 Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
-a data frame, suitable for use with \code{\link{stat_dist_slabinterval}} and its shortcut stats
+a data frame, suitable for use with \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and its shortcut stats
 (like \code{stat_dist_halfeye}). This format is output
-by \code{\link[brms]{get_prior}}, making it particularly useful for visualizing priors from
+by \code{\link[brms:get_prior]{brms::get_prior()}}, making it particularly useful for visualizing priors from
 brms models.
 }
 \details{
@@ -61,7 +61,7 @@ column to parse, and returns a data frame with \code{".dist"} and \code{".args"}
 by R.
 
 \code{r_dist_name()} takes a character vector of names and translates common names into R
-distribution names. Names are first made into valid R names using \code{\link{make.names}},
+distribution names. Names are first made into valid R names using \code{\link[=make.names]{make.names()}},
 then translated (ignoring character case, \code{"."}, and \code{"_"}). Thus, \code{"lognormal"},
 \code{"LogNormal"}, \code{"log_normal"}, \code{"log-Normal"}, and any number of other variants
 all get translated into \code{"lnorm"}.
@@ -101,6 +101,6 @@ if (
 
 }
 \seealso{
-See \code{\link{stat_dist_slabinterval}} and its shortcut stats, which can easily make use of
+See \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and its shortcut stats, which can easily make use of
 the output of this function using the \code{dist} and \code{args} aesthetics.
 }

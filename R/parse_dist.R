@@ -7,9 +7,9 @@
 #' Parse distribution specifications into columns of a data frame
 #'
 #' Parses simple string distribution specifications, like `"normal(0, 1)"`, into two columns of
-#' a data frame, suitable for use with \code{\link{stat_dist_slabinterval}} and its shortcut stats
+#' a data frame, suitable for use with [stat_dist_slabinterval()] and its shortcut stats
 #' (like `stat_dist_halfeye`). This format is output
-#' by \code{\link[brms]{get_prior}}, making it particularly useful for visualizing priors from
+#' by [brms::get_prior()], making it particularly useful for visualizing priors from
 #' brms models.
 #'
 #' `parse_dist()` can be applied to character vectors or to a data frame + bare column name of the
@@ -18,7 +18,7 @@
 #' by R.
 #'
 #' `r_dist_name()` takes a character vector of names and translates common names into R
-#' distribution names. Names are first made into valid R names using \code{\link{make.names}},
+#' distribution names. Names are first made into valid R names using [make.names()],
 #' then translated (ignoring character case, `"."`, and `"_"`). Thus, `"lognormal"`,
 #' `"LogNormal"`, `"log_normal"`, `"log-Normal"`, and any number of other variants
 #' all get translated into `"lnorm"`.
@@ -37,7 +37,7 @@
 #'   `"normal"` is translated into `"norm"` and `"lognormal"` is translated into `"lnorm"`.
 #' @param dist_name For `r_dist_name`, a character vector of distribution names to be translated into
 #'   distribution names R recognizes. Unrecognized names are left as-is.
-#' @seealso See \code{\link{stat_dist_slabinterval}} and its shortcut stats, which can easily make use of
+#' @seealso See [stat_dist_slabinterval()] and its shortcut stats, which can easily make use of
 #' the output of this function using the `dist` and `args` aesthetics.
 #' @examples
 #'

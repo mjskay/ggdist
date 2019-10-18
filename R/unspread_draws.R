@@ -24,26 +24,26 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 
 #' Turn tidy data frames of variables from a Bayesian model back into untidy data
 #'
-#' Inverse operations of \code{\link{spread_draws}} and \code{\link{gather_draws}}, giving
-#' results that look like \code{\link{tidy_draws}}.
+#' Inverse operations of [spread_draws()] and [gather_draws()], giving
+#' results that look like [tidy_draws()].
 #'
 #' These functions take symbolic specifications of variable names and dimensions in the same format as
-#' \code{\link{spread_draws}} and \code{\link{gather_draws}} and invert the tidy data frame back into
+#' [spread_draws()] and [gather_draws()] and invert the tidy data frame back into
 #' a data frame whose column names are variables with dimensions in them.
 #'
 #' @param data A tidy data frame of draws, such as one output by `spread_draws` or `gather_draws`.
 #' @param ... Expressions in the form of
-#' `variable_name[dimension_1, dimension_2, ...]`. See \code{\link{spread_draws}}.
+#' `variable_name[dimension_1, dimension_2, ...]`. See [spread_draws()].
 #' @param draw_indices Character vector of column names in `data` that
 #' should be treated as indices of draws. The default is `c(".chain",".iteration",".draw")`,
 #' which are the same names used for chain, iteration, and draw indices returned by
-#' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
+#' [spread_draws()] or [gather_draws()].
 #' @param drop_indices Drop the columns specified by `draw_indices` from the resulting data frame. Default `FALSE`.
 #' @param variable The name of the column in `data` that contains the names of variables from the model.
 #' @param value The name of the column in `data` that contains draws from the variables.
 #' @return A data frame.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{tidy_draws}}.
+#' @seealso [spread_draws()], [gather_draws()], [tidy_draws()].
 #' @keywords manip
 #' @examples
 #'

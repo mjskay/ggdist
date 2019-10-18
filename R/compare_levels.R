@@ -37,7 +37,7 @@ comparison_types = within(list(), {
 #' different levels of a factor
 #'
 #' Given posterior draws from a Bayesian model in long format (e.g. as
-#' returned by \code{\link{spread_draws}}), compare the value of a variable in those draws
+#' returned by [spread_draws()]), compare the value of a variable in those draws
 #' across different paired combinations of levels of a factor.
 #'
 #' This function simplifies conducting comparisons across levels of some
@@ -52,12 +52,12 @@ comparison_types = within(list(), {
 #' 1)` \item `pairwise`: compare each level of `by` with every other
 #' level.  \item `control`: compare each level of `by` with the first
 #' level of `by`.  If you wish to compare with a different level, you can
-#' first apply \code{\link{relevel}} to `by` to set the control
+#' first apply [relevel()] to `by` to set the control
 #' (reference) level.  \item `default`: use `ordered` if
 #' `is.ordered(by)` and `pairwise` otherwise.  }
 #'
 #' @param data Long-format `data.frame` of draws such as returned by
-#' \code{\link{spread_draws}} or \code{\link{gather_draws}}. If `data`
+#' [spread_draws()] or [gather_draws()]. If `data`
 #' is a grouped data frame, comparisons will be made within groups (if
 #' one of the groups in the data frame is the `by` column, that specific
 #' group will be ignored, as it is not possible to make comparisons both
@@ -89,12 +89,12 @@ comparison_types = within(list(), {
 #' unique combination of levels of `draw_indices`). Columns in `draw_indices`
 #' not found in `data` are ignored. The default is `c(".chain",".iteration",".draw")`,
 #' which are the same names used for chain/iteration/draw indices returned by
-#' \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using `compare_levels`
-#' with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
+#' [spread_draws()] or [gather_draws()]; thus if you are using `compare_levels`
+#' with [spread_draws()] or [gather_draws()] you generally should not need to change this
 #' value.
 #' @param ignore_groups character vector of names of groups to ignore by
 #' default in the input grouping. This is primarily provided to make it
-#' easier to pipe output of \code{\link{add_fitted_draws}} into this function,
+#' easier to pipe output of [add_fitted_draws()] into this function,
 #' as that function provides a `".row"` output column that is grouped,
 #' but which is virtually never desired to group by when using `compare_levels`.
 #' @return A `data.frame` with the same columns as `data`, except
@@ -102,7 +102,7 @@ comparison_types = within(list(), {
 #' comparison of pairs of levels of `by` in `data`, and
 #' `variable` contains the result of that comparison.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_draws}} and \code{\link{gather_draws}}.
+#' @seealso [spread_draws()] and [gather_draws()].
 #' @keywords manip
 #' @examples
 #'

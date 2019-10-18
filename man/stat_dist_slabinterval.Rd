@@ -92,13 +92,13 @@ will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link{geom_slabinterval}}}
+\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom
-(e.g., \code{\link{geom_pointinterval}})}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
+(e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
@@ -162,14 +162,14 @@ opposite axis is \code{1}; if \code{"groups"}, normalize within values of the op
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
 
-\item{thickness}{Override for the \code{thickness} aesthetic in \code{\link{geom_slabinterval}}: the thickness
+\item{thickness}{Override for the \code{thickness} aesthetic in \code{\link[=geom_slabinterval]{geom_slabinterval()}}: the thickness
 of the slab at each x / y value of the slab (depending on \code{orientation}).}
 
 \item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
 }
 \description{
 Stats for computing distribution functions (densities or CDFs) + intervals for use with
-\code{\link{geom_slabinterval}}. Uses \code{dist} aesthetic to specify a distribution name
+\code{\link[=geom_slabinterval]{geom_slabinterval()}}. Uses \code{dist} aesthetic to specify a distribution name
 and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column) to specify distribution
 arguments.
 }
@@ -199,12 +199,12 @@ These stats expect a \code{dist} aesthetic to specify a distribution name
 and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column) to specify distribution
 arguments. Distribution names should correspond to R functions that have \code{"p"}, \code{"q"}, and
 \code{"d"} functions; e.g. \code{"norm"} is a valid distribution name because R defines the
-\code{\link{pnorm}}, \code{\link{qnorm}}, and \code{\link{dnorm}} functions for Normal distributions.
+\code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, and \code{\link[=dnorm]{dnorm()}} functions for Normal distributions.
 
-See the \code{\link{parse_dist}} function for a useful way to generate \code{dist} and \code{args}
+See the \code{\link[=parse_dist]{parse_dist()}} function for a useful way to generate \code{dist} and \code{args}
 values from human-readable distribution specs (like \code{"normal(0,1)"}). Such specs are also
-produced by other packages (like the \code{\link[brms]{get_prior}} function in brms); thus,
-\code{\link{parse_dist}} combined with the stats described here can help you visualize the output
+produced by other packages (like the \code{\link[brms:get_prior]{brms::get_prior()}} function in brms); thus,
+\code{\link[=parse_dist]{parse_dist()}} combined with the stats described here can help you visualize the output
 of those functions.
 }
 \section{Aesthetics}{
@@ -308,8 +308,8 @@ data.frame(dist = "lnorm") \%>\%
 
 }
 \seealso{
-See \code{\link{geom_slabinterval}} for more information on the geom these stats
-use by default and some of the options they have. See \code{\link{stat_sample_slabinterval}}
+See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for more information on the geom these stats
+use by default and some of the options they have. See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}}
 for the versions of these stats that can be used on samples.
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }

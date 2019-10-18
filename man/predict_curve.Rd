@@ -11,10 +11,10 @@ predict_curve_density(data, formula, summary = function(...)
   density_bins(..., n = n), n = 50, ...)
 }
 \arguments{
-\item{data}{A \code{\link{data.frame}}, \code{\link{tbl_df}} or
-\code{link{grouped_df}} representing posteriors from a Bayesian model as
-might be obtained through \code{\link{spread_draws}}. Grouped data frames
-as returned by \code{\link{group_by}} are supported.}
+\item{data}{A \link{data.frame}, \link{tbl_df} or
+\link{grouped_df} representing posteriors from a Bayesian model as
+might be obtained through \code{\link[=spread_draws]{spread_draws()}}. Grouped data frames
+as returned by \code{\link[=group_by]{group_by()}} are supported.}
 
 \item{formula}{A formula specifying the prediction curve. The left-hand side
 of the formula should be a name representing the name of the column that
@@ -23,10 +23,10 @@ side is an expression that may include numeric columns from \code{data} and
 variables passed into this function in \code{...}.}
 
 \item{summary}{The function to apply to summarize each predicted response.
-Useful functions (if you just want a curve) might be \code{\link{median}},
-\code{\link{mean}}, or \code{\link{Mode}}. If you want predictive distribution
-at each point on the curve, try \code{\link{density_bins}} or
-\code{\link{histogram_bins}}.}
+Useful functions (if you just want a curve) might be \code{\link[=median]{median()}},
+\code{\link[=mean]{mean()}}, or \code{\link[=Mode]{Mode()}}. If you want predictive distribution
+at each point on the curve, try \code{\link[=density_bins]{density_bins()}} or
+\code{\link[=histogram_bins]{histogram_bins()}}.}
 
 \item{...}{Variables defining the curve. The right-hand side of
 \code{formula} is evaluated for every combination of values of variables in
@@ -45,10 +45,10 @@ variable in \code{...}, and a column named \code{lhs} with the value of
 of variables in \code{...}.
 
 If \code{summary} is a function that returns a \code{data.frame}, such as
-\code{\link{density_bins}}, \code{predict_curve} has the same set of columns
+\code{\link[=density_bins]{density_bins()}}, \code{predict_curve} has the same set of columns
 as above, except that in place of the \code{lhs} column is a set of columns
 named \code{lhs.x} for every column named \code{x} returned by
-\code{summary}. For example, \code{\link{density_bins}} returns a data frame
+\code{summary}. For example, \code{\link[=density_bins]{density_bins()}} returns a data frame
 with the columns \code{mid}, \code{lower}, \code{upper}, and \code{density},
 so the data frame returned by \code{predict_curve} with \code{summary = density_bins} will have columns \code{lhs.mid}, \code{lhs.lower},
 \code{lhs.upper}, and \code{lhs.density} in place of \code{lhs}.
@@ -58,25 +58,25 @@ Deprecated function for generating prediction curves (or a density for a
 prediction curve).
 }
 \details{
-\strong{This function is deprecated.} Use \code{\link[modelr]{data_grid}} combined
-with \code{\link{point_interval}} or \code{\link[dplyr]{do}} and
-\code{\link{density_bins}} instead.
+\strong{This function is deprecated.} Use \code{\link[modelr:data_grid]{modelr::data_grid()}} combined
+with \code{\link[=point_interval]{point_interval()}} or \code{\link[dplyr:do]{dplyr::do()}} and
+\code{\link[=density_bins]{density_bins()}} instead.
 
 The function generates a predictive curve given posterior draws
 (\code{data}), an expression (\code{formula}), and a set of variables
 defining the curve (\code{...}). For every group in \code{data} (if it is a
-grouped data frame---see \code{\link{group_by}}; otherwise the entire data
+grouped data frame---see \code{\link[=group_by]{group_by()}}; otherwise the entire data
 frame is taken at once), and for each combination of values in \code{...},
 the right-hand side of \code{formula} is evaluated and its results passed to
 the \code{summary} function. This allows a predictive curve to be generated,
 given (e.g.) some samples of coefficients in \code{data} and a set of
 predictors defining the space of the curve in \code{...}.
 
-Given a summary function like \code{\link{median}} or \code{\link{mean}},
+Given a summary function like \code{\link[=median]{median()}} or \code{\link[=mean]{mean()}},
 this function will produce the median (resp. mean) prediction at each point
 on the curve.
 
-Given a summary function like \code{\link{density_bins}}, this function will
+Given a summary function like \code{\link[=density_bins]{density_bins()}}, this function will
 produce a predictive distribution for each point on the curve.
 \code{predict_curve_density} is a shorthand for such a call, with a
 convenient argument for adjusting the number of bins per point on the
@@ -88,7 +88,7 @@ curve.
 
 }
 \seealso{
-See \code{\link{density_bins}}.
+See \code{\link[=density_bins]{density_bins()}}.
 }
 \author{
 Matthew Kay

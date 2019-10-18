@@ -17,7 +17,7 @@ in the resulting lookup vector. Default \code{NA}.}
 }
 \description{
 Generates a lookup vector such that \code{x_at_y(x, y)[y] == x}. Particularly useful
-for generating lookup tables for nested indices in conjunction with \code{\link{compose_data}}.
+for generating lookup tables for nested indices in conjunction with \code{\link[=compose_data]{compose_data()}}.
 }
 \details{
 \code{x_at_y(x, y)} returns a vector \code{k} such that \code{k[y] == x}. It also
@@ -41,7 +41,7 @@ df \%>\%
 
 }
 \seealso{
-\code{\link{compose_data}}.
+\code{\link[=compose_data]{compose_data()}}.
 }
 \author{
 Matthew Kay

@@ -30,8 +30,8 @@
 #'   Lewandowski, D., Kurowicka, D., & Joe, H. (2009). Generating random correlation matrices based on vines
 #'   and extended onion method. *Journal of Multivariate Analysis*, 100(9), 1989--2001.
 #'   \doi{10.1016/j.jmva.2009.04.008}.
-#' @seealso \code{\link{parse_dist}} and \code{\link{marginalize_lkjcorr}} for parsing specs that use the
-#' LKJ correlation distribution and the \code{\link{stat_dist_slabinterval}} family of stats for visualizing them.
+#' @seealso [parse_dist()] and [marginalize_lkjcorr()] for parsing specs that use the
+#' LKJ correlation distribution and the [stat_dist_slabinterval()] family of stats for visualizing them.
 #' @examples
 #'
 #' library(dplyr)
@@ -92,8 +92,8 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' Turn spec for LKJ distribution into spec for marginal LKJ distribution
 #'
 #' Turns specs for an LKJ correlation matrix distribution as returned by
-#' \code{\link{parse_dist}} into specs for the marginal distribution of
-#' a single cell in an LKJ-distributed correlation matrix (i.e., \code{\link{lkjcorr_marginal}}).
+#' [parse_dist()] into specs for the marginal distribution of
+#' a single cell in an LKJ-distributed correlation matrix (i.e., [lkjcorr_marginal()]).
 #' Useful for visualizing prior correlations from LKJ distributions.
 #'
 #' The LKJ(eta) prior on a correlation matrix induces a marginal prior on each correlation
@@ -103,24 +103,24 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' on what your model specification looks like.
 #'
 #' Given a data frame representing parsed distribution specifications (such
-#' as returned by \code{\link{parse_dist}}), this function updates any rows with `.dist == "lkjcorr"`
+#' as returned by [parse_dist()]), this function updates any rows with `.dist == "lkjcorr"`
 #' so that the first argument to the distribution is equal to the specified dimension
 #' of the correlation matrix (`K`) and changes the distribution name to `"lkjcorr_marginal"`,
-#' allowing the distribution to be easily visualized using the \code{\link{stat_dist_slabinterval}}
+#' allowing the distribution to be easily visualized using the [stat_dist_slabinterval()]
 #' family of ggplot2 stats.
 #'
 #' @inheritParams lkjcorr_marginal
 #' @param data A data frame containing a column with distribution names (`".dist"` by default)
 #' and a list column of distribution arguments (`".args"` by default), such as output by
-#' \code{\link{parse_dist}}.
+#' [parse_dist()].
 #' @param predicate a bare expression for selecting the rows of `data` to modify. This is useful
 #' if `data` contains more than one row with an LKJ prior in it and you only want to modify some
 #' of the distributions; if this is the case, give row a predicate expression (such as you might supply
-#' to \code{\link[dplyr]{filter}}) that evaluates to `TRUE` on the rows you want to modify.
+#' to [dplyr::filter()]) that evaluates to `TRUE` on the rows you want to modify.
 #' If `NULL` (the default), all `lkjcorr` distributions in `data` are modified.
-#' @param dist The name of the column containing distribution names. See \code{\link{parse_dist}}.
-#' @param args The name of the column containing distribution arguments. See \code{\link{parse_dist}}.
-#' @seealso \code{\link{parse_dist}}, \code{\link{lkjcorr_marginal}}
+#' @param dist The name of the column containing distribution names. See [parse_dist()].
+#' @param args The name of the column containing distribution arguments. See [parse_dist()].
+#' @seealso [parse_dist()], [lkjcorr_marginal()]
 #' @examples
 #'
 #' library(dplyr)

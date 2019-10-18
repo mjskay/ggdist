@@ -16,7 +16,7 @@ geom_halfeyeh(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale,
   .prob)
 }
 \arguments{
-\item{...}{Arguments passed to \code{\link{stat_sample_slabinterval}}}
+\item{...}{Arguments passed to \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}}}
 
 \item{scale}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
 slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
@@ -28,8 +28,8 @@ slabs that use the maximum range will just touch each other. Default is \code{0.
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 }
 \description{
-These are deprecated spellings of \code{\link{stat_eye}}, \code{\link{stat_eyeh}},
-and \code{\link{stat_halfeyeh}}. Use those functions instead.
+These are deprecated spellings of \code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_eyeh]{stat_eyeh()}},
+and \code{\link[=stat_halfeyeh]{stat_halfeyeh()}}. Use those functions instead.
 }
 \examples{
 
@@ -50,7 +50,7 @@ RankCorr \%>\%
 
 }
 \seealso{
-See \code{\link{stat_sample_slabinterval}} and the shortcut stats documented there for the
+See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and the shortcut stats documented there for the
 preferred way to generate these geoms.
 }
 \author{

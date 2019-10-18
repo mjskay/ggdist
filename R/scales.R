@@ -8,10 +8,10 @@
 
 #' Custom ggplot scales for geom_slabinterval (and derivatives)
 #'
-#' These scales allow more specific aesthetic mappings to be made when using \code{\link{geom_slabinterval}}
+#' These scales allow more specific aesthetic mappings to be made when using [geom_slabinterval()]
 #' and stats/geoms based on it (like eye plots).
 #'
-#' The following additional scales / aesthetics are defined for use with \code{\link{geom_slabinterval}} and
+#' The following additional scales / aesthetics are defined for use with [geom_slabinterval()] and
 #' related geoms:
 #'
 #' \enumerate{
@@ -26,16 +26,16 @@
 #'   \item{`scale_slab_color_* `}{Slab outline color}
 #'   \item{`scale_slab_fill_* `}{Slab fill color}
 #'   \item{`scale_slab_alpha_* `}{Slab alpha level / opacity. The default settings of
-#'   `scale_slab_alpha_continuous` differ from \code{\link{scale_alpha_continuous}} and
-#'   are designed for gradient plots (e.g. \code{\link{stat_gradientinterval}}) by ensuring that
+#'   `scale_slab_alpha_continuous` differ from [scale_alpha_continuous()] and
+#'   are designed for gradient plots (e.g. [stat_gradientinterval()]) by ensuring that
 #'   densities of 0 get mapped to 0 in the output.}
 #'   \item{`scale_slab_size_* `}{Slab outline line width}
 #'   \item{`scale_slab_linetype_* `}{Slab outline line type}
-#'   \item{`scale_slab_shape_* `}{Slab dot shape (for \code{\link{geom_dotsinterval}})}
+#'   \item{`scale_slab_shape_* `}{Slab dot shape (for [geom_dotsinterval()])}
 #' }
 #'
 #' See the corresponding scale documentation in ggplot for more information; e.g.
-#' \code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
+#' [scale_color_discrete()], [scale_color_continuous()], etc.
 #'
 #' Other scale functions can be used with the aesthetics/scales defined here by using the `aesthetics`
 #' argument to that scale function. For example, to use color brewer scales with the `point_color` aesthetic:
@@ -50,7 +50,7 @@
 #' @inheritParams ggplot2::continuous_scale
 #' @inheritParams ggplot2::scale_shape
 #' @param ... Arguments passed to underlying scale or guide functions. E.g. `scale_point_color_discrete`
-#' passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.
+#' passes arguments to [scale_color_discrete()]. See those functions for more details.
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @param guide Guide to use for legends for an aesthetic.
 #' @param range a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
@@ -59,7 +59,7 @@
 #' @param na.value When na.translate is true, what value should be shown?
 #' @name scales
 #' @author Matthew Kay
-#' @seealso \code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
+#' @seealso [scale_color_discrete()], [scale_color_continuous()], etc.
 #' @examples
 #'
 #' library(dplyr)

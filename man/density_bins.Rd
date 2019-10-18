@@ -14,11 +14,11 @@ histogram_bins(x, n = 30, breaks = n, ...)
 
 \item{n}{Number of bins}
 
-\item{...}{Additional arguments passed to \code{\link{density}} or
-\code{\link{hist}}.}
+\item{...}{Additional arguments passed to \code{\link[=density]{density()}} or
+\code{\link[=hist]{hist()}}.}
 
 \item{breaks}{Used to set bins for \code{histogram_bins}. Can be number of bins (by default it is set to the value
-of \code{n}) or a method for setting bins. See the \code{breaks} argument of \code{\link{hist}}.}
+of \code{n}) or a method for setting bins. See the \code{breaks} argument of \code{\link[=hist]{hist()}}.}
 }
 \value{
 A data frame representing bins and their densities with the
@@ -34,15 +34,15 @@ designed for use with the now-deprecated \code{predict_curve()}, and
 may be deprecated in the future.
 }
 \details{
-These functions are simple wrappers to \code{\link{density}} and
-\code{\link{hist}} that compute density estimates and return their results
+These functions are simple wrappers to \code{\link[=density]{density()}} and
+\code{\link[=hist]{hist()}} that compute density estimates and return their results
 in a consistent format: a data frame of bins suitable for use with
-the now-deprecated \code{\link{predict_curve}}.
+the now-deprecated \code{\link[=predict_curve]{predict_curve()}}.
 
 \code{density_bins} computes a kernel density estimate using
-\code{\link{density}}.
+\code{\link[=density]{density()}}.
 
-\code{histogram_bins} computes a density histogram using \code{\link{hist}}.
+\code{histogram_bins} computes a density histogram using \code{\link[=hist]{hist()}}.
 }
 \examples{
 \donttest{
@@ -80,7 +80,7 @@ if (
 }
 }
 \seealso{
-See \code{\link{add_predicted_draws}} and \code{\link{stat_lineribbon}} for a better approach. These
+See \code{\link[=add_predicted_draws]{add_predicted_draws()}} and \code{\link[=stat_lineribbon]{stat_lineribbon()}} for a better approach. These
 functions may be deprecated in the future.
 }
 \author{

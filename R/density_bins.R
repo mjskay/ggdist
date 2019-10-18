@@ -12,28 +12,28 @@
 #' designed for use with the now-deprecated `predict_curve()`, and
 #' may be deprecated in the future.
 #'
-#' These functions are simple wrappers to \code{\link{density}} and
-#' \code{\link{hist}} that compute density estimates and return their results
+#' These functions are simple wrappers to [density()] and
+#' [hist()] that compute density estimates and return their results
 #' in a consistent format: a data frame of bins suitable for use with
-#' the now-deprecated \code{\link{predict_curve}}.
+#' the now-deprecated [predict_curve()].
 #'
 #' `density_bins` computes a kernel density estimate using
-#' \code{\link{density}}.
+#' [density()].
 #'
-#' `histogram_bins` computes a density histogram using \code{\link{hist}}.
+#' `histogram_bins` computes a density histogram using [hist()].
 #'
 #' @param x A numeric vector
 #' @param n Number of bins
 #' @param breaks Used to set bins for `histogram_bins`. Can be number of bins (by default it is set to the value
-#' of `n`) or a method for setting bins. See the `breaks` argument of \code{\link{hist}}.
-#' @param ...  Additional arguments passed to \code{\link{density}} or
-#' \code{\link{hist}}.
+#' of `n`) or a method for setting bins. See the `breaks` argument of [hist()].
+#' @param ...  Additional arguments passed to [density()] or
+#' [hist()].
 #' @return A data frame representing bins and their densities with the
 #' following columns: \item{mid}{Bin midpoint} \item{lower}{Lower endpoint of
 #' each bin} \item{upper}{Upper endpoint of each bin} \item{density}{Density
 #' estimate of the bin}
 #' @author Matthew Kay
-#' @seealso See \code{\link{add_predicted_draws}} and \code{\link{stat_lineribbon}} for a better approach. These
+#' @seealso See [add_predicted_draws()] and [stat_lineribbon()] for a better approach. These
 #' functions may be deprecated in the future.
 #' @keywords manip
 #' @examples

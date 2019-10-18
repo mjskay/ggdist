@@ -5,13 +5,13 @@
 
 #' Key glyph for geom_slabinterval and related geoms
 #'
-#' Glyph drawing function for use with \code{\link{geom_slabinterval}}. Automatically determines
+#' Glyph drawing function for use with [geom_slabinterval()]. Automatically determines
 #' what portions of the key to draw based on what aesthetics are actually mapped.
 #'
 #' @inheritParams ggplot2::draw_key
 #' @param self A geom
 #' @author Matthew Kay
-#' @seealso See \code{\link{geom_slabinterval}}.
+#' @seealso See [geom_slabinterval()].
 #' @keywords internal
 #' @noRd
 draw_key_slabinterval_ = function(self, data, params, size) {

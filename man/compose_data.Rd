@@ -21,7 +21,7 @@ whose value is number of levels in a factor or the length of a data frame in
 (having 3 levels) is passed to \code{compose_data}, the list returned by
 \code{compose_data} will include an element named \code{.n_name("foo")}, which
 by default would be "n_foo", containing the value 3, and a column named "n"
-containing the value 20. See \code{\link{n_prefix}}.}
+containing the value 20. See \code{\link[=n_prefix]{n_prefix()}}.}
 }
 \value{
 A list where each element is a translated variable as described above.
@@ -32,12 +32,12 @@ BUGS, Stan, etc).
 }
 \details{
 This function recursively translates each argument into list elements using
-\code{\link{as_data_list}}, merging all resulting lists together. By
+\code{\link[=as_data_list]{as_data_list()}}, merging all resulting lists together. By
 default this means that:
 \itemize{
 \item numerics are included as-is.
-\item logicals are translated into numeric using \code{\link{as.numeric}}.
-\item factors are translated into numeric using \code{\link{as.numeric}},
+\item logicals are translated into numeric using \code{\link[=as.numeric]{as.numeric()}}.
+\item factors are translated into numeric using \code{\link[=as.numeric]{as.numeric()}},
 and an additional element named \code{.n_name(argument_name)} is added
 with the number of levels in the factor. The default \code{.n_name}
 function prefixes \code{"n_"} before the factor name; e.g. a factor
@@ -59,16 +59,16 @@ from a data frame that is not needed in the model).
 \item all other types are dropped (and a warning given)
 }
 
-As in functions like \code{\link{mutate}}, each expression is evaluated in an
+As in functions like \code{\link[=mutate]{mutate()}}, each expression is evaluated in an
 environment containing the data list built up so far.
 
 For example, this means that if the first argument to \code{compose_data}
 is a data frame, subsequent arguments can include direct references to columns
 from that data frame. This allows you, for example, to easily use
-\code{\link{x_at_y}} to generate indices for nested models.
+\code{\link[=x_at_y]{x_at_y()}} to generate indices for nested models.
 
 If you wish to add support for additional types not described above,
-provide an implementation of \code{\link{as_data_list}} for the type. See
+provide an implementation of \code{\link[=as_data_list]{as_data_list()}} for the type. See
 the implementations of \code{as_data_list.numeric},
 \code{as_data_list.logical}, etc for examples.
 }
@@ -97,8 +97,8 @@ df \%>\%
 
 }
 \seealso{
-\code{\link{x_at_y}}, \code{\link{spread_draws}},
-\code{\link{gather_draws}}.
+\code{\link[=x_at_y]{x_at_y()}}, \code{\link[=spread_draws]{spread_draws()}},
+\code{\link[=gather_draws]{gather_draws()}}.
 }
 \author{
 Matthew Kay

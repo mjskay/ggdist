@@ -35,13 +35,13 @@ will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link{geom_slabinterval}}}
+\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom
-(e.g., \code{\link{geom_pointinterval}})}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
+(e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
@@ -82,12 +82,12 @@ columns \code{.width} (from the \code{.width} vector), \code{.value} (point summ
 
 \item{interval_args}{Additional arguments passed to \code{interval_function} or \code{point_interval}.}
 
-\item{point_interval}{A function from the \code{\link{point_interval}} family (e.g., \code{median_qi},
+\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, etc). This function should take in a vector of value, and should obey the
-\code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
+\code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
 a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
-depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
+depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 
 \item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
@@ -109,7 +109,7 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 }
 \description{
-A meta-stat for computing slab and interval functions for use with \code{\link{geom_slabinterval}}
+A meta-stat for computing slab and interval functions for use with \code{\link[=geom_slabinterval]{geom_slabinterval()}}
 and its derivatives. Generally speaking not intended to be used directly: The API for
 this stat is \strong{experimental and subject to change}. This is used as the basis
 for several other more directly useful stats whose APIs are more stable; it is recommended
@@ -174,9 +174,9 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 
 }
 \seealso{
-See \code{\link{geom_slabinterval}} for the geom version, intended
+See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geom version, intended
 for use on data that has already been translated into function evaluations, points, and intervals.
-See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} for families of stats
 built on top of this stat for common use cases (like \code{stat_halfeyeh}).
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }

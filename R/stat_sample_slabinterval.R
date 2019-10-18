@@ -81,7 +81,7 @@ sample_slab_function = function(
 #' Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)
 #'
 #' Stats for computing densities and CDFs + intervals from samples for use with
-#' \code{\link{geom_slabinterval}}. Useful for creating eye plots, halfeye plots,
+#' [geom_slabinterval()]. Useful for creating eye plots, halfeye plots,
 #' CCDF bar plots etc.
 #'
 #' A highly configurable stat for generating a variety of plots that combine a "slab"
@@ -124,13 +124,13 @@ sample_slab_function = function(
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
 #' cumulative distribution function (`"cdf"`), complementary CDF (`"ccdf"`), or histogram (`"histogram"`.
 #' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator is adjusted by multiplying it
-#' by this value. See \code{\link{density}} for more information.
+#' by this value. See [density()] for more information.
 #' @param trim If `slab_type` is `"pdf"`, should the density estimate be trimmed to the range of the
 #' input data? Default `TRUE`.
 #' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to
-#' \code{\link{hist}} to determine where to put breaks in the histogram.
-#' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
-#' use by default and some of the options they have. See \code{\link{stat_dist_slabinterval}}
+#' [hist()] to determine where to put breaks in the histogram.
+#' @seealso See [geom_slabinterval()] for more information on the geom these stats
+#' use by default and some of the options they have. See [stat_dist_slabinterval()]
 #' for the versions of these stats that can be used on analytical distributions.
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples

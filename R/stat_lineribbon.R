@@ -6,10 +6,10 @@
 
 #' Line + multiple probability ribbon plots (ggplot stat)
 #'
-#' A combination of \code{\link{stat_slabinterval}} and \code{\link{geom_lineribbon}} with sensible defaults.
+#' A combination of [stat_slabinterval()] and [geom_lineribbon()] with sensible defaults.
 #' While `geom_lineribbon` is intended for use on data frames that have already been summarized using
-#' a \code{\link{point_interval}} function, `stat_lineribbon` is intended for use directly on data
-#' frames of draws, and will perform the summarization using a \code{\link{point_interval}} function;
+#' a [point_interval()] function, `stat_lineribbon` is intended for use directly on data
+#' frames of draws, and will perform the summarization using a [point_interval()] function;
 #' `stat_dist_lineribbon` is intended for use on analytical distributions through the `dist`,
 #' `arg1`, ... `arg9`, and `args` aesthetics.
 #'
@@ -19,9 +19,9 @@
 #' `geom_lineribbon` and `stat_lineribbon`.
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics
 #' are mapped. `FALSE` never includes, and `TRUE` always includes.
-#' @seealso See \code{\link{geom_lineribbon}} for the geom version, intended for use on points and intervals that have
-#' already been summarized using a \code{\link{point_interval}} function. See \code{\link{stat_pointinterval}} /
-#' \code{\link{stat_pointintervalh}} for a similar stat intended for point summaries and intervals.
+#' @seealso See [geom_lineribbon()] for the geom version, intended for use on points and intervals that have
+#' already been summarized using a [point_interval()] function. See [stat_pointinterval()] /
+#' [stat_pointintervalh()] for a similar stat intended for point summaries and intervals.
 #' @examples
 #'
 #' library(dplyr)

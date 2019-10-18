@@ -37,30 +37,30 @@ tidy_draws(model)
 \method{tidy_draws}{MCMCglmm}(model)
 }
 \arguments{
-\item{model}{A supported Bayesian model fit object. See \code{\link{tidybayes-models}} for a list of supported
+\item{model}{A supported Bayesian model fit object. See \code{\link[=tidybayes-models]{tidybayes-models()}} for a list of supported
 models.}
 }
 \value{
-A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.chain} column,
+A data frame (actually, a \link[tibble:tibble]{tibble}) with a \code{.chain} column,
 \code{.iteration} column, \code{.draw} column, and one column for every variable in \code{model}.
 }
 \description{
 Extract draws from a Bayesian fit into a wide-format data frame with a
 \code{.chain}, \code{.iteration}, and \code{.draw} column, as well as all variables
 as columns. While this function can be useful for quick glances at models (especially
-combined with \code{\link{gather_variables}} and \code{\link{median_qi}}), it is
-generally speaking not as useful as \code{\link{spread_draws}} or
-\code{\link{gather_draws}} for most applications, and is mainly used internally (see \emph{Details}).
+combined with \code{\link[=gather_variables]{gather_variables()}} and \code{\link[=median_qi]{median_qi()}}), it is
+generally speaking not as useful as \code{\link[=spread_draws]{spread_draws()}} or
+\code{\link[=gather_draws]{gather_draws()}} for most applications, and is mainly used internally (see \emph{Details}).
 }
 \details{
 In practice, apart from quick looks at a model you will probably not call this directly;
-\code{\link{spread_draws}} or \code{\link{gather_draws}}, which are build on top of this
+\code{\link[=spread_draws]{spread_draws()}} or \code{\link[=gather_draws]{gather_draws()}}, which are build on top of this
 function, provide support for extracting variable dimensions are so are often more useful.
 
 To provide support for new models in tidybayes,
 you must provide an implementation of this function \emph{or} an implementation
-of \code{\link[coda]{as.mcmc.list}} (\code{tidy_draws} should work on any model
-with an implementation of \code{\link[coda]{as.mcmc.list}})
+of \code{\link[coda:as.mcmc.list]{coda::as.mcmc.list()}} (\code{tidy_draws} should work on any model
+with an implementation of \code{\link[coda:as.mcmc.list]{coda::as.mcmc.list()}})
 
 \code{tidy_draws} can be applied to a data frame that is already a tidy-format data frame
 of draws, provided it has one row per draw. In other words, it can be applied to data frames
@@ -68,7 +68,7 @@ that have the same format it returns, and it will return the same data frame bac
 checking to ensure the \code{.chain}, \code{.iteration}, and \code{.draw} columns are all
 integers (converting if possible) and that the \code{.draw} column is unique. This allows
 you to pass already-tidy-format data frames into other tidybayes functions, like
-\code{\link{spread_draws}} or \code{\link{gather_draws}}.
+\code{\link[=spread_draws]{spread_draws()}} or \code{\link[=gather_draws]{gather_draws()}}.
 }
 \examples{
 
@@ -81,7 +81,7 @@ line \%>\%
 
 }
 \seealso{
-\code{\link{spread_draws}} or \code{\link{gather_draws}}, which use this function
+\code{\link[=spread_draws]{spread_draws()}} or \code{\link[=gather_draws]{gather_draws()}}, which use this function
 internally and provides a friendly interface for extracting tidy data frames from model fits.
 }
 \author{

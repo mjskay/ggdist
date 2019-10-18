@@ -22,7 +22,7 @@ gather_terms = function(...) {
 
 #' Gather variables from a tidy data frame of draws from variables into a single column
 #'
-#' Given a data frame such as might be returned by \code{\link{tidy_draws}} or \code{\link{spread_draws}},
+#' Given a data frame such as might be returned by [tidy_draws()] or [spread_draws()],
 #' gather variables and their values from that data frame into a `".variable"` and `".value"` column.
 #'
 #' This function gathers every column except grouping columns and those matching the expression
@@ -65,12 +65,12 @@ gather_terms = function(...) {
 #' }
 #'
 #' @param data A data frame with variable names spread across columns, such as one returned by
-#' \code{\link{tidy_draws}} or \code{\link{spread_draws}}.
+#' [tidy_draws()] or [spread_draws()].
 #' @param exclude A character vector of names of columns to be excluded from the gather. Default
 #' ignores several meta-data column names used in tidybayes.
 #' @return A data frame.
 #' @author Matthew Kay
-#' @seealso \code{\link{spread_draws}}, \code{\link{tidy_draws}}.
+#' @seealso [spread_draws()], [tidy_draws()].
 #' @keywords manip
 #' @examples
 #' \donttest{

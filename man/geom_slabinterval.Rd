@@ -49,7 +49,7 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link{layer}}.}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
 
 \item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
@@ -86,15 +86,15 @@ normalization (this should probably only be used with functions whose values are
 sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
 
 \item{interval_size_range}{This geom scales the raw size aesthetic values when drawing interval and point sizes, as
-they tend to be too thick when using the default settings of \code{\link{scale_size_continuous}}, which give sizes
+they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give sizes
 with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
-(typically this should be equal to the value of the \code{range} argument of the \code{\link{scale_size_continuous}}
+(typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
 function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
 the actual sizes used to draw intervals).}
 
 \item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link{scale_point_size_continuous}} or \code{\link{scale_point_size_discrete}}; sizes
+aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
@@ -143,7 +143,7 @@ point and \code{ymin}/\code{ymax} or \code{xmin}/\code{xmax} (depending on the v
 specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
 through the \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point} parameters.
 These scaling factors are designed to give multiple probability intervals reasonable
-scaling at the default settings for \code{\link{scale_size_continuous}}.
+scaling at the default settings for \code{\link[=scale_size_continuous]{scale_size_continuous()}}.
 
 As a combination geom, this geom expects a \code{datatype} aesthetic specifying which part of the geom a given
 row in the input data corresponds to: \code{"slab"} or \code{"interval"}. However, specifying this aesthetic
@@ -154,12 +154,12 @@ use case.
 Wrapper geoms and stats include:
 
 \itemize{
-\item \code{\link{stat_sample_slabinterval}} and associated stats
-\item \code{\link{stat_dist_slabinterval}} and associated stats
-\item \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}}
-\item \code{\link{stat_pointinterval}} / \code{\link{stat_pointintervalh}}
-\item \code{\link{geom_interval}} / \code{\link{geom_intervalh}}
-\item \code{\link{stat_interval}} / \code{\link{stat_intervalh}}
+\item \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and associated stats
+\item \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and associated stats
+\item \code{\link[=geom_pointinterval]{geom_pointinterval()}} / \code{\link[=geom_pointintervalh]{geom_pointintervalh()}}
+\item \code{\link[=stat_pointinterval]{stat_pointinterval()}} / \code{\link[=stat_pointintervalh]{stat_pointintervalh()}}
+\item \code{\link[=geom_interval]{geom_interval()}} / \code{\link[=geom_intervalh]{geom_intervalh()}}
+\item \code{\link[=stat_interval]{stat_interval()}} / \code{\link[=stat_intervalh]{stat_intervalh()}}
 }
 
 Typically, the \code{geom_*} versions are meant for use with already-summarized data (such as intervals) and the
@@ -215,8 +215,8 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 
 }
 \seealso{
-See \code{\link{geom_lineribbon}} for a combination geom designed for fit curves plus probability bands.
-See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+See \code{\link[=geom_lineribbon]{geom_lineribbon()}} for a combination geom designed for fit curves plus probability bands.
+See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} for families of stats
 built on top of this geom for common use cases (like \code{stat_halfeyeh}).
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }

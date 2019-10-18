@@ -16,7 +16,7 @@ unspread_draws(data, ..., draw_indices = c(".chain", ".iteration",
 \item{data}{A tidy data frame of draws, such as one output by \code{spread_draws} or \code{gather_draws}.}
 
 \item{...}{Expressions in the form of
-\code{variable_name[dimension_1, dimension_2, ...]}. See \code{\link{spread_draws}}.}
+\code{variable_name[dimension_1, dimension_2, ...]}. See \code{\link[=spread_draws]{spread_draws()}}.}
 
 \item{variable}{The name of the column in \code{data} that contains the names of variables from the model.}
 
@@ -25,7 +25,7 @@ unspread_draws(data, ..., draw_indices = c(".chain", ".iteration",
 \item{draw_indices}{Character vector of column names in \code{data} that
 should be treated as indices of draws. The default is \code{c(".chain",".iteration",".draw")},
 which are the same names used for chain, iteration, and draw indices returned by
-\code{\link{spread_draws}} or \code{\link{gather_draws}}.}
+\code{\link[=spread_draws]{spread_draws()}} or \code{\link[=gather_draws]{gather_draws()}}.}
 
 \item{drop_indices}{Drop the columns specified by \code{draw_indices} from the resulting data frame. Default \code{FALSE}.}
 }
@@ -33,12 +33,12 @@ which are the same names used for chain, iteration, and draw indices returned by
 A data frame.
 }
 \description{
-Inverse operations of \code{\link{spread_draws}} and \code{\link{gather_draws}}, giving
-results that look like \code{\link{tidy_draws}}.
+Inverse operations of \code{\link[=spread_draws]{spread_draws()}} and \code{\link[=gather_draws]{gather_draws()}}, giving
+results that look like \code{\link[=tidy_draws]{tidy_draws()}}.
 }
 \details{
 These functions take symbolic specifications of variable names and dimensions in the same format as
-\code{\link{spread_draws}} and \code{\link{gather_draws}} and invert the tidy data frame back into
+\code{\link[=spread_draws]{spread_draws()}} and \code{\link[=gather_draws]{gather_draws()}} and invert the tidy data frame back into
 a data frame whose column names are variables with dimensions in them.
 }
 \examples{
@@ -67,7 +67,7 @@ RankCorr \%>\%
 
 }
 \seealso{
-\code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{tidy_draws}}.
+\code{\link[=spread_draws]{spread_draws()}}, \code{\link[=gather_draws]{gather_draws()}}, \code{\link[=tidy_draws]{tidy_draws()}}.
 }
 \author{
 Matthew Kay

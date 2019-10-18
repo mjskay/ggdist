@@ -9,7 +9,7 @@ gather_variables(data, exclude = c(".chain", ".iteration", ".draw",
 }
 \arguments{
 \item{data}{A data frame with variable names spread across columns, such as one returned by
-\code{\link{tidy_draws}} or \code{\link{spread_draws}}.}
+\code{\link[=tidy_draws]{tidy_draws()}} or \code{\link[=spread_draws]{spread_draws()}}.}
 
 \item{exclude}{A character vector of names of columns to be excluded from the gather. Default
 ignores several meta-data column names used in tidybayes.}
@@ -18,7 +18,7 @@ ignores several meta-data column names used in tidybayes.}
 A data frame.
 }
 \description{
-Given a data frame such as might be returned by \code{\link{tidy_draws}} or \code{\link{spread_draws}},
+Given a data frame such as might be returned by \code{\link[=tidy_draws]{tidy_draws()}} or \code{\link[=spread_draws]{spread_draws()}},
 gather variables and their values from that data frame into a \code{".variable"} and \code{".value"} column.
 }
 \details{
@@ -82,7 +82,7 @@ RankCorr \%>\%
 }
 }
 \seealso{
-\code{\link{spread_draws}}, \code{\link{tidy_draws}}.
+\code{\link[=spread_draws]{spread_draws()}}, \code{\link[=tidy_draws]{tidy_draws()}}.
 }
 \author{
 Matthew Kay

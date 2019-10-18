@@ -24,12 +24,12 @@ A character vector of variable names in the fitted model.
 }
 \description{
 Get a character vector of the names of the variables in a variety of fitted
-Bayesian model types. All models supported by \code{\link{tidy_draws}} are
+Bayesian model types. All models supported by \code{\link[=tidy_draws]{tidy_draws()}} are
 supported.
 }
 \details{
 This function is often useful for inspecting a model interactively in order
-to construct calls to \code{\link{spread_draws}} or \code{\link{gather_draws}}
+to construct calls to \code{\link[=spread_draws]{spread_draws()}} or \code{\link[=gather_draws]{gather_draws()}}
 in order to extract draws from models in a tidy format.
 }
 \examples{
@@ -42,7 +42,7 @@ get_variables(RankCorr)
 
 }
 \seealso{
-\code{\link{spread_draws}}, \code{\link{gather_draws}}.
+\code{\link[=spread_draws]{spread_draws()}}, \code{\link[=gather_draws]{gather_draws()}}.
 }
 \author{
 Matthew Kay

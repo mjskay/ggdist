@@ -7,16 +7,16 @@
 
 #' Eye plots of densities with point and interval summaries (Deprecated spellings)
 #'
-#' These are deprecated spellings of \code{\link{stat_eye}}, \code{\link{stat_eyeh}},
-#' and \code{\link{stat_halfeyeh}}. Use those functions instead.
+#' These are deprecated spellings of [stat_eye()], [stat_eyeh()],
+#' and [stat_halfeyeh()]. Use those functions instead.
 #'
 #' @inheritParams stat_sample_slabinterval
 #' @inheritParams geom_slabinterval
-#' @param ... Arguments passed to \code{\link{stat_sample_slabinterval}}
+#' @param ... Arguments passed to [stat_sample_slabinterval()]
 #' @param relative_scale Deprecated. Use `scale` instead.
 #' @param .prob Deprecated. Use `.width` instead.
 #' @author Matthew Kay
-#' @seealso See \code{\link{stat_sample_slabinterval}} and the shortcut stats documented there for the
+#' @seealso See [stat_sample_slabinterval()] and the shortcut stats documented there for the
 #' preferred way to generate these geoms.
 #' @examples
 #'

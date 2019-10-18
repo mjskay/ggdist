@@ -6,7 +6,7 @@
 
 #' Meta-stat for computing slab functions and interval functions (ggplot stat)
 #'
-#' A meta-stat for computing slab and interval functions for use with \code{\link{geom_slabinterval}}
+#' A meta-stat for computing slab and interval functions for use with [geom_slabinterval()]
 #' and its derivatives. Generally speaking not intended to be used directly: The API for
 #' this stat is **experimental and subject to change**. This is used as the basis
 #' for several other more directly useful stats whose APIs are more stable; it is recommended
@@ -15,9 +15,9 @@
 #' @eval rd_slabinterval_aesthetics(stat = StatSlabinterval)
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
-#' `stat_slabinterval` and \code{\link{geom_slabinterval}}
-#' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom
-#' (e.g., \code{\link{geom_pointinterval}})
+#' `stat_slabinterval` and [geom_slabinterval()]
+#' @param ...  Other arguments passed to [layer()]. They may also be arguments to the paired geom
+#' (e.g., [geom_pointinterval()])
 #' @param limits_function A function that takes a data frame of aesthetics and returns a data frame with
 #' columns `.lower` and `.upper` indicating the limits of the input for the slab function for that data frame.
 #' @param limits_args Additional arguments passed to `limits_function`
@@ -42,20 +42,20 @@
 #' `y`-based aesthetics depending on the value of `orientation`. If `interval_function` is `NULL`,
 #' `point_interval` is used instead.
 #' @param interval_args Additional arguments passed to `interval_function` or `point_interval`.
-#' @param point_interval A function from the \code{\link{point_interval}} family (e.g., `median_qi`,
+#' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
 #'   `mean_qi`, etc). This function should take in a vector of value, and should obey the
-#'   `.width` and `.simple_names` parameters of \code{\link{point_interval}} functions, such that when given
+#'   `.width` and `.simple_names` parameters of [point_interval()] functions, such that when given
 #'   a vector with `.simple_names = TRUE` should return a data frame with variables `.value`, `.lower`,
 #'   `.upper`, and `.width`. Output will be converted to the appropriate `x`- or `y`-based aesthetics
-#'   depending on the value of `orientation`. See the \code{\link{point_interval}} family of functions for
+#'   depending on the value of `orientation`. See the [point_interval()] family of functions for
 #'   more information.
 #' @param .width The `.width` argument passed to `interval_function` or `point_interval`.
 #' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
 #' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
 #' those that are mapped (the default for most geoms).
-#' @seealso See \code{\link{geom_slabinterval}} for the geom version, intended
+#' @seealso See [geom_slabinterval()] for the geom version, intended
 #' for use on data that has already been translated into function evaluations, points, and intervals.
-#' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
+#' See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of stats
 #' built on top of this stat for common use cases (like `stat_halfeyeh`).
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples

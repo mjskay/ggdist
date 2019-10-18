@@ -39,7 +39,7 @@ globalVariables(c(".chain", ".iteration"))
 #' from `value`.
 #'
 #' @author Matthew Kay
-#' @seealso \code{\link[emmeans]{emmeans}}
+#' @seealso [emmeans::emmeans()]
 #' @keywords manip
 #' @examples
 #'

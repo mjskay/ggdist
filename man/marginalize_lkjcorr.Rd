@@ -10,24 +10,24 @@ marginalize_lkjcorr(data, K, predicate = NULL, dist = ".dist",
 \arguments{
 \item{data}{A data frame containing a column with distribution names (\code{".dist"} by default)
 and a list column of distribution arguments (\code{".args"} by default), such as output by
-\code{\link{parse_dist}}.}
+\code{\link[=parse_dist]{parse_dist()}}.}
 
 \item{K}{Dimension of the correlation matrix. Must be greater than or equal to 2.}
 
 \item{predicate}{a bare expression for selecting the rows of \code{data} to modify. This is useful
 if \code{data} contains more than one row with an LKJ prior in it and you only want to modify some
 of the distributions; if this is the case, give row a predicate expression (such as you might supply
-to \code{\link[dplyr]{filter}}) that evaluates to \code{TRUE} on the rows you want to modify.
+to \code{\link[dplyr:filter]{dplyr::filter()}}) that evaluates to \code{TRUE} on the rows you want to modify.
 If \code{NULL} (the default), all \code{lkjcorr} distributions in \code{data} are modified.}
 
-\item{dist}{The name of the column containing distribution names. See \code{\link{parse_dist}}.}
+\item{dist}{The name of the column containing distribution names. See \code{\link[=parse_dist]{parse_dist()}}.}
 
-\item{args}{The name of the column containing distribution arguments. See \code{\link{parse_dist}}.}
+\item{args}{The name of the column containing distribution arguments. See \code{\link[=parse_dist]{parse_dist()}}.}
 }
 \description{
 Turns specs for an LKJ correlation matrix distribution as returned by
-\code{\link{parse_dist}} into specs for the marginal distribution of
-a single cell in an LKJ-distributed correlation matrix (i.e., \code{\link{lkjcorr_marginal}}).
+\code{\link[=parse_dist]{parse_dist()}} into specs for the marginal distribution of
+a single cell in an LKJ-distributed correlation matrix (i.e., \code{\link[=lkjcorr_marginal]{lkjcorr_marginal()}}).
 Useful for visualizing prior correlations from LKJ distributions.
 }
 \details{
@@ -38,10 +38,10 @@ on the correlations, it is necessary to specify the value of \code{K}, which dep
 on what your model specification looks like.
 
 Given a data frame representing parsed distribution specifications (such
-as returned by \code{\link{parse_dist}}), this function updates any rows with \code{.dist == "lkjcorr"}
+as returned by \code{\link[=parse_dist]{parse_dist()}}), this function updates any rows with \code{.dist == "lkjcorr"}
 so that the first argument to the distribution is equal to the specified dimension
 of the correlation matrix (\code{K}) and changes the distribution name to \code{"lkjcorr_marginal"},
-allowing the distribution to be easily visualized using the \code{\link{stat_dist_slabinterval}}
+allowing the distribution to be easily visualized using the \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}}
 family of ggplot2 stats.
 }
 \examples{
@@ -69,5 +69,5 @@ data.frame(coef = c("a", "b"), prior = "lkjcorr(3)") \%>\%
 
 }
 \seealso{
-\code{\link{parse_dist}}, \code{\link{lkjcorr_marginal}}
+\code{\link[=parse_dist]{parse_dist()}}, \code{\link[=lkjcorr_marginal]{lkjcorr_marginal()}}
 }

@@ -28,7 +28,7 @@ globalVariables(c(".chain", ".iteration"))
 #' @return A data frame of tidy draws with a combined iteration column
 #'
 #' @author Matthew Kay
-#' @seealso \code{\link[emmeans]{emmeans}}
+#' @seealso [emmeans::emmeans()]
 #' @keywords manip
 #' @examples
 #'

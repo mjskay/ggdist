@@ -26,14 +26,14 @@ apply_prototypes = function(...) {
 #'
 #' Decorate a Bayesian model fit or a sample from it with types for
 #' variable and dimension data types. Meant to be used before calling
-#' \code{\link{spread_draws}} or \code{\link{gather_draws}} so that the values returned by
+#' [spread_draws()] or [gather_draws()] so that the values returned by
 #' those functions are translated back into useful data types.
 #'
 #' Each argument in `...` specifies a list or data.frame. The `model`
 #' is decorated with a list of constructors that can convert a numeric column
 #' into the data types in the lists in `...`.
 #'
-#' Then, when \code{\link{spread_draws}} or \code{\link{gather_draws}} is called on the decorated
+#' Then, when [spread_draws()] or [gather_draws()] is called on the decorated
 #' `model`, each list entry with the same name as the variable or a dimension
 #' in `variable_spec` is a used as a prototype for that variable or dimension ---
 #' i.e., its type is taken to be the expected type of that variable or dimension.
@@ -57,14 +57,14 @@ apply_prototypes = function(...) {
 #' of the generic function `as_constructor`.
 #'
 #' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
-#' for a full list of supported models, see \link{tidybayes-models}.
+#' for a full list of supported models, see [tidybayes-models].
 #' @param ...  Lists (or data frames) providing data prototypes used to convert
-#' columns returned by \code{\link{spread_draws}} and \code{\link{gather_draws}} back into useful data types.
+#' columns returned by [spread_draws()] and [gather_draws()] back into useful data types.
 #' See *Details*.
 #' @return A decorated version of `model`.
 #' @author Matthew Kay
 #' @aliases apply_prototypes
-#' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{compose_data}}.
+#' @seealso [spread_draws()], [gather_draws()], [compose_data()].
 #' @keywords manip
 #' @examples
 #' \donttest{

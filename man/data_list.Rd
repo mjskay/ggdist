@@ -38,7 +38,7 @@ as_data_list(object, name = "", ...)
 }
 \arguments{
 \item{...}{Additional arguments passed to other implementations of
-\code{as_data_list}, or for \code{data_list}, passed to \code{\link{list}}.}
+\code{as_data_list}, or for \code{data_list}, passed to \code{\link[=list]{list()}}.}
 
 \item{object}{The object to convert (see \emph{Details}).}
 
@@ -62,15 +62,15 @@ An object of class \code{c("data_list", "list")}, where each element
 is a translated variable as described above.
 }
 \description{
-Functions used by \code{\link{compose_data}} to create lists of data suitable for
+Functions used by \code{\link[=compose_data]{compose_data()}} to create lists of data suitable for
 input into a Bayesian modeling function. \strong{These functions typically should not be called directly}
-(instead use \code{\link{compose_data}}), but are exposed for the rare cases in which
+(instead use \code{\link[=compose_data]{compose_data()}}), but are exposed for the rare cases in which
 you may need to provide your own conversion routines for a data type not already
 supported (see \emph{Details}).
 }
 \details{
 \code{data_list} creates a list with class \code{c("data_list", "list")}
-instead of \code{c("list")}, but largely otherwise acts like the \code{\link{list}}
+instead of \code{c("list")}, but largely otherwise acts like the \code{\link[=list]{list()}}
 function.
 
 \code{as_data_list} recursively translates its first argument into list elements,
@@ -78,8 +78,8 @@ concatenating all resulting lists together. By default this means that:
 
 \itemize{
 \item numerics are included as-is.
-\item logicals are translated into numeric using \code{\link{as.numeric}}.
-\item factors are translated into numeric using \code{\link{as.numeric}}, and an additional element named
+\item logicals are translated into numeric using \code{\link[=as.numeric]{as.numeric()}}.
+\item factors are translated into numeric using \code{\link[=as.numeric]{as.numeric()}}, and an additional element named
 \code{.n_name(name)} is added with the number of levels in the factor.
 \item character vectors are converted into factors then translated into numeric in the same manner as factors are.
 \item lists are translated by translating all elements of the list
@@ -91,7 +91,7 @@ is also added containing the number of rows in the data frame.
 }
 
 If you wish to add support for additional types not described above, provide
-an implementation of \code{\link{as_data_list}} for the type. See the
+an implementation of \code{\link[=as_data_list]{as_data_list()}} for the type. See the
 implementations of \code{as_data_list.numeric}, \code{as_data_list.logical},
 etc for examples.
 }
@@ -103,7 +103,7 @@ etc for examples.
 
 }
 \seealso{
-\code{\link{compose_data}}.
+\code{\link[=compose_data]{compose_data()}}.
 }
 \author{
 Matthew Kay

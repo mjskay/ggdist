@@ -52,7 +52,7 @@ The difference between \code{spread_draws} is that names of variables in the mod
 be spread across the data frame as column names, whereas \code{gather_draws} will
 gather variables into a single column named \code{".variable"} and place values of variables into a
 column named \code{".value"}. To use naming schemes from other packages (such as \code{broom}), consider passing
-results through functions like \code{\link{to_broom_names}} or \code{\link{to_ggmcmc_names}}.
+results through functions like \code{\link[=to_broom_names]{to_broom_names()}} or \code{\link[=to_ggmcmc_names]{to_ggmcmc_names()}}.
 
 For example, \code{spread_draws(fit, a[i], b[i,v])} might return a grouped
 data frame (grouped by \code{i} and \code{v}), with:
@@ -84,7 +84,7 @@ or \code{"b[i,v]"} (when \code{".variable"} is \code{"b"}) for draw \code{".draw
 }
 
 \code{spread_draws} and \code{gather_draws} can use type information
-applied to the \code{fit} object by \code{\link{recover_types}} to convert columns
+applied to the \code{fit} object by \code{\link[=recover_types]{recover_types()}} to convert columns
 back into their original types. This is particularly helpful if some of the dimensions in
 your model were originally factors. For example, if the \code{v} dimension
 in the original data frame \code{data} was a factor with levels \code{c("a","b","c")},
@@ -171,7 +171,7 @@ is roughly equivalent to this:
 
 The main difference between using the \code{|} syntax instead of the
 \code{..} syntax is that the \code{|} syntax respects prototypes applied to
-dimensions with \code{\link{recover_types}}, and thus can be used to get
+dimensions with \code{\link[=recover_types]{recover_types()}}, and thus can be used to get
 columns with nicer names. For example:\preformatted{fit \%>\% recover_types(data) \%>\% spread_draws(b[i,v] | v)
 }
 
@@ -233,7 +233,7 @@ RankCorr \%>\%
 
 }
 \seealso{
-\code{\link{recover_types}}, \code{\link{compose_data}}.
+\code{\link[=recover_types]{recover_types()}}, \code{\link[=compose_data]{compose_data()}}.
 }
 \author{
 Matthew Kay

@@ -8,15 +8,15 @@ n_prefix(prefix)
 }
 \arguments{
 \item{prefix}{Character vector to be prepended to column names by
-\code{\link{compose_data}} to create index columns. Typically something
+\code{\link[=compose_data]{compose_data()}} to create index columns. Typically something
 like \code{"n"} (that is the default used in the \code{.n_name} argument
-of \code{\link{compose_data}}).
+of \code{\link[=compose_data]{compose_data()}}).
 
 Returns a function. The function returned takes a character vector, \code{name}
 and returns \code{paste0(prefix, "_", name)}, unless \code{name} is empty, in
 which case it will return \code{prefix}.
 
-\code{n_prefix("n")} is the default method that \code{\link{compose_data}} uses to
+\code{n_prefix("n")} is the default method that \code{\link[=compose_data]{compose_data()}} uses to
 generate column names for variables storing the number of levels in a factor. Under
 this method, given a data frame
 \code{df} with a factor column \code{"foo"} containing 5 levels, the results of
@@ -27,7 +27,7 @@ number of levels in \code{df$foo}.}
 }
 \description{
 Generates a function for generating names of index columns for factors in
-\code{\link{compose_data}} by prefixing a character vector to the original
+\code{\link[=compose_data]{compose_data()}} by prefixing a character vector to the original
 column name.
 }
 \examples{
@@ -50,5 +50,5 @@ df \%>\%
 
 }
 \seealso{
-The \code{.n_name} argument of \code{\link{compose_data}}.
+The \code{.n_name} argument of \code{\link[=compose_data]{compose_data()}}.
 }
