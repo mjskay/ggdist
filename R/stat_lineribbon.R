@@ -7,18 +7,18 @@
 #' Line + multiple probability ribbon plots (ggplot stat)
 #'
 #' A combination of \code{\link{stat_slabinterval}} and \code{\link{geom_lineribbon}} with sensible defaults.
-#' While \code{geom_lineribbon} is intended for use on data frames that have already been summarized using
-#' a \code{\link{point_interval}} function, \code{stat_lineribbon} is intended for use directly on data
+#' While `geom_lineribbon` is intended for use on data frames that have already been summarized using
+#' a \code{\link{point_interval}} function, `stat_lineribbon` is intended for use directly on data
 #' frames of draws, and will perform the summarization using a \code{\link{point_interval}} function;
-#' \code{stat_dist_lineribbon} is intended for use on analytical distributions through the \code{dist},
-#' \code{arg1}, ... \code{arg9}, and \code{args} aesthetics.
+#' `stat_dist_lineribbon` is intended for use on analytical distributions through the `dist`,
+#' `arg1`, ... `arg9`, and `args` aesthetics.
 #'
 #' @inheritParams stat_interval
 #' @inheritParams stat_slabinterval
 #' @param geom Use to override the default connection between
-#' \code{geom_lineribbon} and \code{stat_lineribbon}.
-#' @param show.legend Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics
-#' are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.
+#' `geom_lineribbon` and `stat_lineribbon`.
+#' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics
+#' are mapped. `FALSE` never includes, and `TRUE` always includes.
 #' @seealso See \code{\link{geom_lineribbon}} for the geom version, intended for use on points and intervals that have
 #' already been summarized using a \code{\link{point_interval}} function. See \code{\link{stat_pointinterval}} /
 #' \code{\link{stat_pointintervalh}} for a similar stat intended for point summaries and intervals.

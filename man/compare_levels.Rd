@@ -78,8 +78,7 @@ by \code{comparison}. By default, all pairwise comparisons are generated if
 \code{by} is \code{ordered}.
 
 The included \code{comparison} types are: \itemize{ \item \code{ordered}:
-compare each level \code{i} with level \code{i - 1}; e.g. \code{fun(i, i -
-1)} \item \code{pairwise}: compare each level of \code{by} with every other
+compare each level \code{i} with level \code{i - 1}; e.g. \code{fun(i, i - 1)} \item \code{pairwise}: compare each level of \code{by} with every other
 level.  \item \code{control}: compare each level of \code{by} with the first
 level of \code{by}.  If you wish to compare with a different level, you can
 first apply \code{\link{relevel}} to \code{by} to set the control

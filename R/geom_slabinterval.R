@@ -182,31 +182,31 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' This meta-geom supports drawing combinations of functions (as slabs, aka ridge plots or joy plots), points, and
 #' intervals. It acts as a meta-geom for many other tidybayes geoms that are wrappers around this geom, including
 #' eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots, and supports both horizontal and
-#' vertical orientations, dodging (via the \code{position} argument), and relative justification of slabs with their
+#' vertical orientations, dodging (via the `position` argument), and relative justification of slabs with their
 #' corresponding intervals.
 #'
-#' \code{geom_slabinterval} is a flexible meta-geom that you can use directly or through a variety of "shortcut"
+#' `geom_slabinterval` is a flexible meta-geom that you can use directly or through a variety of "shortcut"
 #' geoms that represent useful combinations of the various parameters of this geom. In many cases you will want to
 #' use the shortcut geoms instead as they create more useful mnemonic primitives, such as eye plots,
 #' halfeye plots, point+interval plots, or CCDF barplots.
 #'
-#' The \emph{slab} portion of the geom is much like a ridge or "joy" plot: it represents the value of a function
-#' scaled to fit between values on the x or y access (depending on the value of \code{orientation}). Values of
-#' the functions are specified using the \code{thickness} aesthetic and are scaled to fit into \code{scale}
-#' times the distence between points on the relevant axis. E.g., if \code{orientation} is \code{"horizontal"},
-#' \code{scale} is 0.9, and \code{y} is a discrete variable, then the \code{thickness} aesthetic specifies the
-#' value of some function of \code{x} that is drawn for every \code{y} value and scaled to fit into 0.9 times
+#' The *slab* portion of the geom is much like a ridge or "joy" plot: it represents the value of a function
+#' scaled to fit between values on the x or y access (depending on the value of `orientation`). Values of
+#' the functions are specified using the `thickness` aesthetic and are scaled to fit into `scale`
+#' times the distence between points on the relevant axis. E.g., if `orientation` is `"horizontal"`,
+#' `scale` is 0.9, and `y` is a discrete variable, then the `thickness` aesthetic specifies the
+#' value of some function of `x` that is drawn for every `y` value and scaled to fit into 0.9 times
 #' the distance between points on the y axis.
 #'
-#' For the \emph{interval} portion of the geom, \code{x} and \code{y} aesthetics specify the location of the
-#' point and \code{ymin}/\code{ymax} or \code{xmin}/\code{xmax} (depending on the value of \code{orientation}
+#' For the *interval* portion of the geom, `x` and `y` aesthetics specify the location of the
+#' point and `ymin`/`ymax` or `xmin`/`xmax` (depending on the value of `orientation`
 #' specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
-#' through the \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point} parameters.
+#' through the `interval_size_domain`, `interval_size_range`, and `fatten_point` parameters.
 #' These scaling factors are designed to give multiple probability intervals reasonable
 #' scaling at the default settings for \code{\link{scale_size_continuous}}.
 #'
-#' As a combination geom, this geom expects a \code{datatype} aesthetic specifying which part of the geom a given
-#' row in the input data corresponds to: \code{"slab"} or \code{"interval"}. However, specifying this aesthetic
+#' As a combination geom, this geom expects a `datatype` aesthetic specifying which part of the geom a given
+#' row in the input data corresponds to: `"slab"` or `"interval"`. However, specifying this aesthetic
 #' manually is typically only necessary if you use this geom directly; the numerous wrapper geoms will
 #' usually set this aesthetic for you as needed, and their use is recommended unless you have a very custom
 #' use case.
@@ -222,60 +222,60 @@ get_line_size = function(i_data, size_domain, size_range) {
 #'   \item \code{\link{stat_interval}} / \code{\link{stat_intervalh}}
 #' }
 #'
-#' Typically, the \code{geom_*} versions are meant for use with already-summarized data (such as intervals) and the
-#' \code{stat_*} versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
+#' Typically, the `geom_*` versions are meant for use with already-summarized data (such as intervals) and the
+#' `stat_*` versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
 #'
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to \code{\link{layer}}.
-#' @param side Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-#' which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-#' or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-#' to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
-#' \code{"vertical"}. \code{"both"} draws the slab mirrored on both sides (as in a violin plot).
-#' @param scale What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
-#' slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
-#' @param orientation Whether this geom is drawn horizontally (\code{"horizontal"}) or
-#' vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
-#' aesthetic to identify different groups, then for each group uses the \code{x} (resp. \code{y}) aesthetic and the
-#' \code{thickness} aesthetic to draw a function as an slab, and draws points and intervals horizontally
-#' (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp. \code{ymin}, \code{y}, and \code{ymax})
+#' @param side Which side to draw the slab on. `"topright"`, `"top"`, and `"right"` are synonyms
+#' which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`
+#' or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab
+#' to be drawn on the bottom of the left depending on if `orientation` is `"horizontal"` or
+#' `"vertical"`. `"both"` draws the slab mirrored on both sides (as in a violin plot).
+#' @param scale What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
+#' slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.
+#' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
+#' vertically (`"vertical"`). When horizontal (resp. vertical), the geom uses the `y` (resp. `x`)
+#' aesthetic to identify different groups, then for each group uses the `x` (resp. `y`) aesthetic and the
+#' `thickness` aesthetic to draw a function as an slab, and draws points and intervals horizontally
+#' (resp. vertically) using the `xmin`, `x`, and `xmax` (resp. `ymin`, `y`, and `ymax`)
 #' aesthetics.
-#' @param justification Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-#' justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-#' is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-#' \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-#' \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-#' \code{0.5}.
-#' @param normalize How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
-#' (the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
-#' panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
-#' the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
-#' opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
-#' groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
+#' @param justification Justification of the interval relative to the slab, where `0` indicates bottom/left
+#' justification and `1` indicates top/right justification (depending on `orientation`). If `justification`
+#' is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is
+#' `"top"`/`"right"` `justification` is set to `0`, when `side` is `"bottom"`/`"left"`
+#' `justification` is set to `1`, and when `side` is `"both"` `justification` is set to
+#' `0.5`.
+#' @param normalize How to normalize heights of functions input to the `thickness` aesthetic. If `"all"`
+#' (the default), normalize so that the maximum height across all data is `1`; if `"panels"`, normalize within
+#' panels so that the maximum height in each panel is `1`; if `"xy"`, normalize within
+#' the x/y axis opposite the `orientation` of this geom so that the maximum height at each value of the
+#' opposite axis is `1`; if `"groups"`, normalize within values of the opposite axis and within
+#' groups so that the maximum height in each group is `1`; if `"none"`, values are taken as is with no
 #' normalization (this should probably only be used with functions whose values are in \[0,1\], such as CDFs).
 #' @param interval_size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
-#' sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)
+#' sizes for intervals drawn according to `interval_size_range` (see the documentation for that argument.)
 #' @param interval_size_range This geom scales the raw size aesthetic values when drawing interval and point sizes, as
 #' they tend to be too thick when using the default settings of \code{\link{scale_size_continuous}}, which give sizes
-#' with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
-#' (typically this should be equal to the value of the \code{range} argument of the \code{\link{scale_size_continuous}}
-#' function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
+#' with a range of `c(1, 6)`. The `interval_size_domain` value indicates the input domain of raw size values
+#' (typically this should be equal to the value of the `range` argument of the \code{\link{scale_size_continuous}}
+#' function), and `interval_size_range` indicates the desired output range of the size values (the min and max of
 #' the actual sizes used to draw intervals).
 #' @param fatten_point A multiplicative factor used to adjust the size of the point relative to the size of the
-#' thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
+#' thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
 #' aesthetic and \code{\link{scale_point_size_continuous}} or \code{\link{scale_point_size_discrete}}; sizes
-#' specified with that aesthetic will not be adjusted using \code{fatten_point}.
-#' @param show_slab Should the slab portion of the geom be drawn? Default \code{TRUE}.
-#' @param show_point Should the point portion of the geom be drawn? Default \code{TRUE}.
-#' @param show_interval Should the interval portion of the geom be drawn? Default \code{TRUE}.
-#' @param na.rm	If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
+#' specified with that aesthetic will not be adjusted using `fatten_point`.
+#' @param show_slab Should the slab portion of the geom be drawn? Default `TRUE`.
+#' @param show_point Should the point portion of the geom be drawn? Default `TRUE`.
+#' @param show_interval Should the interval portion of the geom be drawn? Default `TRUE`.
+#' @param na.rm	If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
 #' values are silently removed.
 #' @author Matthew Kay
 #' @seealso See \code{\link{geom_lineribbon}} for a combination geom designed for fit curves plus probability bands.
 #' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
-#' built on top of this geom for common use cases (like \code{stat_halfeyeh}).
-#' See \code{vignette("slabinterval")} for a variety of examples of use.
+#' built on top of this geom for common use cases (like `stat_halfeyeh`).
+#' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples
 #'
 #' # geom_slabinterval() is typically not that useful on its own.

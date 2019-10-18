@@ -6,39 +6,39 @@
 
 #' Parse distribution specifications into columns of a data frame
 #'
-#' Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
+#' Parses simple string distribution specifications, like `"normal(0, 1)"`, into two columns of
 #' a data frame, suitable for use with \code{\link{stat_dist_slabinterval}} and its shortcut stats
-#' (like \code{stat_dist_halfeye}). This format is output
+#' (like `stat_dist_halfeye`). This format is output
 #' by \code{\link[brms]{get_prior}}, making it particularly useful for visualizing priors from
 #' brms models.
 #'
-#' \code{parse_dist()} can be applied to character vectors or to a data frame + bare column name of the
-#' column to parse, and returns a data frame with \code{".dist"} and \code{".args"} columns added.
-#' \code{parse_dist()} uses \code{r_dist_name()} to translate distribution names into names reconized
+#' `parse_dist()` can be applied to character vectors or to a data frame + bare column name of the
+#' column to parse, and returns a data frame with `".dist"` and `".args"` columns added.
+#' `parse_dist()` uses `r_dist_name()` to translate distribution names into names reconized
 #' by R.
 #'
-#' \code{r_dist_name()} takes a character vector of names and translates common names into R
+#' `r_dist_name()` takes a character vector of names and translates common names into R
 #' distribution names. Names are first made into valid R names using \code{\link{make.names}},
-#' then translated (ignoring character case, \code{"."}, and \code{"_"}). Thus, \code{"lognormal"},
-#' \code{"LogNormal"}, \code{"log_normal"}, \code{"log-Normal"}, and any number of other variants
-#' all get translated into \code{"lnorm"}.
+#' then translated (ignoring character case, `"."`, and `"_"`). Thus, `"lognormal"`,
+#' `"LogNormal"`, `"log_normal"`, `"log-Normal"`, and any number of other variants
+#' all get translated into `"lnorm"`.
 #'
 #' @param object A character vector containing distribution specifiations or a data frame with a column
 #'  containing distribution specifications.
 #' @param dist_col A bare (unquoted) column or column expression that resolves to a character vector
 #'  of distribution specifications.
-#' @param ...  Arguments passed to other implementations of \code{parse_dist}.
+#' @param ...  Arguments passed to other implementations of `parse_dist`.
 #' @param dist The name of the output column to contain the distribution name
 #' @param args The name of the output column to contain the arguments to the distribution
-#' @param to_r_names If \code{TRUE} (the default), certain common aliases for distribution names are
+#' @param to_r_names If `TRUE` (the default), certain common aliases for distribution names are
 #'   automatically translated into names that R can recognize (i.e., names which have functions starting
-#'   with \code{r}, \code{p}, \code{q}, and \code{d} representing random number generators, distribution
-#'   functions, etc. for that distribution), using the \code{r_dist_name} function. For example,
-#'   \code{"normal"} is translated into \code{"norm"} and \code{"lognormal"} is translated into \code{"lnorm"}.
-#' @param dist_name For \code{r_dist_name}, a character vector of distribution names to be translated into
+#'   with `r`, `p`, `q`, and `d` representing random number generators, distribution
+#'   functions, etc. for that distribution), using the `r_dist_name` function. For example,
+#'   `"normal"` is translated into `"norm"` and `"lognormal"` is translated into `"lnorm"`.
+#' @param dist_name For `r_dist_name`, a character vector of distribution names to be translated into
 #'   distribution names R recognizes. Unrecognized names are left as-is.
 #' @seealso See \code{\link{stat_dist_slabinterval}} and its shortcut stats, which can easily make use of
-#' the output of this function using the \code{dist} and \code{args} aesthetics.
+#' the output of this function using the `dist` and `args` aesthetics.
 #' @examples
 #'
 #' library(dplyr)

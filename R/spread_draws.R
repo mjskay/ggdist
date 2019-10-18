@@ -45,68 +45,68 @@ spread_samples = function(...) {
 #' Extract draws from a Bayesian model for one or more variables (possibly with named
 #' dimensions) into one of two types of long-format data frames.
 #'
-#' Imagine a JAGS or Stan fit named \code{fit}. The model may contain a variable named
-#' \code{b[i,v]} (in the JAGS or Stan language) with dimension \code{i} in \code{1:100} and
-#' dimension \code{v} in \code{1:3}. However, the default format for draws returned from
+#' Imagine a JAGS or Stan fit named `fit`. The model may contain a variable named
+#' `b[i,v]` (in the JAGS or Stan language) with dimension `i` in `1:100` and
+#' dimension `v` in `1:3`. However, the default format for draws returned from
 #' JAGS or Stan in R will not reflect this indexing structure, instead
-#' they will have multiple columns with names like \code{"b[1,1]"}, \code{"b[2,1]"}, etc.
+#' they will have multiple columns with names like `"b[1,1]"`, `"b[2,1]"`, etc.
 #'
-#' \code{spread_draws} and \code{gather_draws} provide a straightforward
+#' `spread_draws` and `gather_draws` provide a straightforward
 #' syntax to translate these columns back into properly-indexed variables in two different
 #' tidy data frame formats, optionally recovering dimension types (e.g. factor levels) as it does so.
 #'
-#' \code{spread_draws} and \code{gather_draws} return data frames already grouped by
+#' `spread_draws` and `gather_draws` return data frames already grouped by
 #' all dimensions used on the variables you specify.
 #'
-#' The difference between \code{spread_draws} is that names of variables in the model will
-#' be spread across the data frame as column names, whereas \code{gather_draws} will
-#' gather variables into a single column named \code{".variable"} and place values of variables into a
-#' column named \code{".value"}. To use naming schemes from other packages (such as \code{broom}), consider passing
+#' The difference between `spread_draws` is that names of variables in the model will
+#' be spread across the data frame as column names, whereas `gather_draws` will
+#' gather variables into a single column named `".variable"` and place values of variables into a
+#' column named `".value"`. To use naming schemes from other packages (such as `broom`), consider passing
 #' results through functions like \code{\link{to_broom_names}} or \code{\link{to_ggmcmc_names}}.
 #'
-#' For example, \code{spread_draws(fit, a[i], b[i,v])} might return a grouped
-#' data frame (grouped by \code{i} and \code{v}), with:
+#' For example, `spread_draws(fit, a[i], b[i,v])` might return a grouped
+#' data frame (grouped by `i` and `v`), with:
 #' \itemize{
-#'    \item column \code{".chain"}: the chain number. \code{NA} if not applicable to the model
+#'    \item column `".chain"`: the chain number. `NA` if not applicable to the model
 #'      type; this is typically only applicable to MCMC algorithms.
-#'    \item column \code{".iteration"}: the iteration number. Guaranteed to be unique within-chain only.
-#'      \code{NA} if not applicable to the model type; this is typically only applicable to MCMC algorithms.
-#'    \item column \code{".draw"}: a unique number for each draw from the posterior. Order is not
+#'    \item column `".iteration"`: the iteration number. Guaranteed to be unique within-chain only.
+#'      `NA` if not applicable to the model type; this is typically only applicable to MCMC algorithms.
+#'    \item column `".draw"`: a unique number for each draw from the posterior. Order is not
 #'      guaranteed to be meaningful.
-#'    \item column \code{"i"}: value in \code{1:5}
-#'    \item column \code{"v"}: value in \code{1:10}
-#'    \item column \code{"a"}: value of \code{"a[i]"} for draw \code{".draw"}
-#'    \item column \code{"b"}: value of \code{"b[i,v]"} for draw \code{".draw"}
+#'    \item column `"i"`: value in `1:5`
+#'    \item column `"v"`: value in `1:10`
+#'    \item column `"a"`: value of `"a[i]"` for draw `".draw"`
+#'    \item column `"b"`: value of `"b[i,v]"` for draw `".draw"`
 #'  }
 #'
-#' \code{gather_draws(fit, a[i], b[i,v])} on the same fit would return a grouped
-#' data frame (grouped by \code{i} and \code{v}), with:
+#' `gather_draws(fit, a[i], b[i,v])` on the same fit would return a grouped
+#' data frame (grouped by `i` and `v`), with:
 #' \itemize{
-#'    \item column \code{".chain"}: the chain number
-#'    \item column \code{".iteration"}: the iteration number
-#'    \item column \code{".draw"}: the draw number
-#'    \item column \code{"i"}: value in \code{1:5}
-#'    \item column \code{"v"}: value in \code{1:10}, or \code{NA}
-#'      if \code{".variable"} is \code{"a"}.
-#'    \item column \code{".variable"}: value in \code{c("a", "b")}.
-#'    \item column \code{".value"}: value of \code{"a[i]"} (when \code{".variable"} is \code{"a"})
-#'      or \code{"b[i,v]"} (when \code{".variable"} is \code{"b"}) for draw \code{".draw"}
+#'    \item column `".chain"`: the chain number
+#'    \item column `".iteration"`: the iteration number
+#'    \item column `".draw"`: the draw number
+#'    \item column `"i"`: value in `1:5`
+#'    \item column `"v"`: value in `1:10`, or `NA`
+#'      if `".variable"` is `"a"`.
+#'    \item column `".variable"`: value in `c("a", "b")`.
+#'    \item column `".value"`: value of `"a[i]"` (when `".variable"` is `"a"`)
+#'      or `"b[i,v]"` (when `".variable"` is `"b"`) for draw `".draw"`
 #'  }
 #'
-#' \code{spread_draws} and \code{gather_draws} can use type information
-#' applied to the \code{fit} object by \code{\link{recover_types}} to convert columns
+#' `spread_draws` and `gather_draws` can use type information
+#' applied to the `fit` object by \code{\link{recover_types}} to convert columns
 #' back into their original types. This is particularly helpful if some of the dimensions in
-#' your model were originally factors. For example, if the \code{v} dimension
-#' in the original data frame \code{data} was a factor with levels \code{c("a","b","c")},
-#' then we could use \code{recover_types} before \code{spread_draws}:
+#' your model were originally factors. For example, if the `v` dimension
+#' in the original data frame `data` was a factor with levels `c("a","b","c")`,
+#' then we could use `recover_types` before `spread_draws`:
 #'
 #' \preformatted{fit \%>\%
 #'  recover_types(data) %\>\%
 #'  spread_draws(fit, b[i,v])
 #' }
 #'
-#' Which would return the same data frame as above, except the \code{"v"} column
-#' would be a value in \code{c("a","b","c")} instead of \code{1:3}.
+#' Which would return the same data frame as above, except the `"v"` column
+#' would be a value in `c("a","b","c")` instead of `1:3`.
 #'
 #' For variables that do not share the same subscripts (or share
 #' some but not all subscripts), we can supply their specifications separately.
@@ -136,43 +136,43 @@ spread_samples = function(...) {
 #' )}
 #'
 #'
-#' The \code{c} and \code{cbind} functions can be used to combine multiple variable names that have
+#' The `c` and `cbind` functions can be used to combine multiple variable names that have
 #' the same dimensions. For example, if we have several variables with the same
-#' subscripts \code{i} and \code{v}, we could do either of these:
+#' subscripts `i` and `v`, we could do either of these:
 #'
 #' \preformatted{spread_draws(fit, c(w, x, y, z)[i,v])}
-#' \preformatted{spread_draws(fit, cbind(w, x, y, z)[i,v])}  # equivalent
+#' \preformatted{spread_draws(fit, cbind(w, x, y, z)[i,v])  # equivalent}
 #'
 #' Each of which is roughly equivalent to this:
 #'
 #' \preformatted{spread_draws(fit, w[i,v], x[i,v], y[i,v], z[i,v])}
 #'
-#' Besides being more compact, the \code{c()}-style syntax is currently also
+#' Besides being more compact, the `c()`-style syntax is currently also
 #' faster (though that may change).
 #'
 #' Dimensions can be omitted from the resulting data frame by leaving their names
-#' blank; e.g. \code{spread_draws(fit, b[,v])} will omit the first dimension of
-#' \code{b} from the output. This is useful if a dimension is known to contain all
+#' blank; e.g. `spread_draws(fit, b[,v])` will omit the first dimension of
+#' `b` from the output. This is useful if a dimension is known to contain all
 #' the same value in a given model.
 #'
-#' The shorthand \code{..} can be used to specify one column that should be put
+#' The shorthand `..` can be used to specify one column that should be put
 #' into a wide format and whose names will be the base variable name, plus a dot
-#' ("."), plus the value of the dimension at \code{..}. For example:
+#' ("."), plus the value of the dimension at `..`. For example:
 #'
-#' \code{spread_draws(fit, b[i,..])} would return a grouped data frame
-#' (grouped by \code{i}), with:
+#' `spread_draws(fit, b[i,..])` would return a grouped data frame
+#' (grouped by `i`), with:
 #' \itemize{
-#'  \item column \code{".chain"}: the chain number
-#'  \item column \code{".iteration"}: the iteration number
-#'  \item column \code{".draw"}: the draw number
-#'  \item column \code{"i"}: value in \code{1:20}
-#'  \item column \code{"b.1"}: value of \code{"b[i,1]"} for draw \code{".draw"}
-#'  \item column \code{"b.2"}: value of \code{"b[i,2]"} for draw \code{".draw"}
-#'  \item column \code{"b.3"}: value of \code{"b[i,3]"} for draw \code{".draw"}
+#'  \item column `".chain"`: the chain number
+#'  \item column `".iteration"`: the iteration number
+#'  \item column `".draw"`: the draw number
+#'  \item column `"i"`: value in `1:20`
+#'  \item column `"b.1"`: value of `"b[i,1]"` for draw `".draw"`
+#'  \item column `"b.2"`: value of `"b[i,2]"` for draw `".draw"`
+#'  \item column `"b.3"`: value of `"b[i,3]"` for draw `".draw"`
 #' }
 #'
-#' An optional clause in the form \code{| wide_dimension} can also be used to put
-#' the data frame into a wide format based on \code{wide_dimension}. For example, this:
+#' An optional clause in the form `| wide_dimension` can also be used to put
+#' the data frame into a wide format based on `wide_dimension`. For example, this:
 #'
 #' \preformatted{spread_draws(fit, b[i,v] | v)}
 #'
@@ -180,55 +180,59 @@ spread_samples = function(...) {
 #'
 #' \preformatted{spread_draws(fit, b[i,v]) \%>\% spread(v,b)}
 #'
-#' The main difference between using the \code{|} syntax instead of the
-#' \code{..} syntax is that the \code{|} syntax respects prototypes applied to
+#' The main difference between using the `|` syntax instead of the
+#' `..` syntax is that the `|` syntax respects prototypes applied to
 #' dimensions with \code{\link{recover_types}}, and thus can be used to get
 #' columns with nicer names. For example:
 #'
-#' \code{fit \%>\% recover_types(data) \%>\% spread_draws(b[i,v] | v)} would return a grouped data frame
-#' (grouped by \code{i}), with:
+#' ```
+#' fit %>% recover_types(data) %>% spread_draws(b[i,v] | v)
+#' ```
+#'
+#' would return a grouped data frame
+#' (grouped by `i`), with:
 #' \itemize{
-#'  \item column \code{".chain"}: the chain number
-#'  \item column \code{".iteration"}: the iteration number
-#'  \item column \code{".draw"}: the draw number
-#'  \item column \code{"i"}: value in \code{1:20}
-#'  \item column \code{"a"}: value of \code{"b[i,1]"} for draw \code{".draw"}
-#'  \item column \code{"b"}: value of \code{"b[i,2]"} for draw \code{".draw"}
-#'  \item column \code{"c"}: value of \code{"b[i,3]"} for draw \code{".draw"}
+#'  \item column `".chain"`: the chain number
+#'  \item column `".iteration"`: the iteration number
+#'  \item column `".draw"`: the draw number
+#'  \item column `"i"`: value in `1:20`
+#'  \item column `"a"`: value of `"b[i,1]"` for draw `".draw"`
+#'  \item column `"b"`: value of `"b[i,2]"` for draw `".draw"`
+#'  \item column `"c"`: value of `"b[i,3]"` for draw `".draw"`
 #' }
 #'
-#' The shorthand \code{.} can be used to specify columns that should be nested
+#' The shorthand `.` can be used to specify columns that should be nested
 #' into vectors, matrices, or n-dimensional arrays (depending on how many dimensions
-#' are specified with \code{.}).
+#' are specified with `.`).
 #'
-#' For example, \code{spread_draws(fit, a[.], b[.,.])} might return a
+#' For example, `spread_draws(fit, a[.], b[.,.])` might return a
 #' data frame, with:
 #' \itemize{
-#'    \item column \code{".chain"}: the chain number.
-#'    \item column \code{".iteration"}: the iteration number.
-#'    \item column \code{".draw"}: a unique number for each draw from the posterior.
-#'    \item column \code{"a"}: a list column of vectors.
-#'    \item column \code{"b"}: a list column of matrices.
+#'    \item column `".chain"`: the chain number.
+#'    \item column `".iteration"`: the iteration number.
+#'    \item column `".draw"`: a unique number for each draw from the posterior.
+#'    \item column `"a"`: a list column of vectors.
+#'    \item column `"b"`: a list column of matrices.
 #'  }
 #'
 #' Ragged arrays are turned into non-ragged arrays with
-#' missing entries given the value \code{NA}.
+#' missing entries given the value `NA`.
 #'
-#' Finally, variable names can be regular expressions by setting \code{regex = TRUE}; e.g.:
+#' Finally, variable names can be regular expressions by setting `regex = TRUE`; e.g.:
 #'
-#' \code{spread_draws(fit, `b_.*`[i], regex = TRUE)}
+#' \preformatted{spread_draws(fit, `b_.*`[i], regex = TRUE)}
 #'
 #' Would return a tidy data frame with variables starting with `b_` and having one dimension.
 #'
 #' @param model A supported Bayesian model fit. Tidybayes supports a variety of model objects;
 #' for a full list of supported models, see \link{tidybayes-models}.
 #' @param ... Expressions in the form of
-#' \code{variable_name[dimension_1, dimension_2, ...] | wide_dimension}. See *Details*.
-#' @param regex If \code{TRUE}, variable names are treated as regular expressions and all column matching the
-#' regular expression and number of dimensions are included in the output. Default \code{FALSE}.
+#' `variable_name[dimension_1, dimension_2, ...] | wide_dimension`. See *Details*.
+#' @param regex If `TRUE`, variable names are treated as regular expressions and all column matching the
+#' regular expression and number of dimensions are included in the output. Default `FALSE`.
 #' @param sep Separator used to separate dimensions in variable names, as a regular expression.
-#' @param n The number of draws to return, or \code{NULL} to return all draws.
-#' @param seed A seed to use when subsampling draws (i.e. when \code{n} is not \code{NULL}).
+#' @param n The number of draws to return, or `NULL` to return all draws.
+#' @param seed A seed to use when subsampling draws (i.e. when `n` is not `NULL`).
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{recover_types}}, \code{\link{compose_data}}.

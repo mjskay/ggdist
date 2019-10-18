@@ -8,56 +8,56 @@
 #'
 #' A meta-stat for computing slab and interval functions for use with \code{\link{geom_slabinterval}}
 #' and its derivatives. Generally speaking not intended to be used directly: The API for
-#' this stat is \strong{experimental and subject to change}. This is used as the basis
+#' this stat is **experimental and subject to change**. This is used as the basis
 #' for several other more directly useful stats whose APIs are more stable; it is recommended
 #' to use those instead.
 #'
 #' @eval rd_slabinterval_aesthetics(stat = StatSlabinterval)
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
-#' \code{stat_slabinterval} and \code{\link{geom_slabinterval}}
+#' `stat_slabinterval` and \code{\link{geom_slabinterval}}
 #' @param ...  Other arguments passed to \code{\link{layer}}. They may also be arguments to the paired geom
 #' (e.g., \code{\link{geom_pointinterval}})
 #' @param limits_function A function that takes a data frame of aesthetics and returns a data frame with
-#' columns \code{.lower} and \code{.upper} indicating the limits of the input for the slab function for that data frame.
-#' @param limits_args Additional arguments passed to \code{limits_function}
-#' @param limits Limits for \code{slab_function}, as a vector of length two. These limits are combined with those
-#' computed by the \code{limits_function} as well as the limits defined by the scales of the plot to determine the
+#' columns `.lower` and `.upper` indicating the limits of the input for the slab function for that data frame.
+#' @param limits_args Additional arguments passed to `limits_function`
+#' @param limits Limits for `slab_function`, as a vector of length two. These limits are combined with those
+#' computed by the `limits_function` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-#' will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
-#' \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.
-#' @param slab_function A function that takes a data frame of aesthetics and an \code{input} parameter (a vector
+#' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
+#' `limits = c(0, NA)` will ensure that the lower limit does not go below 0.
+#' @param slab_function A function that takes a data frame of aesthetics and an `input` parameter (a vector
 #' of function inputs), and returns a data frame with
-#' columns \code{.input} (from the \code{input} vector) and \code{.value} (result of applying the function to
-#' each value of input). Given the results of \code{slab_function}, \code{.value} will be translated into the
-#' \code{f} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
-#' automatically depending on the value of \code{orientation}.
-#' @param slab_args Additional arguments passed to \code{limits_function}
-#' @param n Number of points at which to evaluate \code{slab_function}
-#' @param interval_function Custom function for generating intervals (for most common use cases the \code{point_interval}
-#' argument will be easier to use). This function takes a data frame of aesthetics and a \code{.width} parameter (a vector
+#' columns `.input` (from the `input` vector) and `.value` (result of applying the function to
+#' each value of input). Given the results of `slab_function`, `.value` will be translated into the
+#' `f` aesthetic and `input` will be translated into either the `x` or `y` aesthetic
+#' automatically depending on the value of `orientation`.
+#' @param slab_args Additional arguments passed to `limits_function`
+#' @param n Number of points at which to evaluate `slab_function`
+#' @param interval_function Custom function for generating intervals (for most common use cases the `point_interval`
+#' argument will be easier to use). This function takes a data frame of aesthetics and a `.width` parameter (a vector
 #' of interval widths), and returns a data frame with
-#' columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
-#' (endpoints of the inverals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
-#' \code{y}-based aesthetics depending on the value of \code{orientation}. If \code{interval_function} is \code{NULL},
-#' \code{point_interval} is used instead.
-#' @param interval_args Additional arguments passed to \code{interval_function} or \code{point_interval}.
-#' @param point_interval A function from the \code{\link{point_interval}} family (e.g., \code{median_qi},
-#'   \code{mean_qi}, etc). This function should take in a vector of value, and should obey the
-#'   \code{.width} and \code{.simple_names} parameters of \code{\link{point_interval}} functions, such that when given
-#'   a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
-#'   \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
-#'   depending on the value of \code{orientation}. See the \code{\link{point_interval}} family of functions for
+#' columns `.width` (from the `.width` vector), `.value` (point summary) and `.lower` and `.upper`
+#' (endpoints of the inverals, given the `.width`). Output will be converted to the appropriate `x`- or
+#' `y`-based aesthetics depending on the value of `orientation`. If `interval_function` is `NULL`,
+#' `point_interval` is used instead.
+#' @param interval_args Additional arguments passed to `interval_function` or `point_interval`.
+#' @param point_interval A function from the \code{\link{point_interval}} family (e.g., `median_qi`,
+#'   `mean_qi`, etc). This function should take in a vector of value, and should obey the
+#'   `.width` and `.simple_names` parameters of \code{\link{point_interval}} functions, such that when given
+#'   a vector with `.simple_names = TRUE` should return a data frame with variables `.value`, `.lower`,
+#'   `.upper`, and `.width`. Output will be converted to the appropriate `x`- or `y`-based aesthetics
+#'   depending on the value of `orientation`. See the \code{\link{point_interval}} family of functions for
 #'   more information.
-#' @param .width The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.
-#' @param show.legend Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-#' to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
+#' @param .width The `.width` argument passed to `interval_function` or `point_interval`.
+#' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
+#' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
 #' those that are mapped (the default for most geoms).
 #' @seealso See \code{\link{geom_slabinterval}} for the geom version, intended
 #' for use on data that has already been translated into function evaluations, points, and intervals.
 #' See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of stats
-#' built on top of this stat for common use cases (like \code{stat_halfeyeh}).
-#' See \code{vignette("slabinterval")} for a variety of examples of use.
+#' built on top of this stat for common use cases (like `stat_halfeyeh`).
+#' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples
 #'
 #' # stat_slabinterval() is typically not that useful on its own.

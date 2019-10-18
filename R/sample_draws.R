@@ -11,9 +11,9 @@
 #' based on a column indexing draws, ensuring that rows in sub-groups of a grouped data frame are sampled from the
 #' same draws.
 #'
-#' \code{sample_draws()} makes it easier to sub-sample a grouped, tidy-format data frame of draws. On a grouped data frame,
-#' the naive approach of using \code{filter} with the \code{.draw} column will give incorrect results as it will
-#' select a different sample within each group. \code{sample_draws()} ensures the same sample is selected within
+#' `sample_draws()` makes it easier to sub-sample a grouped, tidy-format data frame of draws. On a grouped data frame,
+#' the naive approach of using `filter` with the `.draw` column will give incorrect results as it will
+#' select a different sample within each group. `sample_draws()` ensures the same sample is selected within
 #' each group.
 #'
 #' @param data Data frame to sample from

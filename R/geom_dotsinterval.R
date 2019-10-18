@@ -237,8 +237,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'
 #' Geoms and stats for creating dotplots that automatically determines a bin width that
 #' ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-#' generation of quantile dotplots using the \code{quantiles} argument to \code{stat_dotsinterval}/\code{stat_dots}
-#' and \code{stat_dist_dotsinterval}/\code{stat_dist_dots}. Generally follows the naming scheme and
+#' generation of quantile dotplots using the `quantiles` argument to `stat_dotsinterval`/`stat_dots`
+#' and `stat_dist_dotsinterval`/`stat_dist_dots`. Generally follows the naming scheme and
 #' arguments of the \code{\link{geom_slabinterval}} and \code{\link{stat_slabinterval}} family of
 #' geoms and stats.
 #'
@@ -252,11 +252,11 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   \item Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
 #'   symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
 #'   dots from overlapping each other.
-#'   \item The shape of the dots in a in these geoms can be changed using the \code{slab_shape} aesthetic (when using the
-#'   \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
+#'   \item The shape of the dots in a in these geoms can be changed using the `slab_shape` aesthetic (when using the
+#'   `dotsinterval` family) or the `shape` or `slab_shape` aesthetic (when using the `dots` family)
 #' }
 #'
-#' The \code{stat_...} and \code{stat_dist_...} versions of the stats when used with the \code{quantiles} argument
+#' The `stat_...` and `stat_dist_...` versions of the stats when used with the `quantiles` argument
 #' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
 #' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 #'
@@ -265,27 +265,27 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @inheritParams stat_slabinterval
 #' @param ...  Other arguments passed to \code{\link{layer}}.
 #' @author Matthew Kay
-#' @param dotsize The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as
+#' @param dotsize The size of the dots relative to the bin width. The default, `1`, makes dots be just about as
 #' wide as the bin width.
 #' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
-#' default, \code{1}, makes dots in the same stack just touch each other.
-#' @param binwidth The binwidth to use for drawing the dotplots. The default value, \code{NA}, will dynamically select
+#' default, `1`, makes dots in the same stack just touch each other.
+#' @param binwidth The binwidth to use for drawing the dotplots. The default value, `NA`, will dynamically select
 #' a binwidth based on the size of the plot when drawn.
-#' @param quantiles For the \code{stat_} and \code{stat_dist_} stats, setting this to a value other than \code{NA}
-#' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for \code{stat_}) or a dotplot
-#' of quantiles from the distribution (for \code{stat_dist_}). The value of \code{quantiles} determines the number
+#' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
+#' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
+#' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number
 #' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
 #' @references
 #'   Kay, M., Kola, T., Hullman, J. R., & Munson, S. A. (2016). When (ish) is My Bus? User-centered Visualizations
-#'   of Uncertainty in Everyday, Mobile Predictive Systems. \emph{Conference on Human Factors
-#'   in Computing Systems - CHI '16}, 5092--5103. \doi{10.1145/2858036.2858558}.
+#'   of Uncertainty in Everyday, Mobile Predictive Systems. *Conference on Human Factors
+#'   in Computing Systems - CHI '16*, 5092--5103. \doi{10.1145/2858036.2858558}.
 #'
 #'   Fernandes, M., Walls, L., Munson, S., Hullman, J., & Kay, M. (2018). Uncertainty Displays Using Quantile Dotplots
-#'   or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Computing Systems - CHI '18}.
+#'   or CDFs Improve Transit Decision-Making. *Conference on Human Factors in Computing Systems - CHI '18*.
 #'   \doi{10.1145/3173574.3173718}.
 #' @seealso See \code{\link{stat_sample_slabinterval}} and \code{\link{stat_dist_slabinterval}} for families of other
 #' stats built on top of \code{\link{geom_slabinterval}}.
-#' See \code{vignette("slabinterval")} for a variety of examples of use.
+#' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples
 #'
 #' # TODO

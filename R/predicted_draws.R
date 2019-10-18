@@ -41,78 +41,78 @@ add_predicted_samples = function(newdata, model, ..., n = NULL) {
 #' linear/link-level predictor), the posterior predictions of the model, or the residuals of a model to
 #' the data frame in a long format.
 #'
-#' \code{add_fitted_draws} adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to
-#' the data. It corresponds to \code{\link[rstanarm]{posterior_linpred}} in \code{rstanarm} or
-#' \code{\link[brms]{fitted.brmsfit}} in \code{brms}.
+#' `add_fitted_draws` adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to
+#' the data. It corresponds to \code{\link[rstanarm]{posterior_linpred}} in `rstanarm` or
+#' \code{\link[brms]{fitted.brmsfit}} in `brms`.
 #'
-#' \code{add_predicted_draws} adds draws from posterior predictions to
-#' the data. It corresponds to \code{\link[rstanarm]{posterior_predict}} in \code{rstanarm} or
-#' \code{\link[brms]{predict.brmsfit}} in \code{brms}.
+#' `add_predicted_draws` adds draws from posterior predictions to
+#' the data. It corresponds to \code{\link[rstanarm]{posterior_predict}} in `rstanarm` or
+#' \code{\link[brms]{predict.brmsfit}} in `brms`.
 #'
-#' \code{add_fitted_draws} and \code{fitted_draws} are alternate spellings of the
+#' `add_fitted_draws` and `fitted_draws` are alternate spellings of the
 #' same function with opposite order of the first two arguments to facilitate use in data
 #' processing pipelines that start either with a data frame or a model. Similarly,
-#' \code{add_predicted_draws} and \code{predicted_draws} are alternate spellings.
+#' `add_predicted_draws` and `predicted_draws` are alternate spellings.
 #'
-#' Given equal choice between the two, \code{add_fitted_draws} and \code{add_predicted_draws}
+#' Given equal choice between the two, `add_fitted_draws` and `add_predicted_draws`
 #' are the preferred spellings.
 #'
-#' \code{add_linpred_draws} and \code{linpred_draws} are alternative spellings of \code{fitted_draws}
-#' and \code{add_fitted_draws} for consistency with \code{rstanarm} terminology (specifically
+#' `add_linpred_draws` and `linpred_draws` are alternative spellings of `fitted_draws`
+#' and `add_fitted_draws` for consistency with `rstanarm` terminology (specifically
 #' \code{\link[rstanarm]{posterior_linpred}}).
 #'
 #' @param newdata Data frame to generate predictions from. If omitted, most model types will
 #' generate predictions from the data used to fit the model.
 #' @param model A supported Bayesian model fit that can provide fits and predictions. Supported models
-#' are listed in the second section of \link{tidybayes-models}: \emph{Models Supporting Prediction}. While other
+#' are listed in the second section of \link{tidybayes-models}: *Models Supporting Prediction*. While other
 #' functions in this package (like \code{\link{spread_draws}}) support a wider range of models, to work with
-#' \code{add_fitted_draws} and \code{add_predicted_draws} a model must provide an interface for generating
-#' predictions, thus more generic Bayesian modeling interfaces like \code{runjags} and \code{rstan} are not directly
-#' supported for these functions (only wrappers around those languages that provide predictions, like \code{rstanarm}
-#' and \code{brm}, are supported here).
-#' @param value The name of the output column for \code{fitted_draws}; default \code{".value"}.
-#' @param prediction The name of the output column for \code{predicted_draws}; default \code{".prediction"}.
-#' @param residual The name of the output column for \code{residual_draws}; default \code{".residual"}.
+#' `add_fitted_draws` and `add_predicted_draws` a model must provide an interface for generating
+#' predictions, thus more generic Bayesian modeling interfaces like `runjags` and `rstan` are not directly
+#' supported for these functions (only wrappers around those languages that provide predictions, like `rstanarm`
+#' and `brm`, are supported here).
+#' @param value The name of the output column for `fitted_draws`; default `".value"`.
+#' @param prediction The name of the output column for `predicted_draws`; default `".prediction"`.
+#' @param residual The name of the output column for `residual_draws`; default `".residual"`.
 #' @param ... Additional arguments passed to the underlying prediction method for the type of
 #' model given.
-#' @param n The number of draws per prediction / fit to return, or \code{NULL} to return all draws.
-#' @param seed A seed to use when subsampling draws (i.e. when \code{n} is not \code{NULL}).
+#' @param n The number of draws per prediction / fit to return, or `NULL` to return all draws.
+#' @param seed A seed to use when subsampling draws (i.e. when `n` is not `NULL`).
 #' @param re_formula formula containing group-level effects to be considered in the prediction.
-#' If \code{NULL} (default), include all group-level effects; if \code{NA}, include no group-level effects.
+#' If `NULL` (default), include all group-level effects; if `NA`, include no group-level effects.
 #' Some model types (such as \code{\link[brms]{brm}} and \code{\link[rstanarm]{stanreg-objects}}) allow
-#' marginalizing over grouping factors by specifying new levels of a factor in \code{newdata}. In the case of
-#' \code{\link[brms]{brm}}, you must also pass \code{allow_new_levels = TRUE} here to include new levels (see
+#' marginalizing over grouping factors by specifying new levels of a factor in `newdata`. In the case of
+#' \code{\link[brms]{brm}}, you must also pass `allow_new_levels = TRUE` here to include new levels (see
 #' \code{\link[brms]{predict.brmsfit}}).
-#' @param category For \emph{some} ordinal, multinomial, and multivariate models (notably, \code{\link[brms]{brm}} models but
-#' \emph{not} \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per input row for
-#' \code{fitted_draws} or \code{predicted_draws}, depending on the model type. For ordinal/multinomial models,
+#' @param category For *some* ordinal, multinomial, and multivariate models (notably, \code{\link[brms]{brm}} models but
+#' *not* \code{\link[rstanarm]{stan_polr}} models), multiple sets of rows will be returned per input row for
+#' `fitted_draws` or `predicted_draws`, depending on the model type. For ordinal/multinomial models,
 #' these rows correspond to different categories of the response variable. For multivariate models, these correspond to
-#' different response variables. The \code{category} argument specifies the name of the column
+#' different response variables. The `category` argument specifies the name of the column
 #' to put the category names (or variable names) into in the resulting data frame. The default name of this column
-#' (\code{".category"}) reflects the fact that this functionality was originally used only for ordinal models and
+#' (`".category"`) reflects the fact that this functionality was originally used only for ordinal models and
 #' has been re-used for multivariate models. The fact that multiple rows per response are returned only for some
 #' model types reflects the fact that tidybayes takes the approach of tidying whatever output is given to us, and
 #' the output from different modeling functions differs on this point.
-#' See \code{vignette("tidy-brms")} and \code{vignette("tidy-rstanarm")} for examples of dealing with output
+#' See `vignette("tidy-brms")` and `vignette("tidy-rstanarm")` for examples of dealing with output
 #' from ordinal models using both approaches.
-#' @param dpar For \code{fitted_draws} and \code{add_fitted_draws}: Should distributional regression
+#' @param dpar For `fitted_draws` and `add_fitted_draws`: Should distributional regression
 #' parameters be included in the output? Valid only for models that support distributional regression parameters,
-#' such as submodels for variance parameters (as in \code{brm}). If \code{TRUE}, distributional regression
+#' such as submodels for variance parameters (as in `brm`). If `TRUE`, distributional regression
 #' parameters are included in the output as additional columns named after each parameter
-#' (alternative names can be provided using a list or named vector, e.g. \code{c(sigma.hat = "sigma")}
-#' would output the \code{"sigma"} parameter from a model as a column named \code{"sigma.hat"}).
-#' If \code{FALSE} (the default), distributional regression parameters are not included.
-#' @param scale Either \code{"response"} or \code{"linear"}. If \code{"response"}, results are returned
-#' on the scale of the response variable. If \code{"linear"}, fitted values are returned on the scale of
+#' (alternative names can be provided using a list or named vector, e.g. `c(sigma.hat = "sigma")`
+#' would output the `"sigma"` parameter from a model as a column named `"sigma.hat"`).
+#' If `FALSE` (the default), distributional regression parameters are not included.
+#' @param scale Either `"response"` or `"linear"`. If `"response"`, results are returned
+#' on the scale of the response variable. If `"linear"`, fitted values are returned on the scale of
 #' the linear predictor.
-#' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a \code{.row} column (a
-#' factor grouping rows from the input \code{newdata}), \code{.chain} column (the chain
-#' each draw came from, or \code{NA} if the model does not provide chain information),
-#' \code{.iteration} column (the iteration the draw came from, or \code{NA} if the model does
-#' not provide iteration information), and a \code{.draw} column (a unique index corresponding to each draw
-#' from the distribution). In addition, \code{fitted_draws} includes a column with its name specified by
-#' the \code{value} argument (default is \code{.value}) containing draws from the (transformed) linear predictor,
-#' and \code{predicted_draws} contains a \code{.prediction} column containing draws from the posterior predictive
+#' @return A data frame (actually, a \code{\link[tibble]{tibble}}) with a `.row` column (a
+#' factor grouping rows from the input `newdata`), `.chain` column (the chain
+#' each draw came from, or `NA` if the model does not provide chain information),
+#' `.iteration` column (the iteration the draw came from, or `NA` if the model does
+#' not provide iteration information), and a `.draw` column (a unique index corresponding to each draw
+#' from the distribution). In addition, `fitted_draws` includes a column with its name specified by
+#' the `value` argument (default is `.value`) containing draws from the (transformed) linear predictor,
+#' and `predicted_draws` contains a `.prediction` column containing draws from the posterior predictive
 #' distribution. For convenience, the resulting data frame comes grouped by the original input rows.
 #' @author Matthew Kay
 #' @seealso \code{\link{add_draws}} for the variant of these functions for use with packages that do not have

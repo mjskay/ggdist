@@ -130,7 +130,7 @@ the same dimensions. For example, if we have several variables with the same
 subscripts \code{i} and \code{v}, we could do either of these:
 
 \preformatted{spread_draws(fit, c(w, x, y, z)[i,v])}
-\preformatted{spread_draws(fit, cbind(w, x, y, z)[i,v])}  # equivalent
+\preformatted{spread_draws(fit, cbind(w, x, y, z)[i,v])  # equivalent}
 
 Each of which is roughly equivalent to this:
 
@@ -172,9 +172,10 @@ is roughly equivalent to this:
 The main difference between using the \code{|} syntax instead of the
 \code{..} syntax is that the \code{|} syntax respects prototypes applied to
 dimensions with \code{\link{recover_types}}, and thus can be used to get
-columns with nicer names. For example:
+columns with nicer names. For example:\preformatted{fit \%>\% recover_types(data) \%>\% spread_draws(b[i,v] | v)
+}
 
-\code{fit \%>\% recover_types(data) \%>\% spread_draws(b[i,v] | v)} would return a grouped data frame
+would return a grouped data frame
 (grouped by \code{i}), with:
 \itemize{
 \item column \code{".chain"}: the chain number
@@ -205,7 +206,7 @@ missing entries given the value \code{NA}.
 
 Finally, variable names can be regular expressions by setting \code{regex = TRUE}; e.g.:
 
-\code{spread_draws(fit, `b_.*`[i], regex = TRUE)}
+\preformatted{spread_draws(fit, `b_.*`[i], regex = TRUE)}
 
 Would return a tidy data frame with variables starting with \code{b_} and having one dimension.
 }

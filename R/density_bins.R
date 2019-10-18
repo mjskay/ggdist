@@ -9,7 +9,7 @@
 #' Generates a data frame of bins representing the kernel density (or
 #' histogram) of a vector, suitable for use in generating predictive
 #' distributions for visualization. These functions were originally
-#' designed for use with the now-deprecated \code{predict_curve()}, and
+#' designed for use with the now-deprecated `predict_curve()`, and
 #' may be deprecated in the future.
 #'
 #' These functions are simple wrappers to \code{\link{density}} and
@@ -17,15 +17,15 @@
 #' in a consistent format: a data frame of bins suitable for use with
 #' the now-deprecated \code{\link{predict_curve}}.
 #'
-#' \code{density_bins} computes a kernel density estimate using
+#' `density_bins` computes a kernel density estimate using
 #' \code{\link{density}}.
 #'
-#' \code{histogram_bins} computes a density histogram using \code{\link{hist}}.
+#' `histogram_bins` computes a density histogram using \code{\link{hist}}.
 #'
 #' @param x A numeric vector
 #' @param n Number of bins
-#' @param breaks Used to set bins for \code{histogram_bins}. Can be number of bins (by default it is set to the value
-#' of \code{n}) or a method for setting bins. See the \code{breaks} argument of \code{\link{hist}}.
+#' @param breaks Used to set bins for `histogram_bins`. Can be number of bins (by default it is set to the value
+#' of `n`) or a method for setting bins. See the `breaks` argument of \code{\link{hist}}.
 #' @param ...  Additional arguments passed to \code{\link{density}} or
 #' \code{\link{hist}}.
 #' @return A data frame representing bins and their densities with the

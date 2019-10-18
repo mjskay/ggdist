@@ -8,9 +8,9 @@
 #'
 #' A combination of \code{\link{stat_sample_slabinterval}} and
 #' \code{\link{geom_slabinterval}} with sensible defaults.
-#' While the corresponding \code{geom}s are intended for use on
+#' While the corresponding `geom`s are intended for use on
 #' data frames that have already been summarized using a \code{\link{point_interval}}
-#' function, these \code{stat}s are intended for use directly on data frames of draws, and
+#' function, these `stat`s are intended for use directly on data frames of draws, and
 #' will perform the summarization using a \code{\link{point_interval}} function.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval", stat = StatInterval)

@@ -31,16 +31,16 @@ unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
 #' \code{\link{spread_draws}} and \code{\link{gather_draws}} and invert the tidy data frame back into
 #' a data frame whose column names are variables with dimensions in them.
 #'
-#' @param data A tidy data frame of draws, such as one output by \code{spread_draws} or \code{gather_draws}.
+#' @param data A tidy data frame of draws, such as one output by `spread_draws` or `gather_draws`.
 #' @param ... Expressions in the form of
-#' \code{variable_name[dimension_1, dimension_2, ...]}. See \code{\link{spread_draws}}.
-#' @param draw_indices Character vector of column names in \code{data} that
-#' should be treated as indices of draws. The default is \code{c(".chain",".iteration",".draw")},
+#' `variable_name[dimension_1, dimension_2, ...]`. See \code{\link{spread_draws}}.
+#' @param draw_indices Character vector of column names in `data` that
+#' should be treated as indices of draws. The default is `c(".chain",".iteration",".draw")`,
 #' which are the same names used for chain, iteration, and draw indices returned by
 #' \code{\link{spread_draws}} or \code{\link{gather_draws}}.
-#' @param drop_indices Drop the columns specified by \code{draw_indices} from the resulting data frame. Default \code{FALSE}.
-#' @param variable The name of the column in \code{data} that contains the names of variables from the model.
-#' @param value The name of the column in \code{data} that contains draws from the variables.
+#' @param drop_indices Drop the columns specified by `draw_indices` from the resulting data frame. Default `FALSE`.
+#' @param variable The name of the column in `data` that contains the names of variables from the model.
+#' @param value The name of the column in `data` that contains draws from the variables.
 #' @return A data frame.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_draws}}, \code{\link{gather_draws}}, \code{\link{tidy_draws}}.

@@ -44,8 +44,7 @@ frame from which the original data came.
 Supported types of prototypes are factor, ordered, and logical. For example:
 
 \itemize{ \item if \code{prototypes$v} is a factor, the v column in the
-returned draws is translated into a factor using \code{factor(v,
-labels=levels(prototypes$v), ordered=is.ordered(prototypes$v))}.  \item if
+returned draws is translated into a factor using \code{factor(v, labels=levels(prototypes$v), ordered=is.ordered(prototypes$v))}.  \item if
 \code{prototypes$v} is a logical, the v column is translated into a logical
 using \code{as.logical(v)}. }
 

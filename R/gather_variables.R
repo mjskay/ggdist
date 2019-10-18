@@ -23,34 +23,34 @@ gather_terms = function(...) {
 #' Gather variables from a tidy data frame of draws from variables into a single column
 #'
 #' Given a data frame such as might be returned by \code{\link{tidy_draws}} or \code{\link{spread_draws}},
-#' gather variables and their values from that data frame into a \code{".variable"} and \code{".value"} column.
+#' gather variables and their values from that data frame into a `".variable"` and `".value"` column.
 #'
 #' This function gathers every column except grouping columns and those matching the expression
-#' \code{exclude} into key/value columns \code{".variable"} and \code{".value"}.
+#' `exclude` into key/value columns `".variable"` and `".value"`.
 #'
-#' Imagine a data frame \code{data} as returned by \code{spread_draws(fit, a[i], b[i,v])}, like this:
+#' Imagine a data frame `data` as returned by `spread_draws(fit, a[i], b[i,v])`, like this:
 #' \itemize{
-#'      \item column \code{".chain"}: the chain number
-#'      \item column \code{".iteration"}: the iteration number
-#'      \item column \code{".draw"}: the draw number
-#'      \item column \code{"i"}: value in \code{1:5}
-#'      \item column \code{"v"}: value in \code{1:10}
-#'      \item column \code{"a"}: value of \code{"a[i]"} for draw number \code{".draw"}
-#'      \item column \code{"b"}: value of \code{"b[i,v]"} for draw number \code{".draw"}
+#'      \item column `".chain"`: the chain number
+#'      \item column `".iteration"`: the iteration number
+#'      \item column `".draw"`: the draw number
+#'      \item column `"i"`: value in `1:5`
+#'      \item column `"v"`: value in `1:10`
+#'      \item column `"a"`: value of `"a[i]"` for draw number `".draw"`
+#'      \item column `"b"`: value of `"b[i,v]"` for draw number `".draw"`
 #'  }
 #'
-#' \code{gather_variables(data)} on that data frame would return a grouped
-#' data frame (grouped by \code{i} and \code{v}), with:
+#' `gather_variables(data)` on that data frame would return a grouped
+#' data frame (grouped by `i` and `v`), with:
 #' \itemize{
-#'      \item column \code{".chain"}: the chain number
-#'      \item column \code{".iteration"}: the iteration number
-#'      \item column \code{".draw"}: the draw number
-#'      \item column \code{"i"}: value in \code{1:5}
-#'      \item column \code{"v"}: value in \code{1:10}
-#'      \item column \code{".variable"}: value in \code{c("a", "b")}.
-#'      \item column \code{".value"}: value of \code{"a[i]"} (when \code{".variable"} is \code{"a"};
-#'          repeated for every value of \code{"v"}) or \code{"b[i,v]"} (when \code{".variable"} is
-#'          \code{"b"}) for draw number \code{".draw"}
+#'      \item column `".chain"`: the chain number
+#'      \item column `".iteration"`: the iteration number
+#'      \item column `".draw"`: the draw number
+#'      \item column `"i"`: value in `1:5`
+#'      \item column `"v"`: value in `1:10`
+#'      \item column `".variable"`: value in `c("a", "b")`.
+#'      \item column `".value"`: value of `"a[i]"` (when `".variable"` is `"a"`;
+#'          repeated for every value of `"v"`) or `"b[i,v]"` (when `".variable"` is
+#'          `"b"`) for draw number `".draw"`
 #'  }
 #'
 #' In this example, this call:

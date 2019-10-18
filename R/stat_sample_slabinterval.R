@@ -86,53 +86,53 @@ sample_slab_function = function(
 #'
 #' A highly configurable stat for generating a variety of plots that combine a "slab"
 #' that summarizes a sample plus an interval. Several "shortcut" stats are provided
-#' which combine multiple options to create useful geoms, particularly \emph{eye} plots
-#' (a combination of a violin plot and interval), \emph{half-eye} plots (a density plus interval),
-#' and \emph{CCDF bar plots} (a complementary CDF plus interval). These can be
+#' which combine multiple options to create useful geoms, particularly *eye* plots
+#' (a combination of a violin plot and interval), *half-eye* plots (a density plus interval),
+#' and *CCDF bar plots* (a complementary CDF plus interval). These can be
 #' handy for visualizing posterior distributions in Bayesian inference, amongst other things.
 #'
-#' The shortcut stat names follow the pattern \code{stat_[name][h|]}, where the trailing
-#' \code{h} (if present) indicates the horizontal version of the stat.
+#' The shortcut stat names follow the pattern `stat_[name][h|]`, where the trailing
+#' `h` (if present) indicates the horizontal version of the stat.
 #'
 #' Stats include:
 #'
 #' \itemize{
-#'   \item \code{stat_eye} / \code{stat_eyeh}: Eye plots (violin + interval)
-#'   \item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
-#'   \item \code{stat_ccdfinterval} / \code{stat_ccdfintervalh}: CCDF bar plots (CCDF + interval)
-#'   \item \code{stat_cdfinterval} / \code{stat_cdfintervalh}: CDF bar plots (CDF + interval)
-#'   \item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
-#'   \item \code{stat_histinterval} / \code{stat_histintervalh}: Histogram + interval plots
-#'   \item \code{stat_pointinterval} / \code{stat_pointintervalh}: Point + interval plots
-#'   \item \code{stat_interval} / \code{stat_intervalh}: Interval plots
+#'   \item `stat_eye` / `stat_eyeh`: Eye plots (violin + interval)
+#'   \item `stat_halfeye` / `stat_halfeyeh`: Half-eye plots (density + interval)
+#'   \item `stat_ccdfinterval` / `stat_ccdfintervalh`: CCDF bar plots (CCDF + interval)
+#'   \item `stat_cdfinterval` / `stat_cdfintervalh`: CDF bar plots (CDF + interval)
+#'   \item `stat_gradientinterval` / `stat_gradientintervalh`: Density gradient + interval plots
+#'   \item `stat_histinterval` / `stat_histintervalh`: Histogram + interval plots
+#'   \item `stat_pointinterval` / `stat_pointintervalh`: Point + interval plots
+#'   \item `stat_interval` / `stat_intervalh`: Interval plots
 #' }
 #'
 #' @eval rd_slabinterval_aesthetics(stat = StatSampleSlabinterval)
 #' @section Computed Variables:
 #' \itemize{
-#'   \item \code{x} or \code{y}: For slabs, the input values to the slab function.
-#'     For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
-#'   \item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
-#'   \item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
-#'   \item \code{f}: For slabs, the output values from the slab function.
-#'   \item \code{n}: For slabs, the number of data points summarized into that slab.
+#'   \item `x` or `y`: For slabs, the input values to the slab function.
+#'     For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
+#'   \item `xmin` or `ymin`: For intervals, the lower end of the interval from the interval function.
+#'   \item `xmax` or `ymax`: For intervals, the upper end of the interval from the interval function.
+#'   \item `f`: For slabs, the output values from the slab function.
+#'   \item `n`: For slabs, the number of data points summarized into that slab.
 #' }
 #'
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_dist_slabinterval
-#' @param slab_type The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-#' cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.
-#' @param adjust If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
+#' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
+#' cumulative distribution function (`"cdf"`), complementary CDF (`"ccdf"`), or histogram (`"histogram"`.
+#' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator is adjusted by multiplying it
 #' by this value. See \code{\link{density}} for more information.
-#' @param trim If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
-#' input data? Default \code{TRUE}.
-#' @param breaks If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
+#' @param trim If `slab_type` is `"pdf"`, should the density estimate be trimmed to the range of the
+#' input data? Default `TRUE`.
+#' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to
 #' \code{\link{hist}} to determine where to put breaks in the histogram.
 #' @seealso See \code{\link{geom_slabinterval}} for more information on the geom these stats
 #' use by default and some of the options they have. See \code{\link{stat_dist_slabinterval}}
 #' for the versions of these stats that can be used on analytical distributions.
-#' See \code{vignette("slabinterval")} for a variety of examples of use.
+#' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples
 #'
 #' library(dplyr)

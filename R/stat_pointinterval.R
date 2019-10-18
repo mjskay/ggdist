@@ -8,17 +8,17 @@
 #'
 #' A combination of \code{\link{stat_sample_slabinterval}} and
 #' \code{\link{geom_slabinterval}} with sensible defaults.
-#' While the corresponding \code{geom}s are intended for use on
+#' While the corresponding `geom`s are intended for use on
 #' data frames that have already been summarized using a \code{\link{point_interval}}
-#' function, these \code{stat}s are intended for use directly on data frames of draws, and
+#' function, these `stat`s are intended for use directly on data frames of draws, and
 #' will perform the summarization using a \code{\link{point_interval}} function.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomPointinterval, geom_name = "geom_pointinterval", stat = StatPointinterval)
 #' @inheritParams stat_sample_slabinterval
 #' @inheritParams geom_slabinterval
-#' @param .prob Deprecated. Use \code{.width} instead.
-#' @param fun.data Deprecated. Use \code{point_interval} or \code{interval_function} instead.
-#' @param fun.args Deprecated. Use \code{interval_args} instead.
+#' @param .prob Deprecated. Use `.width` instead.
+#' @param fun.data Deprecated. Use `point_interval` or `interval_function` instead.
+#' @param fun.args Deprecated. Use `interval_args` instead.
 #' @seealso See \code{\link{geom_pointinterval}} / \code{\link{geom_pointintervalh}} for the geom versions, intended
 #' for use on points and intervals that have already been summarized using a \code{\link{point_interval}} function.
 #' See \code{\link{stat_interval}} / \code{\link{stat_intervalh}} for a similar stat intended for intervals without

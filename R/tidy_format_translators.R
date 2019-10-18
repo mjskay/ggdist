@@ -11,26 +11,26 @@
 #' These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
 #' formats (each format using a different naming scheme).
 #'
-#' Function prefixed with \code{to_} translate from the tidybayes format to another format, functions
-#' prefixed with \code{from_} translate from that format back to the tidybayes format. Formats include:
+#' Function prefixed with `to_` translate from the tidybayes format to another format, functions
+#' prefixed with `from_` translate from that format back to the tidybayes format. Formats include:
 #'
-#' \code{to_broom_names()} / \code{from_broom_names()}:
+#' `to_broom_names()` / `from_broom_names()`:
 #'
 #' \itemize{
-#'    \item \code{.variable} <-> \code{term}
-#'    \item \code{.value} <-> \code{estimate}
-#'    \item \code{.prediction} <-> \code{.fitted}
-#'    \item \code{.lower} <-> \code{conf.low}
-#'    \item \code{.upper} <-> \code{conf.high}
+#'    \item `.variable` <-> `term`
+#'    \item `.value` <-> `estimate`
+#'    \item `.prediction` <-> `.fitted`
+#'    \item `.lower` <-> `conf.low`
+#'    \item `.upper` <-> `conf.high`
 #' }
 #'
-#' \code{to_ggmcmc_names()} / \code{from_ggmcmc_names()}:
+#' `to_ggmcmc_names()` / `from_ggmcmc_names()`:
 #'
 #' \itemize{
-#'    \item \code{.chain} <-> \code{Chain}
-#'    \item \code{.iteration} <-> \code{Iteration}
-#'    \item \code{.variable} <-> \code{Parameter}
-#'    \item \code{.value} <-> \code{value}
+#'    \item `.chain` <-> `Chain`
+#'    \item `.iteration` <-> `Iteration`
+#'    \item `.variable` <-> `Parameter`
+#'    \item `.value` <-> `value`
 #' }
 #'
 #' @param data A data frame to translate.

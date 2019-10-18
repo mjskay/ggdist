@@ -50,8 +50,7 @@ as above, except that in place of the \code{lhs} column is a set of columns
 named \code{lhs.x} for every column named \code{x} returned by
 \code{summary}. For example, \code{\link{density_bins}} returns a data frame
 with the columns \code{mid}, \code{lower}, \code{upper}, and \code{density},
-so the data frame returned by \code{predict_curve} with \code{summary =
-density_bins} will have columns \code{lhs.mid}, \code{lhs.lower},
+so the data frame returned by \code{predict_curve} with \code{summary = density_bins} will have columns \code{lhs.mid}, \code{lhs.lower},
 \code{lhs.upper}, and \code{lhs.density} in place of \code{lhs}.
 }
 \description{

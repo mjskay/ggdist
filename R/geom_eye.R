@@ -13,8 +13,8 @@
 #' @inheritParams stat_sample_slabinterval
 #' @inheritParams geom_slabinterval
 #' @param ... Arguments passed to \code{\link{stat_sample_slabinterval}}
-#' @param relative_scale Deprecated. Use \code{scale} instead.
-#' @param .prob Deprecated. Use \code{.width} instead.
+#' @param relative_scale Deprecated. Use `scale` instead.
+#' @param .prob Deprecated. Use `.width` instead.
 #' @author Matthew Kay
 #' @seealso See \code{\link{stat_sample_slabinterval}} and the shortcut stats documented there for the
 #' preferred way to generate these geoms.

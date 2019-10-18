@@ -41,66 +41,66 @@ comparison_types = within(list(), {
 #' across different paired combinations of levels of a factor.
 #'
 #' This function simplifies conducting comparisons across levels of some
-#' variable in a tidy data frame of draws. It applies \code{fun} to all
-#' values of \code{variable} for each pair of levels of \code{by} as selected
-#' by \code{comparison}. By default, all pairwise comparisons are generated if
-#' \code{by} is an unordered \code{factor} and ordered comparisons are made if
-#' \code{by} is \code{ordered}.
+#' variable in a tidy data frame of draws. It applies `fun` to all
+#' values of `variable` for each pair of levels of `by` as selected
+#' by `comparison`. By default, all pairwise comparisons are generated if
+#' `by` is an unordered `factor` and ordered comparisons are made if
+#' `by` is `ordered`.
 #'
-#' The included \code{comparison} types are: \itemize{ \item \code{ordered}:
-#' compare each level \code{i} with level \code{i - 1}; e.g. \code{fun(i, i -
-#' 1)} \item \code{pairwise}: compare each level of \code{by} with every other
-#' level.  \item \code{control}: compare each level of \code{by} with the first
-#' level of \code{by}.  If you wish to compare with a different level, you can
-#' first apply \code{\link{relevel}} to \code{by} to set the control
-#' (reference) level.  \item \code{default}: use \code{ordered} if
-#' \code{is.ordered(by)} and \code{pairwise} otherwise.  }
+#' The included `comparison` types are: \itemize{ \item `ordered`:
+#' compare each level `i` with level `i - 1`; e.g. `fun(i, i -
+#' 1)` \item `pairwise`: compare each level of `by` with every other
+#' level.  \item `control`: compare each level of `by` with the first
+#' level of `by`.  If you wish to compare with a different level, you can
+#' first apply \code{\link{relevel}} to `by` to set the control
+#' (reference) level.  \item `default`: use `ordered` if
+#' `is.ordered(by)` and `pairwise` otherwise.  }
 #'
-#' @param data Long-format \code{data.frame} of draws such as returned by
-#' \code{\link{spread_draws}} or \code{\link{gather_draws}}. If \code{data}
+#' @param data Long-format `data.frame` of draws such as returned by
+#' \code{\link{spread_draws}} or \code{\link{gather_draws}}. If `data`
 #' is a grouped data frame, comparisons will be made within groups (if
-#' one of the groups in the data frame is the \code{by} column, that specific
+#' one of the groups in the data frame is the `by` column, that specific
 #' group will be ignored, as it is not possible to make comparisons both
 #' within some variable and across it simultaneously).
 #' @param variable Bare (unquoted) name of a column in data representing the
 #' variable to compare across levels.
 #' @param by Bare (unquoted) name of a column in data that is a
-#' \code{factor} or \code{ordered}. The value of \code{variable} will be
-#' compared across pairs of levels of this \code{factor}.
+#' `factor` or `ordered`. The value of `variable` will be
+#' compared across pairs of levels of this `factor`.
 #' @param fun Binary function to use for comparison. For each pair of levels of
-#' \code{by} we are comparing (as determined by \code{comparison}), compute the
+#' `by` we are comparing (as determined by `comparison`), compute the
 #' result of this function.
-#' @param comparison One of (a) the comparison types \code{ordered},
-#' \code{control}, \code{pairwise}, or \code{default} (may also be given as
-#' strings, e.g. \code{"ordered"}), see *Details*; (b) a user-specified
-#' function that takes a \code{factor} and returns a list of pairs of names of
+#' @param comparison One of (a) the comparison types `ordered`,
+#' `control`, `pairwise`, or `default` (may also be given as
+#' strings, e.g. `"ordered"`), see *Details*; (b) a user-specified
+#' function that takes a `factor` and returns a list of pairs of names of
 #' levels to compare (as strings) and/or unevaluated expressions containing
 #' representing the comparisons to make; or (c) a list of pairs of names of
 #' levels to compare (as strings) and/or unevaluated expressions representing
-#' the comparisons to make, e.g.: \code{list(c("a", "b"), c("b", "c"))} or
-#' \code{exprs(a - b, b - c)}, both of which would compare level \code{"a"} against
-#' \code{"b"} and level \code{"b"} against \code{"c"}. Note that the
-#' unevaluated expression syntax ignores the \code{fun} argument, can include
+#' the comparisons to make, e.g.: `list(c("a", "b"), c("b", "c"))` or
+#' `exprs(a - b, b - c)`, both of which would compare level `"a"` against
+#' `"b"` and level `"b"` against `"c"`. Note that the
+#' unevaluated expression syntax ignores the `fun` argument, can include
 #' any other functions desired (e.g. variable transformations), and can even
-#' include more than two levels or other columns in \code{data}.
-#' @param draw_indices Character vector of column names in \code{data} that
+#' include more than two levels or other columns in `data`.
+#' @param draw_indices Character vector of column names in `data` that
 #' should be treated as indices when making the comparison (i.e. values of
-#' \code{variable} within each level of \code{by} will be compared at each
-#' unique combination of levels of \code{draw_indices}). Columns in \code{draw_indices}
-#' not found in \code{data} are ignored. The default is \code{c(".chain",".iteration",".draw")},
+#' `variable` within each level of `by` will be compared at each
+#' unique combination of levels of `draw_indices`). Columns in `draw_indices`
+#' not found in `data` are ignored. The default is `c(".chain",".iteration",".draw")`,
 #' which are the same names used for chain/iteration/draw indices returned by
-#' \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using \code{compare_levels}
+#' \code{\link{spread_draws}} or \code{\link{gather_draws}}; thus if you are using `compare_levels`
 #' with \code{\link{spread_draws}} or \code{\link{gather_draws}} you generally should not need to change this
 #' value.
 #' @param ignore_groups character vector of names of groups to ignore by
 #' default in the input grouping. This is primarily provided to make it
 #' easier to pipe output of \code{\link{add_fitted_draws}} into this function,
-#' as that function provides a \code{".row"} output column that is grouped,
-#' but which is virtually never desired to group by when using \code{compare_levels}.
-#' @return A \code{data.frame} with the same columns as \code{data}, except
-#' that the \code{by} column contains a symbolic representation of the
-#' comparison of pairs of levels of \code{by} in \code{data}, and
-#' \code{variable} contains the result of that comparison.
+#' as that function provides a `".row"` output column that is grouped,
+#' but which is virtually never desired to group by when using `compare_levels`.
+#' @return A `data.frame` with the same columns as `data`, except
+#' that the `by` column contains a symbolic representation of the
+#' comparison of pairs of levels of `by` in `data`, and
+#' `variable` contains the result of that comparison.
 #' @author Matthew Kay
 #' @seealso \code{\link{spread_draws}} and \code{\link{gather_draws}}.
 #' @keywords manip

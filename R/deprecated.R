@@ -13,63 +13,63 @@
 #' @section Deprecated Functions:
 #'
 #' Several deprecated versions of functions use slightly different output
-#' formats (e.g., they use names like \code{term} and \code{estimate} where new
-#' functions use \code{.variable} and \code{.value}; or they set \code{.iteration} even
-#' when iteration information is not available --- new functions always set \code{.draw}
-#' but may not set \code{.iteration}), so be careful when upgrading to new function names.
+#' formats (e.g., they use names like `term` and `estimate` where new
+#' functions use `.variable` and `.value`; or they set `.iteration` even
+#' when iteration information is not available --- new functions always set `.draw`
+#' but may not set `.iteration`), so be careful when upgrading to new function names.
 #' See *Deprecated Arguments and Column Names*, below, for more information.
 #'
 #' Deprecated functions are:
 #'
 #' \itemize{
 #'
-#'   \item \code{spread_samples}, \code{extract_samples}, and \code{tidy_samples} are
+#'   \item `spread_samples`, `extract_samples`, and `tidy_samples` are
 #'   deprecated names for \code{\link{spread_draws}}. The spread/gather terminology
-#'   better distinguishes the resulting data frame format, and \emph{draws} is more
-#'   correct terminology than \emph{samples} for describing multiple realizations from
+#'   better distinguishes the resulting data frame format, and *draws* is more
+#'   correct terminology than *samples* for describing multiple realizations from
 #'   a posterior distribution.
 #'
-#'   \item \code{gather_samples} is a deprecated name for \code{\link{gather_draws}},
-#'   reflecting a package-wide move to using \emph{draws} instead of \emph{samples} for
+#'   \item `gather_samples` is a deprecated name for \code{\link{gather_draws}},
+#'   reflecting a package-wide move to using *draws* instead of *samples* for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{unspread_samples} is a deprecated name for \code{\link{unspread_draws}},
-#'   reflecting a package-wide move to using \emph{draws} instead of \emph{samples} for
+#'   \item `unspread_samples` is a deprecated name for \code{\link{unspread_draws}},
+#'   reflecting a package-wide move to using *draws* instead of *samples* for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{ungather_samples} is a deprecated name for \code{\link{ungather_draws}},
-#'   reflecting a package-wide move to using \emph{draws} instead of \emph{samples} for
+#'   \item `ungather_samples` is a deprecated name for \code{\link{ungather_draws}},
+#'   reflecting a package-wide move to using *draws* instead of *samples* for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{fitted_samples} / \code{add_fitted_samples} are deprecated names for
+#'   \item `fitted_samples` / `add_fitted_samples` are deprecated names for
 #'   \code{\link{fitted_draws}} / \code{\link{add_fitted_draws}},
-#'   reflecting a package-wide move to using \emph{draws} instead of \emph{samples} for
+#'   reflecting a package-wide move to using *draws* instead of *samples* for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{predicted_samples} / \code{add_predicted_samples} are deprecated names for
+#'   \item `predicted_samples` / `add_predicted_samples` are deprecated names for
 #'   \code{\link{predicted_draws}} / \code{\link{add_predicted_draws}},
-#'   reflecting a package-wide move to using \emph{draws} instead of \emph{samples} for
+#'   reflecting a package-wide move to using *draws* instead of *samples* for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{gather_lsmeans_samples} and \code{gather_emmeans_samples} are deprecated aliases
+#'   \item `gather_lsmeans_samples` and `gather_emmeans_samples` are deprecated aliases
 #'   for \code{\link{gather_emmeans_draws}}. The new name (estimated marginal means) is more
 #'   appropriate for Bayesian models than the old name (least-squares means), and reflects the
-#'   naming of the newer \code{emmeans} package. It also reflects
-#'   a package-wide move to using \emph{draws} instead of \emph{samples} for
+#'   naming of the newer `emmeans` package. It also reflects
+#'   a package-wide move to using *draws* instead of *samples* for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{as_sample_tibble} and \code{as_sample_data_frame} are deprecated aliases
-#'   for \code{\link{tidy_draws}}. The original intent of \code{as_sample_tibble} was to be
+#'   \item `as_sample_tibble` and `as_sample_data_frame` are deprecated aliases
+#'   for \code{\link{tidy_draws}}. The original intent of `as_sample_tibble` was to be
 #'   used primarily internally (hence its less user-friendly name); however, increasingly
-#'   I have come across use cases of \code{tidy_draws} that warrant a more user-friendly name.
-#'   It also reflects a package-wide move to using \emph{draws} instead of \emph{samples} for
+#'   I have come across use cases of `tidy_draws` that warrant a more user-friendly name.
+#'   It also reflects a package-wide move to using *draws* instead of *samples* for
 #'   describing multiple realizations from a distribution.
 #'
-#'   \item \code{ggeye} is deprecated: for a package whose goal is flexible and customizable
+#'   \item `ggeye` is deprecated: for a package whose goal is flexible and customizable
 #'   visualization, monolithic functions are inflexible and do not sufficiently capitalize on users'
 #'   existing knowledge of ggplot; instead, I think it is more flexible to design geoms and stats
 #'   that can used within a complete ggplot workflow. \code{\link{geom_eyeh}} offers a horizontal
-#'   eye plot geom that can be used instead of \code{ggeye}.
+#'   eye plot geom that can be used instead of `ggeye`.
 #'
 #' }
 #'
@@ -81,15 +81,15 @@
 #' Deprecated arguments and column names are:
 #'
 #' \itemize{
-#'   \item \code{term} is now \code{.variable}
-#'   \item \code{estimate} is now \code{.value}
-#'   \item \code{pred} is now \code{.prediction}
-#'   \item \code{conf.low} is now \code{.lower}
-#'   \item \code{conf.high} is now \code{.upper}
-#'   \item \code{.prob} is now \code{.width}
-#'   \item The \code{.draw} column was added, and should be used instead of \code{.chain}
-#'     and \code{.iteration} to uniquely identify draws when you do not care about chains. (\code{.chain} and
-#'     \code{.iteration} are still provided for identifying draws \emph{within} chains, if desired).
+#'   \item `term` is now `.variable`
+#'   \item `estimate` is now `.value`
+#'   \item `pred` is now `.prediction`
+#'   \item `conf.low` is now `.lower`
+#'   \item `conf.high` is now `.upper`
+#'   \item `.prob` is now `.width`
+#'   \item The `.draw` column was added, and should be used instead of `.chain`
+#'     and `.iteration` to uniquely identify draws when you do not care about chains. (`.chain` and
+#'     `.iteration` are still provided for identifying draws *within* chains, if desired).
 #' }
 #'
 #' To translate to/from the old naming scheme in output, use \code{\link{to_broom_names}}
@@ -100,7 +100,7 @@
 #'
 #' \itemize{
 #'   \item Ignore compatibility with broom names on the assumption an adapter function can be created.
-#'   \item Use names that could be compatible with frequentist approaches (hence \code{.width} instead of \code{.prob}).
+#'   \item Use names that could be compatible with frequentist approaches (hence `.width` instead of `.prob`).
 #'   \item Always precede with "." to avoid collisions with variable names in models.
 #'   \item No abbreviations (remembering if something is abbreviated or not can be a pain).
 #'   \item No two-word names (multi-word names can always be standardized on and used in documentation, but I think data frame output should be succinct).

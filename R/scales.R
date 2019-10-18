@@ -15,41 +15,41 @@
 #' related geoms:
 #'
 #' \enumerate{
-#'   \item{\code{scale_point_color_* }}{Point color}
-#'   \item{\code{scale_point_fill_* }}{Point fill color}
-#'   \item{\code{scale_point_alpha_* }}{Point alpha level / opacity}
-#'   \item{\code{scale_point_size_* }}{Point size}
-#'   \item{\code{scale_interval_color_* }}{Interval line color}
-#'   \item{\code{scale_interval_alpha_* }}{Interval alpha level / opacity}
-#'   \item{\code{scale_interval_size_* }}{Interval line width}
-#'   \item{\code{scale_interval_linetype_* }}{Interval line type}
-#'   \item{\code{scale_slab_color_* }}{Slab outline color}
-#'   \item{\code{scale_slab_fill_* }}{Slab fill color}
-#'   \item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
-#'   \code{scale_slab_alpha_continuous} differ from \code{\link{scale_alpha_continuous}} and
+#'   \item{`scale_point_color_* `}{Point color}
+#'   \item{`scale_point_fill_* `}{Point fill color}
+#'   \item{`scale_point_alpha_* `}{Point alpha level / opacity}
+#'   \item{`scale_point_size_* `}{Point size}
+#'   \item{`scale_interval_color_* `}{Interval line color}
+#'   \item{`scale_interval_alpha_* `}{Interval alpha level / opacity}
+#'   \item{`scale_interval_size_* `}{Interval line width}
+#'   \item{`scale_interval_linetype_* `}{Interval line type}
+#'   \item{`scale_slab_color_* `}{Slab outline color}
+#'   \item{`scale_slab_fill_* `}{Slab fill color}
+#'   \item{`scale_slab_alpha_* `}{Slab alpha level / opacity. The default settings of
+#'   `scale_slab_alpha_continuous` differ from \code{\link{scale_alpha_continuous}} and
 #'   are designed for gradient plots (e.g. \code{\link{stat_gradientinterval}}) by ensuring that
 #'   densities of 0 get mapped to 0 in the output.}
-#'   \item{\code{scale_slab_size_* }}{Slab outline line width}
-#'   \item{\code{scale_slab_linetype_* }}{Slab outline line type}
-#'   \item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link{geom_dotsinterval}})}
+#'   \item{`scale_slab_size_* `}{Slab outline line width}
+#'   \item{`scale_slab_linetype_* `}{Slab outline line type}
+#'   \item{`scale_slab_shape_* `}{Slab dot shape (for \code{\link{geom_dotsinterval}})}
 #' }
 #'
 #' See the corresponding scale documentation in ggplot for more information; e.g.
 #' \code{\link{scale_color_discrete}}, \code{\link{scale_color_continuous}}, etc.
 #'
-#' Other scale functions can be used with the aesthetics/scales defined here by using the \code{aesthetics}
-#' argument to that scale function. For example, to use color brewer scales with the \code{point_color} aesthetic:
+#' Other scale functions can be used with the aesthetics/scales defined here by using the `aesthetics`
+#' argument to that scale function. For example, to use color brewer scales with the `point_color` aesthetic:
 #'
-#' \code{scale_color_brewer(..., aesthetics = "point_color")}
+#' `scale_color_brewer(..., aesthetics = "point_color")`
 #'
 #' With continuous color scales, you may also need to provide a guide as the default guide does not work properly;
-#' this is what \code{guide_colorbar2} is for:
+#' this is what `guide_colorbar2` is for:
 #'
-#' \code{scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")}
+#' `scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")`
 #'
 #' @inheritParams ggplot2::continuous_scale
 #' @inheritParams ggplot2::scale_shape
-#' @param ... Arguments passed to underlying scale or guide functions. E.g. \code{scale_point_color_discrete}
+#' @param ... Arguments passed to underlying scale or guide functions. E.g. `scale_point_color_discrete`
 #' passes arguments to \code{\link{scale_color_discrete}}. See those functions for more details.
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @param guide Guide to use for legends for an aesthetic.

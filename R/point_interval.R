@@ -14,93 +14,93 @@ globalVariables(c("y", "ymin", "ymax"))
 #' interval summaries (or set of point and interval summaries, if there are
 #' multiple groups in a grouped data frame).
 #'
-#' If \code{.data} is a data frame, then \code{...} is a list of bare names of
-#' columns (or expressions derived from columns) of \code{.data}, on which
+#' If `.data` is a data frame, then `...` is a list of bare names of
+#' columns (or expressions derived from columns) of `.data`, on which
 #' the point and interval summaries are derived. Column expressions are processed
 #' using the tidy evaluation framework (see \code{\link[rlang]{eval_tidy}}).
 #'
-#' For a column named \code{x}, the resulting data frame will have a column
-#' named \code{x} containing its point summary. If there is a single
-#' column to be summarized and \code{.simple_names} is \code{TRUE}, the output will
-#' also contain columns \code{.lower} (the lower end of the interval),
-#' \code{.upper} (the upper end of the interval).
-#' Otherwise, for every summarized column \code{x}, the output will contain
-#' \code{x.lower} (the lower end of the interval) and \code{x.upper} (the upper
-#' end of the interval). Finally, the output will have a \code{.width} column
+#' For a column named `x`, the resulting data frame will have a column
+#' named `x` containing its point summary. If there is a single
+#' column to be summarized and `.simple_names` is `TRUE`, the output will
+#' also contain columns `.lower` (the lower end of the interval),
+#' `.upper` (the upper end of the interval).
+#' Otherwise, for every summarized column `x`, the output will contain
+#' `x.lower` (the lower end of the interval) and `x.upper` (the upper
+#' end of the interval). Finally, the output will have a `.width` column
 #' containing the' probability for the interval on each output row.
 #'
-#' If \code{.data} includes groups (see e.g. \code{\link[dplyr]{group_by}}),
+#' If `.data` includes groups (see e.g. \code{\link[dplyr]{group_by}}),
 #' the points and intervals are calculated within the groups.
 #'
-#' If \code{.data} is a vector, \code{...} is ignored and the result is a
-#' data frame with one row per value of \code{.width} and three columns:
-#' \code{y} (the point summary), \code{ymin} (the lower end of the interval),
-#' \code{ymax} (the upper end of the interval), and \code{.width}, the probability
-#' corresponding to the interval. This behavior allows \code{point_interval}
-#' and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
+#' If `.data` is a vector, `...` is ignored and the result is a
+#' data frame with one row per value of `.width` and three columns:
+#' `y` (the point summary), `ymin` (the lower end of the interval),
+#' `ymax` (the upper end of the interval), and `.width`, the probability
+#' corresponding to the interval. This behavior allows `point_interval`
+#' and its derived functions (like `median_qi`, `mean_qi`, `mode_hdi`, etc)
 #' to be easily used to plot intervals in ggplot stats using methods like
 #' \code{\link{stat_eye}}, \code{\link{stat_halfeyeh}}, or \code{\link{stat_summary}}.
 #'
-#' The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih})
+#' The functions ending in `h` (e.g., `point_intervalh`, `median_qih`)
 #' behave identically to the function without the h, except that when passed a vector,
-#' they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
-#' \code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
-#' \code{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
-#' functions are not necessary if you use the \code{point_interval}
-#' argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
+#' they return a data frame with `x`/`xmin`/`xmax` instead of
+#' `y`/`ymin`/`ymax`. This allows them to be used as values of the
+#' `fun.data = ` argument of `stat_summaryh`. **Note:** these
+#' functions are not necessary if you use the `point_interval`
+#' argument of `stat`s and `geom`s in the `tidybayes` package (e.g.
 #' \code{\link{stat_pointintervalh}}, \code{\link{stat_halfeyeh}}, etc), as
 #' these automatically adjust the function output to match their required aesthetics.
 #'
-#' \code{median_qi}, \code{mode_hdi}, etc are short forms for
-#' \code{point_interval(..., .point = median, .interval = qi)}, etc.
+#' `median_qi`, `mode_hdi`, etc are short forms for
+#' `point_interval(..., .point = median, .interval = qi)`, etc.
 #'
-#' \code{qi} yields the quantile interval (also known as the percentile interval or
+#' `qi` yields the quantile interval (also known as the percentile interval or
 #' equi-tailed interval) as a 1x2 matrix.
 #'
-#' \code{hdi} yields the highest-density interval(s) (also known as the highest posterior
-#' density interval). \strong{Note:} If the distribution is multimodal, \code{hdi} may return multiple
+#' `hdi` yields the highest-density interval(s) (also known as the highest posterior
+#' density interval). **Note:** If the distribution is multimodal, `hdi` may return multiple
 #' intervals for each probability level (these will be spread over rows). You may wish to use
-#' \code{hdci} (below) instead if you want a single highest-density interval, with the caveat that when
-#' the distribution is multimodal \code{hdci} is not a highest-density interval. Internally \code{hdi} uses
-#' \code{\link[HDInterval]{hdi}} with \code{allowSplit = TRUE} (when multimodal) and with
-#' \code{allowSplit = FALSE} (when not multimodal).
+#' `hdci` (below) instead if you want a single highest-density interval, with the caveat that when
+#' the distribution is multimodal `hdci` is not a highest-density interval. Internally `hdi` uses
+#' \code{\link[HDInterval]{hdi}} with `allowSplit = TRUE` (when multimodal) and with
+#' `allowSplit = FALSE` (when not multimodal).
 #'
-#' \code{hdci} yields the highest-density \emph{continuous} interval. \strong{Note:} If the distribution
+#' `hdci` yields the highest-density *continuous* interval. **Note:** If the distribution
 #' is multimodal, this may not actually be the highest-density interval (there may be a higher-density
-#' discontinuous interval). Internally \code{hdci} uses
-#' \code{\link[HDInterval]{hdi}} with \code{allowSplit = FALSE}; see that function for more
+#' discontinuous interval). Internally `hdci` uses
+#' \code{\link[HDInterval]{hdi}} with `allowSplit = FALSE`; see that function for more
 #' information on multimodality and continuous versus discontinuous intervals.
 #'
 #' @param .data Data frame (or grouped data frame as returned by \code{\link{group_by}})
 #' that contains draws to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
-#' \code{.data}, represent draws to summarize. If this is empty, then by default all
-#' columns that are not group columns and which are not in \code{.exclude} (by default
-#' \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarized.
+#' `.data`, represent draws to summarize. If this is empty, then by default all
+#' columns that are not group columns and which are not in `.exclude` (by default
+#' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.
 #' This can be list columns.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
-#' a different probability interval (and value of the corresponding \code{.width} column).
-#' @param .prob Deprecated. Use \code{.width} instead.
+#' a different probability interval (and value of the corresponding `.width` column).
+#' @param .prob Deprecated. Use `.width` instead.
 #' @param .point Point summary function, which takes a vector and returns a single
 #' value, e.g. \code{\link{mean}}, \code{\link{median}}, or \code{\link{Mode}}.
 #' @param .interval Interval function, which takes a vector and a probability
-#' (\code{.width}) and returns a two-element vector representing the lower and upper
+#' (`.width`) and returns a two-element vector representing the lower and upper
 #' bound of an interval; e.g. \code{\link{qi}}, \code{\link{hdi}}
-#' @param .simple_names When \code{TRUE} and only a single column / vector is to be summarized, use the
-#' name \code{.lower} for the lower end of the interval and \code{.upper} for the
-#' upper end. If \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
-#' of the point summary to \code{.value}. When \code{FALSE} and \code{.data} is a data frame,
-#' names the lower and upper intervals for each column \code{x} \code{x.lower} and \code{x.upper}.
-#' When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y}, \code{ymin}
-#' and \code{ymax} (for use with ggplot).
+#' @param .simple_names When `TRUE` and only a single column / vector is to be summarized, use the
+#' name `.lower` for the lower end of the interval and `.upper` for the
+#' upper end. If `.data` is a vector and this is `TRUE`, this will also set the column name
+#' of the point summary to `.value`. When `FALSE` and `.data` is a data frame,
+#' names the lower and upper intervals for each column `x` `x.lower` and `x.upper`.
+#' When `FALSE` and `.data` is a vector, uses the naming scheme `y`, `ymin`
+#' and `ymax` (for use with ggplot).
 #' @param .exclude A character vector of names of columns to be excluded from summarization
 #' if no column names are specified to be summarized. Default ignores several meta-data column
 #' names used in tidybayes.
-#' @param na.rm logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
-#' If \code{FALSE} (the default), any vectors to be summarised that contain \code{NA} will result in
-#' point and interval summaries equal to \code{NA}.
-#' @param x vector to summarize (for interval functions: \code{qi} and \code{hdi})
+#' @param na.rm logical value indicating whether `NA` values should be stripped before the computation proceeds.
+#' If `FALSE` (the default), any vectors to be summarised that contain `NA` will result in
+#' point and interval summaries equal to `NA`.
+#' @param x vector to summarize (for interval functions: `qi` and `hdi`)
 #' @author Matthew Kay
 #' @examples
 #'
