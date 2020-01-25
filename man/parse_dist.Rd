@@ -9,19 +9,22 @@
 \alias{r_dist_name}
 \title{Parse distribution specifications into columns of a data frame}
 \usage{
-parse_dist(object, ..., dist = ".dist", args = ".args",
-  to_r_names = TRUE)
+parse_dist(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE)
 
 \method{parse_dist}{default}(object, ...)
 
-\method{parse_dist}{data.frame}(object, dist_col, ..., dist = ".dist",
-  args = ".args", to_r_names = TRUE)
+\method{parse_dist}{data.frame}(
+  object,
+  dist_col,
+  ...,
+  dist = ".dist",
+  args = ".args",
+  to_r_names = TRUE
+)
 
-\method{parse_dist}{character}(object, ..., dist = ".dist",
-  args = ".args", to_r_names = TRUE)
+\method{parse_dist}{character}(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE)
 
-\method{parse_dist}{factor}(object, ..., dist = ".dist",
-  args = ".args", to_r_names = TRUE)
+\method{parse_dist}{factor}(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE)
 
 r_dist_name(dist_name)
 }

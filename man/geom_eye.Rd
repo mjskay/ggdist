@@ -6,14 +6,11 @@
 \alias{geom_halfeyeh}
 \title{Eye plots of densities with point and interval summaries (Deprecated spellings)}
 \usage{
-geom_eye(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale,
-  .prob)
+geom_eye(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale, .prob)
 
-geom_eyeh(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale,
-  .prob)
+geom_eyeh(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale, .prob)
 
-geom_halfeyeh(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale,
-  .prob)
+geom_halfeyeh(..., scale = 0.9, .width = c(0.66, 0.95), relative_scale, .prob)
 }
 \arguments{
 \item{...}{Arguments passed to \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}}}

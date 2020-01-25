@@ -4,18 +4,33 @@
 \alias{stat_slabinterval}
 \title{Meta-stat for computing slab functions and interval functions (ggplot stat)}
 \usage{
-stat_slabinterval(mapping = NULL, data = NULL, geom = "slabinterval",
-  position = "identity", ..., orientation = c("vertical",
-  "horizontal"), limits_function = NULL, limits_args = list(),
-  limits = NULL, slab_function = NULL, slab_args = list(), n = 501,
-  interval_function = NULL, interval_args = list(),
-  point_interval = NULL, .width = c(0.66, 0.95), show_slab = TRUE,
-  show_interval = TRUE, na.rm = FALSE, show.legend = c(size = FALSE),
-  inherit.aes = TRUE)
+stat_slabinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  orientation = c("vertical", "horizontal"),
+  limits_function = NULL,
+  limits_args = list(),
+  limits = NULL,
+  slab_function = NULL,
+  slab_args = list(),
+  n = 501,
+  interval_function = NULL,
+  interval_args = list(),
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_interval = TRUE,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
-\code{\link[=aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
+\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply \code{mapping} if there is no plot mapping.}
 
@@ -23,11 +38,11 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 options:
 
 If \code{NULL}, the default, the data is inherited from the plot
-data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
+data as specified in the call to \code{\link[ggplot2:ggplot]{ggplot()}}.
 
 A \code{data.frame}, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-\code{\link[=fortify]{fortify()}} for which variables will be created.
+\code{\link[ggplot2:fortify]{fortify()}} for which variables will be created.
 
 A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
@@ -106,7 +121,7 @@ those that are mapped (the default for most geoms).}
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
 A meta-stat for computing slab and interval functions for use with \code{\link[=geom_slabinterval]{geom_slabinterval()}}

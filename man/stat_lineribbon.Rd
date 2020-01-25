@@ -5,20 +5,40 @@
 \alias{stat_dist_lineribbon}
 \title{Line + multiple probability ribbon plots (ggplot stat)}
 \usage{
-stat_lineribbon(mapping = NULL, data = NULL, geom = "lineribbon",
-  position = "identity", ..., interval_function = NULL,
-  interval_args = list(), point_interval = median_qi, .width = c(0.5,
-  0.8, 0.95), na.rm = FALSE, show.legend = NA, inherit.aes = TRUE,
-  .prob, fun.data, fun.args)
+stat_lineribbon(
+  mapping = NULL,
+  data = NULL,
+  geom = "lineribbon",
+  position = "identity",
+  ...,
+  interval_function = NULL,
+  interval_args = list(),
+  point_interval = median_qi,
+  .width = c(0.5, 0.8, 0.95),
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  .prob,
+  fun.data,
+  fun.args
+)
 
-stat_dist_lineribbon(mapping = NULL, data = NULL,
-  geom = "lineribbon", position = "identity", ..., n = 501,
-  .width = c(0.5, 0.8, 0.95), na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
+stat_dist_lineribbon(
+  mapping = NULL,
+  data = NULL,
+  geom = "lineribbon",
+  position = "identity",
+  ...,
+  n = 501,
+  .width = c(0.5, 0.8, 0.95),
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
-\code{\link[=aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
+\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply \code{mapping} if there is no plot mapping.}
 
@@ -26,11 +46,11 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 options:
 
 If \code{NULL}, the default, the data is inherited from the plot
-data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
+data as specified in the call to \code{\link[ggplot2:ggplot]{ggplot()}}.
 
 A \code{data.frame}, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-\code{\link[=fortify]{fortify()}} for which variables will be created.
+\code{\link[ggplot2:fortify]{fortify()}} for which variables will be created.
 
 A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
@@ -75,7 +95,7 @@ are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.}
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 

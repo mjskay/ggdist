@@ -4,8 +4,7 @@
 \alias{combine_chains}
 \title{Combine the chain and iteration columns of tidy data frames of draws}
 \usage{
-combine_chains(data, chain = .chain, iteration = .iteration,
-  into = ".draw")
+combine_chains(data, chain = .chain, iteration = .iteration, into = ".draw")
 }
 \arguments{
 \item{data}{Tidy data frame of draws with columns representing the chain and iteration of each draw.}

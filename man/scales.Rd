@@ -44,16 +44,25 @@ scale_point_colour_discrete(..., aesthetics = "point_colour")
 
 scale_point_color_discrete(..., aesthetics = "point_colour")
 
-scale_point_colour_continuous(..., aesthetics = "point_colour",
-  guide = "colourbar2")
+scale_point_colour_continuous(
+  ...,
+  aesthetics = "point_colour",
+  guide = "colourbar2"
+)
 
-scale_point_color_continuous(..., aesthetics = "point_colour",
-  guide = "colourbar2")
+scale_point_color_continuous(
+  ...,
+  aesthetics = "point_colour",
+  guide = "colourbar2"
+)
 
 scale_point_fill_discrete(..., aesthetics = "point_fill")
 
-scale_point_fill_continuous(..., aesthetics = "point_fill",
-  guide = "colourbar2")
+scale_point_fill_continuous(
+  ...,
+  aesthetics = "point_fill",
+  guide = "colourbar2"
+)
 
 scale_point_alpha_continuous(..., range = c(0.1, 1))
 
@@ -67,11 +76,17 @@ scale_interval_colour_discrete(..., aesthetics = "interval_colour")
 
 scale_interval_color_discrete(..., aesthetics = "interval_colour")
 
-scale_interval_colour_continuous(..., aesthetics = "interval_colour",
-  guide = "colourbar2")
+scale_interval_colour_continuous(
+  ...,
+  aesthetics = "interval_colour",
+  guide = "colourbar2"
+)
 
-scale_interval_color_continuous(..., aesthetics = "interval_colour",
-  guide = "colourbar2")
+scale_interval_color_continuous(
+  ...,
+  aesthetics = "interval_colour",
+  guide = "colourbar2"
+)
 
 scale_interval_alpha_continuous(..., range = c(0.1, 1))
 
@@ -79,8 +94,7 @@ scale_interval_alpha_discrete(..., range = c(0.1, 1))
 
 scale_interval_size_continuous(..., range = c(1, 6))
 
-scale_interval_size_discrete(..., range = c(1, 6),
-  na.translate = FALSE)
+scale_interval_size_discrete(..., range = c(1, 6), na.translate = FALSE)
 
 scale_interval_linetype_discrete(..., na.value = "blank")
 
@@ -90,19 +104,27 @@ scale_slab_colour_discrete(..., aesthetics = "slab_colour")
 
 scale_slab_color_discrete(..., aesthetics = "slab_colour")
 
-scale_slab_colour_continuous(..., aesthetics = "slab_colour",
-  guide = "colourbar2")
+scale_slab_colour_continuous(
+  ...,
+  aesthetics = "slab_colour",
+  guide = "colourbar2"
+)
 
-scale_slab_color_continuous(..., aesthetics = "slab_colour",
-  guide = "colourbar2")
+scale_slab_color_continuous(
+  ...,
+  aesthetics = "slab_colour",
+  guide = "colourbar2"
+)
 
 scale_slab_fill_discrete(..., aesthetics = "slab_fill")
 
-scale_slab_fill_continuous(..., aesthetics = "slab_fill",
-  guide = "colourbar2")
+scale_slab_fill_continuous(..., aesthetics = "slab_fill", guide = "colourbar2")
 
-scale_slab_alpha_continuous(..., limits = function(l) c(min(0, l[[1]]),
-  l[[2]]), range = c(0, 1))
+scale_slab_alpha_continuous(
+  ...,
+  limits = function(l) c(min(0, l[[1]]), l[[2]]),
+  range = c(0, 1)
+)
 
 scale_slab_alpha_discrete(..., range = c(0.1, 1))
 
@@ -158,23 +180,23 @@ The following additional scales / aesthetics are defined for use with \code{\lin
 related geoms:
 
 \enumerate{
-\item{\code{scale_point_color_* }}{Point color}
-\item{\code{scale_point_fill_* }}{Point fill color}
-\item{\code{scale_point_alpha_* }}{Point alpha level / opacity}
-\item{\code{scale_point_size_* }}{Point size}
-\item{\code{scale_interval_color_* }}{Interval line color}
-\item{\code{scale_interval_alpha_* }}{Interval alpha level / opacity}
-\item{\code{scale_interval_size_* }}{Interval line width}
-\item{\code{scale_interval_linetype_* }}{Interval line type}
-\item{\code{scale_slab_color_* }}{Slab outline color}
-\item{\code{scale_slab_fill_* }}{Slab fill color}
-\item{\code{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
+\item{\verb{scale_point_color_* }}{Point color}
+\item{\verb{scale_point_fill_* }}{Point fill color}
+\item{\verb{scale_point_alpha_* }}{Point alpha level / opacity}
+\item{\verb{scale_point_size_* }}{Point size}
+\item{\verb{scale_interval_color_* }}{Interval line color}
+\item{\verb{scale_interval_alpha_* }}{Interval alpha level / opacity}
+\item{\verb{scale_interval_size_* }}{Interval line width}
+\item{\verb{scale_interval_linetype_* }}{Interval line type}
+\item{\verb{scale_slab_color_* }}{Slab outline color}
+\item{\verb{scale_slab_fill_* }}{Slab fill color}
+\item{\verb{scale_slab_alpha_* }}{Slab alpha level / opacity. The default settings of
 \code{scale_slab_alpha_continuous} differ from \code{\link[=scale_alpha_continuous]{scale_alpha_continuous()}} and
 are designed for gradient plots (e.g. \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}) by ensuring that
 densities of 0 get mapped to 0 in the output.}
-\item{\code{scale_slab_size_* }}{Slab outline line width}
-\item{\code{scale_slab_linetype_* }}{Slab outline line type}
-\item{\code{scale_slab_shape_* }}{Slab dot shape (for \code{\link[=geom_dotsinterval]{geom_dotsinterval()}})}
+\item{\verb{scale_slab_size_* }}{Slab outline line width}
+\item{\verb{scale_slab_linetype_* }}{Slab outline line type}
+\item{\verb{scale_slab_shape_* }}{Slab dot shape (for \code{\link[=geom_dotsinterval]{geom_dotsinterval()}})}
 }
 
 See the corresponding scale documentation in ggplot for more information; e.g.

@@ -4,8 +4,7 @@
 \alias{marginalize_lkjcorr}
 \title{Turn spec for LKJ distribution into spec for marginal LKJ distribution}
 \usage{
-marginalize_lkjcorr(data, K, predicate = NULL, dist = ".dist",
-  args = ".args")
+marginalize_lkjcorr(data, K, predicate = NULL, dist = ".dist", args = ".args")
 }
 \arguments{
 \item{data}{A data frame containing a column with distribution names (\code{".dist"} by default)

@@ -5,9 +5,15 @@
 \title{Compare the value of draws of some variable from a Bayesian model for
 different levels of a factor}
 \usage{
-compare_levels(data, variable, by, fun = `-`, comparison = "default",
+compare_levels(
+  data,
+  variable,
+  by,
+  fun = `-`,
+  comparison = "default",
   draw_indices = c(".chain", ".iteration", ".draw"),
-  ignore_groups = ".row")
+  ignore_groups = ".row"
+)
 }
 \arguments{
 \item{data}{Long-format \code{data.frame} of draws such as returned by

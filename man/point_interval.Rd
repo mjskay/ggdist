@@ -29,19 +29,41 @@
 \alias{mode_hdcih}
 \title{Point and interval summaries for tidy data frames of draws from distributions}
 \usage{
-point_interval(.data, ..., .width = 0.95, .point = median,
-  .interval = qi, .simple_names = TRUE, na.rm = FALSE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob)
+point_interval(
+  .data,
+  ...,
+  .width = 0.95,
+  .point = median,
+  .interval = qi,
+  .simple_names = TRUE,
+  na.rm = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob
+)
 
-\method{point_interval}{default}(.data, ..., .width = 0.95,
-  .point = median, .interval = qi, .simple_names = TRUE,
-  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"),
-  .prob)
+\method{point_interval}{default}(
+  .data,
+  ...,
+  .width = 0.95,
+  .point = median,
+  .interval = qi,
+  .simple_names = TRUE,
+  na.rm = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob
+)
 
-\method{point_interval}{numeric}(.data, ..., .width = 0.95,
-  .point = median, .interval = qi, .simple_names = FALSE,
-  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"),
-  .prob)
+\method{point_interval}{numeric}(
+  .data,
+  ...,
+  .width = 0.95,
+  .point = median,
+  .interval = qi,
+  .simple_names = FALSE,
+  na.rm = FALSE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row"),
+  .prob
+)
 
 point_intervalh(...)
 
@@ -167,7 +189,7 @@ The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih
 behave identically to the function without the h, except that when passed a vector,
 they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 \code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
-\code{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
+\verb{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
 functions are not necessary if you use the \code{point_interval}
 argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
 \code{\link[=stat_pointintervalh]{stat_pointintervalh()}}, \code{\link[=stat_halfeyeh]{stat_halfeyeh()}}, etc), as

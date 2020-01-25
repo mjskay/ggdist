@@ -5,11 +5,9 @@
 \alias{spread_draws}
 \title{Extract draws of variables in a Bayesian model fit into a tidy data format}
 \usage{
-gather_draws(model, ..., regex = FALSE, sep = "[, ]", n = NULL,
-  seed = NULL)
+gather_draws(model, ..., regex = FALSE, sep = "[, ]", n = NULL, seed = NULL)
 
-spread_draws(model, ..., regex = FALSE, sep = "[, ]", n = NULL,
-  seed = NULL)
+spread_draws(model, ..., regex = FALSE, sep = "[, ]", n = NULL, seed = NULL)
 }
 \arguments{
 \item{model}{A supported Bayesian model fit. Tidybayes supports a variety of model objects;
@@ -160,7 +158,7 @@ into a wide format and whose names will be the base variable name, plus a dot
 \item column \code{"b.3"}: value of \code{"b[i,3]"} for draw \code{".draw"}
 }
 
-An optional clause in the form \code{| wide_dimension} can also be used to put
+An optional clause in the form \verb{| wide_dimension} can also be used to put
 the data frame into a wide format based on \code{wide_dimension}. For example, this:
 
 \preformatted{spread_draws(fit, b[i,v] | v)}

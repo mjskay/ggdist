@@ -4,8 +4,7 @@
 \alias{gather_variables}
 \title{Gather variables from a tidy data frame of draws from variables into a single column}
 \usage{
-gather_variables(data, exclude = c(".chain", ".iteration", ".draw",
-  ".row"))
+gather_variables(data, exclude = c(".chain", ".iteration", ".draw", ".row"))
 }
 \arguments{
 \item{data}{A data frame with variable names spread across columns, such as one returned by

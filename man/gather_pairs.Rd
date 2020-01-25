@@ -4,9 +4,16 @@
 \alias{gather_pairs}
 \title{Gather pairwise combinations of values from key/value columns in a long-format data frame}
 \usage{
-gather_pairs(data, key, value, row = ".row", col = ".col", x = ".x",
-  y = ".y", triangle = c("lower only", "upper only", "lower", "upper",
-  "both only", "both"))
+gather_pairs(
+  data,
+  key,
+  value,
+  row = ".row",
+  col = ".col",
+  x = ".x",
+  y = ".y",
+  triangle = c("lower only", "upper only", "lower", "upper", "both only", "both")
+)
 }
 \arguments{
 \item{data}{Tidy data frame.}

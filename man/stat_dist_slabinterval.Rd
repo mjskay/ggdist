@@ -20,12 +20,24 @@
 \alias{stat_dist_slabh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)}
 \usage{
-stat_dist_slabinterval(mapping = NULL, data = NULL,
-  geom = "slabinterval", position = "identity", ...,
-  slab_type = c("pdf", "cdf", "ccdf"), p_limits = c(0.001, 0.999),
-  orientation = c("vertical", "horizontal"), limits = NULL, n = 501,
-  .width = c(0.66, 0.95), show_slab = TRUE, show_interval = TRUE,
-  na.rm = FALSE, show.legend = c(size = FALSE), inherit.aes = TRUE)
+stat_dist_slabinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  slab_type = c("pdf", "cdf", "ccdf"),
+  p_limits = c(0.001, 0.999),
+  orientation = c("vertical", "horizontal"),
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_interval = TRUE,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_dist_halfeye(...)
 
@@ -35,44 +47,87 @@ stat_dist_eye(..., side = "both")
 
 stat_dist_eyeh(..., side = "both", orientation = "horizontal")
 
-stat_dist_ccdfinterval(..., slab_type = "ccdf", justification = 0.5,
-  side = "left", normalize = "none")
+stat_dist_ccdfinterval(
+  ...,
+  slab_type = "ccdf",
+  justification = 0.5,
+  side = "left",
+  normalize = "none"
+)
 
-stat_dist_ccdfintervalh(..., slab_type = "ccdf", justification = 0.5,
-  side = "top", orientation = "horizontal", normalize = "none")
+stat_dist_ccdfintervalh(
+  ...,
+  slab_type = "ccdf",
+  justification = 0.5,
+  side = "top",
+  orientation = "horizontal",
+  normalize = "none"
+)
 
-stat_dist_cdfinterval(..., slab_type = "cdf", justification = 0.5,
-  side = "left", normalize = "none")
+stat_dist_cdfinterval(
+  ...,
+  slab_type = "cdf",
+  justification = 0.5,
+  side = "left",
+  normalize = "none"
+)
 
-stat_dist_cdfintervalh(..., slab_type = "cdf", justification = 0.5,
-  side = "top", orientation = "horizontal", normalize = "none")
+stat_dist_cdfintervalh(
+  ...,
+  slab_type = "cdf",
+  justification = 0.5,
+  side = "top",
+  orientation = "horizontal",
+  normalize = "none"
+)
 
-stat_dist_gradientinterval(mapping = NULL, data = NULL,
-  geom = "slabinterval", position = "identity", ...,
-  justification = 0.5, thickness = 1, show.legend = c(size = FALSE,
-  slab_alpha = FALSE), inherit.aes = TRUE)
+stat_dist_gradientinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  justification = 0.5,
+  thickness = 1,
+  show.legend = c(size = FALSE, slab_alpha = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_dist_gradientintervalh(..., orientation = "horizontal")
 
 stat_dist_pointinterval(..., show_slab = FALSE)
 
-stat_dist_pointintervalh(..., show_slab = FALSE,
-  orientation = "horizontal")
+stat_dist_pointintervalh(..., show_slab = FALSE, orientation = "horizontal")
 
-stat_dist_interval(mapping = NULL, data = NULL, geom = "interval",
-  position = "identity", ..., show_slab = FALSE, show_point = FALSE,
-  show.legend = NA, inherit.aes = TRUE)
+stat_dist_interval(
+  mapping = NULL,
+  data = NULL,
+  geom = "interval",
+  position = "identity",
+  ...,
+  show_slab = FALSE,
+  show_point = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 
 stat_dist_intervalh(..., orientation = "horizontal")
 
-stat_dist_slab(mapping = NULL, data = NULL, geom = "slab",
-  position = "identity", ..., show.legend = NA, inherit.aes = TRUE)
+stat_dist_slab(
+  mapping = NULL,
+  data = NULL,
+  geom = "slab",
+  position = "identity",
+  ...,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 
 stat_dist_slabh(..., orientation = "horizontal")
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
-\code{\link[=aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
+\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply \code{mapping} if there is no plot mapping.}
 
@@ -80,11 +135,11 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 options:
 
 If \code{NULL}, the default, the data is inherited from the plot
-data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
+data as specified in the call to \code{\link[ggplot2:ggplot]{ggplot()}}.
 
 A \code{data.frame}, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-\code{\link[=fortify]{fortify()}} for which variables will be created.
+\code{\link[ggplot2:fortify]{fortify()}} for which variables will be created.
 
 A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
@@ -139,7 +194,7 @@ those that are mapped (the default for most geoms).}
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
@@ -180,7 +235,7 @@ which combine multiple options to create useful geoms, particularly \emph{eye pl
 (a combination of a violin plot and interval), \emph{half-eye plots} (a density plus interval),
 and \emph{CCDF bar plots} (a complementary CDF plus interval).
 
-The shortcut stat names follow the pattern \code{stat_dist_[name][h|]}, where the trailing
+The shortcut stat names follow the pattern \verb{stat_dist_[name][h|]}, where the trailing
 \code{h} (if present) indicates the horizontal version of the stat.
 
 Stats include:

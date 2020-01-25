@@ -20,59 +20,166 @@
 \alias{residual_draws.brmsfit}
 \title{Add draws from the posterior fit, predictions, or residuals of a model to a data frame}
 \usage{
-add_fitted_draws(newdata, model, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
+add_fitted_draws(
+  newdata,
+  model,
+  value = ".value",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category",
+  dpar = FALSE,
+  scale = c("response", "linear")
+)
 
-fitted_draws(model, newdata, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
+fitted_draws(
+  model,
+  newdata,
+  value = ".value",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category",
+  dpar = FALSE,
+  scale = c("response", "linear")
+)
 
-add_linpred_draws(newdata, model, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
+add_linpred_draws(
+  newdata,
+  model,
+  value = ".value",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category",
+  dpar = FALSE,
+  scale = c("response", "linear")
+)
 
-linpred_draws(model, newdata, value = ".value", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
+linpred_draws(
+  model,
+  newdata,
+  value = ".value",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category",
+  dpar = FALSE,
+  scale = c("response", "linear")
+)
 
 \method{fitted_draws}{default}(model, newdata, ...)
 
-\method{fitted_draws}{stanreg}(model, newdata, value = ".value", ...,
-  n = NULL, seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
+\method{fitted_draws}{stanreg}(
+  model,
+  newdata,
+  value = ".value",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category",
+  dpar = FALSE,
+  scale = c("response", "linear")
+)
 
-\method{fitted_draws}{brmsfit}(model, newdata, value = ".value", ...,
-  n = NULL, seed = NULL, re_formula = NULL, category = ".category",
-  dpar = FALSE, scale = c("response", "linear"))
+\method{fitted_draws}{brmsfit}(
+  model,
+  newdata,
+  value = ".value",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category",
+  dpar = FALSE,
+  scale = c("response", "linear")
+)
 
-add_predicted_draws(newdata, model, prediction = ".prediction", ...,
-  n = NULL, seed = NULL, re_formula = NULL, category = ".category")
+add_predicted_draws(
+  newdata,
+  model,
+  prediction = ".prediction",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category"
+)
 
-predicted_draws(model, newdata, prediction = ".prediction", ...,
-  n = NULL, seed = NULL, re_formula = NULL, category = ".category")
+predicted_draws(
+  model,
+  newdata,
+  prediction = ".prediction",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category"
+)
 
 \method{predicted_draws}{default}(model, newdata, ...)
 
-\method{predicted_draws}{stanreg}(model, newdata,
-  prediction = ".prediction", ..., n = NULL, seed = NULL,
-  re_formula = NULL, category = ".category")
+\method{predicted_draws}{stanreg}(
+  model,
+  newdata,
+  prediction = ".prediction",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category"
+)
 
-\method{predicted_draws}{brmsfit}(model, newdata,
-  prediction = ".prediction", ..., n = NULL, seed = NULL,
-  re_formula = NULL, category = ".category")
+\method{predicted_draws}{brmsfit}(
+  model,
+  newdata,
+  prediction = ".prediction",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category"
+)
 
-add_residual_draws(newdata, model, residual = ".residual", ...,
-  n = NULL, seed = NULL, re_formula = NULL, category = ".category")
+add_residual_draws(
+  newdata,
+  model,
+  residual = ".residual",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category"
+)
 
-residual_draws(model, newdata, residual = ".residual", ..., n = NULL,
-  seed = NULL, re_formula = NULL, category = ".category")
+residual_draws(
+  model,
+  newdata,
+  residual = ".residual",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category"
+)
 
 \method{residual_draws}{default}(model, newdata, ...)
 
-\method{residual_draws}{brmsfit}(model, newdata, residual = ".residual",
-  ..., n = NULL, seed = NULL, re_formula = NULL,
-  category = ".category")
+\method{residual_draws}{brmsfit}(
+  model,
+  newdata,
+  residual = ".residual",
+  ...,
+  n = NULL,
+  seed = NULL,
+  re_formula = NULL,
+  category = ".category"
+)
 }
 \arguments{
 \item{newdata}{Data frame to generate predictions from. If omitted, most model types will

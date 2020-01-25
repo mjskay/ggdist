@@ -11,8 +11,7 @@ gather_emmeans_draws(object, value = ".value", ...)
 
 \method{gather_emmeans_draws}{default}(object, value = ".value", ...)
 
-\method{gather_emmeans_draws}{emm_list}(object, value = ".value",
-  grid = ".grid", ...)
+\method{gather_emmeans_draws}{emm_list}(object, value = ".value", grid = ".grid", ...)
 }
 \arguments{
 \item{object}{An \code{emmGrid} object such as returned by
