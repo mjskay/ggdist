@@ -107,15 +107,21 @@ test_that("[add_]predicted_draws works on brms models with categorical outcomes"
   m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
 
   set.seed(1234)
-  preds = predict(m_cyl_mpg, mtcars_tbl, summary = FALSE, nsamples = 100) %>%
+  raw_preds = predict(m_cyl_mpg, mtcars_tbl, summary = FALSE, nsamples = 100)
+  preds = raw_preds %>%
     array2df(list(.draw = NA, .row = NA), label.x = ".prediction") %>%
     mutate(
       .chain = NA_integer_,
       .iteration = NA_integer_,
       .draw = as.integer(.draw),
       .row = as.character(.row),
+    )
+  # get this test to pass for now on brms versions that don't output levels anymore
+  if (!is.null(attr(raw_preds, "levels"))) {
+    preds %<>% mutate(
       .prediction = factor(.prediction, levels = 1:3, labels = paste0("c", c(4,6,8)))
     )
+  }
 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
