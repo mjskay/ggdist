@@ -10,9 +10,8 @@
 popular Bayesian modeling methods into a tidy data + ggplot workflow.
 }
 \details{
-\href{http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html}{Tidy}
-data frames (one observation per row) are particularly convenient for
-use in a variety of R data manipulation and visualization packages.
+Tidy data frames (one observation per row) are particularly convenient for
+use in a variety of R data manipulation and visualization packages (Wickham 2014).
 However, when using Bayesian modeling functions like JAGS or Stan in R,
 we often have to translate this data into a form the model understands,
 and then after running the model, translate the resulting sample (or
@@ -27,4 +26,8 @@ For overviews aimed at the \code{rstanarm} and \code{brms} packages, see
 of the majority of geoms in tidybayes, see \code{vignette("slabinterval")}.
 
 For a list of supported models, see \link{tidybayes-models}.
+}
+\references{
+Wickham, Hadley. (2014). Tidy data. \emph{Journal of Statistical Software},
+59(10), 1-23. DOI: \href{http://dx.doi.org/10.18637/jss.v059.i10}{10.18637/jss.v059.i10}.
 }

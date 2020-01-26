@@ -11,9 +11,8 @@
 #'
 #' @details
 #'
-#' [Tidy](http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
-#' data frames (one observation per row) are particularly convenient for
-#' use in a variety of R data manipulation and visualization packages.
+#' Tidy data frames (one observation per row) are particularly convenient for
+#' use in a variety of R data manipulation and visualization packages (Wickham 2014).
 #' However, when using Bayesian modeling functions like JAGS or Stan in R,
 #' we often have to translate this data into a form the model understands,
 #' and then after running the model, translate the resulting sample (or
@@ -28,5 +27,10 @@
 #' of the majority of geoms in tidybayes, see `vignette("slabinterval")`.
 #'
 #' For a list of supported models, see [tidybayes-models].
+#'
+#' @references
+#'
+#' Wickham, Hadley. (2014). Tidy data. _Journal of Statistical Software_,
+#' 59(10), 1-23. DOI: [10.18637/jss.v059.i10](http://dx.doi.org/10.18637/jss.v059.i10).
 #'
 NULL
