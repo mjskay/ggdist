@@ -93,7 +93,7 @@ corresponding intervals." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -346,11 +346,11 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
     <p><code>geom_slabinterval</code> is a flexible meta-geom that you can use directly or through a variety of "shortcut"
 geoms that represent useful combinations of the various parameters of this geom. In many cases you will want to
 use the shortcut geoms instead as they create more useful mnemonic primitives, such as eye plots,
-halfeye plots, point+interval plots, or CCDF barplots.</p>
+half-eye plots, point+interval plots, or CCDF barplots.</p>
 <p>The <em>slab</em> portion of the geom is much like a ridge or "joy" plot: it represents the value of a function
 scaled to fit between values on the x or y access (depending on the value of <code>orientation</code>). Values of
 the functions are specified using the <code>thickness</code> aesthetic and are scaled to fit into <code>scale</code>
-times the distence between points on the relevant axis. E.g., if <code>orientation</code> is <code>"horizontal"</code>,
+times the distance between points on the relevant axis. E.g., if <code>orientation</code> is <code>"horizontal"</code>,
 <code>scale</code> is 0.9, and <code>y</code> is a discrete variable, then the <code>thickness</code> aesthetic specifies the
 value of some function of <code>x</code> that is drawn for every <code>y</code> value and scaled to fit into 0.9 times
 the distance between points on the y axis.</p>

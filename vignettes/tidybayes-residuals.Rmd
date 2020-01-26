@@ -29,10 +29,15 @@ knitr::opts_chunk$set(
   fig.height = 4,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
+if (requireNamespace("Cairo")) {
+  knitr::opts_chunk$set(
+    dev = "CairoPNG"
+  )
+} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))
-  )  
+  )
 }
 ```
 
@@ -347,7 +352,7 @@ p = cens_df %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```
 
 Looks good.
@@ -462,7 +467,7 @@ p = cens_df_t %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```
 
 Still not good! But the clear s shape is very diagnostic of fat tails, so let's try a different model.
@@ -510,7 +515,7 @@ p = cens_df_t %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```
 
 Looking pretty good! As well they should, since this is the same model that generated the data.
@@ -605,7 +610,7 @@ p = cens_df_o %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```
 
 It is not too surprising that the ordinal regression also works here, even though it is not the data generating model. Ordinal regressions are pretty robust.
@@ -691,7 +696,7 @@ p = bin_df %>%
   geom_abline() +
   transition_manual(.residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```
 
 We could also look at the probability residuals instead, comparing them against a uniform distribution, like so:
@@ -707,5 +712,5 @@ p = bin_df %>%
   geom_abline() +
   transition_manual(.residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```

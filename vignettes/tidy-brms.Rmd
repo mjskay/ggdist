@@ -29,10 +29,15 @@ knitr::opts_chunk$set(
   fig.height = 4,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
+if (requireNamespace("Cairo")) {
+  knitr::opts_chunk$set(
+    dev = "CairoPNG"
+  )
+} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))
-  )  
+  )
 }
 ```
 
@@ -519,7 +524,7 @@ p = mtcars %>%
   transition_states(.draw, 0, 1) +
   shadow_mark(future = TRUE, color = "gray50", alpha = 1/20)
 
-animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:
@@ -737,7 +742,7 @@ p = mtcars_clean %>%
   scale_fill_brewer(palette = "Dark2") +
   transition_manual(.draw)
 
-animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 192, res = 96, type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 192, res = 96, dev = "png", type = "cairo")
 ```
 
 Notice how the lines move together, and how they move up or down together or in opposition. We could take a slice through these lines at an x position in the above chart (say, `mpg = 20`) and look at the correlation between them using a scatterplot matrix:

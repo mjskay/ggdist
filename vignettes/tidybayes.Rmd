@@ -29,10 +29,15 @@ knitr::opts_chunk$set(
   fig.height = 4,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
+if (requireNamespace("Cairo")) {
+  knitr::opts_chunk$set(
+    dev = "CairoPNG"
+  )
+} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))
-  )  
+  )
 }
 ```
 
@@ -687,7 +692,7 @@ p = mtcars %>%
   transition_states(.draw, 0, 1) +
   shadow_mark(future = TRUE, color = "gray50", alpha = 1/20)
 
-animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 384, res = 96, type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:

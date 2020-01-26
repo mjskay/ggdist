@@ -90,7 +90,7 @@ popular Bayesian modeling methods into a tidy data + ggplot workflow." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -170,9 +170,8 @@ popular Bayesian modeling methods into a tidy data + ggplot workflow.</p>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><a href='http://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html'>Tidy</a>
-data frames (one observation per row) are particularly convenient for
-use in a variety of R data manipulation and visualization packages.
+    <p>Tidy data frames (one observation per row) are particularly convenient for
+use in a variety of R data manipulation and visualization packages (Wickham 2014).
 However, when using Bayesian modeling functions like JAGS or Stan in R,
 we often have to translate this data into a form the model understands,
 and then after running the model, translate the resulting sample (or
@@ -185,12 +184,18 @@ For overviews aimed at the <code>rstanarm</code> and <code>brms</code> packages,
 <code><a href='../articles/tidy-rstanarm.html'>vignette("tidy-rstanarm")</a></code> and <code><a href='../articles/tidy-brms.html'>vignette("tidy-brms")</a></code>. For an overview
 of the majority of geoms in tidybayes, see <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.</p>
 <p>For a list of supported models, see <a href='tidybayes-models.html'>tidybayes-models</a>.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Wickham, Hadley. (2014). Tidy data. <em>Journal of Statistical Software</em>,
+59(10), 1-23. doi: <a href='https://doi.org/10.18637/jss.v059.i10'>10.18637/jss.v059.i10</a>
+.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#details">Details</a></li>
+      <li><a href="#references">References</a></li>
     </ul>
 
   </div>

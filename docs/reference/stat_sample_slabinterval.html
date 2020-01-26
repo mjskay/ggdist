@@ -46,7 +46,7 @@
 
 <meta property="og:title" content="Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat) — stat_sample_slabinterval" />
 <meta property="og:description" content="Stats for computing densities and CDFs + intervals from samples for use with
-geom_slabinterval(). Useful for creating eye plots, halfeye plots,
+geom_slabinterval(). Useful for creating eye plots, half-eye plots,
 CCDF bar plots etc." />
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +91,7 @@ CCDF bar plots etc." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -164,7 +164,7 @@ CCDF bar plots etc." />
 
     <div class="ref-description">
     <p>Stats for computing densities and CDFs + intervals from samples for use with
-<code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>. Useful for creating eye plots, halfeye plots,
+<code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>. Useful for creating eye plots, half-eye plots,
 CCDF bar plots etc.</p>
     </div>
 
@@ -348,7 +348,7 @@ will not be wider than these (but may be narrower). Use <code>NA</code> to leave
 argument will be easier to use). This function takes a data frame of aesthetics and a <code>.width</code> parameter (a vector
 of interval widths), and returns a data frame with
 columns <code>.width</code> (from the <code>.width</code> vector), <code>.value</code> (point summary) and <code>.lower</code> and <code>.upper</code>
-(endpoints of the inverals, given the <code>.width</code>). Output will be converted to the appropriate <code>x</code>- or
+(endpoints of the intervals, given the <code>.width</code>). Output will be converted to the appropriate <code>x</code>- or
 <code>y</code>-based aesthetics depending on the value of <code>orientation</code>. If <code>interval_function</code> is <code>NULL</code>,
 <code>point_interval</code> is used instead.</p></td>
     </tr>
@@ -455,7 +455,7 @@ handy for visualizing posterior distributions in Bayesian inference, amongst oth
 <li><p><code>thickness</code></p></li>
 <li><p><code>size</code></p></li>
 <li><p><code>group</code></p></li>
-</ul><p>In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:</p><ul>
+</ul><p>In addition, in their default configuration (paired with <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>) the following aesthetics are supported by the underlying geom:</p><ul>
 <li><p><code>datatype</code></p></li>
 <li><p><code>alpha</code></p></li>
 <li><p><code>colour</code></p></li>

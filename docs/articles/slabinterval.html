@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -190,7 +190,7 @@ img {
 <a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_eye()"</span>)</a></code></pre></div>
 <p><img src="slabinterval_files/figure-html/group_eye-1.png" width="576"></p>
-<p>(Users of older versions of tidybayes might have used <code><a href="../reference/geom_eye.html">geom_eye()</a></code>, which is the older spelling of <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Due to the name standardization in this version of tidybayes (see the decription above), <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> is now the preferred spelling, though <code><a href="../reference/geom_eye.html">geom_eye()</a></code> will continue to work.)</p>
+<p>(Users of older versions of tidybayes might have used <code><a href="../reference/geom_eye.html">geom_eye()</a></code>, which is the older spelling of <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Due to the name standardization in this version of tidybayes (see the description above), <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> is now the preferred spelling, though <code><a href="../reference/geom_eye.html">geom_eye()</a></code> will continue to work.)</p>
 <p>We can also use <code>stat_halfeye</code> instead to just get densities:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value)) <span class="op">+</span></a>
@@ -249,7 +249,7 @@ img {
 <a class="sourceLine" id="cb9-10" title="10">  p <span class="op">+</span><span class="st"> </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_eyeh</a></span>(<span class="dt">side =</span> <span class="st">"right"</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">"side = 'top'"</span>)</a>
 <a class="sourceLine" id="cb9-11" title="11">)</a></code></pre></div>
 <p><img src="slabinterval_files/figure-html/eyeh_side-1.png" width="672"></p>
-<p>Eye plots are also designed to support dodging through the standard mechanism of <code>position = "dodge"</code>. Unlike with geom_violin(), densities in groups that are not dodged (here, ‘a’ and ‘b’)the same area and max width as those in groups that are dodged (‘c’):</p>
+<p>Eye plots are also designed to support dodging through the standard mechanism of <code>position = "dodge"</code>. Unlike with geom_violin(), densities in groups that are not dodged (here, ‘a’ and ‘b’) have the same area and max width as those in groups that are dodged (‘c’):</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb10-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
@@ -306,7 +306,7 @@ img {
 <a class="sourceLine" id="cb14-12" title="12">    <span class="dt">y =</span> <span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb14-13" title="13">  ) </a></code></pre></div>
 <p><img src="slabinterval_files/figure-html/beta_overplotted-1.png" width="576"></p>
-<p><code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh()</a></code> is a shortcut geom for something like <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh(show_interval = FALSE, ...)</a></code>, with some simplifications: since it does not have the interval attached to it, it does not require you to use <code>slab_color</code> to target the outliine color; you can use <code>color</code> directly. This simplifies things somewhat:</p>
+<p><code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh()</a></code> is a shortcut geom for something like <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh(show_interval = FALSE, ...)</a></code>, with some simplifications: since it does not have the interval attached to it, it does not require you to use <code>slab_color</code> to target the outline color; you can use <code>color</code> directly. This simplifies things somewhat:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dt">length.out =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">dist =</span> <span class="st">"beta"</span>, <span class="dt">arg1 =</span> alpha, <span class="dt">arg2 =</span> <span class="dv">10</span>, <span class="dt">color =</span> alpha)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb15-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh</a></span>(<span class="dt">fill =</span> <span class="ot">NA</span>) <span class="op">+</span></a>
@@ -467,7 +467,7 @@ img {
 <a href="#on-analytical-distributions-stat_dist_ccdfintervalh" class="anchor"></a>On analytical distributions: <code>stat_dist_[c]cdfinterval[h]</code>
 </h3>
 <p>You can also use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval()</a></code> instead if you wish to visualize analytical distributions, just as you can use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code>.</p>
-<p>By default, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval()</a></code> uses the quantiles at <code>p = 0.001</code> and <code>p = 0.999</code> in the distributions are used to determine their extrant. You can change this setting using the <code>p_limits</code> parameter, or use <code>expand_limits()</code> to ensure a particular value is shown as before:</p>
+<p>By default, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval()</a></code> uses the quantiles at <code>p = 0.001</code> and <code>p = 0.999</code> in the distributions are used to determine their extent. You can change this setting using the <code>p_limits</code> parameter, or use <code>expand_limits()</code> to ensure a particular value is shown as before:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">dist_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb29-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb29-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
@@ -620,7 +620,7 @@ img {
 <div id="highlighting-and-other-combinations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#highlighting-and-other-combinations" class="anchor"></a>Highlighting and other combinations</h3>
-<p>The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight subregions of a plot. Take the earlier example of visualizing priors:</p>
+<p>The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. Take the earlier example of visualizing priors:</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1">priors =<span class="st"> </span><span class="kw">tribble</span>(</a>
 <a class="sourceLine" id="cb39-2" title="2">  <span class="op">~</span><span class="st"> </span>dist,      <span class="op">~</span><span class="st"> </span>args,</a>
 <a class="sourceLine" id="cb39-3" title="3">  <span class="st">"norm"</span>,      <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dv">0</span>, <span class="dv">1</span>),</a>

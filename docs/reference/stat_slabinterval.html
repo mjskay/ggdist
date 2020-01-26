@@ -93,7 +93,7 @@ to use those instead." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -284,7 +284,7 @@ automatically depending on the value of <code>orientation</code>.</p></td>
 argument will be easier to use). This function takes a data frame of aesthetics and a <code>.width</code> parameter (a vector
 of interval widths), and returns a data frame with
 columns <code>.width</code> (from the <code>.width</code> vector), <code>.value</code> (point summary) and <code>.lower</code> and <code>.upper</code>
-(endpoints of the inverals, given the <code>.width</code>). Output will be converted to the appropriate <code>x</code>- or
+(endpoints of the intervals, given the <code>.width</code>). Output will be converted to the appropriate <code>x</code>- or
 <code>y</code>-based aesthetics depending on the value of <code>orientation</code>. If <code>interval_function</code> is <code>NULL</code>,
 <code>point_interval</code> is used instead.</p></td>
     </tr>
@@ -345,7 +345,7 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
 <li><p><code>thickness</code></p></li>
 <li><p><code>size</code></p></li>
 <li><p><code>group</code></p></li>
-</ul><p>In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:</p><ul>
+</ul><p>In addition, in their default configuration (paired with <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>) the following aesthetics are supported by the underlying geom:</p><ul>
 <li><p><code>datatype</code></p></li>
 <li><p><code>alpha</code></p></li>
 <li><p><code>colour</code></p></li>

@@ -29,6 +29,11 @@ knitr::opts_chunk$set(
   fig.height = 4,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
+if (requireNamespace("Cairo")) {
+  knitr::opts_chunk$set(
+    dev = "CairoPNG"
+  )
+} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))

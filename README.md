@@ -203,7 +203,7 @@ ABC %>%
   ylab("condition")
 ```
 
-![](README_files/figure-gfm/make_data-1.png)<!-- -->
+![](man/figures/README/make_data-1.png)<!-- -->
 
 A hierarchical model of this data might fit an overall mean across the
 conditions (`overall_mean`), the standard deviation of the condition
@@ -281,27 +281,25 @@ m %>%
   head(15)  # just show the first few rows
 ```
 
-<div class="kable-table">
-
-| condition | condition\_mean | .chain | .iteration | .draw | response\_sd |
-| :-------- | --------------: | -----: | ---------: | ----: | -----------: |
-| A         |       0.1571394 |      1 |          1 |     1 |    0.6728488 |
-| A         |       0.3616655 |      1 |          2 |     2 |    0.5323894 |
-| A         |       0.1946582 |      1 |          3 |     3 |    0.5647096 |
-| A         |       0.2448337 |      1 |          4 |     4 |    0.5348348 |
-| A         |       0.1341376 |      1 |          5 |     5 |    0.5095604 |
-| A         |       0.2728213 |      1 |          6 |     6 |    0.5113445 |
-| A         |     \-0.0744789 |      1 |          7 |     7 |    0.6272724 |
-| A         |       0.1158576 |      1 |          8 |     8 |    0.6099609 |
-| A         |       0.0902241 |      1 |          9 |     9 |    0.4847436 |
-| A         |       0.2101223 |      1 |         10 |    10 |    0.5940226 |
-| A         |       0.1183253 |      1 |         11 |    11 |    0.4777475 |
-| A         |       0.2180164 |      1 |         12 |    12 |    0.5436858 |
-| A         |       0.2382551 |      1 |         13 |    13 |    0.4933700 |
-| A         |       0.0557767 |      1 |         14 |    14 |    0.6066798 |
-| A         |       0.1804452 |      1 |         15 |    15 |    0.5824206 |
-
-</div>
+    ## # A tibble: 15 x 6
+    ## # Groups:   condition [1]
+    ##    condition condition_mean .chain .iteration .draw response_sd
+    ##    <chr>              <dbl>  <int>      <int> <int>       <dbl>
+    ##  1 A                 0.157       1          1     1       0.673
+    ##  2 A                 0.362       1          2     2       0.532
+    ##  3 A                 0.195       1          3     3       0.565
+    ##  4 A                 0.245       1          4     4       0.535
+    ##  5 A                 0.134       1          5     5       0.510
+    ##  6 A                 0.273       1          6     6       0.511
+    ##  7 A                -0.0745      1          7     7       0.627
+    ##  8 A                 0.116       1          8     8       0.610
+    ##  9 A                 0.0902      1          9     9       0.485
+    ## 10 A                 0.210       1         10    10       0.594
+    ## 11 A                 0.118       1         11    11       0.478
+    ## 12 A                 0.218       1         12    12       0.544
+    ## 13 A                 0.238       1         13    13       0.493
+    ## 14 A                 0.0558      1         14    14       0.607
+    ## 15 A                 0.180       1         15    15       0.582
 
 The condition numbers are automatically turned back into text (“A”, “B”,
 “C”, …) and split into their own column. A long-format data frame is
@@ -331,7 +329,7 @@ m %>%
   stat_eyeh()
 ```
 
-![](README_files/figure-gfm/stat_eyeh-1.png)<!-- -->
+![](man/figures/README/stat_eyeh-1.png)<!-- -->
 
 Or one can employ the similar “half-eye” plot:
 
@@ -342,7 +340,7 @@ m %>%
   stat_halfeyeh()
 ```
 
-![](README_files/figure-gfm/stat_halfeyeh-1.png)<!-- -->
+![](man/figures/README/stat_halfeyeh-1.png)<!-- -->
 
 A variety of other stats and geoms for visualizing priors and posteriors
 are available; see `vignette("slabinterval")` for an overview of them.
@@ -374,7 +372,7 @@ m %>%
   stat_dotsh(quantiles = 100) 
 ```
 
-![](README_files/figure-gfm/quantile_dotplots-1.png)<!-- -->
+![](man/figures/README/quantile_dotplots-1.png)<!-- -->
 
 The idea is to get away from thinking about the posterior as indicating
 one canonical point or interval, but instead to represent it as (say)
@@ -392,17 +390,14 @@ m %>%
   median_qi(condition_mean)
 ```
 
-<div class="kable-table">
-
-| condition | condition\_mean |      .lower |      .upper | .width | .point | .interval |
-| :-------- | --------------: | ----------: | ----------: | -----: | :----- | :-------- |
-| A         |       0.1959004 | \-0.1533328 |   0.5512907 |   0.95 | median | qi        |
-| B         |       1.0020230 |   0.6535607 |   1.3503131 |   0.95 | median | qi        |
-| C         |       1.8340888 |   1.4886406 |   2.1726034 |   0.95 | median | qi        |
-| D         |       1.0203893 |   0.6539531 |   1.3762399 |   0.95 | median | qi        |
-| E         |     \-0.8895464 | \-1.2428199 | \-0.5200346 |   0.95 | median | qi        |
-
-</div>
+    ## # A tibble: 5 x 7
+    ##   condition condition_mean .lower .upper .width .point .interval
+    ##   <chr>              <dbl>  <dbl>  <dbl>  <dbl> <chr>  <chr>    
+    ## 1 A                  0.196 -0.153  0.551   0.95 median qi       
+    ## 2 B                  1.00   0.654  1.35    0.95 median qi       
+    ## 3 C                  1.83   1.49   2.17    0.95 median qi       
+    ## 4 D                  1.02   0.654  1.38    0.95 median qi       
+    ## 5 E                 -0.890 -1.24  -0.520   0.95 median qi
 
 ### Comparison to other models via compatibility with `broom`
 
@@ -425,17 +420,14 @@ linear_results =
 linear_results
 ```
 
-<div class="kable-table">
-
-| condition |    estimate | std.error | df |    conf.low |   conf.high | model |
-| :-------- | ----------: | --------: | -: | ----------: | ----------: | :---- |
-| A         |   0.1815842 |  0.173236 | 45 | \-0.1673310 |   0.5304993 | OLS   |
-| B         |   1.0142144 |  0.173236 | 45 |   0.6652993 |   1.3631296 | OLS   |
-| C         |   1.8745839 |  0.173236 | 45 |   1.5256687 |   2.2234990 | OLS   |
-| D         |   1.0271794 |  0.173236 | 45 |   0.6782642 |   1.3760946 | OLS   |
-| E         | \-0.9352260 |  0.173236 | 45 | \-1.2841411 | \-0.5863108 | OLS   |
-
-</div>
+    ## # A tibble: 5 x 7
+    ##   condition estimate std.error    df conf.low conf.high model
+    ##   <fct>        <dbl>     <dbl> <dbl>    <dbl>     <dbl> <chr>
+    ## 1 A            0.182     0.173    45   -0.167     0.530 OLS  
+    ## 2 B            1.01      0.173    45    0.665     1.36  OLS  
+    ## 3 C            1.87      0.173    45    1.53      2.22  OLS  
+    ## 4 D            1.03      0.173    45    0.678     1.38  OLS  
+    ## 5 E           -0.935     0.173    45   -1.28     -0.586 OLS
 
 Using `tidybayes::to_broom_names`, we’ll convert the output from
 `median_qi` (which uses names `.lower` and `.upper`) to use names from
@@ -451,17 +443,14 @@ bayes_results = m %>%
 bayes_results
 ```
 
-<div class="kable-table">
-
-| condition |    estimate |    conf.low |   conf.high | .width | .point | .interval | model |
-| :-------- | ----------: | ----------: | ----------: | -----: | :----- | :-------- | :---- |
-| A         |   0.1959004 | \-0.1533328 |   0.5512907 |   0.95 | median | qi        | Bayes |
-| B         |   1.0020230 |   0.6535607 |   1.3503131 |   0.95 | median | qi        | Bayes |
-| C         |   1.8340888 |   1.4886406 |   2.1726034 |   0.95 | median | qi        | Bayes |
-| D         |   1.0203893 |   0.6539531 |   1.3762399 |   0.95 | median | qi        | Bayes |
-| E         | \-0.8895464 | \-1.2428199 | \-0.5200346 |   0.95 | median | qi        | Bayes |
-
-</div>
+    ## # A tibble: 5 x 8
+    ##   condition estimate conf.low conf.high .width .point .interval model
+    ##   <chr>        <dbl>    <dbl>     <dbl>  <dbl> <chr>  <chr>     <chr>
+    ## 1 A            0.196   -0.153     0.551   0.95 median qi        Bayes
+    ## 2 B            1.00     0.654     1.35    0.95 median qi        Bayes
+    ## 3 C            1.83     1.49      2.17    0.95 median qi        Bayes
+    ## 4 D            1.02     0.654     1.38    0.95 median qi        Bayes
+    ## 5 E           -0.890   -1.24     -0.520   0.95 median qi        Bayes
 
 This makes it easy to bind the two results together and plot them:
 
@@ -477,7 +466,7 @@ bind_rows(linear_results, bayes_results) %>%
     ## Warning in bind_rows_(x, .id): binding character and factor vector, coercing into
     ## character vector
 
-![](README_files/figure-gfm/broom_bind-1.png)<!-- -->
+![](man/figures/README/broom_bind-1.png)<!-- -->
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
 
@@ -490,7 +479,7 @@ bind_rows(linear_results, bayes_results) %>%
   dotwhisker::dwplot() 
 ```
 
-![](README_files/figure-gfm/dwplot-1.png)<!-- -->
+![](man/figures/README/dwplot-1.png)<!-- -->
 
 ### Posterior prediction and complex custom plots
 
@@ -518,7 +507,7 @@ m %>%
   geom_point(aes(x = response), data = ABC)
 ```
 
-![](README_files/figure-gfm/pp_intervals-1.png)<!-- -->
+![](man/figures/README/pp_intervals-1.png)<!-- -->
 
 This plot shows 66% and 95% quantile credible intervals of posterior
 median for each condition (point + black line); 95%, 80%, and 50%
@@ -552,7 +541,7 @@ mtcars %>%
   scale_fill_brewer()
 ```
 
-![](README_files/figure-gfm/pp_bands-1.png)<!-- -->
+![](man/figures/README/pp_bands-1.png)<!-- -->
 
 `stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5))` is
 one of several shortcut geoms that simplify common combinations of
@@ -594,7 +583,7 @@ mtcars %>%
   facet_wrap(~ am)                                  # facet by am
 ```
 
-![](README_files/figure-gfm/pp_bands_facet-1.png)<!-- -->
+![](man/figures/README/pp_bands_facet-1.png)<!-- -->
 
 Or, if you would like overplotted posterior fit lines, you can instead
 use `tidybayes::add_fitted_draws` to get draws from fit lines (instead
@@ -611,7 +600,7 @@ mtcars %>%
   facet_wrap(~ am)
 ```
 
-![](README_files/figure-gfm/spaghetti-1.png)<!-- -->
+![](man/figures/README/spaghetti-1.png)<!-- -->
 
 Animated hypothetical outcome plots (HOPs) can also be easily
 constructed by using `gganimate`:
@@ -630,10 +619,10 @@ p = mtcars %>%
   transition_states(.draw, 0, 1) +
   shadow_mark(past = TRUE, future = TRUE, alpha = 1/20, color = "gray50")
 
-animate(p, nframes = ndraws, fps = 2.5, width = 700, height = 432, res = 100, type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 700, height = 432, res = 100, dev = "png", type = "cairo")
 ```
 
-![](README_files/figure-gfm/hops-1.gif)<!-- -->
+![](man/figures/README/hops-1.gif)<!-- -->
 
 See `vignette("tidybayes")` for a variety of additional examples and
 more explanation of how it works.
@@ -653,6 +642,5 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2020). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 1.1.0.9000,
-<https://mjskay.github.io/tidybayes/>. DOI:
-[10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
+Models*. R package version 2.0.0, <https://mjskay.github.io/tidybayes/>.
+DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).

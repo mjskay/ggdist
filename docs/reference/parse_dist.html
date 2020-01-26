@@ -93,7 +93,7 @@ brms models." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -200,7 +200,7 @@ brms models.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>A character vector containing distribution specifiations or a data frame with a column
+      <td><p>A character vector containing distribution specifications or a data frame with a column
 containing distribution specifications.</p></td>
     </tr>
     <tr>
@@ -239,7 +239,7 @@ distribution names R recognizes. Unrecognized names are left as-is.</p></td>
 
     <p><code>parse_dist()</code> can be applied to character vectors or to a data frame + bare column name of the
 column to parse, and returns a data frame with <code>".dist"</code> and <code>".args"</code> columns added.
-<code>parse_dist()</code> uses <code>r_dist_name()</code> to translate distribution names into names reconized
+<code>parse_dist()</code> uses <code>r_dist_name()</code> to translate distribution names into names recognized
 by R.</p>
 <p><code>r_dist_name()</code> takes a character vector of names and translates common names into R
 distribution names. Names are first made into valid R names using <code><a href='https://rdrr.io/r/base/make.names.html'>make.names()</a></code>,
