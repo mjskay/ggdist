@@ -118,7 +118,7 @@ ABC %>%
 
 Let's fit a hierarchical model with shrinkage towards a global mean:
 
-```{r, cache = TRUE}
+```{r m_brm, cache = TRUE}
 m = brm(response ~ (1|condition), data = ABC, control = list(adapt_delta = .99),
   prior = c(
     prior(normal(0, 1), class = Intercept),
@@ -472,7 +472,7 @@ ABC %>%
 
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset:
 
-```{r, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
+```{r m_mpg_brm, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
 m_mpg = brm(mpg ~ hp * cyl, data = mtcars)
 ```
 
@@ -571,7 +571,7 @@ AB %>%
 
 Here is a model that lets the mean _and standard deviation_ of `response` be dependent on `group`:
 
-```{r, cache = TRUE}
+```{r m_ab_brm, cache = TRUE}
 m_ab = brm(
   bf(
     response ~ group,
@@ -664,7 +664,7 @@ head(mtcars_clean)
 
 Then we'll fit an ordinal regression model:
 
-```{r, cache = TRUE}
+```{r m_cyl_brm, cache = TRUE}
 m_cyl = brm(cyl ~ mpg, data = mtcars_clean, family = cumulative, seed = 58393)
 ```
 
@@ -676,6 +676,20 @@ tibble(mpg = 21) %>%
   median_qi(.value)
 ```
 
+Note how the `.category` variable does not retain the original factor level names. This is due to a bug in brms 2.11 (see [here](https://github.com/paul-buerkner/brms/issues/838)). As a workaround, we can recover the original factor labels and assign the result to a `cyl` column:
+
+```{r}
+tibble(mpg = 21) %>%
+  add_fitted_draws(m_cyl) %>%
+  
+  # recover original factor labels
+  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %>%
+  group_by(cyl, add = TRUE) %>%
+  
+  median_qi(.value)
+```
+
+
 We could plot fit lines for fitted probabilities against the dataset:
 
 ```{r, fig.width = 6, fig.height = 4}
@@ -686,11 +700,9 @@ data_plot = mtcars_clean %>%
 
 fit_plot = mtcars_clean %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
-  # we can use the `value` argument to give the column with values of 
-  # transformed linear predictors a more precise name and the 
-  # `category` argument to give the column with category labels
-  # a more precise name
-  add_fitted_draws(m_cyl, value = "P(cyl | mpg)", category = "cyl") %>%
+  add_fitted_draws(m_cyl, value = "P(cyl | mpg)") %>%
+  # recover original factor labels
+  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %>%
   ggplot(aes(x = mpg, y = `P(cyl | mpg)`, color = cyl)) +
   stat_lineribbon(aes(fill = cyl), alpha = 1/5) +
   scale_color_brewer(palette = "Dark2") +
@@ -702,7 +714,7 @@ plot_grid(ncol = 1, align = "v",
 )
 ```
 
-As [Michael Betancourt points out], the above display does not let you see the correlation between `P(cyl|mpg)` for different values of `cyl` at a particular value of `mpg`. For example, in the portion of the posterior where `P(cyl = 6|mpg = 20)` is high, `P(cyl = 4|mpg = 20)` and `P(cyl = 8|mpg = 20)` must be low (since these must add up to 1). 
+The above display does not let you see the correlation between `P(cyl|mpg)` for different values of `cyl` at a particular value of `mpg`. For example, in the portion of the posterior where `P(cyl = 6|mpg = 20)` is high, `P(cyl = 4|mpg = 20)` and `P(cyl = 8|mpg = 20)` must be low (since these must add up to 1). 
 
 One way to see this correlation might be to employ [hypothetical outcome plots (HOPs)](https://doi.org/10.1371/journal.pone.0142444) just for the fit line, "detach"ing it from the ribbon (another alternative would be to use HOPs on top of line ensembles, as demonstrated earlier in this document). By employing animation, you can see how the lines move in tandem or opposition to each other, revealing some patterns in how they are correlated:
 
@@ -712,7 +724,9 @@ ndraws = 50
 
 p = mtcars_clean %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
-  add_fitted_draws(m_cyl, value = "P(cyl | mpg)", category = "cyl") %>%
+  add_fitted_draws(m_cyl, value = "P(cyl | mpg)") %>%
+  # recover original factor labels
+  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %>%
   ggplot(aes(x = mpg, y = `P(cyl | mpg)`, color = cyl)) +
   # we remove the `.draw` column from the data for stat_lineribbon so that the same ribbons
   # are drawn on every frame (since we use .draw to determine the transitions below)
@@ -731,7 +745,9 @@ Notice how the lines move together, and how they move up or down together or in 
 
 ```{r}
 tibble(mpg = 20) %>%
-  add_fitted_draws(m_cyl, value = "P(cyl | mpg = 20)", category = "cyl") %>%
+  add_fitted_draws(m_cyl, value = "P(cyl | mpg = 20)") %>%
+  # recover original factor labels
+  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %>%
   ungroup() %>%
   select(.draw, cyl, `P(cyl | mpg = 20)`) %>%
   gather_pairs(cyl, `P(cyl | mpg = 20)`, triangle = "both") %>%
@@ -759,8 +775,8 @@ label_data_function = . %>%
 data_plot_with_mean = mtcars_clean %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
   add_fitted_draws(m_cyl, value = "P(cyl | mpg)", n = 100) %>%
-  # turn `.category` (a factor) into a numeric value in {4, 6, 8}
-  mutate(cyl = as.numeric(as.character(.category))) %>%
+  # recover original factor labels (and convert into numbers)
+  mutate(cyl = as.numeric(levels(mtcars_clean$cyl)[.category])) %>%
   group_by(mpg, .draw) %>%
   # calculate expected cylinder value
   summarise(cyl = sum(cyl * `P(cyl | mpg)`)) %>%
@@ -784,7 +800,9 @@ mtcars_clean %>%
   # we use `select` instead of `data_grid` here because we want to make posterior predictions
   # for exactly the same set of observations we have in the original data
   select(mpg) %>%
-  add_predicted_draws(m_cyl, prediction = "cyl", seed = 1234) %>%
+  add_predicted_draws(m_cyl, seed = 1234) %>%
+  # recover original factor labels
+  mutate(cyl = levels(mtcars_clean$cyl)[.prediction]) %>%
   ggplot(aes(x = mpg, y = cyl)) +
   geom_count(color = "gray75") +
   geom_point(aes(fill = cyl), data = mtcars_clean, shape = 21, size = 2) +
@@ -806,7 +824,9 @@ This looks pretty good. Let's check using another typical posterior predictive c
 ```{r, fig.width = 6.5, fig.height = 4}
 mtcars_clean %>%
   select(mpg) %>%
-  add_predicted_draws(m_cyl, prediction = "cyl", n = 100, seed = 12345) %>%
+  add_predicted_draws(m_cyl, n = 100, seed = 12345) %>%
+  # recover original factor labels
+  mutate(cyl = levels(mtcars_clean$cyl)[.prediction]) %>%
   ggplot(aes(x = cyl)) +
   stat_count(aes(group = NA), geom = "line", data = mtcars_clean, color = "red", size = 3, alpha = .5) +
   stat_count(aes(group = .draw), geom = "line", position = "identity", alpha = .05) +
@@ -825,7 +845,13 @@ set.seed(12345)
 
 mtcars_clean %>%
   select(mpg) %>%
-  add_predicted_draws(m_cyl, prediction = "cyl") %>%
+  add_predicted_draws(m_cyl) %>%
+  # recover original factor labels. Must ungroup first so that the
+  # factor is created in the same way in all groups; this is a workaround
+  # because brms no longer returns labelled predictions (hopefully that
+  # is fixed then this will no longer be necessary)
+  ungroup() %>%
+  mutate(cyl = factor(levels(mtcars_clean$cyl)[.prediction])) %>%
   # need .drop = FALSE to ensure 0 counts are not dropped
   group_by(.draw, .drop = FALSE) %>%
   count(cyl) %>%
@@ -842,7 +868,7 @@ mtcars_clean %>%
 
 Here's an ordinal model with a categorical predictor:
 
-```{r, cache = TRUE}
+```{r m_esoph_brm, cache = TRUE}
 data(esoph)
 m_esoph_brm = brm(tobgp ~ agegp, data = esoph, family = cumulative())
 ```
@@ -853,7 +879,8 @@ Then we can plot predicted probabilities for each outcome category within each l
 esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_brm, dpar = TRUE) %>%
-  ggplot(aes(x = agegp, y = .value, color = .category)) +
+  mutate(tobgp = levels(esoph$tobgp)[.category]) %>%
+  ggplot(aes(x = agegp, y = .value, color = tobgp)) +
   stat_pointinterval(position = position_dodge(width = .4)) +
   scale_size_continuous(guide = FALSE) +
   scale_color_manual(values = brewer.pal(6, "Blues")[-c(1,2)])
@@ -865,7 +892,8 @@ It is hard to see the changes in categories in the above plot; let's try somethi
 esoph_plot = esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_brm) %>%
-  ggplot(aes(x = .value, y = .category)) +
+  mutate(tobgp = levels(esoph$tobgp)[.category]) %>%
+  ggplot(aes(x = .value, y = tobgp)) +
   coord_cartesian(expand = FALSE) +
   facet_grid(. ~ agegp, switch = "x") +
   theme_classic() +

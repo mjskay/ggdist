@@ -8,21 +8,32 @@
 
 <title>Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom) — geom_dotsinterval • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,17 +43,17 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom) — geom_dotsinterval" />
 
+<meta property="og:title" content="Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom) — geom_dotsinterval" />
 <meta property="og:description" content="Geoms and stats for creating dotplots that automatically determines a bin width that
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
 generation of quantile dotplots using the quantiles argument to stat_dotsinterval/stat_dots
 and stat_dist_dotsinterval/stat_dist_dots. Generally follows the naming scheme and
-arguments of the geom_slabinterval and stat_slabinterval family of
+arguments of the geom_slabinterval() and stat_slabinterval() family of
 geoms and stats." />
-
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -65,6 +76,7 @@ geoms and stats." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -90,7 +102,7 @@ geoms and stats." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -128,11 +140,10 @@ geoms and stats." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,6 +154,7 @@ geoms and stats." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -154,58 +166,103 @@ geoms and stats." />
     </div>
 
     <div class="ref-description">
-    
     <p>Geoms and stats for creating dotplots that automatically determines a bin width that
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
 generation of quantile dotplots using the <code>quantiles</code> argument to <code>stat_dotsinterval</code>/<code>stat_dots</code>
 and <code>stat_dist_dotsinterval</code>/<code>stat_dist_dots</code>. Generally follows the naming scheme and
-arguments of the <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> and <code><a href='stat_slabinterval.html'>stat_slabinterval</a></code> family of
+arguments of the <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> and <code><a href='stat_slabinterval.html'>stat_slabinterval()</a></code> family of
 geoms and stats.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>geom_dotsinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>dotsize</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>stackratio</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>geom_dotsinterval</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>dotsize</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>stackratio</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>binwidth</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>geom_dotsintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>geom_dots</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>geom_dots</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>geom_dotsh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_dotsinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dotsinterval"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span>
-  <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>stat_dotsinterval</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dotsinterval"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>stat_dotsintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_dots</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dots"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>stat_dots</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dots"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>stat_dotsh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_dist_dotsinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dotsinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>stat_dist_dotsinterval</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dotsinterval"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>stat_dist_dotsintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_dist_dots</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dots"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>stat_dist_dots</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"dots"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>stat_dist_dotsh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>Set of aesthetic mappings created by <code>aes()</code> or
-<code>aes_()</code>. If specified and <code>inherit.aes = TRUE</code> (the
+      <td><p>Set of aesthetic mappings created by <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code> or
+<code><a href='https://ggplot2.tidyverse.org/reference/aes_.html'>aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
     </tr>
@@ -214,10 +271,10 @@ plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
       <td><p>The data to be displayed in this layer. There are three
 options:</p>
 <p>If <code>NULL</code>, the default, the data is inherited from the plot
-data as specified in the call to <code>ggplot()</code>.</p>
+data as specified in the call to <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code>.</p>
 <p>A <code>data.frame</code>, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-<code>fortify()</code> for which variables will be created.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/fortify.html'>fortify()</a></code> for which variables will be created.</p>
 <p>A <code>function</code> will be called with a single argument,
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
@@ -235,7 +292,44 @@ a call to a position adjustment function.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code>layer</code>.</p></td>
+      <td><p>Arguments passed on to <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p><dl class='dl-horizontal'>
+    <dt><code>side</code></dt><dd><p>Which side to draw the slab on. <code>"topright"</code>, <code>"top"</code>, and <code>"right"</code> are synonyms
+which cause the slab to be drawn on the top or the right depending on if <code>orientation</code> is <code>"horizontal"</code>
+or <code>"vertical"</code>. <code>"bottomleft"</code>, <code>"bottom"</code>, and <code>"left"</code> are synonyms which cause the slab
+to be drawn on the bottom of the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
+<code>"vertical"</code>. <code>"both"</code> draws the slab mirrored on both sides (as in a violin plot).</p></dd>
+    <dt><code>scale</code></dt><dd><p>What proportion of the region allocated to this geom to use to draw the slab. If <code>scale = 1</code>,
+slabs that use the maximum range will just touch each other. Default is <code>0.9</code> to leave some space.</p></dd>
+    <dt><code>justification</code></dt><dd><p>Justification of the interval relative to the slab, where <code>0</code> indicates bottom/left
+justification and <code>1</code> indicates top/right justification (depending on <code>orientation</code>). If <code>justification</code>
+is <code>NULL</code> (the default), then it is set automatically based on the value of <code>side</code>: when <code>side</code> is
+<code>"top"</code>/<code>"right"</code> <code>justification</code> is set to <code>0</code>, when <code>side</code> is <code>"bottom"</code>/<code>"left"</code>
+<code>justification</code> is set to <code>1</code>, and when <code>side</code> is <code>"both"</code> <code>justification</code> is set to
+<code>0.5</code>.</p></dd>
+    <dt><code>normalize</code></dt><dd><p>How to normalize heights of functions input to the <code>thickness</code> aesthetic. If <code>"all"</code>
+(the default), normalize so that the maximum height across all data is <code>1</code>; if <code>"panels"</code>, normalize within
+panels so that the maximum height in each panel is <code>1</code>; if <code>"xy"</code>, normalize within
+the x/y axis opposite the <code>orientation</code> of this geom so that the maximum height at each value of the
+opposite axis is <code>1</code>; if <code>"groups"</code>, normalize within values of the opposite axis and within
+groups so that the maximum height in each group is <code>1</code>; if <code>"none"</code>, values are taken as is with no
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).</p></dd>
+    <dt><code>interval_size_domain</code></dt><dd><p>The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to <code>interval_size_range</code> (see the documentation for that argument.)</p></dd>
+    <dt><code>interval_size_range</code></dt><dd><p>This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of <code>scale_size_continuous()</code>, which give sizes
+with a range of <code><a href='https://rdrr.io/r/base/c.html'>c(1, 6)</a></code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
+(typically this should be equal to the value of the <code>range</code> argument of the <code>scale_size_continuous()</code>
+function), and <code>interval_size_range</code> indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals).</p></dd>
+    <dt><code>fatten_point</code></dt><dd><p>A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the <code>point_size</code>
+aesthetic and <code><a href='scales.html'>scale_point_size_continuous()</a></code> or <code><a href='scales.html'>scale_point_size_discrete()</a></code>; sizes
+specified with that aesthetic will not be adjusted using <code>fatten_point</code>.</p></dd>
+    <dt><code>show_slab</code></dt><dd><p>Should the slab portion of the geom be drawn? Default <code>TRUE</code>.</p></dd>
+    <dt><code>show_point</code></dt><dd><p>Should the point portion of the geom be drawn? Default <code>TRUE</code>.</p></dd>
+    <dt><code>show_interval</code></dt><dd><p>Should the interval portion of the geom be drawn? Default <code>TRUE</code>.</p></dd>
+  
+</dl></td>
     </tr>
     <tr>
       <th>dotsize</th>
@@ -246,6 +340,11 @@ wide as the bin width.</p></td>
       <th>stackratio</th>
       <td><p>The distance between the center of the dots in the same stack relative to the bin height. The
 default, <code>1</code>, makes dots in the same stack just touch each other.</p></td>
+    </tr>
+    <tr>
+      <th>binwidth</th>
+      <td><p>The binwidth to use for drawing the dotplots. The default value, <code>NA</code>, will dynamically select
+a binwidth based on the size of the plot when drawn.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -265,7 +364,7 @@ display.</p></td>
       <td><p>If <code>FALSE</code>, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. <code>borders()</code>.</p></td>
+the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.org/reference/borders.html'>borders()</a></code>.</p></td>
     </tr>
     <tr>
       <th>orientation</th>
@@ -279,7 +378,7 @@ aesthetics.</p></td>
     <tr>
       <th>geom</th>
       <td><p>Use to override the default connection between
-<code>stat_slabinterval</code> and <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p></td>
+<code>stat_slabinterval</code> and <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code></p></td>
     </tr>
     <tr>
       <th>quantiles</th>
@@ -290,38 +389,39 @@ of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more
     </tr>
     <tr>
       <th>point_interval</th>
-      <td><p>A function from the <code><a href='point_interval.html'>point_interval</a></code> family (e.g., <code>median_qi</code>,
+      <td><p>A function from the <code><a href='point_interval.html'>point_interval()</a></code> family (e.g., <code>median_qi</code>,
 <code>mean_qi</code>, etc). This function should take in a vector of value, and should obey the
-<code>.width</code> and <code>.simple_names</code> parameters of <code><a href='point_interval.html'>point_interval</a></code> functions, such that when given
+<code>.width</code> and <code>.simple_names</code> parameters of <code><a href='point_interval.html'>point_interval()</a></code> functions, such that when given
 a vector with <code>.simple_names = TRUE</code> should return a data frame with variables <code>.value</code>, <code>.lower</code>,
 <code>.upper</code>, and <code>.width</code>. Output will be converted to the appropriate <code>x</code>- or <code>y</code>-based aesthetics
-depending on the value of <code>orientation</code>. See the <code><a href='point_interval.html'>point_interval</a></code> family of functions for
+depending on the value of <code>orientation</code>. See the <code><a href='point_interval.html'>point_interval()</a></code> family of functions for
 more information.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The dots geoms are similar to <code>geom_dotplot</code> but with a number of differences:</p>
+    <p>The dots geoms are similar to <code>geom_dotplot()</code> but with a number of differences:</p>
 <ul>
-<li><p>Dots geoms act like slabs in <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> and can be given x positions (or y positions when
-  in a horizontal orientation).</p></li>
+<li><p>Dots geoms act like slabs in <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> and can be given x positions (or y positions when
+in a horizontal orientation).</p></li>
 <li><p>Given the available space to lay out dots, the dots geoms will automatically determine how many bins to
-  use to fit the available space.</p></li>
+use to fit the available space.</p></li>
 <li><p>Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
-  symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
-  dots from overlapping each other.</p></li>
+symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
+dots from overlapping each other.</p></li>
 <li><p>The shape of the dots in a in these geoms can be changed using the <code>slab_shape</code> aesthetic (when using the
-  <code>dotsinterval</code> family) or the <code>shape</code> or <code>slab_shape</code> aesthetic (when using the <code>dots</code> family)</p></li>
+<code>dotsinterval</code> family) or the <code>shape</code> or <code>slab_shape</code> aesthetic (when using the <code>dots</code> family)</p></li>
 </ul>
-    <p>The <code>stat_...</code> and <code>stat_dist_...</code> versions of the stats when used with the <code>quantiles</code> argument
+
+<p>The <code>stat_...</code> and <code>stat_dist_...</code> versions of the stats when used with the <code>quantiles</code> argument
 are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
 using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).</p>
-    
     <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
 
     
-    <p>These stats support the following aesthetics:</p><ul>
+
+<p>These stats support the following aesthetics:</p><ul>
 <li><p><code>x</code></p></li>
 <li><p><code>y</code></p></li>
 <li><p><code>datatype</code></p></li>
@@ -361,27 +461,24 @@ using a frequency framing that may be easier for laypeople to understand (Kay et
 <li><p><code>height</code></p></li>
 <li><p><code>thickness</code></p></li>
 <li><p><code>group</code></p></li>
-</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
-Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation.
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
-    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Kay, M., Kola, T., Hullman, J. R., &amp; Munson, S. A. (2016). When (ish) is My Bus? User-centered Visualizations
-  of Uncertainty in Everyday, Mobile Predictive Systems. <em>Conference on Human Factors
-  in Computing Systems - CHI '16</em>, 5092--5103. doi: <a href='https://doi.org/10.1145/2858036.2858558'>10.1145/2858036.2858558</a>
+of Uncertainty in Everyday, Mobile Predictive Systems. <em>Conference on Human Factors
+in Computing Systems - CHI '16</em>, 5092--5103. doi: <a href='https://doi.org/10.1145/2858036.2858558'>10.1145/2858036.2858558</a>
 .</p>
 <p>Fernandes, M., Walls, L., Munson, S., Hullman, J., &amp; Kay, M. (2018). Uncertainty Displays Using Quantile Dotplots
-  or CDFs Improve Transit Decision-Making. <em>Conference on Human Factors in Computing Systems - CHI '18</em>.
-  doi: <a href='https://doi.org/10.1145/3173574.3173718'>10.1145/3173574.3173718</a>
+or CDFs Improve Transit Decision-Making. <em>Conference on Human Factors in Computing Systems - CHI '18</em>.
+doi: <a href='https://doi.org/10.1145/3173574.3173718'>10.1145/3173574.3173718</a>
 .</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> and <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval</a></code> for families of other
-stats built on top of <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>.
+    <div class='dont-index'><p>See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a></code> and <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code> for families of other
+stats built on top of <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>.
 See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -393,15 +490,10 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-
       <li><a href="#aesthetics">Aesthetics</a></li>
-
       <li><a href="#references">References</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -410,19 +502,23 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='http://www.mjskay.com'>Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

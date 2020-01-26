@@ -28,6 +28,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval")
 #' @inheritParams geom_slabinterval
+#' @inheritDotParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
 #' `"dodge"` or `"dodgev"` (if the `ggstance` package is loaded) can be useful if you have
 #' overlapping intervals.

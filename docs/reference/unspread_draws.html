@@ -8,21 +8,32 @@
 
 <title>Turn tidy data frames of variables from a Bayesian model back into untidy data — ungather_draws • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,13 +43,13 @@
 
   <link href="../extra.css" rel="stylesheet">
   
+
 <meta property="og:title" content="Turn tidy data frames of variables from a Bayesian model back into untidy data — ungather_draws" />
-
-<meta property="og:description" content="Inverse operations of spread_draws and gather_draws, giving
-results that look like tidy_draws." />
-
+<meta property="og:description" content="Inverse operations of spread_draws() and gather_draws(), giving
+results that look like tidy_draws()." />
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -61,6 +72,7 @@ results that look like tidy_draws." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -86,7 +98,7 @@ results that look like tidy_draws." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -124,11 +136,10 @@ results that look like tidy_draws." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -139,6 +150,7 @@ results that look like tidy_draws." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -150,19 +162,26 @@ results that look like tidy_draws." />
     </div>
 
     <div class="ref-description">
-    
-    <p>Inverse operations of <code><a href='spread_draws.html'>spread_draws</a></code> and <code><a href='spread_draws.html'>gather_draws</a></code>, giving
-results that look like <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p>
-    
+    <p>Inverse operations of <code><a href='spread_draws.html'>spread_draws()</a></code> and <code><a href='spread_draws.html'>gather_draws()</a></code>, giving
+results that look like <code><a href='tidy_draws.html'>tidy_draws()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ungather_draws</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>".variable"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>,
-  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
-  <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>ungather_draws</span>(
+  <span class='no'>data</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>".variable"</span>,
+  <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>".value"</span>,
+  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
+  <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)
 
-<span class='fu'>unspread_draws</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>,
-  <span class='st'>".draw"</span>), <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
+<span class='fu'>unspread_draws</span>(
+  <span class='no'>data</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
+  <span class='kw'>drop_indices</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -173,7 +192,7 @@ results that look like <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p
     <tr>
       <th>...</th>
       <td><p>Expressions in the form of
-<code>variable_name[dimension_1, dimension_2, ...]</code>. See <code><a href='spread_draws.html'>spread_draws</a></code>.</p></td>
+<code>variable_name[dimension_1, dimension_2, ...]</code>. See <code><a href='spread_draws.html'>spread_draws()</a></code>.</p></td>
     </tr>
     <tr>
       <th>variable</th>
@@ -186,36 +205,33 @@ results that look like <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p
     <tr>
       <th>draw_indices</th>
       <td><p>Character vector of column names in <code>data</code> that
-should be treated as indices of draws. The default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(".chain",".iteration",".draw")</a></code>,
+should be treated as indices of draws. The default is <code><a href='https://rdrr.io/r/base/c.html'>c(".chain",".iteration",".draw")</a></code>,
 which are the same names used for chain, iteration, and draw indices returned by
-<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>.</p></td>
+<code><a href='spread_draws.html'>spread_draws()</a></code> or <code><a href='spread_draws.html'>gather_draws()</a></code>.</p></td>
     </tr>
     <tr>
       <th>drop_indices</th>
       <td><p>Drop the columns specified by <code>draw_indices</code> from the resulting data frame. Default <code>FALSE</code>.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>These functions take symbolic specifications of variable names and dimensions in the same format as
-<code><a href='spread_draws.html'>spread_draws</a></code> and <code><a href='spread_draws.html'>gather_draws</a></code> and invert the tidy data frame back into
+<code><a href='spread_draws.html'>spread_draws()</a></code> and <code><a href='spread_draws.html'>gather_draws()</a></code> and invert the tidy data frame back into
 a data frame whose column names are variables with dimensions in them.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code>, <code><a href='spread_draws.html'>gather_draws</a></code>, <code><a href='tidy_draws.html'>tidy_draws</a></code>.</p></div>
-    
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws()</a></code>, <code><a href='spread_draws.html'>gather_draws()</a></code>, <code><a href='tidy_draws.html'>tidy_draws()</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='co'># We can use unspread_draws to allow us to manipulate draws with tidybayes</span>
 <span class='co'># and then transform the draws into a form we can use with packages like bayesplot.</span>
@@ -239,13 +255,9 @@ a data frame whose column names are variables with dimensions in them.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -254,19 +266,23 @@ a data frame whose column names are variables with dimensions in them.</p>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='http://www.mjskay.com'>Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

@@ -8,21 +8,32 @@
 
 <title>Extract draws of variables in a Bayesian model fit into a tidy data format — gather_draws • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,13 +43,13 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Extract draws of variables in a Bayesian model fit into a tidy data format — gather_draws" />
 
+<meta property="og:title" content="Extract draws of variables in a Bayesian model fit into a tidy data format — gather_draws" />
 <meta property="og:description" content="Extract draws from a Bayesian model for one or more variables (possibly with named
 dimensions) into one of two types of long-format data frames." />
-
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -61,6 +72,7 @@ dimensions) into one of two types of long-format data frames." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -86,7 +98,7 @@ dimensions) into one of two types of long-format data frames." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -124,11 +136,10 @@ dimensions) into one of two types of long-format data frames." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -139,6 +150,7 @@ dimensions) into one of two types of long-format data frames." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -150,16 +162,14 @@ dimensions) into one of two types of long-format data frames." />
     </div>
 
     <div class="ref-description">
-    
     <p>Extract draws from a Bayesian model for one or more variables (possibly with named
 dimensions) into one of two types of long-format data frames.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>gather_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>)
+    <pre class="usage"><span class='fu'>gather_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>spread_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>)</pre>
-    
+<span class='fu'>spread_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>, <span class='kw'>regex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"[, ]"</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -171,7 +181,7 @@ for a full list of supported models, see <a href='tidybayes-models.html'>tidybay
     <tr>
       <th>...</th>
       <td><p>Expressions in the form of
-<code>variable_name[dimension_1, dimension_2, ...] | wide_dimension</code>. See `Details`.</p></td>
+<code>variable_name[dimension_1, dimension_2, ...] | wide_dimension</code>. See <em>Details</em>.</p></td>
     </tr>
     <tr>
       <th>regex</th>
@@ -182,12 +192,19 @@ regular expression and number of dimensions are included in the output. Default 
       <th>sep</th>
       <td><p>Separator used to separate dimensions in variable names, as a regular expression.</p></td>
     </tr>
+    <tr>
+      <th>n</th>
+      <td><p>The number of draws to return, or <code>NULL</code> to return all draws.</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>A seed to use when subsampling draws (i.e. when <code>n</code> is not <code>NULL</code>).</p></td>
+    </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Imagine a JAGS or Stan fit named <code>fit</code>. The model may contain a variable named
@@ -204,71 +221,80 @@ all dimensions used on the variables you specify.</p>
 be spread across the data frame as column names, whereas <code>gather_draws</code> will
 gather variables into a single column named <code>".variable"</code> and place values of variables into a
 column named <code>".value"</code>. To use naming schemes from other packages (such as <code>broom</code>), consider passing
-results through functions like <code><a href='tidy-format-translators.html'>to_broom_names</a></code> or <code><a href='tidy-format-translators.html'>to_ggmcmc_names</a></code>.</p>
+results through functions like <code><a href='tidy-format-translators.html'>to_broom_names()</a></code> or <code><a href='tidy-format-translators.html'>to_ggmcmc_names()</a></code>.</p>
 <p>For example, <code>spread_draws(fit, a[i], b[i,v])</code> might return a grouped
 data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number. <code>NA</code> if not applicable to the model
-     type; this is typically only applicable to MCMC algorithms.</p></li>
+type; this is typically only applicable to MCMC algorithms.</p></li>
 <li><p>column <code>".iteration"</code>: the iteration number. Guaranteed to be unique within-chain only.
-     <code>NA</code> if not applicable to the model type; this is typically only applicable to MCMC algorithms.</p></li>
+<code>NA</code> if not applicable to the model type; this is typically only applicable to MCMC algorithms.</p></li>
 <li><p>column <code>".draw"</code>: a unique number for each draw from the posterior. Order is not
-     guaranteed to be meaningful.</p></li>
+guaranteed to be meaningful.</p></li>
 <li><p>column <code>"i"</code>: value in <code>1:5</code></p></li>
 <li><p>column <code>"v"</code>: value in <code>1:10</code></p></li>
 <li><p>column <code>"a"</code>: value of <code>"a[i]"</code> for draw <code>".draw"</code></p></li>
 <li><p>column <code>"b"</code>: value of <code>"b[i,v]"</code> for draw <code>".draw"</code></p></li>
 </ul>
-    <p><code>gather_draws(fit, a[i], b[i,v])</code> on the same fit would return a grouped
+
+<p><code>gather_draws(fit, a[i], b[i,v])</code> on the same fit would return a grouped
 data frame (grouped by <code>i</code> and <code>v</code>), with:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number</p></li>
 <li><p>column <code>".iteration"</code>: the iteration number</p></li>
 <li><p>column <code>".draw"</code>: the draw number</p></li>
 <li><p>column <code>"i"</code>: value in <code>1:5</code></p></li>
 <li><p>column <code>"v"</code>: value in <code>1:10</code>, or <code>NA</code>
-     if <code>".variable"</code> is <code>"a"</code>.</p></li>
-<li><p>column <code>".variable"</code>: value in <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("a", "b")</a></code>.</p></li>
+if <code>".variable"</code> is <code>"a"</code>.</p></li>
+<li><p>column <code>".variable"</code>: value in <code><a href='https://rdrr.io/r/base/c.html'>c("a", "b")</a></code>.</p></li>
 <li><p>column <code>".value"</code>: value of <code>"a[i]"</code> (when <code>".variable"</code> is <code>"a"</code>)
-     or <code>"b[i,v]"</code> (when <code>".variable"</code> is <code>"b"</code>) for draw <code>".draw"</code></p></li>
+or <code>"b[i,v]"</code> (when <code>".variable"</code> is <code>"b"</code>) for draw <code>".draw"</code></p></li>
 </ul>
-    <p><code>spread_draws</code> and <code>gather_draws</code> can use type information
-applied to the <code>fit</code> object by <code><a href='recover_types.html'>recover_types</a></code> to convert columns
+
+<p><code>spread_draws</code> and <code>gather_draws</code> can use type information
+applied to the <code>fit</code> object by <code><a href='recover_types.html'>recover_types()</a></code> to convert columns
 back into their original types. This is particularly helpful if some of the dimensions in
 your model were originally factors. For example, if the <code>v</code> dimension
-in the original data frame <code>data</code> was a factor with levels <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("a","b","c")</a></code>,
+in the original data frame <code>data</code> was a factor with levels <code><a href='https://rdrr.io/r/base/c.html'>c("a","b","c")</a></code>,
 then we could use <code>recover_types</code> before <code>spread_draws</code>:</p>
 <pre>fit %&gt;%
  recover_types(data) <!-- %\&gt;\% -->
  spread_draws(fit, b[i,v])
 </pre>
-    <p>Which would return the same data frame as above, except the <code>"v"</code> column
-would be a value in <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("a","b","c")</a></code> instead of <code>1:3</code>.</p>
+
+<p>Which would return the same data frame as above, except the <code>"v"</code> column
+would be a value in <code><a href='https://rdrr.io/r/base/c.html'>c("a","b","c")</a></code> instead of <code>1:3</code>.</p>
 <p>For variables that do not share the same subscripts (or share
 some but not all subscripts), we can supply their specifications separately.
-For example, if we have a variable d[i] with the same i subscript
-as b[i,v], and a variable x with no subscripts, we could do this:</p>
+For example, if we have a variable <code>d[i]</code> with the same <code>i</code> subscript
+as <code>b[i,v]</code>, and a variable <code>x</code> with no subscripts, we could do this:</p>
 <pre>spread_draws(fit, x, d[i], b[i,v])</pre>
-    <p>Which is roughly equivalent to this:</p>
+
+<p>Which is roughly equivalent to this:</p>
 <pre>spread_draws(fit, x) %&gt;%
  inner_join(spread_draws(fit, d[i])) %&gt;%
  inner_join(spread_draws(fit, b[i,v])) %&gt;%
  group_by(i,v)
 </pre>
-    <p>Similarly, this:</p>
+
+<p>Similarly, this:</p>
 <pre>gather_draws(fit, x, d[i], b[i,v])</pre>
-    <p>Is roughly equivalent to this:</p>
+
+<p>Is roughly equivalent to this:</p>
 <pre>bind_rows(
  gather_draws(fit, x),
  gather_draws(fit, d[i]),
  gather_draws(fit, b[i,v])
 )</pre>
-    <p>The <code>c</code> and <code>cbind</code> functions can be used to combine multiple variable names that have
+
+<p>The <code>c</code> and <code>cbind</code> functions can be used to combine multiple variable names that have
 the same dimensions. For example, if we have several variables with the same
 subscripts <code>i</code> and <code>v</code>, we could do either of these:</p>
 <pre>spread_draws(fit, c(w, x, y, z)[i,v])</pre>
-<pre>spread_draws(fit, cbind(w, x, y, z)[i,v])</pre><p># equivalent</p>
+<pre>spread_draws(fit, cbind(w, x, y, z)[i,v])  # equivalent</pre>
+
 <p>Each of which is roughly equivalent to this:</p>
 <pre>spread_draws(fit, w[i,v], x[i,v], y[i,v], z[i,v])</pre>
-    <p>Besides being more compact, the <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c()</a></code>-style syntax is currently also
+
+<p>Besides being more compact, the <code><a href='https://rdrr.io/r/base/c.html'>c()</a></code>-style syntax is currently also
 faster (though that may change).</p>
 <p>Dimensions can be omitted from the resulting data frame by leaving their names
 blank; e.g. <code>spread_draws(fit, b[,v])</code> will omit the first dimension of
@@ -287,16 +313,21 @@ into a wide format and whose names will be the base variable name, plus a dot
 <li><p>column <code>"b.2"</code>: value of <code>"b[i,2]"</code> for draw <code>".draw"</code></p></li>
 <li><p>column <code>"b.3"</code>: value of <code>"b[i,3]"</code> for draw <code>".draw"</code></p></li>
 </ul>
-    <p>An optional clause in the form <code>| wide_dimension</code> can also be used to put
+
+<p>An optional clause in the form <code>| wide_dimension</code> can also be used to put
 the data frame into a wide format based on <code>wide_dimension</code>. For example, this:</p>
 <pre>spread_draws(fit, b[i,v] | v)</pre>
-    <p>is roughly equivalent to this:</p>
+
+<p>is roughly equivalent to this:</p>
 <pre>spread_draws(fit, b[i,v]) %&gt;% spread(v,b)</pre>
-    <p>The main difference between using the <code>|</code> syntax instead of the
+
+<p>The main difference between using the <code>|</code> syntax instead of the
 <code>..</code> syntax is that the <code>|</code> syntax respects prototypes applied to
-dimensions with <code><a href='recover_types.html'>recover_types</a></code>, and thus can be used to get
-columns with nicer names. For example:</p>
-<p><code>fit %&gt;% recover_types(data) %&gt;% spread_draws(b[i,v] | v)</code> would return a grouped data frame
+dimensions with <code><a href='recover_types.html'>recover_types()</a></code>, and thus can be used to get
+columns with nicer names. For example:</p><pre>fit %&gt;% recover_types(data) %&gt;% spread_draws(b[i,v] | v)
+</pre>
+
+<p>would return a grouped data frame
 (grouped by <code>i</code>), with:</p><ul>
 <li><p>column <code>".chain"</code>: the chain number</p></li>
 <li><p>column <code>".iteration"</code>: the iteration number</p></li>
@@ -306,7 +337,8 @@ columns with nicer names. For example:</p>
 <li><p>column <code>"b"</code>: value of <code>"b[i,2]"</code> for draw <code>".draw"</code></p></li>
 <li><p>column <code>"c"</code>: value of <code>"b[i,3]"</code> for draw <code>".draw"</code></p></li>
 </ul>
-    <p>The shorthand <code>.</code> can be used to specify columns that should be nested
+
+<p>The shorthand <code>.</code> can be used to specify columns that should be nested
 into vectors, matrices, or n-dimensional arrays (depending on how many dimensions
 are specified with <code>.</code>).</p>
 <p>For example, <code>spread_draws(fit, a[.], b[.,.])</code> might return a
@@ -317,72 +349,72 @@ data frame, with:</p><ul>
 <li><p>column <code>"a"</code>: a list column of vectors.</p></li>
 <li><p>column <code>"b"</code>: a list column of matrices.</p></li>
 </ul>
-    <p>Ragged arrays are turned into non-ragged arrays with
+
+<p>Ragged arrays are turned into non-ragged arrays with
 missing entries given the value <code>NA</code>.</p>
 <p>Finally, variable names can be regular expressions by setting <code>regex = TRUE</code>; e.g.:</p>
-<p><code>spread_draws(fit, `b_.*`[i], regex = TRUE)</code></p>
-<p>Would return a tidy data frame with variables starting with `b_` and having one dimension.</p>
-    
+<pre>spread_draws(fit, `b_.*`[i], regex = TRUE)</pre>
+
+<p>Would return a tidy data frame with variables starting with <code>b_</code> and having one dimension.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='recover_types.html'>recover_types</a></code>, <code><a href='compose_data.html'>compose_data</a></code>.</p></div>
-    
+    <div class='dont-index'><p><code><a href='recover_types.html'>recover_types()</a></code>, <code><a href='compose_data.html'>compose_data()</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>spread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>])</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 12,000 x 6</span><span>
 #&gt; </span><span style='color: #555555;'># Groups:   i, j [12]</span><span>
-#&gt;    .chain .iteration .draw     i     j         b
-#&gt;     </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span>      1          1     1     1     1 -</span><span style='color: #BB0000;'>0.927</span><span>   
-#&gt; </span><span style='color: #555555;'> 2</span><span>      1          1     1     1     2 -</span><span style='color: #BB0000;'>2.09</span><span>    
-#&gt; </span><span style='color: #555555;'> 3</span><span>      1          1     1     1     3  0.111   
-#&gt; </span><span style='color: #555555;'> 4</span><span>      1          1     1     1     4 -</span><span style='color: #BB0000;'>0.000</span><span style='color: #BB0000;text-decoration: underline;'>774</span><span>
-#&gt; </span><span style='color: #555555;'> 5</span><span>      1          1     1     2     1 -</span><span style='color: #BB0000;'>0.944</span><span>   
-#&gt; </span><span style='color: #555555;'> 6</span><span>      1          1     1     2     2  0.652   
-#&gt; </span><span style='color: #555555;'> 7</span><span>      1          1     1     2     3  0.044</span><span style='text-decoration: underline;'>0</span><span>  
-#&gt; </span><span style='color: #555555;'> 8</span><span>      1          1     1     2     4 -</span><span style='color: #BB0000;'>0.171</span><span>   
-#&gt; </span><span style='color: #555555;'> 9</span><span>      1          1     1     3     1 -</span><span style='color: #BB0000;'>0.164</span><span>   
-#&gt; </span><span style='color: #555555;'>10</span><span>      1          1     1     3     2 -</span><span style='color: #BB0000;'>1.14</span><span>    
+#&gt;        i     j      b .chain .iteration .draw
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span>     1     1 -</span><span style='color: #BB0000;'>0.927</span><span>      1          1     1
+#&gt; </span><span style='color: #555555;'> 2</span><span>     1     1 -</span><span style='color: #BB0000;'>0.979</span><span>      1          2     2
+#&gt; </span><span style='color: #555555;'> 3</span><span>     1     1 -</span><span style='color: #BB0000;'>1.15</span><span>       1          3     3
+#&gt; </span><span style='color: #555555;'> 4</span><span>     1     1 -</span><span style='color: #BB0000;'>1.09</span><span>       1          4     4
+#&gt; </span><span style='color: #555555;'> 5</span><span>     1     1 -</span><span style='color: #BB0000;'>1.20</span><span>       1          5     5
+#&gt; </span><span style='color: #555555;'> 6</span><span>     1     1 -</span><span style='color: #BB0000;'>1.07</span><span>       1          6     6
+#&gt; </span><span style='color: #555555;'> 7</span><span>     1     1 -</span><span style='color: #BB0000;'>1.11</span><span>       1          7     7
+#&gt; </span><span style='color: #555555;'> 8</span><span>     1     1 -</span><span style='color: #BB0000;'>1.06</span><span>       1          8     8
+#&gt; </span><span style='color: #555555;'> 9</span><span>     1     1 -</span><span style='color: #BB0000;'>0.831</span><span>      1          9     9
+#&gt; </span><span style='color: #555555;'>10</span><span>     1     1 -</span><span style='color: #BB0000;'>0.986</span><span>      1         10    10
 #&gt; </span><span style='color: #555555;'># ... with 11,990 more rows</span><span></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>spread_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>], <span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>u_tau</span>[<span class='no'>i</span>])</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 12,000 x 8</span><span>
 #&gt; </span><span style='color: #555555;'># Groups:   i, j [12]</span><span>
-#&gt;    .chain .iteration .draw     i     j         b   tau u_tau
-#&gt;     </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span>      1          1     1     1     1 -</span><span style='color: #BB0000;'>0.927</span><span>     5.79  5.87
-#&gt; </span><span style='color: #555555;'> 2</span><span>      1          1     1     1     2 -</span><span style='color: #BB0000;'>2.09</span><span>      5.79  5.87
-#&gt; </span><span style='color: #555555;'> 3</span><span>      1          1     1     1     3  0.111     5.79  5.87
-#&gt; </span><span style='color: #555555;'> 4</span><span>      1          1     1     1     4 -</span><span style='color: #BB0000;'>0.000</span><span style='color: #BB0000;text-decoration: underline;'>774</span><span>  5.79  5.87
-#&gt; </span><span style='color: #555555;'> 5</span><span>      1          1     1     2     1 -</span><span style='color: #BB0000;'>0.944</span><span>     3.19  4.97
-#&gt; </span><span style='color: #555555;'> 6</span><span>      1          1     1     2     2  0.652     3.19  4.97
-#&gt; </span><span style='color: #555555;'> 7</span><span>      1          1     1     2     3  0.044</span><span style='text-decoration: underline;'>0</span><span>    3.19  4.97
-#&gt; </span><span style='color: #555555;'> 8</span><span>      1          1     1     2     4 -</span><span style='color: #BB0000;'>0.171</span><span>     3.19  4.97
-#&gt; </span><span style='color: #555555;'> 9</span><span>      1          1     1     3     1 -</span><span style='color: #BB0000;'>0.164</span><span>     3.15  5.24
-#&gt; </span><span style='color: #555555;'>10</span><span>      1          1     1     3     2 -</span><span style='color: #BB0000;'>1.14</span><span>      3.15  5.24
+#&gt;        i     j      b .chain .iteration .draw   tau u_tau
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span>     1     1 -</span><span style='color: #BB0000;'>0.927</span><span>      1          1     1  5.79  5.87
+#&gt; </span><span style='color: #555555;'> 2</span><span>     1     1 -</span><span style='color: #BB0000;'>0.979</span><span>      1          2     2  6.26  4.91
+#&gt; </span><span style='color: #555555;'> 3</span><span>     1     1 -</span><span style='color: #BB0000;'>1.15</span><span>       1          3     3  7.38  3.34
+#&gt; </span><span style='color: #555555;'> 4</span><span>     1     1 -</span><span style='color: #BB0000;'>1.09</span><span>       1          4     4  5.97  6.96
+#&gt; </span><span style='color: #555555;'> 5</span><span>     1     1 -</span><span style='color: #BB0000;'>1.20</span><span>       1          5     5  6.01  5.30
+#&gt; </span><span style='color: #555555;'> 6</span><span>     1     1 -</span><span style='color: #BB0000;'>1.07</span><span>       1          6     6  7.03  5.34
+#&gt; </span><span style='color: #555555;'> 7</span><span>     1     1 -</span><span style='color: #BB0000;'>1.11</span><span>       1          7     7  7.39  5.53
+#&gt; </span><span style='color: #555555;'> 8</span><span>     1     1 -</span><span style='color: #BB0000;'>1.06</span><span>       1          8     8  5.98  6.79
+#&gt; </span><span style='color: #555555;'> 9</span><span>     1     1 -</span><span style='color: #BB0000;'>0.831</span><span>      1          9     9  6.75  5.40
+#&gt; </span><span style='color: #555555;'>10</span><span>     1     1 -</span><span style='color: #BB0000;'>0.986</span><span>      1         10    10  6.76  6.63
 #&gt; </span><span style='color: #555555;'># ... with 11,990 more rows</span><span></div><div class='input'>
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_draws</span>(<span class='no'>b</span>[<span class='no'>i</span>, <span class='no'>j</span>], <span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>u_tau</span>[<span class='no'>i</span>])</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 18,000 x 7</span><span>
 #&gt; </span><span style='color: #555555;'># Groups:   i, j, .variable [18]</span><span>
-#&gt;    .chain .iteration .draw     i     j .variable    .value
-#&gt;     </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span>      1          1     1     1     1 b         -</span><span style='color: #BB0000;'>0.927</span><span>   
-#&gt; </span><span style='color: #555555;'> 2</span><span>      1          1     1     1     2 b         -</span><span style='color: #BB0000;'>2.09</span><span>    
-#&gt; </span><span style='color: #555555;'> 3</span><span>      1          1     1     1     3 b          0.111   
-#&gt; </span><span style='color: #555555;'> 4</span><span>      1          1     1     1     4 b         -</span><span style='color: #BB0000;'>0.000</span><span style='color: #BB0000;text-decoration: underline;'>774</span><span>
-#&gt; </span><span style='color: #555555;'> 5</span><span>      1          1     1     2     1 b         -</span><span style='color: #BB0000;'>0.944</span><span>   
-#&gt; </span><span style='color: #555555;'> 6</span><span>      1          1     1     2     2 b          0.652   
-#&gt; </span><span style='color: #555555;'> 7</span><span>      1          1     1     2     3 b          0.044</span><span style='text-decoration: underline;'>0</span><span>  
-#&gt; </span><span style='color: #555555;'> 8</span><span>      1          1     1     2     4 b         -</span><span style='color: #BB0000;'>0.171</span><span>   
-#&gt; </span><span style='color: #555555;'> 9</span><span>      1          1     1     3     1 b         -</span><span style='color: #BB0000;'>0.164</span><span>   
-#&gt; </span><span style='color: #555555;'>10</span><span>      1          1     1     3     2 b         -</span><span style='color: #BB0000;'>1.14</span><span>    
+#&gt;        i     j .chain .iteration .draw .variable .value
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span>     1     1      1          1     1 b         -</span><span style='color: #BB0000;'>0.927</span><span>
+#&gt; </span><span style='color: #555555;'> 2</span><span>     1     1      1          2     2 b         -</span><span style='color: #BB0000;'>0.979</span><span>
+#&gt; </span><span style='color: #555555;'> 3</span><span>     1     1      1          3     3 b         -</span><span style='color: #BB0000;'>1.15</span><span> 
+#&gt; </span><span style='color: #555555;'> 4</span><span>     1     1      1          4     4 b         -</span><span style='color: #BB0000;'>1.09</span><span> 
+#&gt; </span><span style='color: #555555;'> 5</span><span>     1     1      1          5     5 b         -</span><span style='color: #BB0000;'>1.20</span><span> 
+#&gt; </span><span style='color: #555555;'> 6</span><span>     1     1      1          6     6 b         -</span><span style='color: #BB0000;'>1.07</span><span> 
+#&gt; </span><span style='color: #555555;'> 7</span><span>     1     1      1          7     7 b         -</span><span style='color: #BB0000;'>1.11</span><span> 
+#&gt; </span><span style='color: #555555;'> 8</span><span>     1     1      1          8     8 b         -</span><span style='color: #BB0000;'>1.06</span><span> 
+#&gt; </span><span style='color: #555555;'> 9</span><span>     1     1      1          9     9 b         -</span><span style='color: #BB0000;'>0.831</span><span>
+#&gt; </span><span style='color: #555555;'>10</span><span>     1     1      1         10    10 b         -</span><span style='color: #BB0000;'>0.986</span><span>
 #&gt; </span><span style='color: #555555;'># ... with 17,990 more rows</span><span></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_draws</span>(<span class='no'>tau</span>[<span class='no'>i</span>], <span class='no'>typical_r</span>) <span class='kw'>%&gt;%</span>
@@ -400,13 +432,9 @@ missing entries given the value <code>NA</code>.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -415,19 +443,23 @@ missing entries given the value <code>NA</code>.</p>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='http://www.mjskay.com'>Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

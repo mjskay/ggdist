@@ -34,10 +34,10 @@
     <loc>http://mjskay.github.io/tidybayes/reference/gather_variables.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/tidybayes/reference/geom_eye.html</loc>
+    <loc>http://mjskay.github.io/tidybayes/reference/geom_dotsinterval.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/tidybayes/reference/geom_heapinterval.html</loc>
+    <loc>http://mjskay.github.io/tidybayes/reference/geom_eye.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/geom_interval.html</loc>
@@ -119,6 +119,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/tidybayes-models.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/tidybayes/reference/tidybayes-package.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/tidybayes/reference/tidy_draws.html</loc>

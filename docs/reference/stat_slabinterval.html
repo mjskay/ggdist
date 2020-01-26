@@ -8,21 +8,32 @@
 
 <title>Meta-stat for computing slab functions and interval functions (ggplot stat) — stat_slabinterval • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,16 +43,16 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Meta-stat for computing slab functions and interval functions (ggplot stat) — stat_slabinterval" />
 
-<meta property="og:description" content="A meta-stat for computing slab and interval functions for use with geom_slabinterval
+<meta property="og:title" content="Meta-stat for computing slab functions and interval functions (ggplot stat) — stat_slabinterval" />
+<meta property="og:description" content="A meta-stat for computing slab and interval functions for use with geom_slabinterval()
 and its derivatives. Generally speaking not intended to be used directly: The API for
 this stat is experimental and subject to change. This is used as the basis
 for several other more directly useful stats whose APIs are more stable; it is recommended
 to use those instead." />
-
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -64,6 +75,7 @@ to use those instead." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -89,7 +101,7 @@ to use those instead." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -127,11 +139,10 @@ to use those instead." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,6 +153,7 @@ to use those instead." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -153,31 +165,44 @@ to use those instead." />
     </div>
 
     <div class="ref-description">
-    
-    <p>A meta-stat for computing slab and interval functions for use with <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>
+    <p>A meta-stat for computing slab and interval functions for use with <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>
 and its derivatives. Generally speaking not intended to be used directly: The API for
 this stat is <strong>experimental and subject to change</strong>. This is used as the basis
 for several other more directly useful stats whose APIs are more stable; it is recommended
 to use those instead.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>stat_slabinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"vertical"</span>,
-  <span class='st'>"horizontal"</span>), <span class='kw'>limits_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>limits_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(),
-  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>slab_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>slab_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>501</span>,
-  <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(),
-  <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
-  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>stat_slabinterval</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vertical"</span>, <span class='st'>"horizontal"</span>),
+  <span class='kw'>limits_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>limits_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>slab_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>slab_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>501</span>,
+  <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>),
+  <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>show_interval</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>Set of aesthetic mappings created by <code>aes()</code> or
-<code>aes_()</code>. If specified and <code>inherit.aes = TRUE</code> (the
+      <td><p>Set of aesthetic mappings created by <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code> or
+<code><a href='https://ggplot2.tidyverse.org/reference/aes_.html'>aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
     </tr>
@@ -186,10 +211,10 @@ plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
       <td><p>The data to be displayed in this layer. There are three
 options:</p>
 <p>If <code>NULL</code>, the default, the data is inherited from the plot
-data as specified in the call to <code>ggplot()</code>.</p>
+data as specified in the call to <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code>.</p>
 <p>A <code>data.frame</code>, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-<code>fortify()</code> for which variables will be created.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/fortify.html'>fortify()</a></code> for which variables will be created.</p>
 <p>A <code>function</code> will be called with a single argument,
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
@@ -198,7 +223,7 @@ from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></td>
     <tr>
       <th>geom</th>
       <td><p>Use to override the default connection between
-<code>stat_slabinterval</code> and <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p></td>
+<code>stat_slabinterval</code> and <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code></p></td>
     </tr>
     <tr>
       <th>position</th>
@@ -207,8 +232,8 @@ a call to a position adjustment function.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code>layer</code>. They may also be arguments to the paired geom
-(e.g., <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code>)</p></td>
+      <td><p>Other arguments passed to <code>layer()</code>. They may also be arguments to the paired geom
+(e.g., <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code>)</p></td>
     </tr>
     <tr>
       <th>orientation</th>
@@ -269,12 +294,12 @@ columns <code>.width</code> (from the <code>.width</code> vector), <code>.value<
     </tr>
     <tr>
       <th>point_interval</th>
-      <td><p>A function from the <code><a href='point_interval.html'>point_interval</a></code> family (e.g., <code>median_qi</code>,
+      <td><p>A function from the <code><a href='point_interval.html'>point_interval()</a></code> family (e.g., <code>median_qi</code>,
 <code>mean_qi</code>, etc). This function should take in a vector of value, and should obey the
-<code>.width</code> and <code>.simple_names</code> parameters of <code><a href='point_interval.html'>point_interval</a></code> functions, such that when given
+<code>.width</code> and <code>.simple_names</code> parameters of <code><a href='point_interval.html'>point_interval()</a></code> functions, such that when given
 a vector with <code>.simple_names = TRUE</code> should return a data frame with variables <code>.value</code>, <code>.lower</code>,
 <code>.upper</code>, and <code>.width</code>. Output will be converted to the appropriate <code>x</code>- or <code>y</code>-based aesthetics
-depending on the value of <code>orientation</code>. See the <code><a href='point_interval.html'>point_interval</a></code> family of functions for
+depending on the value of <code>orientation</code>. See the <code><a href='point_interval.html'>point_interval()</a></code> family of functions for
 more information.</p></td>
     </tr>
     <tr>
@@ -296,7 +321,7 @@ values are silently removed.</p></td>
     </tr>
     <tr>
       <th>show.legend</th>
-      <td><p>Should this layer be included in the legends? Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(size = FALSE)</a></code>, unlike most geoms,
+      <td><p>Should this layer be included in the legends? Default is <code><a href='https://rdrr.io/r/base/c.html'>c(size = FALSE)</a></code>, unlike most geoms,
 to match its common use cases. <code>FALSE</code> hides all legends, <code>TRUE</code> shows all legends, and <code>NA</code> shows only
 those that are mapped (the default for most geoms).</p></td>
     </tr>
@@ -305,14 +330,15 @@ those that are mapped (the default for most geoms).</p></td>
       <td><p>If <code>FALSE</code>, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. <code>borders()</code>.</p></td>
+the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.org/reference/borders.html'>borders()</a></code>.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
 
     
-    <p>These stats support the following aesthetics:</p><ul>
+
+<p>These stats support the following aesthetics:</p><ul>
 <li><p><code>x</code></p></li>
 <li><p><code>y</code></p></li>
 <li><p><code>datatype</code></p></li>
@@ -351,18 +377,16 @@ the default plot specification, e.g. <code>borders()</code>.</p></td>
 <li><p><code>height</code></p></li>
 <li><p><code>thickness</code></p></li>
 <li><p><code>group</code></p></li>
-</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
-Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation.
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for the geom version, intended
+    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> for the geom version, intended
 for use on data that has already been translated into function evaluations, points, and intervals.
-See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> and <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval</a></code> for families of stats
+See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a></code> and <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code> for families of stats
 built on top of this stat for common use cases (like <code>stat_halfeyeh</code>).
 See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -377,16 +401,14 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#aesthetics">Aesthetics</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -394,13 +416,16 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

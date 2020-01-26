@@ -6,9 +6,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Extracting and visualizing tidy residuals from Bayesian models • tidybayes</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Extracting and visualizing tidy residuals from Bayesian models">
 <meta property="og:description" content="">
@@ -46,7 +53,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -87,7 +94,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -100,13 +107,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Extracting and visualizing tidy residuals from Bayesian models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2019-08-19</h4>
+            <h4 class="date">2020-01-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes-residuals.Rmd"><code>vignettes/tidybayes-residuals.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes-residuals.Rmd</code></div>
@@ -132,21 +140,21 @@ img {
 <h2 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h2>
 <p>The following libraries are required to run this vignette:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(purrr)</a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyr)</a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidybayes)</a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)</a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggridges)</a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(cowplot)</a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(rstan)</a>
-<a class="sourceLine" id="cb1-9" title="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(brms)</a>
-<a class="sourceLine" id="cb1-10" title="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gganimate)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(purrr)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyr)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidybayes)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggridges)</a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(cowplot)</a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(rstan)</a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(brms)</a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(gganimate)</a>
 <a class="sourceLine" id="cb1-11" title="11"></a>
 <a class="sourceLine" id="cb1-12" title="12"><span class="kw">theme_set</span>(<span class="kw"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">panel_border</span>())</a></code></pre></div>
 <p>These options help Stan run faster:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">rstan_options</span>(<span class="dt">auto_write =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/parallel/topics/detectCores">detectCores</a></span>())</a></code></pre></div>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw"><a href="https://rdrr.io/r/parallel/detectCores.html">detectCores</a></span>())</a></code></pre></div>
 </div>
 <div id="example-dataset" class="section level2">
 <h2 class="hasAnchor">
@@ -168,18 +176,18 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 \]</span></p>
 <p>We don’t observe each <span class="math inline">\(y^*_i\)</span>, only <span class="math inline">\(y^\textrm{lower}_i\)</span> and <span class="math inline">\(y^\textrm{upper}_i\)</span>, i.e., the upper and lower bounds of an interval in which <span class="math inline">\(y^*_i\)</span> lies. This is <em>interval-censored</em> data.</p>
 <p>We can generate it as follows:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">4118</span>)</a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">4118</span>)</a>
 <a class="sourceLine" id="cb3-2" title="2">n =<span class="st"> </span><span class="dv">100</span></a>
 <a class="sourceLine" id="cb3-3" title="3"></a>
 <a class="sourceLine" id="cb3-4" title="4">cens_df =</a>
 <a class="sourceLine" id="cb3-5" title="5"><span class="st">  </span><span class="kw">tibble</span>(</a>
-<a class="sourceLine" id="cb3-6" title="6">    <span class="dt">y_star =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n, <span class="fl">0.5</span>, <span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb3-7" title="7">    <span class="dt">y_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">floor</a></span>(y_star),</a>
-<a class="sourceLine" id="cb3-8" title="8">    <span class="dt">y_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">ceiling</a></span>(y_star),</a>
+<a class="sourceLine" id="cb3-6" title="6">    <span class="dt">y_star =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(n, <span class="fl">0.5</span>, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb3-7" title="7">    <span class="dt">y_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">floor</a></span>(y_star),</a>
+<a class="sourceLine" id="cb3-8" title="8">    <span class="dt">y_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">ceiling</a></span>(y_star),</a>
 <a class="sourceLine" id="cb3-9" title="9">    <span class="dt">censoring =</span> <span class="st">"interval"</span></a>
 <a class="sourceLine" id="cb3-10" title="10">  )</a></code></pre></div>
 <p>A snapshot of the data looks like this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(cens_df, <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(cens_df, <span class="dv">10</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 4
 ##     y_star y_lower y_upper censoring
 ##      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    
@@ -198,29 +206,29 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">uncensored_plot =<span class="st"> </span>cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">x =</span> y_star)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-3" title="3"><span class="st">  </span><span class="kw">geom_density_ridges</span>(<span class="dt">bandwidth =</span> <span class="fl">0.5</span>, <span class="dt">scale =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">0.75</span>, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(y_lower)), <span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">height =</span> <span class="fl">0.2</span>), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">0.75</span>, <span class="dt">color =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y_lower)), <span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">height =</span> <span class="fl">0.2</span>), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-5" title="5"><span class="st">  </span><span class="kw">ylab</span>(<span class="ot">NULL</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-4</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-4</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-7" title="7"><span class="st">  </span><span class="kw">background_grid</span>(<span class="st">"x"</span>)</a>
 <a class="sourceLine" id="cb6-8" title="8"></a>
 <a class="sourceLine" id="cb6-9" title="9">censored_plot =<span class="st"> </span>cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-10" title="10"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">x =</span> (y_lower <span class="op">+</span><span class="st"> </span>y_upper)<span class="op">/</span><span class="dv">2</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-11" title="11"><span class="st">  </span><span class="kw">geom_dotplot</span>(</a>
-<a class="sourceLine" id="cb6-12" title="12">    <span class="kw">aes</span>(<span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(y_lower)),</a>
+<a class="sourceLine" id="cb6-12" title="12">    <span class="kw">aes</span>(<span class="dt">fill =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y_lower)),</a>
 <a class="sourceLine" id="cb6-13" title="13">    <span class="dt">method =</span> <span class="st">"histodot"</span>, <span class="dt">origin =</span> <span class="dv">-4</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">dotsize =</span> <span class="fl">0.5</span>, <span class="dt">stackratio =</span> <span class="fl">.8</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb6-14" title="14">    <span class="dt">stackgroups =</span> <span class="ot">TRUE</span>, <span class="dt">binpositions =</span> <span class="st">"all"</span>, <span class="dt">color =</span> <span class="ot">NA</span></a>
 <a class="sourceLine" id="cb6-15" title="15">  ) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-16" title="16"><span class="st">  </span><span class="kw">geom_segment</span>(</a>
-<a class="sourceLine" id="cb6-17" title="17">    <span class="kw">aes</span>(<span class="dt">x =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">xend =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">y =</span> <span class="fl">1.75</span>, <span class="dt">yend =</span> <span class="fl">1.5</span>, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(y)),</a>
-<a class="sourceLine" id="cb6-18" title="18">    <span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(cens_df<span class="op">$</span>y_lower)), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb6-17" title="17">    <span class="kw">aes</span>(<span class="dt">x =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">xend =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">y =</span> <span class="fl">1.75</span>, <span class="dt">yend =</span> <span class="fl">1.5</span>, <span class="dt">color =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y)),</a>
+<a class="sourceLine" id="cb6-18" title="18">    <span class="dt">data =</span> <span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(cens_df<span class="op">$</span>y_lower)), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb6-19" title="19">    <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">type =</span> <span class="st">"closed"</span>, <span class="dt">length =</span> <span class="kw">unit</span>(<span class="dv">7</span>, <span class="st">"points"</span>)), <span class="dt">size =</span> <span class="dv">1</span></a>
 <a class="sourceLine" id="cb6-20" title="20">  ) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-21" title="21"><span class="st">  </span><span class="kw">ylab</span>(<span class="ot">NULL</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-22" title="22"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"interval-censored y"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-23" title="23"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-4</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-23" title="23"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-4</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-24" title="24"><span class="st">  </span><span class="kw">background_grid</span>(<span class="st">"x"</span>)</a>
 <a class="sourceLine" id="cb6-25" title="25"></a>
-<a class="sourceLine" id="cb6-26" title="26"><span class="kw">plot_grid</span>(<span class="dt">align =</span> <span class="st">"v"</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">rel_heights =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="fl">2.5</span>),</a>
+<a class="sourceLine" id="cb6-26" title="26"><span class="kw">plot_grid</span>(<span class="dt">align =</span> <span class="st">"v"</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">rel_heights =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="fl">2.5</span>),</a>
 <a class="sourceLine" id="cb6-27" title="27">  uncensored_plot,</a>
 <a class="sourceLine" id="cb6-28" title="28">  censored_plot</a>
 <a class="sourceLine" id="cb6-29" title="29">)</a></code></pre></div>
@@ -244,16 +252,16 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 ##          total post-warmup samples = 4000
 ## 
 ## Population-Level Effects: 
-##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept     0.52      0.11     0.29     0.74       2875 1.00
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     0.52      0.11     0.31     0.73 1.00     2948     2728
 ## 
 ## Family Specific Parameters: 
-##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma     1.02      0.09     0.85     1.21       2448 1.00
-## nu       21.43     13.71     5.40    55.91       3023 1.00
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     1.02      0.09     0.84     1.21 1.00     2524     2250
+## nu       21.30     13.74     4.99    56.16 1.00     2395     2444
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <div id="residuals" class="section level3">
 <h3 class="hasAnchor">
@@ -263,7 +271,7 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 <a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(m_ideal) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
 <p>This is a typical residual plot, though with the addition of the uncertainty associated with each residual afforded by generating draws from the distribution associated with each residual.</p>
 <p>Let’s check the QQ plot:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">cens_df <span class="op">%&gt;%</span></a>
@@ -272,7 +280,7 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 <a class="sourceLine" id="cb13-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb13-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb13-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
 <p>This is a typical way of looking at residuals. However, this type of residual will not generalize to discrete and censored models, so let’s consider something else…</p>
 </div>
 <div id="probability-residuals-and-quantile-residuals" class="section level3">
@@ -289,13 +297,13 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_ideal) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb14-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb14-4" title="4">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_star),</a>
-<a class="sourceLine" id="cb14-5" title="5">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)</a>
+<a class="sourceLine" id="cb14-4" title="4">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_star),</a>
+<a class="sourceLine" id="cb14-5" title="5">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)</a>
 <a class="sourceLine" id="cb14-6" title="6">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb14-7" title="7"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb14-8" title="8"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb14-9" title="9"><span class="st">  </span><span class="kw">geom_abline</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
 <p>This QQ plot shows us the model fits okay.</p>
 </div>
 </div>
@@ -316,15 +324,15 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 ##          total post-warmup samples = 4000
 ## 
 ## Population-Level Effects: 
-##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept     0.56      0.11     0.34     0.77       2939 1.00
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     0.56      0.11     0.35     0.78 1.00     3084     2615
 ## 
 ## Family Specific Parameters: 
-##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma     1.10      0.08     0.94     1.28       3206 1.00
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     1.09      0.08     0.94     1.26 1.00     3380     2794
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>Again, <code><a href="../reference/add_predicted_draws.html">add_residual_draws()</a></code> lets us look at the residuals:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">cens_df <span class="op">%&gt;%</span></a>
@@ -332,7 +340,7 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <a class="sourceLine" id="cb20-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb20-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
 <p>But notice the horizontal striations due to censoring. This obscures patterns we might wish to see in the diagnostic plots. Patterns like this often show up in censored regression, logistic regression, Poisson regression, and other discrete regression models. Notice how <code>brms</code> also gives us a warning message that the residuals may not be meaningful due to censoring.</p>
 <p>Let’s look at the QQ plot:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">cens_df <span class="op">%&gt;%</span></a>
@@ -342,7 +350,7 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <a class="sourceLine" id="cb22-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb22-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-13-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
 <p>Again, the striations are making interpretation difficult. But there is hope!</p>
 <div id="randomized-quantile-residuals" class="section level3">
 <h3 class="hasAnchor">
@@ -371,47 +379,47 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb24-4" title="4">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
-<a class="sourceLine" id="cb24-5" title="5">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
-<a class="sourceLine" id="cb24-6" title="6">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
-<a class="sourceLine" id="cb24-7" title="7">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)</a>
+<a class="sourceLine" id="cb24-4" title="4">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
+<a class="sourceLine" id="cb24-5" title="5">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
+<a class="sourceLine" id="cb24-6" title="6">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
+<a class="sourceLine" id="cb24-7" title="7">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)</a>
 <a class="sourceLine" id="cb24-8" title="8">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-9" title="9"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb24-10" title="10"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-14-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
 <p>The striations are gone! And a QQ plot:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb25-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb25-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb25-4" title="4">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
-<a class="sourceLine" id="cb25-5" title="5">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
-<a class="sourceLine" id="cb25-6" title="6">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
-<a class="sourceLine" id="cb25-7" title="7">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)</a>
+<a class="sourceLine" id="cb25-4" title="4">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
+<a class="sourceLine" id="cb25-5" title="5">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
+<a class="sourceLine" id="cb25-6" title="6">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
+<a class="sourceLine" id="cb25-7" title="7">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)</a>
 <a class="sourceLine" id="cb25-8" title="8">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb25-9" title="9"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-10" title="10"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-11" title="11"><span class="st">  </span><span class="kw">geom_abline</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-15-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-13-1.png" width="576"></p>
 <p>Looks decent. However, our residuals are now subject to noise—we actually have a distribution of possible QQ plots. So, let’s check on some of them to make sure this nice-looking one is not just a fluke. We’ll employ <a href="https://mucollective.co/project/hops-trends">HOPs</a> to do that:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb26-2" title="2"></a>
 <a class="sourceLine" id="cb26-3" title="3">p =<span class="st"> </span>cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb26-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb26-5" title="5"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb26-6" title="6">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
-<a class="sourceLine" id="cb26-7" title="7">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
-<a class="sourceLine" id="cb26-8" title="8">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(k, p_lower, p_upper)),</a>
-<a class="sourceLine" id="cb26-9" title="9">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
+<a class="sourceLine" id="cb26-6" title="6">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
+<a class="sourceLine" id="cb26-7" title="7">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
+<a class="sourceLine" id="cb26-8" title="8">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(k, p_lower, p_upper)),</a>
+<a class="sourceLine" id="cb26-9" title="9">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
 <a class="sourceLine" id="cb26-10" title="10">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-11" title="11"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-11" title="11"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb26-13" title="13"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb26-14" title="14"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb26-15" title="15"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb26-16" title="16"><span class="st">  </span><span class="kw">transition_manual</span>(residual_draw)</a>
 <a class="sourceLine" id="cb26-17" title="17"></a>
 <a class="sourceLine" id="cb26-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-16-1.gif"><!-- --></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-14-1.gif"><!-- --></p>
 <p>Looks good.</p>
 </div>
 </div>
@@ -419,47 +427,47 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <h2 class="hasAnchor">
 <a href="#what-if-the-model-does-not-fit-well" class="anchor"></a>What if the model does not fit well?</h2>
 <p>Let’s instead generate the data from a t distribution, which should give us some more extreme values:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">41181</span>)</a>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">41181</span>)</a>
 <a class="sourceLine" id="cb27-2" title="2">n =<span class="st"> </span><span class="dv">100</span></a>
 <a class="sourceLine" id="cb27-3" title="3"></a>
 <a class="sourceLine" id="cb27-4" title="4">cens_df_t =</a>
 <a class="sourceLine" id="cb27-5" title="5"><span class="st">  </span><span class="kw">tibble</span>(</a>
-<a class="sourceLine" id="cb27-6" title="6">    <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/TDist">rt</a></span>(n, <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>,</a>
-<a class="sourceLine" id="cb27-7" title="7">    <span class="dt">y_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">floor</a></span>(y),</a>
-<a class="sourceLine" id="cb27-8" title="8">    <span class="dt">y_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">ceiling</a></span>(y),</a>
+<a class="sourceLine" id="cb27-6" title="6">    <span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/stats/TDist.html">rt</a></span>(n, <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>,</a>
+<a class="sourceLine" id="cb27-7" title="7">    <span class="dt">y_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">floor</a></span>(y),</a>
+<a class="sourceLine" id="cb27-8" title="8">    <span class="dt">y_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">ceiling</a></span>(y),</a>
 <a class="sourceLine" id="cb27-9" title="9">    <span class="dt">censoring =</span> <span class="st">"interval"</span></a>
 <a class="sourceLine" id="cb27-10" title="10">  )</a></code></pre></div>
 <p>Note the presence of outliers:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">uncensored_plot =<span class="st"> </span>cens_df_t <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb28-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">x =</span> y)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-3" title="3"><span class="st">  </span><span class="kw">geom_density_ridges</span>(<span class="dt">bandwidth =</span> <span class="fl">0.5</span>, <span class="dt">scale =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">0.75</span>, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(y_lower)), <span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">height =</span> <span class="fl">0.2</span>), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">0.75</span>, <span class="dt">color =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y_lower)), <span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">height =</span> <span class="fl">0.2</span>), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-5" title="5"><span class="st">  </span><span class="kw">ylab</span>(<span class="ot">NULL</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-6" title="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-10</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb28-6" title="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-10</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-7" title="7"><span class="st">  </span><span class="kw">background_grid</span>(<span class="st">"x"</span>)</a>
 <a class="sourceLine" id="cb28-8" title="8"></a>
 <a class="sourceLine" id="cb28-9" title="9">censored_plot =<span class="st"> </span>cens_df_t <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb28-10" title="10"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">x =</span> (y_lower <span class="op">+</span><span class="st"> </span>y_upper)<span class="op">/</span><span class="dv">2</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-11" title="11"><span class="st">  </span><span class="kw">geom_dotplot</span>(</a>
-<a class="sourceLine" id="cb28-12" title="12">    <span class="kw">aes</span>(<span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(y_lower)),</a>
+<a class="sourceLine" id="cb28-12" title="12">    <span class="kw">aes</span>(<span class="dt">fill =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y_lower)),</a>
 <a class="sourceLine" id="cb28-13" title="13">    <span class="dt">method =</span> <span class="st">"histodot"</span>, <span class="dt">origin =</span> <span class="dv">-4</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">dotsize =</span> <span class="fl">0.5</span>, <span class="dt">stackratio =</span> <span class="fl">.8</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb28-14" title="14">    <span class="dt">stackgroups =</span> <span class="ot">TRUE</span>, <span class="dt">binpositions =</span> <span class="st">"all"</span>, <span class="dt">color =</span> <span class="ot">NA</span></a>
 <a class="sourceLine" id="cb28-15" title="15">  ) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-16" title="16"><span class="st">  </span><span class="kw">geom_segment</span>(</a>
-<a class="sourceLine" id="cb28-17" title="17">    <span class="kw">aes</span>(<span class="dt">x =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">xend =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">y =</span> <span class="fl">1.75</span>, <span class="dt">yend =</span> <span class="fl">1.5</span>, <span class="dt">color =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(y)),</a>
-<a class="sourceLine" id="cb28-18" title="18">    <span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(cens_df_t<span class="op">$</span>y_lower)), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb28-17" title="17">    <span class="kw">aes</span>(<span class="dt">x =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">xend =</span> y <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">y =</span> <span class="fl">1.75</span>, <span class="dt">yend =</span> <span class="fl">1.5</span>, <span class="dt">color =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y)),</a>
+<a class="sourceLine" id="cb28-18" title="18">    <span class="dt">data =</span> <span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(cens_df_t<span class="op">$</span>y_lower)), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb28-19" title="19">    <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">type =</span> <span class="st">"closed"</span>, <span class="dt">length =</span> <span class="kw">unit</span>(<span class="dv">7</span>, <span class="st">"points"</span>)), <span class="dt">size =</span> <span class="dv">1</span></a>
 <a class="sourceLine" id="cb28-20" title="20">  ) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-21" title="21"><span class="st">  </span><span class="kw">ylab</span>(<span class="ot">NULL</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-22" title="22"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"interval-censored y"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-23" title="23"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-10</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb28-23" title="23"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-10</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-24" title="24"><span class="st">  </span><span class="kw">background_grid</span>(<span class="st">"x"</span>)</a>
 <a class="sourceLine" id="cb28-25" title="25"></a>
-<a class="sourceLine" id="cb28-26" title="26"><span class="kw">plot_grid</span>(<span class="dt">align =</span> <span class="st">"v"</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">rel_heights =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="fl">2.25</span>),</a>
+<a class="sourceLine" id="cb28-26" title="26"><span class="kw">plot_grid</span>(<span class="dt">align =</span> <span class="st">"v"</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">rel_heights =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="fl">2.25</span>),</a>
 <a class="sourceLine" id="cb28-27" title="27">  uncensored_plot,</a>
 <a class="sourceLine" id="cb28-28" title="28">  censored_plot</a>
 <a class="sourceLine" id="cb28-29" title="29">)</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-18-1.png" width="384"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-16-1.png" width="384"></p>
 <div id="model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model" class="anchor"></a>Model</h3>
@@ -476,7 +484,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb33-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb33-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-20-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-17-1.png" width="576"></p>
 <p>It looks like this could be problematic, but the striations make diagnosing the problem difficult.</p>
 </div>
 <div id="randomized-quantile-residuals-1" class="section level3">
@@ -486,29 +494,29 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">cens_df_t <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb35-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_t1) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb35-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb35-4" title="4">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
-<a class="sourceLine" id="cb35-5" title="5">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
-<a class="sourceLine" id="cb35-6" title="6">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
-<a class="sourceLine" id="cb35-7" title="7">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)</a>
+<a class="sourceLine" id="cb35-4" title="4">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
+<a class="sourceLine" id="cb35-5" title="5">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
+<a class="sourceLine" id="cb35-6" title="6">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
+<a class="sourceLine" id="cb35-7" title="7">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)</a>
 <a class="sourceLine" id="cb35-8" title="8">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb35-9" title="9"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb35-10" title="10"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb35-11" title="11"><span class="st">  </span><span class="kw">geom_abline</span>()</a></code></pre></div>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_qq).</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-18-1.png" width="576"></p>
 <p>Does not look good for the model—this s-shape is characteristic of excess kurtosis (aka fat tails), which is exactly what a t distribution should produce. But let’s check using HOPs again:</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb37-2" title="2"></a>
 <a class="sourceLine" id="cb37-3" title="3">p =<span class="st"> </span>cens_df_t <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb37-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_t1) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb37-5" title="5"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb37-6" title="6">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
-<a class="sourceLine" id="cb37-7" title="7">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
-<a class="sourceLine" id="cb37-8" title="8">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(k, p_lower, p_upper)),</a>
-<a class="sourceLine" id="cb37-9" title="9">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
+<a class="sourceLine" id="cb37-6" title="6">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
+<a class="sourceLine" id="cb37-7" title="7">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
+<a class="sourceLine" id="cb37-8" title="8">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(k, p_lower, p_upper)),</a>
+<a class="sourceLine" id="cb37-9" title="9">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
 <a class="sourceLine" id="cb37-10" title="10">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb37-11" title="11"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb37-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb37-11" title="11"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb37-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb37-13" title="13"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb37-14" title="14"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb37-15" title="15"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
@@ -516,7 +524,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb37-17" title="17"></a>
 <a class="sourceLine" id="cb37-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <pre><code>## Warning: Removed 20 rows containing non-finite values (stat_qq).</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-22-1.gif"><!-- --></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-19-1.gif"><!-- --></p>
 <p>Still not good! But the clear s shape is very diagnostic of fat tails, so let’s try a different model.</p>
 </div>
 </div>
@@ -535,7 +543,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb42-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb42-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-20-1.png" width="576"></p>
 <p>Odd, these don’t look great! But again, these residuals are not to be trusted…</p>
 <div id="randomized-quantile-residuals-2" class="section level3">
 <h3 class="hasAnchor">
@@ -546,20 +554,20 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb44-3" title="3">p =<span class="st"> </span>cens_df_t <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb44-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_t2) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb44-5" title="5"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb44-6" title="6">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
-<a class="sourceLine" id="cb44-7" title="7">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
-<a class="sourceLine" id="cb44-8" title="8">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(k, p_lower, p_upper)),</a>
-<a class="sourceLine" id="cb44-9" title="9">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
+<a class="sourceLine" id="cb44-6" title="6">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_lower),</a>
+<a class="sourceLine" id="cb44-7" title="7">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_upper),</a>
+<a class="sourceLine" id="cb44-8" title="8">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(k, p_lower, p_upper)),</a>
+<a class="sourceLine" id="cb44-9" title="9">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
 <a class="sourceLine" id="cb44-10" title="10">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb44-11" title="11"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb44-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb44-11" title="11"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb44-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb44-13" title="13"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb44-14" title="14"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb44-15" title="15"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb44-16" title="16"><span class="st">  </span><span class="kw">transition_manual</span>(residual_draw)</a>
 <a class="sourceLine" id="cb44-17" title="17"></a>
 <a class="sourceLine" id="cb44-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-25-1.gif"><!-- --></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-21-1.gif"><!-- --></p>
 <p>Looking pretty good! As well they should, since this is the same model that generated the data.</p>
 </div>
 </div>
@@ -569,10 +577,10 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <p>But we’re not done yet—another sensible choice of model for this data might have been an ordinal regression. So let’s try that too.</p>
 <p>First, we’ll add a column that transforms the data into an ordered factor:</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">cens_df_o =<span class="st"> </span>cens_df_t <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb45-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_factor =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(y_lower))</a></code></pre></div>
+<a class="sourceLine" id="cb45-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_factor =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y_lower))</a></code></pre></div>
 <p>Then we’ll fit an ordinal regression model. We have to adjust the fit parameters a bit to get it to converge:</p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">m_o =<span class="st"> </span><span class="kw">brm</span>(y_factor <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> cens_df_o, <span class="dt">family =</span> cumulative, </a>
-<a class="sourceLine" id="cb46-2" title="2">  <span class="dt">prior =</span> <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept), <span class="dt">control =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">adapt_delta =</span> <span class="fl">0.99</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb46-2" title="2">  <span class="dt">prior =</span> <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept), <span class="dt">control =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">adapt_delta =</span> <span class="fl">0.99</span>))</a></code></pre></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>Now, let’s check out those residuals:</p>
@@ -582,7 +590,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb49-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb49-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb49-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
-<pre><code>## Error: Residuals are not defined for ordinal or categorical models.</code></pre>
+<pre><code>## Error: Predictive errors are not defined for ordinal or categorical models.</code></pre>
 <p>Gah! <code>brms</code> will not even produce residuals for models like these. This is very sensible, as standard residuals here are hard to define. Fortunately, we can still construct randomized quantile residuals.</p>
 <div id="randomized-quantile-residuals-for-a-discrete-distribution" class="section level3">
 <h3 class="hasAnchor">
@@ -606,37 +614,37 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <p>Then we proceed as before:</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">cens_df_o <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb51-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_o) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb51-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.prediction =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(.prediction)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.prediction =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(y_factor)[.prediction], <span class="dt">levels =</span> <span class="kw"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(y_factor))) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb51-4" title="4"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb51-5" title="5">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_factor),</a>
-<a class="sourceLine" id="cb51-6" title="6">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;=</span><span class="st"> </span>y_factor),</a>
-<a class="sourceLine" id="cb51-7" title="7">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
-<a class="sourceLine" id="cb51-8" title="8">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)</a>
+<a class="sourceLine" id="cb51-5" title="5">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_factor),</a>
+<a class="sourceLine" id="cb51-6" title="6">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;=</span><span class="st"> </span>y_factor),</a>
+<a class="sourceLine" id="cb51-7" title="7">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, p_lower, p_upper),</a>
+<a class="sourceLine" id="cb51-8" title="8">    <span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)</a>
 <a class="sourceLine" id="cb51-9" title="9">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb51-10" title="10"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb51-11" title="11"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
 <p>Or in HOPs-QQ plot form:</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb52-2" title="2"></a>
 <a class="sourceLine" id="cb52-3" title="3">p =<span class="st"> </span>cens_df_o <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb52-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m_o) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.prediction =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(.prediction)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.prediction =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(y_factor)[.prediction], <span class="dt">levels =</span> <span class="kw"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(y_factor))) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb52-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb52-7" title="7">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_factor),</a>
-<a class="sourceLine" id="cb52-8" title="8">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(.prediction <span class="op">&lt;=</span><span class="st"> </span>y_factor),</a>
-<a class="sourceLine" id="cb52-9" title="9">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(k, p_lower, p_upper)),</a>
-<a class="sourceLine" id="cb52-10" title="10">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
+<a class="sourceLine" id="cb52-7" title="7">    <span class="dt">p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;</span><span class="st"> </span>y_factor),</a>
+<a class="sourceLine" id="cb52-8" title="8">    <span class="dt">p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(.prediction <span class="op">&lt;=</span><span class="st"> </span>y_factor),</a>
+<a class="sourceLine" id="cb52-9" title="9">    <span class="dt">p_residual =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(k, p_lower, p_upper)),</a>
+<a class="sourceLine" id="cb52-10" title="10">    <span class="dt">residual_draw =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dv">1</span><span class="op">:</span>k)</a>
 <a class="sourceLine" id="cb52-11" title="11">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-12" title="12"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-12" title="12"><span class="st">  </span><span class="kw">unnest</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(p_residual, residual_draw)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(p_residual)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb52-14" title="14"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-15" title="15"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-16" title="16"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-17" title="17"><span class="st">  </span><span class="kw">transition_manual</span>(residual_draw)</a>
 <a class="sourceLine" id="cb52-18" title="18"></a>
 <a class="sourceLine" id="cb52-19" title="19"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-30-1.gif"><!-- --></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-25-1.gif"><!-- --></p>
 <p>It is not too surprising that the ordinal regression also works here, even though it is not the data generating model. Ordinal regressions are pretty robust.</p>
 </div>
 </div>
@@ -644,7 +652,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <h2 class="hasAnchor">
 <a href="#a-function-for-probability-residuals" class="anchor"></a>A function for probability residuals</h2>
 <p>Here’s a function that can calculate randomized probability residuals for you. A future version of <code>tidybayes</code> will likely supply some variant of this function, but for now, since it is experimental, I have not folded it into the main package yet. Use at your own risk:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(rlang)</a></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(rlang)</a></code></pre></div>
 <pre><code>## 
 ## Attaching package: 'rlang'</code></pre>
 <pre><code>## The following objects are masked from 'package:purrr':
@@ -652,25 +660,25 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 ##     %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl, flatten_raw, invoke,
 ##     list_along, modify, prepend, splice</code></pre>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">make_probability_residuals =<span class="st"> </span><span class="cf">function</span>(data, prediction, y, <span class="dt">y_upper =</span> <span class="ot">NA</span>, <span class="dt">n =</span> <span class="dv">1</span>) {</a>
-<a class="sourceLine" id="cb56-2" title="2">  .prediction =<span class="st"> </span><span class="kw"><a href="https://rlang.r-lib.org/reference/quotation.html">enquo</a></span>(prediction)</a>
-<a class="sourceLine" id="cb56-3" title="3">  .y =<span class="st"> </span><span class="kw"><a href="https://rlang.r-lib.org/reference/quotation.html">enquo</a></span>(y)</a>
-<a class="sourceLine" id="cb56-4" title="4">  .y_upper =<span class="st"> </span><span class="kw"><a href="https://rlang.r-lib.org/reference/quotation.html">enquo</a></span>(y_upper)</a>
+<a class="sourceLine" id="cb56-2" title="2">  .prediction =<span class="st"> </span><span class="kw"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(prediction)</a>
+<a class="sourceLine" id="cb56-3" title="3">  .y =<span class="st"> </span><span class="kw"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(y)</a>
+<a class="sourceLine" id="cb56-4" title="4">  .y_upper =<span class="st"> </span><span class="kw"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(y_upper)</a>
 <a class="sourceLine" id="cb56-5" title="5"></a>
-<a class="sourceLine" id="cb56-6" title="6">  <span class="cf">if</span> (<span class="kw"><a href="https://rlang.r-lib.org/reference/eval_tidy.html">eval_tidy</a></span>(<span class="kw"><a href="https://rlang.r-lib.org/reference/quotation.html">expr</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">is.factor</a></span>(<span class="op">!!</span>.prediction) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">is.ordered</a></span>(<span class="op">!!</span>.prediction)), data)) {</a>
-<a class="sourceLine" id="cb56-7" title="7">    data =<span class="st"> </span><span class="kw">mutate</span>(data, <span class="op">!!</span><span class="dt">.prediction :=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">ordered</a></span>(<span class="op">!!</span>.prediction, <span class="dt">levels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/levels">levels</a></span>(<span class="op">!!</span>.prediction)))</a>
+<a class="sourceLine" id="cb56-6" title="6">  <span class="cf">if</span> (<span class="kw"><a href="https://rlang.r-lib.org/reference/eval_tidy.html">eval_tidy</a></span>(<span class="kw"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">expr</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/factor.html">is.factor</a></span>(<span class="op">!!</span>.prediction) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">is.ordered</a></span>(<span class="op">!!</span>.prediction)), data)) {</a>
+<a class="sourceLine" id="cb56-7" title="7">    data =<span class="st"> </span><span class="kw">mutate</span>(data, <span class="op">!!</span><span class="dt">.prediction :=</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="op">!!</span>.prediction, <span class="dt">levels =</span> <span class="kw"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="op">!!</span>.prediction)))</a>
 <a class="sourceLine" id="cb56-8" title="8">  }</a>
 <a class="sourceLine" id="cb56-9" title="9">  </a>
-<a class="sourceLine" id="cb56-10" title="10">  <span class="cf">if</span> (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(<span class="kw"><a href="https://rlang.r-lib.org/reference/quotation.html">enquo</a></span>(y_upper)[[<span class="dv">2</span>]])) {</a>
+<a class="sourceLine" id="cb56-10" title="10">  <span class="cf">if</span> (<span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="kw"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(y_upper)[[<span class="dv">2</span>]])) {</a>
 <a class="sourceLine" id="cb56-11" title="11">    <span class="co">#no y_upper provided, use y as y_upper</span></a>
 <a class="sourceLine" id="cb56-12" title="12">    data =<span class="st"> </span><span class="kw">summarise</span>(data,</a>
-<a class="sourceLine" id="cb56-13" title="13">      <span class="dt">.p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;</span><span class="st"> </span><span class="op">!!</span>.y),</a>
-<a class="sourceLine" id="cb56-14" title="14">      <span class="dt">.p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;=</span><span class="st"> </span><span class="op">!!</span>.y)</a>
+<a class="sourceLine" id="cb56-13" title="13">      <span class="dt">.p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;</span><span class="st"> </span><span class="op">!!</span>.y),</a>
+<a class="sourceLine" id="cb56-14" title="14">      <span class="dt">.p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;=</span><span class="st"> </span><span class="op">!!</span>.y)</a>
 <a class="sourceLine" id="cb56-15" title="15">    )</a>
 <a class="sourceLine" id="cb56-16" title="16">  } <span class="cf">else</span> {</a>
 <a class="sourceLine" id="cb56-17" title="17">    <span class="co">#y_upper should be a vector, and if an entry in it is NA, use the entry from y</span></a>
 <a class="sourceLine" id="cb56-18" title="18">    data =<span class="st"> </span><span class="kw">summarise</span>(data,</a>
-<a class="sourceLine" id="cb56-19" title="19">      <span class="dt">.p_lower =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;</span><span class="st"> </span><span class="op">!!</span>.y),</a>
-<a class="sourceLine" id="cb56-20" title="20">      <span class="dt">.p_upper =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;=</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(<span class="op">!!</span>.y_upper), <span class="op">!!</span>.y, <span class="op">!!</span>.y_upper))</a>
+<a class="sourceLine" id="cb56-19" title="19">      <span class="dt">.p_lower =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;</span><span class="st"> </span><span class="op">!!</span>.y),</a>
+<a class="sourceLine" id="cb56-20" title="20">      <span class="dt">.p_upper =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="op">!!</span>.prediction <span class="op">&lt;=</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="op">!!</span>.y_upper), <span class="op">!!</span>.y, <span class="op">!!</span>.y_upper))</a>
 <a class="sourceLine" id="cb56-21" title="21">    )</a>
 <a class="sourceLine" id="cb56-22" title="22">  }</a>
 <a class="sourceLine" id="cb56-23" title="23">  </a>
@@ -679,15 +687,15 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb56-26" title="26">      <span class="dt">.p_residual =</span> <span class="kw">map2</span>(.p_lower, .p_upper, runif, <span class="dt">n =</span> <span class="op">!!</span>n),</a>
 <a class="sourceLine" id="cb56-27" title="27">      <span class="dt">.residual_draw =</span> <span class="kw">map</span>(.p_residual, seq_along)</a>
 <a class="sourceLine" id="cb56-28" title="28">    ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-29" title="29"><span class="st">    </span><span class="kw">unnest</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.p_residual, .residual_draw)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-30" title="30"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">.z_residual =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">qnorm</a></span>(.p_residual))</a>
+<a class="sourceLine" id="cb56-29" title="29"><span class="st">    </span><span class="kw">unnest</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.p_residual, .residual_draw)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb56-30" title="30"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">.z_residual =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(.p_residual))</a>
 <a class="sourceLine" id="cb56-31" title="31">}</a></code></pre></div>
 </div>
 <div id="logistic-regression" class="section level2">
 <h2 class="hasAnchor">
 <a href="#logistic-regression" class="anchor"></a>Logistic regression</h2>
 <p>Consider a simple dataset with a single binary outcome:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">51919</span>)</a>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">51919</span>)</a>
 <a class="sourceLine" id="cb57-2" title="2"></a>
 <a class="sourceLine" id="cb57-3" title="3">bin_df =<span class="st"> </span><span class="kw">tibble</span>(</a>
 <a class="sourceLine" id="cb57-4" title="4">  <span class="dt">y =</span> <span class="kw">rbernoulli</span>(<span class="dv">100</span>, <span class="fl">.7</span>)</a>
@@ -703,7 +711,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb61-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb61-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb61-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-34-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
 <p>Randomized quantile residuals help us see that the fit is probably reasonable:</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb62-2" title="2"></a>
@@ -718,7 +726,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 ## Please use `quo_get_expr()` instead.
 ## This warning is displayed once per session.</code></pre>
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-35-1.gif"><!-- --></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-29-1.gif"><!-- --></p>
 <p>We could also look at the probability residuals instead, comparing them against a uniform distribution, like so:</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb65-2" title="2"></a>
@@ -731,11 +739,12 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb65-9" title="9"><span class="st">  </span><span class="kw">transition_manual</span>(.residual_draw)</a>
 <a class="sourceLine" id="cb65-10" title="10"></a>
 <a class="sourceLine" id="cb65-11" title="11"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-36-1.gif"><!-- --></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-30-1.gif"><!-- --></p>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -757,17 +766,20 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by <a href="http://www.mjskay.com">Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

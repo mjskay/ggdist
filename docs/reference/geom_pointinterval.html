@@ -8,21 +8,32 @@
 
 <title>Point + multiple probability interval plots (ggplot geom) — geom_pointinterval • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,14 +43,14 @@
 
   <link href="../extra.css" rel="stylesheet">
   
+
 <meta property="og:title" content="Point + multiple probability interval plots (ggplot geom) — geom_pointinterval" />
-
 <meta property="og:description" content="Combined point + multiple interval geoms with default aesthetics
-designed for use with output from point_interval.
-Wrapper around geom_slabinterval." />
-
+designed for use with output from point_interval().
+Wrapper around geom_slabinterval()." />
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -62,6 +73,7 @@ Wrapper around geom_slabinterval." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -87,7 +99,7 @@ Wrapper around geom_slabinterval." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -125,11 +137,10 @@ Wrapper around geom_slabinterval." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,6 +151,7 @@ Wrapper around geom_slabinterval." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -151,30 +163,42 @@ Wrapper around geom_slabinterval." />
     </div>
 
     <div class="ref-description">
-    
     <p>Combined point + multiple interval geoms with default aesthetics
-designed for use with output from <code><a href='point_interval.html'>point_interval</a></code>.
-Wrapper around <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>.</p>
-    
+designed for use with output from <code><a href='point_interval.html'>point_interval()</a></code>.
+Wrapper around <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>geom_pointinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>,
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>, <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span>
-  <span class='fl'>FALSE</span>))
+    <pre class="usage"><span class='fu'>geom_pointinterval</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>,
+  <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+)
 
-<span class='fu'>geom_pointintervalh</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>,
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span>
-  <span class='kw'>=</span> <span class='fl'>FALSE</span>))</pre>
-    
+<span class='fu'>geom_pointintervalh</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>,
+  <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>Set of aesthetic mappings created by <code>aes()</code> or
-<code>aes_()</code>. If specified and <code>inherit.aes = TRUE</code> (the
+      <td><p>Set of aesthetic mappings created by <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code> or
+<code><a href='https://ggplot2.tidyverse.org/reference/aes_.html'>aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
     </tr>
@@ -183,10 +207,10 @@ plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
       <td><p>The data to be displayed in this layer. There are three
 options:</p>
 <p>If <code>NULL</code>, the default, the data is inherited from the plot
-data as specified in the call to <code>ggplot()</code>.</p>
+data as specified in the call to <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code>.</p>
 <p>A <code>data.frame</code>, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-<code>fortify()</code> for which variables will be created.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/fortify.html'>fortify()</a></code> for which variables will be created.</p>
 <p>A <code>function</code> will be called with a single argument,
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
@@ -205,7 +229,44 @@ overlapping intervals.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code>layer</code>.</p></td>
+      <td><p>Arguments passed on to <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p><dl class='dl-horizontal'>
+    <dt><code>scale</code></dt><dd><p>What proportion of the region allocated to this geom to use to draw the slab. If <code>scale = 1</code>,
+slabs that use the maximum range will just touch each other. Default is <code>0.9</code> to leave some space.</p></dd>
+    <dt><code>justification</code></dt><dd><p>Justification of the interval relative to the slab, where <code>0</code> indicates bottom/left
+justification and <code>1</code> indicates top/right justification (depending on <code>orientation</code>). If <code>justification</code>
+is <code>NULL</code> (the default), then it is set automatically based on the value of <code>side</code>: when <code>side</code> is
+<code>"top"</code>/<code>"right"</code> <code>justification</code> is set to <code>0</code>, when <code>side</code> is <code>"bottom"</code>/<code>"left"</code>
+<code>justification</code> is set to <code>1</code>, and when <code>side</code> is <code>"both"</code> <code>justification</code> is set to
+<code>0.5</code>.</p></dd>
+    <dt><code>normalize</code></dt><dd><p>How to normalize heights of functions input to the <code>thickness</code> aesthetic. If <code>"all"</code>
+(the default), normalize so that the maximum height across all data is <code>1</code>; if <code>"panels"</code>, normalize within
+panels so that the maximum height in each panel is <code>1</code>; if <code>"xy"</code>, normalize within
+the x/y axis opposite the <code>orientation</code> of this geom so that the maximum height at each value of the
+opposite axis is <code>1</code>; if <code>"groups"</code>, normalize within values of the opposite axis and within
+groups so that the maximum height in each group is <code>1</code>; if <code>"none"</code>, values are taken as is with no
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).</p></dd>
+    <dt><code>interval_size_domain</code></dt><dd><p>The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to <code>interval_size_range</code> (see the documentation for that argument.)</p></dd>
+    <dt><code>interval_size_range</code></dt><dd><p>This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of <code>scale_size_continuous()</code>, which give sizes
+with a range of <code><a href='https://rdrr.io/r/base/c.html'>c(1, 6)</a></code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
+(typically this should be equal to the value of the <code>range</code> argument of the <code>scale_size_continuous()</code>
+function), and <code>interval_size_range</code> indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals).</p></dd>
+    <dt><code>fatten_point</code></dt><dd><p>A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the <code>point_size</code>
+aesthetic and <code><a href='scales.html'>scale_point_size_continuous()</a></code> or <code><a href='scales.html'>scale_point_size_discrete()</a></code>; sizes
+specified with that aesthetic will not be adjusted using <code>fatten_point</code>.</p></dd>
+    <dt><code>show_point</code></dt><dd><p>Should the point portion of the geom be drawn? Default <code>TRUE</code>.</p></dd>
+    <dt><code>show_interval</code></dt><dd><p>Should the interval portion of the geom be drawn? Default <code>TRUE</code>.</p></dd>
+    <dt><code>na.rm</code></dt><dd><p>If <code>FALSE</code>, the default, missing values are removed with a warning. If <code>TRUE</code>, missing
+values are silently removed.</p></dd>
+    <dt><code>inherit.aes</code></dt><dd><p>If <code>FALSE</code>, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.org/reference/borders.html'>borders()</a></code>.</p></dd>
+  
+</dl></td>
     </tr>
     <tr>
       <th>side</th>
@@ -230,27 +291,27 @@ aesthetics.</p></td>
     </tr>
     <tr>
       <th>show.legend</th>
-      <td><p>Should this layer be included in the legends? Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(size = FALSE)</a></code>, unlike most geoms,
+      <td><p>Should this layer be included in the legends? Default is <code><a href='https://rdrr.io/r/base/c.html'>c(size = FALSE)</a></code>, unlike most geoms,
 to match its common use cases. <code>FALSE</code> hides all legends, <code>TRUE</code> shows all legends, and <code>NA</code> shows only
 those that are mapped (the default for most geoms).</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>These geoms are wrappers around <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> with defaults designed to produce
+    <p>These geoms are wrappers around <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> with defaults designed to produce
 points+interval plots. These geoms set some default aesthetics equal
 to the <code>.lower</code>, <code>.upper</code>, and <code>.width</code> columns generated by the <code>point_interval</code> family
-of functions, making them often more convenient than vanilla <code><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange</a></code> when used with
-functions like <code><a href='point_interval.html'>median_qi</a></code>, <code><a href='point_interval.html'>mean_qi</a></code>, <code><a href='point_interval.html'>mode_hdi</a></code>, etc.</p>
+of functions, making them often more convenient than vanilla <code><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange()</a></code> when used with
+functions like <code><a href='point_interval.html'>median_qi()</a></code>, <code><a href='point_interval.html'>mean_qi()</a></code>, <code><a href='point_interval.html'>mode_hdi()</a></code>, etc.</p>
 <p>Specifically, <code>geom_pointinterval</code> acts as if its default aesthetics are
 <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(ymin = .lower, ymax = .upper, size = -.width)</a></code>. <code>geom_pointintervalh</code> acts as if its default
 aesthetics are <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(xmin = .lower, xmax = .upper, size = -.width)</a></code>.</p>
-    
     <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
 
     
-    <p>These geoms support the following aesthetics:</p><ul>
+
+<p>These geoms support the following aesthetics:</p><ul>
 <li><p><code>datatype</code></p></li>
 <li><p><code>alpha</code></p></li>
 <li><p><code>colour</code></p></li>
@@ -282,39 +343,37 @@ aesthetics are <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>
 <li><p><code>height</code></p></li>
 <li><p><code>thickness</code></p></li>
 <li><p><code>group</code></p></li>
-</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
-Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation.
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for the geom that these geoms wrap. All parameters of that geom are
+    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> for the geom that these geoms wrap. All parameters of that geom are
 available to these geoms.</p>
-<p>See <code><a href='stat_pointinterval.html'>stat_pointinterval</a></code> / <code><a href='stat_pointinterval.html'>stat_pointintervalh</a></code> for the stat versions, intended
+<p>See <code><a href='stat_pointinterval.html'>stat_pointinterval()</a></code> / <code><a href='stat_pointinterval.html'>stat_pointintervalh()</a></code> for the stat versions, intended
 for use on samples from a distribution.
-See <code><a href='geom_interval.html'>geom_interval</a></code> / <code><a href='geom_interval.html'>geom_intervalh</a></code> for a similar stat intended for intervals without
+See <code><a href='geom_interval.html'>geom_interval()</a></code> / <code><a href='geom_interval.html'>geom_intervalh()</a></code> for a similar stat intended for intervals without
 point summaries.
-See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval</a></code> for a variety of other
+See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a></code> for a variety of other
 stats that combine intervals with densities and CDFs.
-See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for the geom that these geoms wrap. All parameters of that geom are
+See <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> for the geom that these geoms wrap. All parameters of that geom are
 available to these geoms.</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
   <span class='fu'>geom_pointintervalh</span>()</div><div class='img'><img src='geom_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
   <span class='fu'>geom_pointinterval</span>()</div><div class='img'><img src='geom_pointinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
@@ -323,13 +382,9 @@ available to these geoms.</p></div>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-
       <li><a href="#aesthetics">Aesthetics</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -338,19 +393,23 @@ available to these geoms.</p></div>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='http://www.mjskay.com'>Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

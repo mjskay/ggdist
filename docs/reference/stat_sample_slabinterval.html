@@ -8,21 +8,32 @@
 
 <title>Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat) — stat_sample_slabinterval • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,14 +43,14 @@
 
   <link href="../extra.css" rel="stylesheet">
   
+
 <meta property="og:title" content="Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat) — stat_sample_slabinterval" />
-
 <meta property="og:description" content="Stats for computing densities and CDFs + intervals from samples for use with
-geom_slabinterval. Useful for creating eye plots, halfeye plots,
+geom_slabinterval(). Useful for creating eye plots, halfeye plots,
 CCDF bar plots etc." />
-
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -62,6 +73,7 @@ CCDF bar plots etc." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -87,7 +99,7 @@ CCDF bar plots etc." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -125,11 +137,10 @@ CCDF bar plots etc." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,6 +151,7 @@ CCDF bar plots etc." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -151,21 +163,32 @@ CCDF bar plots etc." />
     </div>
 
     <div class="ref-description">
-    
     <p>Stats for computing densities and CDFs + intervals from samples for use with
-<code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>. Useful for creating eye plots, halfeye plots,
+<code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>. Useful for creating eye plots, halfeye plots,
 CCDF bar plots etc.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>stat_sample_slabinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
-  <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"pdf"</span>, <span class='st'>"cdf"</span>, <span class='st'>"ccdf"</span>, <span class='st'>"histogram"</span>), <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"Sturges"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"vertical"</span>,
-  <span class='st'>"horizontal"</span>), <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>501</span>, <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
-  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>), <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span>
-  <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>stat_sample_slabinterval</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pdf"</span>, <span class='st'>"cdf"</span>, <span class='st'>"ccdf"</span>, <span class='st'>"histogram"</span>),
+  <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"Sturges"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vertical"</span>, <span class='st'>"horizontal"</span>),
+  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>501</span>,
+  <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
+  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>),
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>stat_halfeye</span>(<span class='no'>...</span>)
 
@@ -175,42 +198,77 @@ CCDF bar plots etc.</p>
 
 <span class='fu'>stat_eyeh</span>(<span class='no'>...</span>, <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_ccdfinterval</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
+<span class='fu'>stat_ccdfinterval</span>(
+  <span class='no'>...</span>,
+  <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>,
+  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
+  <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
+)
 
-<span class='fu'>stat_ccdfintervalh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
+<span class='fu'>stat_ccdfintervalh</span>(
+  <span class='no'>...</span>,
+  <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>,
+  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>,
+  <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
+)
 
-<span class='fu'>stat_cdfinterval</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
+<span class='fu'>stat_cdfinterval</span>(
+  <span class='no'>...</span>,
+  <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>,
+  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
+  <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
+)
 
-<span class='fu'>stat_cdfintervalh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>, <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>)
+<span class='fu'>stat_cdfintervalh</span>(
+  <span class='no'>...</span>,
+  <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>,
+  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>,
+  <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
+)
 
-<span class='fu'>stat_gradientinterval</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>,
-  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>thickness</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>slab_alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>stat_gradientinterval</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slabinterval"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>thickness</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>slab_alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>stat_gradientintervalh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
 <span class='fu'>stat_histinterval</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"histogram"</span>)
 
-<span class='fu'>stat_histintervalh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"histogram"</span>,
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
+<span class='fu'>stat_histintervalh</span>(<span class='no'>...</span>, <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"histogram"</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)
 
-<span class='fu'>stat_slab</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slab"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>, <span class='no'>...</span>, <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>stat_slab</span>(
+  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"slab"</span>,
+  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='fu'>stat_slabh</span>(<span class='no'>...</span>, <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>Set of aesthetic mappings created by <code>aes()</code> or
-<code>aes_()</code>. If specified and <code>inherit.aes = TRUE</code> (the
+      <td><p>Set of aesthetic mappings created by <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code> or
+<code><a href='https://ggplot2.tidyverse.org/reference/aes_.html'>aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
     </tr>
@@ -219,10 +277,10 @@ plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
       <td><p>The data to be displayed in this layer. There are three
 options:</p>
 <p>If <code>NULL</code>, the default, the data is inherited from the plot
-data as specified in the call to <code>ggplot()</code>.</p>
+data as specified in the call to <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code>.</p>
 <p>A <code>data.frame</code>, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-<code>fortify()</code> for which variables will be created.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/fortify.html'>fortify()</a></code> for which variables will be created.</p>
 <p>A <code>function</code> will be called with a single argument,
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
@@ -231,7 +289,7 @@ from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></td>
     <tr>
       <th>geom</th>
       <td><p>Use to override the default connection between
-<code>stat_slabinterval</code> and <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p></td>
+<code>stat_slabinterval</code> and <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code></p></td>
     </tr>
     <tr>
       <th>position</th>
@@ -240,8 +298,8 @@ a call to a position adjustment function.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code>layer</code>. They may also be arguments to the paired geom
-(e.g., <code><a href='geom_pointinterval.html'>geom_pointinterval</a></code>)</p></td>
+      <td><p>Other arguments passed to <code>layer()</code>. They may also be arguments to the paired geom
+(e.g., <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code>)</p></td>
     </tr>
     <tr>
       <th>slab_type</th>
@@ -251,7 +309,7 @@ cumulative distribution function (<code>"cdf"</code>), complementary CDF (<code>
     <tr>
       <th>adjust</th>
       <td><p>If <code>slab_type</code> is <code>"pdf"</code>, bandwidth for the density estimator is adjusted by multiplying it
-by this value. See <code><a href='https://www.rdocumentation.org/packages/stats/topics/density'>density</a></code> for more information.</p></td>
+by this value. See <code><a href='https://rdrr.io/r/stats/density.html'>density()</a></code> for more information.</p></td>
     </tr>
     <tr>
       <th>trim</th>
@@ -261,7 +319,7 @@ input data? Default <code>TRUE</code>.</p></td>
     <tr>
       <th>breaks</th>
       <td><p>If <code>slab_type</code> is <code>"histogram"</code>, the <code>breaks</code> parameter that is passed to
-<code><a href='https://www.rdocumentation.org/packages/graphics/topics/hist'>hist</a></code> to determine where to put breaks in the histogram.</p></td>
+<code><a href='https://rdrr.io/r/graphics/hist.html'>hist()</a></code> to determine where to put breaks in the histogram.</p></td>
     </tr>
     <tr>
       <th>orientation</th>
@@ -300,12 +358,12 @@ columns <code>.width</code> (from the <code>.width</code> vector), <code>.value<
     </tr>
     <tr>
       <th>point_interval</th>
-      <td><p>A function from the <code><a href='point_interval.html'>point_interval</a></code> family (e.g., <code>median_qi</code>,
+      <td><p>A function from the <code><a href='point_interval.html'>point_interval()</a></code> family (e.g., <code>median_qi</code>,
 <code>mean_qi</code>, etc). This function should take in a vector of value, and should obey the
-<code>.width</code> and <code>.simple_names</code> parameters of <code><a href='point_interval.html'>point_interval</a></code> functions, such that when given
+<code>.width</code> and <code>.simple_names</code> parameters of <code><a href='point_interval.html'>point_interval()</a></code> functions, such that when given
 a vector with <code>.simple_names = TRUE</code> should return a data frame with variables <code>.value</code>, <code>.lower</code>,
 <code>.upper</code>, and <code>.width</code>. Output will be converted to the appropriate <code>x</code>- or <code>y</code>-based aesthetics
-depending on the value of <code>orientation</code>. See the <code><a href='point_interval.html'>point_interval</a></code> family of functions for
+depending on the value of <code>orientation</code>. See the <code><a href='point_interval.html'>point_interval()</a></code> family of functions for
 more information.</p></td>
     </tr>
     <tr>
@@ -319,7 +377,7 @@ values are silently removed.</p></td>
     </tr>
     <tr>
       <th>show.legend</th>
-      <td><p>Should this layer be included in the legends? Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(size = FALSE)</a></code>, unlike most geoms,
+      <td><p>Should this layer be included in the legends? Default is <code><a href='https://rdrr.io/r/base/c.html'>c(size = FALSE)</a></code>, unlike most geoms,
 to match its common use cases. <code>FALSE</code> hides all legends, <code>TRUE</code> shows all legends, and <code>NA</code> shows only
 those that are mapped (the default for most geoms).</p></td>
     </tr>
@@ -328,7 +386,7 @@ those that are mapped (the default for most geoms).</p></td>
       <td><p>If <code>FALSE</code>, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. <code>borders()</code>.</p></td>
+the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.org/reference/borders.html'>borders()</a></code>.</p></td>
     </tr>
     <tr>
       <th>side</th>
@@ -349,18 +407,21 @@ is <code>NULL</code> (the default), then it is set automatically based on the va
     </tr>
     <tr>
       <th>normalize</th>
-      <td><p>How to normalize heights of functions input to the <code>thickness</code> aesthetic. If <code>"max_height"</code>
-(the default), normalize so that the maximum height across all data is <code>1</code>; if <code>"height"</code>, normalize within
+      <td><p>How to normalize heights of functions input to the <code>thickness</code> aesthetic. If <code>"all"</code>
+(the default), normalize so that the maximum height across all data is <code>1</code>; if <code>"panels"</code>, normalize within
+panels so that the maximum height in each panel is <code>1</code>; if <code>"xy"</code>, normalize within
+the x/y axis opposite the <code>orientation</code> of this geom so that the maximum height at each value of the
+opposite axis is <code>1</code>; if <code>"groups"</code>, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is <code>1</code>; if <code>"none"</code>, values are taken as is with no
- normalization (this should probably only be used with functions whose values are in [0,1]).</p></td>
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).</p></td>
     </tr>
     <tr>
       <th>thickness</th>
-      <td><p>Override for the <code>thickness</code> aesthetic in <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code>: the thickness
+      <td><p>Override for the <code>thickness</code> aesthetic in <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>: the thickness
 of the slab at each x / y value of the slab (depending on <code>orientation</code>).</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>A highly configurable stat for generating a variety of plots that combine a "slab"
@@ -382,11 +443,12 @@ handy for visualizing posterior distributions in Bayesian inference, amongst oth
 <li><p><code>stat_pointinterval</code> / <code>stat_pointintervalh</code>: Point + interval plots</p></li>
 <li><p><code>stat_interval</code> / <code>stat_intervalh</code>: Interval plots</p></li>
 </ul>
-    
+
     <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
 
     
-    <p>These stats support the following aesthetics:</p><ul>
+
+<p>These stats support the following aesthetics:</p><ul>
 <li><p><code>x</code></p></li>
 <li><p><code>y</code></p></li>
 <li><p><code>datatype</code></p></li>
@@ -425,45 +487,44 @@ handy for visualizing posterior distributions in Bayesian inference, amongst oth
 <li><p><code>height</code></p></li>
 <li><p><code>thickness</code></p></li>
 <li><p><code>group</code></p></li>
-</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>. 
-Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation. 
+</ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation.
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
-    
     <h2 class="hasAnchor" id="computed-variables"><a class="anchor" href="#computed-variables"></a>Computed Variables</h2>
 
     
-    <ul>
+
+<ul>
 <li><p><code>x</code> or <code>y</code>: For slabs, the input values to the slab function.
-    For intervals, the point summary from the interval function. Whether it is <code>x</code> or <code>y</code> depends on <code>orientation</code></p></li>
+For intervals, the point summary from the interval function. Whether it is <code>x</code> or <code>y</code> depends on <code>orientation</code></p></li>
 <li><p><code>xmin</code> or <code>ymin</code>: For intervals, the lower end of the interval from the interval function.</p></li>
 <li><p><code>xmax</code> or <code>ymax</code>: For intervals, the upper end of the interval from the interval function.</p></li>
 <li><p><code>f</code>: For slabs, the output values from the slab function.</p></li>
 <li><p><code>n</code>: For slabs, the number of data points summarized into that slab.</p></li>
 </ul>
-    
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code> for more information on the geom these stats
-use by default and some of the options they have. See <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval</a></code>
+    <div class='dont-index'><p>See <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> for more information on the geom these stats
+use by default and some of the options they have. See <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code>
 for the versions of these stats that can be used on analytical distributions.
 See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
 <span class='co'># consider the following example data:</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1234</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>1234</span>)
 <span class='no'>df</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
   ~<span class='no'>group</span>, ~<span class='no'>subgroup</span>, ~<span class='no'>value</span>,
-  <span class='st'>"a"</span>,          <span class='st'>"h"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>),
-  <span class='st'>"b"</span>,          <span class='st'>"h"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>1.5</span>),
-  <span class='st'>"c"</span>,          <span class='st'>"h"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>8</span>),
-  <span class='st'>"c"</span>,          <span class='st'>"i"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>9</span>),
-  <span class='st'>"c"</span>,          <span class='st'>"j"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>7</span>)
+  <span class='st'>"a"</span>,          <span class='st'>"h"</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>5</span>),
+  <span class='st'>"b"</span>,          <span class='st'>"h"</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>1.5</span>),
+  <span class='st'>"c"</span>,          <span class='st'>"h"</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>8</span>),
+  <span class='st'>"c"</span>,          <span class='st'>"i"</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>9</span>),
+  <span class='st'>"c"</span>,          <span class='st'>"j"</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>500</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>7</span>)
 ) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/nest.html'>unnest</a></span>(<span class='no'>value</span>)
 
@@ -488,20 +549,16 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-
       <li><a href="#aesthetics">Aesthetics</a></li>
-
       <li><a href="#computed-variables">Computed Variables</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -509,13 +566,16 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

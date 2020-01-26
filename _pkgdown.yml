@@ -13,6 +13,12 @@ authors:
 
 
 reference:
+- title: Package overview
+  desc:  Overview of tidybayes.
+  contents:
+  - tidybayes-package
+  - tidybayes-models
+
 - title: Composing data for input to a model
   desc:  Transform tidy data frames into data lists appropriate for model types like Stan and JAGS
   contents:
@@ -21,11 +27,6 @@ reference:
   - as_data_list
   - n_prefix
   - x_at_y
-
-- title: Model types
-  desc:  Models supported by tidybayes
-  contents:
-  - tidybayes-models
 
 - title: Extracting posteriors
   desc:  Get tidy draws of posterior distributions from objects (and helper functions for examining objects)

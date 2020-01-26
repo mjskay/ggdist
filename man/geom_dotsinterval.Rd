@@ -124,7 +124,45 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
+\item{...}{
+  Arguments passed on to \code{\link[=geom_slabinterval]{geom_slabinterval}}
+  \describe{
+    \item{\code{side}}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"both"} draws the slab mirrored on both sides (as in a violin plot).}
+    \item{\code{scale}}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+    \item{\code{justification}}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
+\code{0.5}.}
+    \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
+panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
+the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
+opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
+groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
+    \item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
+    \item{\code{interval_size_range}}{This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give sizes
+with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
+(typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
+function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals).}
+    \item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
+aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
+specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+    \item{\code{show_slab}}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+    \item{\code{show_point}}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+    \item{\code{show_interval}}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+  }}
 
 \item{dotsize}{The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as
 wide as the bin width.}

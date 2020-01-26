@@ -8,21 +8,32 @@
 
 <title>Deprecated functions, arguments, and column names in tidybayes — tidybayes-deprecated • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,13 +43,13 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Deprecated functions, arguments, and column names in tidybayes — tidybayes-deprecated" />
 
+<meta property="og:title" content="Deprecated functions, arguments, and column names in tidybayes — tidybayes-deprecated" />
 <meta property="og:description" content="Deprecated functions, arguments, and column names and their alternatives are listed below.
 Many of the deprecations are due to a naming scheme overhaul in tidybayes version 1.0." />
-
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -61,6 +72,7 @@ Many of the deprecations are due to a naming scheme overhaul in tidybayes versio
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -86,7 +98,7 @@ Many of the deprecations are due to a naming scheme overhaul in tidybayes versio
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -124,11 +136,10 @@ Many of the deprecations are due to a naming scheme overhaul in tidybayes versio
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -139,6 +150,7 @@ Many of the deprecations are due to a naming scheme overhaul in tidybayes versio
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -150,69 +162,72 @@ Many of the deprecations are due to a naming scheme overhaul in tidybayes versio
     </div>
 
     <div class="ref-description">
-    
     <p>Deprecated functions, arguments, and column names and their alternatives are listed below.
 Many of the deprecations are due to a naming scheme overhaul in tidybayes version 1.0.</p>
-    
     </div>
 
-        
+
+
     <h2 class="hasAnchor" id="deprecated-functions"><a class="anchor" href="#deprecated-functions"></a>Deprecated Functions</h2>
 
     
-    <p>Several deprecated versions of functions use slightly different output
+
+
+<p>Several deprecated versions of functions use slightly different output
 formats (e.g., they use names like <code>term</code> and <code>estimate</code> where new
 functions use <code>.variable</code> and <code>.value</code>; or they set <code>.iteration</code> even
 when iteration information is not available --- new functions always set <code>.draw</code>
 but may not set <code>.iteration</code>), so be careful when upgrading to new function names.
-See `Deprecated Arguments and Column Names`, below, for more information.</p>
+See <em>Deprecated Arguments and Column Names</em>, below, for more information.</p>
 <p>Deprecated functions are:</p>
 <ul>
 <li><p><code>spread_samples</code>, <code>extract_samples</code>, and <code>tidy_samples</code> are
-  deprecated names for <code><a href='spread_draws.html'>spread_draws</a></code>. The spread/gather terminology
-  better distinguishes the resulting data frame format, and <em>draws</em> is more
-  correct terminology than <em>samples</em> for describing multiple realizations from
-  a posterior distribution.</p></li>
-<li><p><code>gather_samples</code> is a deprecated name for <code><a href='spread_draws.html'>gather_draws</a></code>,
-  reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
-  describing multiple realizations from a distribution.</p></li>
-<li><p><code>unspread_samples</code> is a deprecated name for <code><a href='unspread_draws.html'>unspread_draws</a></code>,
-  reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
-  describing multiple realizations from a distribution.</p></li>
-<li><p><code>ungather_samples</code> is a deprecated name for <code><a href='unspread_draws.html'>ungather_draws</a></code>,
-  reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
-  describing multiple realizations from a distribution.</p></li>
+deprecated names for <code><a href='spread_draws.html'>spread_draws()</a></code>. The spread/gather terminology
+better distinguishes the resulting data frame format, and <em>draws</em> is more
+correct terminology than <em>samples</em> for describing multiple realizations from
+a posterior distribution.</p></li>
+<li><p><code>gather_samples</code> is a deprecated name for <code><a href='spread_draws.html'>gather_draws()</a></code>,
+reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
+describing multiple realizations from a distribution.</p></li>
+<li><p><code>unspread_samples</code> is a deprecated name for <code><a href='unspread_draws.html'>unspread_draws()</a></code>,
+reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
+describing multiple realizations from a distribution.</p></li>
+<li><p><code>ungather_samples</code> is a deprecated name for <code><a href='unspread_draws.html'>ungather_draws()</a></code>,
+reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
+describing multiple realizations from a distribution.</p></li>
 <li><p><code>fitted_samples</code> / <code>add_fitted_samples</code> are deprecated names for
-  <code><a href='add_predicted_draws.html'>fitted_draws</a></code> / <code><a href='add_predicted_draws.html'>add_fitted_draws</a></code>,
-  reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
-  describing multiple realizations from a distribution.</p></li>
+<code><a href='add_predicted_draws.html'>fitted_draws()</a></code> / <code><a href='add_predicted_draws.html'>add_fitted_draws()</a></code>,
+reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
+describing multiple realizations from a distribution.</p></li>
 <li><p><code>predicted_samples</code> / <code>add_predicted_samples</code> are deprecated names for
-  <code><a href='add_predicted_draws.html'>predicted_draws</a></code> / <code><a href='add_predicted_draws.html'>add_predicted_draws</a></code>,
-  reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
-  describing multiple realizations from a distribution.</p></li>
+<code><a href='add_predicted_draws.html'>predicted_draws()</a></code> / <code><a href='add_predicted_draws.html'>add_predicted_draws()</a></code>,
+reflecting a package-wide move to using <em>draws</em> instead of <em>samples</em> for
+describing multiple realizations from a distribution.</p></li>
 <li><p><code>gather_lsmeans_samples</code> and <code>gather_emmeans_samples</code> are deprecated aliases
-  for <code><a href='gather_emmeans_draws.html'>gather_emmeans_draws</a></code>. The new name (estimated marginal means) is more
-  appropriate for Bayesian models than the old name (least-squares means), and reflects the
-  naming of the newer <code>emmeans</code> package. It also reflects
-  a package-wide move to using <em>draws</em> instead of <em>samples</em> for
-  describing multiple realizations from a distribution.</p></li>
+for <code><a href='gather_emmeans_draws.html'>gather_emmeans_draws()</a></code>. The new name (estimated marginal means) is more
+appropriate for Bayesian models than the old name (least-squares means), and reflects the
+naming of the newer <code>emmeans</code> package. It also reflects
+a package-wide move to using <em>draws</em> instead of <em>samples</em> for
+describing multiple realizations from a distribution.</p></li>
 <li><p><code>as_sample_tibble</code> and <code>as_sample_data_frame</code> are deprecated aliases
-  for <code><a href='tidy_draws.html'>tidy_draws</a></code>. The original intent of <code>as_sample_tibble</code> was to be
-  used primarily internally (hence its less user-friendly name); however, increasingly
-  I have come across use cases of <code>tidy_draws</code> that warrant a more user-friendly name.
-  It also reflects a package-wide move to using <em>draws</em> instead of <em>samples</em> for
-  describing multiple realizations from a distribution.</p></li>
+for <code><a href='tidy_draws.html'>tidy_draws()</a></code>. The original intent of <code>as_sample_tibble</code> was to be
+used primarily internally (hence its less user-friendly name); however, increasingly
+I have come across use cases of <code>tidy_draws</code> that warrant a more user-friendly name.
+It also reflects a package-wide move to using <em>draws</em> instead of <em>samples</em> for
+describing multiple realizations from a distribution.</p></li>
 <li><p><code>ggeye</code> is deprecated: for a package whose goal is flexible and customizable
-  visualization, monolithic functions are inflexible and do not sufficiently capitalize on users'
-  existing knowledge of ggplot; instead, I think it is more flexible to design geoms and stats
-  that can used within a complete ggplot workflow. <code><a href='geom_eye.html'>geom_eyeh</a></code> offers a horizontal
-  eye plot geom that can be used instead of <code>ggeye</code>.</p></li>
+visualization, monolithic functions are inflexible and do not sufficiently capitalize on users'
+existing knowledge of ggplot; instead, I think it is more flexible to design geoms and stats
+that can used within a complete ggplot workflow. <code><a href='geom_eye.html'>geom_eyeh()</a></code> offers a horizontal
+eye plot geom that can be used instead of <code>ggeye</code>.</p></li>
 </ul>
-    
+
     <h2 class="hasAnchor" id="deprecated-arguments-and-column-names"><a class="anchor" href="#deprecated-arguments-and-column-names"></a>Deprecated Arguments and Column Names</h2>
 
     
-    <p>Versions of tidybayes before version 1.0 used a different naming scheme for several
+
+
+<p>Versions of tidybayes before version 1.0 used a different naming scheme for several
 arguments and output columns.</p>
 <p>Deprecated arguments and column names are:</p>
 <ul>
@@ -223,11 +238,12 @@ arguments and output columns.</p>
 <li><p><code>conf.high</code> is now <code>.upper</code></p></li>
 <li><p><code>.prob</code> is now <code>.width</code></p></li>
 <li><p>The <code>.draw</code> column was added, and should be used instead of <code>.chain</code>
-    and <code>.iteration</code> to uniquely identify draws when you do not care about chains. (<code>.chain</code> and
-    <code>.iteration</code> are still provided for identifying draws <em>within</em> chains, if desired).</p></li>
+and <code>.iteration</code> to uniquely identify draws when you do not care about chains. (<code>.chain</code> and
+<code>.iteration</code> are still provided for identifying draws <em>within</em> chains, if desired).</p></li>
 </ul>
-    <p>To translate to/from the old naming scheme in output, use <code><a href='tidy-format-translators.html'>to_broom_names</a></code>
-and <code><a href='tidy-format-translators.html'>from_broom_names</a></code>.</p>
+
+<p>To translate to/from the old naming scheme in output, use <code><a href='tidy-format-translators.html'>to_broom_names()</a></code>
+and <code><a href='tidy-format-translators.html'>from_broom_names()</a></code>.</p>
 <p>Many of these names were updated in version 1.0 in order to
 make terminology more consistent and in order to satisfy these criteria:</p>
 <ul>
@@ -238,22 +254,21 @@ make terminology more consistent and in order to satisfy these criteria:</p>
 <li><p>No two-word names (multi-word names can always be standardized on and used in documentation, but I think data frame output should be succinct).</p></li>
 <li><p>Names should be nouns (I made an exception for lower/upper because they are common).</p></li>
 </ul>
-    
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
       <li><a href="#deprecated-functions">Deprecated Functions</a></li>
-
       <li><a href="#deprecated-arguments-and-column-names">Deprecated Arguments and Column Names</a></li>
-          </ul>
+    </ul>
 
     <h2>Author</h2>
     <p>Matthew Kay</p>
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -261,13 +276,16 @@ make terminology more consistent and in order to satisfy these criteria:</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

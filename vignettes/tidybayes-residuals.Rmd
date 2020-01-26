@@ -163,7 +163,7 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
 
 Before we fit a model to the censored data, let's see what an ideal model looks like: we'll fit a model to `y_star`. With censored or discrete data in the real-world, we would not be able to fit such a model, because we would not have observations of `y_star`, only the intervals. But this might help us understand what we're looking for in a fit that's working.
 
-```{r, cache = TRUE}
+```{r m_ideal_brm, cache = TRUE}
 m_ideal = brm(y_star ~ 1, data = cens_df, family = student)
 ```
 
@@ -232,7 +232,7 @@ This QQ plot shows us the model fits okay.
 
 Assuming a situation where we do not have access to the original (uncensored) data, we will perform a regression on the interval-censored data. In brms, we can do this by specifying the lower (`y_lower`) and upper (`y_upper`) bounds on each observation, and the censoring type (`censoring`), which in this case is `"interval"` for all observations.
 
-```{r, cache = TRUE}
+```{r m_brm, cache = TRUE}
 m = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df)
 ```
 
@@ -408,7 +408,7 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 
 Now, fitting the same model as before:
 
-```{r, cache = TRUE}
+```{r m_t1_brm, cache = TRUE}
 m_t1 = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df_t)
 ```
 
@@ -472,7 +472,7 @@ Still not good! But the clear s shape is very diagnostic of fat tails, so let's 
 
 A common model to try to "robustify" linear regression is to swap out the Normal response distribution for a Student's t distribution, which has fatter tails (it also happens that this is the distribution used to generate the data above, so I am clearly cheating, but also: *this had better work*).
 
-```{r, cache = TRUE}
+```{r m_t2_brm, cache = TRUE}
 m_t2 = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df_t, family = student)
 ```
 
@@ -529,7 +529,7 @@ cens_df_o = cens_df_t %>%
 
 Then we'll fit an ordinal regression model. We have to adjust the fit parameters a bit to get it to converge:
 
-```{r, cache = TRUE}
+```{r m_o_brm, cache = TRUE}
 m_o = brm(y_factor ~ 1, data = cens_df_o, family = cumulative, 
   prior = prior(normal(0, 10), class = Intercept), control = list(adapt_delta = 0.99))
 ```
@@ -574,7 +574,7 @@ Then we proceed as before:
 ```{r}
 cens_df_o %>%
   add_predicted_draws(m_o) %>%
-  mutate(.prediction = ordered(.prediction)) %>%
+  mutate(.prediction = ordered(levels(y_factor)[.prediction], levels = levels(y_factor))) %>%
   summarise(
     p_lower = mean(.prediction < y_factor),
     p_upper = mean(.prediction <= y_factor),
@@ -592,7 +592,7 @@ k = 20
 
 p = cens_df_o %>%
   add_predicted_draws(m_o) %>%
-  mutate(.prediction = ordered(.prediction)) %>%
+  mutate(.prediction = ordered(levels(y_factor)[.prediction], levels = levels(y_factor))) %>%
   summarise(
     p_lower = mean(.prediction < y_factor),
     p_upper = mean(.prediction <= y_factor),
@@ -664,7 +664,7 @@ bin_df = tibble(
 
 A model for this might be the following:
 
-```{r, cache = TRUE}
+```{r m_bin_brm, cache = TRUE}
 m_bin = brm(y ~ 1, data = bin_df, family = bernoulli)
 ```
 

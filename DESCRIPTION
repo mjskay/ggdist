@@ -70,6 +70,7 @@ RoxygenNote: 7.0.2
 LazyData: true
 Encoding: UTF-8
 Collate:
+    "tidybayes-package.R"
     "add_draws.R"
     "binning_methods.R"
     "combine_chains.R"

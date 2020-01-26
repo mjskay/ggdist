@@ -8,21 +8,32 @@
 
 <title>Data lists for input into Bayesian models — data_list • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,16 +43,16 @@
 
   <link href="../extra.css" rel="stylesheet">
   
+
 <meta property="og:title" content="Data lists for input into Bayesian models — data_list" />
-
-<meta property="og:description" content="Functions used by compose_data to create lists of data suitable for
+<meta property="og:description" content="Functions used by compose_data() to create lists of data suitable for
 input into a Bayesian modeling function. These functions typically should not be called directly
-(instead use compose_data), but are exposed for the rare cases in which
+(instead use compose_data()), but are exposed for the rare cases in which
 you may need to provide your own conversion routines for a data type not already
-supported (see `Details`)." />
-
+supported (see Details)." />
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -64,6 +75,7 @@ supported (see `Details`)." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -89,7 +101,7 @@ supported (see `Details`)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -127,11 +139,10 @@ supported (see `Details`)." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,6 +153,7 @@ supported (see `Details`)." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -153,13 +165,11 @@ supported (see `Details`)." />
     </div>
 
     <div class="ref-description">
-    
-    <p>Functions used by <code><a href='compose_data.html'>compose_data</a></code> to create lists of data suitable for
+    <p>Functions used by <code><a href='compose_data.html'>compose_data()</a></code> to create lists of data suitable for
 input into a Bayesian modeling function. <strong>These functions typically should not be called directly</strong>
-(instead use <code><a href='compose_data.html'>compose_data</a></code>), but are exposed for the rare cases in which
+(instead use <code><a href='compose_data.html'>compose_data()</a></code>), but are exposed for the rare cases in which
 you may need to provide your own conversion routines for a data type not already
-supported (see `Details`).</p>
-    
+supported (see <em>Details</em>).</p>
     </div>
 
     <pre class="usage"><span class='fu'>data_list</span>(<span class='no'>...</span>)
@@ -170,15 +180,13 @@ supported (see `Details`).</p>
 <span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>scalar_as_array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>scalar_as_array</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for logical</span>
 <span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for factor</span>
-<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'><a href='n_prefix.html'>n_prefix</a></span>(<span class='st'>"n"</span>), <span class='no'>...</span>)
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'><a href='n_prefix.html'>n_prefix</a></span>(<span class='st'>"n"</span>), <span class='no'>...</span>)
 
 <span class='co'># S3 method for character</span>
 <span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
@@ -187,23 +195,22 @@ supported (see `Details`).</p>
 <span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'><a href='n_prefix.html'>n_prefix</a></span>(<span class='st'>"n"</span>), <span class='no'>...</span>)
+<span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>.n_name</span> <span class='kw'>=</span> <span class='fu'><a href='n_prefix.html'>n_prefix</a></span>(<span class='st'>"n"</span>), <span class='no'>...</span>)
 
 <span class='co'># S3 method for data_list</span>
 <span class='fu'>as_data_list</span>(<span class='no'>object</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>...</th>
       <td><p>Additional arguments passed to other implementations of
-<code>as_data_list</code>, or for <code>data_list</code>, passed to <code><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></code>.</p></td>
+<code>as_data_list</code>, or for <code>data_list</code>, passed to <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>.</p></td>
     </tr>
     <tr>
       <th>object</th>
-      <td><p>The object to convert (see `Details`).</p></td>
+      <td><p>The object to convert (see <em>Details</em>).</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -227,41 +234,39 @@ passed in, the list returned will include an element named
 value 3.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("data_list", "list")</a></code>, where each element
+    <p>An object of class <code><a href='https://rdrr.io/r/base/c.html'>c("data_list", "list")</a></code>, where each element
 is a translated variable as described above.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>data_list</code> creates a list with class <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("data_list", "list")</a></code>
-instead of <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("list")</a></code>, but largely otherwise acts like the <code><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></code>
+    <p><code>data_list</code> creates a list with class <code><a href='https://rdrr.io/r/base/c.html'>c("data_list", "list")</a></code>
+instead of <code><a href='https://rdrr.io/r/base/c.html'>c("list")</a></code>, but largely otherwise acts like the <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>
 function.</p>
 <p><code>as_data_list</code> recursively translates its first argument into list elements,
 concatenating all resulting lists together. By default this means that:</p>
 <ul>
 <li><p>numerics are included as-is.</p></li>
-<li><p>logicals are translated into numeric using <code><a href='https://www.rdocumentation.org/packages/base/topics/numeric'>as.numeric</a></code>.</p></li>
-<li><p>factors are translated into numeric using <code><a href='https://www.rdocumentation.org/packages/base/topics/numeric'>as.numeric</a></code>, and an additional element named
-   <code>.n_name(name)</code> is added with the number of levels in the factor.</p></li>
+<li><p>logicals are translated into numeric using <code><a href='https://rdrr.io/r/base/numeric.html'>as.numeric()</a></code>.</p></li>
+<li><p>factors are translated into numeric using <code><a href='https://rdrr.io/r/base/numeric.html'>as.numeric()</a></code>, and an additional element named
+<code>.n_name(name)</code> is added with the number of levels in the factor.</p></li>
 <li><p>character vectors are converted into factors then translated into numeric in the same manner as factors are.</p></li>
 <li><p>lists are translated by translating all elements of the list
-   (recursively) and adding them to the result.</p></li>
+(recursively) and adding them to the result.</p></li>
 <li><p>data.frames are translated by translating every column of the data.frame and adding them to
-   the result. A variable named <code>"n"</code> (or <code>.n_name(name)</code> if <code>name</code> is not <code>""</code>)
-   is also added containing the number of rows in the data frame.</p></li>
+the result. A variable named <code>"n"</code> (or <code>.n_name(name)</code> if <code>name</code> is not <code>""</code>)
+is also added containing the number of rows in the data frame.</p></li>
 <li><p>all other types are dropped (and a warning given)</p></li>
 </ul>
-    <p>If you wish to add support for additional types not described above, provide
-an implementation of <code>as_data_list</code> for the type. See the
+
+<p>If you wish to add support for additional types not described above, provide
+an implementation of <code>as_data_list()</code> for the type. See the
 implementations of <code>as_data_list.numeric</code>, <code>as_data_list.logical</code>,
 etc for examples.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='compose_data.html'>compose_data</a></code>.</p></div>
-    
+    <div class='dont-index'><p><code><a href='compose_data.html'>compose_data()</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -275,13 +280,9 @@ etc for examples.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -290,19 +291,23 @@ etc for examples.</p>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='http://www.mjskay.com'>Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

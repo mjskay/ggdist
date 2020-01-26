@@ -59,7 +59,43 @@ layer, as a string.}
 \code{"dodge"} or \code{"dodgev"} (if the \code{ggstance} package is loaded) can be useful if you have
 overlapping intervals.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
+\item{...}{
+  Arguments passed on to \code{\link[=geom_slabinterval]{geom_slabinterval}}
+  \describe{
+    \item{\code{scale}}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+    \item{\code{justification}}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
+\code{0.5}.}
+    \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
+panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
+the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
+opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
+groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
+    \item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
+    \item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
+aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
+specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+    \item{\code{show_interval}}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+    \item{\code{na.rm}}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
+values are silently removed.}
+    \item{\code{show.legend}}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+    \item{\code{inherit.aes}}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+  }}
 
 \item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}

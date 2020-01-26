@@ -9,21 +9,32 @@
 <title>Compare the value of draws of some variable from a Bayesian model for
 different levels of a factor — compare_levels • tidybayes</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -33,15 +44,15 @@ different levels of a factor — compare_levels • tidybayes</title>
 
   <link href="../extra.css" rel="stylesheet">
   
+
 <meta property="og:title" content="Compare the value of draws of some variable from a Bayesian model for
 different levels of a factor — compare_levels" />
-
 <meta property="og:description" content="Given posterior draws from a Bayesian model in long format (e.g. as
-returned by spread_draws), compare the value of a variable in those draws
+returned by spread_draws()), compare the value of a variable in those draws
 across different paired combinations of levels of a factor." />
-
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -64,6 +75,7 @@ across different paired combinations of levels of a factor." />
 
   gtag('config', 'UA-93322-5');
 </script>
+
 
   </head>
 
@@ -89,7 +101,7 @@ across different paired combinations of levels of a factor." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -127,11 +139,10 @@ across different paired combinations of levels of a factor." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/tidybayes">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,6 +153,7 @@ across different paired combinations of levels of a factor." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -154,24 +166,28 @@ different levels of a factor</h1>
     </div>
 
     <div class="ref-description">
-    
     <p>Given posterior draws from a Bayesian model in long format (e.g. as
-returned by <code><a href='spread_draws.html'>spread_draws</a></code>), compare the value of a variable in those draws
+returned by <code><a href='spread_draws.html'>spread_draws()</a></code>), compare the value of a variable in those draws
 across different paired combinations of levels of a factor.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>compare_levels</span>(<span class='no'>data</span>, <span class='no'>variable</span>, <span class='no'>by</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>`-`</span>, <span class='kw'>comparison</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
-  <span class='kw'>ignore_groups</span> <span class='kw'>=</span> <span class='st'>".row"</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>compare_levels</span>(
+  <span class='no'>data</span>,
+  <span class='no'>variable</span>,
+  <span class='no'>by</span>,
+  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='no'>`-`</span>,
+  <span class='kw'>comparison</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
+  <span class='kw'>draw_indices</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>),
+  <span class='kw'>ignore_groups</span> <span class='kw'>=</span> <span class='st'>".row"</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
       <td><p>Long-format <code>data.frame</code> of draws such as returned by
-<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>. If <code>data</code>
+<code><a href='spread_draws.html'>spread_draws()</a></code> or <code><a href='spread_draws.html'>gather_draws()</a></code>. If <code>data</code>
 is a grouped data frame, comparisons will be made within groups (if
 one of the groups in the data frame is the <code>by</code> column, that specific
 group will be ignored, as it is not possible to make comparisons both
@@ -198,12 +214,12 @@ result of this function.</p></td>
       <th>comparison</th>
       <td><p>One of (a) the comparison types <code>ordered</code>,
 <code>control</code>, <code>pairwise</code>, or <code>default</code> (may also be given as
-strings, e.g. <code>"ordered"</code>), see `Details`; (b) a user-specified
+strings, e.g. <code>"ordered"</code>), see <em>Details</em>; (b) a user-specified
 function that takes a <code>factor</code> and returns a list of pairs of names of
 levels to compare (as strings) and/or unevaluated expressions containing
 representing the comparisons to make; or (c) a list of pairs of names of
 levels to compare (as strings) and/or unevaluated expressions representing
-the comparisons to make, e.g.: <code><a href='https://www.rdocumentation.org/packages/base/topics/list'>list(c("a", "b"), c("b", "c"))</a></code> or
+the comparisons to make, e.g.: <code><a href='https://rdrr.io/r/base/list.html'>list(c("a", "b"), c("b", "c"))</a></code> or
 <code>exprs(a - b, b - c)</code>, both of which would compare level <code>"a"</code> against
 <code>"b"</code> and level <code>"b"</code> against <code>"c"</code>. Note that the
 unevaluated expression syntax ignores the <code>fun</code> argument, can include
@@ -216,29 +232,28 @@ include more than two levels or other columns in <code>data</code>.</p></td>
 should be treated as indices when making the comparison (i.e. values of
 <code>variable</code> within each level of <code>by</code> will be compared at each
 unique combination of levels of <code>draw_indices</code>). Columns in <code>draw_indices</code>
-not found in <code>data</code> are ignored. The default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(".chain",".iteration",".draw")</a></code>,
+not found in <code>data</code> are ignored. The default is <code><a href='https://rdrr.io/r/base/c.html'>c(".chain",".iteration",".draw")</a></code>,
 which are the same names used for chain/iteration/draw indices returned by
-<code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code>; thus if you are using <code>compare_levels</code>
-with <code><a href='spread_draws.html'>spread_draws</a></code> or <code><a href='spread_draws.html'>gather_draws</a></code> you generally should not need to change this
+<code><a href='spread_draws.html'>spread_draws()</a></code> or <code><a href='spread_draws.html'>gather_draws()</a></code>; thus if you are using <code>compare_levels</code>
+with <code><a href='spread_draws.html'>spread_draws()</a></code> or <code><a href='spread_draws.html'>gather_draws()</a></code> you generally should not need to change this
 value.</p></td>
     </tr>
     <tr>
       <th>ignore_groups</th>
       <td><p>character vector of names of groups to ignore by
 default in the input grouping. This is primarily provided to make it
-easier to pipe output of <code><a href='add_predicted_draws.html'>add_fitted_draws</a></code> into this function,
+easier to pipe output of <code><a href='add_predicted_draws.html'>add_fitted_draws()</a></code> into this function,
 as that function provides a <code>".row"</code> output column that is grouped,
 but which is virtually never desired to group by when using <code>compare_levels</code>.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A <code>data.frame</code> with the same columns as <code>data</code>, except
 that the <code>by</code> column contains a symbolic representation of the
 comparison of pairs of levels of <code>by</code> in <code>data</code>, and
 <code>variable</code> contains the result of that comparison.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function simplifies conducting comparisons across levels of some
@@ -249,29 +264,27 @@ by <code>comparison</code>. By default, all pairwise comparisons are generated i
 <code>by</code> is <code>ordered</code>.</p>
 <p>The included <code>comparison</code> types are:</p><ul>
 <li><p><code>ordered</code>:
-compare each level <code>i</code> with level <code>i - 1</code>; e.g. <code>fun(i, i -
-1)</code></p></li>
+compare each level <code>i</code> with level <code>i - 1</code>; e.g. <code>fun(i, i - 1)</code></p></li>
 <li><p><code>pairwise</code>: compare each level of <code>by</code> with every other
 level.</p></li>
 <li><p><code>control</code>: compare each level of <code>by</code> with the first
 level of <code>by</code>.  If you wish to compare with a different level, you can
-first apply <code><a href='https://www.rdocumentation.org/packages/stats/topics/relevel'>relevel</a></code> to <code>by</code> to set the control
+first apply <code><a href='https://rdrr.io/r/stats/relevel.html'>relevel()</a></code> to <code>by</code> to set the control
 (reference) level.</p></li>
 <li><p><code>default</code>: use <code>ordered</code> if
-<code><a href='https://www.rdocumentation.org/packages/base/topics/factor'>is.ordered(by)</a></code> and <code>pairwise</code> otherwise.</p></li>
+<code><a href='https://rdrr.io/r/base/factor.html'>is.ordered(by)</a></code> and <code>pairwise</code> otherwise.</p></li>
 </ul>
-    
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws</a></code> and <code><a href='spread_draws.html'>gather_draws</a></code>.</p></div>
-    
+    <div class='dont-index'><p><code><a href='spread_draws.html'>spread_draws()</a></code> and <code><a href='spread_draws.html'>gather_draws()</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='co'># Let's do all pairwise comparisons of b[i,1]:</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
@@ -307,13 +320,9 @@ first apply <code><a href='https://www.rdocumentation.org/packages/stats/topics/
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -322,19 +331,23 @@ first apply <code><a href='https://www.rdocumentation.org/packages/stats/topics/
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='http://www.mjskay.com'>Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
