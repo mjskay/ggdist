@@ -1,4 +1,4 @@
-# tidybayes 1.1.0.9000
+# tidybayes 2.0.0
 
 * meta-geom (and everything that goes with that...) (#84 and others: #162 #163 #56 #83 #136 #180)
 * trimmed hdis (#165)
