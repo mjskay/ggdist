@@ -55,7 +55,6 @@ library(modelr)
 library(tidybayes)
 library(ggplot2)
 library(ggstance)
-library(ggridges)
 library(rstan)
 library(rstanarm)
 library(cowplot)
@@ -406,14 +405,14 @@ The idea is to get away from thinking about the posterior as indicating one cano
 
 Where `add_fitted_draws` is analogous to `rstanarm::posterior_linpred`, `add_predicted_draws` is analogous to `rstanarm::posterior_predict`, giving draws from the posterior predictive distribution.
 
-Here is an example of posterior predictive distributions plotted using `ggridges::geom_density_ridges`:
+Here is an example of posterior predictive distributions plotted using `stat_slabh()`:
 
 ```{r}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
   ggplot(aes(x = .prediction, y = condition)) +
-  geom_density_ridges()
+  stat_slabh()
 ```
 
 We could also use `tidybayes::stat_intervalh` to plot predictive bands alongside the data:

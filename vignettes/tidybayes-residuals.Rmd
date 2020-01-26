@@ -51,7 +51,6 @@ library(purrr)
 library(tidyr)
 library(tidybayes)
 library(ggplot2)
-library(ggridges)
 library(cowplot)
 library(rstan)
 library(brms)
@@ -130,7 +129,7 @@ A graphical depiction of the censoring process might be something like this:
 ```{r, fig.width = 1.75, fig.height = 5}
 uncensored_plot = cens_df %>%
   ggplot(aes(y = "", x = y_star)) +
-  geom_density_ridges(bandwidth = 0.5, scale = 1.5) +
+  stat_slabh(color = "black") +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
   scale_x_continuous(breaks = -4:4, limits = c(-4, 4)) +
@@ -375,7 +374,7 @@ Note the presence of outliers:
 ```{r, fig.width = 4, fig.height = 5.75}
 uncensored_plot = cens_df_t %>%
   ggplot(aes(y = "", x = y)) +
-  geom_density_ridges(bandwidth = 0.5, scale = 1.5) +
+  stat_slabh(color = "black") +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
   scale_x_continuous(breaks = -10:10, limits = c(-10, 10)) +

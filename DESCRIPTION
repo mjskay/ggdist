@@ -50,7 +50,6 @@ Suggests:
     modelr,
     brms (>= 2.11.1),
     cowplot,
-    ggridges,
     covr,
     gdtools,
     rmarkdown,
