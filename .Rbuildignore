@@ -27,3 +27,4 @@
 ^figures-source$
 ^vignettes/.*_cache$
 ^benchmarks.*$
+^revdep$
