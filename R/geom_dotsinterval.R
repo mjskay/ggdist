@@ -270,8 +270,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' wide as the bin width.
 #' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
 #' default, `1`, makes dots in the same stack just touch each other.
-#' @param binwidth The binwidth to use for drawing the dotplots. The default value, `NA`, will dynamically select
-#' a binwidth based on the size of the plot when drawn.
+#' @param binwidth The bin width to use for drawing the dotplots. The default value, `NA`, will dynamically select
+#' a bin width based on the size of the plot when drawn.
 #' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
 #' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number

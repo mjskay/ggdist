@@ -170,8 +170,8 @@ wide as the bin width.}
 \item{stackratio}{The distance between the center of the dots in the same stack relative to the bin height. The
 default, \code{1}, makes dots in the same stack just touch each other.}
 
-\item{binwidth}{The binwidth to use for drawing the dotplots. The default value, \code{NA}, will dynamically select
-a binwidth based on the size of the plot when drawn.}
+\item{binwidth}{The bin width to use for drawing the dotplots. The default value, \code{NA}, will dynamically select
+a bin width based on the size of the plot when drawn.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
@@ -248,7 +248,7 @@ These stats support the following aesthetics:
 \item \code{size}
 \item \code{group}
 }
-In addition, in their default configuration (paired with geom_dotsinterval) the following aesthetics are supported by the underlying geom:
+In addition, in their default configuration (paired with \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
 \item \code{slab_shape}
 \item \code{datatype}

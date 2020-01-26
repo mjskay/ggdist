@@ -98,7 +98,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' if no column names are specified to be summarized. Default ignores several meta-data column
 #' names used in tidybayes.
 #' @param na.rm logical value indicating whether `NA` values should be stripped before the computation proceeds.
-#' If `FALSE` (the default), any vectors to be summarised that contain `NA` will result in
+#' If `FALSE` (the default), any vectors to be summarized that contain `NA` will result in
 #' point and interval summaries equal to `NA`.
 #' @param x vector to summarize (for interval functions: `qi` and `hdi`)
 #' @author Matthew Kay

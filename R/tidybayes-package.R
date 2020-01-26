@@ -31,6 +31,6 @@
 #' @references
 #'
 #' Wickham, Hadley. (2014). Tidy data. _Journal of Statistical Software_,
-#' 59(10), 1-23. DOI: [10.18637/jss.v059.i10](http://dx.doi.org/10.18637/jss.v059.i10).
+#' 59(10), 1-23. \doi{10.18637/jss.v059.i10}.
 #'
 NULL

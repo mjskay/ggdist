@@ -14,7 +14,7 @@
 #'
 #' `parse_dist()` can be applied to character vectors or to a data frame + bare column name of the
 #' column to parse, and returns a data frame with `".dist"` and `".args"` columns added.
-#' `parse_dist()` uses `r_dist_name()` to translate distribution names into names reconized
+#' `parse_dist()` uses `r_dist_name()` to translate distribution names into names recognized
 #' by R.
 #'
 #' `r_dist_name()` takes a character vector of names and translates common names into R
@@ -23,7 +23,7 @@
 #' `"LogNormal"`, `"log_normal"`, `"log-Normal"`, and any number of other variants
 #' all get translated into `"lnorm"`.
 #'
-#' @param object A character vector containing distribution specifiations or a data frame with a column
+#' @param object A character vector containing distribution specifications or a data frame with a column
 #'  containing distribution specifications.
 #' @param dist_col A bare (unquoted) column or column expression that resolves to a character vector
 #'  of distribution specifications.

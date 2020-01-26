@@ -32,8 +32,8 @@ operations:
     the length of indices, etc. This package helps automate these
     operations using the `compose_data` function, which automatically
     handles data types like `numeric`, `logical`, `factor`, and
-    `ordinal`, and allows easy extensions for converting other datatypes
-    into a format the model understands by providing your own
+    `ordinal`, and allows easy extensions for converting other data
+    types into a format the model understands by providing your own
     implementation of the generic `as_data_list`.
 
   - **Extracting tidy draws** from the model. This often means
@@ -83,13 +83,14 @@ manipulation and visualization tasks common to many models:
     `stat_pointinterval()`, `stat_pointintervalh()`), visualizing
     distributions with point summaries and intervals (the
     `stat_sample_slabinterval()` family of stats, including eye plots,
-    half-eye plots, CCDF bar plots, gradient plots, and histograms), and
-    visualizing fit lines with an arbitrary number of uncertainty bands
-    (`geom_lineribbon` and `stat_lineribbon`). Priors can also be
-    visualized in the same way using the `stat_dist_slabinterval()`
-    family of stats. Combining the base-R `quantile` function with
-    `geom_dotplot` also facilitates the construction of quantile
-    dotplots of posteriors (see example in this document).
+    half-eye plots, CCDF bar plots, gradient plots, dotplots, and
+    histograms), and visualizing fit lines with an arbitrary number of
+    uncertainty bands (`geom_lineribbon` and `stat_lineribbon`). Priors
+    can also be visualized in the same way using the
+    `stat_dist_slabinterval()` family of stats. The
+    `geom_dotsinterval()` family also automatically finds good binning
+    parameters for dotplots, and can be used to easily construct
+    quantile dotplots of posteriors (see example in this document).
     
     ![The slabinterval family of geoms and
     stats](man/figures/slabinterval_family.png)
@@ -282,23 +283,23 @@ m %>%
 
 <div class="kable-table">
 
-| .chain | .iteration | .draw | condition | condition\_mean | response\_sd |
-| -----: | ---------: | ----: | :-------- | --------------: | -----------: |
-|      1 |          1 |     1 | A         |       0.1264058 |    0.5331877 |
-|      1 |          1 |     1 | B         |       0.9613813 |    0.5331877 |
-|      1 |          1 |     1 | C         |       1.8768678 |    0.5331877 |
-|      1 |          1 |     1 | D         |       1.2310755 |    0.5331877 |
-|      1 |          1 |     1 | E         |     \-1.2789841 |    0.5331877 |
-|      1 |          2 |     2 | A         |       0.2500193 |    0.5418101 |
-|      1 |          2 |     2 | B         |       1.0487896 |    0.5418101 |
-|      1 |          2 |     2 | C         |       1.9597241 |    0.5418101 |
-|      1 |          2 |     2 | D         |       0.7616625 |    0.5418101 |
-|      1 |          2 |     2 | E         |     \-1.2759327 |    0.5418101 |
-|      1 |          3 |     3 | A         |       0.1603645 |    0.5429537 |
-|      1 |          3 |     3 | B         |       0.9749313 |    0.5429537 |
-|      1 |          3 |     3 | C         |       2.0067855 |    0.5429537 |
-|      1 |          3 |     3 | D         |       1.2180539 |    0.5429537 |
-|      1 |          3 |     3 | E         |     \-0.9395891 |    0.5429537 |
+| condition | condition\_mean | .chain | .iteration | .draw | response\_sd |
+| :-------- | --------------: | -----: | ---------: | ----: | -----------: |
+| A         |       0.1571394 |      1 |          1 |     1 |    0.6728488 |
+| A         |       0.3616655 |      1 |          2 |     2 |    0.5323894 |
+| A         |       0.1946582 |      1 |          3 |     3 |    0.5647096 |
+| A         |       0.2448337 |      1 |          4 |     4 |    0.5348348 |
+| A         |       0.1341376 |      1 |          5 |     5 |    0.5095604 |
+| A         |       0.2728213 |      1 |          6 |     6 |    0.5113445 |
+| A         |     \-0.0744789 |      1 |          7 |     7 |    0.6272724 |
+| A         |       0.1158576 |      1 |          8 |     8 |    0.6099609 |
+| A         |       0.0902241 |      1 |          9 |     9 |    0.4847436 |
+| A         |       0.2101223 |      1 |         10 |    10 |    0.5940226 |
+| A         |       0.1183253 |      1 |         11 |    11 |    0.4777475 |
+| A         |       0.2180164 |      1 |         12 |    12 |    0.5436858 |
+| A         |       0.2382551 |      1 |         13 |    13 |    0.4933700 |
+| A         |       0.0557767 |      1 |         14 |    14 |    0.6066798 |
+| A         |       0.1804452 |      1 |         15 |    15 |    0.5824206 |
 
 </div>
 
@@ -354,20 +355,23 @@ better (hence eye plots, above). On the other hand, making inferences
 from density plots is imprecise (estimating the area of one shape as a
 proportion of another is a hard perceptual task). Reasoning about
 probability in frequency formats is easier, motivating [quantile
-dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md),
-which also allow precise estimation of arbitrary intervals (down to the
-dot resolution of the plot, here 100):
+dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md)
+([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes
+et al. 2018](https://doi.org/10.1145/3173574.3173718)), which also allow
+precise estimation of arbitrary intervals (down to the dot resolution of
+the plot, 100 in the example below).
+
+Within the slabinterval family of geoms in tidybayes is the `dots` and
+`dotsinterval` family, which automatically determine appropriate bin
+sizes for dotplots and can calculate quantiles from samples to construct
+quantile dotplots. `stat_dotsh()` is the horizontal variant designed for
+use on samples:
 
 ``` r
 m %>%
   spread_draws(condition_mean[condition]) %>%
-  do(tibble(condition_mean = quantile(.$condition_mean, ppoints(100)))) %>%
-  ggplot(aes(x = condition_mean)) +
-  geom_dotplot(binwidth = .04) +
-  facet_grid(rows = vars(fct_rev(condition)), switch = "y") +
-  facet_title_left_horizontal() +
-  scale_y_continuous(breaks = NULL) +
-  ylab(NULL)
+  ggplot(aes(x = condition_mean, y = condition)) +
+  stat_dotsh(quantiles = 100) 
 ```
 
 ![](README_files/figure-gfm/quantile_dotplots-1.png)<!-- -->
@@ -392,11 +396,11 @@ m %>%
 
 | condition | condition\_mean |      .lower |      .upper | .width | .point | .interval |
 | :-------- | --------------: | ----------: | ----------: | -----: | :----- | :-------- |
-| A         |       0.1894690 | \-0.1584671 |   0.5459622 |   0.95 | median | qi        |
-| B         |       1.0065091 |   0.6530260 |   1.3523473 |   0.95 | median | qi        |
-| C         |       1.8355453 |   1.4871716 |   2.1951686 |   0.95 | median | qi        |
-| D         |       1.0106941 |   0.6558686 |   1.3625754 |   0.95 | median | qi        |
-| E         |     \-0.8867473 | \-1.2434928 | \-0.5213330 |   0.95 | median | qi        |
+| A         |       0.1959004 | \-0.1533328 |   0.5512907 |   0.95 | median | qi        |
+| B         |       1.0020230 |   0.6535607 |   1.3503131 |   0.95 | median | qi        |
+| C         |       1.8340888 |   1.4886406 |   2.1726034 |   0.95 | median | qi        |
+| D         |       1.0203893 |   0.6539531 |   1.3762399 |   0.95 | median | qi        |
+| E         |     \-0.8895464 | \-1.2428199 | \-0.5200346 |   0.95 | median | qi        |
 
 </div>
 
@@ -451,11 +455,11 @@ bayes_results
 
 | condition |    estimate |    conf.low |   conf.high | .width | .point | .interval | model |
 | :-------- | ----------: | ----------: | ----------: | -----: | :----- | :-------- | :---- |
-| A         |   0.1894690 | \-0.1584671 |   0.5459622 |   0.95 | median | qi        | Bayes |
-| B         |   1.0065091 |   0.6530260 |   1.3523473 |   0.95 | median | qi        | Bayes |
-| C         |   1.8355453 |   1.4871716 |   2.1951686 |   0.95 | median | qi        | Bayes |
-| D         |   1.0106941 |   0.6558686 |   1.3625754 |   0.95 | median | qi        | Bayes |
-| E         | \-0.8867473 | \-1.2434928 | \-0.5213330 |   0.95 | median | qi        | Bayes |
+| A         |   0.1959004 | \-0.1533328 |   0.5512907 |   0.95 | median | qi        | Bayes |
+| B         |   1.0020230 |   0.6535607 |   1.3503131 |   0.95 | median | qi        | Bayes |
+| C         |   1.8340888 |   1.4886406 |   2.1726034 |   0.95 | median | qi        | Bayes |
+| D         |   1.0203893 |   0.6539531 |   1.3762399 |   0.95 | median | qi        | Bayes |
+| E         | \-0.8895464 | \-1.2428199 | \-0.5200346 |   0.95 | median | qi        | Bayes |
 
 </div>
 
@@ -640,7 +644,7 @@ I welcome feedback, suggestions, issues, and contributions\! Contact me
 at <mjskay@umich.edu>. If you have found a bug, please file it
 [here](https://github.com/mjskay/tidybayes/issues/new) with minimal code
 to reproduce the issue. Pull requests should be filed against the
-[dev](https://github.com/mjskay/tidybayes/tree/dev) branch.
+[`dev`](https://github.com/mjskay/tidybayes/tree/dev) branch.
 
 `tidybayes` grew out of helper functions I wrote to make my own analysis
 pipelines tidier. Over time it has expanded to cover more use cases I
@@ -648,7 +652,7 @@ have encountered, but I would love to make it cover more\!
 
 ## Citing `tidybayes`
 
-Matthew Kay (2019). *tidybayes: Tidy Data and Geoms for Bayesian
+Matthew Kay (2020). *tidybayes: Tidy Data and Geoms for Bayesian
 Models*. R package version 1.1.0.9000,
 <https://mjskay.github.io/tidybayes/>. DOI:
 [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).

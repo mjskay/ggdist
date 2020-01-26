@@ -29,7 +29,7 @@ parse_dist(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE)
 r_dist_name(dist_name)
 }
 \arguments{
-\item{object}{A character vector containing distribution specifiations or a data frame with a column
+\item{object}{A character vector containing distribution specifications or a data frame with a column
 containing distribution specifications.}
 
 \item{...}{Arguments passed to other implementations of \code{parse_dist}.}
@@ -60,7 +60,7 @@ brms models.
 \details{
 \code{parse_dist()} can be applied to character vectors or to a data frame + bare column name of the
 column to parse, and returns a data frame with \code{".dist"} and \code{".args"} columns added.
-\code{parse_dist()} uses \code{r_dist_name()} to translate distribution names into names reconized
+\code{parse_dist()} uses \code{r_dist_name()} to translate distribution names into names recognized
 by R.
 
 \code{r_dist_name()} takes a character vector of names and translates common names into R

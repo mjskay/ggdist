@@ -40,7 +40,7 @@ two common (often tedious) operations:
   numerical data, adding variables to store the length of indices, etc. This
   package helps automate these operations using the `compose_data` function, which
   automatically handles data types like `numeric`, `logical`, `factor`, and `ordinal`, 
-  and allows easy extensions for converting other datatypes into a format the
+  and allows easy extensions for converting other data types into a format the
   model understands by providing your own implementation of the generic `as_data_list`.
 
 * __Extracting tidy draws__ from the model. This often means extracting indices
@@ -469,7 +469,7 @@ See `vignette("tidybayes")` for a variety of additional examples and more explan
 
 ## Feedback, issues, and contributions
 
-I welcome feedback, suggestions, issues, and contributions! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [dev](https://github.com/mjskay/tidybayes/tree/dev) branch.
+I welcome feedback, suggestions, issues, and contributions! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/tidybayes/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [`dev`](https://github.com/mjskay/tidybayes/tree/dev) branch.
 
 `tidybayes` grew out of helper functions I wrote to make my own analysis pipelines tidier. Over time it has expanded to cover more use cases I have encountered, but I would love to make it cover more!
 

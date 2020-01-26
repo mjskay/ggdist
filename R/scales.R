@@ -56,7 +56,7 @@
 #' @param range a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
 #' after transformation.
 #' @param na.translate In discrete scales, should we show missing values?
-#' @param na.value When na.translate is true, what value should be shown?
+#' @param na.value When `na.translate` is true, what value should be shown?
 #' @name scales
 #' @author Matthew Kay
 #' @seealso [scale_color_discrete()], [scale_color_continuous()], etc.

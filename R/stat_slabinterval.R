@@ -38,7 +38,7 @@
 #' argument will be easier to use). This function takes a data frame of aesthetics and a `.width` parameter (a vector
 #' of interval widths), and returns a data frame with
 #' columns `.width` (from the `.width` vector), `.value` (point summary) and `.lower` and `.upper`
-#' (endpoints of the inverals, given the `.width`). Output will be converted to the appropriate `x`- or
+#' (endpoints of the intervals, given the `.width`). Output will be converted to the appropriate `x`- or
 #' `y`-based aesthetics depending on the value of `orientation`. If `interval_function` is `NULL`,
 #' `point_interval` is used instead.
 #' @param interval_args Additional arguments passed to `interval_function` or `point_interval`.

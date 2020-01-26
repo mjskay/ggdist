@@ -141,7 +141,7 @@ When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y},
 and \code{ymax} (for use with ggplot).}
 
 \item{na.rm}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
-If \code{FALSE} (the default), any vectors to be summarised that contain \code{NA} will result in
+If \code{FALSE} (the default), any vectors to be summarized that contain \code{NA} will result in
 point and interval summaries equal to \code{NA}.}
 
 \item{.exclude}{A character vector of names of columns to be excluded from summarization

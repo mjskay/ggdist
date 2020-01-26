@@ -453,7 +453,7 @@ ABC %>%
 
 For a more detailed description of these charts (and some useful variations on them), see [Solomon Kurz's excellent blog post on the topic](https://solomonkurz.netlify.com/post/make-rotated-gaussians-kruschke-style/).
 
-We could even combine the Kruschke-style plots of predictive distributions with halfeyes showing the posterior means:
+We could even combine the Kruschke-style plots of predictive distributions with half-eyes showing the posterior means:
 
 ```{r}
 ABC %>%
@@ -715,7 +715,7 @@ plot_grid(ncol = 1, align = "v",
 
 The above display does not let you see the correlation between `P(cyl|mpg)` for different values of `cyl` at a particular value of `mpg`. For example, in the portion of the posterior where `P(cyl = 6|mpg = 20)` is high, `P(cyl = 4|mpg = 20)` and `P(cyl = 8|mpg = 20)` must be low (since these must add up to 1). 
 
-One way to see this correlation might be to employ [hypothetical outcome plots (HOPs)](https://doi.org/10.1371/journal.pone.0142444) just for the fit line, "detach"ing it from the ribbon (another alternative would be to use HOPs on top of line ensembles, as demonstrated earlier in this document). By employing animation, you can see how the lines move in tandem or opposition to each other, revealing some patterns in how they are correlated:
+One way to see this correlation might be to employ [hypothetical outcome plots (HOPs)](https://doi.org/10.1371/journal.pone.0142444) just for the fit line, "detaching" it from the ribbon (another alternative would be to use HOPs on top of line ensembles, as demonstrated earlier in this document). By employing animation, you can see how the lines move in tandem or opposition to each other, revealing some patterns in how they are correlated:
 
 
 ```{r}

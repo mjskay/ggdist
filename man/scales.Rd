@@ -157,7 +157,7 @@ after transformation.}
 
 \item{na.translate}{In discrete scales, should we show missing values?}
 
-\item{na.value}{When na.translate is true, what value should be shown?}
+\item{na.value}{When \code{na.translate} is true, what value should be shown?}
 
 \item{limits}{One of:
 \itemize{

@@ -29,5 +29,5 @@ For a list of supported models, see \link{tidybayes-models}.
 }
 \references{
 Wickham, Hadley. (2014). Tidy data. \emph{Journal of Statistical Software},
-59(10), 1-23. DOI: \href{http://dx.doi.org/10.18637/jss.v059.i10}{10.18637/jss.v059.i10}.
+59(10), 1-23. \doi{10.18637/jss.v059.i10}.
 }

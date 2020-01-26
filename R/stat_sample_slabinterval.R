@@ -81,7 +81,7 @@ sample_slab_function = function(
 #' Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)
 #'
 #' Stats for computing densities and CDFs + intervals from samples for use with
-#' [geom_slabinterval()]. Useful for creating eye plots, halfeye plots,
+#' [geom_slabinterval()]. Useful for creating eye plots, half-eye plots,
 #' CCDF bar plots etc.
 #'
 #' A highly configurable stat for generating a variety of plots that combine a "slab"

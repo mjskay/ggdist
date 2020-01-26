@@ -93,7 +93,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
       "\\itemize{",
       paste0("  \\item \\code{", stat$aesthetics(), "}"),
       "}",
-      paste0("In addition, in their default configuration (paired with ", geom_name, ") ",
+      paste0("In addition, in their default configuration (paired with [", geom_name, "()]) ",
         "the following aesthetics are supported by the underlying geom:")
     )
   }

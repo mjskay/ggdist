@@ -173,7 +173,7 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 argument will be easier to use). This function takes a data frame of aesthetics and a \code{.width} parameter (a vector
 of interval widths), and returns a data frame with
 columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
-(endpoints of the inverals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
+(endpoints of the intervals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
 \code{y}-based aesthetics depending on the value of \code{orientation}. If \code{interval_function} is \code{NULL},
 \code{point_interval} is used instead.}
 
@@ -227,7 +227,7 @@ of the slab at each x / y value of the slab (depending on \code{orientation}).}
 }
 \description{
 Stats for computing densities and CDFs + intervals from samples for use with
-\code{\link[=geom_slabinterval]{geom_slabinterval()}}. Useful for creating eye plots, halfeye plots,
+\code{\link[=geom_slabinterval]{geom_slabinterval()}}. Useful for creating eye plots, half-eye plots,
 CCDF bar plots etc.
 }
 \details{
@@ -265,7 +265,7 @@ These stats support the following aesthetics:
 \item \code{size}
 \item \code{group}
 }
-In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:
+In addition, in their default configuration (paired with \code{\link[=geom_slabinterval]{geom_slabinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
 \item \code{datatype}
 \item \code{alpha}

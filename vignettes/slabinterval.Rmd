@@ -191,7 +191,7 @@ df %>%
   ggtitle("stat_eye()")
 ```
 
-(Users of older versions of tidybayes might have used `geom_eye()`, which is the older spelling of `stat_eye()`. Due to the name standardization in this version of tidybayes (see the decription above), `stat_eye()` is now the preferred spelling, though `geom_eye()` will continue to work.)
+(Users of older versions of tidybayes might have used `geom_eye()`, which is the older spelling of `stat_eye()`. Due to the name standardization in this version of tidybayes (see the description above), `stat_eye()` is now the preferred spelling, though `geom_eye()` will continue to work.)
 
 We can also use `stat_halfeye` instead to just get densities:
 
@@ -270,7 +270,7 @@ plot_grid(ncol = 3, align = "hv",
 ```
 
 Eye plots are also designed to support dodging through the standard mechanism of `position = "dodge"`. 
-Unlike with geom_violin(), densities in groups that are not dodged (here, 'a' and 'b')\nhave the same area and max width as those in groups that are dodged ('c'):
+Unlike with geom_violin(), densities in groups that are not dodged (here, 'a' and 'b') have the same area and max width as those in groups that are dodged ('c'):
 
 ```{r eye_dodge}
 df %>%
@@ -338,7 +338,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   ) 
 ```
 
-`stat_dist_slabh()` is a shortcut geom for something like `stat_dist_halfeyeh(show_interval = FALSE, ...)`, with some simplifications: since it does not have the interval attached to it, it does not require you to use `slab_color` to target the outliine color; you can use `color` directly. This simplifies things somewhat:
+`stat_dist_slabh()` is a shortcut geom for something like `stat_dist_halfeyeh(show_interval = FALSE, ...)`, with some simplifications: since it does not have the interval attached to it, it does not require you to use `slab_color` to target the outline color; you can use `color` directly. This simplifies things somewhat:
 
 ```{r beta_overplotted_slabh}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
@@ -523,7 +523,7 @@ plot_grid(ncol = 3, align = "hv",
 
 You can also use `stat_dist_ccdfinterval()` instead if you wish to visualize analytical distributions, just as you can use `stat_dist_eye()`.
 
-By default, `stat_dist_ccdfinterval()` uses the quantiles at `p = 0.001` and `p = 0.999` in the distributions are used to determine their extrant. You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown as before:
+By default, `stat_dist_ccdfinterval()` uses the quantiles at `p = 0.001` and `p = 0.999` in the distributions are used to determine their extent. You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown as before:
 
 ```{r dist_ccdf_dodge}
 dist_df %>%
@@ -679,7 +679,7 @@ df %>%
 
 ### Highlighting and other combinations
 
-The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight subregions of a plot. Take the earlier example of visualizing priors:
+The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. Take the earlier example of visualizing priors:
 
 ```{r norm_vs_t_2}
 priors = tribble(

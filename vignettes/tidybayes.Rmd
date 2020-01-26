@@ -307,7 +307,7 @@ When given only a single column, `median_qi` will use the names `.lower` and `.u
 
 ### Using `geom_pointinterval`/`geom_pointintervalh`
 
-Plotting medians and intervals is straightforward using the `pointinterval` geom (or its horizontal version, `pointintervalh`), which are simlar to `ggplot2::geom_pointrange` but with sensible defaults for multiple intervals (functionality we will use later):
+Plotting medians and intervals is straightforward using the `pointinterval` geom (or its horizontal version, `pointintervalh`), which are similar to `ggplot2::geom_pointrange` but with sensible defaults for multiple intervals (functionality we will use later):
 
 ```{r}
 m %>%

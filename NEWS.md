@@ -2,10 +2,10 @@
 
 * meta-geom (and everything that goes with that...) (#84 and others: #162 #163 #56 #83 #136 #180)
 * trimmed hdis (#165)
-* exprs in compare_levels (#174 #175)
-* lineribbon now works with ggnewscale (and other default computed aesthetic stuff, #178)
+* `exprs()` in compare_levels (#174 #175)
+* `geom_lineribbon()` now works with `ggnewscale` (and other default computed aesthetic stuff, #178)
 * more helpful error messages on unsupported models for fitted/predicted_draws (#177)
-* kruschke-style distribution-of-distribution plots now easier to construct with stat_dist_slabh
+* Kruschke-style distribution-of-distribution plots now easier to construct with `stat_dist_slabh()`
 
 
 # tidybayes 1.1.0
@@ -19,7 +19,7 @@ New features and documentation:
 Bug fixes:
 
 * Fixed errors on CRAN from changes in brms
-* Properly handle dirichlet responses in predicted_draws (#164)
+* Properly handle Dirichlet responses in predicted_draws (#164)
 
 
 # tidybayes 1.0.4
@@ -35,17 +35,17 @@ New features and documentation:
 Minor changes:
 
 * Fixed errors on CRAN from changes in dplyr
-* Fix bug to support multivariate models in predicted_draws, closes #134
-* Add support for emm_list in gather_emmeans_draws, closes #126
+* Fix bug to support multivariate models in `predicted_draws()`, closes #134
+* Add support for `emm_list` in `gather_emmeans_draws()`, closes #126
 * Default for show.legend no longer omits all guides
-* Make default lineribbon color black, closes #153
+* Make default `geom_lineribbon()` color black, closes #153
 
 
 # tidybayes 1.0.3
 
 * Added `gather_pairs` method for creating custom scatterplot matrices (and more!) 
 * Ordinal models in brms now use original category labels (#122)
-* `NA` values are now better supported in `point_interval`, and it has an na.rm argument (#123)
+* `NA` values are now better supported in `point_interval`, and it has an `na.rm` argument (#123)
 * Added sampler diagnostics to tidy_draws() Stan output (#109)
 * Added MCMCglmm+emmeans example to vignettes
 * Add guards to prevent usage of packages listed in `Suggests`

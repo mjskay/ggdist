@@ -284,7 +284,7 @@ These stats support the following aesthetics:
 \item \code{size}
 \item \code{group}
 }
-In addition, in their default configuration (paired with geom_slabinterval) the following aesthetics are supported by the underlying geom:
+In addition, in their default configuration (paired with \code{\link[=geom_slabinterval]{geom_slabinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
 \item \code{datatype}
 \item \code{alpha}

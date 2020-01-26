@@ -147,12 +147,12 @@ corresponding intervals.
 \code{geom_slabinterval} is a flexible meta-geom that you can use directly or through a variety of "shortcut"
 geoms that represent useful combinations of the various parameters of this geom. In many cases you will want to
 use the shortcut geoms instead as they create more useful mnemonic primitives, such as eye plots,
-halfeye plots, point+interval plots, or CCDF barplots.
+half-eye plots, point+interval plots, or CCDF barplots.
 
 The \emph{slab} portion of the geom is much like a ridge or "joy" plot: it represents the value of a function
 scaled to fit between values on the x or y access (depending on the value of \code{orientation}). Values of
 the functions are specified using the \code{thickness} aesthetic and are scaled to fit into \code{scale}
-times the distence between points on the relevant axis. E.g., if \code{orientation} is \code{"horizontal"},
+times the distance between points on the relevant axis. E.g., if \code{orientation} is \code{"horizontal"},
 \code{scale} is 0.9, and \code{y} is a discrete variable, then the \code{thickness} aesthetic specifies the
 value of some function of \code{x} that is drawn for every \code{y} value and scaled to fit into 0.9 times
 the distance between points on the y axis.
