@@ -61,6 +61,7 @@ gather_emmeans_samples = function(...) {
 #' @seealso [emmeans::emmeans()]
 #' @keywords manip
 #' @examples
+#' \donttest{
 #'
 #' library(dplyr)
 #' library(magrittr)
@@ -102,6 +103,7 @@ gather_emmeans_samples = function(...) {
 #'
 #'   # see the documentation of emmeans() for more examples of types of
 #'   # contrasts supported by that packge.
+#' }
 #' }
 #' @importFrom magrittr %>%
 #' @importFrom purrr map_dfr
