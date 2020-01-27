@@ -25,15 +25,10 @@ img {
 
 ```{r chunk_options, include=FALSE}
 knitr::opts_chunk$set(
-  fig.width = 6, 
-  fig.height = 4,
+  fig.width = 4.5,
+  fig.height = 3,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
-if (requireNamespace("Cairo")) {
-  knitr::opts_chunk$set(
-    dev = "CairoPNG"
-  )
-} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))
@@ -447,7 +442,7 @@ preds = grid %>%
 ABC %>%
   ggplot(aes(y = condition, x = response)) +
   stat_intervalh(aes(x = .prediction), data = preds) +
-  stat_pointintervalh(aes(x = .value), data = fits, .width = c(.66, .95), position = position_nudge(y = -0.2)) +
+  stat_pointintervalh(aes(x = .value), data = fits, .width = c(.66, .95), position = position_nudge(y = -0.3)) +
   geom_point() +
   scale_color_brewer()
 ```
@@ -491,7 +486,7 @@ Or we can create animated [hypothetical outcome plots (HOPs)](https://mucollecti
 
 ```{r}
 set.seed(123456)
-ndraws = 50
+ndraws = 40
 
 p = mtcars %>%
   group_by(cyl) %>%
@@ -504,7 +499,7 @@ p = mtcars %>%
   transition_states(.draw, 0, 1) +
   shadow_mark(future = TRUE, color = "gray50", alpha = 1/20)
 
-animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 432, height = 288, res = 96, dev = "png", type = "cairo")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:

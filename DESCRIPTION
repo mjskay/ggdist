@@ -59,8 +59,7 @@ Suggests:
     gganimate,
     gifski,
     png,
-    transformr,
-    Cairo
+    transformr
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new

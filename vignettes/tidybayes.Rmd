@@ -25,15 +25,10 @@ img {
   
 ```{r chunk_options, include=FALSE}
 knitr::opts_chunk$set(
-  fig.width = 6, 
-  fig.height = 4,
+  fig.width = 4.5,
+  fig.height = 3,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
-if (requireNamespace("Cairo")) {
-  knitr::opts_chunk$set(
-    dev = "CairoPNG"
-  )
-} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))
@@ -353,17 +348,7 @@ When using `point_interval` family functions with geoms and stats defined by pac
 
 ### Intervals with posterior violins ("eye plots"): `stat_eye` and `stat_eyeh`
 
-The `stat_summary` approach to generating intervals makes it easy to add violin plots of posterior densities to the plot using `geom_violin`/`geom_violinh`, forming "eye plots":
-
-```{r}
-m %>%
-  spread_draws(condition_mean[condition]) %>%
-  ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  geom_violinh(color = NA, fill = "gray65") +
-  stat_pointintervalh(.width = c(.95, .66))
-```
-
-The `stat_eye` and `stat_eyeh` geoms provide a shortcut to generating eye plots with some sensible defaults:
+The `stat_eye` and `stat_eyeh` geoms provide a shortcut to generating "eye plots" (combinations of intervals and densities, drawn as violin plots):
 
 ```{r}
 m %>%
@@ -399,7 +384,7 @@ m %>%
 
 There are a variety of additional stats for visualizing distributions in the `geom_slabinterval()` family of stats and geoms:
 
-![The slabinterval family of geoms and stats](slabinterval_family.png)
+<img src="slabinterval_family.png" width="700" alt="The slabinterval family of geoms and stats" />
 
 See `vignette("slabinterval")` for an overview.
 
@@ -484,15 +469,16 @@ multimodal_draws %>%
 
 This is easier to see when plotted:
 
-```{r, fig.height = 3, fig.width = 8}
+```{r, fig.height = 3, fig.width = 6.5}
 multimodal_draws %>%
   ggplot(aes(x = x)) +
-  stat_density(fill = "gray75") +
-  stat_pointintervalh(aes(y = -0.05), point_interval = median_qi, .width = c(.95, .80)) +
-  annotate("text", label = "median, 80% and 95% quantile intervals", x = 6, y = -0.05, hjust = 0, vjust = 0.3) +
-  stat_pointintervalh(aes(y = -0.025), point_interval = mode_hdi, .width = c(.95, .80)) +
-  annotate("text", label = "mode, 80% and 95% highest-density intervals", x = 6, y = -0.025, hjust = 0, vjust = 0.3) +
-  xlim(-3.5, 14.5)
+  stat_slabh(aes(y = 0)) +
+  stat_pointintervalh(aes(y = -0.5), point_interval = median_qi, .width = c(.95, .80)) +
+  annotate("text", label = "median, 80% and 95% quantile intervals", x = 6, y = -0.5, hjust = 0, vjust = 0.3) +
+  stat_pointintervalh(aes(y = -0.25), point_interval = mode_hdi, .width = c(.95, .80)) +
+  annotate("text", label = "mode, 80% and 95% highest-density intervals", x = 6, y = -0.25, hjust = 0, vjust = 0.3) +
+  xlim(-3.25, 18) +
+  scale_y_continuous(breaks = NULL)
 ```
 
 
@@ -517,15 +503,14 @@ m %>%
 
 ## Posterior predictions
 
-We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the condition means with the residual standard deviation to generate predictive distributions from the model:
+We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the condition means with the residual standard deviation to generate predictive distributions from the model, then show the distributions using `stat_slabh()`:
 
 ```{r}
 m %>%
   spread_draws(condition_mean[condition], response_sd) %>%
   mutate(y_rep = rnorm(n(), condition_mean, response_sd)) %>%
-  ggplot(aes(x = y_rep)) +
-  stat_density(fill = "gray75") +
-  facet_grid(condition ~ ., switch = "y")
+  ggplot(aes(y = fct_rev(condition), x = y_rep)) +
+  stat_slabh()
 ```
 
 And even summarize these as predictive intervals and compare them to the data:
@@ -562,7 +547,7 @@ means = draws %>%
 ABC %>%
   ggplot(aes(y = condition)) +
   geom_intervalh(aes(x = y_rep), data = reps) +
-  geom_pointintervalh(aes(x = condition_mean), position = position_nudge(y = -0.2), data = means) +
+  geom_pointintervalh(aes(x = condition_mean), position = position_nudge(y = -0.3), data = means) +
   geom_point(aes(x = response)) +
   scale_color_brewer()
 ```
@@ -679,7 +664,7 @@ Or we can create animated [hypothetical outcome plots (HOPs)](https://mucollecti
 
 ```{r}
 set.seed(123456)
-ndraws = 50
+ndraws = 40
 
 p = mtcars %>%
   group_by(cyl) %>%
@@ -692,7 +677,7 @@ p = mtcars %>%
   transition_states(.draw, 0, 1) +
   shadow_mark(future = TRUE, color = "gray50", alpha = 1/20)
 
-animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = ndraws, fps = 2.5, width = 432, height = 288, res = 96, dev = "png", type = "cairo")
 ```
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:

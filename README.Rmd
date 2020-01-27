@@ -6,11 +6,6 @@ output: github_document
 knitr::opts_chunk$set(
   fig.path = "man/figures/README/"
 )
-if (requireNamespace("Cairo")) {
-  knitr::opts_chunk$set(
-    dev = "CairoPNG"
-  )
-} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))

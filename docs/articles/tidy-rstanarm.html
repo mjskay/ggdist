@@ -191,7 +191,7 @@ img {
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> response)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-4-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-4-1.png" width="504"></p>
 </div>
 <div id="model" class="section level2">
 <h2 class="hasAnchor">
@@ -487,7 +487,7 @@ img {
 <a class="sourceLine" id="cb40-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb40-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> .lower, <span class="dt">xmax =</span> .upper)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb40-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-22-1.png" width="504"></p>
 </div>
 <div id="intervals-with-multiple-probability-levels" class="section level2">
 <h2 class="hasAnchor">
@@ -520,7 +520,7 @@ img {
 <a class="sourceLine" id="cb43-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b, <span class="dt">.width =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">95</span>, <span class="fl">.66</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb43-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb43-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>() </a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-24-1.png" width="504"></p>
 </div>
 <div id="intervals-with-densities" class="section level2">
 <h2 class="hasAnchor">
@@ -531,7 +531,7 @@ img {
 <a class="sourceLine" id="cb44-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_mean =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>b) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb44-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> group, <span class="dt">x =</span> condition_mean)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb44-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() </a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-25-1.png" width="504"></p>
 <p>Or say you want to annotate portions of the densities in color; the <code>fill</code> aesthetic can vary within a slab in all geoms and stats in the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family, including <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh()</a></code>. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb45-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, b[,group]) <span class="op">%&gt;%</span></a>
@@ -540,7 +540,7 @@ img {
 <a class="sourceLine" id="cb45-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb45-6" title="6"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span>.<span class="dv">8</span>, <span class="fl">.8</span>), <span class="dt">linetype =</span> <span class="st">"dashed"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb45-7" title="7"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray80"</span>, <span class="st">"skyblue"</span>))</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-26-1.png" width="504"></p>
 </div>
 <div id="other-visualizations-of-distributions-stat_slabinterval" class="section level2">
 <h2 class="hasAnchor">
@@ -580,7 +580,7 @@ img {
 <a class="sourceLine" id="cb48-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb48-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="dt">.width =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">66</span>, <span class="fl">.95</span>))</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-28-1.png" width="504"></p>
 </div>
 <div id="quantile-dotplots" class="section level2">
 <h2 class="hasAnchor">
@@ -592,7 +592,7 @@ img {
 <a class="sourceLine" id="cb49-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb49-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb49-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/geom_dotsinterval.html">stat_dotsh</a></span>(<span class="dt">quantiles =</span> <span class="dv">100</span>)</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-29-1.png" width="504"></p>
 <p>The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.</p>
 </div>
 <div id="posterior-predictions" class="section level2">
@@ -605,7 +605,7 @@ img {
 <a class="sourceLine" id="cb50-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb50-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb50-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>()</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-30-1.png" width="504"></p>
 <p>We could also use <code><a href="../reference/stat_interval.html">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb51-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
@@ -614,7 +614,7 @@ img {
 <a class="sourceLine" id="cb51-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb51-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) <span class="op">+</span></a>
 <a class="sourceLine" id="cb51-7" title="7"><span class="st">  </span><span class="kw">scale_color_brewer</span>()</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-31-1.png" width="504"></p>
 <p>Altogether, data, posterior predictions, and posterior distributions of the means:</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">grid =<span class="st"> </span>ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb52-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition)</a>
@@ -631,7 +631,7 @@ img {
 <a class="sourceLine" id="cb52-13" title="13"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value), <span class="dt">data =</span> fits, <span class="dt">.width =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">66</span>, <span class="fl">.95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="fl">-0.2</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-14" title="14"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-15" title="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>()</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-32-1.png" width="504"></p>
 </div>
 <div id="fitprediction-curves" class="section level2">
 <h2 class="hasAnchor">
@@ -648,7 +648,7 @@ img {
 <a class="sourceLine" id="cb54-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb54-8" title="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb54-9" title="9"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Set2"</span>)</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-33-1.png" width="504"></p>
 <p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">mtcars <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb55-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
@@ -658,7 +658,7 @@ img {
 <a class="sourceLine" id="cb55-6" title="6"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(cyl, .draw)), <span class="dt">alpha =</span> <span class="fl">.1</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb55-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb55-8" title="8"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-34-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-34-1.png" width="504"></p>
 <p>Or we can create animated <a href="https://mucollective.northwestern.edu/project/hops-trends">hypothetical outcome plots (HOPs)</a> of fit lines:</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">123456</span>)</a>
 <a class="sourceLine" id="cb56-2" title="2">ndraws =<span class="st"> </span><span class="dv">50</span></a>
@@ -674,7 +674,7 @@ img {
 <a class="sourceLine" id="cb56-12" title="12"><span class="st">  </span><span class="kw">transition_states</span>(.draw, <span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb56-13" title="13"><span class="st">  </span><span class="kw">shadow_mark</span>(<span class="dt">future =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> <span class="st">"gray50"</span>, <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">20</span>)</a>
 <a class="sourceLine" id="cb56-14" title="14"></a>
-<a class="sourceLine" id="cb56-15" title="15"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> ndraws, <span class="dt">fps =</span> <span class="fl">2.5</span>, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb56-15" title="15"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> ndraws, <span class="dt">fps =</span> <span class="fl">2.5</span>, <span class="dt">width =</span> <span class="dv">504</span>, <span class="dt">height =</span> <span class="dv">336</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-35-1.gif"><!-- --></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">mtcars <span class="op">%&gt;%</span></a>
@@ -686,7 +686,7 @@ img {
 <a class="sourceLine" id="cb57-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb57-8" title="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Set2"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb57-9" title="9"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-36-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-36-1.png" width="504"></p>
 <p>This can get difficult to judge by group, so could be better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1">mtcars <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb58-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
@@ -697,7 +697,7 @@ img {
 <a class="sourceLine" id="cb58-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb58-8" title="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb58-9" title="9"><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl, <span class="dt">space =</span> <span class="st">"free_x"</span>, <span class="dt">scales =</span> <span class="st">"free_x"</span>)</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-37-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-37-1.png" width="504"></p>
 </div>
 <div id="comparing-levels-of-a-factor" class="section level2">
 <h2 class="hasAnchor">
@@ -740,7 +740,7 @@ img {
 <a class="sourceLine" id="cb62-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(agegp), <span class="dt">y =</span> .value)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb62-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="dt">color =</span> <span class="st">"red"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb62-6" title="6"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>)</a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-40-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-40-1.png" width="504"></p>
 <p>This can be hard to interpret. To turn this into predicted probabilities on a per-category basis, we have to use the fact that an ordinal logistic regression defines the probability of an outcome in category <span class="math inline">\(j\)</span> <strong>or less</strong> as:</p>
 <p><span class="math display">\[
 \textrm{logit}\left[Pr(Y\le j)\right] = \alpha_j - \beta x
@@ -804,7 +804,7 @@ Pr(Y = j) &amp;= Pr(Y \le j) - Pr(Y \le j - 1)\\
 <a class="sourceLine" id="cb69-13" title="13"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> <span class="fl">.4</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb69-14" title="14"><span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb69-15" title="15"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">brewer.pal</span>(<span class="dv">6</span>, <span class="st">"Blues"</span>)[<span class="op">-</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>)]) </a></code></pre></div>
-<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-44-1.png" width="576"></p>
+<p><img src="tidy-rstanarm_files/figure-html/unnamed-chunk-44-1.png" width="504"></p>
 <p>It is hard to see the changes in categories in the above plot; let’s try something that gives a better gist of the distribution within each year:</p>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" title="1">esoph_plot =<span class="st"> </span>esoph <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb70-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(agegp) <span class="op">%&gt;%</span></a>

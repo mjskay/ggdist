@@ -25,15 +25,10 @@ img {
 
 ```{r chunk_options, include=FALSE}
 knitr::opts_chunk$set(
-  fig.width = 6, 
-  fig.height = 4,
+  fig.width = 4.5,
+  fig.height = 3,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
-if (requireNamespace("Cairo")) {
-  knitr::opts_chunk$set(
-    dev = "CairoPNG"
-  )
-} 
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
     dev.args = list(png = list(type = "cairo"))
@@ -134,7 +129,7 @@ A graphical depiction of the censoring process might be something like this:
 ```{r, fig.width = 1.75, fig.height = 5}
 uncensored_plot = cens_df %>%
   ggplot(aes(y = "", x = y_star)) +
-  stat_slabh(color = "black") +
+  stat_slabh() +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
   scale_x_continuous(breaks = -4:4, limits = c(-4, 4)) +
@@ -192,7 +187,7 @@ This is a typical residual plot, though with the addition of the uncertainty ass
 
 Let's check the QQ plot:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 cens_df %>%
   add_residual_draws(m_ideal) %>%
   median_qi() %>%
@@ -218,7 +213,7 @@ $$
 z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 $$
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 cens_df %>%
   add_predicted_draws(m_ideal) %>%
   summarise(
@@ -259,7 +254,7 @@ But notice the horizontal striations due to censoring. This obscures patterns we
 
 Let's look at the QQ plot:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 cens_df %>%
   add_residual_draws(m) %>%
   median_qi(.residual) %>%
@@ -318,7 +313,7 @@ cens_df %>%
 
 The striations are gone! And a QQ plot:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 cens_df %>%
   add_predicted_draws(m) %>%
   summarise(
@@ -334,7 +329,7 @@ cens_df %>%
 
 Looks decent. However, our residuals are now subject to noise---we actually have a distribution of possible QQ plots. So, let's check on some of them to make sure this nice-looking one is not just a fluke. We'll employ [HOPs](https://mucollective.co/project/hops-trends) to do that:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 k = 20
 
 p = cens_df %>%
@@ -352,7 +347,7 @@ p = cens_df %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = k, width = 432, height = 432, res = 96, dev = "png", type = "cairo")
 ```
 
 Looks good.
@@ -379,7 +374,7 @@ Note the presence of outliers:
 ```{r, fig.width = 4, fig.height = 5.75}
 uncensored_plot = cens_df_t %>%
   ggplot(aes(y = "", x = y)) +
-  stat_slabh(color = "black") +
+  stat_slabh() +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
   scale_x_continuous(breaks = -10:10, limits = c(-10, 10)) +
@@ -418,7 +413,7 @@ m_t1 = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df_t)
 
 And checking the QQ plot:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 cens_df_t %>%
   add_residual_draws(m_t1) %>%
   median_qi(.residual) %>%
@@ -433,7 +428,7 @@ It looks like this could be problematic, but the striations make diagnosing the 
 
 Let's try randomized quantile residuals again:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 cens_df_t %>%
   add_predicted_draws(m_t1) %>%
   summarise(
@@ -449,7 +444,7 @@ cens_df_t %>%
 
 Does not look good for the model---this s-shape is characteristic of excess kurtosis (aka fat tails), which is exactly what a t distribution should produce. But let's check using HOPs again:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 k = 20
 
 p = cens_df_t %>%
@@ -467,7 +462,7 @@ p = cens_df_t %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = k, width = 432, height = 432, res = 96, dev = "png", type = "cairo")
 ```
 
 Still not good! But the clear s shape is very diagnostic of fat tails, so let's try a different model.
@@ -482,7 +477,7 @@ m_t2 = brm(y_lower | cens(censoring, y_upper) ~ 1, data = cens_df_t, family = st
 
 Let's look at the QQ plot of the residuals:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 cens_df_t %>%
   add_residual_draws(m_t2) %>%
   median_qi(.residual) %>%
@@ -497,7 +492,7 @@ Odd, these don't look great! But again, these residuals are not to be trusted...
 
 Let's check out the randomized quantile residuals:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 k = 20
 
 p = cens_df_t %>%
@@ -515,7 +510,7 @@ p = cens_df_t %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = k, width = 432, height = 432, res = 96, dev = "png", type = "cairo")
 ```
 
 Looking pretty good! As well they should, since this is the same model that generated the data.
@@ -591,7 +586,7 @@ cens_df_o %>%
 
 Or in HOPs-QQ plot form:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 k = 20
 
 p = cens_df_o %>%
@@ -610,7 +605,7 @@ p = cens_df_o %>%
   geom_abline() +
   transition_manual(residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = k, width = 432, height = 432, res = 96, dev = "png", type = "cairo")
 ```
 
 It is not too surprising that the ordinal regression also works here, even though it is not the data generating model. Ordinal regressions are pretty robust.
@@ -674,7 +669,7 @@ m_bin = brm(y ~ 1, data = bin_df, family = bernoulli)
 
 Again, standard residuals are hard to interpret:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 bin_df %>%
   add_residual_draws(m_bin) %>%
   median_qi() %>%
@@ -685,7 +680,7 @@ bin_df %>%
 
 Randomized quantile residuals help us see that the fit is probably reasonable:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 k = 20
 
 p = bin_df %>%
@@ -696,12 +691,12 @@ p = bin_df %>%
   geom_abline() +
   transition_manual(.residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = k, width = 432, height = 432, res = 96, dev = "png", type = "cairo")
 ```
 
 We could also look at the probability residuals instead, comparing them against a uniform distribution, like so:
 
-```{r}
+```{r, fig.width = 4.5, fig.height = 4.5}
 k = 20
 
 p = bin_df %>%
@@ -712,5 +707,5 @@ p = bin_df %>%
   geom_abline() +
   transition_manual(.residual_draw)
 
-animate(p, nframes = k, width = 576, height = 384, res = 96, dev = "png", type = "cairo")
+animate(p, nframes = k, width = 432, height = 432, res = 96, dev = "png", type = "cairo")
 ```

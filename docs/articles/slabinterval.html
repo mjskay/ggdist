@@ -189,14 +189,14 @@ img {
 <a class="sourceLine" id="cb3-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_eye()"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/group_eye-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/group_eye-1.png" width="504"></p>
 <p>(Users of older versions of tidybayes might have used <code><a href="../reference/geom_eye.html">geom_eye()</a></code>, which is the older spelling of <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Due to the name standardization in this version of tidybayes (see the description above), <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> is now the preferred spelling, though <code><a href="../reference/geom_eye.html">geom_eye()</a></code> will continue to work.)</p>
 <p>We can also use <code>stat_halfeye</code> instead to just get densities:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb4-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeye</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb4-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_halfeye()"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/group_halfeye-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/group_halfeye-1.png" width="504"></p>
 <p>Or use the <code>side</code> parameter to more finely control where the slab (in this case, the density) is drawn:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">p =<span class="st"> </span>df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value)) <span class="op">+</span></a>
@@ -213,13 +213,13 @@ img {
 <a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> group)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_halfeyeh()"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeyeh-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/halfeyeh-1.png" width="504"></p>
 <p>This is equivalent to setting <code>orientation = "horizontal"</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> group)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb7-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeye</a></span>(<span class="dt">orientation =</span> <span class="st">"horizontal"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb7-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_halfeye(orientation = 'horizontal')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/eye_orientation-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/eye_orientation-1.png" width="504"></p>
 <p>Yielding these combinations:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">p =<span class="st"> </span>df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb8-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value)) <span class="op">+</span></a>
@@ -254,7 +254,7 @@ img {
 <a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb10-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb10-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_eye(position = 'dodge')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/eye_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/eye_dodge-1.png" width="504"></p>
 </div>
 <div id="on-analytical-distributions-stat_dist_halfeyeh" class="section level3">
 <h3 class="hasAnchor">
@@ -281,7 +281,7 @@ img {
 <a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_dist_eye(position = 'dodge')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_eye_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dist_eye_dodge-1.png" width="504"></p>
 <p>This makes it easy to visualize a variety of distributions. E.g., here are some Beta distributions:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dt">length.out =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> alpha, <span class="dt">dist =</span> <span class="st">"beta"</span>, <span class="dt">arg1 =</span> alpha, <span class="dt">arg2 =</span> <span class="dv">10</span>)) <span class="op">+</span></a>
@@ -290,7 +290,7 @@ img {
 <a class="sourceLine" id="cb13-5" title="5">    <span class="dt">title =</span> <span class="st">"stat_dist_halfeyeh()"</span>,</a>
 <a class="sourceLine" id="cb13-6" title="6">    <span class="dt">x =</span> <span class="st">"Beta(alpha,10) distribution"</span></a>
 <a class="sourceLine" id="cb13-7" title="7">  )</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/beta_stacked-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/beta_stacked-1.png" width="504"></p>
 <p>If you want to plot all of these on top of each other (instead of stacked), you could turn off plotting of the interval to make the plot easier to read using <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh(show_interval = FALSE, ...)</a></code>. You can also set the outline color of the slab using the <code>slab_color</code> aesthetic, and change the fill color using <code>fill</code>:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dt">length.out =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">dist =</span> <span class="st">"beta"</span>, <span class="dt">arg1 =</span> alpha, <span class="dt">arg2 =</span> <span class="dv">10</span>, <span class="dt">slab_color =</span> alpha)) <span class="op">+</span></a>
@@ -305,7 +305,7 @@ img {
 <a class="sourceLine" id="cb14-11" title="11">    <span class="dt">x =</span> <span class="st">"Beta(alpha,10) distribution"</span>,</a>
 <a class="sourceLine" id="cb14-12" title="12">    <span class="dt">y =</span> <span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb14-13" title="13">  ) </a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/beta_overplotted-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/beta_overplotted-1.png" width="504"></p>
 <p><code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh()</a></code> is a shortcut geom for something like <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh(show_interval = FALSE, ...)</a></code>, with some simplifications: since it does not have the interval attached to it, it does not require you to use <code>slab_color</code> to target the outline color; you can use <code>color</code> directly. This simplifies things somewhat:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dt">length.out =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">dist =</span> <span class="st">"beta"</span>, <span class="dt">arg1 =</span> alpha, <span class="dt">arg2 =</span> <span class="dv">10</span>, <span class="dt">color =</span> alpha)) <span class="op">+</span></a>
@@ -317,7 +317,7 @@ img {
 <a class="sourceLine" id="cb15-8" title="8">    <span class="dt">x =</span> <span class="st">"Beta(alpha,10) distribution"</span>,</a>
 <a class="sourceLine" id="cb15-9" title="9">    <span class="dt">y =</span> <span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb15-10" title="10">  )</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/beta_overplotted_slabh-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/beta_overplotted_slabh-1.png" width="504"></p>
 <p>The approach using <code>arg1</code>, … <code>arg9</code> can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the <code>args</code> aesthetic. We’ll use it along with the <code>brms</code> package’s implementation of the scaled and shifted Student t distribution (<code><a href="https://rdrr.io/pkg/brms/man/StudentT.html">brms::dstudent_t()</a></code>, etc):</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">tribble</span>(</a>
 <a class="sourceLine" id="cb16-2" title="2">  <span class="op">~</span><span class="st"> </span>dist,      <span class="op">~</span><span class="st"> </span>args,</a>
@@ -327,7 +327,7 @@ img {
 <a class="sourceLine" id="cb16-6" title="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> dist, <span class="dt">dist =</span> dist, <span class="dt">args =</span> args)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb16-7" title="7"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb16-8" title="8"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_dist_halfeyeh()"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/norm_vs_t-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/norm_vs_t-1.png" width="504"></p>
 <p>A particularly good use of the <code>dist</code> stats is to visualize priors. For example, with <code>brms</code> you can specify priors using the <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html">brms::prior()</a></code> function. E.g., I might set some priors on the betas and the standard deviation in a model:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co"># NB these priors are made up!</span></a>
 <a class="sourceLine" id="cb17-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
@@ -359,12 +359,12 @@ img {
 <a class="sourceLine" id="cb21-10" title="10">    <span class="dt">subtitle =</span> <span class="st">"with brms::prior() and tidybayes::parse_dist() to visualize priors"</span>,</a>
 <a class="sourceLine" id="cb21-11" title="11">    <span class="dt">x =</span> <span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb21-12" title="12">  )</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/prior_dist_halfeyeh-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/prior_dist_halfeyeh-1.png" width="504"></p>
 <p>The <code>stat_dist_...</code> family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">dist =</span> <span class="st">"lnorm"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">dist =</span> dist, <span class="dt">arg1 =</span> <span class="kw"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="dv">10</span>), <span class="dt">arg2 =</span> <span class="dv">2</span><span class="op">*</span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="dv">10</span>))) <span class="op">+</span></a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb22-3" title="3"><span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">breaks =</span> <span class="dv">10</span><span class="op">^</span><span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">7</span>, <span class="dt">by =</span> <span class="dv">2</span>))</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_halfeyeh_log_scale-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dist_halfeyeh_log_scale-1.png" width="504"></p>
 <p>As expected, a log-Normal density plotted on the log scale appears Normal. The Jacobian for the scale transformation is applied to the density so that the correct density is shown on the log scale. Internally, numerical differentiation is used to calculate the Jacobian so that the <code>stat_dist_...</code> family works generically across the different scale transformations supported by ggplot.</p>
 </div>
 <div id="summing-up-eye-plots-stat_dist_halfeyeh" class="section level3">
@@ -428,7 +428,7 @@ img {
 <a class="sourceLine" id="cb25-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup, <span class="dt">group =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_ccdfinterval(position = 'dodge')"</span>) </a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/ccdf_barplot-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/ccdf_barplot-1.png" width="504"></p>
 <p>The extents of the bars are determined automatically by range of the data in the samples. However, for bar charts it is often good practice to draw the bars from a meaningful reference point (this point is often 0). You can use <code><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">ggplot2::expand_limits()</a></code> to ensure the bar is drawn down to 0:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
@@ -437,7 +437,7 @@ img {
 <a class="sourceLine" id="cb26-5" title="5"><span class="st">  </span><span class="co"># plus coord_cartesian so there is no space between bars and axis</span></a>
 <a class="sourceLine" id="cb26-6" title="6"><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">expand =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb26-7" title="7"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_ccdfinterval(position = 'dodge')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/ccdf_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/ccdf_dodge-1.png" width="504"></p>
 <p>You can also adjust the position of the slab relative to the position of the interval using the <code>justification</code> parameter:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
@@ -446,7 +446,7 @@ img {
 <a class="sourceLine" id="cb27-5" title="5"><span class="st">  </span><span class="co"># clip = "off" needed here to ensure interval at the edge is visible</span></a>
 <a class="sourceLine" id="cb27-6" title="6"><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">expand =</span> <span class="ot">FALSE</span>, <span class="dt">clip =</span> <span class="st">"off"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb27-7" title="7"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_ccdfinterval(position = 'dodge', justification = 1)"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/ccdf_justification-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/ccdf_justification-1.png" width="504"></p>
 <p>The <code>side</code> parameter also works as with <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Here we’ll demonstrate with <code><a href="../reference/stat_sample_slabinterval.html">stat_ccdfintervalh()</a></code>, the horizontal version:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">p =<span class="st"> </span>df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb28-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> group)) <span class="op">+</span></a>
@@ -474,7 +474,7 @@ img {
 <a class="sourceLine" id="cb29-4" title="4"><span class="st">  </span><span class="kw">expand_limits</span>(<span class="dt">y =</span> <span class="dv">0</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb29-5" title="5"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_dist_ccdfinterval(position = 'dodge')"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb29-6" title="6"><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">expand =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_ccdf_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dist_ccdf_dodge-1.png" width="504"></p>
 </div>
 <div id="summing-up-cdf-bar-plots-stat_dist_ccdfintervalh" class="section level3">
 <h3 class="hasAnchor">
@@ -501,7 +501,7 @@ img {
 <a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb30-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb30-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_gradientinterval(position = 'dodge')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/gradient_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/gradient_dodge-1.png" width="504"></p>
 <p><code><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval()</a></code> maps density onto the <code>slab_alpha</code> aesthetic, which is a variant of the ggplot <code>alpha</code> scale that specifically targets alpha (opacity) values of the slab portion of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code>. This aesthetic has default ranges and limits that are a little different from the base ggplot <code>alpha</code> scale and which ensure that densities of 0 are mapped onto opacities of 0. You can use <code><a href="../reference/scales.html">scale_slab_alpha_continuous()</a></code> to adjust this scale’s settings.</p>
 </div>
 <div id="on-analytical-distributions-stat_dist_ccdfintervalh-1" class="section level3">
@@ -513,7 +513,7 @@ img {
 <a class="sourceLine" id="cb31-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb31-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb31-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dist_gradientinterval(position = 'dodge')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_gradient_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dist_gradient_dodge-1.png" width="504"></p>
 </div>
 <div id="summing-up-gradient-plots-stat_dist_gradientintervalh" class="section level3">
 <h3 class="hasAnchor">
@@ -539,13 +539,13 @@ img {
 <a class="sourceLine" id="cb32-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb32-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb32-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dots(position = 'dodge')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dots_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dots_dodge-1.png" width="504"></p>
 <p>Unlike the base <code><a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html">ggplot2::geom_dotplot()</a></code> geom, <code><a href="../reference/geom_dotsinterval.html">tidybayes::geom_dots()</a></code> automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, it makes sense to turn off the outline color (<code>slab_color</code>) of the dots:</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb33-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb33-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>, <span class="dt">slab_color =</span> <span class="ot">NA</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb33-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dots(slab_color = NA)"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dots_dodge_nocolor-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dots_dodge_nocolor-1.png" width="504"></p>
 </div>
 <div id="quantile-dotplots" class="section level3">
 <h3 class="hasAnchor">
@@ -556,7 +556,7 @@ img {
 <a class="sourceLine" id="cb34-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> value, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb34-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>, <span class="dt">quantiles =</span> <span class="dv">50</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb34-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dots(quantiles = 50)"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/quantile_dots_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/quantile_dots_dodge-1.png" width="504"></p>
 </div>
 <div id="on-analytical-distributions-stat_dist_dotsh" class="section level3">
 <h3 class="hasAnchor">
@@ -567,7 +567,7 @@ img {
 <a class="sourceLine" id="cb35-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb35-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/geom_dotsinterval.html">stat_dist_dots</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb35-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dist_dots(position = 'dodge')"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_dots_dodge-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dist_dots_dodge-1.png" width="504"></p>
 <p>Shapes of the dots can also be changed using the <code>shape</code> aesthetic, and as with all slabinterval geoms, fill and color aesthetics can be varied within the geoms:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">dist_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb36-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> <span class="kw">stat</span>(y <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span>), <span class="dt">shape =</span> subgroup)) <span class="op">+</span></a>
@@ -575,13 +575,13 @@ img {
 <a class="sourceLine" id="cb36-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dist_dots(aes(fill = stat(y &lt; 5), shape = subgroup))"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb36-5" title="5"><span class="st">  </span><span class="co"># we'll use these shapes since they retain outlines</span></a>
 <a class="sourceLine" id="cb36-6" title="6"><span class="st">  </span><span class="kw">scale_shape_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">21</span>,<span class="dv">22</span>,<span class="dv">23</span>))</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_dots_shape_color-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dist_dots_shape_color-1.png" width="504"></p>
 <p>As with other slabinterval geoms, the <code>side</code> argument can also be used to construct violin-style dotplots. This example also shows the use of <code>dotsinterval</code> in place of <code>dots</code> to construct a combined quantile dotplot violin + interval plot. We also set <code>slab_color = NA</code> to turn off the outline on the dots:</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">dist_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb37-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">dist =</span> <span class="st">"norm"</span>, <span class="dt">arg1 =</span> mean, <span class="dt">arg2 =</span> sd, <span class="dt">fill =</span> subgroup)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb37-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/geom_dotsinterval.html">stat_dist_dotsinterval</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>, <span class="dt">side =</span> <span class="st">"both"</span>, <span class="dt">slab_color =</span> <span class="ot">NA</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb37-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"stat_dist_dotsinterval(side = 'both', slab_color = NA)"</span>) </a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/dist_dots_violin-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/dist_dots_violin-1.png" width="504"></p>
 </div>
 <div id="summing-up-dotplots-stat_dist_dotsintervalh" class="section level3">
 <h3 class="hasAnchor">
@@ -615,7 +615,7 @@ img {
 <a class="sourceLine" id="cb38-5" title="5"><span class="st">  </span><span class="co"># plus coord_cartesian so there is no space between bars and axis</span></a>
 <a class="sourceLine" id="cb38-6" title="6"><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">expand =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb38-7" title="7"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_ccdfinterval(aes(slab_alpha = stat(f)), thickness = 1)"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/ccdf_gradient-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/ccdf_gradient-1.png" width="504"></p>
 </div>
 <div id="highlighting-and-other-combinations" class="section level3">
 <h3 class="hasAnchor">
@@ -631,7 +631,7 @@ img {
 <a class="sourceLine" id="cb39-8" title="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> dist, <span class="dt">dist =</span> dist, <span class="dt">args =</span> args)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb39-9" title="9"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb39-10" title="10"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_dist_halfeyeh()"</span>)</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/norm_vs_t_2-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/norm_vs_t_2-1.png" width="504"></p>
 <p>We can add a mapping to the <code>fill</code> aesthetic to highlight a region of interest, say ±1.5:</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1">priors <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb40-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> dist, <span class="dt">dist =</span> dist, <span class="dt">args =</span> args)) <span class="op">+</span></a>
@@ -639,7 +639,7 @@ img {
 <a class="sourceLine" id="cb40-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_dist_halfeyeh(aes(fill = stat(abs(x) &lt; 1.5)))"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb40-5" title="5"><span class="st">  </span><span class="co"># we'll use a nicer palette than the default for highlighting:</span></a>
 <a class="sourceLine" id="cb40-6" title="6"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray85"</span>, <span class="st">"skyblue"</span>))</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/norm_vs_t_highlight-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/norm_vs_t_highlight-1.png" width="504"></p>
 <p>We could also combine these aesthetics arbitrarily. Here is a (probably not very useful) eye plot + gradient plot combination, with the portion of the distribution above 1 highlighted:</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">priors <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb41-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> dist, <span class="dt">dist =</span> dist, <span class="dt">args =</span> args)) <span class="op">+</span></a>
@@ -647,7 +647,7 @@ img {
 <a class="sourceLine" id="cb41-4" title="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"stat_dist_eyeh(aes(alpha = stat(f), fill = stat(x &gt; 1)))"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb41-5" title="5"><span class="st">  </span><span class="co"># we'll use a nicer palette than the default for highlighting:</span></a>
 <a class="sourceLine" id="cb41-6" title="6"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray75"</span>, <span class="st">"skyblue"</span>))</a></code></pre></div>
-<p><img src="slabinterval_files/figure-html/norm_vs_t_gradient_eye-1.png" width="576"></p>
+<p><img src="slabinterval_files/figure-html/norm_vs_t_gradient_eye-1.png" width="504"></p>
 </div>
 </div>
   </div>

@@ -167,7 +167,7 @@ img {
 <a class="sourceLine" id="cb3-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">"condition"</span>)</a></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-2-1.png" width="576"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-2-1.png" width="504"></p>
 <p>And a simple linear regression of the data is fit as follows:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">m_ABC =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(response <span class="op">~</span><span class="st"> </span>condition, <span class="dt">data =</span> ABC)</a></code></pre></div>
 <p>The default summary is not great from an uncertainty communication perspective:</p>
@@ -224,7 +224,7 @@ img {
 <a class="sourceLine" id="cb9-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>(</a>
 <a class="sourceLine" id="cb9-5" title="5">    <span class="kw">aes</span>(<span class="dt">dist =</span> <span class="st">"student_t"</span>, <span class="dt">arg1 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(m_ABC), <span class="dt">arg2 =</span> estimate, <span class="dt">arg3 =</span> std.error)</a>
 <a class="sourceLine" id="cb9-6" title="6">  )</a></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-6-1.png" width="504"></p>
 <p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://rdrr.io/pkg/modelr/man/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code> (similar to how we use <code><a href="https://rdrr.io/pkg/modelr/man/data_grid.html">modelr::data_grid()</a></code> with <code><a href="../reference/add_predicted_draws.html">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we want the sampling distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\mu_c\)</span>:</p>
 <p><span class="math display">\[
 \mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\mu_c} \right)
@@ -251,7 +251,7 @@ img {
 <a class="sourceLine" id="cb10-9" title="9"><span class="st">  </span><span class="co"># we'll add the data back in too (scale = .5 above adjusts the halfeye height so</span></a>
 <a class="sourceLine" id="cb10-10" title="10"><span class="st">  </span><span class="co"># that the data fit in as well)</span></a>
 <a class="sourceLine" id="cb10-11" title="11"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC, <span class="dt">pch =</span> <span class="st">"|"</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="fl">-.15</span>))</a></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-7-1.png" width="504"></p>
 <p>Of course, this works with the entire <code>stat_dist_...</code> family. Here are gradient plots instead:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
@@ -261,7 +261,7 @@ img {
 <a class="sourceLine" id="cb11-6" title="6">    <span class="kw">aes</span>(<span class="dt">dist =</span> <span class="st">"student_t"</span>, <span class="dt">arg1 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(m_ABC), <span class="dt">arg2 =</span> .fitted, <span class="dt">arg3 =</span> .se.fit), </a>
 <a class="sourceLine" id="cb11-7" title="7">    <span class="dt">scale =</span> <span class="fl">.5</span></a>
 <a class="sourceLine" id="cb11-8" title="8">  )</a></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-8-1.png" width="504"></p>
 <p>Or complementary cumulative distribution function (CCDF) bar plots:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
@@ -270,7 +270,7 @@ img {
 <a class="sourceLine" id="cb12-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfintervalh</a></span>(</a>
 <a class="sourceLine" id="cb12-6" title="6">    <span class="kw">aes</span>(<span class="dt">dist =</span> <span class="st">"student_t"</span>, <span class="dt">arg1 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(m_ABC), <span class="dt">arg2 =</span> .fitted, <span class="dt">arg3 =</span> .se.fit)</a>
 <a class="sourceLine" id="cb12-7" title="7">  )</a></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-9-1.png" width="504"></p>
 <p>We can also create quantile dotplots by using the <code>dots</code> family of geoms. Quantile dotplots show quantiles from a distribution (in this case, the sampling distribution), employing a <em>frequency framing</em> approach to uncertainty communication that can be easier for people to interpret (<a href="https://doi.org/10.1145/2858036.2858558">Kay et al. 2016</a>, <a href="https://doi.org/10.1145/3173574.3173718">Fernandes et al. 2018</a>):</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
@@ -280,7 +280,7 @@ img {
 <a class="sourceLine" id="cb13-6" title="6">    <span class="dt">quantiles =</span> <span class="dv">100</span>,</a>
 <a class="sourceLine" id="cb13-7" title="7">    <span class="kw">aes</span>(<span class="dt">dist =</span> <span class="st">"student_t"</span>, <span class="dt">arg1 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(m_ABC), <span class="dt">arg2 =</span> .fitted, <span class="dt">arg3 =</span> .se.fit)</a>
 <a class="sourceLine" id="cb13-8" title="8">  )</a></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-10-1.png" width="504"></p>
 <p>See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for more examples of uncertainty geoms and stats in the slabinterval family.</p>
 </div>
 <div id="for-a-fit-line" class="section level2">
@@ -307,7 +307,7 @@ img {
 <a class="sourceLine" id="cb15-16" title="16">    <span class="dt">fill =</span> <span class="st">"cyl"</span>,</a>
 <a class="sourceLine" id="cb15-17" title="17">    <span class="dt">y =</span> <span class="st">"mpg"</span></a>
 <a class="sourceLine" id="cb15-18" title="18">  )</a></code></pre></div>
-<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
+<p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-12-1.png" width="504"></p>
 </div>
   </div>
 

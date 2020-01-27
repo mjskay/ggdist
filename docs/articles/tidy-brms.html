@@ -192,7 +192,7 @@ img {
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> response)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-4-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-4-1.png" width="504"></p>
 </div>
 <div id="model" class="section level2">
 <h2 class="hasAnchor">
@@ -218,15 +218,15 @@ img {
 ## Group-Level Effects: 
 ## ~condition (Number of levels: 5) 
 ##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sd(Intercept)     1.19      0.45     0.62     2.39 1.01      983     1152
+## sd(Intercept)     1.16      0.41     0.61     2.20 1.00      640     1184
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept     0.50      0.47    -0.50     1.44 1.01      887     1073
+## Intercept     0.50      0.44    -0.48     1.31 1.00      947     1101
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     0.56      0.06     0.47     0.70 1.00     1738     2142
+## sigma     0.56      0.06     0.46     0.69 1.00     1719     1953
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -269,16 +269,16 @@ img {
 ## # Groups:   condition, term [1]
 ##    condition term      r_condition .chain .iteration .draw
 ##    &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;  &lt;int&gt;      &lt;int&gt; &lt;int&gt;
-##  1 A         Intercept     -0.716       1          1     1
-##  2 A         Intercept     -0.481       1          2     2
-##  3 A         Intercept     -0.931       1          3     3
-##  4 A         Intercept     -0.661       1          4     4
-##  5 A         Intercept      0.415       1          5     5
-##  6 A         Intercept     -0.0208      1          6     6
-##  7 A         Intercept     -0.276       1          7     7
-##  8 A         Intercept      0.377       1          8     8
-##  9 A         Intercept      0.113       1          9     9
-## 10 A         Intercept      0.948       1         10    10</code></pre>
+##  1 A         Intercept      -0.637      1          1     1
+##  2 A         Intercept      -0.453      1          2     2
+##  3 A         Intercept      -0.195      1          3     3
+##  4 A         Intercept       0.208      1          4     4
+##  5 A         Intercept      -0.379      1          5     5
+##  6 A         Intercept      -0.299      1          6     6
+##  7 A         Intercept      -0.812      1          7     7
+##  8 A         Intercept      -0.908      1          8     8
+##  9 A         Intercept      -0.669      1          9     9
+## 10 A         Intercept      -0.854      1         10    10</code></pre>
 <p>We can choose whatever names we want for the index columns; e.g.:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(r_condition[c,t]) <span class="op">%&gt;%</span></a>
@@ -287,16 +287,16 @@ img {
 ## # Groups:   c, t [1]
 ##    c     t         r_condition .chain .iteration .draw
 ##    &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;  &lt;int&gt;      &lt;int&gt; &lt;int&gt;
-##  1 A     Intercept     -0.716       1          1     1
-##  2 A     Intercept     -0.481       1          2     2
-##  3 A     Intercept     -0.931       1          3     3
-##  4 A     Intercept     -0.661       1          4     4
-##  5 A     Intercept      0.415       1          5     5
-##  6 A     Intercept     -0.0208      1          6     6
-##  7 A     Intercept     -0.276       1          7     7
-##  8 A     Intercept      0.377       1          8     8
-##  9 A     Intercept      0.113       1          9     9
-## 10 A     Intercept      0.948       1         10    10</code></pre>
+##  1 A     Intercept      -0.637      1          1     1
+##  2 A     Intercept      -0.453      1          2     2
+##  3 A     Intercept      -0.195      1          3     3
+##  4 A     Intercept       0.208      1          4     4
+##  5 A     Intercept      -0.379      1          5     5
+##  6 A     Intercept      -0.299      1          6     6
+##  7 A     Intercept      -0.812      1          7     7
+##  8 A     Intercept      -0.908      1          8     8
+##  9 A     Intercept      -0.669      1          9     9
+## 10 A     Intercept      -0.854      1         10    10</code></pre>
 <p>But the more descriptive and less cryptic names from the previous example are probably preferable.</p>
 <p>In this particular model, there is only one term (<code>Intercept</code>), thus we could omit that index altogether to just get each <code>condition</code> and the value of <code>r_condition</code> for that condition:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">m <span class="op">%&gt;%</span></a>
@@ -306,16 +306,16 @@ img {
 ## # Groups:   condition [1]
 ##    condition r_condition .chain .iteration .draw
 ##    &lt;chr&gt;           &lt;dbl&gt;  &lt;int&gt;      &lt;int&gt; &lt;int&gt;
-##  1 A             -0.716       1          1     1
-##  2 A             -0.481       1          2     2
-##  3 A             -0.931       1          3     3
-##  4 A             -0.661       1          4     4
-##  5 A              0.415       1          5     5
-##  6 A             -0.0208      1          6     6
-##  7 A             -0.276       1          7     7
-##  8 A              0.377       1          8     8
-##  9 A              0.113       1          9     9
-## 10 A              0.948       1         10    10</code></pre>
+##  1 A              -0.637      1          1     1
+##  2 A              -0.453      1          2     2
+##  3 A              -0.195      1          3     3
+##  4 A               0.208      1          4     4
+##  5 A              -0.379      1          5     5
+##  6 A              -0.299      1          6     6
+##  7 A              -0.812      1          7     7
+##  8 A              -0.908      1          8     8
+##  9 A              -0.669      1          9     9
+## 10 A              -0.854      1         10    10</code></pre>
 <p><strong>Note:</strong> If you have used <code>spread_draws</code> with a raw sample from Stan or JAGS, you may be used to using <code>recover_types</code> before <code>spread_draws</code> to get index column values back (e.g. if the index was a factor). This is not necessary when using <code>spread_draws</code> on <code>rstanarm</code> models, because those models already contain that information in their variable names. For more on <code>recover_types</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
 </div>
@@ -333,16 +333,16 @@ img {
 <pre><code>## # A tibble: 10 x 5
 ##    .chain .iteration .draw b_Intercept sigma
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt;
-##  1      1          1     1      0.795  0.533
-##  2      1          2     2      0.850  0.601
-##  3      1          3     3      0.830  0.602
-##  4      1          4     4      0.960  0.546
-##  5      1          5     5     -0.0587 0.516
-##  6      1          6     6      0.160  0.475
-##  7      1          7     7      0.692  0.608
-##  8      1          8     8     -0.101  0.522
-##  9      1          9     9      0.0570 0.480
-## 10      1         10    10     -0.668  0.574</code></pre>
+##  1      1          1     1       0.736 0.453
+##  2      1          2     2       0.733 0.455
+##  3      1          3     3       0.284 0.608
+##  4      1          4     4       0.242 0.632
+##  5      1          5     5       0.505 0.625
+##  6      1          6     6       0.516 0.613
+##  7      1          7     7       1.09  0.608
+##  8      1          8     8       0.855 0.617
+##  9      1          9     9       0.925 0.602
+## 10      1         10    10       1.14  0.501</code></pre>
 <p>Like with <code>r_condition[condition,term]</code>, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply <code>median_qi</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span></a>
@@ -350,7 +350,7 @@ img {
 <pre><code>## # A tibble: 1 x 9
 ##   b_Intercept b_Intercept.lower b_Intercept.upper sigma sigma.lower sigma.upper .width .point .interval
 ##         &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.517            -0.496              1.44 0.557       0.465       0.696   0.95 median qi</code></pre>
+## 1       0.529            -0.485              1.31 0.555       0.456       0.688   0.95 median qi</code></pre>
 <p>We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, <code>median_qi</code> will use every column that is not a grouping column or a special column (like <code>.chain</code>, <code>.iteration</code>, or <code>.draw</code>). Thus in the above example, <code>b_Intercept</code> and <code>sigma</code> are redundant arguments to <code>median_qi</code> because they are also the only columns we gathered from the model. So we can simplify this to:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span></a>
@@ -358,7 +358,7 @@ img {
 <pre><code>## # A tibble: 1 x 9
 ##   b_Intercept b_Intercept.lower b_Intercept.upper sigma sigma.lower sigma.upper .width .point .interval
 ##         &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.517            -0.496              1.44 0.557       0.465       0.696   0.95 median qi</code></pre>
+## 1       0.529            -0.485              1.31 0.555       0.456       0.688   0.95 median qi</code></pre>
 <p>If you would rather have a long-format list of intervals, use <code>gather_draws</code> instead:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">gather_draws</a></span>(b_Intercept, sigma) <span class="op">%&gt;%</span></a>
@@ -366,8 +366,8 @@ img {
 <pre><code>## # A tibble: 2 x 7
 ##   .variable   .value .lower .upper .width .point .interval
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 b_Intercept  0.517 -0.496  1.44    0.95 median qi       
-## 2 sigma        0.557  0.465  0.696   0.95 median qi</code></pre>
+## 1 b_Intercept  0.529 -0.485  1.31    0.95 median qi       
+## 2 sigma        0.555  0.456  0.688   0.95 median qi</code></pre>
 <p>For more on <code>gather_draws</code>, see <code><a href="tidybayes.html">vignette(“tidybayes”)</a></code>.</p>
 </div>
 <div id="with-indexed-model-variables" class="section level3">
@@ -380,11 +380,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition r_condition .lower .upper .width .point .interval
 ##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A              -0.315 -1.28   0.716   0.95 median qi       
-## 2 B               0.490 -0.453  1.52    0.95 median qi       
-## 3 C               1.32   0.336  2.38    0.95 median qi       
-## 4 D               0.498 -0.427  1.54    0.95 median qi       
-## 5 E              -1.39  -2.39  -0.390   0.95 median qi</code></pre>
+## 1 A              -0.334 -1.18   0.690   0.95 median qi       
+## 2 B               0.478 -0.356  1.50    0.95 median qi       
+## 3 C               1.31   0.496  2.35    0.95 median qi       
+## 4 D               0.494 -0.361  1.50    0.95 median qi       
+## 5 E              -1.41  -2.25  -0.405   0.95 median qi</code></pre>
 <p>How did <code>median_qi</code> know what to aggregate? Data frames returned by <code>spread_draws</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_draws</code> groups its results by <code>condition</code>. <code>median_qi</code> respects those groups, and calculates the point summaries and intervals within all groups. Then, because no columns were passed to <code>median_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>r_condition</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -393,11 +393,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition r_condition .lower .upper .width .point .interval
 ##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A              -0.315 -1.28   0.716   0.95 median qi       
-## 2 B               0.490 -0.453  1.52    0.95 median qi       
-## 3 C               1.32   0.336  2.38    0.95 median qi       
-## 4 D               0.498 -0.427  1.54    0.95 median qi       
-## 5 E              -1.39  -2.39  -0.390   0.95 median qi</code></pre>
+## 1 A              -0.334 -1.18   0.690   0.95 median qi       
+## 2 B               0.478 -0.356  1.50    0.95 median qi       
+## 3 C               1.31   0.496  2.35    0.95 median qi       
+## 4 D               0.494 -0.361  1.50    0.95 median qi       
+## 5 E              -1.41  -2.25  -0.405   0.95 median qi</code></pre>
 </div>
 </div>
 <div id="combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="section level2">
@@ -412,16 +412,16 @@ img {
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw b_Intercept condition r_condition
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
-##  1      1          1     1       0.795 A              -0.716
-##  2      1          1     1       0.795 B              -0.128
-##  3      1          1     1       0.795 C               0.973
-##  4      1          1     1       0.795 D               0.301
-##  5      1          1     1       0.795 E              -1.75 
-##  6      1          2     2       0.850 A              -0.481
-##  7      1          2     2       0.850 B               0.308
-##  8      1          2     2       0.850 C               1.11 
-##  9      1          2     2       0.850 D               0.227
-## 10      1          2     2       0.850 E              -1.58</code></pre>
+##  1      1          1     1       0.736 A              -0.637
+##  2      1          1     1       0.736 B               0.476
+##  3      1          1     1       0.736 C               1.00 
+##  4      1          1     1       0.736 D               0.499
+##  5      1          1     1       0.736 E              -1.61 
+##  6      1          2     2       0.733 A              -0.453
+##  7      1          2     2       0.733 B               0.301
+##  8      1          2     2       0.733 C               1.15 
+##  9      1          2     2       0.733 D               0.443
+## 10      1          2     2       0.733 E              -1.77</code></pre>
 <p>Within each draw, <code>b_Intercept</code> is repeated as necessary to correspond to every index of <code>r_condition</code>. Thus, the <code>mutate</code> function from dplyr can be used to find their sum, <code>condition_mean</code> (which is the mean for each condition):</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb34-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="st">`</span><span class="dt">b_Intercept</span><span class="st">`</span>, r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -430,11 +430,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A                  0.196 -0.162  0.545   0.95 median qi       
-## 2 B                  1.01   0.651  1.34    0.95 median qi       
-## 3 C                  1.84   1.47   2.19    0.95 median qi       
-## 4 D                  1.02   0.658  1.36    0.95 median qi       
-## 5 E                 -0.893 -1.25  -0.541   0.95 median qi</code></pre>
+## 1 A                  0.187 -0.145  0.538   0.95 median qi       
+## 2 B                  0.999  0.645  1.35    0.95 median qi       
+## 3 C                  1.83   1.48   2.18    0.95 median qi       
+## 4 D                  1.01   0.667  1.36    0.95 median qi       
+## 5 E                 -0.889 -1.22  -0.544   0.95 median qi</code></pre>
 <p><code>median_qi</code> uses tidy evaluation (see <code>vignette("tidy-evaluation", package = "rlang")</code>), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>median_qi</code>:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb36-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -442,11 +442,11 @@ img {
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 A                  0.196 -0.162  0.545   0.95 median qi       
-## 2 B                  1.01   0.651  1.34    0.95 median qi       
-## 3 C                  1.84   1.47   2.19    0.95 median qi       
-## 4 D                  1.02   0.658  1.36    0.95 median qi       
-## 5 E                 -0.893 -1.25  -0.541   0.95 median qi</code></pre>
+## 1 A                  0.187 -0.145  0.538   0.95 median qi       
+## 2 B                  0.999  0.645  1.35    0.95 median qi       
+## 3 C                  1.83   1.48   2.18    0.95 median qi       
+## 4 D                  1.01   0.667  1.36    0.95 median qi       
+## 5 E                 -0.889 -1.22  -0.544   0.95 median qi</code></pre>
 </div>
 <div id="plotting-point-summaries-and-intervals" class="section level2">
 <h2 class="hasAnchor">
@@ -457,7 +457,7 @@ img {
 <a class="sourceLine" id="cb38-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> b_Intercept <span class="op">+</span><span class="st"> </span>r_condition) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb38-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean, <span class="dt">xmin =</span> .lower, <span class="dt">xmax =</span> .upper)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb38-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-19-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-19-1.png" width="504"></p>
 </div>
 <div id="intervals-with-multiple-probability-levels" class="section level2">
 <h2 class="hasAnchor">
@@ -469,28 +469,28 @@ img {
 <pre><code>## # A tibble: 15 x 7
 ##    condition condition_mean  .lower .upper .width .point .interval
 ##    &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-##  1 A                  0.196 -0.162   0.545   0.95 median qi       
-##  2 B                  1.01   0.651   1.34    0.95 median qi       
-##  3 C                  1.84   1.47    2.19    0.95 median qi       
-##  4 D                  1.02   0.658   1.36    0.95 median qi       
-##  5 E                 -0.893 -1.25   -0.541   0.95 median qi       
-##  6 A                  0.196 -0.0286  0.420   0.8  median qi       
-##  7 B                  1.01   0.780   1.23    0.8  median qi       
-##  8 C                  1.84   1.61    2.06    0.8  median qi       
-##  9 D                  1.02   0.794   1.24    0.8  median qi       
-## 10 E                 -0.893 -1.11   -0.662   0.8  median qi       
-## 11 A                  0.196  0.0765  0.314   0.5  median qi       
-## 12 B                  1.01   0.885   1.12    0.5  median qi       
-## 13 C                  1.84   1.72    1.96    0.5  median qi       
-## 14 D                  1.02   0.901   1.13    0.5  median qi       
-## 15 E                 -0.893 -1.01   -0.772   0.5  median qi</code></pre>
+##  1 A                  0.187 -0.145   0.538   0.95 median qi       
+##  2 B                  0.999  0.645   1.35    0.95 median qi       
+##  3 C                  1.83   1.48    2.18    0.95 median qi       
+##  4 D                  1.01   0.667   1.36    0.95 median qi       
+##  5 E                 -0.889 -1.22   -0.544   0.95 median qi       
+##  6 A                  0.187 -0.0264  0.406   0.8  median qi       
+##  7 B                  0.999  0.766   1.24    0.8  median qi       
+##  8 C                  1.83   1.60    2.06    0.8  median qi       
+##  9 D                  1.01   0.784   1.24    0.8  median qi       
+## 10 E                 -0.889 -1.11   -0.661   0.8  median qi       
+## 11 A                  0.187  0.0749  0.306   0.5  median qi       
+## 12 B                  0.999  0.881   1.12    0.5  median qi       
+## 13 C                  1.83   1.71    1.95    0.5  median qi       
+## 14 D                  1.01   0.886   1.13    0.5  median qi       
+## 15 E                 -0.889 -1.01   -0.771   0.5  median qi</code></pre>
 <p>The results are in a tidy format: one row per group and uncertainty interval width (<code>.width</code>). This facilitates plotting. For example, assigning <code>-.width</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The <code>geom_pointintervalh</code> geom automatically sets the <code>xmin</code>, <code>xmax</code>, and <code>size</code> aesthetics appropriately based on the <code>.lower</code>, <code>.upper</code>, and <code>.width</code> columns in the data to produce plots of points with multiple probability levels:</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb41-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, r_condition[condition,]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb41-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="dt">condition_mean =</span> b_Intercept <span class="op">+</span><span class="st"> </span>r_condition, <span class="dt">.width =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">95</span>, <span class="fl">.66</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb41-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb41-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>() </a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-21-1.png" width="504"></p>
 </div>
 <div id="intervals-with-densities" class="section level2">
 <h2 class="hasAnchor">
@@ -501,7 +501,7 @@ img {
 <a class="sourceLine" id="cb42-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition_mean =</span> b_Intercept <span class="op">+</span><span class="st"> </span>r_condition) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb42-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> condition, <span class="dt">x =</span> condition_mean)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb42-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-22-1.png" width="504"></p>
 <p>Or say you want to annotate portions of the densities in color; the <code>fill</code> aesthetic can vary within a slab in all geoms and stats in the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family, including <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh()</a></code>. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">m <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb43-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/spread_draws.html">spread_draws</a></span>(b_Intercept, r_condition[condition,]) <span class="op">%&gt;%</span></a>
@@ -510,7 +510,7 @@ img {
 <a class="sourceLine" id="cb43-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb43-6" title="6"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span>.<span class="dv">8</span>, <span class="fl">.8</span>), <span class="dt">linetype =</span> <span class="st">"dashed"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb43-7" title="7"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray80"</span>, <span class="st">"skyblue"</span>))</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-23-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-23-1.png" width="504"></p>
 </div>
 <div id="other-visualizations-of-distributions-stat_slabinterval" class="section level2">
 <h2 class="hasAnchor">
@@ -534,23 +534,23 @@ img {
 ## # Groups:   condition, .row [1]
 ##    condition  .row .chain .iteration .draw  .value
 ##    &lt;chr&gt;     &lt;int&gt;  &lt;int&gt;      &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;
-##  1 A             1     NA         NA     1  0.0798
-##  2 A             1     NA         NA     2  0.369 
-##  3 A             1     NA         NA     3 -0.101 
-##  4 A             1     NA         NA     4  0.299 
-##  5 A             1     NA         NA     5  0.357 
-##  6 A             1     NA         NA     6  0.140 
-##  7 A             1     NA         NA     7  0.415 
-##  8 A             1     NA         NA     8  0.276 
-##  9 A             1     NA         NA     9  0.170 
-## 10 A             1     NA         NA    10  0.280</code></pre>
+##  1 A             1     NA         NA     1  0.0984
+##  2 A             1     NA         NA     2  0.280 
+##  3 A             1     NA         NA     3  0.0890
+##  4 A             1     NA         NA     4  0.450 
+##  5 A             1     NA         NA     5  0.126 
+##  6 A             1     NA         NA     6  0.217 
+##  7 A             1     NA         NA     7  0.274 
+##  8 A             1     NA         NA     8 -0.0530
+##  9 A             1     NA         NA     9  0.256 
+## 10 A             1     NA         NA    10  0.281</code></pre>
 <p>To plot this example, we’ll also show the use of <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which summarizes draws into points and intervals within ggplot:</p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb46-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb46-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb46-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb46-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="dt">.width =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">66</span>, <span class="fl">.95</span>))</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-25-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-25-1.png" width="504"></p>
 </div>
 <div id="quantile-dotplots" class="section level2">
 <h2 class="hasAnchor">
@@ -562,7 +562,7 @@ img {
 <a class="sourceLine" id="cb47-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb47-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb47-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/geom_dotsinterval.html">stat_dotsh</a></span>(<span class="dt">quantiles =</span> <span class="dv">100</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-26-1.png" width="504"></p>
 <p>The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.</p>
 </div>
 <div id="posterior-predictions" class="section level2">
@@ -575,7 +575,7 @@ img {
 <a class="sourceLine" id="cb48-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">y =</span> condition)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb48-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-27-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-27-1.png" width="504"></p>
 <p>We could also use <code><a href="../reference/stat_interval.html">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1">ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb49-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition) <span class="op">%&gt;%</span></a>
@@ -584,7 +584,7 @@ img {
 <a class="sourceLine" id="cb49-5" title="5"><span class="st">  </span><span class="kw"><a href="../reference/stat_interval.html">stat_intervalh</a></span>(<span class="dt">.width =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">50</span>, <span class="fl">.80</span>, <span class="fl">.95</span>, <span class="fl">.99</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb49-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC) <span class="op">+</span></a>
 <a class="sourceLine" id="cb49-7" title="7"><span class="st">  </span><span class="kw">scale_color_brewer</span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-28-1.png" width="504"></p>
 <p>Altogether, data, posterior predictions, and posterior distributions of the means:</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1">grid =<span class="st"> </span>ABC <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb50-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(condition)</a>
@@ -601,7 +601,7 @@ img {
 <a class="sourceLine" id="cb50-13" title="13"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">aes</span>(<span class="dt">x =</span> .value), <span class="dt">data =</span> fits, <span class="dt">.width =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">66</span>, <span class="fl">.95</span>), <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">y =</span> <span class="fl">-0.2</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb50-14" title="14"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb50-15" title="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-29-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-29-1.png" width="504"></p>
 </div>
 <div id="posterior-predictions-kruschke-style" class="section level2">
 <h2 class="hasAnchor">
@@ -617,7 +617,7 @@ img {
 <a class="sourceLine" id="cb51-7" title="7">    <span class="dt">slab_color =</span> <span class="st">"gray65"</span>, <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">10</span>, <span class="dt">fill =</span> <span class="ot">NA</span></a>
 <a class="sourceLine" id="cb51-8" title="8">  ) <span class="op">+</span></a>
 <a class="sourceLine" id="cb51-9" title="9"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response), <span class="dt">data =</span> ABC, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">fill =</span> <span class="st">"#9ECAE1"</span>, <span class="dt">size =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-30-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-30-1.png" width="504"></p>
 <p>For a more detailed description of these charts (and some useful variations on them), see <a href="https://solomonkurz.netlify.com/post/make-rotated-gaussians-kruschke-style/">Solomon Kurz’s excellent blog post on the topic</a>.</p>
 <p>We could even combine the Kruschke-style plots of predictive distributions with half-eyes showing the posterior means:</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">ABC <span class="op">%&gt;%</span></a>
@@ -629,7 +629,7 @@ img {
 <a class="sourceLine" id="cb52-7" title="7">  ) <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-8" title="8"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeye</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> .value), <span class="dt">side =</span> <span class="st">"bottom"</span>, <span class="dt">scale =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-9" title="9"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> response), <span class="dt">data =</span> ABC, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">fill =</span> <span class="st">"#9ECAE1"</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">position =</span> <span class="kw">position_nudge</span>(<span class="dt">x =</span> <span class="fl">-.1</span>))</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-31-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-31-1.png" width="504"></p>
 </div>
 <div id="fitprediction-curves" class="section level2">
 <h2 class="hasAnchor">
@@ -646,7 +646,7 @@ img {
 <a class="sourceLine" id="cb54-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb54-8" title="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Greys"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb54-9" title="9"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Set2"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-32-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-32-1.png" width="504"></p>
 <p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">mtcars <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb55-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
@@ -656,7 +656,7 @@ img {
 <a class="sourceLine" id="cb55-6" title="6"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(cyl, .draw)), <span class="dt">alpha =</span> <span class="fl">.1</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb55-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb55-8" title="8"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-33-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-33-1.png" width="504"></p>
 <p>Or we can create animated <a href="https://mucollective.northwestern.edu/project/hops-trends">hypothetical outcome plots (HOPs)</a> of fit lines:</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">123456</span>)</a>
 <a class="sourceLine" id="cb56-2" title="2">ndraws =<span class="st"> </span><span class="dv">50</span></a>
@@ -672,7 +672,7 @@ img {
 <a class="sourceLine" id="cb56-12" title="12"><span class="st">  </span><span class="kw">transition_states</span>(.draw, <span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb56-13" title="13"><span class="st">  </span><span class="kw">shadow_mark</span>(<span class="dt">future =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> <span class="st">"gray50"</span>, <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">20</span>)</a>
 <a class="sourceLine" id="cb56-14" title="14"></a>
-<a class="sourceLine" id="cb56-15" title="15"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> ndraws, <span class="dt">fps =</span> <span class="fl">2.5</span>, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb56-15" title="15"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> ndraws, <span class="dt">fps =</span> <span class="fl">2.5</span>, <span class="dt">width =</span> <span class="dv">504</span>, <span class="dt">height =</span> <span class="dv">336</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-34-1.gif"><!-- --></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">mtcars <span class="op">%&gt;%</span></a>
@@ -684,7 +684,7 @@ img {
 <a class="sourceLine" id="cb57-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb57-8" title="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">"Set2"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb57-9" title="9"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">"Dark2"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-35-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-35-1.png" width="504"></p>
 <p>This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1">mtcars <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb58-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></a>
@@ -695,7 +695,7 @@ img {
 <a class="sourceLine" id="cb58-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> mtcars) <span class="op">+</span></a>
 <a class="sourceLine" id="cb58-8" title="8"><span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb58-9" title="9"><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl, <span class="dt">space =</span> <span class="st">"free_x"</span>, <span class="dt">scales =</span> <span class="st">"free_x"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-36-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-36-1.png" width="504"></p>
 <div id="extracting-of-distributional-regression-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#extracting-of-distributional-regression-parameters" class="anchor"></a>Extracting of distributional regression parameters</h3>
@@ -710,7 +710,7 @@ img {
 <a class="sourceLine" id="cb59-7" title="7">AB <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb59-8" title="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> response, <span class="dt">y =</span> group)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb59-9" title="9"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-37-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-37-1.png" width="504"></p>
 <p>Here is a model that lets the mean <em>and standard deviation</em> of <code>response</code> be dependent on <code>group</code>:</p>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1">m_ab =<span class="st"> </span><span class="kw">brm</span>(</a>
 <a class="sourceLine" id="cb60-2" title="2">  <span class="kw">bf</span>(</a>
@@ -738,7 +738,7 @@ img {
 <a class="sourceLine" id="cb63-14" title="14"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> AB) <span class="op">+</span></a>
 <a class="sourceLine" id="cb63-15" title="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>()</a></code></pre></div>
 <pre><code>## Warning: Ignoring unknown parameters: relative_scale</code></pre>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-38-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-38-1.png" width="504"></p>
 <p>This shows posteriors of the mean of each group (black intervals and the density plots) and posterior predictive intervals (blue).</p>
 <p>The predictive intervals in group <code>b</code> are larger than in group <code>a</code> because the model fits a different standard deviation for each group. We can see how the corresponding distributional parameter, <code>sigma</code>, changes by extracting it using the <code>dpar</code> argument to <code>add_fitted_draws</code>:</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1">grid <span class="op">%&gt;%</span></a>
@@ -746,7 +746,7 @@ img {
 <a class="sourceLine" id="cb65-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sigma, <span class="dt">y =</span> group)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb65-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb65-5" title="5"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">"dashed"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-39-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-39-1.png" width="504"></p>
 <p>By setting <code>dpar = TRUE</code>, all distributional parameters are added as additional columns in the result of <code>add_fitted_draws</code>; if you only want a specific parameter, you can specify it (or a list of just the parameters you want). In the above model, <code>dpar = TRUE</code> is equivalent to <code>dpar = list("mu", "sigma")</code>.</p>
 </div>
 </div>
@@ -882,7 +882,7 @@ img {
 <a class="sourceLine" id="cb79-11" title="11"><span class="st">  </span><span class="kw">facet_grid</span>(.row <span class="op">~</span><span class="st"> </span>.col) <span class="op">+</span></a>
 <a class="sourceLine" id="cb79-12" title="12"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">"P(cyl = row | mpg = 20)"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb79-13" title="13"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"P(cyl = col | mpg = 20)"</span>)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-47-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-47-1.png" width="504"></p>
 <p>While talking about the mean for an ordinal distribution often does not make sense, in this particular case one could argue that the expected number of cylinders for a car given its miles per gallon is a meaningful quantity. We could plot the posterior distribution for the average number of cylinders for a car given a particular miles per gallon as follows:</p>
 <p><span class="math display">\[
 \textrm{E}[\textrm{cyl}|\textrm{mpg}=m] = \sum_{c \in \{4,6,8\}} c\cdot \textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)
@@ -911,7 +911,7 @@ img {
 <a class="sourceLine" id="cb80-22" title="22">  data_plot_with_mean,</a>
 <a class="sourceLine" id="cb80-23" title="23">  fit_plot</a>
 <a class="sourceLine" id="cb80-24" title="24">)</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-48-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-48-1.png" width="504"></p>
 <p>Now let’s do some posterior predictive checking: do posterior predictions look like the data? For this, we’ll make new predictions at the same values of <code>mpg</code> as were present in the original dataset (gray circles) and plot these with the observed data (colored circles):</p>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" title="1">mtcars_clean <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb81-2" title="2"><span class="st">  </span><span class="co"># we use `select` instead of `data_grid` here because we want to make posterior predictions</span></a>
@@ -972,7 +972,7 @@ img {
 <a class="sourceLine" id="cb83-19" title="19"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="kw">vars</span>(.row), <span class="kw">vars</span>(.col)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb83-20" title="20"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"Number of observations with cyl = col"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb83-21" title="21"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">"Number of observations with cyl = row"</span>) </a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-51-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-51-1.png" width="504"></p>
 </div>
 <div id="ordinal-model-with-categorical-predictor" class="section level3">
 <h3 class="hasAnchor">
@@ -992,7 +992,7 @@ img {
 <a class="sourceLine" id="cb88-6" title="6"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> <span class="fl">.4</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb88-7" title="7"><span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">guide =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb88-8" title="8"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">brewer.pal</span>(<span class="dv">6</span>, <span class="st">"Blues"</span>)[<span class="op">-</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>)])</a></code></pre></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-52-1.png" width="576"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-52-1.png" width="504"></p>
 <p>It is hard to see the changes in categories in the above plot; let’s try something that gives a better gist of the distribution within each year:</p>
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1">esoph_plot =<span class="st"> </span>esoph <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb89-2" title="2"><span class="st">  </span><span class="kw">data_grid</span>(agegp) <span class="op">%&gt;%</span></a>

@@ -204,7 +204,7 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 <p>A graphical depiction of the censoring process might be something like this:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">uncensored_plot =<span class="st"> </span>cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">x =</span> y_star)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>(<span class="dt">color =</span> <span class="st">"black"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-4" title="4"><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">0.75</span>, <span class="dt">color =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y_lower)), <span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">height =</span> <span class="fl">0.2</span>), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-5" title="5"><span class="st">  </span><span class="kw">ylab</span>(<span class="ot">NULL</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-6" title="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-4</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)) <span class="op">+</span></a>
@@ -252,12 +252,12 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept     0.52      0.11     0.32     0.72 1.00     2951     2935
+## Intercept     0.52      0.11     0.29     0.73 1.00     2968     2452
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     1.02      0.09     0.86     1.21 1.00     2972     2435
-## nu       21.09     12.77     5.41    53.01 1.00     3028     2441
+## sigma     1.02      0.09     0.84     1.20 1.00     2654     2267
+## nu       20.98     13.29     5.27    54.94 1.00     2522     2477
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -270,7 +270,7 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 <a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(m_ideal) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-6-1.png" width="504"></p>
 <p>This is a typical residual plot, though with the addition of the uncertainty associated with each residual afforded by generating draws from the distribution associated with each residual.</p>
 <p>Let’s check the QQ plot:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">cens_df <span class="op">%&gt;%</span></a>
@@ -279,7 +279,7 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 <a class="sourceLine" id="cb13-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb13-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb13-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-7-1.png" width="432"></p>
 <p>This is a typical way of looking at residuals. However, this type of residual will not generalize to discrete and censored models, so let’s consider something else…</p>
 </div>
 <div id="probability-residuals-and-quantile-residuals" class="section level3">
@@ -302,7 +302,7 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <a class="sourceLine" id="cb14-7" title="7"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb14-8" title="8"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb14-9" title="9"><span class="st">  </span><span class="kw">geom_abline</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-8-1.png" width="432"></p>
 <p>This QQ plot shows us the model fits okay.</p>
 </div>
 </div>
@@ -324,11 +324,11 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept     0.56      0.11     0.34     0.79 1.00     3306     2666
+## Intercept     0.56      0.11     0.34     0.77 1.00     3281     2615
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     1.09      0.08     0.95     1.26 1.00     3421     2791
+## sigma     1.09      0.08     0.94     1.27 1.00     3422     2450
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -339,7 +339,7 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <a class="sourceLine" id="cb20-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb20-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-10-1.png" width="504"></p>
 <p>But notice the horizontal striations due to censoring. This obscures patterns we might wish to see in the diagnostic plots. Patterns like this often show up in censored regression, logistic regression, Poisson regression, and other discrete regression models. Notice how <code>brms</code> also gives us a warning message that the residuals may not be meaningful due to censoring.</p>
 <p>Let’s look at the QQ plot:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">cens_df <span class="op">%&gt;%</span></a>
@@ -349,7 +349,7 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <a class="sourceLine" id="cb22-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb22-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-11-1.png" width="432"></p>
 <p>Again, the striations are making interpretation difficult. But there is hope!</p>
 <div id="randomized-quantile-residuals" class="section level3">
 <h3 class="hasAnchor">
@@ -385,7 +385,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb24-8" title="8">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-9" title="9"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb24-10" title="10"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-12-1.png" width="504"></p>
 <p>The striations are gone! And a QQ plot:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">cens_df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb25-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(m) <span class="op">%&gt;%</span></a>
@@ -398,7 +398,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb25-9" title="9"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-10" title="10"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-11" title="11"><span class="st">  </span><span class="kw">geom_abline</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-13-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-13-1.png" width="432"></p>
 <p>Looks decent. However, our residuals are now subject to noise—we actually have a distribution of possible QQ plots. So, let’s check on some of them to make sure this nice-looking one is not just a fluke. We’ll employ <a href="https://mucollective.co/project/hops-trends">HOPs</a> to do that:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb26-2" title="2"></a>
@@ -417,7 +417,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb26-15" title="15"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb26-16" title="16"><span class="st">  </span><span class="kw">transition_manual</span>(residual_draw)</a>
 <a class="sourceLine" id="cb26-17" title="17"></a>
-<a class="sourceLine" id="cb26-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb26-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">432</span>, <span class="dt">height =</span> <span class="dv">432</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-14-1.gif"><!-- --></p>
 <p>Looks good.</p>
 </div>
@@ -439,7 +439,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <p>Note the presence of outliers:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">uncensored_plot =<span class="st"> </span>cens_df_t <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb28-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="st">""</span>, <span class="dt">x =</span> y)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>(<span class="dt">color =</span> <span class="st">"black"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb28-3" title="3"><span class="st">  </span><span class="kw"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">0.75</span>, <span class="dt">color =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(y_lower)), <span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">height =</span> <span class="fl">0.2</span>), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-5" title="5"><span class="st">  </span><span class="kw">ylab</span>(<span class="ot">NULL</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-6" title="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">-10</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)) <span class="op">+</span></a>
@@ -483,7 +483,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb33-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb33-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-17-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-17-1.png" width="432"></p>
 <p>It looks like this could be problematic, but the striations make diagnosing the problem difficult.</p>
 </div>
 <div id="randomized-quantile-residuals-1" class="section level3">
@@ -502,7 +502,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb35-10" title="10"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb35-11" title="11"><span class="st">  </span><span class="kw">geom_abline</span>()</a></code></pre></div>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_qq).</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-18-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-18-1.png" width="432"></p>
 <p>Does not look good for the model—this s-shape is characteristic of excess kurtosis (aka fat tails), which is exactly what a t distribution should produce. But let’s check using HOPs again:</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb37-2" title="2"></a>
@@ -521,7 +521,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb37-15" title="15"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb37-16" title="16"><span class="st">  </span><span class="kw">transition_manual</span>(residual_draw)</a>
 <a class="sourceLine" id="cb37-17" title="17"></a>
-<a class="sourceLine" id="cb37-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb37-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">432</span>, <span class="dt">height =</span> <span class="dv">432</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <pre><code>## Warning: Removed 20 rows containing non-finite values (stat_qq).</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-19-1.gif"><!-- --></p>
 <p>Still not good! But the clear s shape is very diagnostic of fat tails, so let’s try a different model.</p>
@@ -542,7 +542,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb42-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb42-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-20-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-20-1.png" width="432"></p>
 <p>Odd, these don’t look great! But again, these residuals are not to be trusted…</p>
 <div id="randomized-quantile-residuals-2" class="section level3">
 <h3 class="hasAnchor">
@@ -565,7 +565,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb44-15" title="15"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb44-16" title="16"><span class="st">  </span><span class="kw">transition_manual</span>(residual_draw)</a>
 <a class="sourceLine" id="cb44-17" title="17"></a>
-<a class="sourceLine" id="cb44-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb44-18" title="18"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">432</span>, <span class="dt">height =</span> <span class="dv">432</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-21-1.gif"><!-- --></p>
 <p>Looking pretty good! As well they should, since this is the same model that generated the data.</p>
 </div>
@@ -622,7 +622,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb51-9" title="9">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb51-10" title="10"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .row, <span class="dt">y =</span> z_residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb51-11" title="11"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-24-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-24-1.png" width="504"></p>
 <p>Or in HOPs-QQ plot form:</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb52-2" title="2"></a>
@@ -642,7 +642,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb52-16" title="16"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb52-17" title="17"><span class="st">  </span><span class="kw">transition_manual</span>(residual_draw)</a>
 <a class="sourceLine" id="cb52-18" title="18"></a>
-<a class="sourceLine" id="cb52-19" title="19"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb52-19" title="19"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">432</span>, <span class="dt">height =</span> <span class="dv">432</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-25-1.gif"><!-- --></p>
 <p>It is not too surprising that the ordinal regression also works here, even though it is not the data generating model. Ordinal regressions are pretty robust.</p>
 </div>
@@ -704,7 +704,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb58-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> .residual)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb58-5" title="5"><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb58-6" title="6"><span class="st">  </span><span class="kw">geom_qq_line</span>()</a></code></pre></div>
-<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-28-1.png" width="576"></p>
+<p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-28-1.png" width="432"></p>
 <p>Randomized quantile residuals help us see that the fit is probably reasonable:</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
 <a class="sourceLine" id="cb59-2" title="2"></a>
@@ -718,7 +718,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <pre><code>## Warning: Subsetting quosures with `[[` is deprecated as of rlang 0.4.0
 ## Please use `quo_get_expr()` instead.
 ## This warning is displayed once per session.</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">432</span>, <span class="dt">height =</span> <span class="dv">432</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-29-1.gif"><!-- --></p>
 <p>We could also look at the probability residuals instead, comparing them against a uniform distribution, like so:</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1">k =<span class="st"> </span><span class="dv">20</span></a>
@@ -731,7 +731,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 <a class="sourceLine" id="cb62-8" title="8"><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb62-9" title="9"><span class="st">  </span><span class="kw">transition_manual</span>(.residual_draw)</a>
 <a class="sourceLine" id="cb62-10" title="10"></a>
-<a class="sourceLine" id="cb62-11" title="11"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">576</span>, <span class="dt">height =</span> <span class="dv">384</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb62-11" title="11"><span class="kw">animate</span>(p, <span class="dt">nframes =</span> k, <span class="dt">width =</span> <span class="dv">432</span>, <span class="dt">height =</span> <span class="dv">432</span>, <span class="dt">res =</span> <span class="dv">96</span>, <span class="dt">dev =</span> <span class="st">"png"</span>, <span class="dt">type =</span> <span class="st">"cairo"</span>)</a></code></pre></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-30-1.gif"><!-- --></p>
 </div>
   </div>
