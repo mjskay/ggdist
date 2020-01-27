@@ -41,7 +41,7 @@ globalVariables(".draw")
 #' library(dplyr)
 #'
 #' if (
-#'   require("rstanarm", quietly = TRUE) &&
+#'   require("brms", quietly = TRUE) &&
 #'   require("modelr", quietly = TRUE)
 #' ) {
 #'
