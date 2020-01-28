@@ -11,7 +11,7 @@ context("geom_lineribbon")
 make_line_data = function(offset = 0, seed = 123, g = "a") {
   set.seed(seed)
   tibble(
-      x = seq(0, 1, length.out = 25),
+      x = seq(0, 1, length.out = 15),
       g = g
     ) %>%
     group_by_all() %>%
@@ -29,10 +29,9 @@ test_that("one-group stat_lineribbons work", {
   p = ggplot(df, aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("one-group stat_lineribbon", p + stat_lineribbon(.width = c(.50, .75, .90)) + scale_fill_brewer())
-  vdiffr::expect_doppelganger("one-group stat_lineribbon (reverse order)", p + stat_lineribbon(.width = c(.90, .75, .50)) + scale_fill_brewer())
-
-  vdiffr::expect_doppelganger("one-group stat_lineribbon (mean_qi)",
-    p + stat_lineribbon(.width = c(.50, .75, .90), point_interval = mean_qi) + scale_fill_brewer())
+  vdiffr::expect_doppelganger("one-group stat_lineribbon (reverse order, mean_qi)",
+    p + stat_lineribbon(.width = c(.90, .75, .50), point_interval = mean_qi) + scale_fill_brewer()
+  )
 })
 
 test_that("one-group geom_lineribbons work", {
@@ -79,16 +78,6 @@ test_that("two-group stat_lineribbons work", {
   vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by group",
     p +
     stat_lineribbon(aes(group = g), .width = c(.50, .75, .90)) + scale_fill_brewer()
-  )
-  vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by linetype",
-    p +
-    stat_lineribbon(aes(linetype = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +
-    guides(fill = guide_legend(order = 1), linetype = guide_legend(order = 2))
-  )
-  vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by color",
-    p +
-    stat_lineribbon(aes(color = g), .width = c(.50, .75, .90)) + scale_fill_brewer() +
-    guides(fill = guide_legend(order = 1), color = guide_legend(order = 2))
   )
   vdiffr::expect_doppelganger("two-group stat_lineribbons grouped by color and linetype",
     p +

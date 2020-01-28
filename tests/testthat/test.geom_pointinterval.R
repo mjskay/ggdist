@@ -77,22 +77,4 @@ test_that("grouped pointintervals work", {
 
   vdiffr::expect_doppelganger("grouped pointintervals (stat)", stat_forward_plot)
 
-  stat_forward_plot_mode_hdi = RankCorr_u_tau %>%
-    ggplot(aes(x = i, y = u_tau)) +
-    stat_pointinterval(.width = c(.66, .95), point_interval = mode_hdi)
-
-  vdiffr::expect_doppelganger("grouped pointintervals (stat, mode_hdi)", stat_forward_plot_mode_hdi)
-
-  reverse_plot = RankCorr_u_tau %>%
-    mean_qi(.width = c(.66, .95)) %>%
-    ggplot(aes(x = i, y = u_tau)) +
-    geom_pointinterval()
-
-  vdiffr::expect_doppelganger("grouped pointintervals (reverse order)", reverse_plot)
-
-  stat_reverse_plot = RankCorr_u_tau %>%
-    ggplot(aes(x = i, y = u_tau)) +
-    stat_pointinterval(.width = c(.66, .95))
-
-  vdiffr::expect_doppelganger("grouped pointintervals (stat, reverse order)", stat_reverse_plot)
 })

@@ -44,7 +44,7 @@ test_that("group_slab works", {
   skip_if_not_installed("svglite")
 
   p = tibble(
-    x = seq(-4,4, length.out = 50),
+    x = seq(-4,4, length.out = 20),
     d = dnorm(x)
   ) %>%
     ggplot(aes(thickness = d))
@@ -76,18 +76,18 @@ test_that("normalize works", {
     facet_grid(~p)
 
   vdiffr::expect_doppelganger("halfeye with normalize = all",
-    p + stat_dist_halfeyeh(normalize = "all")
+    p + stat_dist_halfeyeh(normalize = "all", n = 20)
   )
   vdiffr::expect_doppelganger("halfeye with normalize = panels",
-    p + stat_dist_halfeyeh(normalize = "panels")
+    p + stat_dist_halfeyeh(normalize = "panels", n = 20)
   )
   vdiffr::expect_doppelganger("halfeye with normalize = xy",
-    p + stat_dist_halfeyeh(normalize = "xy")
+    p + stat_dist_halfeyeh(normalize = "xy", n = 20)
   )
   vdiffr::expect_doppelganger("halfeye with normalize = groups",
-    p + stat_dist_halfeyeh(normalize = "groups")
+    p + stat_dist_halfeyeh(normalize = "groups", n = 20)
   )
   vdiffr::expect_doppelganger("halfeye with normalize = none",
-    p + stat_dist_halfeyeh(normalize = "none")
+    p + stat_dist_halfeyeh(normalize = "none", n = 20)
   )
 })

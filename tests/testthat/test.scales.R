@@ -17,6 +17,7 @@ test_that("direct scale setting works", {
     data.frame(dist = "norm", mean = 1, sd = 2) %>%
       ggplot(aes(y = "", dist = dist, arg1 = mean, arg2 = sd)) +
       stat_dist_halfeyeh(
+        n = 20,
         shape = 21,  # this point shape has a fill and outline
         point_color = "red",
         point_fill = "black",
@@ -165,15 +166,12 @@ test_that("mapping custom aesthetics works", {
 
 
   # DOTS
-  p = data.frame(x = qnorm(ppoints(100)), y = "a") %>%
-    rbind(data.frame(x = qnorm(ppoints(100), 3, 2), y = "b")) %>%
+  p = data.frame(x = qnorm(ppoints(20)), y = "a") %>%
+    rbind(data.frame(x = qnorm(ppoints(20), 3, 2), y = "b")) %>%
     ggplot(aes(x = x, y = y, group = NA))
 
   vdiffr::expect_doppelganger("dots: slab_color plus slab_shape mapping",
-    p + geom_dots(aes(color = x > 2.5, shape = x > 2.5), orientation = "horizontal")
-  )
-  vdiffr::expect_doppelganger("dotsinterval: slab_color plus slab_shape mapping",
-    p + geom_dotsinterval(aes(slab_color = x > 2.5, slab_shape = x > 2.5), orientation = "horizontal")
+    p + geom_dots(aes(color = x > 1.9, shape = x > 1.9), orientation = "horizontal")
   )
 
 })

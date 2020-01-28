@@ -69,10 +69,10 @@ test_that("histinterval and slab work", {
   )
 
   vdiffr::expect_doppelganger("slab with outline",
-    p + stat_slab(aes(x = dist, y = x), slab_color = "black")
+    p + stat_slab(aes(x = dist, y = x), n = 20, slab_color = "black")
   )
   vdiffr::expect_doppelganger("slabh with outline",
-    p + stat_slabh(aes(y = dist, x = x), slab_color = "black")
+    p + stat_slabh(aes(y = dist, x = x), n = 20, slab_color = "black")
   )
 
 })
@@ -87,15 +87,15 @@ test_that("scale transformation works", {
     scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 
   vdiffr::expect_doppelganger("halfeyeh log scale transform",
-    p_log + stat_halfeyeh(point_interval = mode_hdci)
+    p_log + stat_halfeyeh(point_interval = mode_hdci, n = 50)
   )
 
   vdiffr::expect_doppelganger("ccdfintervalh log scale transform",
-    p_log + stat_ccdfintervalh(point_interval = mean_hdi)
+    p_log + stat_ccdfintervalh(point_interval = mean_hdi, n = 50)
   )
 
   vdiffr::expect_doppelganger("histintervalh log scale transform",
-    p_log + stat_histintervalh(point_interval = median_qi)
+    p_log + stat_histintervalh(point_interval = median_qi, n = 50)
   )
 
 })
