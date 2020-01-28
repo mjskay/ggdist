@@ -1,4 +1,4 @@
-# tidybayes 2.0.0
+# tidybayes 2.0.1
 
 * Various geoms and stats have been merged together under the `geom_slabinterval()` and `stat_slabinterval()`
   "meta-geom" (#84). This has enabled a bunch of new geoms to be created (see `vignette("slabinterval")` 
