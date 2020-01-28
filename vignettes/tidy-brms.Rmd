@@ -107,7 +107,7 @@ head(ABC, 10)
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
-```{r}
+```{r fig.width = 3, fig.height = 2.5}
 ABC %>%
   ggplot(aes(y = condition, x = response)) +
   geom_point()
@@ -284,7 +284,7 @@ m %>%
 
 Plotting point summaries and with one interval is straightforward using the `geom_pointinterval` or `geom_pointintervalh` geoms:
 
-```{r}
+```{r fig.width = 4, fig.height = 2.5}
 m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   median_qi(condition_mean = b_Intercept + r_condition) %>%
@@ -305,7 +305,7 @@ m %>%
 
 The results are in a tidy format: one row per group and uncertainty interval width (`.width`). This facilitates plotting. For example, assigning `-.width` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom automatically sets the `xmin`, `xmax`, and `size` aesthetics appropriately based on the `.lower`, `.upper`, and `.width` columns in the data to produce plots of points with multiple probability levels:
 
-```{r}
+```{r fig.width = 4, fig.height = 2.5}
 m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   median_qi(condition_mean = b_Intercept + r_condition, .width = c(.95, .66)) %>%
@@ -318,7 +318,7 @@ m %>%
 
 To see the density along with the intervals, we can use `stat_eyeh` (horizontal "eye plots", which combine intervals with violin plots), or `stat_halfeyeh` (horizontal interval + density plots):
 
-```{r}
+```{r fig.width = 4, fig.height = 2.5}
 m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   mutate(condition_mean = b_Intercept + r_condition) %>%
@@ -328,7 +328,7 @@ m %>%
 
 Or say you want to annotate portions of the densities in color; the `fill` aesthetic can vary within a slab in all geoms and stats in the `geom_slabinterval()` family, including `stat_halfeyeh()`. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:
 
-```{r}
+```{r fig.width = 4.75, fig.height = 2.5}
 m %>%
   spread_draws(b_Intercept, r_condition[condition,]) %>%
   mutate(condition_mean = b_Intercept + r_condition) %>%
@@ -343,7 +343,7 @@ m %>%
 
 There are a variety of additional stats for visualizing distributions in the `geom_slabinterval()` family of stats and geoms:
 
-![The slabinterval family of geoms and stats](slabinterval_family.png)
+<img src="slabinterval_family.png" width="700" alt="The slabinterval family of geoms and stats" />
 
 See `vignette("slabinterval")` for an overview.
 
@@ -361,7 +361,7 @@ ABC %>%
 
 To plot this example, we'll also show the use of `stat_pointintervalh` instead of `geom_pointintervalh`, which summarizes draws into points and intervals within ggplot:
 
-```{r}
+```{r fig.width = 3, fig.height = 2.5}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
@@ -376,7 +376,7 @@ Intervals are nice if the alpha level happens to line up with whatever decision 
 
 Within the slabinterval family of geoms in tidybayes is the `dots` and `dotsinterval` family, which automatically determine appropriate bin sizes for dotplots and can calculate quantiles from samples to construct quantile dotplots. `stat_dotsh()` is the horizontal variant designed for use on samples:
 
-```{r}
+```{r fig.width = 5, fig.height = 3.5}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
@@ -393,7 +393,7 @@ Where `add_fitted_draws` is analogous to `brms::fitted.brmsfit` (or `brms::poste
 
 Here is an example of posterior predictive distributions plotted using `stat_slabh()`:
 
-```{r}
+```{r fig.width = 4, fig.height = 2.5}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
@@ -403,7 +403,7 @@ ABC %>%
 
 We could also use `tidybayes::stat_intervalh` to plot predictive bands alongside the data:
 
-```{r}
+```{r fig.width = 4, fig.height = 2.5}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
@@ -415,7 +415,7 @@ ABC %>%
 
 Altogether, data, posterior predictions, and posterior distributions of the means:
 
-```{r}
+```{r fig.width = 4, fig.height = 2.75}
 grid = ABC %>%
   data_grid(condition)
 
@@ -439,7 +439,7 @@ The above approach to posterior predictions integrates over the parameter uncert
 
 We can do this pretty easily by asking for the distributional parameters for a given prediction implied by the posterior. We'll do it explicitly here by setting `dpar = c("mu", "sigma")` in `add_fitted_draws`. Rather than specifying the parameters explicitly, you can also just set `dpar = TRUE` to get draws from all distributional parameters in a model, and this will work for any response distribution supported by brms. Then, we can select a small number of draws using `sample_draws()` and then use `stat_dist_slabh()` to visualize each predictive distribution implied by the values of `mu` and `sigma`:
 
-```{r}
+```{r fig.width = 4, fig.height = 3}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m, dpar = c("mu", "sigma")) %>%
@@ -455,7 +455,7 @@ For a more detailed description of these charts (and some useful variations on t
 
 We could even combine the Kruschke-style plots of predictive distributions with half-eyes showing the posterior means:
 
-```{r}
+```{r fig.width = 4, fig.height = 3}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m, dpar = c("mu", "sigma")) %>%
@@ -464,7 +464,7 @@ ABC %>%
     slab_color = "gray65", alpha = 1/10, fill = NA, data = . %>% sample_draws(30), scale = .5
   ) +
   stat_halfeye(aes(y = .value), side = "bottom", scale = .5) +
-  geom_point(aes(y = response), data = ABC, shape = 21, fill = "#9ECAE1", size = 2, position = position_nudge(x = -.1))
+  geom_point(aes(y = response), data = ABC, shape = 21, fill = "#9ECAE1", size = 2, position = position_nudge(x = -.2))
 ```
 
 ## Fit/prediction curves
@@ -506,7 +506,9 @@ Or we can create animated [hypothetical outcome plots (HOPs)](https://mucollecti
 
 ```{r}
 set.seed(123456)
-ndraws = 40
+# to keep the example small we use 20 frames, 
+# but something like 100 would be better
+ndraws = 20
 
 p = mtcars %>%
   group_by(cyl) %>%
@@ -556,7 +558,7 @@ mtcars %>%
 
 This approach can be helpful in cases of non-constant variance (also called _heteroskedasticity_ by folks who like obfuscation via Latin). E.g., imagine two groups, each with different mean response _and variance_:
 
-```{r}
+```{r fig.width = 3, fig.height = 1.75}
 set.seed(1234)
 AB = tibble(
   group = rep(c("a", "b"), each = 20),
@@ -582,7 +584,7 @@ m_ab = brm(
 
 We can plot the posterior distribution of the mean `response` alongside posterior predictive intervals and the data:
 
-```{r}
+```{r fig.width = 4, fig.height = 2.5}
 grid = AB %>%
   data_grid(group)
 
@@ -594,7 +596,7 @@ preds = grid %>%
 
 AB %>%
   ggplot(aes(x = response, y = group)) +
-  stat_halfeyeh(aes(x = .value), relative_scale = 0.7, position = position_nudge(y = 0.1), data = fits) +
+  stat_halfeyeh(aes(x = .value), scale = 0.6, position = position_nudge(y = 0.175), data = fits) +
   stat_intervalh(aes(x = .prediction), data = preds) +
   geom_point(data = AB) +
   scale_color_brewer()
@@ -604,7 +606,7 @@ This shows posteriors of the mean of each group (black intervals and the density
 
 The predictive intervals in group `b` are larger than in group `a` because the model fits a different standard deviation for each group. We can see how the corresponding distributional parameter, `sigma`, changes by extracting it using the `dpar` argument to `add_fitted_draws`:
 
-```{r}
+```{r fig.width = 3, fig.height = 1.75}
 grid %>%
   add_fitted_draws(m_ab, dpar = TRUE) %>%
   ggplot(aes(x = sigma, y = group)) +
@@ -621,7 +623,7 @@ If we wish compare the means from each condition, `compare_levels` facilitates c
 
 Let's demonstrate `compare_levels` with another plotting geom, `stat_halfeyeh`, which gives horizontal "half-eye" plots, combining intervals with a density plot:
 
-```{r, fig.width=7}
+```{r, fig.width = 4, fig.height = 2.5}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
   spread_draws(r_condition[condition,]) %>%
@@ -632,7 +634,7 @@ m %>%
 
 If you prefer "caterpillar" plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:
 
-```{r, fig.width=7}
+```{r, fig.width = 4, fig.height = 2.5}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
   spread_draws(r_condition[condition,]) %>%
@@ -719,7 +721,9 @@ One way to see this correlation might be to employ [hypothetical outcome plots (
 
 
 ```{r}
-ndraws = 40
+# to keep the example small we use 20 frames, 
+# but something like 100 would be better
+ndraws = 20
 
 p = mtcars_clean %>%
   data_grid(mpg = seq_range(mpg, n = 101)) %>%
@@ -887,7 +891,7 @@ esoph %>%
 
 It is hard to see the changes in categories in the above plot; let's try something that gives a better gist of the distribution within each year:
 
-```{r fig.height = 2.25, fig.width = 8}
+```{r fig.height = 2.25, fig.width = 7}
 esoph_plot = esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_brm) %>%
@@ -907,7 +911,7 @@ esoph_plot +
 
 The bars in this case might present a false sense of precision, so we could also try CCDF barplots instead:
 
-```{r fig.height = 2.25, fig.width = 8}
+```{r fig.height = 2.25, fig.width = 7}
 esoph_plot +
   stat_ccdfintervalh() +
   expand_limits(x = 0) #ensure bars go to 0
