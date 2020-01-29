@@ -27,7 +27,7 @@ weighted_ecdf = function(x, weights = NULL) {
 #' @importFrom stats ecdf
 sample_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = "vertical",
-  adjust = 1, trim = TRUE, breaks = "Sturges", trans = scales::identity_trans(), ...
+  adjust = 1, trim = TRUE, breaks = "Sturges", outline_bars = FALSE, trans = scales::identity_trans(), ...
 ) {
   x = switch(orientation,
     horizontal = "x",
@@ -63,12 +63,21 @@ sample_slab_function = function(
       h = hist(df[[x]], breaks = breaks, plot = FALSE)
       input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
       input_2 = h$breaks[-1]                 # second edge of bin
-      data.frame(
+
+      if (!outline_bars) {
         # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
         # us the bin endpoints --- then just need to repeat the same value of density
         # for both endpoints of the same bin
-        .input = trans$inverse(as.vector(rbind(input_1, input_2))),
-        .value = rep(h$density, each = 2),
+        .input = trans$inverse(as.vector(rbind(input_1, input_2)))
+        .value = rep(h$density, each = 2)
+      } else {
+        # have to return to 0 in between each bar so that bar outlines are drawn
+        .input = trans$inverse(as.vector(rbind(input_1, input_1, input_2, input_2)))
+        .value = as.vector(rbind(0, h$density, h$density, 0))
+      }
+      data.frame(
+        .input = .input,
+        .value = .value,
         n = nrow(df)
       )
     }
@@ -129,6 +138,9 @@ sample_slab_function = function(
 #' input data? Default `TRUE`.
 #' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to
 #' [hist()] to determine where to put breaks in the histogram.
+#' @param outline_bars If `slab_type` is `"histogram"`, `outline_bars` determines if outlines in between
+#' the bars are drawn when the `slab_color` aesthetic is used. If `FALSE` (the default), the outline
+#' is drawn only along the tops of the bars; if `TRUE`, outlines in between bars are also drawn.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats
 #' use by default and some of the options they have. See [stat_dist_slabinterval()]
 #' for the versions of these stats that can be used on analytical distributions.
@@ -180,6 +192,7 @@ stat_sample_slabinterval = function(
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
+  outline_bars = FALSE,
 
   orientation = c("vertical", "horizontal"),
   limits = NULL,
@@ -212,6 +225,7 @@ stat_sample_slabinterval = function(
       adjust = adjust,
       trim = trim,
       breaks = breaks,
+      outline_bars = outline_bars,
 
       orientation = orientation,
 
@@ -240,7 +254,8 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
     "slab_type",
     "adjust",
     "trim",
-    "breaks"
+    "breaks",
+    "outline_bars"
   ),
 
   default_params = defaults(list(
@@ -248,6 +263,7 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
     adjust = 1,
     trim = TRUE,
     breaks = "Sturges",
+    outline_bars = FALSE,
 
     slab_function = sample_slab_function,
     point_interval = median_qi
@@ -260,7 +276,8 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
       slab_type = params$slab_type %||% self$default_params$slab_type,
       adjust = params$adjust %||% self$default_params$adjust,
       trim = params$trim %||% self$default_params$trim,
-      breaks = params$breaks %||% self$default_params$breaks
+      breaks = params$breaks %||% self$default_params$breaks,
+      outline_bars = params$outline_bars %||% self$default_params$outline_bars
     )
 
     params

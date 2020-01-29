@@ -410,8 +410,8 @@ ph = df %>%
   panel_border()
 
 plot_grid(ncol = 2, align = "hv",
-  p + stat_histinterval() + labs(title = "stat_histinterval[h]", subtitle = "stat_histinterval()"),
-  ph + stat_histintervalh() + labs(subtitle = "stat_histintervalh()")
+  p + stat_histinterval(slab_color = "red", outline_bars = FALSE) + labs(title = "stat_histinterval[h]", subtitle = "stat_histinterval()"),
+  ph + stat_histintervalh(slab_color = "red", outline_bars = TRUE) + labs(subtitle = "stat_histintervalh()")
 )
 ```
 

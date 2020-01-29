@@ -28,6 +28,7 @@ stat_sample_slabinterval(
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
+  outline_bars = FALSE,
   orientation = c("vertical", "horizontal"),
   limits = NULL,
   n = 501,
@@ -153,6 +154,10 @@ input data? Default \code{TRUE}.}
 
 \item{breaks}{If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
 \code{\link[=hist]{hist()}} to determine where to put breaks in the histogram.}
+
+\item{outline_bars}{If \code{slab_type} is \code{"histogram"}, \code{outline_bars} determines if outlines in between
+the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE} (the default), the outline
+is drawn only along the tops of the bars; if \code{TRUE}, outlines in between bars are also drawn.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
