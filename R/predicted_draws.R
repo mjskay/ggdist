@@ -270,8 +270,7 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
   prediction_levels = attr(fits_preds, "levels", exact = TRUE)
   if (!has_category &
       !is.null(prediction_levels) &
-      is_integerish(fits_preds_df[[output_name]]) &
-      all(fits_preds_df[[output_name]] >= 1)
+      is_integerish(fits_preds_df[[output_name]])
     ) {
     fits_preds_df[[output_name]] = factor(
       fits_preds_df[[output_name]],

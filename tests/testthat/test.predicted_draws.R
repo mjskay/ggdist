@@ -156,6 +156,30 @@ test_that("[add_]predicted_draws works on brms models with dirichlet responses",
   expect_equal(predicted_draws(m_dirich, grid, seed = 1234, n = 100), ref)
 })
 
+test_that("[add_]predicted_draws works on brms models with multinomial responses", {
+  skip_if_not_installed("brms")
+  m_multinom = readRDS("../models/models.brms.m_multinom.rds")
+
+  set.seed(1234)
+  # use a low number for total so there are some 0s
+  grid = tibble(total = c(10, 20))
+  preds = predict(m_multinom, grid, summary = FALSE, nsamples = 10) %>%
+    array2df(list(.draw = NA, .row = NA, .category = TRUE), label.x = ".prediction") %>%
+    mutate(
+      .chain = NA_integer_,
+      .iteration = NA_integer_,
+      .row = as.integer(.row),
+      .draw = as.integer(.draw)
+    )
+
+  ref = grid %>%
+    mutate(.row = as.integer(rownames(.))) %>%
+    inner_join(preds, by = ".row") %>%
+    group_by(total, .row, .category)
+
+  expect_equal(predicted_draws(m_multinom, grid, seed = 1234, n = 10), ref)
+})
+
 test_that("[add_]predicted_draws throws an error when nsamples is called instead of n in brms", {
   skip_if_not_installed("brms")
   m_hp = readRDS("../models/models.brms.m_hp.rds")

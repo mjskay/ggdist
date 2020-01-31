@@ -154,6 +154,21 @@ brms.m_dirich = brm(Y ~ x, family = dirichlet(), data = dirich_df,
 saveRDS(strip_brms_model(brms.m_dirich), "tests/models/models.brms.m_dirich.rds", compress = "xz")
 
 
+# simple multinomial model for testing prediction / fit output,
+# see https://github.com/mjskay/tidybayes/issues/219
+set.seed(1234)
+multinom_df <- tribble(
+  ~a,   ~b,   ~c, ~total,
+  3000, 3000, 7000,  13000,
+)
+multinom_df$counts <- with(data, cbind(a, b, c))
+brms.m_multinom = brm(counts | trials(total) ~ 1, family = multinomial(), data = multinom_df,
+  warmup = 950, iter = 1000, chains = 2,
+  save_warmup = FALSE, stan_model_args = list(save_dso = FALSE)
+)
+saveRDS(strip_brms_model(brms.m_multinom), "tests/models/models.brms.m_multinom.rds", compress = "xz")
+
+
 # rstanarm models ---------------------------------------------------------
 
 set.seed(9439)
