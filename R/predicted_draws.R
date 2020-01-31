@@ -237,12 +237,16 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
 
   groups = union(colnames(newdata), ".row")
 
+  has_category = FALSE
   if (ndim(fits_preds) == 3) {
     #3 dimensions implies a categorical outcome, add a column for it
     # N.B.: at some point getting category names to work would be nice, but may be kind of brittle
     column_format[[3]] = TRUE
     names(column_format)[[3]] = category
     groups %<>% union(category)
+    # we need to remember that there are categories, because when there are categories
+    # the response variable should not be re-labelled according to categories
+    has_category = TRUE
   }
 
   fits_preds_df = array2df(fits_preds, column_format, label.x = output_name)
@@ -260,10 +264,12 @@ fitted_predicted_draws_brmsfit_ = function(f_fitted_predicted, model, newdata, o
   fits_preds_df$.draw = as.integer(fits_preds_df$.draw)
 
   #for predictions from categorical models in brms, we can use the "levels" attribute
-  #to recover the original factor levels. But we must be careful: dirichlet models also
-  #get this attribute set, so we must also test that responses are all positive integer values.
+  #to recover the original factor levels. But we must be careful: dirichlet models and multinomial
+  #models also get this attribute set, so we must also test that there is not already a `category`
+  #column (has_category) and that responses are all positive integer values.
   prediction_levels = attr(fits_preds, "levels", exact = TRUE)
-  if (!is.null(prediction_levels) &
+  if (!has_category &
+      !is.null(prediction_levels) &
       is_integerish(fits_preds_df[[output_name]]) &
       all(fits_preds_df[[output_name]] >= 1)
     ) {
