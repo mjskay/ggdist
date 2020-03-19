@@ -194,14 +194,16 @@ compare_levels_ = function(data, variable, by, fun, comparison, draw_indices) {
       #user-supplied quoted expressions are evaluated within the data frame
       data.frame(
         by = quo_name(levels.),
-        variable = eval_tidy(levels., data_wide)
+        variable = eval_tidy(levels., data_wide),
+        stringsAsFactors = FALSE
       )
     }
     else {
       #otherwise, levels should be pairs of strings representing levels
       data.frame(
         by = paste(levels.[[1]], fun_name, levels.[[2]]),
-        variable = fun(data_wide[[levels.[[1]]]], data_wide[[levels.[[2]]]])
+        variable = fun(data_wide[[levels.[[1]]]], data_wide[[levels.[[2]]]]),
+        stringsAsFactors = FALSE
       )
     }
 

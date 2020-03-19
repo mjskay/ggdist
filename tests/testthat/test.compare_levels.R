@@ -30,8 +30,8 @@ test_that("pairwise level comparison works", {
   draws = get_draws()
 
   draws_wide = spread(draws, ff, tau)
-  ref = plyr::ldply(combn(levels(draws$ff), 2, simplify = FALSE), function(levels.) {
-    draws_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
+  ref = plyr::ldply(combn(levels(factor(draws$ff)), 2, simplify = FALSE), function(levels.) {
+    draws_wide$ff = paste(levels.[[2]], "-", levels.[[1]])
     draws_wide$tau = draws_wide[[levels.[[2]]]] - draws_wide[[levels.[[1]]]]
     draws_wide
   }) %>%
@@ -49,7 +49,7 @@ test_that("ordered level comparison works", {
 
   draws_wide = spread(draws, ff, tau)
   ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[i - 1]])), function(levels.) {
-    draws_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
+    draws_wide$ff = paste(levels.[[1]], "-", levels.[[2]])
     draws_wide$tau = draws_wide[[levels.[[1]]]] - draws_wide[[levels.[[2]]]]
     draws_wide
   }) %>%
@@ -65,7 +65,7 @@ test_that("control level comparison works", {
 
   draws_wide = spread(draws, ff, tau)
   ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
-    draws_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
+    draws_wide$ff = paste(levels.[[1]], "-", levels.[[2]])
     draws_wide$tau = draws_wide[[levels.[[1]]]] - draws_wide[[levels.[[2]]]]
     draws_wide
   }) %>%
@@ -92,7 +92,7 @@ test_that("named functions are supported and named with their own name", {
 
   draws_wide = spread(draws, ff, tau)
   ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
-    draws_wide$ff = factor(paste(levels.[[1]], "+", levels.[[2]]))
+    draws_wide$ff = paste(levels.[[1]], "+", levels.[[2]])
     draws_wide$tau = draws_wide[[levels.[[1]]]] + draws_wide[[levels.[[2]]]]
     draws_wide
   }) %>%
@@ -107,7 +107,7 @@ test_that("anonymous functions are supported and named with `:`", {
 
   draws_wide = spread(draws, ff, tau)
   ref = plyr::ldply(plyr::llply(2:3, function(i) c(ff_labels[[i]], ff_labels[[1]])), function(levels.) {
-    draws_wide$ff = factor(paste(levels.[[1]], ":", levels.[[2]]))
+    draws_wide$ff = paste(levels.[[1]], ":", levels.[[2]])
     draws_wide$tau = draws_wide[[levels.[[1]]]] + draws_wide[[levels.[[2]]]]
     draws_wide
   }) %>%
@@ -122,7 +122,7 @@ test_that("custom comparisons of lists of character vectors are supported", {
 
   draws_wide = spread(draws, ff, tau)
   ref = plyr::ldply(list(c("a", "b"), c("a", "c")), function(levels.) {
-    draws_wide$ff = factor(paste(levels.[[1]], "-", levels.[[2]]))
+    draws_wide$ff = paste(levels.[[1]], "-", levels.[[2]])
     draws_wide$tau = draws_wide[[levels.[[1]]]] - draws_wide[[levels.[[2]]]]
     draws_wide
   }) %>%
@@ -137,7 +137,7 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
 
   draws_wide = spread(draws, ff, tau)
   ref = plyr::ldply(plyr::.(a + b, exp(c - a)), function(levels.) {
-    draws_wide$ff = factor(deparse0(levels.))
+    draws_wide$ff = deparse0(levels.)
     draws_wide$tau = eval(levels., draws_wide)
     draws_wide
   }) %>%
@@ -154,7 +154,7 @@ test_that("comparisons of subsets of levels of factors are supported", {
 
   draws_wide = spread(draws, ff, tau)
   ref = plyr::ldply(combn(levels(factor(draws$ff)), 2, simplify = FALSE), function(levels.) {
-    draws_wide$ff = factor(paste(levels.[[2]], "-", levels.[[1]]))
+    draws_wide$ff = paste(levels.[[2]], "-", levels.[[1]])
     draws_wide$tau = draws_wide[[levels.[[2]]]] - draws_wide[[levels.[[1]]]]
     draws_wide
   }) %>%
@@ -185,7 +185,7 @@ test_that("compare_levels respects groups of input data frame", {
   ref = plyr::ddply(draws, "i", function (d) {
     draws_wide = spread(d, j, b)
     plyr::ldply(combn(levels(factor(d$j)), 2, simplify = FALSE), function(levels.) {
-      draws_wide$j = factor(paste(levels.[[2]], "-", levels.[[1]]))
+      draws_wide$j = paste(levels.[[2]], "-", levels.[[1]])
       draws_wide$b = draws_wide[[levels.[[2]]]] - draws_wide[[levels.[[1]]]]
       draws_wide
     })
