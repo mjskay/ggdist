@@ -106,7 +106,7 @@ test_that("spread_draws works on a variable with one named index", {
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr_i)),
       .draw = seq_len(nrow(RankCorr_i)),
-      i = i_labels[i],
+      i = factor(i_labels[i]),
       tau = RankCorr_i[, paste0("tau[", i, "]")]
     )
   })
@@ -153,8 +153,8 @@ test_that("spread_draws works on a variable with two named dimensions", {
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_ij)),
         .draw = seq_len(nrow(RankCorr_ij)),
-        i = i_labels[i],
-        j = j_labels[j],
+        i = factor(i_labels[i]),
+        j = factor(j_labels[j]),
         b = RankCorr_ij[, paste0("b[", i, ",", j, "]")]
       )
     })
@@ -171,8 +171,8 @@ test_that("spread_draws works on a variable with two named dimensions, one that 
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_ij)),
         .draw = seq_len(nrow(RankCorr_ij)),
-        i = i_labels[i],
-        j = j_labels[j],
+        i = factor(i_labels[i]),
+        j = factor(j_labels[j]),
         b = RankCorr_ij[, paste0("b[", i, ",", j, "]")]
       )
     })
@@ -189,8 +189,8 @@ test_that("spread_draws works on a variable with one named index and one wide an
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_i)),
         .draw = seq_len(nrow(RankCorr_i)),
-        i = i_labels[i],
-        j = paste0("b.", j),
+        i = factor(i_labels[i]),
+        j = factor(paste0("b.", j)),
         b = RankCorr_i[, paste0("b[", i, ",", j, "]")]
       )
     })
