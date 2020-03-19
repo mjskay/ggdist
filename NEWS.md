@@ -1,3 +1,13 @@
+# tidybayes 2.0.2
+
+Various minor forward and backward compatibility fixes:
+
+* Fix stringsAsFactors issues for R 4
+* Fix issues with [[<- for R 4
+* Fix minor issues with dplyr 1.0.0
+* Use parse() instead of str2lang() for compatibility with R <= 3.6
+
+
 # tidybayes 2.0.1
 
 * Various geoms and stats have been merged together under the `geom_slabinterval()` and `stat_slabinterval()`
