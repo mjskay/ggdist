@@ -57,7 +57,7 @@ Is roughly equivalent to:
 
 \preformatted{data \%>\%
   gather(.variable, .value, -c(.chain, .iteration, .draw, i, v)) \%>\%
-  group_by(.variable, add = TRUE)
+  group_by(.variable, .add = TRUE)
 }
 }
 \examples{
