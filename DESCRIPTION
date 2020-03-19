@@ -1,7 +1,7 @@
 Package: tidybayes
 Title: Tidy Data and 'Geoms' for Bayesian Models
-Version: 2.0.1.9000
-Date: 2020-01-28
+Version: 2.0.2
+Date: 2020-03-18
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu"),
         person("Timothy", "Mastny", role = "ctb", email = "tim.mastny@gmail.com")
@@ -65,7 +65,7 @@ Language: en-US
 BugReports: https://github.com/mjskay/tidybayes/issues/new
 URL: http://mjskay.github.io/tidybayes, https://github.com/mjskay/tidybayes
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 LazyData: true
 Encoding: UTF-8
 Collate:
