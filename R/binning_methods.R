@@ -20,7 +20,7 @@ wilkinson_bin_to_right = function(x, width, direction = 1) {
 
   # determine bins and midpoints of bins
   bins = c(1L, rep(NA_integer_, length(x) - 1))
-  bin_midpoints = c()
+  bin_midpoints = numeric()
   current_bin = 1L
   first_x = x[[1]]
   n = 1
