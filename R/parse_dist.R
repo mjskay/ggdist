@@ -121,7 +121,7 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_
     }
 
     args_spec = paste0("list(", parsed_dist[[2]])
-    args_list = tryCatch(eval(str2lang(args_spec)), error = function(...) NULL)
+    args_list = tryCatch(eval(parse(text = args_spec)), error = function(...) NULL)
 
     if (is.null(args_list)) {
       na_spec
