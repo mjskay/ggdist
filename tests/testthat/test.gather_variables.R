@@ -15,7 +15,7 @@ test_that("gather_variables works on the results of tidy_draws", {
   ref = RankCorr %>%
     tidy_draws() %>%
     gather(.variable, .value, -.chain, -.iteration, -.draw) %>%
-    group_by(.variable, add = TRUE)
+    group_by_at(".variable", .add = TRUE)
 
   result = RankCorr %>%
     tidy_draws() %>%

@@ -32,8 +32,8 @@ test_that("median_qi works on a grouped variable", {
   ref = draws %>%
     group_by(ff) %>%
     summarise(
-      tau.lower = quantile(tau, .025),
-      tau.upper = quantile(tau, .975),
+      tau.lower = as.vector(quantile(tau, .025)),
+      tau.upper = as.vector(quantile(tau, .975)),
       tau = median(tau)
     )
 
@@ -219,7 +219,8 @@ test_that("multiple-response intervals work", {
       .point = "mode",
       .interval = "hdi"
     ) %>%
-    unnest(c(.lower, .upper))
+    unnest(c(.lower, .upper)) %>%
+    select(x, everything())
 
   expect_equal(mode_hdi(dd, x, .width = .5), ref)
 })

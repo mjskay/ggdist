@@ -61,7 +61,7 @@ gather_terms = function(...) {
 #'
 #' \preformatted{data \%>\%
 #'   gather(.variable, .value, -c(.chain, .iteration, .draw, i, v)) \%>\%
-#'   group_by(.variable, add = TRUE)
+#'   group_by(.variable, .add = TRUE)
 #' }
 #'
 #' @param data A data frame with variable names spread across columns, such as one returned by
@@ -113,5 +113,5 @@ gather_variables = function(data, exclude = c(".chain", ".iteration", ".draw", "
 
   data %>%
     gather(".variable", ".value", !!!columns_excluded_from_gather) %>%
-    group_by_at(c(groups_, ".variable"), add = TRUE)
+    group_by_at(c(groups_, ".variable"), .add = TRUE)
 }

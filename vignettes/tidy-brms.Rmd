@@ -685,7 +685,7 @@ tibble(mpg = 21) %>%
   
   # recover original factor labels
   mutate(cyl = levels(mtcars_clean$cyl)[.category]) %>%
-  group_by(cyl, add = TRUE) %>%
+  group_by(cyl, .add = TRUE) %>%
   
   median_qi(.value)
 ```

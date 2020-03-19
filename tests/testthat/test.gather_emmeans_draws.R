@@ -22,7 +22,7 @@ test_that("gather_emmeans_draws works on a simple rstanarm model", {
   skip_if_not_installed("emmeans")
   skip_if_not_installed("rstanarm")
 
-  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS(test_path("../models/models.rstanarm.m_hp_wt.rds"))
 
   estimate_grid = list(hp = c(100, 110), wt = 0)
 
@@ -39,7 +39,8 @@ test_that("gather_emmeans_draws works on a simple rstanarm model", {
   ref = as_tibble(estimate_grid) %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    select(-.row)
+    select(-.row) %>%
+    group_by(hp, wt)
 
   # recover_data for stanreg objects seems to require the data to be in the same environment as in the
   # call that created the model (here, the global environment).
@@ -55,7 +56,7 @@ test_that("gather_emmeans_draws works on an emm_list", {
   skip_if_not_installed("emmeans")
   skip_if_not_installed("rstanarm")
 
-  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS(test_path("../models/models.rstanarm.m_hp_wt.rds"))
 
   estimate_grid = list(hp = c(100, 110, 120), wt = 0)
 
@@ -67,8 +68,9 @@ test_that("gather_emmeans_draws works on an emm_list", {
       mutate_at(vars(matches("contrast")), as.character),
     .id = ".grid"
     ) %>%
-    group_by(.grid, .value, hp, wt, contrast)
+    group_by(hp, wt, contrast, .grid)
 
   expect_equal(gather_emmeans_draws(grid_list), ref)
-  expect_equal(gather_emmeans_draws(grid_list, value = "v", grid = "g"), ref %>% rename(g = .grid, v = .value))
+  expect_equal(gather_emmeans_draws(grid_list, value = "v", grid = "g"),
+    ref %>% rename(g = .grid, v = .value) %>% group_by(hp, wt, contrast, g))
 })

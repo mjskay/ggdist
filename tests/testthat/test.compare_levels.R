@@ -36,7 +36,7 @@ test_that("pairwise level comparison works", {
     draws_wide
   }) %>%
     select(-one_of(ff_labels)) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, comparison = pairwise), ref)
   expect_equal(group_vars(compare_levels(draws, tau, by = ff, comparison = pairwise)), "ff")
@@ -54,7 +54,7 @@ test_that("ordered level comparison works", {
     draws_wide
   }) %>%
     select(-one_of(ff_labels)) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, comparison = ordered), ref)
   expect_equal(compare_levels(draws, tau, by = ff, comparison = "ordered"), ref)
@@ -70,7 +70,7 @@ test_that("control level comparison works", {
     draws_wide
   }) %>%
     select(-one_of(ff_labels)) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, comparison = control), ref)
 })
@@ -97,7 +97,7 @@ test_that("named functions are supported and named with their own name", {
     draws_wide
   }) %>%
     select(-one_of(ff_labels)) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, fun = `+`, comparison = control), ref)
 })
@@ -112,7 +112,7 @@ test_that("anonymous functions are supported and named with `:`", {
     draws_wide
   }) %>%
     select(-one_of(ff_labels)) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, fun = function(x, y) x + y, comparison = control), ref)
 })
@@ -127,7 +127,7 @@ test_that("custom comparisons of lists of character vectors are supported", {
     draws_wide
   }) %>%
     select(-one_of(ff_labels)) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, comparison = list(c("a", "b"), c("a", "c"))), ref)
 })
@@ -142,7 +142,7 @@ test_that("custom comparisons of lists of unevaluated expressions are supported"
     draws_wide
   }) %>%
     select(-one_of(ff_labels)) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, comparison = plyr::.(a + b, exp(c - a))), ref)
   expect_equal(compare_levels(draws, tau, by = ff, comparison = rlang::exprs(a + b, exp(c - a))), ref)
@@ -159,7 +159,7 @@ test_that("comparisons of subsets of levels of factors are supported", {
     draws_wide
   }) %>%
     select(-one_of(c("a", "c"))) %>%
-    as_tibble()
+    group_by(ff)
 
   expect_equal(compare_levels(draws, tau, by = ff, comparison = pairwise), ref)
 })

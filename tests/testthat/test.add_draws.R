@@ -18,7 +18,7 @@ mtcars_tbl = mtcars %>%
 
 test_that("add_draws works on fit from a simple rstanarm model", {
   skip_if_not_installed("rstanarm")
-  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS(test_path("../models/models.rstanarm.m_hp_wt.rds"))
 
   fits_matrix = rstanarm::posterior_linpred(m_hp_wt, newdata = mtcars_tbl)
 
@@ -31,7 +31,8 @@ test_that("add_draws works on fit from a simple rstanarm model", {
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(add_draws(mtcars, fits_matrix), ref)
   expect_equal(add_draws(mtcars_tbl, fits_matrix), ref)

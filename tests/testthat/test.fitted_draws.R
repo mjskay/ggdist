@@ -31,7 +31,7 @@ test_that("[add_]fitted_draws throws an error on unsupported models", {
 
 test_that("[add_]fitted_draws works on a simple rstanarm model", {
   skip_if_not_installed("rstanarm")
-  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS(test_path("../models/models.rstanarm.m_hp_wt.rds"))
 
   fits = rstanarm::posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
@@ -46,7 +46,8 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(fitted_draws(m_hp_wt, mtcars_tbl), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt), ref)
@@ -66,7 +67,7 @@ test_that("[add_]fitted_draws works on a simple rstanarm model", {
 
 test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", {
   skip_if_not_installed("rstanarm")
-  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS(test_path("../models/models.rstanarm.m_hp_wt.rds"))
 
   fits = rstanarm::posterior_linpred(m_hp_wt, newdata = mtcars_tbl) %>%
     as.data.frame() %>%
@@ -81,7 +82,8 @@ test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", 
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(fitted_draws(m_hp_wt, group_by(mtcars_tbl, hp)), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_wt), ref)
@@ -90,7 +92,7 @@ test_that("[add_]fitted_draws works on an rstanarm model with grouped newdata", 
 
 test_that("[add_]fitted_draws works on brms models without dpar", {
   skip_if_not_installed("brms")
-  m_hp = readRDS("../models/models.brms.m_hp.rds")
+  m_hp = readRDS(test_path("../models/models.brms.m_hp.rds"))
 
   fits = fitted(m_hp, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
@@ -106,7 +108,8 @@ test_that("[add_]fitted_draws works on brms models without dpar", {
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(fitted_draws(m_hp, mtcars_tbl), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp), ref)
@@ -125,7 +128,7 @@ test_that("[add_]fitted_draws works on brms models without dpar", {
 
 test_that("[add_]fitted_draws works on brms models with dpar", {
   skip_if_not_installed("brms")
-  m_hp_sigma = readRDS("../models/models.brms.m_hp_sigma.rds")
+  m_hp_sigma = readRDS(test_path("../models/models.brms.m_hp_sigma.rds"))
 
   fits = fitted(m_hp_sigma, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
@@ -151,7 +154,8 @@ test_that("[add_]fitted_draws works on brms models with dpar", {
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(fitted_draws(m_hp_sigma, mtcars_tbl, dpar = TRUE), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_hp_sigma, dpar = TRUE), ref)
@@ -174,7 +178,7 @@ test_that("[add_]fitted_draws works on brms models with dpar", {
 
 test_that("[add_]fitted_draws works on simple brms models with nlpars", {
   skip_if_not_installed("brms")
-  m_nlpar = readRDS("../models/models.brms.m_nlpar.rds")
+  m_nlpar = readRDS(test_path("../models/models.brms.m_nlpar.rds"))
   df_nlpar = as_tibble(m_nlpar$data)
 
   fits = fitted(m_nlpar, df_nlpar, summary = FALSE) %>%
@@ -191,7 +195,8 @@ test_that("[add_]fitted_draws works on simple brms models with nlpars", {
   ref = df_nlpar %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(y, x, .row)
 
   expect_equal(fitted_draws(m_nlpar, df_nlpar), ref)
   expect_equal(add_fitted_draws(df_nlpar, m_nlpar), ref)
@@ -201,7 +206,7 @@ test_that("[add_]fitted_draws works on simple brms models with nlpars", {
 
 test_that("[add_]fitted_draws works on simple brms models with multiple dpars", {
   skip_if_not_installed("brms")
-  m_dpars = readRDS("../models/models.brms.m_dpars.rds")
+  m_dpars = readRDS(test_path("../models/models.brms.m_dpars.rds"))
   df_dpars = as_tibble(m_dpars$data)
 
   fits = fitted(m_dpars, df_dpars, summary = FALSE) %>%
@@ -228,17 +233,20 @@ test_that("[add_]fitted_draws works on simple brms models with multiple dpars", 
   ref = df_dpars %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(count, Age, visit, .row)
 
   expect_equal(fitted_draws(m_dpars, df_dpars, dpar = TRUE), ref)
   expect_equal(add_fitted_draws(df_dpars, m_dpars, dpar = list("mu1", "mu2")), ref)
-  expect_equal(add_fitted_draws(df_dpars, m_dpars, dpar = FALSE), select(ref, -mu1, -mu2))
+  # brms leaves some extra attributes on the resulting df, just ignore those
+  # by using expect_equivalent here
+  expect_equivalent(add_fitted_draws(df_dpars, m_dpars, dpar = FALSE), select(ref, -mu1, -mu2))
 })
 
 
 test_that("[add_]fitted_draws works on brms models with ordinal outcomes (response scale)", {
   skip_if_not_installed("brms")
-  m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
+  m_cyl_mpg = readRDS(test_path("../models/models.brms.m_cyl_mpg.rds"))
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE) %>%
     array2df(list(.draw = NA, .row = NA, .category = TRUE), label.x = ".value") %>%
@@ -249,7 +257,10 @@ test_that("[add_]fitted_draws works on brms models with ordinal outcomes (respon
       .draw = as.integer(.draw)
     )
 
-  ref = inner_join(mtcars_tbl %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
+  ref = inner_join(mtcars_tbl %>%
+    mutate(.row = as.integer(rownames(.))), fits, by = ".row") %>%
+    select(mpg:.row, .chain, .iteration, .draw, .category, .value) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row, .category)
 
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg), ref)
@@ -268,7 +279,7 @@ test_that("[add_]fitted_draws works on brms models with ordinal outcomes (respon
 
 test_that("[add_]fitted_draws works on brms models with ordinal outcomes (linear scale)", {
   skip_if_not_installed("brms")
-  m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
+  m_cyl_mpg = readRDS(test_path("../models/models.brms.m_cyl_mpg.rds"))
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
     as.data.frame() %>%
@@ -284,7 +295,8 @@ test_that("[add_]fitted_draws works on brms models with ordinal outcomes (linear
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl, scale = "linear"), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg, scale = "linear"), ref)
@@ -292,7 +304,7 @@ test_that("[add_]fitted_draws works on brms models with ordinal outcomes (linear
 
 test_that("[add_]fitted_draws works on brms models with dirichlet outcomes (response scale)", {
   skip_if_not_installed("brms")
-  m_dirich = readRDS("../models/models.brms.m_dirich.rds")
+  m_dirich = readRDS(test_path("../models/models.brms.m_dirich.rds"))
 
   grid = tibble(x = c("A", "B"))
   fits = fitted(m_dirich, grid, summary = FALSE) %>%
@@ -304,7 +316,9 @@ test_that("[add_]fitted_draws works on brms models with dirichlet outcomes (resp
       .draw = as.integer(.draw)
     )
 
-  ref = inner_join(grid %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row")
+  ref = inner_join(grid %>% mutate(.row = as.integer(rownames(.))), fits, by = ".row") %>%
+    select(x, .row, .chain, .iteration, .draw, .category, .value) %>%
+    group_by(x, .row, .category)
 
   expect_equal(fitted_draws(m_dirich, grid), ref)
 })
@@ -312,7 +326,7 @@ test_that("[add_]fitted_draws works on brms models with dirichlet outcomes (resp
 
 test_that("[add_]fitted_draws allows extraction of dpar on brms models with ordinal outcomes (linear scale)", {
   skip_if_not_installed("brms")
-  m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
+  m_cyl_mpg = readRDS(test_path("../models/models.brms.m_cyl_mpg.rds"))
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "linear") %>%
     as.data.frame() %>%
@@ -333,7 +347,8 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with ordi
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(fits, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl, scale = "linear", dpar = TRUE), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg, scale = "linear", dpar = "mu"), ref)
@@ -342,7 +357,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with ordi
 
 test_that("[add_]fitted_draws allows extraction of dpar on brms models with categorical outcomes (response scale)", {
   skip_if_not_installed("brms")
-  m_cyl_mpg = readRDS("../models/models.brms.m_cyl_mpg.rds")
+  m_cyl_mpg = readRDS(test_path("../models/models.brms.m_cyl_mpg.rds"))
 
   fits = fitted(m_cyl_mpg, mtcars_tbl, summary = FALSE, scale = "response") %>%
     array2df(list(.draw = NA, .row = NA, .category = TRUE), label.x = ".value")
@@ -359,7 +374,9 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
       .row = as.integer(.row),
       .draw = as.integer(.draw),
       .category = factor(.category)
-    )
+    ) %>%
+    select(mpg:.row, .chain, .iteration, .draw, .category, everything()) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row, .category)
 
   expect_equal(fitted_draws(m_cyl_mpg, mtcars_tbl, scale = "response", dpar = TRUE), ref)
   expect_equal(add_fitted_draws(mtcars_tbl, m_cyl_mpg, scale = "response", dpar = "mu"), ref)
@@ -368,7 +385,7 @@ test_that("[add_]fitted_draws allows extraction of dpar on brms models with cate
 
 test_that("[add_]fitted_draws throws an error when nsamples is called instead of n in brms", {
   skip_if_not_installed("brms")
-  m_hp = readRDS("../models/models.brms.m_hp.rds")
+  m_hp = readRDS(test_path("../models/models.brms.m_hp.rds"))
 
   expect_error(
     m_hp %>% fitted_draws(newdata = mtcars_tbl, nsamples = 100),
@@ -382,7 +399,7 @@ test_that("[add_]fitted_draws throws an error when nsamples is called instead of
 
 test_that("[add_]predicted_draws throws an error when re.form is called instead of re_formula in rstanarm", {
   skip_if_not_installed("rstanarm")
-  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS(test_path("../models/models.rstanarm.m_hp_wt.rds"))
 
   expect_error(
     m_hp_wt %>% fitted_draws(newdata = mtcars_tbl, re.form = NULL),
@@ -396,7 +413,7 @@ test_that("[add_]predicted_draws throws an error when re.form is called instead 
 
 test_that("[add_]predicted_draws throws an error when transform is called instead of scale in rstanarm", {
   skip_if_not_installed("rstanarm")
-  m_hp_wt = readRDS("../models/models.rstanarm.m_hp_wt.rds")
+  m_hp_wt = readRDS(test_path("../models/models.rstanarm.m_hp_wt.rds"))
 
   expect_error(
     m_hp_wt %>% fitted_draws(newdata = mtcars_tbl, transform = TRUE),

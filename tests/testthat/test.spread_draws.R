@@ -89,13 +89,14 @@ test_that("spread_draws works on two variables with no dimensions and multiple c
 test_that("spread_draws works on a variable with one unnamed index", {
   ref = plyr::ldply(1:3, function(i) {
     data.frame(
+      i = i,
+      tau = RankCorr_s[, paste0("tau[", i, "]")],
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr_s)),
-      .draw = seq_len(nrow(RankCorr_s)),
-      i = i,
-      tau = RankCorr_s[, paste0("tau[", i, "]")]
+      .draw = seq_len(nrow(RankCorr_s))
     )
-  })
+  }) %>%
+    group_by(i)
 
   expect_equal(spread_draws(RankCorr_s, tau[i]) %>% arrange(i), ref)
 })
@@ -103,13 +104,14 @@ test_that("spread_draws works on a variable with one unnamed index", {
 test_that("spread_draws works on a variable with one named index", {
   ref = plyr::ldply(1:3, function(i) {
     data.frame(
+      i = factor(i_labels[i]),
+      tau = RankCorr_i[, paste0("tau[", i, "]")],
       .chain = as.integer(1),
       .iteration = seq_len(nrow(RankCorr_i)),
-      .draw = seq_len(nrow(RankCorr_i)),
-      i = factor(i_labels[i]),
-      tau = RankCorr_i[, paste0("tau[", i, "]")]
+      .draw = seq_len(nrow(RankCorr_i))
     )
-  })
+  }) %>%
+    group_by(i)
 
   expect_equal(spread_draws(RankCorr_i, tau[i]) %>% arrange(i), ref)
 })
@@ -125,6 +127,7 @@ test_that("spread_draws works on a variable with one anonymous wide index", {
     names(refcol) = paste0("tau.", i)
     ref = cbind(ref, refcol)
   }
+  ref = as_tibble(ref)
 
   expect_equal(spread_draws(RankCorr_s, tau[..]), ref)
 })
@@ -141,6 +144,7 @@ test_that("spread_draws works on a variable with one named wide index", {
     names(refcol) = i_labels[i]
     ref = cbind(ref, refcol)
   }
+  ref = as_tibble(ref)
 
   expect_equal(spread_draws(RankCorr_i, tau[i] | i), ref)
 })
@@ -150,15 +154,16 @@ test_that("spread_draws works on a variable with two named dimensions", {
   ref = plyr::ldply(1:4, function(j) {
     plyr::ldply(1:3, function(i) {
       data.frame(
-        .chain = as.integer(1),
-        .iteration = seq_len(nrow(RankCorr_ij)),
-        .draw = seq_len(nrow(RankCorr_ij)),
         i = factor(i_labels[i]),
         j = factor(j_labels[j]),
-        b = RankCorr_ij[, paste0("b[", i, ",", j, "]")]
+        b = RankCorr_ij[, paste0("b[", i, ",", j, "]")],
+        .chain = as.integer(1),
+        .iteration = seq_len(nrow(RankCorr_ij)),
+        .draw = seq_len(nrow(RankCorr_ij))
       )
     })
-  })
+  }) %>%
+    group_by(i, j)
 
   expect_equal(spread_draws(RankCorr_ij, b[i, j]) %>% arrange(j, i), ref)
 })
@@ -168,10 +173,10 @@ test_that("spread_draws works on a variable with two named dimensions, one that 
   ref = plyr::ldply(1:4, function(j) {
     plyr::ldply(1:3, function(i) {
       data.frame(
+        i = factor(i_labels[i]),
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_ij)),
         .draw = seq_len(nrow(RankCorr_ij)),
-        i = factor(i_labels[i]),
         j = factor(j_labels[j]),
         b = RankCorr_ij[, paste0("b[", i, ",", j, "]")]
       )
@@ -179,17 +184,18 @@ test_that("spread_draws works on a variable with two named dimensions, one that 
   }) %>%
     spread(j, b)
 
-  expect_equal(spread_draws(RankCorr_ij, b[i, j] | j) %>% arrange(.iteration), ref)
+  # grouping attributes are too finicky on this one for an exact comparison
+  expect_equivalent(spread_draws(RankCorr_ij, b[i, j] | j) %>% arrange(i, .iteration), ref)
 })
 
 test_that("spread_draws works on a variable with one named index and one wide anonymous index", {
   ref = plyr::ldply(1:4, function(j) {
     plyr::ldply(1:3, function(i) {
       data.frame(
+        i = factor(i_labels[i]),
         .chain = as.integer(1),
         .iteration = seq_len(nrow(RankCorr_i)),
         .draw = seq_len(nrow(RankCorr_i)),
-        i = factor(i_labels[i]),
         j = factor(paste0("b.", j)),
         b = RankCorr_i[, paste0("b[", i, ",", j, "]")]
       )
@@ -197,7 +203,8 @@ test_that("spread_draws works on a variable with one named index and one wide an
   }) %>%
     spread(j, b)
 
-  expect_equal(spread_draws(RankCorr_i, b[i, ..]) %>% arrange(.iteration), ref)
+  # grouping attributes are too finicky on this one for an exact comparison
+  expect_equivalent(spread_draws(RankCorr_i, b[i, ..]) %>% arrange(i, .iteration), ref)
 })
 
 test_that("spread_draws does not allow extraction of two variables simultaneously with a wide index", {
@@ -209,7 +216,8 @@ test_that("spread_draws does not allow extraction of two variables simultaneousl
 test_that("spread_draws correctly extracts multiple variables simultaneously", {
   expect_equal(spread_draws(RankCorr_i, c(tau, u_tau)[i]),
     spread_draws(RankCorr_i, tau[i]) %>%
-      inner_join(spread_draws(RankCorr_i, u_tau[i]), by = c(".chain", ".iteration", ".draw", "i"))
+      inner_join(spread_draws(RankCorr_i, u_tau[i]), by = c(".chain", ".iteration", ".draw", "i")) %>%
+          select(i, tau, u_tau, everything())
   )
   expect_equal(spread_draws(RankCorr_i, cbind(tau)[i]),
     spread_draws(RankCorr_i, c(tau)[i]))
@@ -232,7 +240,8 @@ test_that("spread_draws correctly extracts multiple variables simultaneously whe
 test_that("spread_draws multispec syntax joins results correctly", {
   ref = spread_draws(RankCorr_s, typical_r) %>%
     inner_join(spread_draws(RankCorr_s, tau[i]), by = c(".chain", ".iteration", ".draw")) %>%
-    inner_join(spread_draws(RankCorr_s, b[i, v]), by = c(".chain", ".iteration", ".draw", "i"))
+    inner_join(spread_draws(RankCorr_s, b[i, v]), by = c(".chain", ".iteration", ".draw", "i")) %>%
+    group_by(i, v)
 
   expect_equal(spread_draws(RankCorr_s, typical_r, tau[i], b[i, v]), ref)
 })

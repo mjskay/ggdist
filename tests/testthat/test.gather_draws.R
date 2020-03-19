@@ -34,7 +34,7 @@ test_that("gather_draws works on a combination of 0 and 1-dimensional values (wi
     ungroup() %>%
     filter(.variable != "typical_r" | (.variable == "typical_r" & i == 1))
   ref[ref$.variable == "typical_r", "i"] = NA
-  ref = group_by(ref, i, .variable)
+  ref = group_by(ref, i, .variable, .drop = FALSE)
 
   result = gather_draws(RankCorr, tau[i], typical_r)
 

@@ -22,7 +22,7 @@ test_that("[add_]residual_draws throws error on unsupported models", {
 
 test_that("[add_]residual_draws works on a simple brms model", {
   skip_if_not_installed("brms")
-  m_hp = readRDS("../models/models.brms.m_hp.rds")
+  m_hp = readRDS(test_path("../models/models.brms.m_hp.rds"))
 
   resids = residuals(m_hp, mtcars_tbl, summary = FALSE) %>%
     as.data.frame() %>%
@@ -38,7 +38,8 @@ test_that("[add_]residual_draws works on a simple brms model", {
   ref = mtcars_tbl %>%
     mutate(.row = rownames(.)) %>%
     inner_join(resids, by = ".row") %>%
-    mutate(.row = as.integer(.row))
+    mutate(.row = as.integer(.row)) %>%
+    group_by(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, .row)
 
   expect_equal(residual_draws(m_hp, mtcars_tbl), ref)
   expect_equal(add_residual_draws(mtcars_tbl, m_hp), ref)
