@@ -64,10 +64,10 @@ test_that("spread_draws works on a simple variable with no dimensions", {
     .chain = as.integer(1),
     .iteration = seq_len(nrow(RankCorr_s)),
     .draw = .iteration,
-    typical_r = RankCorr_s[, "typical_r"]
+    typical_r = as.vector(RankCorr_s[, "typical_r"])
   )
 
-  expect_equal(spread_draws(RankCorr_s, typical_r), ref)
+  expect_equivalent(spread_draws(RankCorr_s, typical_r), ref)
 })
 
 
@@ -78,8 +78,8 @@ test_that("spread_draws works on two variables with no dimensions and multiple c
     .chain = c(rep(1L, nrow(line[[1]])), rep(2L, nrow(line[[2]]))),
     .iteration = c(seq_len(nrow(line[[1]])), seq_len(nrow(line[[2]]))),
     .draw = seq_len(nrow(line[[1]]) + nrow(line[[2]])),
-    alpha = c(line[[1]][,"alpha"], line[[2]][,"alpha"]),
-    beta = c(line[[1]][,"beta"], line[[2]][,"beta"])
+    alpha = as.vector(c(line[[1]][,"alpha"], line[[2]][,"alpha"])),
+    beta = as.vector(c(line[[1]][,"beta"], line[[2]][,"beta"]))
   )
 
   expect_equal(spread_draws(line, alpha, beta), ref)

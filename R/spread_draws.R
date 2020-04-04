@@ -426,17 +426,17 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
     # Now go to a long format for everything else...
     # We have three things to accomplish here:
     # 1. SPREAD so variable names are back as columns
-    # 2. UNNEST so draws and chain info are no longer list columns
-    # 3. ADD CHAIN INFO (.chain, .iteration, .draw) back into the data frame
+    # 2. ADD CHAIN INFO (.chain, .iteration, .draw) back into the data frame
+    # 3. UNNEST so draws and chain info are no longer list columns
     # The order we will take depends on whether or not the user has requested nested columns (e.g.
     # array output), because order 1/2/3 is fast but doesn't currently work for doing nested columns.
     if (length(nested_dimension_names) > 0) {
       # some dimensions were requested to be nested as list columns containing arrays.
-      # thus we have to UNNEST then ADD CHAIN INFO, then NEST DIMENSIONS then SPREAD
-      # 2. UNNEST
+      # thus we have to ADD CHAIN INFO then UNNEST, then NEST DIMENSIONS then SPREAD
+      # 2. ADD CHAIN INFO
+      nested_draws[[".chain_info"]] = list(draws[,c(".chain", ".iteration", ".draw")])
+      # 3. UNNEST
       long_draws = unnest_legacy(nested_draws)
-      # 3. ADD CHAIN INFO
-      long_draws[,c(".chain", ".iteration", ".draw")] = draws[,c(".chain", ".iteration", ".draw")]
       # NEST DIMENSIONS
       long_draws = nest_dimensions_(long_draws, temp_dimension_names, nested_dimension_names)
       # 1. SPREAD
@@ -445,10 +445,10 @@ spread_draws_long_ = function(draws, variable_names, dimension_names, regex = FA
       # no nested dimensions, so we can do the SPREAD then UNNEST then ADD CHAIN INFO
       # 1. SPREAD
       nested_draws = spread(nested_draws, ".variable", ".value")
-      # 2. UNNEST
+      # 2. ADD CHAIN INFO
+      nested_draws[[".chain_info"]] = list(draws[,c(".chain", ".iteration", ".draw")])
+      # 3. UNNEST
       long_draws = unnest_legacy(nested_draws)
-      # 3. ADD CHAIN INFO
-      long_draws[,c(".chain", ".iteration", ".draw")] = draws[,c(".chain", ".iteration", ".draw")]
     }
 
     #drop the columns that correspond to blank dimensions in the original spec
