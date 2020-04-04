@@ -38,6 +38,7 @@ test_that("gather_draws works on a combination of 0 and 1-dimensional values (wi
 
   result = gather_draws(RankCorr, tau[i], typical_r)
 
-  expect_equal(result, ref)
+  # grouped tibble equivalence is too persnickety now, so test equivalence + equal groups
+  expect_equivalent(result, ref)
   expect_equal(group_vars(result), group_vars(ref))
 })
