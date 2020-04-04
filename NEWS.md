@@ -1,3 +1,8 @@
+# tidybayes 2.0.3
+
+Minor fixes for changes in tibble 3.0.0
+
+
 # tidybayes 2.0.2
 
 Various minor forward and backward compatibility fixes:
