@@ -29,3 +29,4 @@
 ^benchmarks.*$
 ^revdep$
 ^man/figures/README$
+^vignettes/models$

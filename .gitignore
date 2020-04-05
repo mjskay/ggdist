@@ -8,5 +8,6 @@ tidybayes.Rproj
 vignettes/ABC.rda
 vignettes/ABC.rds
 vignettes/*_cache/
+vignettes/models
 README_cache/
 benchmarks.md
