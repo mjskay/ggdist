@@ -24,9 +24,20 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
+if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
+  tiny_width = small_width = med_width = 6.75
+  tiny_height = small_height = med_height = 4.5
+  large_width = 8; large_height = 5.25
+} else {
+  tiny_width = 3; tiny_height = 2.5
+  small_width = 4.5; small_height = 3
+  med_width = 5; med_height = 3.5
+  large_width = 7; large_height = 4.5
+}
+
 knitr::opts_chunk$set(
-  fig.width = 4.5,
-  fig.height = 3,
+  fig.width = small_width,
+  fig.height = small_height,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
 if (capabilities("cairo")) {
@@ -184,7 +195,7 @@ df = tribble(
 
 We can summarize it at the group level using an eye plot with `stat_eye()` (ignoring subgroups for now):
 
-```{r group_eye, fig.width = 3, fig.height = 3}
+```{r group_eye, fig.width = small_height, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value)) +
   stat_eye() +
@@ -195,7 +206,7 @@ df %>%
 
 We can also use `stat_halfeye` instead to just get densities:
 
-```{r group_halfeye, fig.width = 3, fig.height = 3}
+```{r group_halfeye, fig.width = small_height, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value)) +
   stat_halfeye() +
@@ -204,7 +215,7 @@ df %>%
 
 Or use the `side` parameter to more finely control where the slab (in this case, the density) is drawn:
 
-```{r eye_side, fig.width = 5, fig.height = 3}
+```{r eye_side, fig.width = med_width, fig.height = small_height}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -218,7 +229,7 @@ plot_grid(ncol = 3, align = "hv",
 
 Or show a horizontal version by appending `h` to `stat_halfeye()` to get `stat_halfeyeh()`:
 
-```{r halfeyeh, fig.width = 3, fig.height = 3}
+```{r halfeyeh, fig.width = small_height, fig.height = small_height}
 df %>%
   ggplot(aes(x = value, y = group)) +
   stat_halfeyeh() +
@@ -229,7 +240,7 @@ df %>%
 
 Yielding these combinations:
 
-```{r halfeyeh_family, fig.width = 5, fig.height = 5}
+```{r halfeyeh_family, fig.width = med_width, fig.height = med_width}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -248,7 +259,7 @@ plot_grid(ncol = 2, align = "hv",
 
 The `side` parameter works for `stat_halfeye()` as well. `"top"` and `"right"` are considered synonyms, as are `"bottom"` and `"left"`; either form works with both horizontal and vertical versions of the geoms:
 
-```{r eyeh_side, fig.width = 5, fig.height = 3}
+```{r eyeh_side, fig.width = med_width, fig.height = small_height}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
   panel_border()
@@ -330,7 +341,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
 
 The approach using `arg1`, ... `arg9` can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the `args` aesthetic. We'll use it along with the `brms` package's implementation of the scaled and shifted Student t distribution (`brms::dstudent_t()`, etc):
 
-```{r norm_vs_t, fig.width = 3, fig.height = 3}
+```{r norm_vs_t, fig.width = small_height, fig.height = small_height}
 tribble(
   ~ dist,      ~ args,
   "norm",      list(0, 1),
@@ -380,7 +391,7 @@ c(
 
 The `stat_dist_...` family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:
 
-```{r dist_halfeyeh_log_scale, fig.width = 3, fig.height = 2.5}
+```{r dist_halfeyeh_log_scale, fig.width = small_height, fig.height = small_height}
 data.frame(dist = "lnorm") %>% ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
   stat_dist_halfeyeh() +
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
@@ -400,7 +411,7 @@ All of the above geoms follow the naming scheme `stat_[dist_][half]eye[h]`.
 
 In some cases you might prefer histograms to density plots. `stat_histinterval[h]` provides an alternative to `stat_halfeye[h]` that uses histograms instead of densities:
 
-```{r stat_histintervalh, fig.width = 5.25, fig.height = 3}
+```{r stat_histintervalh, fig.width = med_width, fig.height = small_height}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -417,7 +428,7 @@ plot_grid(ncol = 2, align = "hv",
 
 You can use the `slab_color` aesthetic to show the outline of the bars. By default the outlines are only drawn on top of the bars, as typical tasks with histograms involve area estimation, so the outlines between bars are not strictly necessary and may be distracting. However, if you wish to include those outlines, you can set `outline_bars = TRUE`:
 
-```{r stat_histintervalh_outlines, fig.width = 5.25, fig.height = 3}
+```{r stat_histintervalh_outlines, fig.width = med_width, fig.height = small_height}
 plot_grid(ncol = 2, align = "hv",
   ph + stat_histintervalh(slab_color = "gray45", outline_bars = FALSE) +
     labs(title = "stat_histintervalh", subtitle = "outline_bars = FALSE (default)"),
@@ -438,7 +449,7 @@ For all of the examples above, both on sample data and analytical distributions,
 
 `stat_[c]cdfinterval[h]` has the following basic combinations:
 
-```{r cdfinterval_family, fig.width = 4.5, fig.height = 4.5}
+```{r cdfinterval_family, fig.width = small_width, fig.height = small_width}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -490,7 +501,7 @@ df %>%
 
 The `side` parameter also works as with `stat_eye()`. Here we'll demonstrate with `stat_ccdfintervalh()`, the horizontal version:
 
-```{r ccdf_side, fig.width = 5, fig.height = 2}
+```{r ccdf_side, fig.width = med_width, fig.height = tiny_height}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
   expand_limits(x = 0) +
@@ -572,7 +583,7 @@ The encodings thus far are *continuous* probability encodings: they map probabil
 
 For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots:
 
-```{r dots_dodge, fig.width = 5, fig.height = 3.33}
+```{r dots_dodge, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_dots(position = "dodge") +
@@ -581,7 +592,7 @@ df %>%
 
 Unlike the base `ggplot2::geom_dotplot()` geom, `tidybayes::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:
 
-```{r dots_dodge_nocolor, fig.width = 5, fig.height = 3.33}
+```{r dots_dodge_nocolor, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup, color = subgroup)) +
   stat_dots(position = "dodge") +
@@ -594,7 +605,7 @@ The above plots are a bit hard to read due to the large number of dots. Particul
 
 The `quantiles` argument to `stat_dots` constructs a quantile dotplot with the specified number of quantiles. Here is one with 50 quantiles, so each dot represents approximately a 2% (1/50) chance. We'll turn off outline color too (`color = NA`):
 
-```{r quantile_dots_dodge, fig.width = 5, fig.height = 3.5}
+```{r quantile_dots_dodge, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_dots(position = "dodge", quantiles = 50, color = NA) +
@@ -605,7 +616,7 @@ df %>%
 
 As with other plot types, you can also use `stat_dist_dots()` instead if you wish to visualize analytical distributions. Analytical dotplots default to 100-dot quantile dotplots (as above, this can be adjusted with the `quantiles` argument). Shapes of the dots can also be changed using the `shape` aesthetic, and as with all slabinterval geoms, fill and color aesthetics can be varied within the geoms:
 
-```{r dist_dots_shape_color, fig.width = 5.5, fig.height = 3.5}
+```{r dist_dots_shape_color, fig.width = med_width, fig.height = small_height}
 dist_df %>%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = stat(y < 5), shape = subgroup)) +
   stat_dist_dots(position = "dodge", color = NA) +
@@ -616,7 +627,7 @@ dist_df %>%
 
 As with other slabinterval geoms, the `side` argument can also be used to construct violin-style dotplots. This example also shows the use of `dotsinterval` in place of `dots` to construct a combined quantile dotplot violin + interval plot. We also set `slab_color = NA` to turn off the outline on the dots:
 
-```{r dist_dots_violin, fig.width = 5.5, fig.height = 3.5}
+```{r dist_dots_violin, fig.width = med_width, fig.height = small_height}
 dist_df %>%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
   stat_dist_dotsinterval(position = "dodge", side = "both", slab_color = NA) +
@@ -644,7 +655,7 @@ Two aesthetics of particular use for creating custom geoms are `slab_alpha`, whi
 
 For example, `stat_ccdfinterval` maps the output of the evaluated function (in its case, the CCDF) onto the `thickness` aesthetic of the `slabinterval` geom, which determines how thick the slab is. This is the equivalent of setting `aes(thickness = stat(f))`. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping `stat(f)` onto the `slab_alpha` aesthetic instead, and setting `thickness` to a constant (1):
 
-```{r ccdf_gradient, fig.width = 5.3, fig.height = 3.5}
+```{r ccdf_gradient, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
   stat_ccdfinterval(aes(slab_alpha = stat(f)), thickness = 1, position = "dodge") +
@@ -658,7 +669,7 @@ df %>%
 
 The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. Take the earlier example of visualizing priors:
 
-```{r norm_vs_t_2, fig.width = 3.75, fig.height = 3}
+```{r norm_vs_t_2, fig.width = small_width, fig.height = small_height}
 priors = tribble(
   ~ dist,      ~ args,
   "norm",      list(0, 1),
@@ -673,7 +684,7 @@ priors %>%
 
 We can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
 
-```{r norm_vs_t_highlight, fig.width = 5, fig.height = 3}
+```{r norm_vs_t_highlight, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
   stat_dist_halfeyeh(aes(fill = stat(abs(x) < 1.5))) +
@@ -684,7 +695,7 @@ priors %>%
 
 We could also combine these aesthetics arbitrarily. Here is a (probably not very useful) eye plot + gradient plot combination, with the portion of the distribution above 1 highlighted:
 
-```{r norm_vs_t_gradient_eye, fig.width = 5.25, fig.height = 3}
+```{r norm_vs_t_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
   stat_dist_eyeh(aes(alpha = stat(f), fill = stat(x > 1))) +

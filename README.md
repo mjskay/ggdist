@@ -281,6 +281,11 @@ m %>%
   head(15)  # just show the first few rows
 ```
 
+    ## Warning: `combine()` is deprecated as of dplyr 1.0.0.
+    ## Please use `vctrs::vec_c()` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
+
     ## # A tibble: 15 x 6
     ## # Groups:   condition [1]
     ##    condition condition_mean .chain .iteration .draw response_sd
@@ -460,12 +465,6 @@ bind_rows(linear_results, bayes_results) %>%
   geom_pointintervalh(position = position_dodgev(height = .3))
 ```
 
-    ## Warning in bind_rows_(x, .id): binding factor and character vector, coercing into
-    ## character vector
-
-    ## Warning in bind_rows_(x, .id): binding character and factor vector, coercing into
-    ## character vector
-
 ![](man/figures/README/broom_bind-1.png)<!-- -->
 
 Shrinkage towards the overall mean is visible in the Bayesian results.
@@ -524,7 +523,13 @@ Let’s fit a slightly naive model to miles per gallon versus horsepower
 in the `mtcars` dataset:
 
 ``` r
-m_mpg = brm(mpg ~ log(hp), data = mtcars, family = lognormal)
+m_mpg = brm(
+  mpg ~ log(hp), 
+  data = mtcars, 
+  family = lognormal,
+
+  file = "README_models/m_mpg.rds" # cache model (can be removed)  
+)
 ```
 
 Now we will use `modelr::data_grid`, `tidybayes::add_predicted_draws`,
@@ -566,7 +571,13 @@ features built in to ggplot to plot them.
 Such a model might be:
 
 ``` r
-m_mpg_am = brm(mpg ~ log(hp)*am, data = mtcars, family = lognormal)
+m_mpg_am = brm(
+  mpg ~ log(hp) * am, 
+  data = mtcars, 
+  family = lognormal,
+
+  file = "README_models/m_mpg_am.rds" # cache model (can be removed)  
+)
 ```
 
 Then we can generate and plot predictions as before (differences from
@@ -642,5 +653,5 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2020). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 2.0.1, <https://mjskay.github.io/tidybayes/>.
+Models*. R package version 2.0.3, <https://mjskay.github.io/tidybayes/>.
 DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).

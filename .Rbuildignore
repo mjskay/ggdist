@@ -30,3 +30,4 @@
 ^revdep$
 ^man/figures/README$
 ^vignettes/models$
+^README_models$

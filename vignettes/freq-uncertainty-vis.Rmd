@@ -24,9 +24,20 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
+if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
+  tiny_width = small_width = med_width = 6.75
+  tiny_height = small_height = med_height = 4.5
+  large_width = 8; large_height = 5.25
+} else {
+  tiny_width = 3; tiny_height = 2.5
+  small_width = 4.5; small_height = 3
+  med_width = 5; med_height = 3.5
+  large_width = 7; large_height = 4.5
+}
+
 knitr::opts_chunk$set(
-  fig.width = 4.5,
-  fig.height = 3,
+  fig.width = small_width,
+  fig.height = small_height,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
 if (capabilities("cairo")) {

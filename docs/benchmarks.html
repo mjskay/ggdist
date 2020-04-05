@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="pkgdown.css" rel="stylesheet">
@@ -45,8 +49,7 @@
   
 
 <meta property="og:title" content="Benchmarks" />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
 
 
 
@@ -74,7 +77,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -88,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
 
@@ -136,7 +139,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes">
+  <a href="https://github.com/mjskay/tidybayes/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -169,11 +172,11 @@
 </ul>
 </li>
 </ul>
-<p>Some rough benchmarks for testing how long things take…</p>
+<p>Some rough benchmarks for testing how long things takeâ¦</p>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyverse)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)</pre></html></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">## -- Attaching packages ------------------------------------------------------------ tidyverse 1.2.1 --</span></a>
 <a class="sourceLine" id="cb2-2" title="2"></a>
 <a class="sourceLine" id="cb2-3" title="3"><span class="co">## v ggplot2 3.2.1     v purrr   0.3.2</span></a>
@@ -184,35 +187,35 @@
 <a class="sourceLine" id="cb2-8" title="8"><span class="co">## -- Conflicts --------------------------------------------------------------- tidyverse_conflicts() --</span></a>
 <a class="sourceLine" id="cb2-9" title="9"><span class="co">## x dplyr::filter() masks stats::filter()</span></a>
 <a class="sourceLine" id="cb2-10" title="10"><span class="co">## x dplyr::lag()    masks stats::lag()</span></a></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidybayes)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidybayes</span>)</pre></html></div>
 </div>
 <div id="spreadgather_draws" class="section level2">
 <h2 class="hasAnchor">
 <a href="#spreadgather_draws" class="anchor"></a><code>spread/gather_draws</code>
 </h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">k =<span class="st"> </span><span class="dv">50000</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1234</span>)</a>
-<a class="sourceLine" id="cb4-3" title="3">df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">.chain =</span> <span class="ot">NA</span>,</a>
-<a class="sourceLine" id="cb4-5" title="5">  <span class="dt">.iteration =</span> <span class="ot">NA</span>,</a>
-<a class="sourceLine" id="cb4-6" title="6">  <span class="dt">.draw =</span> <span class="dv">1</span><span class="op">:</span>k,</a>
-<a class="sourceLine" id="cb4-7" title="7">  <span class="st">`</span><span class="dt">a[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-8" title="8">  <span class="st">`</span><span class="dt">b[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-9" title="9">  <span class="st">`</span><span class="dt">c[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-10" title="10">  <span class="st">`</span><span class="dt">d[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-11" title="11">  <span class="st">`</span><span class="dt">e[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-12" title="12">  <span class="st">`</span><span class="dt">f[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-13" title="13">  <span class="st">`</span><span class="dt">g[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-14" title="14">  <span class="st">`</span><span class="dt">h[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-15" title="15">  <span class="st">`</span><span class="dt">i[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-16" title="16">  <span class="st">`</span><span class="dt">j[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-17" title="17">  <span class="st">`</span><span class="dt">k[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-18" title="18">  <span class="st">`</span><span class="dt">l[2]</span><span class="st">`</span> =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(k),</a>
-<a class="sourceLine" id="cb4-19" title="19">  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb4-20" title="20">  <span class="dt">check.names =</span> <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb4-21" title="21">) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-22" title="22"><span class="st">  </span><span class="kw">as_tibble</span>()</a>
-<a class="sourceLine" id="cb4-23" title="23">df</a></code></pre></div>
+<div class="sourceCode" id="cb4"><html><pre class="r">k = 50000
+set.seed(1234)
+df = data.frame(
+  .chain = NA,
+  .iteration = NA,
+  .draw = 1:k,
+  `a[2]` = rnorm(k),
+  `b[2]` = rnorm(k),
+  `c[2]` = rnorm(k),
+  `d[2]` = rnorm(k),
+  `e[2]` = rnorm(k),
+  `f[2]` = rnorm(k),
+  `g[2]` = rnorm(k),
+  `h[2]` = rnorm(k),
+  `i[2]` = rnorm(k),
+  `j[2]` = rnorm(k),
+  `k[2]` = rnorm(k),
+  `l[2]` = rnorm(k),
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+) %&gt;%
+  as_tibble()
+df</pre></html></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co">## # A tibble: 50,000 x 15</span></a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="co">##    .chain .iteration .draw `a[2]`  `b[2]` `c[2]`  `d[2]`  `e[2]` `f[2]`</span></a>
 <a class="sourceLine" id="cb5-3" title="3"><span class="co">##    &lt;lgl&gt;  &lt;lgl&gt;      &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></a>
@@ -232,25 +235,25 @@
 <h3 class="hasAnchor">
 <a href="#spreading-with-indices" class="anchor"></a>Spreading with indices</h3>
 <p>This should be fairly fast. Last test was ~= 0.03 seconds on <code>monarch</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="reference/spread_draws.html">spread_draws</a></span>(df, <span class="st">`</span><span class="dt">.</span><span class="st">`</span>[index], <span class="dt">regex =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb6"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="reference/spread_draws.html">spread_draws</a></span>(<span class="no">df</span>, <span class="no">`.`</span>[<span class="no">index</span>], <span class="kw">regex</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></html></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">##    user  system elapsed </span></a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="co">##    0.05    0.00    0.04</span></a></code></pre></div>
 <div id="separate-spec-version" class="section level4">
 <h4 class="hasAnchor">
 <a href="#separate-spec-version" class="anchor"></a>Separate-spec version</h4>
 <p>This is definitely slower than it could be, likely due to use of joins with chain information involved. This could almost definitely be made faster if nesting was used all the way up the spread_draws pipeline and chain information added at the last possible moment. Last test was ~= 0.35 seconds on <code>monarch</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="reference/spread_draws.html">spread_draws</a></span>(df, </a>
-<a class="sourceLine" id="cb8-2" title="2">  a[index], b[index], c[index], d[index], e[index], f[index], </a>
-<a class="sourceLine" id="cb8-3" title="3">  g[index], h[index], i[index], j[index], k[index], l[index]</a>
-<a class="sourceLine" id="cb8-4" title="4">))</a></code></pre></div>
+<div class="sourceCode" id="cb8"><html><pre class="r">system.time(spread_draws(df, 
+  a[index], b[index], c[index], d[index], e[index], f[index], 
+  g[index], h[index], i[index], j[index], k[index], l[index]
+))</pre></html></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">##    user  system elapsed </span></a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="co">##    0.33    0.05    0.37</span></a></code></pre></div>
 </div>
 <div id="using-gather_draws" class="section level4">
 <h4 class="hasAnchor">
 <a href="#using-gather_draws" class="anchor"></a>Using gather_draws</h4>
-<p>This is slower than the spread_draws version even though it shouldn’t really have to be. This is a result of spread_draws_long_ doing a spread that is later undone by gather_draws. Could either use a flag to skip this (although that is a little complicated as the <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> syntax might need the spread anyway) or rely on switching to nesting throughout the entire pipeline to just make the spread/gather round trip not so costly. Last test was ~= 0.13 seconds on <code>monarch</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="reference/spread_draws.html">gather_draws</a></span>(df, <span class="st">`</span><span class="dt">.</span><span class="st">`</span>[index], <span class="dt">regex =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<p>This is slower than the spread_draws version even though it shouldnât really have to be. This is a result of spread_draws_long_ doing a spread that is later undone by gather_draws. Could either use a flag to skip this (although that is a little complicated as the <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> syntax might need the spread anyway) or rely on switching to nesting throughout the entire pipeline to just make the spread/gather round trip not so costly. Last test was ~= 0.13 seconds on <code>monarch</code>.</p>
+<div class="sourceCode" id="cb10"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="reference/spread_draws.html">gather_draws</a></span>(<span class="no">df</span>, <span class="no">`.`</span>[<span class="no">index</span>], <span class="kw">regex</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></html></div>
 <div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">##    user  system elapsed </span></a>
 <a class="sourceLine" id="cb11-2" title="2"><span class="co">##    0.13    0.03    0.16</span></a></code></pre></div>
 </div>
@@ -259,18 +262,24 @@
 <h3 class="hasAnchor">
 <a href="#array-columns" class="anchor"></a>Array columns</h3>
 <p>This tends to be slower than spreading without array columns. Last test was ~0.08 seconds on <code>monarch</code>.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(RankCorr)</a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="reference/spread_draws.html">spread_draws</a></span>(RankCorr, b[.,.]))</a></code></pre></div>
+<div class="sourceCode" id="cb12"><html><pre class="r">data(RankCorr)
+system.time(spread_draws(RankCorr, b[.,.]))</pre></html></div>
 <div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co">##    user  system elapsed </span></a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="co">##    0.07    0.00    0.06</span></a></code></pre></div>
 <p>And this is currently very slow. Last test was ~0.5 seconds on <code>monarch</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="reference/spread_draws.html">spread_draws</a></span>(df, a[.]))</a></code></pre></div>
+<div class="sourceCode" id="cb14"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="reference/spread_draws.html">spread_draws</a></span>(<span class="no">df</span>, <span class="no">a</span>[<span class="no">.</span>]))</pre></html></div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">##    user  system elapsed </span></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="co">##    0.47    0.06    0.53</span></a></code></pre></div>
 </div>
 </div>
 </div>
 
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -283,7 +292,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

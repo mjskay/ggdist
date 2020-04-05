@@ -11,6 +11,7 @@ if (capabilities("cairo")) {
     dev.args = list(png = list(type = "cairo"))
   )
 }
+dir.create("README_models", showWarnings = FALSE)
 ```
 
 # tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
@@ -387,7 +388,13 @@ For models that support it (like `rstanarm` and `brms` models), We can also use 
 Let's fit a slightly naive model to miles per gallon versus horsepower in the `mtcars` dataset:
 
 ```{r m_mpg, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
-m_mpg = brm(mpg ~ log(hp), data = mtcars, family = lognormal)
+m_mpg = brm(
+  mpg ~ log(hp), 
+  data = mtcars, 
+  family = lognormal,
+
+  file = "README_models/m_mpg.rds" # cache model (can be removed)  
+)
 ```
 
 Now we will use `modelr::data_grid`, `tidybayes::add_predicted_draws`, and `tidybayes::stat_lineribbon` to generate a fit curve with multiple probability bands:
@@ -417,7 +424,13 @@ Because this is all tidy data, if you wanted to build a model with interactions 
 Such a model might be:
 
 ```{r m_mpg_am, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
-m_mpg_am = brm(mpg ~ log(hp)*am, data = mtcars, family = lognormal)
+m_mpg_am = brm(
+  mpg ~ log(hp) * am, 
+  data = mtcars, 
+  family = lognormal,
+
+  file = "README_models/m_mpg_am.rds" # cache model (can be removed)  
+)
 ```
 
 Then we can generate and plot predictions as before (differences from above are highlighted as comments):

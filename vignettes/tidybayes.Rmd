@@ -22,11 +22,22 @@ img {
   border: none;
 }
 </style>
-  
+
 ```{r chunk_options, include=FALSE}
+if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
+  tiny_width = small_width = med_width = 6.75
+  tiny_height = small_height = med_height = 4.5
+  large_width = 8; large_height = 5.25
+} else {
+  tiny_width = 3; tiny_height = 2.5
+  small_width = 4.5; small_height = 3
+  med_width = 5; med_height = 3.5
+  large_width = 7; large_height = 4.5
+}
+
 knitr::opts_chunk$set(
-  fig.width = 4.5,
-  fig.height = 3,
+  fig.width = small_width,
+  fig.height = small_height,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
 if (capabilities("cairo")) {
@@ -34,6 +45,7 @@ if (capabilities("cairo")) {
     dev.args = list(png = list(type = "cairo"))
   )
 }
+dir.create("models", showWarnings = FALSE)
 ```
 
 ## Introduction
@@ -81,18 +93,18 @@ The following libraries are required to run this vignette:
 library(magrittr)
 library(dplyr)
 library(forcats)
+library(modelr)
+library(tidybayes)
 library(ggplot2)
 library(ggstance)
+library(cowplot)
 library(emmeans)
 library(broom)
 library(rstan)
 library(rstanarm)
 library(brms)
-library(modelr)
 library(bayesplot)
 library(MCMCglmm)
-library(tidybayes)
-library(cowplot)
 library(RColorBrewer)
 
 theme_set(theme_tidybayes() + panel_border())
@@ -113,8 +125,9 @@ options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = TRUE)
 options(mc.cores = min(2, parallel::detectCores()))
 
-options(width = 100)
+options(width = 120)
 ```
+
 
 ## Example dataset
 
@@ -139,7 +152,7 @@ head(ABC, 10)
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
-```{r}
+```{r fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   ggplot(aes(x = response, y = fct_rev(condition))) +
   geom_point(alpha = 0.5) +
@@ -308,7 +321,7 @@ When given only a single column, `median_qi` will use the names `.lower` and `.u
 
 Plotting medians and intervals is straightforward using the `pointinterval` geom (or its horizontal version, `pointintervalh`), which are similar to `ggplot2::geom_pointrange` but with sensible defaults for multiple intervals (functionality we will use later):
 
-```{r fig.width = 3, fig.height = 2.5}
+```{r fig.width = tiny_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   median_qi() %>%
@@ -322,7 +335,7 @@ m %>%
 
 Rather than summarizing the posterior before calling ggplot, we could also use `stat_pointinterval` / `stat_pointintervalh` to perform the summary within ggplot:
 
-```{r fig.width = 3, fig.height = 2.5}
+```{r fig.width = tiny_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
@@ -341,7 +354,7 @@ When using `point_interval` family functions with geoms and stats defined by pac
 
 The `stat_eye` and `stat_eyeh` geoms provide a shortcut to generating "eye plots" (combinations of intervals and densities, drawn as violin plots):
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
@@ -353,7 +366,7 @@ m %>%
 
 If you prefer densities over violins, you can use `stat_halfeyeh` (the vertical version, not yet available, will be called `stat_halfeye`). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
@@ -362,7 +375,7 @@ m %>%
 
 Or say you want to annotate portions of the densities in color; the `fill` aesthetic can vary within a slab in all geoms and stats in the `geom_slabinterval()` family, including `stat_halfeyeh()`. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:
 
-```{r fig.width = 4.75, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean, fill = stat(abs(x) < .8))) +
@@ -391,7 +404,7 @@ m %>%
 
 The results are in a tidy format: one row per index (`condition`) and probability level (`.width`). This facilitates plotting. For example, assigning `-.width` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals:
 
-```{r fig.width = 3, fig.height = 2.5}
+```{r fig.width = tiny_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   median_qi(.width = c(.95, .66)) %>%
@@ -403,7 +416,7 @@ m %>%
 Just as `geom_pointintervalh` includes `xmin = .lower` and `xmax = .upper` as default aesthetics, it also includes 
 `size = -.width` to facilitate exactly this usage. This, the above can be simplified to:
 
-```{r fig.width = 3, fig.height = 2.5}
+```{r fig.width = tiny_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   median_qi(.width = c(.95, .66)) %>%
@@ -413,7 +426,7 @@ m %>%
 
 Just as the `point_interval` functions can generate an arbitrary number of intervals per distribution, so too can `geom_pointintervalh` draw an arbitrary number of intervals, though in most cases this starts to get pretty silly (and will require the use of `interval_size_range =`, which determines the minimum and maximum line thickness, to make it legible). Here it is with 3:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   median_qi(.width = c(.95, .8, .5)) %>%
@@ -428,7 +441,7 @@ Intervals are nice if the alpha level happens to line up with whatever decision 
 
 Within the slabinterval family of geoms in tidybayes is the `dots` and `dotsinterval` family, which automatically determine appropriate bin sizes for dotplots and can calculate quantiles from samples to construct quantile dotplots. `stat_dotsh()` is the horizontal variant designed for use on samples:
 
-```{r fig.width = 5, fig.height = 3.5}
+```{r fig.width = med_width, fig.height = med_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = fct_rev(condition))) +
@@ -460,7 +473,7 @@ multimodal_draws %>%
 
 This is easier to see when plotted:
 
-```{r, fig.height = 3, fig.width = 6.5}
+```{r fig.width = large_width, fig.height = large_height/2}
 multimodal_draws %>%
   ggplot(aes(x = x)) +
   stat_slabh(aes(y = 0)) +
@@ -496,7 +509,7 @@ m %>%
 
 We can use combinations of variables with difference indices to generate predictions from the model. In this case, we can combine the condition means with the residual standard deviation to generate predictive distributions from the model, then show the distributions using `stat_slabh()`:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition], response_sd) %>%
   mutate(y_rep = rnorm(n(), condition_mean, response_sd)) %>%
@@ -506,7 +519,7 @@ m %>%
 
 And even summarize these as predictive intervals and compare them to the data:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition], response_sd) %>%
   mutate(y_rep = rnorm(n(), condition_mean, response_sd)) %>%
@@ -524,7 +537,7 @@ If this model is well-calibrated, about 95% of the data should be within the out
 
 Altogether, data, posterior predictions, and posterior distributions of the means:
 
-```{r fig.width = 4, fig.height = 2.75}
+```{r fig.width = small_width, fig.height = small_height}
 draws = m %>%
   spread_draws(condition_mean[condition], response_sd)
 
@@ -547,7 +560,7 @@ ABC %>%
 
 `compare_levels` allows us to compare the value of some variable across levels of some factor. By default it computes all pairwise differences, though this can be changed using the `comparison = ` argument:
 
-```{r, fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
   spread_draws(condition_mean[condition]) %>%
@@ -694,7 +707,7 @@ bayes_results
 
 Here, `to_broom_names` will convert `.lower` and `.upper` into `conf.low` and `conf.high` so the names of the columns we need to make the comparison (`condition`, `estimate`, `conf.low`, and `conf.high`) all line up easily. This makes it simple to combine the two tidy data frames together using `bind_rows`, and plot them:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 bind_rows(linear_results, bayes_results) %>%
   mutate(condition = fct_rev(condition)) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
@@ -703,7 +716,7 @@ bind_rows(linear_results, bayes_results) %>%
 
 Compatibility with `tidy` also gives compatibility with `dotwhisker::dwplot`:
 
-```{r, warning = FALSE, fig.width = 4, fig.height = 2.5}
+```{r warning = FALSE, fig.width = small_width, fig.height = tiny_height}
 bind_rows(linear_results, bayes_results) %>%
   rename(term = condition) %>%
   dotwhisker::dwplot()
@@ -738,7 +751,7 @@ m %>%
 
 We can pass that into `bayesplot::mcmc_areas` directly. The `drop_indices = TRUE` argument to `unspread_draws` indicates that `.chain`, `.iteration`, and `.draw` should not be included in the output:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   compare_levels(condition_mean, by = condition) %>%
@@ -786,7 +799,7 @@ See `?pairwise.emmc` for a list of the numerous contrast types supported by `emm
 
 As before, we can plot the results instead of using a table:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m_rst %>%
   emmeans( ~ condition) %>%
   contrast(method = "pairwise") %>%

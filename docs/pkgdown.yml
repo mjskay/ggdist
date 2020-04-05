@@ -1,5 +1,5 @@
 pandoc: 2.7.2
-pkgdown: 1.4.1
+pkgdown: 1.5.0
 pkgdown_sha: ~
 articles:
   freq-uncertainty-vis: freq-uncertainty-vis.html
@@ -8,6 +8,7 @@ articles:
   tidy-rstanarm: tidy-rstanarm.html
   tidybayes-residuals: tidybayes-residuals.html
   tidybayes: tidybayes.html
+last_built: 2020-04-05T03:56Z
 urls:
   reference: http://mjskay.github.io/tidybayes/reference
   article: http://mjskay.github.io/tidybayes/articles

@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -49,8 +53,7 @@
 variable and dimension data types. Meant to be used before calling
 spread_draws() or gather_draws() so that the values returned by
 those functions are translated back into useful data types." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
 
 
 
@@ -78,7 +81,7 @@ those functions are translated back into useful data types." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -92,7 +95,7 @@ those functions are translated back into useful data types." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
 
@@ -140,7 +143,7 @@ those functions are translated back into useful data types." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes">
+  <a href="https://github.com/mjskay/tidybayes/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -292,11 +295,11 @@ of the generic function <code>as_constructor</code>.</p>
     <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='point_interval.html'>median_qi</a></span>()
 
-}</div><div class='output co'>#&gt; <span class='message'>rstan (Version 2.19.2, GitRev: 2e1f913d3ca3)</span></div><div class='output co'>#&gt; <span class='message'>For execution on a local, multicore CPU with excess RAM we recommend calling</span>
+}</div><div class='output co'>#&gt; <span class='message'>rstan (Version 2.19.3, GitRev: 2e1f913d3ca3)</span></div><div class='output co'>#&gt; <span class='message'>For execution on a local, multicore CPU with excess RAM we recommend calling</span>
 #&gt; <span class='message'>options(mc.cores = parallel::detectCores()).</span>
 #&gt; <span class='message'>To avoid recompilation of unchanged Stan programs, we recommend calling</span>
 #&gt; <span class='message'>rstan_options(auto_write = TRUE)</span></div><div class='output co'>#&gt; <span class='message'>For improved execution time, we recommend calling</span>
-#&gt; <span class='message'>Sys.setenv(LOCAL_CPPFLAGS = '-march=native')</span>
+#&gt; <span class='message'>Sys.setenv(LOCAL_CPPFLAGS = '-march=corei7 -mtune=corei7')</span>
 #&gt; <span class='message'>although this causes Stan to throw an error on a few processors.</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: 'rstan'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:tidyr':</span>
 #&gt; <span class='message'></span>
@@ -325,37 +328,27 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Chain 1: Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.136 seconds (Warm-up)
-#&gt; Chain 1:                0.125 seconds (Sampling)
-#&gt; Chain 1:                0.261 seconds (Total)
-#&gt; Chain 1: </div><div class='output co'>#&gt; <span class='warning'>Warning: The largest R-hat is 1.07, indicating chains have not mixed.</span>
-#&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
-#&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#r-hat</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>
+#&gt; Chain 1:  Elapsed Time: 0.11 seconds (Warm-up)
+#&gt; Chain 1:                0.106 seconds (Sampling)
+#&gt; Chain 1:                0.216 seconds (Total)
+#&gt; Chain 1: </div><div class='output co'>#&gt; <span class='warning'>Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>
 #&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
 #&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#bulk-ess</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span>
 #&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
 #&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#tail-ess</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
 #&gt;   condition condition_mean .lower .upper .width .point .interval
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'>1</span><span> A                  0.184 -</span><span style='color: #BB0000;'>0.122</span><span>  0.532   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>2</span><span> B                  1.01   0.679  1.27    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>3</span><span> C                  1.84   1.45   2.27    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>4</span><span> D                  1.03   0.775  1.36    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>5</span><span> E                 -</span><span style='color: #BB0000;'>0.888</span><span> -</span><span style='color: #BB0000;'>1.19</span><span>  -</span><span style='color: #BB0000;'>0.536</span><span>   0.95 median qi       </div><div class='input'># }
+#&gt; </span><span style='color: #555555;'>1</span><span> A                  0.188 -</span><span style='color: #BB0000;'>0.196</span><span>  0.559   0.95 median qi       
+#&gt; </span><span style='color: #555555;'>2</span><span> B                  0.999  0.676  1.36    0.95 median qi       
+#&gt; </span><span style='color: #555555;'>3</span><span> C                  1.85   1.49   2.18    0.95 median qi       
+#&gt; </span><span style='color: #555555;'>4</span><span> D                  1.04   0.657  1.33    0.95 median qi       
+#&gt; </span><span style='color: #555555;'>5</span><span> E                 -</span><span style='color: #BB0000;'>0.883</span><span> -</span><span style='color: #BB0000;'>1.22</span><span>  -</span><span style='color: #BB0000;'>0.523</span><span>   0.95 median qi       </div><div class='input'># }
 </div></span></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Matthew Kay</p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -366,7 +359,7 @@ of the generic function <code>as_constructor</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

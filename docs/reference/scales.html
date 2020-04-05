@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -47,8 +51,7 @@
 <meta property="og:title" content="Custom ggplot scales for geom_slabinterval (and derivatives) — scales" />
 <meta property="og:description" content="These scales allow more specific aesthetic mappings to be made when using geom_slabinterval()
 and stats/geoms based on it (like eye plots)." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.png" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
 
 
 
@@ -76,7 +79,7 @@ and stats/geoms based on it (like eye plots)." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -90,7 +93,7 @@ and stats/geoms based on it (like eye plots)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
 
@@ -138,7 +141,7 @@ and stats/geoms based on it (like eye plots)." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes">
+  <a href="https://github.com/mjskay/tidybayes/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -306,7 +309,10 @@ after transformation.</p></td>
 <li><p>A numeric vector of length two providing limits of the scale.
 Use <code>NA</code> to refer to the existing minimum or maximum</p></li>
 <li><p>A function that accepts the existing (automatic) limits and returns
-new limits</p></li>
+new limits
+Note that setting limits on positional scales will <strong>remove</strong> data outside of the limits.
+If the purpose is to zoom, use the limit argument in the coordinate system
+(see <code><a href='https://ggplot2.tidyverse.org/reference/coord_cartesian.html'>coord_cartesian()</a></code>).</p></li>
 </ul></td>
     </tr>
     <tr>
@@ -341,7 +347,7 @@ densities of 0 get mapped to 0 in the output.</p></li>
 </ol>
 
 <p>See the corresponding scale documentation in ggplot for more information; e.g.
-<code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete()</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_color_continuous()</a></code>, etc.</p>
+<code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete()</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous()</a></code>, etc.</p>
 <p>Other scale functions can be used with the aesthetics/scales defined here by using the <code>aesthetics</code>
 argument to that scale function. For example, to use color brewer scales with the <code>point_color</code> aesthetic:</p>
 <p><code><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer(..., aesthetics = "point_color")</a></code></p>
@@ -350,7 +356,7 @@ this is what <code>guide_colorbar2</code> is for:</p>
 <p><code><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")</a></code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete()</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_color_continuous()</a></code>, etc.</p></div>
+    <div class='dont-index'><p><code><a href='https://ggplot2.tidyverse.org/reference/scale_hue.html'>scale_color_discrete()</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous()</a></code>, etc.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -384,17 +390,10 @@ this is what <code>guide_colorbar2</code> is for:</p>
   )</div><div class='img'><img src='scales-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Matthew Kay</p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -405,7 +404,7 @@ this is what <code>guide_colorbar2</code> is for:</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

@@ -958,7 +958,7 @@ plot_grid(ncol = 1, align = "v",
     label = "observed data", xlim = c(26, NA), ylim = c(2.2, NA), point.padding = 0.2,
     label.size = NA, segment.color = "gray35"
   )</pre></body></html></div>
-<p><img src="tidy-brms_files/figure-html/unnamed-chunk-49-1.png" width="648"></p>
+<p><img src="tidy-brms_files/figure-html/unnamed-chunk-49-1.png" width="768"></p>
 <p>This looks pretty good. Let’s check using another typical posterior predictive checking plot: many simulated distributions of the response (<code>cyl</code>) against the observed distribution of the response. For a continuous response variable this is usually done with a density plot; here, we’ll plot the number of posterior predictions in each bin as a line plot, since the response variable is discrete:</p>
 <div class="sourceCode" id="cb77"><html><body><pre class="r">mtcars_clean %&gt;%
   select(mpg) %&gt;%
@@ -970,8 +970,8 @@ plot_grid(ncol = 1, align = "v",
   stat_count(aes(group = .draw), geom = "line", position = "identity", alpha = .05) +
   geom_label(data = data.frame(cyl = "4"), y = 9.5, label = "posterior\npredictions",
     hjust = 1, color = "gray50", lineheight = 1, label.size = NA) +
-  geom_label(data = data.frame(cyl = "8"), y = 14, label = "observed data",
-    hjust = 0, color = "red", label.size = NA)</pre></body></html></div>
+  geom_label(data = data.frame(cyl = "8"), y = 14, label = "observed\ndata",
+    hjust = 0, color = "red", lineheight = 1, label.size = NA)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-50-1.png" width="648"></p>
 <p>This also looks good.</p>
 <p>Another way to look at these posterior predictions might be as a scatterplot matrix. <code><a href="../reference/gather_pairs.html">tidybayes::gather_pairs</a></code> makes it easy to generate long-format data frames suitable for creating custom scatterplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using <code>facet_grid</code>:</p>
