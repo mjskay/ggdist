@@ -28,3 +28,4 @@
 ^vignettes/.*_cache$
 ^benchmarks.*$
 ^revdep$
+^man/figures/README$
