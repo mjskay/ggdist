@@ -24,9 +24,20 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
+if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
+  tiny_width = small_width = med_width = 6.75
+  tiny_height = small_height = med_height = 4.5
+  large_width = 8; large_height = 5.25
+} else {
+  tiny_width = 3; tiny_height = 2.5
+  small_width = 4.5; small_height = 3
+  med_width = 5; med_height = 3.5
+  large_width = 7; large_height = 4.5
+}
+
 knitr::opts_chunk$set(
-  fig.width = 4.5,
-  fig.height = 3,
+  fig.width = small_width,
+  fig.height = small_height,
   eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
 )
 if (capabilities("cairo")) {
@@ -48,16 +59,16 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(magrittr)
 library(dplyr)
+library(purrr)
 library(forcats)
 library(tidyr)
-library(purrr)
 library(modelr)
 library(tidybayes)
 library(ggplot2)
 library(ggstance)
+library(cowplot)
 library(rstan)
 library(rstanarm)
-library(cowplot)
 library(RColorBrewer)
 library(gganimate)
 
@@ -106,7 +117,7 @@ head(ABC, 10)
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
-```{r fig.width = 3, fig.height = 2.5}
+```{r fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   ggplot(aes(y = condition, x = response)) +
   geom_point()
@@ -298,7 +309,7 @@ m %>%
 
 Plotting point summaries and with one interval is straightforward using the `geom_pointinterval` or `geom_pointintervalh` geoms:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   median_qi(condition_mean = `(Intercept)` + b) %>%
@@ -319,7 +330,7 @@ m %>%
 
 The results are in a tidy format: one row per group and uncertainty interval width (`.width`). This facilitates plotting. For example, assigning `-.width` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom automatically sets the `xmin`, `xmax`, and `size` aesthetics appropriately based on the `.lower`, `.upper`, and `.width` columns in the data to produce plots of points with multiple probability levels:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   median_qi(condition_mean = `(Intercept)` + b, .width = c(.95, .66)) %>%
@@ -332,7 +343,7 @@ m %>%
 
 To see the density along with the intervals, we can use `stat_eyeh` (horizontal "eye plots", which combine intervals with violin plots), or `stat_halfeyeh` (horizontal interval + density plots):
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   mutate(condition_mean = `(Intercept)` + b) %>%
@@ -342,7 +353,7 @@ m %>%
 
 Or say you want to annotate portions of the densities in color; the `fill` aesthetic can vary within a slab in all geoms and stats in the `geom_slabinterval()` family, including `stat_halfeyeh()`. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:
 
-```{r fig.width = 4.75, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   mutate(condition_mean = `(Intercept)` + b) %>%
@@ -375,7 +386,7 @@ ABC %>%
 
 To plot this example, we'll also show the use of `stat_pointintervalh` instead of `geom_pointintervalh`, which summarizes draws into point summaries and intervals within ggplot:
 
-```{r fig.width = 3, fig.height = 2.5}
+```{r fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
@@ -390,7 +401,7 @@ Intervals are nice if the alpha level happens to line up with whatever decision 
 
 Within the slabinterval family of geoms in tidybayes is the `dots` and `dotsinterval` family, which automatically determine appropriate bin sizes for dotplots and can calculate quantiles from samples to construct quantile dotplots. `stat_dotsh()` is the horizontal variant designed for use on samples:
 
-```{r fig.width = 5, fig.height = 3.5}
+```{r fig.width = med_width, fig.height = med_height}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
@@ -407,7 +418,7 @@ Where `add_fitted_draws` is analogous to `rstanarm::posterior_linpred`, `add_pre
 
 Here is an example of posterior predictive distributions plotted using `stat_slabh()`:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
@@ -417,7 +428,7 @@ ABC %>%
 
 We could also use `tidybayes::stat_intervalh` to plot predictive bands alongside the data:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
@@ -429,7 +440,7 @@ ABC %>%
 
 Altogether, data, posterior predictions, and posterior distributions of the means:
 
-```{r fig.width = 4, fig.height = 2.75}
+```{r fig.width = small_width, fig.height = small_height}
 grid = ABC %>%
   data_grid(condition)
 
@@ -457,7 +468,7 @@ m_mpg = stan_glm(mpg ~ hp * cyl, data = mtcars)
 
 We can plot fit curves with probability bands:
 
-```{r}
+```{r fig.width = med_width, fig.height = small_height}
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 51)) %>%
@@ -471,7 +482,7 @@ mtcars %>%
 
 Or we can sample a reasonable number of fit lines (say 100) and overplot them:
 
-```{r}
+```{r fig.width = med_width, fig.height = small_height}
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
@@ -506,7 +517,7 @@ animate(p, nframes = ndraws, fps = 2.5, width = 432, height = 288, res = 96, dev
 
 Or, for posterior predictions (instead of fits), we can go back to probability bands:
 
-```{r}
+```{r fig.width = med_width, fig.height = small_height}
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
@@ -520,7 +531,7 @@ mtcars %>%
 
 This can get difficult to judge by group, so could be better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:
 
-```{r}
+```{r fig.width = med_width, fig.height = small_height}
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
@@ -540,7 +551,7 @@ If we wish compare the means from each condition, `compare_levels` facilitates c
 
 Let's demonstrate `compare_levels` with another plotting geom, `stat_halfeyeh`, which gives horizontal "half-eye" plots, combining intervals with a density plot:
 
-```{r, fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = small_height}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
   spread_draws(b[,,condition], sep = "[, :]") %>%
@@ -551,7 +562,7 @@ m %>%
 
 If you prefer "caterpillar" plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:
 
-```{r, fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = small_height}
 #N.B. the syntax for compare_levels is experimental and may change
 m %>%
   spread_draws(b[,,condition], sep = "[, :]") %>%
@@ -562,7 +573,6 @@ m %>%
   stat_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
-
 
 ## Ordinal models
 
@@ -579,7 +589,7 @@ The `rstanarm::posterior_linpred` function for ordinal regression models in rsta
 
 For example, here is a plot of the link-level fit:
 
-```{r fig.width = 4, fig.height = 2.5}
+```{r fig.width = small_width, fig.height = tiny_height}
 esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_rs, scale = "linear") %>%
@@ -636,7 +646,7 @@ thresholds[1,]$threshold
 
 We can combine those thresholds (the $\alpha_j$ values from the above formula) with the `.value` from `add_fitted_draws` ($\beta x$ from the above formula) to calculate per-category probabilities:
 
-```{r fig.width = 5, fig.height = 2.5}
+```{r fig.width = med_width, fig.height = med_height}
 esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_rs, scale = "linear") %>%
@@ -656,7 +666,7 @@ esoph %>%
 
 It is hard to see the changes in categories in the above plot; let's try something that gives a better gist of the distribution within each year:
 
-```{r fig.height = 2.25, fig.width = 7}
+```{r fig.width = large_width, fig.height = large_height/2}
 esoph_plot = esoph %>%
   data_grid(agegp) %>%
   add_fitted_draws(m_esoph_rs, scale = "linear") %>%
@@ -683,7 +693,7 @@ esoph_plot +
 
 The bars in this case might present a false sense of precision, so we could also try CCDF barplots instead:
 
-```{r fig.height = 2.25, fig.width = 7}
+```{r fig.width = large_width, fig.height = large_height/2}
 esoph_plot +
   stat_ccdfintervalh() +
   expand_limits(x = 0) #ensure bars go to 0

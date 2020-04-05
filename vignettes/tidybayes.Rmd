@@ -621,7 +621,12 @@ This result is equivalent in this case to `spread_draws(c(condition_mean, condit
 To demonstrate drawing fit curves with uncertainty, let's fit a slightly naive model to part of the `mtcars` dataset using `brm`:
 
 ```{r m_mpg_brms, results = "hide", message = FALSE, warning = FALSE, cache = TRUE}
-m_mpg = brm(mpg ~ hp * cyl, data = mtcars)
+m_mpg = brm(
+  mpg ~ hp * cyl, 
+  data = mtcars, 
+  
+  file = "models/tidybayes_m_mpg.rds"  # cache model (can be removed)
+)
 ```
 
 We can draw fit curves with probability bands using `tidybayes::add_fitted_draws` and `tidybayes::stat_lineribbon`:
