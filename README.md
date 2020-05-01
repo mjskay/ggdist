@@ -3,6 +3,7 @@
 
 [![Build
 status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
+[![R build status](https://github.com/mjskay/tidybayes/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/tidybayes/actions)
 [![Coverage
 status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
 [![CRAN

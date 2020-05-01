@@ -17,6 +17,7 @@ dir.create("README_models", showWarnings = FALSE)
 # tidybayes: Bayesian analysis + tidy data + geoms <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
 
 [![Build status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
+[![R build status](https://github.com/mjskay/tidybayes/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/tidybayes/actions)
 [![Coverage status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
 [![CRAN status](http://www.r-pkg.org/badges/version/tidybayes)](https://cran.r-project.org/package=tidybayes)
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/tidybayes)
