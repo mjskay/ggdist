@@ -105,3 +105,28 @@ test_that("stat_dist_lineribbon works", {
     p + stat_dist_lineribbon(aes(arg1 = x + ifelse(g == "a", 6, 0), fill = g, color = g), alpha = 1/4)
   )
 })
+
+test_that("the stepped lineribbons work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(x = 1:10) %>%
+    ggplot(aes(x = x, dist = "norm", arg1 = x))
+
+  vdiffr::expect_doppelganger("lineribbon with step = TRUE works",
+    p + stat_dist_lineribbon(step = TRUE) + geom_point(aes(y = x), size = 3)
+  )
+
+  vdiffr::expect_doppelganger("lineribbon with step = hv works",
+    p + stat_dist_lineribbon(step = "hv") + geom_point(aes(y = x), size = 3)
+  )
+
+  vdiffr::expect_doppelganger("lineribbon with step = vh works",
+    p + stat_dist_lineribbon(step = "vh") + geom_point(aes(y = x), size = 3)
+  )
+
+  vdiffr::expect_doppelganger("lineribbon with step = mid works",
+    p + stat_dist_lineribbon(step = "mid") + geom_point(aes(y = x), size = 3)
+  )
+
+})

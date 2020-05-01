@@ -10,6 +10,7 @@ geom_lineribbon(
   stat = "identity",
   position = "identity",
   ...,
+  step = FALSE,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -43,6 +44,13 @@ layer, as a string.}
 a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
+
+\item{step}{Should the line/ribbon be drawn as a step function? One of: \code{FALSE} (do not draw as a step
+function, the default), \code{TRUE} (draw a step function using the \code{"mid"} approach), \code{"mid"}
+(draw steps midway between adjacent x values), \code{"hv"} (draw horizontal-then-vertical steps), \code{"vh"}
+(draw as vertical-then-horizontal steps). \code{TRUE} is an alias for \code{"mid"} because for a step function with
+ribbons, \code{"mid"} is probably what you want (for the other two step approaches the ribbons at either the
+vert first or vert last x value will not be visible).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}

@@ -24,6 +24,12 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' @inheritParams ggplot2::geom_line
 #' @param ...  Other arguments passed to [layer()].
+#' @param step Should the line/ribbon be drawn as a step function? One of: `FALSE` (do not draw as a step
+#' function, the default), `TRUE` (draw a step function using the `"mid"` approach), `"mid"`
+#' (draw steps midway between adjacent x values), `"hv"` (draw horizontal-then-vertical steps), `"vh"`
+#' (draw as vertical-then-horizontal steps). `TRUE` is an alias for `"mid"` because for a step function with
+#' ribbons, `"mid"` is probably what you want (for the other two step approaches the ribbons at either the
+#' vert first or vert last x value will not be visible).
 #' @author Matthew Kay
 #' @seealso See [stat_lineribbon()] for a version that does summarizing of samples into points and intervals
 #' within ggplot. See [geom_pointinterval()] / [geom_pointintervalh()] for a similar geom intended
@@ -46,9 +52,15 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @importFrom forcats fct_rev
 #' @import ggplot2
 #' @export
-geom_lineribbon = function(mapping = NULL, data = NULL,
-  stat = "identity", position = "identity",
+geom_lineribbon = function(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
   ...,
+
+  step = FALSE,
+
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -63,6 +75,7 @@ geom_lineribbon = function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      step = step,
       na.rm = na.rm,
       ...
     )
@@ -84,7 +97,7 @@ draw_key_lineribbon = function(data, params, size) {
 #' @rdname tidybayes-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom plyr dlply
+#' @importFrom plyr dlply ddply
 #' @importFrom purrr map map_dbl
 #' @import ggplot2
 #' @export
@@ -96,12 +109,16 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
   required_aes = c("x", "y", "ymin", "ymax"),
 
-  draw_panel = function(data, panel_scales, coord) {
+  draw_panel = function(data, panel_scales, coord, step = FALSE) {
     # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
     # of the line or by setting fill, the ribbons might give an error. So we will do the
     # grouping ourselves
     grouping_columns = names(data) %>%
       intersect(c("colour", "fill", "linetype", "group"))
+
+    # draw as a step function if requested
+    if (step == TRUE) step = "mid"
+    if (step != FALSE) data = ddply(data, grouping_columns, stepify, x = "x", direction = step)
 
     # draw all the ribbons
     ribbon_grobs = data %>%
@@ -139,3 +156,35 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     )
   }
 )
+
+
+# helpers -----------------------------------------------------------------
+
+stepify = function(df, x = "x", direction = "hv") {
+  n = nrow(df)
+
+  # sort by x and double up all rows in the data frame
+  step_df = df[rep(order(df[[x]]), each = 2),]
+
+  if (direction == "hv") {
+    # horizontal-to-vertical step => lead x and drop last row
+    step_df[[x]] = lead(step_df[[x]])
+    step_df[-2*n,]
+  } else if (direction == "vh") {
+    # vertical-to-horizontal step => lag x and drop first row
+    step_df[[x]] = lag(step_df[[x]])
+    step_df[-1,]
+  } else if (direction == "mid") {
+    # mid step => last value in each pair is matched with the first value in the next pair,
+    # then we set their x position to their average.
+    # Need to repeat the last value one more time to make it work
+    step_df[2*n + 1,] = step_df[2*n,]
+
+    x_i = seq_len(n)*2
+    mid_x = (step_df[x_i, x] + step_df[x_i + 1, x]) / 2
+
+    step_df[x_i, x] = mid_x
+    step_df[x_i + 1, x] = mid_x
+    step_df
+  }
+}
