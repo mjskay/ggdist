@@ -70,7 +70,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", ${{ matrix.config.vignettes }}), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(build_args = c(${{ matrix.config.vignettes }}), args = c("--no-manual", "--as-cran", ${{ matrix.config.vignettes }}), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Upload check results
@@ -82,6 +82,5 @@ jobs:
 
       - name: Test coverage
         if: matrix.config.r == 'release' && runner.os == 'Windows' && matrix.config.suffix == 'quick'
-        run: |
-          Rscript -e 'remotes::install_github("r-lib/covr@gh-actions")'
-          Rscript -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'
+        run: covr::codecov()
+        shell: Rscript {0}
