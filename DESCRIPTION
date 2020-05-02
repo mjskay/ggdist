@@ -59,6 +59,7 @@ Suggests:
     gganimate,
     gifski,
     png,
+    pkgdown,
     transformr
 License: GPL (>= 3)
 Language: en-US
