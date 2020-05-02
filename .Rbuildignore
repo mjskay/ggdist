@@ -13,6 +13,7 @@
 ^README.md$
 ^README_files$
 ^README_cache$
+^clean_vignette_cache\.sh$
 ^\.lintr$
 ^docs$
 ^_pkgdown\.yml$
