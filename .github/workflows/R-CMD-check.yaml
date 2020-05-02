@@ -13,16 +13,17 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.suffix }}
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release'}
-          - {os: macOS-latest, r: 'release'}
-          - {os: macOS-latest, r: 'devel'}
-          - {os: ubuntu-16.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+          - {os: windows-latest, r: 'release', suffix: 'quick', vignettes: '"--no-build-vignettes"'}
+          - {os: windows-latest, r: 'release', suffix: '', vignettes: 'NULL'}
+#          - {os: macOS-latest, r: 'release', suffix: '', vignettes: 'NULL'}
+#          - {os: macOS-latest, r: 'devel', suffix: '', vignettes: 'NULL'}
+          - {os: ubuntu-16.04, r: 'release', suffix: '', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -69,7 +70,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", ${{ matrix.config.vignettes }}), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Upload check results
@@ -80,7 +81,7 @@ jobs:
           path: check
 
       - name: Test coverage
-        if: matrix.config.r == 'release' && runner.os == 'Linux'
+        if: matrix.config.r == 'release' && runner.os == 'Windows' && matrix.config.suffix == 'quick'
         run: |
           Rscript -e 'remotes::install_github("r-lib/covr@gh-actions")'
           Rscript -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'
