@@ -246,13 +246,22 @@ LKJ correlation distribution and the <code><a href='stat_dist_slabinterval.html'
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>forcats</span>)
 
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>prior</span> <span class='kw'>=</span> <span class='st'>"lkjcorr_marginal(2, 3)"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span>(<span class='no'>prior</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>prior</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>.dist</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='no'>.args</span>)) +
-  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeyeh</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>xlim</a></span>(-<span class='fl'>1</span>, <span class='fl'>1</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span>(<span class='st'>"Marginal correlation for LKJ(3) prior on 2x2 correlation matrix"</span>)</div><div class='img'><img src='lkjcorr_marginal-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(
+  <span class='kw'>eta</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>6</span>,
+  <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fl'>6</span>
+) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_rev.html'>fct_rev</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/factor.html'>ordered</a></span>(<span class='no'>eta</span>)), <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"lkjcorr_marginal"</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='no'>K</span>, <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='no'>eta</span>)) +
+  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_slabh</a></span>(<span class='kw'>p_limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(~ <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>K</span>, <span class='st'>"x"</span>, <span class='no'>K</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span>(
+    <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Marginal correlation for LKJ(eta) prior on different matrix sizes:\ndlkjcorr_marginal(K, eta)"</span>,
+    <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"Correlation matrix size (KxK)"</span>,
+    <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"eta"</span>,
+    <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Marginal correlation"</span>
+  ) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>axis.title</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>0</span>))</div><div class='img'><img src='lkjcorr_marginal-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
