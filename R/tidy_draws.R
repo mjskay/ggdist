@@ -55,6 +55,7 @@ as_sample_data_frame = function(...) {
 #'
 #' @param model A supported Bayesian model fit object. See [tidybayes-models()] for a list of supported
 #' models.
+#' @param ... Further arguments passed to other methods (mostly unused).
 #' @return A data frame (actually, a [tibble][tibble::tibble]) with a `.chain` column,
 #' `.iteration` column, `.draw` column, and one column for every variable in `model`.
 #' @author Matthew Kay
@@ -75,11 +76,11 @@ as_sample_data_frame = function(...) {
 #' @importFrom tibble as_tibble tibble
 #' @importFrom coda as.mcmc.list as.mcmc
 #' @export
-tidy_draws = function(model) UseMethod("tidy_draws")
+tidy_draws = function(model, ...) UseMethod("tidy_draws")
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.default = function(model) {
+tidy_draws.default = function(model, ...) {
   draws = tidy_draws(as.mcmc.list(model))
   attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
   draws
@@ -87,7 +88,7 @@ tidy_draws.default = function(model) {
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.data.frame = function(model) {
+tidy_draws.data.frame = function(model, ...) {
   stop_message = paste0(
     "To use a data frame directly with `tidy_draws()`, it must already be a\n",
     "  tidy-format data frame of draws: it must have integer-like `.chain`\n",
@@ -137,7 +138,7 @@ tidy_draws.data.frame = function(model) {
 #' @rdname tidy_draws
 #' @importFrom tibble add_column
 #' @export
-tidy_draws.mcmc.list = function(model) {
+tidy_draws.mcmc.list = function(model, ...) {
   draws = do.call(rbind, lapply(seq_along(model), function(chain) {
     n = nrow(model[[chain]])
     iteration = seq_len(n)
@@ -162,12 +163,12 @@ tidy_draws.mcmc.list = function(model) {
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.stanfit = function(model) {
+tidy_draws.stanfit = function(model, ...) {
   if (!requireNamespace("rstan", quietly = TRUE)) {
     stop("The `rstan` package is needed for `tidy_draws` to support `stanfit` objects.", call. = FALSE) # nocov
   }
 
-  parameter_draws = tidy_draws(rstan::As.mcmc.list(model))
+  parameter_draws = tidy_draws(rstan::As.mcmc.list(model), ...)
 
   diagnostics_draws = map_dfr(rstan::get_sampler_params(model, inc_warmup = FALSE), as.data.frame)
 
@@ -179,7 +180,7 @@ tidy_draws.stanfit = function(model) {
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.stanreg = function(model) {
+tidy_draws.stanreg = function(model, ...) {
   if (!requireNamespace("rstanarm", quietly = TRUE)) {
     stop("The `rstanarm` package is needed for `tidy_draws` to support `stanreg` objects.", call. = FALSE) # nocov
   }
@@ -188,7 +189,7 @@ tidy_draws.stanreg = function(model) {
   sample_matrix = as.array(model) #[iteration, chain, variable]
   n_chain = dim(sample_matrix)[[2]]
   mcmc_list = as.mcmc.list(lapply(seq_len(n_chain), function(chain) as.mcmc(sample_matrix[, chain, ]))) # nolint
-  parameter_draws = tidy_draws(mcmc_list)
+  parameter_draws = tidy_draws(mcmc_list, ...)
 
   diagnostics_draws = map_dfr(rstan::get_sampler_params(model$stanfit, inc_warmup = FALSE), as.data.frame)
 
@@ -200,34 +201,34 @@ tidy_draws.stanreg = function(model) {
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.runjags = function(model) {
+tidy_draws.runjags = function(model, ...) {
   if (!requireNamespace("runjags", quietly = TRUE)) {
     stop("The `runjags` package is needed for `tidy_draws` to support `runjags` objects.", call. = FALSE) # nocov
   }
-  draws = tidy_draws(as.mcmc.list(model))
+  draws = tidy_draws(as.mcmc.list(model), ...)
   attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
   draws
 }
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.jagsUI = function(model) {
+tidy_draws.jagsUI = function(model, ...) {
   if (!requireNamespace("jagsUI", quietly = TRUE)) {
     stop("The `jagsUI` package is needed for `tidy_draws` to support `jagsUI` objects.", call. = FALSE) # nocov
   }
-  draws = tidy_draws(as.mcmc.list(model$samples))
+  draws = tidy_draws(as.mcmc.list(model$samples), ...)
   attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
   draws
 }
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.brmsfit = function(model) {
+tidy_draws.brmsfit = function(model, ...) {
   if (!requireNamespace("brms", quietly = TRUE)) {
     stop("The `brms` package is needed for `tidy_draws` to support `brmsfit` objects.", call. = FALSE) # nocov
   }
 
-  parameter_draws = tidy_draws(brms::as.mcmc(model))
+  parameter_draws = tidy_draws(brms::as.mcmc(model), ...)
 
   diagnostics_draws = map_dfr(rstan::get_sampler_params(model$fit, inc_warmup = FALSE), as.data.frame)
 
@@ -239,9 +240,9 @@ tidy_draws.brmsfit = function(model) {
 
 #' @rdname tidy_draws
 #' @export
-tidy_draws.matrix = function(model) {
+tidy_draws.matrix = function(model, ...) {
   # assume matrix indexed by [iterations, variables]
-  draws = tidy_draws(as.mcmc.list(as.mcmc(model)))
+  draws = tidy_draws(as.mcmc.list(as.mcmc(model)), ...)
 
   attr(draws, "tidybayes_constructors") = attr(model, "tidybayes_constructors")
   draws
@@ -251,9 +252,9 @@ tidy_draws.matrix = function(model) {
 #' @importFrom dplyr inner_join
 #' @importFrom purrr discard
 #' @export
-tidy_draws.MCMCglmm = function(model) {
+tidy_draws.MCMCglmm = function(model, ...) {
   # draws from MME solutions, including fixed effects
-  sol_draws = tidy_draws(model$Sol)
+  sol_draws = tidy_draws(model$Sol, ...)
 
   # draws from (co)variance matrices, ordinal cutpoints, and latent variables
   other_draws =
@@ -261,7 +262,7 @@ tidy_draws.MCMCglmm = function(model) {
     discard(is.null) %>%
     map2(names(.), function(draws, param_type) {
       dimnames(draws)[[2]] %<>% paste0(param_type, "_", .)
-      tidy_draws(draws)
+      tidy_draws(draws, ...)
     })
 
   draws = sol_draws %>%
