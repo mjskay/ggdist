@@ -175,8 +175,17 @@ predicted_draws = function(model, newdata, prediction = ".prediction", ..., n = 
 #' @rdname add_predicted_draws
 #' @export
 predicted_draws.default = function(model, newdata, ...) {
+  model_class = class(model)
+
+  if (model_class %in% c("ulam", "quap", "map", "map2stan")) {
+    stop(
+      "Models of type ", deparse0(model_class), " are not supported by base tidybayes.\n",
+      "Install the `tidybayes.rethinking` package to enable support for these models:\n",
+      "  devtools::install_github('mjskay/tidybayes.rethinking')"
+    )
+  }
   stop(
-    "Models of type ", deparse0(class(model)), " are not currently supported by `predicted_draws`.\n",
+    "Models of type ", deparse0(model_class), " are not currently supported by `predicted_draws`.\n",
     "You might try using `add_draws()` for models that do not have explicit fit/prediction\n",
     "support; see help(\"add_draws\") for an example. See also help(\"tidybayes-models\") for\n",
     "more information on what functions are supported by what model types."

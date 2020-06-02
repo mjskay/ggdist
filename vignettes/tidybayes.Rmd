@@ -80,7 +80,7 @@ There are a few core ideas that run through the `tidybayes` API that should (hop
 [jagsUI](https://cran.r-project.org/package=jagsUI), 
 [coda::mcmc and coda::mcmc.list](https://cran.r-project.org/package=coda),
 [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), 
-and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
+and anything with its own `as.mcmc.list` implementation. If you install the [tidybayes.rethinking](https://mjskay.github.io/tidybayes.rethinking/) package, models from the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
 
 For an up-to-date list of supported models, see `?"tidybayes-models"`.
 
@@ -361,16 +361,15 @@ m %>%
   stat_eyeh()
 ```
 
-
 ### Intervals with posterior densities ("half-eye plots"): `stat_halfeyeh`
 
-If you prefer densities over violins, you can use `stat_halfeyeh` (the vertical version, not yet available, will be called `stat_halfeye`). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):
+If you prefer densities over violins, you can use `stat_halfeyeh`. This example also demonstrates how to change the interval probability (here, to 90% and 50% intervals):
 
 ```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  stat_halfeyeh(.width = c(.99, .8))
+  stat_halfeyeh(.width = c(.90, .5))
 ```
 
 Or say you want to annotate portions of the densities in color; the `fill` aesthetic can vary within a slab in all geoms and stats in the `geom_slabinterval()` family, including `stat_halfeyeh()`. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:
@@ -434,7 +433,6 @@ m %>%
   geom_pointintervalh(interval_size_range = c(0.5, 2))
 ```
 
-
 ### Plotting posteriors as quantile dotplots
 
 Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating [quantile dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md) ([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes et al. 2018](https://doi.org/10.1145/3173574.3173718)), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, 100 in the example below). 
@@ -449,7 +447,6 @@ m %>%
 ```
 
 The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
-
 
 ### Alternative point summaries and intervals: median, mean, mode; qi, hdi, hdci
 

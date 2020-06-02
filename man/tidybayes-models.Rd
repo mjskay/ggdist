@@ -27,9 +27,8 @@ types.
 environment, run \code{methods(as.mcmc.list)}
 }
 
-If you install the \code{tidybayes.rethinking} package (available at
-\url{https://github.com/mjskay/tidybayes.rethinking}), \code{map} and
-\code{map2stan} models from the \code{rethinking} package are also supported.
+If you install the \href{https://mjskay.github.io/tidybayes.rethinking/}{tidybayes.rethinking} package, models from
+the \href{https://github.com/rmcelreath/rethinking}{rethinking} package are also supported.
 }
 
 \section{Models Supporting Prediction}{
@@ -46,11 +45,8 @@ In addition, the \strong{following models support fit and prediction} extraction
 \strong{If your model type is not in the above list}, you may still be able to use the \code{\link[=add_draws]{add_draws()}}
 function to turn matrices of predictive draws (or fit draws) into tidy data frames.
 
-If you install the \href{https://github.com/mjskay/tidybayes.rethinking}{tidybayes.rethinking} package, models from
-the \href{https://github.com/rmcelreath/rethinking}{rethinking} package are also supported. Note that in
-\code{tidybayes.rethinking}, \code{tidy_link} takes the place of
-\code{\link[=add_fitted_draws]{add_fitted_draws()}} and \code{tidy_sim} takes the place of
-\code{\link[=add_predicted_draws]{add_predicted_draws()}}.
+If you install the \href{https://mjskay.github.io/tidybayes.rethinking/}{tidybayes.rethinking} package, models from
+the \href{https://github.com/rmcelreath/rethinking}{rethinking} package are also supported.
 }
 
 \section{Extending tidybayes}{

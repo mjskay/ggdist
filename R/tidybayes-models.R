@@ -32,9 +32,8 @@
 #'     environment, run `methods(as.mcmc.list)`
 #' }
 #'
-#' If you install the `tidybayes.rethinking` package (available at
-#' <https://github.com/mjskay/tidybayes.rethinking>), `map` and
-#' `map2stan` models from the `rethinking` package are also supported.
+#' If you install the [tidybayes.rethinking](https://mjskay.github.io/tidybayes.rethinking/) package, models from
+#' the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
 #'
 #'
 #' @section Models Supporting Prediction:
@@ -50,11 +49,8 @@
 #' **If your model type is not in the above list**, you may still be able to use the [add_draws()]
 #' function to turn matrices of predictive draws (or fit draws) into tidy data frames.
 #'
-#' If you install the [tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking) package, models from
-#' the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported. Note that in
-#' `tidybayes.rethinking`, `tidy_link` takes the place of
-#' [add_fitted_draws()] and `tidy_sim` takes the place of
-#' [add_predicted_draws()].
+#' If you install the [tidybayes.rethinking](https://mjskay.github.io/tidybayes.rethinking/) package, models from
+#' the [rethinking](https://github.com/rmcelreath/rethinking) package are also supported.
 #'
 #'
 #' @section Extending tidybayes:

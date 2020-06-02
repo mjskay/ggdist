@@ -575,7 +575,7 @@ mtcars %>%
   facet_grid(. ~ cyl, space = "free_x", scales = "free_x")
 ```
 
-### Extracting of distributional regression parameters
+### Extracting distributional regression parameters
 
 `brm` also allows us to set up submodels for parameters of the response distribution *other than* the location (e.g., mean). For example, we can allow a variance parameter, such as the standard deviation, to also be some function of the predictors.
 
