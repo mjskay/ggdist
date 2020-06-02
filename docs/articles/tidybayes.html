@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Using tidy data with Bayesian models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-04-05</h4>
+            <h4 class="date">2020-06-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes.Rmd"><code>vignettes/tidybayes.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes.Rmd</code></div>
@@ -151,7 +151,7 @@ img {
 <div id="supported-model-types" class="section level3">
 <h3 class="hasAnchor">
 <a href="#supported-model-types" class="anchor"></a>Supported model types</h3>
-<p><code>tidybayes</code> aims to support a variety of models with a uniform interface. Currently supported models include <a href="https://cran.r-project.org/package=rstan">rstan</a>, <a href="https://cran.r-project.org/package=brms">brms</a>, <a href="https://cran.r-project.org/package=rstanarm">rstanarm</a>, <a href="https://cran.r-project.org/package=runjags">runjags</a>, <a href="https://cran.r-project.org/package=rjags">rjags</a>, <a href="https://cran.r-project.org/package=jagsUI">jagsUI</a>, <a href="https://cran.r-project.org/package=coda">coda::mcmc and coda::mcmc.list</a>, <a href="https://cran.r-project.org/package=MCMCglmm">MCMCglmm</a>, and anything with its own <code>as.mcmc.list</code> implementation. If you install the <a href="https://github.com/mjskay/tidybayes.rethinking">tidybayes.rethinking</a> package, models from the <a href="https://github.com/rmcelreath/rethinking">rethinking</a> package are also supported.</p>
+<p><code>tidybayes</code> aims to support a variety of models with a uniform interface. Currently supported models include <a href="https://cran.r-project.org/package=rstan">rstan</a>, <a href="https://cran.r-project.org/package=brms">brms</a>, <a href="https://cran.r-project.org/package=rstanarm">rstanarm</a>, <a href="https://cran.r-project.org/package=runjags">runjags</a>, <a href="https://cran.r-project.org/package=rjags">rjags</a>, <a href="https://cran.r-project.org/package=jagsUI">jagsUI</a>, <a href="https://cran.r-project.org/package=coda">coda::mcmc and coda::mcmc.list</a>, <a href="https://cran.r-project.org/package=MCMCglmm">MCMCglmm</a>, and anything with its own <code>as.mcmc.list</code> implementation. If you install the <a href="https://mjskay.github.io/tidybayes.rethinking/">tidybayes.rethinking</a> package, models from the <a href="https://github.com/rmcelreath/rethinking">rethinking</a> package are also supported.</p>
 <p>For an up-to-date list of supported models, see <code><a href="../reference/tidybayes-models.html">?"tidybayes-models"</a></code>.</p>
 </div>
 </div>
@@ -293,7 +293,7 @@ model {
 ## condition_mean[5] -0.89    0.00 0.18 -1.24 -1.01 -0.89 -0.77 -0.52  4908 1.00
 ## response_sd        0.56    0.00 0.06  0.46  0.52  0.56  0.60  0.69  1463 1.00
 ## 
-## Samples were drawn using NUTS(diag_e) at Sun Apr 05 00:05:52 2020.
+## Samples were drawn using NUTS(diag_e) at Mon Jun 01 21:52:23 2020.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -308,24 +308,24 @@ model {
 <p>Now that we have our results, the fun begins: getting the draws out in a tidy format! The default methods in Stan for extracting draws from the model do so in a nested format:</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="kw pkg">rstan</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/rstan/man/stanfit-method-extract.html">extract</a></span>(<span class="no">m</span>))</pre></body></html></div>
 <pre><code>## List of 6
-##  $ overall_mean     : num [1:4000(1d)] 0.589 0.769 0.473 1.695 1.085 ...
+##  $ overall_mean     : num [1:4000(1d)] 0.48 0.888 0.543 1.099 0.704 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_zoffset: num [1:4000, 1:5] -0.445 -0.486 -0.127 -1.403 -0.861 ...
+##  $ condition_zoffset: num [1:4000, 1:5] -0.514 -0.693 -0.248 -1.261 -0.345 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ response_sd      : num [1:4000(1d)] 0.55 0.551 0.525 0.632 0.647 ...
+##  $ response_sd      : num [1:4000(1d)] 0.482 0.498 0.516 0.517 0.652 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean_sd: num [1:4000(1d)] 1.446 0.982 1.764 0.987 1.253 ...
+##  $ condition_mean_sd: num [1:4000(1d)] 1.075 1.127 0.762 0.772 1.032 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL
-##  $ condition_mean   : num [1:4000, 1:5] -0.05341 0.29149 0.24789 0.30944 0.00704 ...
+##  $ condition_mean   : num [1:4000, 1:5] -0.0716 0.1067 0.3534 0.1249 0.347 ...
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ iterations: NULL
 ##   .. ..$           : NULL
-##  $ lp__             : num [1:4000(1d)] 2.5431 1.1229 2.7153 -1.464 -0.0449 ...
+##  $ lp__             : num [1:4000(1d)] 1.51496 3.88031 0.00465 0.50086 1.18091 ...
 ##   ..- attr(*, "dimnames")=List of 1
 ##   .. ..$ iterations: NULL</code></pre>
 <p>There are also methods for extracting draws as matrices or data frames in Stan (and other model types, such as JAGS and MCMCglmm, have their own formats).</p>
@@ -505,11 +505,11 @@ model {
 <h3 class="hasAnchor">
 <a href="#intervals-with-posterior-densities-half-eye-plots-stat_halfeyeh" class="anchor"></a>Intervals with posterior densities (“half-eye plots”): <code>stat_halfeyeh</code>
 </h3>
-<p>If you prefer densities over violins, you can use <code>stat_halfeyeh</code> (the vertical version, not yet available, will be called <code>stat_halfeye</code>). This example also demonstrates how to change the interval probability (here, to 99% and 80% intervals):</p>
+<p>If you prefer densities over violins, you can use <code>stat_halfeyeh</code>. This example also demonstrates how to change the interval probability (here, to 90% and 50% intervals):</p>
 <div class="sourceCode" id="cb34"><html><body><pre class="r">m %&gt;%
   spread_draws(condition_mean[condition]) %&gt;%
   ggplot(aes(y = fct_rev(condition), x = condition_mean)) +
-  stat_halfeyeh(.width = c(.99, .8))</pre></body></html></div>
+  stat_halfeyeh(.width = c(.90, .5))</pre></body></html></div>
 <p><img src="tidybayes_files/figure-html/unnamed-chunk-20-1.png" width="648"></p>
 <p>Or say you want to annotate portions of the densities in color; the <code>fill</code> aesthetic can vary within a slab in all geoms and stats in the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family, including <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh()</a></code>. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:</p>
 <div class="sourceCode" id="cb35"><html><body><pre class="r">m %&gt;%
@@ -776,7 +776,7 @@ m %&gt;%
 ## #   `condition_mean[1]` &lt;dbl&gt;, `condition_mean[2]` &lt;dbl&gt;, `condition_mean[3]` &lt;dbl&gt;, `condition_mean[4]` &lt;dbl&gt;,
 ## #   `condition_mean[5]` &lt;dbl&gt;, lp__ &lt;dbl&gt;, accept_stat__ &lt;dbl&gt;, stepsize__ &lt;dbl&gt;, treedepth__ &lt;dbl&gt;,
 ## #   n_leapfrog__ &lt;dbl&gt;, divergent__ &lt;dbl&gt;, energy__ &lt;dbl&gt;</code></pre>
-<p>Combining <code>tidy_draws</code> with <code>gather_variables</code> also allows us to derive similar output to <code>ggmcmc::ggs</code>, if desired:</p>
+<p>Combining <code>tidy_draws</code> with <code>gather_variables</code> also allows us to derive similar output to <code><a href="https://rdrr.io/pkg/ggmcmc/man/ggs.html">ggmcmc::ggs</a></code>, if desired:</p>
 <div class="sourceCode" id="cb60"><html><body><pre class="r">m %&gt;%
   tidy_draws() %&gt;%
   gather_variables() %&gt;%

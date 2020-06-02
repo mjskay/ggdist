@@ -234,7 +234,7 @@ that <code>add_predicted_draws</code> standardizes argument names and values acr
   <span class='co'># plot posterior predictive intervals</span>
   <span class='no'>mtcars</span> <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>cyl</span>) <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/modelr/man/data_grid.html'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/modelr/man/seq_range.html'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>101</span>)) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://modelr.tidyverse.org/reference/data_grid.html'>data_grid</a></span>(<span class='kw'>hp</span> <span class='kw'>=</span> <span class='fu'><a href='https://modelr.tidyverse.org/reference/seq_range.html'>seq_range</a></span>(<span class='no'>hp</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>101</span>)) <span class='kw'>%&gt;%</span>
     <span class='co'># the line below is equivalent to add_fitted_draws(m_mpg), except that it does not</span>
     <span class='co'># standardize arguments across model types. `summary = FALSE` is not strictly necessary</span>
     <span class='co'># with posterior_linpred(), but because it is necessary on some functions (otherwise</span>
@@ -271,9 +271,9 @@ that <code>add_predicted_draws</code> standardizes argument names and values acr
 #&gt; Chain 1: Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.214 seconds (Warm-up)
-#&gt; Chain 1:                0.052 seconds (Sampling)
-#&gt; Chain 1:                0.266 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.253 seconds (Warm-up)
+#&gt; Chain 1:                0.059 seconds (Sampling)
+#&gt; Chain 1:                0.312 seconds (Total)
 #&gt; Chain 1: </div><div class='output co'>#&gt; <span class='warning'>Warning: The largest R-hat is 1.08, indicating chains have not mixed.</span>
 #&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
 #&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#r-hat</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>

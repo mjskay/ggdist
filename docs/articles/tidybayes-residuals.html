@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Extracting and visualizing tidy residuals from Bayesian models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-04-05</h4>
+            <h4 class="date">2020-06-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes-residuals.Rmd"><code>vignettes/tidybayes-residuals.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes-residuals.Rmd</code></div>
@@ -245,8 +245,10 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
   
   file = "models/tidybayes-residuals_m_ideal.rds"  # cache model (can be removed)
 )</pre></body></html></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## Start sampling</code></pre>
 <p>This looks like this:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">m_ideal</span></pre></body></html></div>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">m_ideal</span></pre></body></html></div>
 <pre><code>##  Family: student 
 ##   Links: mu = identity; sigma = identity; nu = identity 
 ## Formula: y_star ~ 1 
@@ -256,12 +258,12 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept     0.52      0.11     0.31     0.72 1.00     3186     2972
+## Intercept     0.52      0.11     0.30     0.73 1.00     3042     2777
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     1.02      0.09     0.84     1.21 1.00     2523     2526
-## nu       21.03     13.39     5.05    55.87 1.00     2365     2493
+## sigma     1.02      0.09     0.84     1.20 1.00     2420     2179
+## nu       21.01     13.29     4.94    55.91 1.00     2436     2442
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -270,14 +272,14 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
 <h3 class="hasAnchor">
 <a href="#residuals" class="anchor"></a>Residuals</h3>
 <p><code><a href="../reference/add_predicted_draws.html">add_residual_draws()</a></code> operates much like <code><a href="../reference/add_predicted_draws.html">add_fitted_draws()</a></code> and <code><a href="../reference/add_predicted_draws.html">add_predicted_draws()</a></code>: it gives us draws from the posterior distribution for each residual:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r">cens_df %&gt;%
+<div class="sourceCode" id="cb12"><html><body><pre class="r">cens_df %&gt;%
   add_residual_draws(m_ideal) %&gt;%
   ggplot(aes(x = .row, y = .residual)) +
   stat_pointinterval()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-6-1.png" width="648"></p>
 <p>This is a typical residual plot, though with the addition of the uncertainty associated with each residual afforded by generating draws from the distribution associated with each residual.</p>
 <p>Let’s check the QQ plot:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r">cens_df %&gt;%
+<div class="sourceCode" id="cb13"><html><body><pre class="r">cens_df %&gt;%
   add_residual_draws(m_ideal) %&gt;%
   median_qi() %&gt;%
   ggplot(aes(sample = .residual)) +
@@ -301,7 +303,7 @@ p^{*\textrm{resid}}_i = P(y^{*\textrm{rep}}_i \le y^*_i|\mathbf{y}^*)
 <p><span class="math display">\[
 z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 \]</span></p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r">cens_df %&gt;%
+<div class="sourceCode" id="cb15"><html><body><pre class="r">cens_df %&gt;%
   add_predicted_draws(m_ideal) %&gt;%
   summarise(
     p_residual = mean(.prediction &lt; y_star),
@@ -318,14 +320,16 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <h2 class="hasAnchor">
 <a href="#basic-interval-censored-model" class="anchor"></a>Basic interval-censored model</h2>
 <p>Assuming a situation where we do not have access to the original (uncensored) data, we will perform a regression on the interval-censored data. In brms, we can do this by specifying the lower (<code>y_lower</code>) and upper (<code>y_upper</code>) bounds on each observation, and the censoring type (<code>censoring</code>), which in this case is <code>"interval"</code> for all observations.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r">m = brm(
+<div class="sourceCode" id="cb16"><html><body><pre class="r">m = brm(
   y_lower | cens(censoring, y_upper) ~ 1, 
   data = cens_df,
   
   file = "models/tidybayes-residuals_m.rds"  # cache model (can be removed)
 )</pre></body></html></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## Start sampling</code></pre>
 <p>The results look like this:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">m</span></pre></body></html></div>
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">m</span></pre></body></html></div>
 <pre><code>##  Family: gaussian 
 ##   Links: mu = identity; sigma = identity 
 ## Formula: y_lower | cens(censoring, y_upper) ~ 1 
@@ -335,17 +339,17 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept     0.56      0.11     0.33     0.77 1.00     2922     2353
+## Intercept     0.56      0.11     0.34     0.79 1.00     2828     2552
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     1.09      0.08     0.94     1.27 1.00     3205     2561
+## sigma     1.10      0.09     0.94     1.28 1.00     3392     2675
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>Again, <code><a href="../reference/add_predicted_draws.html">add_residual_draws()</a></code> lets us look at the residuals:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r">cens_df %&gt;%
+<div class="sourceCode" id="cb21"><html><body><pre class="r">cens_df %&gt;%
   add_residual_draws(m) %&gt;%
   ggplot(aes(x = .row, y = .residual)) +
   stat_pointinterval()</pre></body></html></div>
@@ -353,7 +357,7 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-10-1.png" width="648"></p>
 <p>But notice the horizontal striations due to censoring. This obscures patterns we might wish to see in the diagnostic plots. Patterns like this often show up in censored regression, logistic regression, Poisson regression, and other discrete regression models. Notice how <code>brms</code> also gives us a warning message that the residuals may not be meaningful due to censoring.</p>
 <p>Let’s look at the QQ plot:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r">cens_df %&gt;%
+<div class="sourceCode" id="cb23"><html><body><pre class="r">cens_df %&gt;%
   add_residual_draws(m) %&gt;%
   median_qi(.residual) %&gt;%
   ggplot(aes(sample = .residual)) +
@@ -386,7 +390,7 @@ p^{\textrm{resid}}_i \sim \textrm{Uniform}(p^\textrm{lower}_i, p^\textrm{upper}_
 z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 \]</span></p>
 <p>In code, that looks like this:</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r">cens_df %&gt;%
+<div class="sourceCode" id="cb25"><html><body><pre class="r">cens_df %&gt;%
   add_predicted_draws(m) %&gt;%
   summarise(
     p_lower = mean(.prediction &lt; y_lower),
@@ -398,7 +402,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
   geom_point()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-12-1.png" width="648"></p>
 <p>The striations are gone! And a QQ plot:</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r">cens_df %&gt;%
+<div class="sourceCode" id="cb26"><html><body><pre class="r">cens_df %&gt;%
   add_predicted_draws(m) %&gt;%
   summarise(
     p_lower = mean(.prediction &lt; y_lower),
@@ -411,7 +415,7 @@ z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
   geom_abline()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-13-1.png" width="648"></p>
 <p>Looks decent. However, our residuals are now subject to noise—we actually have a distribution of possible QQ plots. So, let’s check on some of them to make sure this nice-looking one is not just a fluke. We’ll employ <a href="https://mucollective.co/project/hops-trends">HOPs</a> to do that:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb27"><html><body><pre class="r">k = 20
 
 p = cens_df %&gt;%
   add_predicted_draws(m) %&gt;%
@@ -437,7 +441,7 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 <h2 class="hasAnchor">
 <a href="#what-if-the-model-does-not-fit-well" class="anchor"></a>What if the model does not fit well?</h2>
 <p>Let’s instead generate the data from a t distribution, which should give us some more extreme values:</p>
-<div class="sourceCode" id="cb24"><html><body><pre class="r">set.seed(41181)
+<div class="sourceCode" id="cb28"><html><body><pre class="r">set.seed(41181)
 n = 100
 
 cens_df_t =
@@ -448,7 +452,7 @@ cens_df_t =
     censoring = "interval"
   )</pre></body></html></div>
 <p>Note the presence of outliers:</p>
-<div class="sourceCode" id="cb25"><html><body><pre class="r">uncensored_plot = cens_df_t %&gt;%
+<div class="sourceCode" id="cb29"><html><body><pre class="r">uncensored_plot = cens_df_t %&gt;%
   ggplot(aes(y = "", x = y)) +
   stat_slabh() +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
@@ -482,14 +486,17 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 <h3 class="hasAnchor">
 <a href="#model" class="anchor"></a>Model</h3>
 <p>Now, fitting the same model as before:</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r">m_t1 = brm(
+<div class="sourceCode" id="cb30"><html><body><pre class="r">m_t1 = brm(
   y_lower | cens(censoring, y_upper) ~ 1,
   data = cens_df_t,
 
   file = "models/tidybayes-residuals_m_t1"  # cache model (can be removed)
 )</pre></body></html></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## recompiling to avoid crashing R session</code></pre>
+<pre><code>## Start sampling</code></pre>
 <p>And checking the QQ plot:</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r">cens_df_t %&gt;%
+<div class="sourceCode" id="cb34"><html><body><pre class="r">cens_df_t %&gt;%
   add_residual_draws(m_t1) %&gt;%
   median_qi(.residual) %&gt;%
   ggplot(aes(sample = .residual)) +
@@ -503,7 +510,7 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 <h3 class="hasAnchor">
 <a href="#randomized-quantile-residuals-1" class="anchor"></a>Randomized quantile residuals</h3>
 <p>Let’s try randomized quantile residuals again:</p>
-<div class="sourceCode" id="cb29"><html><body><pre class="r">cens_df_t %&gt;%
+<div class="sourceCode" id="cb36"><html><body><pre class="r">cens_df_t %&gt;%
   add_predicted_draws(m_t1) %&gt;%
   summarise(
     p_lower = mean(.prediction &lt; y_lower),
@@ -523,15 +530,17 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 <h2 class="hasAnchor">
 <a href="#robust-interval-censored-model" class="anchor"></a>Robust interval-censored model</h2>
 <p>A common model to try to “robustify” linear regression is to swap out the Normal response distribution for a Student’s t distribution, which has fatter tails (it also happens that this is the distribution used to generate the data above, so I am clearly cheating, but also: <em>this had better work</em>).</p>
-<div class="sourceCode" id="cb31"><html><body><pre class="r">m_t2 = brm(
+<div class="sourceCode" id="cb38"><html><body><pre class="r">m_t2 = brm(
   y_lower | cens(censoring, y_upper) ~ 1, 
   data = cens_df_t,
   family = student,
   
   file = "models/tidybayes-residuals_m_t2.rds"  # cache model (can be removed)
 )</pre></body></html></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## Start sampling</code></pre>
 <p>Let’s look at the QQ plot of the residuals:</p>
-<div class="sourceCode" id="cb32"><html><body><pre class="r">cens_df_t %&gt;%
+<div class="sourceCode" id="cb41"><html><body><pre class="r">cens_df_t %&gt;%
   add_residual_draws(m_t2) %&gt;%
   median_qi(.residual) %&gt;%
   ggplot(aes(sample = .residual)) +
@@ -544,7 +553,7 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 <h3 class="hasAnchor">
 <a href="#randomized-quantile-residuals-2" class="anchor"></a>Randomized quantile residuals</h3>
 <p>Let’s check out the randomized quantile residuals:</p>
-<div class="sourceCode" id="cb34"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb43"><html><body><pre class="r">k = 20
 
 p = cens_df_t %&gt;%
   add_predicted_draws(m_t2) %&gt;%
@@ -571,10 +580,10 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 <a href="#ordinal-regression" class="anchor"></a>Ordinal regression</h2>
 <p>But we’re not done yet—another sensible choice of model for this data might have been an ordinal regression. So let’s try that too.</p>
 <p>First, we’ll add a column that transforms the data into an ordered factor:</p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r">cens_df_o = cens_df_t %&gt;%
+<div class="sourceCode" id="cb44"><html><body><pre class="r">cens_df_o = cens_df_t %&gt;%
   mutate(y_factor = ordered(y_lower))</pre></body></html></div>
 <p>Then we’ll fit an ordinal regression model. We have to adjust the fit parameters a bit to get it to converge:</p>
-<div class="sourceCode" id="cb36"><html><body><pre class="r">m_o = brm(
+<div class="sourceCode" id="cb45"><html><body><pre class="r">m_o = brm(
   y_factor ~ 1, 
   data = cens_df_o, 
   family = cumulative, 
@@ -583,8 +592,10 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
   
   file = "models/tidybayes-residuals_m_o.rds"  # cache model (can be removed)
 )</pre></body></html></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## Start sampling</code></pre>
 <p>Now, let’s check out those residuals:</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r">cens_df_o %&gt;%
+<div class="sourceCode" id="cb48"><html><body><pre class="r">cens_df_o %&gt;%
   add_residual_draws(m_o) %&gt;%
   median_qi(.residual) %&gt;%
   ggplot(aes(sample = .residual)) +
@@ -612,7 +623,7 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 \end{align*}
 \]</span></p>
 <p>Then we proceed as before:</p>
-<div class="sourceCode" id="cb39"><html><body><pre class="r">cens_df_o %&gt;%
+<div class="sourceCode" id="cb50"><html><body><pre class="r">cens_df_o %&gt;%
   add_predicted_draws(m_o) %&gt;%
   mutate(.prediction = ordered(levels(y_factor)[.prediction], levels = levels(y_factor))) %&gt;%
   summarise(
@@ -625,7 +636,7 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
   geom_point()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-23-1.png" width="648"></p>
 <p>Or in HOPs-QQ plot form:</p>
-<div class="sourceCode" id="cb40"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb51"><html><body><pre class="r">k = 20
 
 p = cens_df_o %&gt;%
   add_predicted_draws(m_o) %&gt;%
@@ -652,8 +663,14 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 <h2 class="hasAnchor">
 <a href="#a-function-for-probability-residuals" class="anchor"></a>A function for probability residuals</h2>
 <p>Here’s a function that can calculate randomized probability residuals for you. A future version of <code>tidybayes</code> will likely supply some variant of this function, but for now, since it is experimental, I have not folded it into the main package yet. Use at your own risk:</p>
-<div class="sourceCode" id="cb41"><html><body><pre class="r">library(rlang)
-make_probability_residuals = function(data, prediction, y, y_upper = NA, n = 1) {
+<div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rlang</span>)</pre></body></html></div>
+<pre><code>## 
+## Attaching package: 'rlang'</code></pre>
+<pre><code>## The following objects are masked from 'package:purrr':
+## 
+##     %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl, flatten_raw, invoke,
+##     list_along, modify, prepend, splice</code></pre>
+<div class="sourceCode" id="cb55"><html><body><pre class="r">make_probability_residuals = function(data, prediction, y, y_upper = NA, n = 1) {
   .prediction = enquo(prediction)
   .y = enquo(y)
   .y_upper = enquo(y_upper)
@@ -689,21 +706,23 @@ make_probability_residuals = function(data, prediction, y, y_upper = NA, n = 1) 
 <h2 class="hasAnchor">
 <a href="#logistic-regression" class="anchor"></a>Logistic regression</h2>
 <p>Consider a simple dataset with a single binary outcome:</p>
-<div class="sourceCode" id="cb42"><html><body><pre class="r">set.seed(51919)
+<div class="sourceCode" id="cb56"><html><body><pre class="r">set.seed(51919)
 
 bin_df = tibble(
   y = rbernoulli(100, .7)
 )</pre></body></html></div>
 <p>A model for this might be the following:</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r">m_bin = brm(
+<div class="sourceCode" id="cb57"><html><body><pre class="r">m_bin = brm(
   y ~ 1, 
   data = bin_df, 
   family = bernoulli,
   
   file = "models/tidybayes-residuals_m_bin.rds"  # cache model (can be removed)
 )</pre></body></html></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## Start sampling</code></pre>
 <p>Again, standard residuals are hard to interpret:</p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r">bin_df %&gt;%
+<div class="sourceCode" id="cb60"><html><body><pre class="r">bin_df %&gt;%
   add_residual_draws(m_bin) %&gt;%
   median_qi() %&gt;%
   ggplot(aes(sample = .residual)) +
@@ -711,7 +730,7 @@ bin_df = tibble(
   geom_qq_line()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-27-1.png" width="648"></p>
 <p>Randomized quantile residuals help us see that the fit is probably reasonable. In this case (just to switch it up), we’ll look at the probability residuals instead, comparing them against a uniform distribution, like so:</p>
-<div class="sourceCode" id="cb45"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb61"><html><body><pre class="r">k = 20
 
 p = bin_df %&gt;%
   add_predicted_draws(m_bin) %&gt;%
@@ -723,7 +742,7 @@ p = bin_df %&gt;%
 <pre><code>## Warning: Subsetting quosures with `[[` is deprecated as of rlang 0.4.0
 ## Please use `quo_get_expr()` instead.
 ## This warning is displayed once per session.</code></pre>
-<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="fu">animate</span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="fu">animate</span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-28-1.gif"><!-- --></p>
 </div>
   </div>

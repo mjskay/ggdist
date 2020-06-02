@@ -184,13 +184,13 @@
 <a href="#tidybayes-201" class="anchor"></a>tidybayes 2.0.1<small> 2020-01-28 </small>
 </h1>
 <ul>
-<li>Various geoms and stats have been merged together under the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> âmeta-geomâ (<a href='https://github.com/mjskay/tidybayes/issues/84'>#84</a>). This has enabled a bunch of new geoms to be created (see <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> and fixed a number of outstanding issues:
+<li>Various geoms and stats have been merged together under the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> “meta-geom” (<a href='https://github.com/mjskay/tidybayes/issues/84'>#84</a>). This has enabled a bunch of new geoms to be created (see <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> and fixed a number of outstanding issues:
 <ul>
 <li>Histogram geoms and histogram+interval geoms (<a href='https://github.com/mjskay/tidybayes/issues/162'>#162</a>)</li>
 <li>CCDF bar charts and gradient plots</li>
 <li>The alpha aesthetic can now be mapped on eye plots (and all related geoms) (<a href='https://github.com/mjskay/tidybayes/issues/163'>#163</a>)</li>
 <li>Vertical version of eye plot (and vertical/horizontal variants of all slabinterval variants) (<a href='https://github.com/mjskay/tidybayes/issues/56'>#56</a>)</li>
-<li>Intervals and densities are now correctly grouped in eye plots (e.g.Â when dodging) (<a href='https://github.com/mjskay/tidybayes/issues/83'>#83</a>)</li>
+<li>Intervals and densities are now correctly grouped in eye plots (e.g. when dodging) (<a href='https://github.com/mjskay/tidybayes/issues/83'>#83</a>)</li>
 <li>Fill and color aesthetics can now be mapped within the slab part of eyes (and all slabintervals), allowing gradients to be made easily (<a href='https://github.com/mjskay/tidybayes/issues/136'>#136</a>) and regions of practical equivalence (ROPEs) to be annotated easily. Examples of ROPEs have been added to the main vignettes (<a href='https://github.com/mjskay/tidybayes/issues/129'>#129</a>).</li>
 <li>Intervals and eyes support <code>position = "dodge"</code> correctly (<a href='https://github.com/mjskay/tidybayes/issues/180'>#180</a>)</li>
 <li>The new geoms (and replacements for old ones) have custom scales allowing fine-grained targeting of fill, color, and size aesthetics of all the component parts of the composite geoms.</li>
@@ -198,7 +198,7 @@
 </ul>
 </li>
 <li>Analytical distributions can be visualized using the new <code>stat_dist_...</code> family of geoms for both the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> (see <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabinterval()</a></code> and <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>).</li>
-<li>The new <code><a href="../reference/parse_dist.html">parse_dist()</a></code>, which parses distribution specifications (like <code>normal(0,1)</code>) into tidy columns, can be combined with the <code>stat_dist_...</code> family of geoms to easily to visualize priors (e.g.Â from <code>brms</code>).</li>
+<li>The new <code><a href="../reference/parse_dist.html">parse_dist()</a></code>, which parses distribution specifications (like <code>normal(0,1)</code>) into tidy columns, can be combined with the <code>stat_dist_...</code> family of geoms to easily to visualize priors (e.g. from <code>brms</code>).</li>
 <li>New distribution functions for the marginal LKJ distribution (<code><a href="../reference/lkjcorr_marginal.html">dlkjcorr_marginal()</a></code> and company), combined with <code><a href="../reference/parse_dist.html">parse_dist()</a></code> and the <code>stat_dist_...</code> family make it easy to visualize the marginal LKJ prior on a cell in a correlation matrix. (<a href='https://github.com/mjskay/tidybayes/issues/191'>#191</a> <a href='https://github.com/mjskay/tidybayes/issues/192'>#192</a>)</li>
 <li>There is a new vignette on frequentist uncertainty visualization, <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>, also made possible by the new <code>stat_dist_...</code> family of geoms (<a href='https://github.com/mjskay/tidybayes/issues/188'>#188</a>)</li>
 <li>
@@ -273,7 +273,7 @@
 <p>Major changes:</p>
 <ul>
 <li>First CRAN release.</li>
-<li>Various function, argument, and column name changes towards unification with the Stan ecosystem. See help(âtidybayes-deprecatedâ) for more information.</li>
+<li>Various function, argument, and column name changes towards unification with the Stan ecosystem. See help(“tidybayes-deprecated”) for more information.</li>
 </ul>
 </div>
   </div>

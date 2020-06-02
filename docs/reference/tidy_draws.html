@@ -177,37 +177,37 @@ generally speaking not as useful as <code><a href='spread_draws.html'>spread_dra
 <code><a href='spread_draws.html'>gather_draws()</a></code> for most applications, and is mainly used internally (see <em>Details</em>).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+    <pre class="usage"><span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for mcmc.list</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanfit</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for runjags</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for jagsUI</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for MCMCglmm</span>
-<span class='fu'>tidy_draws</span>(<span class='no'>model</span>)</pre>
+<span class='fu'>tidy_draws</span>(<span class='no'>model</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -216,6 +216,10 @@ generally speaking not as useful as <code><a href='spread_draws.html'>spread_dra
       <th>model</th>
       <td><p>A supported Bayesian model fit object. See <code><a href='tidybayes-models.html'>tidybayes-models()</a></code> for a list of supported
 models.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments passed to other methods (mostly unused).</p></td>
     </tr>
     </table>
 

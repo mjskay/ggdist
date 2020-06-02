@@ -172,7 +172,7 @@
 </ul>
 </li>
 </ul>
-<p>Some rough benchmarks for testing how long things takeâ¦</p>
+<p>Some rough benchmarks for testing how long things take…</p>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h2>
@@ -252,7 +252,7 @@ df</pre></html></div>
 <div id="using-gather_draws" class="section level4">
 <h4 class="hasAnchor">
 <a href="#using-gather_draws" class="anchor"></a>Using gather_draws</h4>
-<p>This is slower than the spread_draws version even though it shouldnât really have to be. This is a result of spread_draws_long_ doing a spread that is later undone by gather_draws. Could either use a flag to skip this (although that is a little complicated as the <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> syntax might need the spread anyway) or rely on switching to nesting throughout the entire pipeline to just make the spread/gather round trip not so costly. Last test was ~= 0.13 seconds on <code>monarch</code>.</p>
+<p>This is slower than the spread_draws version even though it shouldn’t really have to be. This is a result of spread_draws_long_ doing a spread that is later undone by gather_draws. Could either use a flag to skip this (although that is a little complicated as the <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> syntax might need the spread anyway) or rely on switching to nesting throughout the entire pipeline to just make the spread/gather round trip not so costly. Last test was ~= 0.13 seconds on <code>monarch</code>.</p>
 <div class="sourceCode" id="cb10"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="reference/spread_draws.html">gather_draws</a></span>(<span class="no">df</span>, <span class="no">`.`</span>[<span class="no">index</span>], <span class="kw">regex</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></html></div>
 <div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">##    user  system elapsed </span></a>
 <a class="sourceLine" id="cb11-2" title="2"><span class="co">##    0.13    0.03    0.16</span></a></code></pre></div>
