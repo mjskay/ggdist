@@ -3,7 +3,8 @@
 
 [![Build
 status](https://travis-ci.org/mjskay/tidybayes.png?branch=master)](https://travis-ci.org/mjskay/tidybayes)
-[![R build status](https://github.com/mjskay/tidybayes/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/tidybayes/actions)
+[![R build
+status](https://github.com/mjskay/tidybayes/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/tidybayes/actions)
 [![Coverage
 status](https://codecov.io/gh/mjskay/tidybayes/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/tidybayes?branch=master)
 [![CRAN
@@ -138,7 +139,7 @@ interface. Currently supported models include
 coda::mcmc.list](https://cran.r-project.org/package=coda),
 [MCMCglmm](https://cran.r-project.org/package=MCMCglmm), and anything
 with its own `as.mcmc.list` implementation. If you install the
-[tidybayes.rethinking](https://github.com/mjskay/tidybayes.rethinking)
+[tidybayes.rethinking](https://mjskay.github.io/tidybayes.rethinking/)
 package, models from the
 [rethinking](https://github.com/rmcelreath/rethinking) package are also
 supported.
@@ -654,5 +655,6 @@ have encountered, but I would love to make it cover more\!
 ## Citing `tidybayes`
 
 Matthew Kay (2020). *tidybayes: Tidy Data and Geoms for Bayesian
-Models*. R package version 2.0.3, <https://mjskay.github.io/tidybayes/>.
-DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
+Models*. R package version 2.0.3.9000,
+<https://mjskay.github.io/tidybayes/>. DOI:
+[10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).
