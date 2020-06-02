@@ -261,7 +261,7 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 <span class='co'># parse dist can operate on strings directly...</span>
 <span class='fu'>parse_dist</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span>))</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 2</span><span>
 #&gt;   .dist     .args     
-#&gt; </span><span style='color: #555555;'>*</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span>    
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span>    
 #&gt; </span><span style='color: #555555;'>1</span><span> norm      </span><span style='color: #555555;'>&lt;list [2]&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>2</span><span> student_t </span><span style='color: #555555;'>&lt;list [3]&gt;</span><span></div><div class='input'>
 <span class='co'># ... or on columns of a data frame, where it adds the</span>
@@ -289,16 +289,16 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
   <span class='co'># are retained)</span>
   <span class='fu'>parse_dist</span>(<span class='no'>priors</span>, <span class='no'>prior</span>)
 
-}</div><div class='output co'>#&gt;                 prior     class  coef group resp dpar nlpar bound     .dist
-#&gt; 1                             b                                        &lt;NA&gt;
-#&gt; 2                             b loghp                                  &lt;NA&gt;
-#&gt; 3 student_t(3, 3, 10) Intercept                                   student_t
-#&gt; 4 student_t(3, 0, 10)     sigma                                   student_t
-#&gt;      .args
-#&gt; 1       NA
-#&gt; 2       NA
-#&gt; 3 3, 3, 10
-#&gt; 4 3, 0, 10</div><div class='input'>
+}</div><div class='output co'>#&gt;                  prior     class  coef group resp dpar nlpar bound     .dist
+#&gt; 1                              b                                        &lt;NA&gt;
+#&gt; 2                              b loghp                                  &lt;NA&gt;
+#&gt; 3 student_t(3, 3, 2.5) Intercept                                   student_t
+#&gt; 4 student_t(3, 0, 2.5)     sigma                                   student_t
+#&gt;           .args
+#&gt; 1            NA
+#&gt; 2            NA
+#&gt; 3 3.0, 3.0, 2.5
+#&gt; 4 3.0, 0.0, 2.5</div><div class='input'>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -315,7 +315,7 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

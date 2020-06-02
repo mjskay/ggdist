@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Frequentist uncertainty visualization</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-01</h4>
+            <h4 class="date">2020-06-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/freq-uncertainty-vis.Rmd"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
       <div class="hidden name"><code>freq-uncertainty-vis.Rmd</code></div>
@@ -140,33 +140,33 @@ img {
 <h2 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h2>
 <p>The following libraries are required to run this vignette:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r">library(dplyr)
-library(tidyr)
-library(tidybayes)
-library(ggplot2)
-library(brms)       # needed for dstudent_t(), etc; not for model fitting
-library(broom)
-library(modelr)
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidybayes</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)       <span class="co"># needed for dstudent_t(), etc; not for model fitting</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">modelr</span>)
 
-theme_set(theme_tidybayes())</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>())</pre></body></html></div>
 </div>
 <div id="point-estimates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#point-estimates" class="anchor"></a>Point estimates</h2>
 <p>We’ll start with an ordinary least squares (OLS) linear regression analysis of the simple <code>ABC</code> dataset used in <code><a href="../articles/tidybayes.html">vignette("tidybayes")</a></code>:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r">set.seed(5)
-n = 10
-n_condition = 5
-ABC =
-  tibble(
-    condition = rep(c("A","B","C","D","E"), n),
-    response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">5</span>)
+<span class="no">n</span> <span class="kw">=</span> <span class="fl">10</span>
+<span class="no">n_condition</span> <span class="kw">=</span> <span class="fl">5</span>
+<span class="no">ABC</span> <span class="kw">=</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
+    <span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"C"</span>,<span class="st">"D"</span>,<span class="st">"E"</span>), <span class="no">n</span>),
+    <span class="kw">response</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span> * <span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">1</span>,-<span class="fl">1</span>), <span class="fl">0.5</span>)
   )</pre></body></html></div>
 <p>This is a typical tidy format data frame: one observation per row. Graphically:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">ABC %&gt;%
-  ggplot(aes(x = response, y = condition)) +
-  geom_point(alpha = 0.5) +
-  ylab("condition")</pre></body></html></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.5</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="st">"condition"</span>)</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-2-1.png" width="648"></p>
 <p>And a simple linear regression of the data is fit as follows:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">m_ABC</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">response</span> ~ <span class="no">condition</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">ABC</span>)</pre></body></html></div>
@@ -208,7 +208,7 @@ ABC =
 <span class="math inline">\(\sigma_{\beta_i}\)</span>: <em>scale</em>, equal to the standard error of the parameter estimate (<code>std.error</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>)</li>
 </ul>
 <p>We can get the estimates and standard errors easily by using <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu">tidy</span>(<span class="no">m_ABC</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">m_ABC</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 5 x 5
 ##   term        estimate std.error statistic      p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
@@ -218,11 +218,11 @@ ABC =
 ## 4 conditionD     0.846     0.245      3.45 0.00122     
 ## 5 conditionE    -1.12      0.245     -4.56 0.0000394</code></pre>
 <p>Putting everything together, we have:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r">m_ABC %&gt;%
-  tidy() %&gt;%
-  ggplot(aes(y = term)) +
-  stat_dist_halfeyeh(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = estimate, arg3 = std.error)
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">m_ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">term</span>)) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">estimate</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">std.error</span>)
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-6-1.png" width="648"></p>
 <p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code> (similar to how we use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="../reference/add_predicted_draws.html">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we want the sampling distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\mu_c\)</span>:</p>
@@ -240,45 +240,45 @@ ABC =
 <span class="math inline">\(\sigma_{\mu_c}\)</span>: <em>scale</em>, equal to the standard error of the mean in condition <span class="math inline">\(c\)</span> (<code>.se.fit</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code>)</li>
 </ul>
 <p>Putting everything together, we have:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  augment(m_ABC, newdata = .) %&gt;%
-  ggplot(aes(y = condition)) +
-  stat_dist_halfeyeh(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
-    scale = .5
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>),
+    <span class="kw">scale</span> <span class="kw">=</span> <span class="fl">.5</span>
   ) +
-  # we'll add the data back in too (scale = .5 above adjusts the halfeye height so
-  # that the data fit in as well)
-  geom_point(aes(x = response), data = ABC, pch = "|", size = 2, position = position_nudge(y = -.15))</pre></body></html></div>
+  <span class="co"># we'll add the data back in too (scale = .5 above adjusts the halfeye height so</span>
+  <span class="co"># that the data fit in as well)</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">ABC</span>, <span class="kw">pch</span> <span class="kw">=</span> <span class="st">"|"</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_nudge.html">position_nudge</a></span>(<span class="kw">y</span> <span class="kw">=</span> -<span class="fl">.15</span>))</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-7-1.png" width="648"></p>
 <p>Of course, this works with the entire <code>stat_dist_...</code> family. Here are gradient plots instead:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  augment(m_ABC, newdata = .) %&gt;%
-  ggplot(aes(y = condition)) +
-  stat_dist_gradientintervalh(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
-    scale = .5
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientintervalh</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>),
+    <span class="kw">scale</span> <span class="kw">=</span> <span class="fl">.5</span>
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-8-1.png" width="648"></p>
 <p>Or complementary cumulative distribution function (CCDF) bar plots:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  augment(m_ABC, newdata = .) %&gt;%
-  ggplot(aes(y = condition)) +
-  stat_dist_ccdfintervalh(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfintervalh</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>)
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-9-1.png" width="648"></p>
 <p>We can also create quantile dotplots by using the <code>dots</code> family of geoms. Quantile dotplots show quantiles from a distribution (in this case, the sampling distribution), employing a <em>frequency framing</em> approach to uncertainty communication that can be easier for people to interpret (<a href="https://doi.org/10.1145/2858036.2858558">Kay et al. 2016</a>, <a href="https://doi.org/10.1145/3173574.3173718">Fernandes et al. 2018</a>):</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  augment(m_ABC, newdata = .) %&gt;%
-  ggplot(aes(y = condition)) +
-  stat_dist_dotsh(
-    quantiles = 100,
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dotsh</a></span>(
+    <span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">100</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>)
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-10-1.png" width="648"></p>
 <p>See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for more examples of uncertainty geoms and stats in the slabinterval family.</p>
@@ -289,23 +289,23 @@ ABC =
 <p>The same principle of reconstructing the sampling distribution allows us to use <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> to construct uncertainty bands around regression fit lines. Here we’ll reconstruct an example with the <code>mtcars</code> dataset from <code><a href="../articles/tidy-brms.html">vignette("tidy-brms")</a></code>, but using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> instead:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">m_mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> * <span class="no">cyl</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>)</pre></body></html></div>
 <p>Again we’ll use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>, but now we’ll employ <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r">mtcars %&gt;%
-  group_by(cyl) %&gt;%
-  data_grid(hp = seq_range(hp, n = 101)) %&gt;%
-  augment(m_mpg, newdata = .) %&gt;%
-  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
-  stat_dist_lineribbon(
-    aes(dist = "student_t", arg1 = df.residual(m_mpg), arg2 = .fitted, arg3 = .se.fit), 
-    alpha = 1/4
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">hp</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">hp</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_mpg</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">hp</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>), <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>))) +
+  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_mpg</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>),
+    <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">4</span>
   ) +
-  geom_point(aes(y = mpg), data = mtcars) +
-  
-  scale_fill_brewer(palette = "Set2") +
-  scale_color_brewer(palette = "Dark2") +
-  labs(
-    color = "cyl",
-    fill = "cyl",
-    y = "mpg"
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">mpg</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>) +
+
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Set2"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(
+    <span class="kw">color</span> <span class="kw">=</span> <span class="st">"cyl"</span>,
+    <span class="kw">fill</span> <span class="kw">=</span> <span class="st">"cyl"</span>,
+    <span class="kw">y</span> <span class="kw">=</span> <span class="st">"mpg"</span>
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-12-1.png" width="648"></p>
 </div>
@@ -326,7 +326,7 @@ ABC =
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

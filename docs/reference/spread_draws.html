@@ -258,8 +258,8 @@ back into their original types. This is particularly helpful if some of the dime
 your model were originally factors. For example, if the <code>v</code> dimension
 in the original data frame <code>data</code> was a factor with levels <code><a href='https://rdrr.io/r/base/c.html'>c("a","b","c")</a></code>,
 then we could use <code>recover_types</code> before <code>spread_draws</code>:</p>
-<pre>fit %&gt;%
- recover_types(data) <!-- %\&gt;\% -->
+<pre>fit %&amp;gt;%
+ recover_types(data) &lt;!-- %\&amp;gt;\% --&gt;
  spread_draws(fit, b[i,v])
 </pre>
 
@@ -443,7 +443,7 @@ missing entries given the value <code>NA</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

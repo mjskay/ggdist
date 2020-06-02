@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Extracting and visualizing tidy draws from brms models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-01</h4>
+            <h4 class="date">2020-06-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidy-brms.Rmd"><code>vignettes/tidy-brms.Rmd</code></a></small>
       <div class="hidden name"><code>tidy-brms.Rmd</code></div>
@@ -140,38 +140,38 @@ img {
 <h2 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h2>
 <p>The following libraries are required to run this vignette:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r">library(magrittr)
-library(dplyr)
-library(purrr)
-library(forcats)
-library(tidyr)
-library(modelr)
-library(tidybayes)
-library(ggplot2)
-library(ggstance)
-library(cowplot)
-library(rstan)
-library(brms)
-library(ggrepel)
-library(RColorBrewer)
-library(gganimate)
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">magrittr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">purrr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">forcats</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">modelr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidybayes</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggstance</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cowplot</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rstan</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggrepel</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">RColorBrewer</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">gganimate</span>)
 
-theme_set(theme_tidybayes() + panel_border())</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>() + <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>())</pre></body></html></div>
 <p>These options help Stan run faster:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r">rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())</pre></body></html></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rstan/man/rstan_options.html">rstan_options</a></span>(<span class="kw">auto_write</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">mc.cores</span> <span class="kw">=</span> <span class="kw pkg">parallel</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html">detectCores</a></span>())</pre></body></html></div>
 </div>
 <div id="example-dataset" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-dataset" class="anchor"></a>Example dataset</h2>
 <p>To demonstrate <code>tidybayes</code>, we will use a simple dataset with 10 observations from 5 conditions each:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">set.seed(5)
-n = 10
-n_condition = 5
-ABC =
-  tibble(
-    condition = rep(c("A","B","C","D","E"), n),
-    response = rnorm(n * 5, c(0,1,2,1,-1), 0.5)
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">5</span>)
+<span class="no">n</span> <span class="kw">=</span> <span class="fl">10</span>
+<span class="no">n_condition</span> <span class="kw">=</span> <span class="fl">5</span>
+<span class="no">ABC</span> <span class="kw">=</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
+    <span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"C"</span>,<span class="st">"D"</span>,<span class="st">"E"</span>), <span class="no">n</span>),
+    <span class="kw">response</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span> * <span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">1</span>,-<span class="fl">1</span>), <span class="fl">0.5</span>)
   )</pre></body></html></div>
 <p>A snapshot of the data looks like this:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ABC</span>, <span class="fl">10</span>)</pre></body></html></div>
@@ -189,26 +189,26 @@ ABC =
 ##  9 D            0.857
 ## 10 E           -0.931</code></pre>
 <p>This is a typical tidy format data frame: one observation per row. Graphically:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r">ABC %&gt;%
-  ggplot(aes(y = condition, x = response)) +
-  geom_point()</pre></body></html></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-4-1.png" width="648"></p>
 </div>
 <div id="model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model" class="anchor"></a>Model</h2>
 <p>Let’s fit a hierarchical model with shrinkage towards a global mean:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r">m = brm(
-  response ~ (1|condition), 
-  data = ABC, 
-  prior = c(
-    prior(normal(0, 1), class = Intercept),
-    prior(student_t(3, 0, 1), class = sd),
-    prior(student_t(3, 0, 1), class = sigma)
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">m</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">response</span> ~ (<span class="fl">1</span><span class="kw">|</span><span class="no">condition</span>),
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">ABC</span>,
+  <span class="kw">prior</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+    <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>, <span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">Intercept</span>),
+    <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">student_t</span>(<span class="fl">3</span>, <span class="fl">0</span>, <span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sd</span>),
+    <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">student_t</span>(<span class="fl">3</span>, <span class="fl">0</span>, <span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
   ),
-  control = list(adapt_delta = .99),
-  
-  file = "models/tidy-brms_m.rds" # cache model (can be removed)  
+  <span class="kw">control</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">adapt_delta</span> <span class="kw">=</span> <span class="fl">.99</span>),
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidy-brms_m.rds"</span> <span class="co"># cache model (can be removed)  </span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
@@ -266,13 +266,9 @@ ABC =
 <p>We can provide <code>spread_draws</code> with a column specification like this:</p>
 <p><code>r_condition[condition,term]</code></p>
 <p>Where <code>condition</code> corresponds to <code>D</code> and <code>term</code> corresponds to <code>Intercept</code>. There is nothing too magical about what <code>spread_draws</code> does with this specification: under the hood, it splits the variable indices by commas and spaces (you can split by other characters by changing the <code>sep</code> argument). It lets you assign columns to the resulting indices in order. So <code>r_condition[D,Intercept]</code> has indices <code>D</code> and <code>Intercept</code>, and <code>spread_draws</code> lets us extract these indices as columns in the resulting tidy data frame of draws from <code>r_condition</code>:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r">m %&gt;%
-  spread_draws(r_condition[condition,term]) %&gt;%
-  head(10)</pre></body></html></div>
-<pre><code>## Warning: `combine()` is deprecated as of dplyr 1.0.0.
-## Please use `vctrs::vec_c()` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">r_condition</span>[<span class="no">condition</span>,<span class="no">term</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 6
 ## # Groups:   condition, term [1]
 ##    condition term      r_condition .chain .iteration .draw
@@ -288,9 +284,9 @@ ABC =
 ##  9 A         Intercept     -0.323       1          9     9
 ## 10 A         Intercept     -0.0404      1         10    10</code></pre>
 <p>We can choose whatever names we want for the index columns; e.g.:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r">m %&gt;%
-  spread_draws(r_condition[c,t]) %&gt;%
-  head(10)</pre></body></html></div>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">r_condition</span>[<span class="no">c</span>,<span class="no">t</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 6
 ## # Groups:   c, t [1]
 ##    c     t         r_condition .chain .iteration .draw
@@ -307,9 +303,9 @@ ABC =
 ## 10 A     Intercept     -0.0404      1         10    10</code></pre>
 <p>But the more descriptive and less cryptic names from the previous example are probably preferable.</p>
 <p>In this particular model, there is only one term (<code>Intercept</code>), thus we could omit that index altogether to just get each <code>condition</code> and the value of <code>r_condition</code> for that condition:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r">m %&gt;%
-  spread_draws(r_condition[condition,]) %&gt;%
-  head(10)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 5
 ## # Groups:   condition [1]
 ##    condition r_condition .chain .iteration .draw
@@ -335,9 +331,9 @@ ABC =
 <a href="#with-simple-model-variables" class="anchor"></a>With simple model variables</h3>
 <p><code>tidybayes</code> provides a family of functions for generating point summaries and intervals from draws in a tidy format. These functions follow the naming scheme <code>[median|mean|mode]_[qi|hdi]</code>, for example, <code>median_qi</code>, <code>mean_qi</code>, <code>mode_hdi</code>, and so on. The first name (before the <code>_</code>) indicates the type of point summary, and the second name indicates the type of interval. <code>qi</code> yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and <code>hdi</code> yields a highest (posterior) density interval. Custom point summary or interval functions can also be applied using the <code>point_interval</code> function.</p>
 <p>For example, we might extract the draws corresponding to posterior distributions of the overall mean and standard deviation of observations:</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, sigma) %&gt;%
-  head(10)</pre></body></html></div>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">sigma</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 5
 ##    .chain .iteration .draw b_Intercept sigma
 ##     &lt;int&gt;      &lt;int&gt; &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt;
@@ -352,25 +348,25 @@ ABC =
 ##  9      1          9     9       0.320 0.531
 ## 10      1         10    10       0.233 0.475</code></pre>
 <p>Like with <code>r_condition[condition,term]</code>, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply <code>median_qi</code>:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, sigma) %&gt;%
-  median_qi(b_Intercept, sigma)</pre></body></html></div>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">sigma</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">b_Intercept</span>, <span class="no">sigma</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 1 x 9
 ##   b_Intercept b_Intercept.lower b_Intercept.upper sigma sigma.lower sigma.upper .width .point .interval
 ##         &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
 ## 1       0.511            -0.417              1.33 0.554       0.453       0.698   0.95 median qi</code></pre>
 <p>We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, <code>median_qi</code> will use every column that is not a grouping column or a special column (like <code>.chain</code>, <code>.iteration</code>, or <code>.draw</code>). Thus in the above example, <code>b_Intercept</code> and <code>sigma</code> are redundant arguments to <code>median_qi</code> because they are also the only columns we gathered from the model. So we can simplify this to:</p>
-<div class="sourceCode" id="cb25"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, sigma) %&gt;%
-  median_qi()</pre></body></html></div>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">sigma</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>()</pre></body></html></div>
 <pre><code>## # A tibble: 1 x 9
 ##   b_Intercept b_Intercept.lower b_Intercept.upper sigma sigma.lower sigma.upper .width .point .interval
 ##         &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
 ## 1       0.511            -0.417              1.33 0.554       0.453       0.698   0.95 median qi</code></pre>
 <p>If you would rather have a long-format list of intervals, use <code>gather_draws</code> instead:</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r">m %&gt;%
-  gather_draws(b_Intercept, sigma) %&gt;%
-  median_qi()</pre></body></html></div>
+<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">gather_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">sigma</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>()</pre></body></html></div>
 <pre><code>## # A tibble: 2 x 7
 ##   .variable   .value .lower .upper .width .point .interval
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -382,9 +378,9 @@ ABC =
 <h3 class="hasAnchor">
 <a href="#with-indexed-model-variables" class="anchor"></a>With indexed model variables</h3>
 <p>When we have a model variable with one or more indices, such as <code>r_condition</code>, we can apply <code>median_qi</code> (or other functions in the <code>point_interval</code> family) as we did before:</p>
-<div class="sourceCode" id="cb29"><html><body><pre class="r">m %&gt;%
-  spread_draws(r_condition[condition,]) %&gt;%
-  median_qi()</pre></body></html></div>
+<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>()</pre></body></html></div>
 <pre><code>## # A tibble: 5 x 7
 ##   condition r_condition .lower .upper .width .point .interval
 ##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -394,10 +390,10 @@ ABC =
 ## 4 D               0.502 -0.368  1.48    0.95 median qi       
 ## 5 E              -1.39  -2.28  -0.455   0.95 median qi</code></pre>
 <p>How did <code>median_qi</code> know what to aggregate? Data frames returned by <code>spread_draws</code> are automatically grouped by all index variables you pass to it; in this case, that means <code>spread_draws</code> groups its results by <code>condition</code>. <code>median_qi</code> respects those groups, and calculates the point summaries and intervals within all groups. Then, because no columns were passed to <code>median_qi</code>, it acts on the only non-special (<code>.</code>-prefixed) and non-group column, <code>r_condition</code>. So the above shortened syntax is equivalent to this more verbose call:</p>
-<div class="sourceCode" id="cb31"><html><body><pre class="r">m %&gt;%
-  spread_draws(r_condition[condition,]) %&gt;%
-  group_by(condition) %&gt;%   # this line not necessary (done by spread_draws)
-  median_qi(r_condition)      # b is not necessary (it is the only non-group column)</pre></body></html></div>
+<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>   <span class="co"># this line not necessary (done by spread_draws)</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">r_condition</span>)      <span class="co"># b is not necessary (it is the only non-group column)</span></pre></body></html></div>
 <pre><code>## # A tibble: 5 x 7
 ##   condition r_condition .lower .upper .width .point .interval
 ##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -413,9 +409,9 @@ ABC =
 <a href="#combining-variables-with-different-indices-in-a-single-tidy-format-data-frame" class="anchor"></a>Combining variables with different indices in a single tidy format data frame</h2>
 <p><code>spread_draws</code> and <code>gather_draws</code> support extracting variables that have different indices into the same data frame. Indices with the same name are automatically matched up, and values are duplicated as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this <code>condition_mean</code>). In this model, that mean is the intercept (<code>b_Intercept</code>) plus the effect for a given condition (<code>r_condition</code>).</p>
 <p>We can gather draws from <code>b_Intercept</code> and <code>r_condition</code> together in a single data frame:</p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r">m %&gt;% 
-  spread_draws(b_Intercept, r_condition[condition,]) %&gt;%
-  head(10)</pre></body></html></div>
+<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 6
 ## # Groups:   condition [5]
 ##    .chain .iteration .draw b_Intercept condition r_condition
@@ -431,10 +427,10 @@ ABC =
 ##  9      1          2     2       0.363 D              0.824 
 ## 10      1          2     2       0.363 E             -1.28</code></pre>
 <p>Within each draw, <code>b_Intercept</code> is repeated as necessary to correspond to every index of <code>r_condition</code>. Thus, the <code>mutate</code> function from dplyr can be used to find their sum, <code>condition_mean</code> (which is the mean for each condition):</p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r">m %&gt;%
-  spread_draws(`b_Intercept`, r_condition[condition,]) %&gt;%
-  mutate(condition_mean = b_Intercept + r_condition) %&gt;%
-  median_qi(condition_mean)</pre></body></html></div>
+<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">`b_Intercept`</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition_mean</span> <span class="kw">=</span> <span class="no">b_Intercept</span> + <span class="no">r_condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">condition_mean</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -444,9 +440,9 @@ ABC =
 ## 4 D                  1.02   0.666  1.35    0.95 median qi       
 ## 5 E                 -0.890 -1.23  -0.544   0.95 median qi</code></pre>
 <p><code>median_qi</code> uses tidy evaluation (see <code>vignette("tidy-evaluation", package = "rlang")</code>), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of <code>condition_mean</code> from <code>mutate</code> into <code>median_qi</code>:</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, r_condition[condition,]) %&gt;%
-  median_qi(condition_mean = b_Intercept + r_condition)</pre></body></html></div>
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="kw">condition_mean</span> <span class="kw">=</span> <span class="no">b_Intercept</span> + <span class="no">r_condition</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 5 x 7
 ##   condition condition_mean .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -460,20 +456,20 @@ ABC =
 <h2 class="hasAnchor">
 <a href="#plotting-point-summaries-and-intervals" class="anchor"></a>Plotting point summaries and intervals</h2>
 <p>Plotting point summaries and with one interval is straightforward using the <code>geom_pointinterval</code> or <code>geom_pointintervalh</code> geoms:</p>
-<div class="sourceCode" id="cb39"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, r_condition[condition,]) %&gt;%
-  median_qi(condition_mean = b_Intercept + r_condition) %&gt;%
-  ggplot(aes(y = condition, x = condition_mean, xmin = .lower, xmax = .upper)) +
-  geom_pointintervalh()</pre></body></html></div>
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="kw">condition_mean</span> <span class="kw">=</span> <span class="no">b_Intercept</span> + <span class="no">r_condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">condition_mean</span>, <span class="kw">xmin</span> <span class="kw">=</span> <span class="no">.lower</span>, <span class="kw">xmax</span> <span class="kw">=</span> <span class="no">.upper</span>)) +
+  <span class="fu"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-19-1.png" width="648"></p>
 </div>
 <div id="intervals-with-multiple-probability-levels" class="section level2">
 <h2 class="hasAnchor">
 <a href="#intervals-with-multiple-probability-levels" class="anchor"></a>Intervals with multiple probability levels</h2>
 <p><code>median_qi</code> and its sister functions can also produce an arbitrary number of probability intervals by setting the <code>.width =</code> argument:</p>
-<div class="sourceCode" id="cb40"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, r_condition[condition,]) %&gt;%
-  median_qi(condition_mean = b_Intercept + r_condition, .width = c(.95, .8, .5))</pre></body></html></div>
+<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="kw">condition_mean</span> <span class="kw">=</span> <span class="no">b_Intercept</span> + <span class="no">r_condition</span>, <span class="kw">.width</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.95</span>, <span class="fl">.8</span>, <span class="fl">.5</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 15 x 7
 ##    condition condition_mean  .lower .upper .width .point .interval
 ##    &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
@@ -493,31 +489,31 @@ ABC =
 ## 14 D                  1.02   0.895   1.13    0.5  median qi       
 ## 15 E                 -0.890 -1.01   -0.770   0.5  median qi</code></pre>
 <p>The results are in a tidy format: one row per group and uncertainty interval width (<code>.width</code>). This facilitates plotting. For example, assigning <code>-.width</code> to the <code>size</code> aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The <code>geom_pointintervalh</code> geom automatically sets the <code>xmin</code>, <code>xmax</code>, and <code>size</code> aesthetics appropriately based on the <code>.lower</code>, <code>.upper</code>, and <code>.width</code> columns in the data to produce plots of points with multiple probability levels:</p>
-<div class="sourceCode" id="cb42"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, r_condition[condition,]) %&gt;%
-  median_qi(condition_mean = b_Intercept + r_condition, .width = c(.95, .66)) %&gt;%
-  ggplot(aes(y = condition, x = condition_mean)) +
-  geom_pointintervalh() </pre></body></html></div>
+<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="kw">condition_mean</span> <span class="kw">=</span> <span class="no">b_Intercept</span> + <span class="no">r_condition</span>, <span class="kw">.width</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.95</span>, <span class="fl">.66</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">condition_mean</span>)) +
+  <span class="fu"><a href="../reference/geom_pointinterval.html">geom_pointintervalh</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-21-1.png" width="648"></p>
 </div>
 <div id="intervals-with-densities" class="section level2">
 <h2 class="hasAnchor">
 <a href="#intervals-with-densities" class="anchor"></a>Intervals with densities</h2>
 <p>To see the density along with the intervals, we can use <code>stat_eyeh</code> (horizontal “eye plots”, which combine intervals with violin plots), or <code>stat_halfeyeh</code> (horizontal interval + density plots):</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, r_condition[condition,]) %&gt;%
-  mutate(condition_mean = b_Intercept + r_condition) %&gt;%
-  ggplot(aes(y = condition, x = condition_mean)) +
-  stat_halfeyeh()</pre></body></html></div>
+<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition_mean</span> <span class="kw">=</span> <span class="no">b_Intercept</span> + <span class="no">r_condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">condition_mean</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-22-1.png" width="648"></p>
 <p>Or say you want to annotate portions of the densities in color; the <code>fill</code> aesthetic can vary within a slab in all geoms and stats in the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family, including <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh()</a></code>. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:</p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r">m %&gt;%
-  spread_draws(b_Intercept, r_condition[condition,]) %&gt;%
-  mutate(condition_mean = b_Intercept + r_condition) %&gt;%
-  ggplot(aes(y = condition, x = condition_mean, fill = stat(abs(x) &lt; .8))) +
-  stat_halfeyeh() +
-  geom_vline(xintercept = c(-.8, .8), linetype = "dashed") +
-  scale_fill_manual(values = c("gray80", "skyblue"))</pre></body></html></div>
+<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">b_Intercept</span>, <span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition_mean</span> <span class="kw">=</span> <span class="no">b_Intercept</span> + <span class="no">r_condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">condition_mean</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">x</span>) <span class="kw">&lt;</span> <span class="fl">.8</span>))) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span>(<span class="kw">xintercept</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">.8</span>, <span class="fl">.8</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="st">"dashed"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="kw">values</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray80"</span>, <span class="st">"skyblue"</span>))</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-23-1.png" width="648"></p>
 </div>
 <div id="other-visualizations-of-distributions-stat_slabinterval" class="section level2">
@@ -532,10 +528,10 @@ ABC =
 <h2 class="hasAnchor">
 <a href="#posterior-fits" class="anchor"></a>Posterior fits</h2>
 <p>Rather than calculating conditional means manually as in the previous example, we could use <code>add_fitted_draws</code>, which is analogous to <code><a href="https://rdrr.io/pkg/brms/man/fitted.brmsfit.html">brms::fitted.brmsfit</a></code> or <code><a href="https://rdrr.io/pkg/brms/man/posterior_linpred.brmsfit.html">brms::posterior_linpred</a></code> (giving posterior draws from the model’s linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid</a></code> to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of draws from posterior fits:</p>
-<div class="sourceCode" id="cb45"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  add_fitted_draws(m) %&gt;%
-  head(10)</pre></body></html></div>
+<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 6
 ## # Groups:   condition, .row [1]
 ##    condition  .row .chain .iteration .draw   .value
@@ -551,11 +547,11 @@ ABC =
 ##  9 A             1     NA         NA     9 -0.00381
 ## 10 A             1     NA         NA    10  0.193</code></pre>
 <p>To plot this example, we’ll also show the use of <code>stat_pointintervalh</code> instead of <code>geom_pointintervalh</code>, which summarizes draws into points and intervals within ggplot:</p>
-<div class="sourceCode" id="cb47"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  add_fitted_draws(m) %&gt;%
-  ggplot(aes(x = .value, y = condition)) +
-  stat_pointintervalh(.width = c(.66, .95))</pre></body></html></div>
+<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.value</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="kw">.width</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.66</span>, <span class="fl">.95</span>))</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-25-1.png" width="648"></p>
 </div>
 <div id="quantile-dotplots" class="section level2">
@@ -563,11 +559,11 @@ ABC =
 <a href="#quantile-dotplots" class="anchor"></a>Quantile dotplots</h2>
 <p>Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating <a href="https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md">quantile dotplots</a> (<a href="https://doi.org/10.1145/2858036.2858558">Kay et al. 2016</a>, <a href="https://doi.org/10.1145/3173574.3173718">Fernandes et al. 2018</a>), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, 100 in the example below).</p>
 <p>Within the slabinterval family of geoms in tidybayes is the <code>dots</code> and <code>dotsinterval</code> family, which automatically determine appropriate bin sizes for dotplots and can calculate quantiles from samples to construct quantile dotplots. <code><a href="../reference/geom_dotsinterval.html">stat_dotsh()</a></code> is the horizontal variant designed for use on samples:</p>
-<div class="sourceCode" id="cb48"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  add_fitted_draws(m) %&gt;%
-  ggplot(aes(x = .value, y = condition)) +
-  stat_dotsh(quantiles = 100)</pre></body></html></div>
+<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.value</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsh</a></span>(<span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">100</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-26-1.png" width="648"></p>
 <p>The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.</p>
 </div>
@@ -576,37 +572,37 @@ ABC =
 <a href="#posterior-predictions" class="anchor"></a>Posterior predictions</h2>
 <p>Where <code>add_fitted_draws</code> is analogous to <code><a href="https://rdrr.io/pkg/brms/man/fitted.brmsfit.html">brms::fitted.brmsfit</a></code> (or <code><a href="https://rdrr.io/pkg/brms/man/posterior_linpred.brmsfit.html">brms::posterior_linpred</a></code>), <code>add_predicted_draws</code> is analogous to <code><a href="https://rdrr.io/pkg/brms/man/predict.brmsfit.html">brms::predict.brmsfit</a></code> (<code><a href="https://rdrr.io/pkg/brms/man/posterior_predict.brmsfit.html">brms::posterior_predict</a></code>), giving draws from the posterior predictive distribution.</p>
 <p>Here is an example of posterior predictive distributions plotted using <code><a href="../reference/stat_sample_slabinterval.html">stat_slabh()</a></code>:</p>
-<div class="sourceCode" id="cb49"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  add_predicted_draws(m) %&gt;%
-  ggplot(aes(x = .prediction, y = condition)) +
-  stat_slabh()</pre></body></html></div>
+<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.prediction</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-27-1.png" width="648"></p>
 <p>We could also use <code><a href="../reference/stat_interval.html">tidybayes::stat_intervalh</a></code> to plot predictive bands alongside the data:</p>
-<div class="sourceCode" id="cb50"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  add_predicted_draws(m) %&gt;%
-  ggplot(aes(y = condition, x = .prediction)) +
-  stat_intervalh(.width = c(.50, .80, .95, .99)) +
-  geom_point(aes(x = response), data = ABC) +
-  scale_color_brewer()</pre></body></html></div>
+<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">.prediction</span>)) +
+  <span class="fu"><a href="../reference/stat_interval.html">stat_intervalh</a></span>(<span class="kw">.width</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.50</span>, <span class="fl">.80</span>, <span class="fl">.95</span>, <span class="fl">.99</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">ABC</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-28-1.png" width="648"></p>
 <p>Altogether, data, posterior predictions, and posterior distributions of the means:</p>
-<div class="sourceCode" id="cb51"><html><body><pre class="r">grid = ABC %&gt;%
-  data_grid(condition)
+<div class="sourceCode" id="cb50"><html><body><pre class="r"><span class="no">grid</span> <span class="kw">=</span> <span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>)
 
-fits = grid %&gt;%
-  add_fitted_draws(m)
+<span class="no">fits</span> <span class="kw">=</span> <span class="no">grid</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m</span>)
 
-preds = grid %&gt;%
-  add_predicted_draws(m)
+<span class="no">preds</span> <span class="kw">=</span> <span class="no">grid</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m</span>)
 
-ABC %&gt;%
-  ggplot(aes(y = condition, x = response)) +
-  stat_intervalh(aes(x = .prediction), data = preds) +
-  stat_pointintervalh(aes(x = .value), data = fits, .width = c(.66, .95), position = position_nudge(y = -0.3)) +
-  geom_point() +
-  scale_color_brewer()</pre></body></html></div>
+<span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>)) +
+  <span class="fu"><a href="../reference/stat_interval.html">stat_intervalh</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.prediction</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">preds</span>) +
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.value</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">fits</span>, <span class="kw">.width</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.66</span>, <span class="fl">.95</span>), <span class="kw">position</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_nudge.html">position_nudge</a></span>(<span class="kw">y</span> <span class="kw">=</span> -<span class="fl">0.3</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-29-1.png" width="648"></p>
 </div>
 <div id="posterior-predictions-kruschke-style" class="section level2">
@@ -614,152 +610,153 @@ ABC %&gt;%
 <a href="#posterior-predictions-kruschke-style" class="anchor"></a>Posterior predictions, Kruschke-style</h2>
 <p>The above approach to posterior predictions integrates over the parameter uncertainty to give a single posterior predictive distribution. Another approach, often used by John Kruschke in his book <a href="https://sites.google.com/site/doingbayesiandataanalysis/">Doing Bayesian Data Analysis</a>, is to attempt to show both the predictive uncertainty and the parameter uncertainty simultaneously by showing several possible predictive distributions implied by the posterior.</p>
 <p>We can do this pretty easily by asking for the distributional parameters for a given prediction implied by the posterior. We’ll do it explicitly here by setting <code>dpar = c("mu", "sigma")</code> in <code>add_fitted_draws</code>. Rather than specifying the parameters explicitly, you can also just set <code>dpar = TRUE</code> to get draws from all distributional parameters in a model, and this will work for any response distribution supported by brms. Then, we can select a small number of draws using <code><a href="../reference/sample_draws.html">sample_draws()</a></code> and then use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh()</a></code> to visualize each predictive distribution implied by the values of <code>mu</code> and <code>sigma</code>:</p>
-<div class="sourceCode" id="cb52"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  add_fitted_draws(m, dpar = c("mu", "sigma")) %&gt;%
-  sample_draws(30) %&gt;%
-  ggplot(aes(y = condition)) +
-  stat_dist_slabh(aes(dist = "norm", arg1 = mu, arg2 = sigma), 
-    slab_color = "gray65", alpha = 1/10, fill = NA
+<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m</span>, <span class="kw">dpar</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mu"</span>, <span class="st">"sigma"</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/sample_draws.html">sample_draws</a></span>(<span class="fl">30</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mu</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sigma</span>),
+    <span class="kw">slab_color</span> <span class="kw">=</span> <span class="st">"gray65"</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">10</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="fl">NA</span>
   ) +
-  geom_point(aes(x = response), data = ABC, shape = 21, fill = "#9ECAE1", size = 2)</pre></body></html></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">ABC</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">"#9ECAE1"</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-30-1.png" width="648"></p>
 <p>For a more detailed description of these charts (and some useful variations on them), see <a href="https://solomonkurz.netlify.com/post/make-rotated-gaussians-kruschke-style/">Solomon Kurz’s excellent blog post on the topic</a>.</p>
 <p>We could even combine the Kruschke-style plots of predictive distributions with half-eyes showing the posterior means:</p>
-<div class="sourceCode" id="cb53"><html><body><pre class="r">ABC %&gt;%
-  data_grid(condition) %&gt;%
-  add_fitted_draws(m, dpar = c("mu", "sigma")) %&gt;%
-  ggplot(aes(x = condition)) +
-  stat_dist_slab(aes(dist = "norm", arg1 = mu, arg2 = sigma), 
-    slab_color = "gray65", alpha = 1/10, fill = NA, data = . %&gt;% sample_draws(30), scale = .5
+<div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m</span>, <span class="kw">dpar</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mu"</span>, <span class="st">"sigma"</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_slab</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mu</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sigma</span>),
+    <span class="kw">slab_color</span> <span class="kw">=</span> <span class="st">"gray65"</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">10</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">.</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/sample_draws.html">sample_draws</a></span>(<span class="fl">30</span>), <span class="kw">scale</span> <span class="kw">=</span> <span class="fl">.5</span>
   ) +
-  stat_halfeye(aes(y = .value), side = "bottom", scale = .5) +
-  geom_point(aes(y = response), data = ABC, shape = 21, fill = "#9ECAE1", size = 2, position = position_nudge(x = -.2))</pre></body></html></div>
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeye</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">.value</span>), <span class="kw">side</span> <span class="kw">=</span> <span class="st">"bottom"</span>, <span class="kw">scale</span> <span class="kw">=</span> <span class="fl">.5</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">response</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">ABC</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">"#9ECAE1"</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_nudge.html">position_nudge</a></span>(<span class="kw">x</span> <span class="kw">=</span> -<span class="fl">.2</span>))</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-31-1.png" width="648"></p>
 </div>
 <div id="fitprediction-curves" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fitprediction-curves" class="anchor"></a>Fit/prediction curves</h2>
 <p>To demonstrate drawing fit curves with uncertainty, let’s fit a slightly naive model to part of the <code>mtcars</code> dataset:</p>
-<div class="sourceCode" id="cb54"><html><body><pre class="r">m_mpg = brm(
-  mpg ~ hp * cyl, 
-  data = mtcars, 
-  
-  file = "models/tidy-brms_m_mpg.rds"  # cache model (can be removed)
+<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="no">m_mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">mpg</span> ~ <span class="no">hp</span> * <span class="no">cyl</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>,
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidy-brms_m_mpg.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <p>We can draw fit curves with probability bands:</p>
-<div class="sourceCode" id="cb55"><html><body><pre class="r">mtcars %&gt;%
-  group_by(cyl) %&gt;%
-  data_grid(hp = seq_range(hp, n = 51)) %&gt;%
-  add_fitted_draws(m_mpg) %&gt;%
-  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  stat_lineribbon(aes(y = .value)) +
-  geom_point(data = mtcars) +
-  scale_fill_brewer(palette = "Greys") +
-  scale_color_brewer(palette = "Set2")</pre></body></html></div>
+<div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">hp</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">hp</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">51</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_mpg</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">hp</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>))) +
+  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">.value</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Greys"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Set2"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-32-1.png" width="648"></p>
 <p>Or we can sample a reasonable number of fit lines (say 100) and overplot them:</p>
-<div class="sourceCode" id="cb56"><html><body><pre class="r">mtcars %&gt;%
-  group_by(cyl) %&gt;%
-  data_grid(hp = seq_range(hp, n = 101)) %&gt;%
-  add_fitted_draws(m_mpg, n = 100) %&gt;%
-  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  geom_line(aes(y = .value, group = paste(cyl, .draw)), alpha = .1) +
-  geom_point(data = mtcars) +
-  scale_color_brewer(palette = "Dark2")</pre></body></html></div>
+<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">hp</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">hp</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_mpg</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">100</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">hp</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>))) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">.value</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">cyl</span>, <span class="no">.draw</span>)), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">.1</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-33-1.png" width="648"></p>
 <p>Or we can create animated <a href="https://mucollective.northwestern.edu/project/hops-trends">hypothetical outcome plots (HOPs)</a> of fit lines:</p>
-<div class="sourceCode" id="cb57"><html><body><pre class="r">set.seed(123456)
-# to keep the example small we use 20 frames, 
-# but something like 100 would be better
-ndraws = 20
+<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123456</span>)
+<span class="co"># to keep the example small we use 20 frames, </span>
+<span class="co"># but something like 100 would be better</span>
+<span class="no">ndraws</span> <span class="kw">=</span> <span class="fl">20</span>
 
-p = mtcars %&gt;%
-  group_by(cyl) %&gt;%
-  data_grid(hp = seq_range(hp, n = 101)) %&gt;%
-  add_fitted_draws(m_mpg, n = ndraws) %&gt;%
-  ggplot(aes(x = hp, y = mpg, color = ordered(cyl))) +
-  geom_line(aes(y = .value, group = paste(cyl, .draw))) +
-  geom_point(data = mtcars) +
-  scale_color_brewer(palette = "Dark2") +
-  transition_states(.draw, 0, 1) +
-  shadow_mark(future = TRUE, color = "gray50", alpha = 1/20)
+<span class="no">p</span> <span class="kw">=</span> <span class="no">mtcars</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">hp</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">hp</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_mpg</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="no">ndraws</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">hp</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>))) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">.value</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">cyl</span>, <span class="no">.draw</span>))) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>) +
+  <span class="fu"><a href="https://gganimate.com/reference/transition_states.html">transition_states</a></span>(<span class="no">.draw</span>, <span class="fl">0</span>, <span class="fl">1</span>) +
+  <span class="fu"><a href="https://gganimate.com/reference/shadow_mark.html">shadow_mark</a></span>(<span class="kw">future</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"gray50"</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">20</span>)
 
-animate(p, nframes = ndraws, fps = 2.5, width = 432, height = 288, res = 96, dev = "png", type = "cairo")</pre></body></html></div>
+<span class="fu"><a href="https://gganimate.com/reference/animate.html">animate</a></span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">ndraws</span>, <span class="kw">fps</span> <span class="kw">=</span> <span class="fl">2.5</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">432</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">288</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-34-1.gif"><!-- --></p>
 <p>Or, for posterior predictions (instead of fits), we can go back to probability bands:</p>
-<div class="sourceCode" id="cb58"><html><body><pre class="r">mtcars %&gt;%
-  group_by(cyl) %&gt;%
-  data_grid(hp = seq_range(hp, n = 101)) %&gt;%
-  add_predicted_draws(m_mpg) %&gt;%
-  ggplot(aes(x = hp, y = mpg, color = ordered(cyl), fill = ordered(cyl))) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.95, .80, .50), alpha = 1/4) +
-  geom_point(data = mtcars) +
-  scale_fill_brewer(palette = "Set2") +
-  scale_color_brewer(palette = "Dark2")</pre></body></html></div>
+<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">hp</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">hp</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_mpg</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">hp</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>), <span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>))) +
+  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">.prediction</span>), <span class="kw">.width</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.95</span>, <span class="fl">.80</span>, <span class="fl">.50</span>), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">4</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Set2"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-35-1.png" width="648"></p>
 <p>This gets difficult to judge by group, so probably better to facet into multiple plots. Fortunately, since we are using ggplot, that functionality is built in:</p>
-<div class="sourceCode" id="cb59"><html><body><pre class="r">mtcars %&gt;%
-  group_by(cyl) %&gt;%
-  data_grid(hp = seq_range(hp, n = 101)) %&gt;%
-  add_predicted_draws(m_mpg) %&gt;%
-  ggplot(aes(x = hp, y = mpg)) +
-  stat_lineribbon(aes(y = .prediction), .width = c(.99, .95, .8, .5), color = brewer.pal(5, "Blues")[[5]]) +
-  geom_point(data = mtcars) +
-  scale_fill_brewer() +
-  facet_grid(. ~ cyl, space = "free_x", scales = "free_x")</pre></body></html></div>
+<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">hp</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">hp</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_mpg</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">hp</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">mpg</span>)) +
+  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">.prediction</span>), <span class="kw">.width</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.99</span>, <span class="fl">.95</span>, <span class="fl">.8</span>, <span class="fl">.5</span>), <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="fl">5</span>, <span class="st">"Blues"</span>)<span class="kw">[[</span><span class="fl">5</span>]]) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="no">.</span> ~ <span class="no">cyl</span>, <span class="kw">space</span> <span class="kw">=</span> <span class="st">"free_x"</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free_x"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-36-1.png" width="648"></p>
 <div id="extracting-distributional-regression-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#extracting-distributional-regression-parameters" class="anchor"></a>Extracting distributional regression parameters</h3>
 <p><code>brm</code> also allows us to set up submodels for parameters of the response distribution <em>other than</em> the location (e.g., mean). For example, we can allow a variance parameter, such as the standard deviation, to also be some function of the predictors.</p>
 <p>This approach can be helpful in cases of non-constant variance (also called <em>heteroskedasticity</em> by folks who like obfuscation via Latin). E.g., imagine two groups, each with different mean response <em>and variance</em>:</p>
-<div class="sourceCode" id="cb60"><html><body><pre class="r">set.seed(1234)
-AB = tibble(
-  group = rep(c("a", "b"), each = 20),
-  response = rnorm(40, mean = rep(c(1, 5), each = 20), sd = rep(c(1, 3), each = 20))
+<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1234</span>)
+<span class="no">AB</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
+  <span class="kw">group</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="kw">each</span> <span class="kw">=</span> <span class="fl">20</span>),
+  <span class="kw">response</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fl">40</span>, <span class="kw">mean</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">5</span>), <span class="kw">each</span> <span class="kw">=</span> <span class="fl">20</span>), <span class="kw">sd</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">3</span>), <span class="kw">each</span> <span class="kw">=</span> <span class="fl">20</span>))
 )
 
-AB %&gt;%
-  ggplot(aes(x = response, y = group)) +
-  geom_point()</pre></body></html></div>
+<span class="no">AB</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-37-1.png" width="648"></p>
 <p>Here is a model that lets the mean <em>and standard deviation</em> of <code>response</code> be dependent on <code>group</code>:</p>
-<div class="sourceCode" id="cb61"><html><body><pre class="r">m_ab = brm(
-  bf(
-    response ~ group,
-    sigma ~ group
+<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="no">m_ab</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsformula.html">bf</a></span>(
+    <span class="no">response</span> ~ <span class="no">group</span>,
+    <span class="no">sigma</span> ~ <span class="no">group</span>
   ),
-  data = AB,
-  
-  file = "models/tidy-brms_m_ab.rds"  # cache model (can be removed)
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">AB</span>,
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidy-brms_m_ab.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>We can plot the posterior distribution of the mean <code>response</code> alongside posterior predictive intervals and the data:</p>
-<div class="sourceCode" id="cb64"><html><body><pre class="r">grid = AB %&gt;%
-  data_grid(group)
+<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="no">grid</span> <span class="kw">=</span> <span class="no">AB</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">group</span>)
 
-fits = grid %&gt;%
-  add_fitted_draws(m_ab)
+<span class="no">fits</span> <span class="kw">=</span> <span class="no">grid</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_ab</span>)
 
-preds = grid %&gt;%
-  add_predicted_draws(m_ab)
+<span class="no">preds</span> <span class="kw">=</span> <span class="no">grid</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_ab</span>)
 
-AB %&gt;%
-  ggplot(aes(x = response, y = group)) +
-  stat_halfeyeh(aes(x = .value), scale = 0.6, position = position_nudge(y = 0.175), data = fits) +
-  stat_intervalh(aes(x = .prediction), data = preds) +
-  geom_point(data = AB) +
-  scale_color_brewer()</pre></body></html></div>
+<span class="no">AB</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">response</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.value</span>), <span class="kw">scale</span> <span class="kw">=</span> <span class="fl">0.6</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_nudge.html">position_nudge</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0.175</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">fits</span>) +
+  <span class="fu"><a href="../reference/stat_interval.html">stat_intervalh</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.prediction</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">preds</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">AB</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-38-1.png" width="648"></p>
 <p>This shows posteriors of the mean of each group (black intervals and the density plots) and posterior predictive intervals (blue).</p>
 <p>The predictive intervals in group <code>b</code> are larger than in group <code>a</code> because the model fits a different standard deviation for each group. We can see how the corresponding distributional parameter, <code>sigma</code>, changes by extracting it using the <code>dpar</code> argument to <code>add_fitted_draws</code>:</p>
-<div class="sourceCode" id="cb65"><html><body><pre class="r">grid %&gt;%
-  add_fitted_draws(m_ab, dpar = TRUE) %&gt;%
-  ggplot(aes(x = sigma, y = group)) +
-  stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed")</pre></body></html></div>
+<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="no">grid</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_ab</span>, <span class="kw">dpar</span> <span class="kw">=</span> <span class="fl">TRUE</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">sigma</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span>(<span class="kw">xintercept</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">linetype</span> <span class="kw">=</span> <span class="st">"dashed"</span>)</pre></body></html></div>
+<pre><code>## Warning: Method 'parse_bf' is deprecated. Please use 'brmsterms' instead.</code></pre>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-39-1.png" width="648"></p>
 <p>By setting <code>dpar = TRUE</code>, all distributional parameters are added as additional columns in the result of <code>add_fitted_draws</code>; if you only want a specific parameter, you can specify it (or a list of just the parameters you want). In the above model, <code>dpar = TRUE</code> is equivalent to <code>dpar = list("mu", "sigma")</code>.</p>
 </div>
@@ -769,23 +766,23 @@ AB %&gt;%
 <a href="#comparing-levels-of-a-factor" class="anchor"></a>Comparing levels of a factor</h2>
 <p>If we wish compare the means from each condition, <code>compare_levels</code> facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences.</p>
 <p>Let’s demonstrate <code>compare_levels</code> with another plotting geom, <code>stat_halfeyeh</code>, which gives horizontal “half-eye” plots, combining intervals with a density plot:</p>
-<div class="sourceCode" id="cb66"><html><body><pre class="r">#N.B. the syntax for compare_levels is experimental and may change
-m %&gt;%
-  spread_draws(r_condition[condition,]) %&gt;%
-  compare_levels(r_condition, by = condition) %&gt;%
-  ggplot(aes(y = condition, x = r_condition)) +
-  stat_halfeyeh()</pre></body></html></div>
+<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
+<span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/compare_levels.html">compare_levels</a></span>(<span class="no">r_condition</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">r_condition</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-40-1.png" width="648"></p>
 <p>If you prefer “caterpillar” plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:</p>
-<div class="sourceCode" id="cb67"><html><body><pre class="r">#N.B. the syntax for compare_levels is experimental and may change
-m %&gt;%
-  spread_draws(r_condition[condition,]) %&gt;%
-  compare_levels(r_condition, by = condition) %&gt;%
-  ungroup() %&gt;%
-  mutate(condition = reorder(condition, r_condition)) %&gt;%
-  ggplot(aes(y = condition, x = r_condition)) +
-  stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed") </pre></body></html></div>
+<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="co">#N.B. the syntax for compare_levels is experimental and may change</span>
+<span class="no">m</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/spread_draws.html">spread_draws</a></span>(<span class="no">r_condition</span>[<span class="no">condition</span>,]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/compare_levels.html">compare_levels</a></span>(<span class="no">r_condition</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html">reorder</a></span>(<span class="no">condition</span>, <span class="no">r_condition</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">r_condition</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span>(<span class="kw">xintercept</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">linetype</span> <span class="kw">=</span> <span class="st">"dashed"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-41-1.png" width="648"></p>
 </div>
 <div id="ordinal-models" class="section level2">
@@ -797,30 +794,30 @@ m %&gt;%
 <a href="#ordinal-model-with-continuous-predictor" class="anchor"></a>Ordinal model with continuous predictor</h3>
 <p>We’ll fit a model using the <code>mtcars</code> dataset that predicts the number of cylinders in a car given the car’s mileage (in miles per gallon). While this is a little backwards causality-wise (presumably the number of cylinders causes the mileage, if anything), that does not mean this is not a fine prediction task (I could probably tell someone who knows something about cars the MPG of a car and they could do reasonably well at guessing the number of cylinders in the engine).</p>
 <p>Before we fit the model, let’s clean the dataset by making the <code>cyl</code> column an ordered factor (by default it is just a number):</p>
-<div class="sourceCode" id="cb68"><html><body><pre class="r">mtcars_clean = mtcars %&gt;%
-  mutate(cyl = ordered(cyl))
+<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="no">mtcars_clean</span> <span class="kw">=</span> <span class="no">mtcars</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">cyl</span>))
 
-head(mtcars_clean)</pre></body></html></div>
-<pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">mtcars_clean</span>)</pre></body></html></div>
+<pre><code>##    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
 <p>Then we’ll fit an ordinal regression model:</p>
-<div class="sourceCode" id="cb70"><html><body><pre class="r">m_cyl = brm(
-  cyl ~ mpg, 
-  data = mtcars_clean, 
-  family = cumulative,
-  seed = 58393,
-  
-  file = "models/tidy-brms_m_cyl.rds"  # cache model (can be removed)
+<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="no">m_cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">cyl</span> ~ <span class="no">mpg</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars_clean</span>,
+  <span class="kw">family</span> <span class="kw">=</span> <span class="no">cumulative</span>,
+  <span class="kw">seed</span> <span class="kw">=</span> <span class="fl">58393</span>,
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidy-brms_m_cyl.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <p><code>add_fitted_draws</code> will include a <code>.category</code> column, and <code>.value</code> will contain draws from the posterior distribution for the probability that the response is in that category. For example, here is the fit for the first row in the dataset:</p>
-<div class="sourceCode" id="cb71"><html><body><pre class="r">tibble(mpg = 21) %&gt;%
-  add_fitted_draws(m_cyl) %&gt;%
-  median_qi(.value)</pre></body></html></div>
+<div class="sourceCode" id="cb71"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(<span class="kw">mpg</span> <span class="kw">=</span> <span class="fl">21</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">.value</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 3 x 9
 ## # Groups:   mpg, .row [1]
 ##     mpg  .row .category  .value    .lower .upper .width .point .interval
@@ -829,14 +826,14 @@ head(mtcars_clean)</pre></body></html></div>
 ## 2    21     1 2         0.711   0.318     0.944    0.95 median qi       
 ## 3    21     1 3         0.00325 0.0000140 0.0837   0.95 median qi</code></pre>
 <p>Note how the <code>.category</code> variable does not retain the original factor level names. This is due to a bug in brms 2.11 (see <a href="https://github.com/paul-buerkner/brms/issues/838">here</a>). As a workaround, we can recover the original factor labels and assign the result to a <code>cyl</code> column:</p>
-<div class="sourceCode" id="cb73"><html><body><pre class="r">tibble(mpg = 21) %&gt;%
-  add_fitted_draws(m_cyl) %&gt;%
-  
-  # recover original factor labels
-  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %&gt;%
-  group_by(cyl, .add = TRUE) %&gt;%
-  
-  median_qi(.value)</pre></body></html></div>
+<div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(<span class="kw">mpg</span> <span class="kw">=</span> <span class="fl">21</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_cyl</span>) <span class="kw">%&gt;%</span>
+
+  <span class="co"># recover original factor labels</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.category</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">cyl</span>, <span class="kw">.add</span> <span class="kw">=</span> <span class="fl">TRUE</span>) <span class="kw">%&gt;%</span>
+
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">.value</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 3 x 10
 ## # Groups:   mpg, .row, .category [3]
 ##     mpg  .row .category cyl    .value    .lower .upper .width .point .interval
@@ -845,219 +842,202 @@ head(mtcars_clean)</pre></body></html></div>
 ## 2    21     1 2         6     0.711   0.318     0.944    0.95 median qi       
 ## 3    21     1 3         8     0.00325 0.0000140 0.0837   0.95 median qi</code></pre>
 <p>We could plot fit lines for fitted probabilities against the dataset:</p>
-<div class="sourceCode" id="cb75"><html><body><pre class="r">data_plot = mtcars_clean %&gt;%
-  ggplot(aes(x = mpg, y = cyl, color = cyl)) +
-  geom_point() +
-  scale_color_brewer(palette = "Dark2", name = "cyl")
+<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="no">data_plot</span> <span class="kw">=</span> <span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">cyl</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">cyl</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>, <span class="kw">name</span> <span class="kw">=</span> <span class="st">"cyl"</span>)
 
-fit_plot = mtcars_clean %&gt;%
-  data_grid(mpg = seq_range(mpg, n = 101)) %&gt;%
-  add_fitted_draws(m_cyl, value = "P(cyl | mpg)") %&gt;%
-  # recover original factor labels
-  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %&gt;%
-  ggplot(aes(x = mpg, y = `P(cyl | mpg)`, color = cyl)) +
-  stat_lineribbon(aes(fill = cyl), alpha = 1/5) +
-  scale_color_brewer(palette = "Dark2") +
-  scale_fill_brewer(palette = "Dark2")
+<span class="no">fit_plot</span> <span class="kw">=</span> <span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">mpg</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_cyl</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="st">"P(cyl | mpg)"</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># recover original factor labels</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.category</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">`P(cyl | mpg)`</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">cyl</span>)) +
+  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="no">cyl</span>), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">5</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>)
 
-plot_grid(ncol = 1, align = "v",
-  data_plot,
-  fit_plot
+<span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"v"</span>,
+  <span class="no">data_plot</span>,
+  <span class="no">fit_plot</span>
 )</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-45-1.png" width="648"></p>
 <p>The above display does not let you see the correlation between <code>P(cyl|mpg)</code> for different values of <code>cyl</code> at a particular value of <code>mpg</code>. For example, in the portion of the posterior where <code>P(cyl = 6|mpg = 20)</code> is high, <code>P(cyl = 4|mpg = 20)</code> and <code>P(cyl = 8|mpg = 20)</code> must be low (since these must add up to 1).</p>
 <p>One way to see this correlation might be to employ <a href="https://doi.org/10.1371/journal.pone.0142444">hypothetical outcome plots (HOPs)</a> just for the fit line, “detaching” it from the ribbon (another alternative would be to use HOPs on top of line ensembles, as demonstrated earlier in this document). By employing animation, you can see how the lines move in tandem or opposition to each other, revealing some patterns in how they are correlated:</p>
-<div class="sourceCode" id="cb76"><html><body><pre class="r"># to keep the example small we use 20 frames, 
-# but something like 100 would be better
-ndraws = 20
+<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co"># to keep the example small we use 20 frames, </span>
+<span class="co"># but something like 100 would be better</span>
+<span class="no">ndraws</span> <span class="kw">=</span> <span class="fl">20</span>
 
-p = mtcars_clean %&gt;%
-  data_grid(mpg = seq_range(mpg, n = 101)) %&gt;%
-  add_fitted_draws(m_cyl, value = "P(cyl | mpg)") %&gt;%
-  # recover original factor labels
-  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %&gt;%
-  ggplot(aes(x = mpg, y = `P(cyl | mpg)`, color = cyl)) +
-  # we remove the `.draw` column from the data for stat_lineribbon so that the same ribbons
-  # are drawn on every frame (since we use .draw to determine the transitions below)
-  stat_lineribbon(aes(fill = cyl), alpha = 1/5, color = NA, data = . %&gt;% select(-.draw)) +
-  # we use sample_draws to subsample at the level of geom_line (rather than for the full dataset
-  # as in previous HOPs examples) because we need the full set of draws for stat_lineribbon above
-  geom_line(aes(group = paste(.draw, cyl)), size = 1, data = . %&gt;% sample_draws(ndraws)) +
-  scale_color_brewer(palette = "Dark2") +
-  scale_fill_brewer(palette = "Dark2") +
-  transition_manual(.draw)
+<span class="no">p</span> <span class="kw">=</span> <span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">mpg</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_cyl</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="st">"P(cyl | mpg)"</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># recover original factor labels</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.category</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">`P(cyl | mpg)`</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">cyl</span>)) +
+  <span class="co"># we remove the `.draw` column from the data for stat_lineribbon so that the same ribbons</span>
+  <span class="co"># are drawn on every frame (since we use .draw to determine the transitions below)</span>
+  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="no">cyl</span>), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">5</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">.</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">.draw</span>)) +
+  <span class="co"># we use sample_draws to subsample at the level of geom_line (rather than for the full dataset</span>
+  <span class="co"># as in previous HOPs examples) because we need the full set of draws for stat_lineribbon above</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">group</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">.draw</span>, <span class="no">cyl</span>)), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">.</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/sample_draws.html">sample_draws</a></span>(<span class="no">ndraws</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>) +
+  <span class="fu"><a href="https://gganimate.com/reference/transition_manual.html">transition_manual</a></span>(<span class="no">.draw</span>)
 
-animate(p, nframes = ndraws, fps = 2.5, width = 576, height = 192, res = 96, dev = "png", type = "cairo")</pre></body></html></div>
+<span class="fu"><a href="https://gganimate.com/reference/animate.html">animate</a></span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">ndraws</span>, <span class="kw">fps</span> <span class="kw">=</span> <span class="fl">2.5</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">576</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">192</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-46-1.gif"><!-- --></p>
 <p>Notice how the lines move together, and how they move up or down together or in opposition. We could take a slice through these lines at an x position in the above chart (say, <code>mpg = 20</code>) and look at the correlation between them using a scatterplot matrix:</p>
-<div class="sourceCode" id="cb77"><html><body><pre class="r">tibble(mpg = 20) %&gt;%
-  add_fitted_draws(m_cyl, value = "P(cyl | mpg = 20)") %&gt;%
-  # recover original factor labels
-  mutate(cyl = levels(mtcars_clean$cyl)[.category]) %&gt;%
-  ungroup() %&gt;%
-  select(.draw, cyl, `P(cyl | mpg = 20)`) %&gt;%
-  gather_pairs(cyl, `P(cyl | mpg = 20)`, triangle = "both") %&gt;%
-  filter(.row != .col) %&gt;%
-  ggplot(aes(.x, .y)) +
-  geom_point(alpha = 1/50) +
-  facet_grid(.row ~ .col) +
-  ylab("P(cyl = row | mpg = 20)") +
-  xlab("P(cyl = col | mpg = 20)")</pre></body></html></div>
-<pre><code>## New names:
-## * `4...41` -&gt; `4...1`
-## * `4...42` -&gt; `4...2`
-## * `4...43` -&gt; `4...3`
-## * `4...44` -&gt; `4...4`
-## * `4...45` -&gt; `4...5`
-## * ...</code></pre>
+<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(<span class="kw">mpg</span> <span class="kw">=</span> <span class="fl">20</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_cyl</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="st">"P(cyl | mpg = 20)"</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># recover original factor labels</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.category</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">.draw</span>, <span class="no">cyl</span>, <span class="no">`P(cyl | mpg = 20)`</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/gather_pairs.html">gather_pairs</a></span>(<span class="no">cyl</span>, <span class="no">`P(cyl | mpg = 20)`</span>, <span class="kw">triangle</span> <span class="kw">=</span> <span class="st">"both"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">.row</span> <span class="kw">!=</span> <span class="no">.col</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">.x</span>, <span class="no">.y</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="fl">50</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="no">.row</span> ~ <span class="no">.col</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="st">"P(cyl = row | mpg = 20)"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span>(<span class="st">"P(cyl = col | mpg = 20)"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-47-1.png" width="648"></p>
 <p>While talking about the mean for an ordinal distribution often does not make sense, in this particular case one could argue that the expected number of cylinders for a car given its miles per gallon is a meaningful quantity. We could plot the posterior distribution for the average number of cylinders for a car given a particular miles per gallon as follows:</p>
 <p><span class="math display">\[
 \textrm{E}[\textrm{cyl}|\textrm{mpg}=m] = \sum_{c \in \{4,6,8\}} c\cdot \textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)
 \]</span> We can use the above formula to derive a posterior distribution for <span class="math inline">\(\textrm{E}[\textrm{cyl}|\textrm{mpg}=m]\)</span> from the model. The model gives us a posterior distribution for <span class="math inline">\(\textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)\)</span>: when <code>mpg</code> = <span class="math inline">\(m\)</span>, the response-scale linear predictor (the <code>.value</code> column from <code>add_fitted_draws</code>) for <code>cyl</code> (aka <code>.category</code>) = <span class="math inline">\(c\)</span> is <span class="math inline">\(\textrm{P}(\textrm{cyl}=c|\textrm{mpg}=m)\)</span>. Thus, we can group within <code>.draw</code> and then use <code>summarise</code> to calculate the expected value:</p>
-<div class="sourceCode" id="cb79"><html><body><pre class="r">label_data_function = . %&gt;% 
-  ungroup() %&gt;%
-  filter(mpg == quantile(mpg, .47)) %&gt;%
-  summarise_if(is.numeric, mean)
+<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="no">label_data_function</span> <span class="kw">=</span> <span class="no">.</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">mpg</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">mpg</span>, <span class="fl">.47</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="no">mean</span>)
 
-data_plot_with_mean = mtcars_clean %&gt;%
-  data_grid(mpg = seq_range(mpg, n = 101)) %&gt;%
-  add_fitted_draws(m_cyl, value = "P(cyl | mpg)", n = 100) %&gt;%
-  # recover original factor labels (and convert into numbers)
-  mutate(cyl = as.numeric(levels(mtcars_clean$cyl)[.category])) %&gt;%
-  group_by(mpg, .draw) %&gt;%
-  # calculate expected cylinder value
-  summarise(cyl = sum(cyl * `P(cyl | mpg)`)) %&gt;%
-  ggplot(aes(x = mpg, y = cyl)) +
-  geom_line(aes(group = .draw), alpha = 5/100) +
-  geom_point(aes(y = as.numeric(as.character(cyl)), fill = cyl), data = mtcars_clean, shape = 21, size = 2) +
-  geom_text(aes(x = mpg + 4), label = "E[cyl | mpg]", data = label_data_function, hjust = 0) +
-  geom_segment(aes(yend = cyl, xend = mpg + 3.9), data = label_data_function) +
-  scale_fill_brewer(palette = "Set2", name = "cyl")
-
-plot_grid(ncol = 1, align = "v",
-  data_plot_with_mean,
-  fit_plot
+<span class="no">data_plot_with_mean</span> <span class="kw">=</span> <span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="kw">mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span>(<span class="no">mpg</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">101</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_cyl</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="st">"P(cyl | mpg)"</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">100</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># recover original factor labels (and convert into numbers)</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.category</span>])) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">mpg</span>, <span class="no">.draw</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># calculate expected cylinder value</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">cyl</span> * <span class="no">`P(cyl | mpg)`</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">cyl</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">group</span> <span class="kw">=</span> <span class="no">.draw</span>), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">5</span>/<span class="fl">100</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(<span class="no">cyl</span>)), <span class="kw">fill</span> <span class="kw">=</span> <span class="no">cyl</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars_clean</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">mpg</span> + <span class="fl">4</span>), <span class="kw">label</span> <span class="kw">=</span> <span class="st">"E[cyl | mpg]"</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">label_data_function</span>, <span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">yend</span> <span class="kw">=</span> <span class="no">cyl</span>, <span class="kw">xend</span> <span class="kw">=</span> <span class="no">mpg</span> + <span class="fl">3.9</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">label_data_function</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Set2"</span>, <span class="kw">name</span> <span class="kw">=</span> <span class="st">"cyl"</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'mpg' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb80"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"v"</span>,
+  <span class="no">data_plot_with_mean</span>,
+  <span class="no">fit_plot</span>
 )</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-48-1.png" width="648"></p>
 <p>Now let’s do some posterior predictive checking: do posterior predictions look like the data? For this, we’ll make new predictions at the same values of <code>mpg</code> as were present in the original dataset (gray circles) and plot these with the observed data (colored circles):</p>
-<div class="sourceCode" id="cb80"><html><body><pre class="r">mtcars_clean %&gt;%
-  # we use `select` instead of `data_grid` here because we want to make posterior predictions
-  # for exactly the same set of observations we have in the original data
-  select(mpg) %&gt;%
-  add_predicted_draws(m_cyl, seed = 1234) %&gt;%
-  # recover original factor labels
-  mutate(cyl = levels(mtcars_clean$cyl)[.prediction]) %&gt;%
-  ggplot(aes(x = mpg, y = cyl)) +
-  geom_count(color = "gray75") +
-  geom_point(aes(fill = cyl), data = mtcars_clean, shape = 21, size = 2) +
-  scale_fill_brewer(palette = "Dark2") +
-  geom_label_repel(
-    data = . %&gt;% ungroup() %&gt;% filter(cyl == "8") %&gt;% filter(mpg == max(mpg)) %&gt;% dplyr::slice(1),
-    label = "posterior predictions", xlim = c(26, NA), ylim = c(NA, 2.8), point.padding = 0.3,
-    label.size = NA, color = "gray50", segment.color = "gray75"
+<div class="sourceCode" id="cb81"><html><body><pre class="r"><span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span>
+  <span class="co"># we use `select` instead of `data_grid` here because we want to make posterior predictions</span>
+  <span class="co"># for exactly the same set of observations we have in the original data</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">mpg</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_cyl</span>, <span class="kw">seed</span> <span class="kw">=</span> <span class="fl">1234</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># recover original factor labels</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.prediction</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">mpg</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">cyl</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_count.html">geom_count</a></span>(<span class="kw">color</span> <span class="kw">=</span> <span class="st">"gray75"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="no">cyl</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars_clean</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(<span class="kw">palette</span> <span class="kw">=</span> <span class="st">"Dark2"</span>) +
+  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(
+    <span class="kw">data</span> <span class="kw">=</span> <span class="no">.</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">cyl</span> <span class="kw">==</span> <span class="st">"8"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">mpg</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">mpg</span>)) <span class="kw">%&gt;%</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>),
+    <span class="kw">label</span> <span class="kw">=</span> <span class="st">"posterior predictions"</span>, <span class="kw">xlim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">26</span>, <span class="fl">NA</span>), <span class="kw">ylim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">NA</span>, <span class="fl">2.8</span>), <span class="kw">point.padding</span> <span class="kw">=</span> <span class="fl">0.3</span>,
+    <span class="kw">label.size</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"gray50"</span>, <span class="kw">segment.color</span> <span class="kw">=</span> <span class="st">"gray75"</span>
   ) +
-  geom_label_repel(
-    data = mtcars_clean %&gt;% filter(cyl == "6") %&gt;% filter(mpg == max(mpg)) %&gt;% dplyr::slice(1),
-    label = "observed data", xlim = c(26, NA), ylim = c(2.2, NA), point.padding = 0.2,
-    label.size = NA, segment.color = "gray35"
+  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(
+    <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">cyl</span> <span class="kw">==</span> <span class="st">"6"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">mpg</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">mpg</span>)) <span class="kw">%&gt;%</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>),
+    <span class="kw">label</span> <span class="kw">=</span> <span class="st">"observed data"</span>, <span class="kw">xlim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">26</span>, <span class="fl">NA</span>), <span class="kw">ylim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2.2</span>, <span class="fl">NA</span>), <span class="kw">point.padding</span> <span class="kw">=</span> <span class="fl">0.2</span>,
+    <span class="kw">label.size</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">segment.color</span> <span class="kw">=</span> <span class="st">"gray35"</span>
   )</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-49-1.png" width="768"></p>
 <p>This looks pretty good. Let’s check using another typical posterior predictive checking plot: many simulated distributions of the response (<code>cyl</code>) against the observed distribution of the response. For a continuous response variable this is usually done with a density plot; here, we’ll plot the number of posterior predictions in each bin as a line plot, since the response variable is discrete:</p>
-<div class="sourceCode" id="cb81"><html><body><pre class="r">mtcars_clean %&gt;%
-  select(mpg) %&gt;%
-  add_predicted_draws(m_cyl, n = 100, seed = 12345) %&gt;%
-  # recover original factor labels
-  mutate(cyl = levels(mtcars_clean$cyl)[.prediction]) %&gt;%
-  ggplot(aes(x = cyl)) +
-  stat_count(aes(group = NA), geom = "line", data = mtcars_clean, color = "red", size = 3, alpha = .5) +
-  stat_count(aes(group = .draw), geom = "line", position = "identity", alpha = .05) +
-  geom_label(data = data.frame(cyl = "4"), y = 9.5, label = "posterior\npredictions",
-    hjust = 1, color = "gray50", lineheight = 1, label.size = NA) +
-  geom_label(data = data.frame(cyl = "8"), y = 14, label = "observed\ndata",
-    hjust = 0, color = "red", lineheight = 1, label.size = NA)</pre></body></html></div>
+<div class="sourceCode" id="cb82"><html><body><pre class="r"><span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">mpg</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_cyl</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">100</span>, <span class="kw">seed</span> <span class="kw">=</span> <span class="fl">12345</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># recover original factor labels</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.prediction</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">cyl</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">stat_count</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">group</span> <span class="kw">=</span> <span class="fl">NA</span>), <span class="kw">geom</span> <span class="kw">=</span> <span class="st">"line"</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars_clean</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"red"</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">.5</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">stat_count</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">group</span> <span class="kw">=</span> <span class="no">.draw</span>), <span class="kw">geom</span> <span class="kw">=</span> <span class="st">"line"</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="st">"identity"</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">.05</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_label</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="st">"4"</span>), <span class="kw">y</span> <span class="kw">=</span> <span class="fl">9.5</span>, <span class="kw">label</span> <span class="kw">=</span> <span class="st">"posterior\npredictions"</span>,
+    <span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"gray50"</span>, <span class="kw">lineheight</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">label.size</span> <span class="kw">=</span> <span class="fl">NA</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_label</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="st">"8"</span>), <span class="kw">y</span> <span class="kw">=</span> <span class="fl">14</span>, <span class="kw">label</span> <span class="kw">=</span> <span class="st">"observed\ndata"</span>,
+    <span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"red"</span>, <span class="kw">lineheight</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">label.size</span> <span class="kw">=</span> <span class="fl">NA</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-50-1.png" width="648"></p>
 <p>This also looks good.</p>
 <p>Another way to look at these posterior predictions might be as a scatterplot matrix. <code><a href="../reference/gather_pairs.html">tidybayes::gather_pairs</a></code> makes it easy to generate long-format data frames suitable for creating custom scatterplot matrices (or really, arbitrary matrix-style small multiples plots) in ggplot using <code>facet_grid</code>:</p>
-<div class="sourceCode" id="cb82"><html><body><pre class="r">set.seed(12345)
+<div class="sourceCode" id="cb83"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">12345</span>)
 
-mtcars_clean %&gt;%
-  select(mpg) %&gt;%
-  add_predicted_draws(m_cyl) %&gt;%
-  # recover original factor labels. Must ungroup first so that the
-  # factor is created in the same way in all groups; this is a workaround
-  # because brms no longer returns labelled predictions (hopefully that
-  # is fixed then this will no longer be necessary)
-  ungroup() %&gt;%
-  mutate(cyl = factor(levels(mtcars_clean$cyl)[.prediction])) %&gt;%
-  # need .drop = FALSE to ensure 0 counts are not dropped
-  group_by(.draw, .drop = FALSE) %&gt;%
-  count(cyl) %&gt;%
-  gather_pairs(cyl, n) %&gt;%
-  ggplot(aes(.x, .y)) +
-  geom_count(color = "gray75") +
-  geom_point(data = mtcars_clean %&gt;% count(cyl) %&gt;% gather_pairs(cyl, n), color = "red") +
-  facet_grid(vars(.row), vars(.col)) +
-  xlab("Number of observations with cyl = col") +
-  ylab("Number of observations with cyl = row") </pre></body></html></div>
-<pre><code>## New names:
-## * `6...41` -&gt; `6...1`
-## * `6...42` -&gt; `6...2`
-## * `6...43` -&gt; `6...3`
-## * `6...44` -&gt; `6...4`
-## * `6...45` -&gt; `6...5`
-## * ...</code></pre>
-<pre><code>## New names:
-## * `6...4` -&gt; `6`
-## * `8...4` -&gt; `8...2`
-## * `8...6` -&gt; `8...3`</code></pre>
+<span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">mpg</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># recover original factor labels. Must ungroup first so that the</span>
+  <span class="co"># factor is created in the same way in all groups; this is a workaround</span>
+  <span class="co"># because brms no longer returns labelled predictions (hopefully that</span>
+  <span class="co"># is fixed then this will no longer be necessary)</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cyl</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">mtcars_clean</span>$<span class="no">cyl</span>)[<span class="no">.prediction</span>])) <span class="kw">%&gt;%</span>
+  <span class="co"># need .drop = FALSE to ensure 0 counts are not dropped</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">.draw</span>, <span class="kw">.drop</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/gather_pairs.html">gather_pairs</a></span>(<span class="no">cyl</span>, <span class="no">n</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">.x</span>, <span class="no">.y</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_count.html">geom_count</a></span>(<span class="kw">color</span> <span class="kw">=</span> <span class="st">"gray75"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars_clean</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span>(<span class="no">cyl</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/gather_pairs.html">gather_pairs</a></span>(<span class="no">cyl</span>, <span class="no">n</span>), <span class="kw">color</span> <span class="kw">=</span> <span class="st">"red"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="no">.row</span>), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="no">.col</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span>(<span class="st">"Number of observations with cyl = col"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="st">"Number of observations with cyl = row"</span>)</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-51-1.png" width="648"></p>
 </div>
 <div id="ordinal-model-with-categorical-predictor" class="section level3">
 <h3 class="hasAnchor">
 <a href="#ordinal-model-with-categorical-predictor" class="anchor"></a>Ordinal model with categorical predictor</h3>
 <p>Here’s an ordinal model with a categorical predictor:</p>
-<div class="sourceCode" id="cb85"><html><body><pre class="r">data(esoph)
-m_esoph_brm = brm(
-  tobgp ~ agegp, 
-  data = esoph, 
-  family = cumulative(),
+<div class="sourceCode" id="cb84"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">esoph</span>)
+<span class="no">m_esoph_brm</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">tobgp</span> ~ <span class="no">agegp</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">esoph</span>,
+  <span class="kw">family</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsfamily.html">cumulative</a></span>(),
 
-  file = "models/tidy-brms_m_esoph_brm.rds"  
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidy-brms_m_esoph_brm.rds"</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>Then we can plot predicted probabilities for each outcome category within each level of the predictor:</p>
-<div class="sourceCode" id="cb88"><html><body><pre class="r">esoph %&gt;%
-  data_grid(agegp) %&gt;%
-  add_fitted_draws(m_esoph_brm, dpar = TRUE) %&gt;%
-  mutate(tobgp = levels(esoph$tobgp)[.category]) %&gt;%
-  ggplot(aes(x = agegp, y = .value, color = tobgp)) +
-  stat_pointinterval(position = position_dodge(width = .4)) +
-  scale_size_continuous(guide = FALSE) +
-  scale_color_manual(values = brewer.pal(6, "Blues")[-c(1,2)])</pre></body></html></div>
+<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="no">esoph</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">agegp</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_esoph_brm</span>, <span class="kw">dpar</span> <span class="kw">=</span> <span class="fl">TRUE</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">tobgp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">esoph</span>$<span class="no">tobgp</span>)[<span class="no">.category</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">agegp</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">.value</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">tobgp</span>)) +
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge</a></span>(<span class="kw">width</span> <span class="kw">=</span> <span class="fl">.4</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_size.html">scale_size_continuous</a></span>(<span class="kw">guide</span> <span class="kw">=</span> <span class="fl">FALSE</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual</a></span>(<span class="kw">values</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="fl">6</span>, <span class="st">"Blues"</span>)[-<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">2</span>)])</pre></body></html></div>
+<pre><code>## Warning: Method 'parse_bf' is deprecated. Please use 'brmsterms' instead.</code></pre>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-52-1.png" width="648"></p>
 <p>It is hard to see the changes in categories in the above plot; let’s try something that gives a better gist of the distribution within each year:</p>
-<div class="sourceCode" id="cb89"><html><body><pre class="r">esoph_plot = esoph %&gt;%
-  data_grid(agegp) %&gt;%
-  add_fitted_draws(m_esoph_brm) %&gt;%
-  mutate(tobgp = levels(esoph$tobgp)[.category]) %&gt;%
-  ggplot(aes(x = .value, y = tobgp)) +
-  coord_cartesian(expand = FALSE) +
-  facet_grid(. ~ agegp, switch = "x") +
-  theme_classic() +
-  theme(strip.background = element_blank(), strip.placement = "outside") +
-  ggtitle("P(tobacco consumption category | age group)") +
-  xlab("age group")
+<div class="sourceCode" id="cb89"><html><body><pre class="r"><span class="no">esoph_plot</span> <span class="kw">=</span> <span class="no">esoph</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">agegp</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_fitted_draws</a></span>(<span class="no">m_esoph_brm</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">tobgp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">esoph</span>$<span class="no">tobgp</span>)[<span class="no">.category</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.value</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">tobgp</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fl">FALSE</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="no">.</span> ~ <span class="no">agegp</span>, <span class="kw">switch</span> <span class="kw">=</span> <span class="st">"x"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_classic</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">strip.background</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>(), <span class="kw">strip.placement</span> <span class="kw">=</span> <span class="st">"outside"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"P(tobacco consumption category | age group)"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span>(<span class="st">"age group"</span>)
 
-esoph_plot +
-  stat_summaryh(fun.x = median, geom = "barh", fill = "gray75", width = 1, color = "white") +
-  stat_pointintervalh()</pre></body></html></div>
+<span class="no">esoph_plot</span> +
+  <span class="fu"><a href="https://rdrr.io/pkg/ggstance/man/stat_summaryh.html">stat_summaryh</a></span>(<span class="kw">fun.x</span> <span class="kw">=</span> <span class="no">median</span>, <span class="kw">geom</span> <span class="kw">=</span> <span class="st">"barh"</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">"gray75"</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"white"</span>) +
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointintervalh</a></span>()</pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-53-1.png" width="768"></p>
 <p>The bars in this case might present a false sense of precision, so we could also try CCDF barplots instead:</p>
-<div class="sourceCode" id="cb90"><html><body><pre class="r">esoph_plot +
-  stat_ccdfintervalh() +
-  expand_limits(x = 0) #ensure bars go to 0</pre></body></html></div>
+<div class="sourceCode" id="cb90"><html><body><pre class="r"><span class="no">esoph_plot</span> +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfintervalh</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="fl">0</span>) <span class="co">#ensure bars go to 0</span></pre></body></html></div>
 <p><img src="tidy-brms_files/figure-html/unnamed-chunk-54-1.png" width="768"></p>
 <p>This output should be very similar to the output from the corresponding <code>m_esoph_rs</code> model in <code><a href="../articles/tidy-rstanarm.html">vignette("tidy-rstanarm")</a></code> (modulo different priors), though brms does more of the work for us to produce it than <code>rstanarm</code> does.</p>
 </div>
@@ -1079,7 +1059,7 @@ esoph_plot +
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

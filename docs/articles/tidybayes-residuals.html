@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Extracting and visualizing tidy residuals from Bayesian models</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-01</h4>
+            <h4 class="date">2020-06-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/tidybayes-residuals.Rmd"><code>vignettes/tidybayes-residuals.Rmd</code></a></small>
       <div class="hidden name"><code>tidybayes-residuals.Rmd</code></div>
@@ -140,20 +140,20 @@ img {
 <h2 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h2>
 <p>The following libraries are required to run this vignette:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r">library(dplyr)
-library(purrr)
-library(tidyr)
-library(tidybayes)
-library(ggplot2)
-library(cowplot)
-library(rstan)
-library(brms)
-library(gganimate)
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">purrr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidybayes</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cowplot</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rstan</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">gganimate</span>)
 
-theme_set(theme_tidybayes() + panel_border())</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>() + <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>())</pre></body></html></div>
 <p>These options help Stan run faster:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r">rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())</pre></body></html></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rstan/man/rstan_options.html">rstan_options</a></span>(<span class="kw">auto_write</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">mc.cores</span> <span class="kw">=</span> <span class="kw pkg">parallel</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html">detectCores</a></span>())</pre></body></html></div>
 </div>
 <div id="example-dataset" class="section level2">
 <h2 class="hasAnchor">
@@ -175,15 +175,15 @@ y^\textrm{upper}_i &amp;= \lceil{y^*_i}\rceil
 \]</span></p>
 <p>We don’t observe each <span class="math inline">\(y^*_i\)</span>, only <span class="math inline">\(y^\textrm{lower}_i\)</span> and <span class="math inline">\(y^\textrm{upper}_i\)</span>, i.e., the upper and lower bounds of an interval in which <span class="math inline">\(y^*_i\)</span> lies. This is <em>interval-censored</em> data.</p>
 <p>We can generate it as follows:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">set.seed(4118)
-n = 100
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">4118</span>)
+<span class="no">n</span> <span class="kw">=</span> <span class="fl">100</span>
 
-cens_df =
-  tibble(
-    y_star = rnorm(n, 0.5, 1),
-    y_lower = floor(y_star),
-    y_upper = ceiling(y_star),
-    censoring = "interval"
+<span class="no">cens_df</span> <span class="kw">=</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
+    <span class="kw">y_star</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span>, <span class="fl">0.5</span>, <span class="fl">1</span>),
+    <span class="kw">y_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span>(<span class="no">y_star</span>),
+    <span class="kw">y_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">ceiling</a></span>(<span class="no">y_star</span>),
+    <span class="kw">censoring</span> <span class="kw">=</span> <span class="st">"interval"</span>
   )</pre></body></html></div>
 <p>A snapshot of the data looks like this:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">cens_df</span>, <span class="fl">10</span>)</pre></body></html></div>
@@ -202,34 +202,34 @@ cens_df =
 ## 10  0.385        0       1 interval</code></pre>
 <p>This is a typical tidy format data frame: one observation per row.</p>
 <p>A graphical depiction of the censoring process might be something like this:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r">uncensored_plot = cens_df %&gt;%
-  ggplot(aes(y = "", x = y_star)) +
-  stat_slabh() +
-  geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
-  ylab(NULL) +
-  scale_x_continuous(breaks = -4:4, limits = c(-4, 4)) +
-  background_grid("x")
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">uncensored_plot</span> <span class="kw">=</span> <span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">y_star</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0.75</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">y_lower</span>)), <span class="kw">position</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span>(<span class="kw">height</span> <span class="kw">=</span> <span class="fl">0.2</span>), <span class="kw">show.legend</span> <span class="kw">=</span> <span class="fl">FALSE</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="kw">NULL</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> -<span class="fl">4</span>:<span class="fl">4</span>, <span class="kw">limits</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">4</span>, <span class="fl">4</span>)) +
+  <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/background_grid.html">background_grid</a></span>(<span class="st">"x"</span>)
 
-censored_plot = cens_df %&gt;%
-  ggplot(aes(y = "", x = (y_lower + y_upper)/2)) +
-  geom_dotplot(
-    aes(fill = ordered(y_lower)),
-    method = "histodot", origin = -4, binwidth = 1, dotsize = 0.5, stackratio = .8, show.legend = FALSE,
-    stackgroups = TRUE, binpositions = "all", color = NA
+<span class="no">censored_plot</span> <span class="kw">=</span> <span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">x</span> <span class="kw">=</span> (<span class="no">y_lower</span> + <span class="no">y_upper</span>)/<span class="fl">2</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html">geom_dotplot</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">y_lower</span>)),
+    <span class="kw">method</span> <span class="kw">=</span> <span class="st">"histodot"</span>, <span class="kw">origin</span> <span class="kw">=</span> -<span class="fl">4</span>, <span class="kw">binwidth</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">dotsize</span> <span class="kw">=</span> <span class="fl">0.5</span>, <span class="kw">stackratio</span> <span class="kw">=</span> <span class="fl">.8</span>, <span class="kw">show.legend</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
+    <span class="kw">stackgroups</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">binpositions</span> <span class="kw">=</span> <span class="st">"all"</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fl">NA</span>
   ) +
-  geom_segment(
-    aes(x = y + 0.5, xend = y + 0.5, y = 1.75, yend = 1.5, color = ordered(y)),
-    data = data.frame(y = unique(cens_df$y_lower)), show.legend = FALSE,
-    arrow = arrow(type = "closed", length = unit(7, "points")), size = 1
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">y</span> + <span class="fl">0.5</span>, <span class="kw">xend</span> <span class="kw">=</span> <span class="no">y</span> + <span class="fl">0.5</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="fl">1.75</span>, <span class="kw">yend</span> <span class="kw">=</span> <span class="fl">1.5</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">y</span>)),
+    <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">cens_df</span>$<span class="no">y_lower</span>)), <span class="kw">show.legend</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
+    <span class="kw">arrow</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">arrow</a></span>(<span class="kw">type</span> <span class="kw">=</span> <span class="st">"closed"</span>, <span class="kw">length</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">unit</a></span>(<span class="fl">7</span>, <span class="st">"points"</span>)), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">1</span>
   ) +
-  ylab(NULL) +
-  xlab("interval-censored y") +
-  scale_x_continuous(breaks = -4:4, limits = c(-4, 4)) +
-  background_grid("x")
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="kw">NULL</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span>(<span class="st">"interval-censored y"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> -<span class="fl">4</span>:<span class="fl">4</span>, <span class="kw">limits</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">4</span>, <span class="fl">4</span>)) +
+  <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/background_grid.html">background_grid</a></span>(<span class="st">"x"</span>)
 
-plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
-  uncensored_plot,
-  censored_plot
+<span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">align</span> <span class="kw">=</span> <span class="st">"v"</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">rel_heights</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">2.5</span>),
+  <span class="no">uncensored_plot</span>,
+  <span class="no">censored_plot</span>
 )</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-4-1.png" width="180"></p>
 </div>
@@ -238,12 +238,12 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
 <a href="#model-for-y_star" class="anchor"></a>Model for <code>y_star</code>
 </h2>
 <p>Before we fit a model to the censored data, let’s see what an ideal model looks like: we’ll fit a model to <code>y_star</code>. With censored or discrete data in the real-world, we would not be able to fit such a model, because we would not have observations of <code>y_star</code>, only the intervals. But this might help us understand what we’re looking for in a fit that’s working.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r">m_ideal = brm(
-  y_star ~ 1, 
-  data = cens_df, 
-  family = student,
-  
-  file = "models/tidybayes-residuals_m_ideal.rds"  # cache model (can be removed)
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">m_ideal</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">y_star</span> ~ <span class="fl">1</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">cens_df</span>,
+  <span class="kw">family</span> <span class="kw">=</span> <span class="no">student</span>,
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidybayes-residuals_m_ideal.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
@@ -272,23 +272,19 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.5),
 <h3 class="hasAnchor">
 <a href="#residuals" class="anchor"></a>Residuals</h3>
 <p><code><a href="../reference/add_predicted_draws.html">add_residual_draws()</a></code> operates much like <code><a href="../reference/add_predicted_draws.html">add_fitted_draws()</a></code> and <code><a href="../reference/add_predicted_draws.html">add_predicted_draws()</a></code>: it gives us draws from the posterior distribution for each residual:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r">cens_df %&gt;%
-  add_residual_draws(m_ideal) %&gt;%
-  ggplot(aes(x = .row, y = .residual)) +
-  stat_pointinterval()</pre></body></html></div>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m_ideal</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.row</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-6-1.png" width="648"></p>
 <p>This is a typical residual plot, though with the addition of the uncertainty associated with each residual afforded by generating draws from the distribution associated with each residual.</p>
 <p>Let’s check the QQ plot:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r">cens_df %&gt;%
-  add_residual_draws(m_ideal) %&gt;%
-  median_qi() %&gt;%
-  ggplot(aes(sample = .residual)) +
-  geom_qq() +
-  geom_qq_line()</pre></body></html></div>
-<pre><code>## Warning: `combine()` is deprecated as of dplyr 1.0.0.
-## Please use `vctrs::vec_c()` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m_ideal</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-7-1.png" width="648"></p>
 <p>This is a typical way of looking at residuals. However, this type of residual will not generalize to discrete and censored models, so let’s consider something else…</p>
 </div>
@@ -303,15 +299,16 @@ p^{*\textrm{resid}}_i = P(y^{*\textrm{rep}}_i \le y^*_i|\mathbf{y}^*)
 <p><span class="math display">\[
 z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 \]</span></p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r">cens_df %&gt;%
-  add_predicted_draws(m_ideal) %&gt;%
-  summarise(
-    p_residual = mean(.prediction &lt; y_star),
-    z_residual = qnorm(p_residual)
-  ) %&gt;%
-  ggplot(aes(sample = z_residual)) +
-  geom_qq() +
-  geom_abline()</pre></body></html></div>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_ideal</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_star</span>),
+    <span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>()</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y_star', 'y_lower', 'y_upper', 'censoring' (override with `.groups` argument)</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-8-1.png" width="648"></p>
 <p>This QQ plot shows us the model fits okay.</p>
 </div>
@@ -320,11 +317,11 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 <h2 class="hasAnchor">
 <a href="#basic-interval-censored-model" class="anchor"></a>Basic interval-censored model</h2>
 <p>Assuming a situation where we do not have access to the original (uncensored) data, we will perform a regression on the interval-censored data. In brms, we can do this by specifying the lower (<code>y_lower</code>) and upper (<code>y_upper</code>) bounds on each observation, and the censoring type (<code>censoring</code>), which in this case is <code>"interval"</code> for all observations.</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r">m = brm(
-  y_lower | cens(censoring, y_upper) ~ 1, 
-  data = cens_df,
-  
-  file = "models/tidybayes-residuals_m.rds"  # cache model (can be removed)
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">m</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">y_lower</span> <span class="kw">|</span> <span class="fu">cens</span>(<span class="no">censoring</span>, <span class="no">y_upper</span>) ~ <span class="fl">1</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">cens_df</span>,
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidybayes-residuals_m.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
@@ -349,20 +346,20 @@ z^{*\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{*\textrm{resid}}_i)
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>Again, <code><a href="../reference/add_predicted_draws.html">add_residual_draws()</a></code> lets us look at the residuals:</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r">cens_df %&gt;%
-  add_residual_draws(m) %&gt;%
-  ggplot(aes(x = .row, y = .residual)) +
-  stat_pointinterval()</pre></body></html></div>
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.row</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span>()</pre></body></html></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-10-1.png" width="648"></p>
 <p>But notice the horizontal striations due to censoring. This obscures patterns we might wish to see in the diagnostic plots. Patterns like this often show up in censored regression, logistic regression, Poisson regression, and other discrete regression models. Notice how <code>brms</code> also gives us a warning message that the residuals may not be meaningful due to censoring.</p>
 <p>Let’s look at the QQ plot:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r">cens_df %&gt;%
-  add_residual_draws(m) %&gt;%
-  median_qi(.residual) %&gt;%
-  ggplot(aes(sample = .residual)) +
-  geom_qq() +
-  geom_qq_line()</pre></body></html></div>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">.residual</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>()</pre></body></html></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-11-1.png" width="648"></p>
 <p>Again, the striations are making interpretation difficult. But there is hope!</p>
@@ -390,49 +387,51 @@ p^{\textrm{resid}}_i \sim \textrm{Uniform}(p^\textrm{lower}_i, p^\textrm{upper}_
 z^{\textrm{resid}}_i = F_{\textrm{Normal}}^{-1}(p^{\textrm{resid}}_i)
 \]</span></p>
 <p>In code, that looks like this:</p>
-<div class="sourceCode" id="cb25"><html><body><pre class="r">cens_df %&gt;%
-  add_predicted_draws(m) %&gt;%
-  summarise(
-    p_lower = mean(.prediction &lt; y_lower),
-    p_upper = mean(.prediction &lt; y_upper),
-    p_residual = runif(1, p_lower, p_upper),
-    z_residual = qnorm(p_residual)
-  ) %&gt;%
-  ggplot(aes(x = .row, y = z_residual)) +
-  geom_point()</pre></body></html></div>
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_lower</span>),
+    <span class="kw">p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_upper</span>),
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fl">1</span>, <span class="no">p_lower</span>, <span class="no">p_upper</span>),
+    <span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.row</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>()</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y_star', 'y_lower', 'y_upper', 'censoring' (override with `.groups` argument)</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-12-1.png" width="648"></p>
 <p>The striations are gone! And a QQ plot:</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r">cens_df %&gt;%
-  add_predicted_draws(m) %&gt;%
-  summarise(
-    p_lower = mean(.prediction &lt; y_lower),
-    p_upper = mean(.prediction &lt; y_upper),
-    p_residual = runif(1, p_lower, p_upper),
-    z_residual = qnorm(p_residual)
-  ) %&gt;%
-  ggplot(aes(sample = z_residual)) +
-  geom_qq() +
-  geom_abline()</pre></body></html></div>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_lower</span>),
+    <span class="kw">p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_upper</span>),
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fl">1</span>, <span class="no">p_lower</span>, <span class="no">p_upper</span>),
+    <span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>()</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y_star', 'y_lower', 'y_upper', 'censoring' (override with `.groups` argument)</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-13-1.png" width="648"></p>
 <p>Looks decent. However, our residuals are now subject to noise—we actually have a distribution of possible QQ plots. So, let’s check on some of them to make sure this nice-looking one is not just a fluke. We’ll employ <a href="https://mucollective.co/project/hops-trends">HOPs</a> to do that:</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="no">k</span> <span class="kw">=</span> <span class="fl">20</span>
 
-p = cens_df %&gt;%
-  add_predicted_draws(m) %&gt;%
-  summarise(
-    p_lower = mean(.prediction &lt; y_lower),
-    p_upper = mean(.prediction &lt; y_upper),
-    p_residual = list(runif(k, p_lower, p_upper)),
-    residual_draw = list(1:k)
-  ) %&gt;%
-  unnest(c(p_residual, residual_draw)) %&gt;%
-  mutate(z_residual = qnorm(p_residual)) %&gt;%
-  ggplot(aes(sample = z_residual)) +
-  geom_qq() +
-  geom_abline() +
-  transition_manual(residual_draw)
-
-animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type = "cairo")</pre></body></html></div>
+<span class="no">p</span> <span class="kw">=</span> <span class="no">cens_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_lower</span>),
+    <span class="kw">p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_upper</span>),
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">k</span>, <span class="no">p_lower</span>, <span class="no">p_upper</span>)),
+    <span class="kw">residual_draw</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">1</span>:<span class="no">k</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">p_residual</span>, <span class="no">residual_draw</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>() +
+  <span class="fu"><a href="https://gganimate.com/reference/transition_manual.html">transition_manual</a></span>(<span class="no">residual_draw</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y_star', 'y_lower', 'y_upper', 'censoring' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://gganimate.com/reference/animate.html">animate</a></span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-14-1.gif"><!-- --></p>
 <p>Looks good.</p>
 </div>
@@ -441,67 +440,67 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 <h2 class="hasAnchor">
 <a href="#what-if-the-model-does-not-fit-well" class="anchor"></a>What if the model does not fit well?</h2>
 <p>Let’s instead generate the data from a t distribution, which should give us some more extreme values:</p>
-<div class="sourceCode" id="cb28"><html><body><pre class="r">set.seed(41181)
-n = 100
+<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">41181</span>)
+<span class="no">n</span> <span class="kw">=</span> <span class="fl">100</span>
 
-cens_df_t =
-  tibble(
-    y = rt(n, 3) + 0.5,
-    y_lower = floor(y),
-    y_upper = ceiling(y),
-    censoring = "interval"
+<span class="no">cens_df_t</span> <span class="kw">=</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
+    <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html">rt</a></span>(<span class="no">n</span>, <span class="fl">3</span>) + <span class="fl">0.5</span>,
+    <span class="kw">y_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span>(<span class="no">y</span>),
+    <span class="kw">y_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">ceiling</a></span>(<span class="no">y</span>),
+    <span class="kw">censoring</span> <span class="kw">=</span> <span class="st">"interval"</span>
   )</pre></body></html></div>
 <p>Note the presence of outliers:</p>
-<div class="sourceCode" id="cb29"><html><body><pre class="r">uncensored_plot = cens_df_t %&gt;%
-  ggplot(aes(y = "", x = y)) +
-  stat_slabh() +
-  geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
-  ylab(NULL) +
-  scale_x_continuous(breaks = -10:10, limits = c(-10, 10)) +
-  background_grid("x")
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="no">uncensored_plot</span> <span class="kw">=</span> <span class="no">cens_df_t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">y</span>)) +
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slabh</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0.75</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">y_lower</span>)), <span class="kw">position</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span>(<span class="kw">height</span> <span class="kw">=</span> <span class="fl">0.2</span>), <span class="kw">show.legend</span> <span class="kw">=</span> <span class="fl">FALSE</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="kw">NULL</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> -<span class="fl">10</span>:<span class="fl">10</span>, <span class="kw">limits</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">10</span>, <span class="fl">10</span>)) +
+  <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/background_grid.html">background_grid</a></span>(<span class="st">"x"</span>)
 
-censored_plot = cens_df_t %&gt;%
-  ggplot(aes(y = "", x = (y_lower + y_upper)/2)) +
-  geom_dotplot(
-    aes(fill = ordered(y_lower)),
-    method = "histodot", origin = -4, binwidth = 1, dotsize = 0.5, stackratio = .8, show.legend = FALSE,
-    stackgroups = TRUE, binpositions = "all", color = NA
+<span class="no">censored_plot</span> <span class="kw">=</span> <span class="no">cens_df_t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">x</span> <span class="kw">=</span> (<span class="no">y_lower</span> + <span class="no">y_upper</span>)/<span class="fl">2</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html">geom_dotplot</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">y_lower</span>)),
+    <span class="kw">method</span> <span class="kw">=</span> <span class="st">"histodot"</span>, <span class="kw">origin</span> <span class="kw">=</span> -<span class="fl">4</span>, <span class="kw">binwidth</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">dotsize</span> <span class="kw">=</span> <span class="fl">0.5</span>, <span class="kw">stackratio</span> <span class="kw">=</span> <span class="fl">.8</span>, <span class="kw">show.legend</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
+    <span class="kw">stackgroups</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">binpositions</span> <span class="kw">=</span> <span class="st">"all"</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fl">NA</span>
   ) +
-  geom_segment(
-    aes(x = y + 0.5, xend = y + 0.5, y = 1.75, yend = 1.5, color = ordered(y)),
-    data = data.frame(y = unique(cens_df_t$y_lower)), show.legend = FALSE,
-    arrow = arrow(type = "closed", length = unit(7, "points")), size = 1
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">y</span> + <span class="fl">0.5</span>, <span class="kw">xend</span> <span class="kw">=</span> <span class="no">y</span> + <span class="fl">0.5</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="fl">1.75</span>, <span class="kw">yend</span> <span class="kw">=</span> <span class="fl">1.5</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">y</span>)),
+    <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">cens_df_t</span>$<span class="no">y_lower</span>)), <span class="kw">show.legend</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
+    <span class="kw">arrow</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">arrow</a></span>(<span class="kw">type</span> <span class="kw">=</span> <span class="st">"closed"</span>, <span class="kw">length</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">unit</a></span>(<span class="fl">7</span>, <span class="st">"points"</span>)), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">1</span>
   ) +
-  ylab(NULL) +
-  xlab("interval-censored y") +
-  scale_x_continuous(breaks = -10:10, limits = c(-10, 10)) +
-  background_grid("x")
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="kw">NULL</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span>(<span class="st">"interval-censored y"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> -<span class="fl">10</span>:<span class="fl">10</span>, <span class="kw">limits</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">10</span>, <span class="fl">10</span>)) +
+  <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/background_grid.html">background_grid</a></span>(<span class="st">"x"</span>)
 
-plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
-  uncensored_plot,
-  censored_plot
+<span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">align</span> <span class="kw">=</span> <span class="st">"v"</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">rel_heights</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">2.25</span>),
+  <span class="no">uncensored_plot</span>,
+  <span class="no">censored_plot</span>
 )</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-16-1.png" width="432"></p>
 <div id="model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model" class="anchor"></a>Model</h3>
 <p>Now, fitting the same model as before:</p>
-<div class="sourceCode" id="cb30"><html><body><pre class="r">m_t1 = brm(
-  y_lower | cens(censoring, y_upper) ~ 1,
-  data = cens_df_t,
+<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="no">m_t1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">y_lower</span> <span class="kw">|</span> <span class="fu">cens</span>(<span class="no">censoring</span>, <span class="no">y_upper</span>) ~ <span class="fl">1</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">cens_df_t</span>,
 
-  file = "models/tidybayes-residuals_m_t1"  # cache model (can be removed)
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidybayes-residuals_m_t1"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## recompiling to avoid crashing R session</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>And checking the QQ plot:</p>
-<div class="sourceCode" id="cb34"><html><body><pre class="r">cens_df_t %&gt;%
-  add_residual_draws(m_t1) %&gt;%
-  median_qi(.residual) %&gt;%
-  ggplot(aes(sample = .residual)) +
-  geom_qq() +
-  geom_qq_line()</pre></body></html></div>
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">cens_df_t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m_t1</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">.residual</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>()</pre></body></html></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-17-1.png" width="648"></p>
 <p>It looks like this could be problematic, but the striations make diagnosing the problem difficult.</p>
@@ -510,17 +509,18 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 <h3 class="hasAnchor">
 <a href="#randomized-quantile-residuals-1" class="anchor"></a>Randomized quantile residuals</h3>
 <p>Let’s try randomized quantile residuals again:</p>
-<div class="sourceCode" id="cb36"><html><body><pre class="r">cens_df_t %&gt;%
-  add_predicted_draws(m_t1) %&gt;%
-  summarise(
-    p_lower = mean(.prediction &lt; y_lower),
-    p_upper = mean(.prediction &lt; y_upper),
-    p_residual = runif(1, p_lower, p_upper),
-    z_residual = qnorm(p_residual)
-  ) %&gt;%
-  ggplot(aes(sample = z_residual)) +
-  geom_qq() +
-  geom_abline()</pre></body></html></div>
+<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="no">cens_df_t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_t1</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_lower</span>),
+    <span class="kw">p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_upper</span>),
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fl">1</span>, <span class="no">p_lower</span>, <span class="no">p_upper</span>),
+    <span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>()</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y', 'y_lower', 'y_upper', 'censoring' (override with `.groups` argument)</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_qq).</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-18-1.png" width="648"></p>
 <p>Does not look good for the model—this s-shape is characteristic of excess kurtosis (aka fat tails), which is exactly what a t distribution should produce. So let’s try a different model.</p>
@@ -530,22 +530,22 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 <h2 class="hasAnchor">
 <a href="#robust-interval-censored-model" class="anchor"></a>Robust interval-censored model</h2>
 <p>A common model to try to “robustify” linear regression is to swap out the Normal response distribution for a Student’s t distribution, which has fatter tails (it also happens that this is the distribution used to generate the data above, so I am clearly cheating, but also: <em>this had better work</em>).</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r">m_t2 = brm(
-  y_lower | cens(censoring, y_upper) ~ 1, 
-  data = cens_df_t,
-  family = student,
-  
-  file = "models/tidybayes-residuals_m_t2.rds"  # cache model (can be removed)
+<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="no">m_t2</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">y_lower</span> <span class="kw">|</span> <span class="fu">cens</span>(<span class="no">censoring</span>, <span class="no">y_upper</span>) ~ <span class="fl">1</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">cens_df_t</span>,
+  <span class="kw">family</span> <span class="kw">=</span> <span class="no">student</span>,
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidybayes-residuals_m_t2.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>Let’s look at the QQ plot of the residuals:</p>
-<div class="sourceCode" id="cb41"><html><body><pre class="r">cens_df_t %&gt;%
-  add_residual_draws(m_t2) %&gt;%
-  median_qi(.residual) %&gt;%
-  ggplot(aes(sample = .residual)) +
-  geom_qq() +
-  geom_qq_line()</pre></body></html></div>
+<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="no">cens_df_t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m_t2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">.residual</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>()</pre></body></html></div>
 <pre><code>## Warning: Results may not be meaningful for censored models.</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-19-1.png" width="648"></p>
 <p>Odd, these don’t look great! But again, these residuals are not to be trusted…</p>
@@ -553,24 +553,24 @@ plot_grid(align = "v", ncol = 1, rel_heights = c(1, 2.25),
 <h3 class="hasAnchor">
 <a href="#randomized-quantile-residuals-2" class="anchor"></a>Randomized quantile residuals</h3>
 <p>Let’s check out the randomized quantile residuals:</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="no">k</span> <span class="kw">=</span> <span class="fl">20</span>
 
-p = cens_df_t %&gt;%
-  add_predicted_draws(m_t2) %&gt;%
-  summarise(
-    p_lower = mean(.prediction &lt; y_lower),
-    p_upper = mean(.prediction &lt; y_upper),
-    p_residual = list(runif(k, p_lower, p_upper)),
-    residual_draw = list(1:k)
-  ) %&gt;%
-  unnest(c(p_residual, residual_draw)) %&gt;%
-  mutate(z_residual = qnorm(p_residual)) %&gt;%
-  ggplot(aes(sample = z_residual)) +
-  geom_qq() +
-  geom_abline() +
-  transition_manual(residual_draw)
-
-animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type = "cairo")</pre></body></html></div>
+<span class="no">p</span> <span class="kw">=</span> <span class="no">cens_df_t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_t2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_lower</span>),
+    <span class="kw">p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_upper</span>),
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">k</span>, <span class="no">p_lower</span>, <span class="no">p_upper</span>)),
+    <span class="kw">residual_draw</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">1</span>:<span class="no">k</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">p_residual</span>, <span class="no">residual_draw</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>() +
+  <span class="fu"><a href="https://gganimate.com/reference/transition_manual.html">transition_manual</a></span>(<span class="no">residual_draw</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y', 'y_lower', 'y_upper', 'censoring' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb50"><html><body><pre class="r"><span class="fu"><a href="https://gganimate.com/reference/animate.html">animate</a></span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-20-1.gif"><!-- --></p>
 <p>Looking pretty good! As well they should, since this is the same model that generated the data.</p>
 </div>
@@ -580,27 +580,27 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 <a href="#ordinal-regression" class="anchor"></a>Ordinal regression</h2>
 <p>But we’re not done yet—another sensible choice of model for this data might have been an ordinal regression. So let’s try that too.</p>
 <p>First, we’ll add a column that transforms the data into an ordered factor:</p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r">cens_df_o = cens_df_t %&gt;%
-  mutate(y_factor = ordered(y_lower))</pre></body></html></div>
+<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="no">cens_df_o</span> <span class="kw">=</span> <span class="no">cens_df_t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">y_factor</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">y_lower</span>))</pre></body></html></div>
 <p>Then we’ll fit an ordinal regression model. We have to adjust the fit parameters a bit to get it to converge:</p>
-<div class="sourceCode" id="cb45"><html><body><pre class="r">m_o = brm(
-  y_factor ~ 1, 
-  data = cens_df_o, 
-  family = cumulative, 
-  prior = prior(normal(0, 10), class = Intercept), 
-  control = list(adapt_delta = 0.99),
-  
-  file = "models/tidybayes-residuals_m_o.rds"  # cache model (can be removed)
+<div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="no">m_o</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">y_factor</span> ~ <span class="fl">1</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">cens_df_o</span>,
+  <span class="kw">family</span> <span class="kw">=</span> <span class="no">cumulative</span>,
+  <span class="kw">prior</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>, <span class="fl">10</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">Intercept</span>),
+  <span class="kw">control</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">adapt_delta</span> <span class="kw">=</span> <span class="fl">0.99</span>),
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidybayes-residuals_m_o.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>Now, let’s check out those residuals:</p>
-<div class="sourceCode" id="cb48"><html><body><pre class="r">cens_df_o %&gt;%
-  add_residual_draws(m_o) %&gt;%
-  median_qi(.residual) %&gt;%
-  ggplot(aes(sample = .residual)) +
-  geom_qq() +
-  geom_qq_line()</pre></body></html></div>
+<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="no">cens_df_o</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m_o</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>(<span class="no">.residual</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>()</pre></body></html></div>
 <pre><code>## Error: Predictive errors are not defined for ordinal or categorical models.</code></pre>
 <p>Gah! <code>brms</code> will not even produce residuals for models like these. This is very sensible, as standard residuals here are hard to define. Fortunately, we can still construct randomized quantile residuals.</p>
 <div id="randomized-quantile-residuals-for-a-discrete-distribution" class="section level3">
@@ -623,38 +623,39 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 \end{align*}
 \]</span></p>
 <p>Then we proceed as before:</p>
-<div class="sourceCode" id="cb50"><html><body><pre class="r">cens_df_o %&gt;%
-  add_predicted_draws(m_o) %&gt;%
-  mutate(.prediction = ordered(levels(y_factor)[.prediction], levels = levels(y_factor))) %&gt;%
-  summarise(
-    p_lower = mean(.prediction &lt; y_factor),
-    p_upper = mean(.prediction &lt;= y_factor),
-    p_residual = runif(1, p_lower, p_upper),
-    z_residual = qnorm(p_residual)
-  ) %&gt;%
-  ggplot(aes(x = .row, y = z_residual)) +
-  geom_point()</pre></body></html></div>
+<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="no">cens_df_o</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_o</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">.prediction</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">y_factor</span>)[<span class="no">.prediction</span>], <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">y_factor</span>))) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_factor</span>),
+    <span class="kw">p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;=</span> <span class="no">y_factor</span>),
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fl">1</span>, <span class="no">p_lower</span>, <span class="no">p_upper</span>),
+    <span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">.row</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>()</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y', 'y_lower', 'y_upper', 'censoring', 'y_factor' (override with `.groups` argument)</code></pre>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-23-1.png" width="648"></p>
 <p>Or in HOPs-QQ plot form:</p>
-<div class="sourceCode" id="cb51"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="no">k</span> <span class="kw">=</span> <span class="fl">20</span>
 
-p = cens_df_o %&gt;%
-  add_predicted_draws(m_o) %&gt;%
-  mutate(.prediction = ordered(levels(y_factor)[.prediction], levels = levels(y_factor))) %&gt;%
-  summarise(
-    p_lower = mean(.prediction &lt; y_factor),
-    p_upper = mean(.prediction &lt;= y_factor),
-    p_residual = list(runif(k, p_lower, p_upper)),
-    residual_draw = list(1:k)
-  ) %&gt;%
-  unnest(c(p_residual, residual_draw)) %&gt;%
-  mutate(z_residual = qnorm(p_residual)) %&gt;%
-  ggplot(aes(sample = z_residual)) +
-  geom_qq() +
-  geom_abline() +
-  transition_manual(residual_draw)
-
-animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type = "cairo")</pre></body></html></div>
+<span class="no">p</span> <span class="kw">=</span> <span class="no">cens_df_o</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_o</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">.prediction</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">y_factor</span>)[<span class="no">.prediction</span>], <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">y_factor</span>))) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(
+    <span class="kw">p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;</span> <span class="no">y_factor</span>),
+    <span class="kw">p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.prediction</span> <span class="kw">&lt;=</span> <span class="no">y_factor</span>),
+    <span class="kw">p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">k</span>, <span class="no">p_lower</span>, <span class="no">p_upper</span>)),
+    <span class="kw">residual_draw</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">1</span>:<span class="no">k</span>)
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">p_residual</span>, <span class="no">residual_draw</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">p_residual</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">z_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>() +
+  <span class="fu"><a href="https://gganimate.com/reference/transition_manual.html">transition_manual</a></span>(<span class="no">residual_draw</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y', 'y_lower', 'y_upper', 'censoring', 'y_factor' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="fu"><a href="https://gganimate.com/reference/animate.html">animate</a></span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-24-1.gif"><!-- --></p>
 <p>It is not too surprising that the ordinal regression also works here, even though it is not the data generating model. Ordinal regressions are pretty robust.</p>
 </div>
@@ -663,86 +664,87 @@ animate(p, nframes = k, width = 384, height = 384, res = 96, dev = "png", type =
 <h2 class="hasAnchor">
 <a href="#a-function-for-probability-residuals" class="anchor"></a>A function for probability residuals</h2>
 <p>Here’s a function that can calculate randomized probability residuals for you. A future version of <code>tidybayes</code> will likely supply some variant of this function, but for now, since it is experimental, I have not folded it into the main package yet. Use at your own risk:</p>
-<div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rlang</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rlang</span>)</pre></body></html></div>
 <pre><code>## 
 ## Attaching package: 'rlang'</code></pre>
 <pre><code>## The following objects are masked from 'package:purrr':
 ## 
 ##     %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl, flatten_raw, invoke,
 ##     list_along, modify, prepend, splice</code></pre>
-<div class="sourceCode" id="cb55"><html><body><pre class="r">make_probability_residuals = function(data, prediction, y, y_upper = NA, n = 1) {
-  .prediction = enquo(prediction)
-  .y = enquo(y)
-  .y_upper = enquo(y_upper)
+<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="no">make_probability_residuals</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">data</span>, <span class="no">prediction</span>, <span class="no">y</span>, <span class="no">y_upper</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="no">n</span> <span class="kw">=</span> <span class="fl">1</span>) {
+  <span class="no">.prediction</span> <span class="kw">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(<span class="no">prediction</span>)
+  <span class="no">.y</span> <span class="kw">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(<span class="no">y</span>)
+  <span class="no">.y_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(<span class="no">y_upper</span>)
 
-  if (eval_tidy(expr(is.factor(!!.prediction) &amp;&amp; !is.ordered(!!.prediction)), data)) {
-    data = mutate(data, !!.prediction := ordered(!!.prediction, levels = levels(!!.prediction)))
+  <span class="kw">if</span> (<span class="fu"><a href="https://rlang.r-lib.org/reference/eval_tidy.html">eval_tidy</a></span>(<span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">expr</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/factor.html">is.factor</a></span>(!!<span class="no">.prediction</span>) <span class="kw">&amp;&amp;</span> !<span class="fu"><a href="https://rdrr.io/r/base/factor.html">is.ordered</a></span>(!!<span class="no">.prediction</span>)), <span class="no">data</span>)) {
+    <span class="no">data</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="no">data</span>, !!<span class="no">.prediction</span> <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(!!<span class="no">.prediction</span>, <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(!!<span class="no">.prediction</span>)))
   }
-  
-  if (is.na(enquo(y_upper)[[2]])) {
-    #no y_upper provided, use y as y_upper
-    data = summarise(data,
-      .p_lower = mean(!!.prediction &lt; !!.y),
-      .p_upper = mean(!!.prediction &lt;= !!.y)
+
+  <span class="kw">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">enquo</a></span>(<span class="no">y_upper</span>)<span class="kw">[[</span><span class="fl">2</span>]])) {
+    <span class="co">#no y_upper provided, use y as y_upper</span>
+    <span class="no">data</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="no">data</span>,
+      <span class="kw">.p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="no">.prediction</span> <span class="kw">&lt;</span> !!<span class="no">.y</span>),
+      <span class="kw">.p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="no">.prediction</span> <span class="kw">&lt;=</span> !!<span class="no">.y</span>)
     )
-  } else {
-    #y_upper should be a vector, and if an entry in it is NA, use the entry from y
-    data = summarise(data,
-      .p_lower = mean(!!.prediction &lt; !!.y),
-      .p_upper = mean(!!.prediction &lt;= ifelse(is.na(!!.y_upper), !!.y, !!.y_upper))
+  } <span class="kw">else</span> {
+    <span class="co">#y_upper should be a vector, and if an entry in it is NA, use the entry from y</span>
+    <span class="no">data</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="no">data</span>,
+      <span class="kw">.p_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="no">.prediction</span> <span class="kw">&lt;</span> !!<span class="no">.y</span>),
+      <span class="kw">.p_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="no">.prediction</span> <span class="kw">&lt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(!!<span class="no">.y_upper</span>), !!<span class="no">.y</span>, !!<span class="no">.y_upper</span>))
     )
   }
-  
-  data %&gt;%
-    mutate(
-      .p_residual = map2(.p_lower, .p_upper, runif, n = !!n),
-      .residual_draw = map(.p_residual, seq_along)
-    ) %&gt;%
-    unnest(c(.p_residual, .residual_draw)) %&gt;%
-    mutate(.z_residual = qnorm(.p_residual))
+
+  <span class="no">data</span> <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+      <span class="kw">.p_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html">map2</a></span>(<span class="no">.p_lower</span>, <span class="no">.p_upper</span>, <span class="no">runif</span>, <span class="kw">n</span> <span class="kw">=</span> !!<span class="no">n</span>),
+      <span class="kw">.residual_draw</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">.p_residual</span>, <span class="no">seq_along</span>)
+    ) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">.p_residual</span>, <span class="no">.residual_draw</span>)) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">.z_residual</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span>(<span class="no">.p_residual</span>))
 }</pre></body></html></div>
 </div>
 <div id="logistic-regression" class="section level2">
 <h2 class="hasAnchor">
 <a href="#logistic-regression" class="anchor"></a>Logistic regression</h2>
 <p>Consider a simple dataset with a single binary outcome:</p>
-<div class="sourceCode" id="cb56"><html><body><pre class="r">set.seed(51919)
+<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">51919</span>)
 
-bin_df = tibble(
-  y = rbernoulli(100, .7)
+<span class="no">bin_df</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
+  <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/rbernoulli.html">rbernoulli</a></span>(<span class="fl">100</span>, <span class="fl">.7</span>)
 )</pre></body></html></div>
 <p>A model for this might be the following:</p>
-<div class="sourceCode" id="cb57"><html><body><pre class="r">m_bin = brm(
-  y ~ 1, 
-  data = bin_df, 
-  family = bernoulli,
-  
-  file = "models/tidybayes-residuals_m_bin.rds"  # cache model (can be removed)
+<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="no">m_bin</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html">brm</a></span>(
+  <span class="no">y</span> ~ <span class="fl">1</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">bin_df</span>,
+  <span class="kw">family</span> <span class="kw">=</span> <span class="no">bernoulli</span>,
+
+  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"models/tidybayes-residuals_m_bin.rds"</span>  <span class="co"># cache model (can be removed)</span>
 )</pre></body></html></div>
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <p>Again, standard residuals are hard to interpret:</p>
-<div class="sourceCode" id="cb60"><html><body><pre class="r">bin_df %&gt;%
-  add_residual_draws(m_bin) %&gt;%
-  median_qi() %&gt;%
-  ggplot(aes(sample = .residual)) +
-  geom_qq() +
-  geom_qq_line()</pre></body></html></div>
+<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="no">bin_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_residual_draws</a></span>(<span class="no">m_bin</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">.residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>()</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-27-1.png" width="648"></p>
 <p>Randomized quantile residuals help us see that the fit is probably reasonable. In this case (just to switch it up), we’ll look at the probability residuals instead, comparing them against a uniform distribution, like so:</p>
-<div class="sourceCode" id="cb61"><html><body><pre class="r">k = 20
+<div class="sourceCode" id="cb71"><html><body><pre class="r"><span class="no">k</span> <span class="kw">=</span> <span class="fl">20</span>
 
-p = bin_df %&gt;%
-  add_predicted_draws(m_bin) %&gt;%
-  make_probability_residuals(.prediction, y, n = k) %&gt;%
-  ggplot(aes(sample = .p_residual)) +
-  geom_qq(distribution = qunif) +
-  geom_abline() +
-  transition_manual(.residual_draw)</pre></body></html></div>
+<span class="no">p</span> <span class="kw">=</span> <span class="no">bin_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_predicted_draws.html">add_predicted_draws</a></span>(<span class="no">m_bin</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">make_probability_residuals</span>(<span class="no">.prediction</span>, <span class="no">y</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="no">k</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">.p_residual</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>(<span class="kw">distribution</span> <span class="kw">=</span> <span class="no">qunif</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>() +
+  <span class="fu"><a href="https://gganimate.com/reference/transition_manual.html">transition_manual</a></span>(<span class="no">.residual_draw</span>)</pre></body></html></div>
 <pre><code>## Warning: Subsetting quosures with `[[` is deprecated as of rlang 0.4.0
 ## Please use `quo_get_expr()` instead.
 ## This warning is displayed once per session.</code></pre>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="fu">animate</span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'y' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="fu"><a href="https://gganimate.com/reference/animate.html">animate</a></span>(<span class="no">p</span>, <span class="kw">nframes</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">384</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">dev</span> <span class="kw">=</span> <span class="st">"png"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"cairo"</span>)</pre></body></html></div>
 <p><img src="tidybayes-residuals_files/figure-html/unnamed-chunk-28-1.gif"><!-- --></p>
 </div>
   </div>
@@ -762,7 +764,7 @@ p = bin_df %&gt;%
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
