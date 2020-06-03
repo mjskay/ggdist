@@ -30,6 +30,17 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' (draw as vertical-then-horizontal steps). `TRUE` is an alias for `"mid"` because for a step function with
 #' ribbons, `"mid"` is probably what you want (for the other two step approaches the ribbons at either the
 #' vert first or vert last x value will not be visible).
+#' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
+#' vertically (`"vertical"`). The default, `NA`, automatically detects the orientation based on how the
+#' aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+#' the geom uses the `y` (resp. `x`) aesthetic to identify different groups, then for each group uses
+#' the `x` (resp. `y`) aesthetic and the `thickness` aesthetic to draw a function as an slab, and draws
+#' points and intervals horizontally (resp. vertically) using the `xmin`, `x`, and `xmax` (resp.
+#' `ymin`, `y`, and `ymax`) aesthetics. For compatibility with the base
+#' ggplot naming scheme for `orientation`, `"x"` can be used as an alias for `"vertical"` and `"y"` as an alias for
+#' `"horizontal"` (tidybayes had an `orientation` parameter before ggplot did, and I think the tidybayes naming
+#' scheme is more intuitive: `"x"` and `"y"` are not orientations and their mapping to orientations is, in my
+#' opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
 #' @author Matthew Kay
 #' @seealso See [stat_lineribbon()] for a version that does summarizing of samples into points and intervals
 #' within ggplot. See [geom_pointinterval()] / [geom_pointintervalh()] for a similar geom intended
@@ -60,6 +71,7 @@ geom_lineribbon = function(
   ...,
 
   step = FALSE,
+  orientation = NA,
 
   na.rm = FALSE,
   show.legend = NA,
@@ -76,6 +88,7 @@ geom_lineribbon = function(
     inherit.aes = inherit.aes,
     params = list(
       step = step,
+      orientation = orientation,
       na.rm = na.rm,
       ...
     )
@@ -107,9 +120,44 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
   draw_key = draw_key_lineribbon,
 
-  required_aes = c("x", "y", "ymin", "ymax"),
+  required_aes = c("x", "y"),
 
-  draw_panel = function(data, panel_scales, coord, step = FALSE) {
+  optional_aes = c("ymin", "ymax", "xmin", "xmax"),
+
+  extra_params = c("step", "orientation", "na.rm"),
+
+  default_params = list(
+    step = FALSE,
+    orientation = NA,
+    na.rm = FALSE
+  ),
+
+  setup_params = function(self, data, params) {
+    params = defaults(params, self$default_params)
+
+    # detect orientation
+    params$flipped_aes = get_flipped_aes(data, params,
+      main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE
+    )
+    params$orientation = get_orientation(params$flipped_aes)
+
+    params
+  },
+
+  setup_data = function(self, data, params) {
+    #set up orientation
+    data$flipped_aes = params$flipped_aes
+
+    data
+  },
+
+  draw_panel = function(self, data, panel_scales, coord,
+    step = self$default_params$step,
+    orientation = self$default_params$orientation,
+    flipped_aes = FALSE
+  ) {
+    define_orientation_variables(orientation)
+
     # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
     # of the line or by setting fill, the ribbons might give an error. So we will do the
     # grouping ourselves
@@ -118,14 +166,14 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
     # draw as a step function if requested
     if (step == TRUE) step = "mid"
-    if (step != FALSE) data = ddply(data, grouping_columns, stepify, x = "x", direction = step)
+    if (step != FALSE) data = ddply(data, grouping_columns, stepify, x = y, direction = step)
 
     # draw all the ribbons
     ribbon_grobs = data %>%
       dlply(grouping_columns, function(d) {
-        group_grobs = list(GeomRibbon$draw_panel(transform(d, size = NA), panel_scales, coord))
+        group_grobs = list(GeomRibbon$draw_panel(transform(d, size = NA), panel_scales, coord, flipped_aes = flipped_aes))
         list(
-          width = d %$% mean(abs(ymax - ymin)),
+          width = mean(abs(d[[xmax]] - d[[xmin]])),
           grobs = group_grobs
         )
       })
@@ -140,7 +188,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     # now draw all the lines
     line_grobs = data %>%
       dlply(grouping_columns, function(d) {
-        if (!is.null(d$y)) {
+        if (!is.null(d[[x]])) {
           list(GeomLine$draw_panel(d, panel_scales, coord))
         } else {
           list()

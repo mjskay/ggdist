@@ -32,6 +32,11 @@ test_that("one-group stat_lineribbons work", {
   vdiffr::expect_doppelganger("one-group stat_lineribbon (reverse order, mean_qi)",
     p + stat_lineribbon(.width = c(.90, .75, .50), point_interval = mean_qi) + scale_fill_brewer()
   )
+
+  vdiffr::expect_doppelganger("one-group stat_lineribbon (horizontal)",
+    p + stat_lineribbon(aes(x = y, y = x), orientation = "horizontal", .width = c(.50, .75, .90)) + scale_fill_brewer()
+  )
+
 })
 
 test_that("one-group geom_lineribbons work", {
@@ -58,6 +63,14 @@ test_that("one-group geom_lineribbons work", {
       group_by(x, g) %>%
       mean_qi(y, .width = c(.50, .75, .90)) %>%
       ggplot(aes(x = x, y = y, ymin = .lower - 10)) +
+      geom_lineribbon() +
+      scale_fill_brewer()
+  )
+  vdiffr::expect_doppelganger("one-group geom_lineribbon (horizontal)", df %>%
+      group_by(x, g) %>%
+      mode_qi(y, .width = c(.50, .75, .90)) %>%
+      rename(l = .lower, u = .upper) %>%
+      ggplot(aes(x = y, y = x, xmin = l, xmax = u)) +
       geom_lineribbon() +
       scale_fill_brewer()
   )

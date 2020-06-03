@@ -11,6 +11,7 @@ geom_lineribbon(
   position = "identity",
   ...,
   step = FALSE,
+  orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -51,6 +52,18 @@ function, the default), \code{TRUE} (draw a step function using the \code{"mid"}
 (draw as vertical-then-horizontal steps). \code{TRUE} is an alias for \code{"mid"} because for a step function with
 ribbons, \code{"mid"} is probably what you want (for the other two step approaches the ribbons at either the
 vert first or vert last x value will not be visible).}
+
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
