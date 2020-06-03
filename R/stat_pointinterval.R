@@ -57,7 +57,7 @@ stat_pointinterval = function(
   position = "identity",
   ...,
 
-  orientation = "vertical",
+  orientation = NA,
   interval_function = NULL,
   interval_args = list(),
   point_interval = median_qi,

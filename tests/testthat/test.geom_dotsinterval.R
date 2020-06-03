@@ -84,5 +84,3 @@ test_that("stat_dist_dots[interval] works", {
   )
 
 })
-
-

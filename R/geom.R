@@ -42,6 +42,25 @@ add_default_computed_aesthetics = function(l, default_mapping) {
   )
 }
 
+# detects the orientation of the geometry
+#' @importFrom ggplot2 has_flipped_aes
+get_flipped_aes = function(data, params, ...) {
+  params$orientation =
+    if (params$orientation %in% c("horizontal", "y")) "y"
+    else if (params$orientation %in% c("vertical", "x")) "x"
+    else if (is.na(params$orientation)) NA
+    else stop("Unknown orientation: ", deparse0(params$orientation))
+
+  has_flipped_aes(data, params, ...)
+}
+
+# detects the orientation of the geometry
+get_orientation = function(flipped_aes) {
+  if (flipped_aes) "y"
+  else "x"
+}
+
+
 # defines "orientation" variables in the environment of the calling
 # function (for convenience): these are variables (typically aesthetics)
 # that differ depending on whether the geom's orientation is horizontal
@@ -50,7 +69,7 @@ globalVariables(c("height", "y", "ymin", "ymax", "yend", "x", "xmin", "xmax", "x
 define_orientation_variables = function(orientation) {
   f = parent.frame()
 
-  if (orientation == "horizontal") {
+  if (orientation == "horizontal" || orientation == "y") {
     f$height = "height"
 
     f$y = "y"
@@ -64,7 +83,7 @@ define_orientation_variables = function(orientation) {
     f$xmax = "xmax"
     f$xend = "xend"
     f$x.range = "x.range"
-  } else if (orientation == "vertical") {
+  } else if (orientation == "vertical" || orientation == "x") {
     f$height = "width"
 
     f$y = "x"

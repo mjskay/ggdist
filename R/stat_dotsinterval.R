@@ -8,11 +8,13 @@
 
 #' @importFrom stats ppoints
 dots_sample_slab_function = function(
-  df, input, limits = NULL, quantiles = NA, orientation = "vertical",
+  df, input, limits = NULL, quantiles = NA, orientation = NA,
   trans = scales::identity_trans(), ...
 ) {
   x = switch(orientation,
+    y = ,
     horizontal = "x",
+    x = ,
     vertical = "y"
   )
 
@@ -234,6 +236,17 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   ), StatDistSlabinterval$default_params),
 
   setup_params = function(self, data, params) {
+    params = defaults(params, self$default_params)
+
+    # detect orientation -- this must be done before calling up to StatSlabInterval
+    # since auto-detection here is different (main_is_orthogonal needs to be FALSE)
+    params$flipped_aes = get_flipped_aes(data, params,
+      main_is_orthogonal = FALSE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
+    )
+    params$orientation = get_orientation(params$flipped_aes)
+
+    # we use setup_params from StatSlabinterval instead of StatDistSlabinterval
+    # because StatDistSlabinterval does some limits calculations that are not relevant here
     params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
 
     params$slab_args = list(
@@ -290,5 +303,3 @@ StatDistDots$default_aes$size = NULL
 stat_dist_dotsh = function(..., orientation = "horizontal") {
   stat_dist_dots(..., orientation = orientation)
 }
-
-

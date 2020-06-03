@@ -236,11 +236,16 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @param scale What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
 #' slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.
 #' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
-#' vertically (`"vertical"`). When horizontal (resp. vertical), the geom uses the `y` (resp. `x`)
-#' aesthetic to identify different groups, then for each group uses the `x` (resp. `y`) aesthetic and the
-#' `thickness` aesthetic to draw a function as an slab, and draws points and intervals horizontally
-#' (resp. vertically) using the `xmin`, `x`, and `xmax` (resp. `ymin`, `y`, and `ymax`)
-#' aesthetics.
+#' vertically (`"vertical"`). The default, `NA`, automatically detects the orientation based on how the
+#' aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+#' the geom uses the `y` (resp. `x`) aesthetic to identify different groups, then for each group uses
+#' the `x` (resp. `y`) aesthetic and the `thickness` aesthetic to draw a function as an slab, and draws
+#' points and intervals horizontally (resp. vertically) using the `xmin`, `x`, and `xmax` (resp.
+#' `ymin`, `y`, and `ymax`) aesthetics. For compatibility with the base
+#' ggplot naming scheme for `orientation`, `"x"` can be used as an alias for `"vertical"` and `"y"` as an alias for
+#' `"horizontal"` (tidybayes had an `orientation` parameter before ggplot did, and I think the tidybayes naming
+#' scheme is more intuitive: `"x"` and `"y"` are not orientations and their mapping to orientations is, in my
+#' opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
 #' @param justification Justification of the interval relative to the slab, where `0` indicates bottom/left
 #' justification and `1` indicates top/right justification (depending on `orientation`). If `justification`
 #' is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is
@@ -304,7 +309,7 @@ geom_slabinterval = function(
   # amongst other things
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
   scale = 0.9,
-  orientation = c("vertical", "horizontal"),
+  orientation = NA,
   justification = NULL,
   normalize = c("all", "panels", "xy", "groups", "none"),
   interval_size_domain = c(1, 6),
@@ -319,7 +324,6 @@ geom_slabinterval = function(
   inherit.aes = TRUE
 ) {
   side = match.arg(side)
-  orientation = match.arg(orientation)
   normalize = match.arg(normalize)
 
   layer_geom_slabinterval(
@@ -470,7 +474,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   default_params = list(
     side = "topright",
     scale = 0.9,
-    orientation = "vertical",
+    orientation = NA,
     justification = NULL,
     normalize = "all",
     interval_size_domain = c(1, 6),
@@ -484,10 +488,26 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
   default_datatype = "slab",
 
-  setup_data = function(self, data, params) {
+  setup_params = function(self, data, params) {
     params = defaults(params, self$default_params)
 
+    # detect orientation
+    params$flipped_aes = get_flipped_aes(data, params,
+      main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
+    )
+    params$orientation = get_orientation(params$flipped_aes)
+
+    params
+  },
+
+  setup_data = function(self, data, params) {
+    #set up orientation
+    data$flipped_aes = params$flipped_aes
     define_orientation_variables(params$orientation)
+
+    # when we are missing a main aesthetic (e.g. the y aes in a horizontal orientation),
+    # fill it in with 0 so that we can still draw stuff
+    data[[y]] = data[[y]] %||% 0
 
     data$datatype = data$datatype %||% self$default_datatype
 

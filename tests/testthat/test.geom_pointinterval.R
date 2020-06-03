@@ -78,3 +78,29 @@ test_that("grouped pointintervals work", {
   vdiffr::expect_doppelganger("grouped pointintervals (stat)", stat_forward_plot)
 
 })
+
+test_that("orientation detection on pointintervals works", {
+  p = data.frame(
+    v = c(1,2),
+    l = c(0, 1),
+    u = c(4,5),
+    g = c("a", "b")
+  ) %>% ggplot()
+
+  vdiffr::expect_doppelganger("vertical pointinterval orientation detection",
+    p + geom_pointinterval(aes(x = g, y = v, ymin = l, ymax = u), orientation = NA)
+  )
+
+  vdiffr::expect_doppelganger("horizontal pointinterval orientation detection",
+    p + geom_pointinterval(aes(y = g, x = v, xmin = l, xmax = u), orientation = NA)
+  )
+
+  vdiffr::expect_doppelganger("vertical pointinterval orientation detection plus dodge",
+    p + geom_pointinterval(aes(color = g, y = v, ymin = l, ymax = u), orientation = NA, position = "dodge")
+  )
+
+  vdiffr::expect_doppelganger("horizontal pointinterval orientation detection plus dodge",
+    p + geom_pointinterval(aes(color = g, x = v, xmin = l, xmax = u), orientation = NA, position = "dodge")
+  )
+
+})

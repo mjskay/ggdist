@@ -72,7 +72,7 @@ geom_interval = function(
   ...,
 
   side = "both",
-  orientation = "vertical",
+  orientation = NA,
   interval_size_range = c(1, 6),
   show_slab = FALSE,
   show_point = FALSE
@@ -114,7 +114,7 @@ GeomInterval = ggproto("GeomInterval", GeomSlabinterval,
 
   default_params = defaults(list(
     side = "both",
-    orientation = "vertical",
+    orientation = NA,
     interval_size_range = c(1, 6),
     show_slab = FALSE,
     show_point = FALSE

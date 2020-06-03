@@ -222,7 +222,7 @@ stat_dist_slabinterval = function(
   slab_type = c("pdf", "cdf", "ccdf"),
   p_limits = c(.001, .999),
 
-  orientation = c("vertical", "horizontal"),
+  orientation = NA,
   limits = NULL,
   n = 501,
   .width = c(.66, .95),
@@ -235,7 +235,6 @@ stat_dist_slabinterval = function(
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
-  orientation = match.arg(orientation)
   slab_type = match.arg(slab_type)
 
   layer(
@@ -315,6 +314,15 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   ), StatSlabinterval$default_params),
 
   setup_params = function(self, data, params) {
+    params = defaults(params, self$default_params)
+
+    # detect orientation -- this must be done before calling up to StatSlabInterval
+    # since auto-detection here is different (main_is_orthogonal needs to be FALSE)
+    params$flipped_aes = get_flipped_aes(data, params,
+      main_is_orthogonal = FALSE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
+    )
+    params$orientation = get_orientation(params$flipped_aes)
+
     params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
 
     params$limits_args = list(

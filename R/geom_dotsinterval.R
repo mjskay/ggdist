@@ -202,7 +202,12 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
   # Swap axes if using coord_flip
   if (inherits(coord, "CoordFlip")) {
-    orientation = ifelse(orientation == "horizontal", "vertical", "horizontal")
+    orientation = switch(orientation,
+      y = ,
+      horizontal = "x",
+      x = ,
+      vertical = "y"
+    )
     define_orientation_variables(orientation)
   }
   s_data = coord$transform(s_data, panel_params)

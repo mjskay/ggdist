@@ -10,7 +10,7 @@ stat_slabinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
-  orientation = c("vertical", "horizontal"),
+  orientation = NA,
   limits_function = NULL,
   limits_args = list(),
   limits = NULL,
@@ -59,11 +59,16 @@ a call to a position adjustment function.}
 (e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). When horizontal (resp. vertical), the geom uses the \code{y} (resp. \code{x})
-aesthetic to identify different groups, then for each group uses the \code{x} (resp. \code{y}) aesthetic and the
-\code{thickness} aesthetic to draw a function as an slab, and draws points and intervals horizontally
-(resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp. \code{ymin}, \code{y}, and \code{ymax})
-aesthetics.}
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
 \item{limits_function}{A function that takes a data frame of aesthetics and returns a data frame with
 columns \code{.lower} and \code{.upper} indicating the limits of the input for the slab function for that data frame.}

@@ -76,7 +76,7 @@ stat_slabinterval = function(
   position = "identity",
   ...,
 
-  orientation = c("vertical", "horizontal"),
+  orientation = NA,
 
   limits_function = NULL,
   limits_args = list(),
@@ -99,7 +99,6 @@ stat_slabinterval = function(
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
-  orientation = match.arg(orientation)
 
   layer(
     data = data,
@@ -146,7 +145,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
   ),
 
   default_params = list(
-    orientation = "vertical",
+    orientation = NA,
 
     limits_function = NULL,
     limits_args = list(),
@@ -166,6 +165,30 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
     na.rm = FALSE
   ),
+
+  setup_params = function(self, data, params) {
+    params = defaults(params, self$default_params)
+
+    # detect orientation
+    params$flipped_aes = get_flipped_aes(data, params,
+      main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
+    )
+    params$orientation = get_orientation(params$flipped_aes)
+
+    params
+  },
+
+  setup_data = function(self, data, params) {
+    #set up orientation
+    data$flipped_aes = params$flipped_aes
+    define_orientation_variables(params$orientation)
+
+    # when we are missing a main aesthetic (e.g. the y aes in a horizontal orientation),
+    # fill it in with 0 so that we can still draw stuff
+    data[[y]] = data[[y]] %||% 0
+
+    data
+  },
 
   compute_panel = function(self, data, scales,
     orientation = self$default_params$orientation,

@@ -160,3 +160,18 @@ test_that("scale transformation works", {
     p_rev + stat_dist_ccdfintervalh(n = 100)
   )
 })
+
+test_that("orientation detection works properly on stat_dist", {
+  vdiffr::expect_doppelganger("stat_dist with no main axis",
+    ggplot(data.frame(), aes(dist = "norm")) + stat_dist_slabinterval(n = 10)
+  )
+
+  vdiffr::expect_doppelganger("stat_dist with main axis of y",
+    ggplot(data.frame(), aes(y = "a", dist = "norm")) + stat_dist_slabinterval(n = 10)
+  )
+
+  vdiffr::expect_doppelganger("stat_dist with main axis of x",
+    ggplot(data.frame(), aes(x = "a", dist = "norm")) + stat_dist_slabinterval(n = 10)
+  )
+
+})

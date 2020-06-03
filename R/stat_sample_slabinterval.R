@@ -26,11 +26,13 @@ weighted_ecdf = function(x, weights = NULL) {
 #' @importFrom rlang missing_arg
 #' @importFrom stats ecdf
 sample_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = "vertical",
+  df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = NA,
   adjust = 1, trim = TRUE, breaks = "Sturges", outline_bars = FALSE, trans = scales::identity_trans(), ...
 ) {
   x = switch(orientation,
+    y = ,
     horizontal = "x",
+    x = ,
     vertical = "y"
   )
 
@@ -194,7 +196,7 @@ stat_sample_slabinterval = function(
   breaks = "Sturges",
   outline_bars = FALSE,
 
-  orientation = c("vertical", "horizontal"),
+  orientation = NA,
   limits = NULL,
   n = 501,
   interval_function = NULL,
@@ -207,7 +209,6 @@ stat_sample_slabinterval = function(
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
-  orientation = match.arg(orientation)
   slab_type = match.arg(slab_type)
 
   layer(
