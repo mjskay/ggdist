@@ -48,7 +48,7 @@ Suggests:
     MCMCglmm,
     bayesplot,
     modelr,
-    brms (>= 2.11.1),
+    brms (>= 2.13.0),
     cowplot,
     covr,
     gdtools,

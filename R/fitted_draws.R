@@ -138,7 +138,7 @@ fitted_draws.brmsfit = function(model, newdata, value = ".value", ..., n = NULL,
 
   # get the names of distributional regression parameters to include
   dpars = if (is_true(dpar)) {
-    names(brms::parse_bf(model$formula)$dpar)
+    names(brms::brmsterms(model$formula)$dpar)
   } else if (is_false(dpar)) {
     NULL
   } else {
