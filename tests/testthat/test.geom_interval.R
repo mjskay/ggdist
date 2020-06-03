@@ -88,7 +88,7 @@ test_that("multimodal intervals work with stat_interval", {
 
   stat_intervalh_plot_multimodal_dodged = df %>%
     ggplot(aes(x = x, y = "a", group = g)) +
-    stat_intervalh(point_interval = mean_hdi, position = ggstance::position_dodgev()) +
+    stat_intervalh(point_interval = mean_hdi, position = "dodge") +
     scale_color_brewer()
 
   vdiffr::expect_doppelganger("multimodal intervals (h, stat, dodged)", stat_intervalh_plot_multimodal_dodged)

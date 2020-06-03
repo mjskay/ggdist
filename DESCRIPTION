@@ -36,7 +36,6 @@ Suggests:
     testthat,
     vdiffr (>= 0.3.0),
     svglite,
-    ggstance (>= 0.3.2),
     rstan (>= 2.17.0),
     runjags,
     rjags,

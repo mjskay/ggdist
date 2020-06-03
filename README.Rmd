@@ -161,7 +161,6 @@ This example shows the use of tidybayes with the Stan modeling language; however
 library(magrittr)
 library(dplyr)
 library(ggplot2)
-library(ggstance)
 library(rstan)
 library(tidybayes)
 library(emmeans)
@@ -345,7 +344,7 @@ This makes it easy to bind the two results together and plot them:
 ```{r broom_bind}
 bind_rows(linear_results, bayes_results) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-  geom_pointintervalh(position = position_dodgev(height = .3))
+  geom_pointintervalh(position = position_dodge(width = .3))
 ```
 
 Shrinkage towards the overall mean is visible in the Bayesian results.

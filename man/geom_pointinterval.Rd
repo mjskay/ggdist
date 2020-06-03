@@ -54,8 +54,7 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 layer, as a string.}
 
 \item{position}{The position adjustment to use for overlapping points on this layer. Setting this equal to
-\code{"dodge"} or \code{"dodgev"} (if the \code{ggstance} package is loaded) can be useful if you have
-overlapping intervals.}
+\code{"dodge"} can be useful if you have overlapping intervals.}
 
 \item{...}{
   Arguments passed on to \code{\link[=geom_slabinterval]{geom_slabinterval}}

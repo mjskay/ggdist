@@ -96,7 +96,6 @@ library(forcats)
 library(modelr)
 library(tidybayes)
 library(ggplot2)
-library(ggstance)
 library(cowplot)
 library(emmeans)
 library(broom)
@@ -708,7 +707,7 @@ Here, `to_broom_names` will convert `.lower` and `.upper` into `conf.low` and `c
 bind_rows(linear_results, bayes_results) %>%
   mutate(condition = fct_rev(condition)) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-  geom_pointintervalh(position = position_dodgev(height = .3))
+  geom_pointintervalh(position = position_dodge(width = .3))
 ```
 
 Compatibility with `tidy` also gives compatibility with `dotwhisker::dwplot`:

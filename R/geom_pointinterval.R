@@ -29,8 +29,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @inheritParams geom_slabinterval
 #' @inheritDotParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
-#' `"dodge"` or `"dodgev"` (if the `ggstance` package is loaded) can be useful if you have
-#' overlapping intervals.
+#' `"dodge"` can be useful if you have overlapping intervals.
 #' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
 #' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
 #' those that are mapped (the default for most geoms).

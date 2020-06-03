@@ -62,7 +62,6 @@ library(tidybayes)
 library(ggplot2)
 library(cowplot)
 library(brms)
-library(ggstance)
 
 theme_set(theme_tidybayes())
 ```

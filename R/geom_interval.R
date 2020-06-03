@@ -30,8 +30,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @inheritParams geom_slabinterval
 #' @inheritDotParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
-#' `"dodge"` or `"dodgev"` (if the `ggstance` package is loaded) can be useful if you have
-#' overlapping intervals.
+#' `"dodge"` can be useful if you have overlapping intervals.
 #' @author Matthew Kay
 #' @seealso See [stat_interval()] / [stat_intervalh()] for the stat versions, intended
 #' for use on samples from a distribution.
