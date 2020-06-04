@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Slab + interval stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-02</h4>
+            <h4 class="date">2020-06-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
@@ -146,7 +146,6 @@ img {
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cowplot</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggstance</span>)
 
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>())</pre></body></html></div>
 </div>
@@ -156,21 +155,22 @@ img {
 <p><img src="slabinterval_files/figure-html/slabinterval_family-1.png" width="672"></p>
 <p>Tidybayes has a pantheon of geoms and stats that stem from a common root: <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>. These geoms consist of a “slab” (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components.</p>
 <p>Using <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> directly is not necessarily advisable: they are highly configurable on their own, but this configurability requires remembering a bunch of combinations of options to use. Instead, tidybayes contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:</p>
-<p><code>[geom|stat|stat_dist]_[name][h|]</code></p>
-<p>For example, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code>, <code>stat_dist_eyeh</code>, <code>stat_eyeh</code>, <code>stat_pointinterval</code>, <code>geom_pointinterval</code>, etc. The naming scheme works as follows:</p>
+<p><code>[geom|stat|stat_dist]_[name]</code></p>
+<p>For example, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code>, <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>, <code><a href="../reference/stat_pointinterval.html">stat_pointinterval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, etc. The naming scheme works as follows:</p>
 <ul>
 <li>Geoms starting with <code>geom_</code> are meant to be used on already-summarized data (typically data summarized into intervals): things like <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code> and <code><a href="../reference/geom_interval.html">geom_interval()</a></code>.</li>
-<li>Stats starting with <code>stat_</code> are meant to be used on sample data; e.g. draws from a posterior distribution (or any other distribution, really). These stats compute relevant summaries (densities, CDFs, points, and/or intervals) before forwarding the summaries to their geom. Some have geom counterparts (e.g. <code><a href="../reference/stat_interval.html">stat_interval()</a></code> corresponds to <code><a href="../reference/geom_interval.html">geom_interval()</a></code>, except the former applies to sample data and the latter to already-summarized data). Many of these stats do not currently have geom counterparts (e.g. <code>stat_ccdfinterval</code>), as they are primarily differentiated based on what kind of statistical summary they compute. If you’ve already computed a function (such as a density or CDF), you can just use <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> directly.</li>
-<li>Stats starting with <code>stat_dist</code> can be used to create slab+interval geoms for analytical distributions. They take distribution names (the <code>dist</code> aesthetic) and arguments (the <code>args</code> aesthetic or <code>arg1</code>, … <code>arg9</code> aesthetics) and compute the relevant slabs and intervals. Thus, where <code>stat_eye</code> makes an eye plot for sample data, <code>stat_dist_eye</code> makes an eye plot for an analytical distribution.</li>
+<li>Stats starting with <code>stat_</code> are meant to be used on sample data; e.g. draws from a posterior distribution (or any other distribution, really). These stats compute relevant summaries (densities, CDFs, points, and/or intervals) before forwarding the summaries to their geom. Some have geom counterparts (e.g. <code><a href="../reference/stat_interval.html">stat_interval()</a></code> corresponds to <code><a href="../reference/geom_interval.html">geom_interval()</a></code>, except the former applies to sample data and the latter to already-summarized data). Many of these stats do not currently have geom counterparts (e.g. <code><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval()</a></code>), as they are primarily differentiated based on what kind of statistical summary they compute. If you’ve already computed a function (such as a density or CDF), you can just use <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> directly.</li>
+<li>Stats starting with <code>stat_dist_</code> can be used to create slab+interval geoms for analytical distributions. They take distribution names (the <code>dist</code> aesthetic) and arguments (the <code>args</code> aesthetic or <code>arg1</code>, … <code>arg9</code> aesthetics) and compute the relevant slabs and intervals. Thus, where <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> makes an eye plot for sample data, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code> makes an eye plot for an analytical distribution.</li>
 </ul>
+<p>All slabinterval geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting <code>orientation = "horizontal"</code> or <code>orientation = "vertical"</code>.</p>
 <p>We’ll start with one of the most common existing use cases for these kinds geoms: eye plots.</p>
 </div>
 <div id="eye-plots-and-half-eye-plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#eye-plots-and-half-eye-plots" class="anchor"></a>Eye plots and half-eye plots</h2>
-<div id="on-sample-data-stat_halfeyeh" class="section level3">
+<div id="on-sample-data-stat_halfeye" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-sample-data-stat_halfeyeh" class="anchor"></a>On sample data: <code>stat_[half]eye[h]</code>
+<a href="#on-sample-data-stat_halfeye" class="anchor"></a>On sample data: <code>stat_[half]eye</code>
 </h3>
 <p>Eye plots combine densities (as violins) with intervals to give a more detailed picture of uncertainty than is available just by looking at intervals.</p>
 <p>For these first few demos we’ll use these data:</p>
@@ -186,14 +186,14 @@ img {
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>(<span class="no">value</span>)</pre></body></html></div>
 <p>We can summarize it at the group level using an eye plot with <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> (ignoring subgroups for now):</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_eye()"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/group_eye-1.png" width="432"></p>
-<p>(Users of older versions of tidybayes might have used <code><a href="../reference/geom_eye.html">geom_eye()</a></code>, which is the older spelling of <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Due to the name standardization in this version of tidybayes (see the description above), <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> is now the preferred spelling, though <code><a href="../reference/geom_eye.html">geom_eye()</a></code> will continue to work.)</p>
-<p>We can also use <code>stat_halfeye</code> instead to just get densities:</p>
+<p>Users of older versions of tidybayes might have used <code><a href="../reference/geom_eye.html">geom_eye()</a></code>, which is the older spelling of <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Due to the name standardization in version 2 of tidybayes (see the description above), <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> is now the preferred spelling. <code><a href="../reference/geom_eye.html">geom_eye()</a></code> will continue to work for now, but is deprecated and may throw a warning in future versions.</p>
+<p>We can also use <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye()</a></code> instead to get densities instead of violins:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeye</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_halfeye()"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/group_halfeye-1.png" width="432"></p>
@@ -208,52 +208,37 @@ img {
   <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"right"</span>)  + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'right'"</span>)
 )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/eye_side-1.png" width="648"></p>
-<p>Or show a horizontal version by appending <code>h</code> to <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye()</a></code> to get <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh()</a></code>:</p>
+<p>Note how the above chart was drawn vertically instead of horizontally: all slabinterval geoms automatically detect their orientation based on the input data. For example, if you use a factor on one axis (say the <code>x</code> axis below), the geom will be drawn along the other axis:</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>)) +
-  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_halfeyeh()"</span>)</pre></body></html></div>
-<p><img src="slabinterval_files/figure-html/halfeyeh-1.png" width="432"></p>
-<p><code><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh()</a></code> is equivalent to <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye(orientation = 'horizontal')</a></code>.</p>
-<p>Yielding these combinations:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
-  <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
-
-<span class="no">ph</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>)) +
-  <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
-
-<span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>,
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_[half]eye[h]"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_eye()"</span>),
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeye</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_halfeye()"</span>),
-  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eyeh</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_eyeh()"</span>),
-  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeyeh</a></span>()  + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_halfeyeh()"</span>)
-)</pre></body></html></div>
-<p><img src="slabinterval_files/figure-html/halfeyeh_family-1.png" width="648"></p>
-<p>The <code>side</code> parameter works for <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye()</a></code> as well. <code>"top"</code> and <code>"right"</code> are considered synonyms, as are <code>"bottom"</code> and <code>"left"</code>; either form works with both horizontal and vertical versions of the geoms:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_halfeye</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_halfeye()"</span>)</pre></body></html></div>
+<p><img src="slabinterval_files/figure-html/halfeyeh-1.png" width="432"></p>
+<p>If automatic detection of the desired axis fails, you can specify it manually; e.g. with <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye(orientation = 'vertical')</a></code> or <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye(orientation = 'horizontal')</a></code>.</p>
+<p>The <code>side</code> parameter works for horizontal geoms as well. <code>"top"</code> and <code>"right"</code> are considered synonyms, as are <code>"bottom"</code> and <code>"left"</code>; either form works with both horizontal and vertical versions of the geoms:</p>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>)) +
   <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
 
 <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>,
   <span class="co"># side = "left" would give the same result</span>
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eyeh</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"left"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_eyeh()"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'bottom'"</span>),
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eyeh</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"both"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'both'"</span>),
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"left"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_eye()"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'bottom'"</span>),
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"both"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'both'"</span>),
   <span class="co"># side = "right" would give the same result</span>
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eyeh</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"right"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'top'"</span>)
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"right"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'top'"</span>)
 )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/eyeh_side-1.png" width="648"></p>
 <p>Eye plots are also designed to support dodging through the standard mechanism of <code>position = "dodge"</code>. Unlike with geom_violin(), densities in groups that are not dodged (here, ‘a’ and ‘b’) have the same area and max width as those in groups that are dodged (‘c’):</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_eye(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/eye_dodge-1.png" width="648"></p>
+<p>Dodging works whether geoms are horizontal or vertical.</p>
 </div>
-<div id="on-analytical-distributions-stat_dist_halfeyeh" class="section level3">
+<div id="on-analytical-distributions-stat_dist_halfeye" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-analytical-distributions-stat_dist_halfeyeh" class="anchor"></a>On analytical distributions: <code>stat_dist_[half]eye[h]</code>
+<a href="#on-analytical-distributions-stat_dist_halfeye" class="anchor"></a>On analytical distributions: <code>stat_dist_[half]eye</code>
 </h3>
 <p>The same set of (half-)eye plot stats designed for sample data described above all have corresponding stats for analytical distributions: simply use <code>stat_dist_</code> instead of <code>stat_</code> in the name. These stats use the following aesthetics to produce plots of distributions:</p>
 <ul>
@@ -263,7 +248,7 @@ img {
 <code>args</code> or <code>arg1</code>, … <code>arg9</code>: arguments for the distribution. If you use <code>args</code>, it should be a list column where each element is a list containing arguments for the distribution functions; alternatively, you can pass the arguments directly using <code>arg1</code>, … <code>arg9</code>.</li>
 </ul>
 <p>For example, here are a variety of normal distributions describing the same data from the previous example:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
     ~<span class="no">group</span>, ~<span class="no">subgroup</span>, ~<span class="no">mean</span>, ~<span class="no">sd</span>,
     <span class="st">"a"</span>,          <span class="st">"h"</span>,     <span class="fl">5</span>,   <span class="fl">1</span>,
     <span class="st">"b"</span>,          <span class="st">"h"</span>,     <span class="fl">7</span>,   <span class="fl">1.5</span>,
@@ -272,44 +257,44 @@ img {
     <span class="st">"c"</span>,          <span class="st">"j"</span>,     <span class="fl">7</span>,   <span class="fl">1</span>
 )</pre></body></html></div>
 <p>We can visualize these distributions directly using <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code>:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mean</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sd</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_eye(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dist_eye_dodge-1.png" width="648"></p>
 <p>This makes it easy to visualize a variety of distributions. E.g., here are some Beta distributions:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">5</span>, <span class="fl">100</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">10</span>)) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">5</span>, <span class="fl">100</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">10</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">alpha</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"beta"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">alpha</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="fl">10</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_halfeyeh()"</span>,
+    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_halfeye()"</span>,
     <span class="kw">x</span> <span class="kw">=</span> <span class="st">"Beta(alpha,10) distribution"</span>
   )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/beta_stacked-1.png" width="648"></p>
-<p>If you want to plot all of these on top of each other (instead of stacked), you could turn off plotting of the interval to make the plot easier to read using <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh(show_interval = FALSE, ...)</a></code>. A shortcut for <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh(show_interval = FALSE, ...)</a></code> is <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh()</a></code>. We’ll also turn off the fill color with <code>fill = NA</code> to make the stacking easier to see, and use outline <code>color</code> to show the value of <code>alpha</code>:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">5</span>, <span class="fl">100</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">10</span>)) <span class="kw">%&gt;%</span>
+<p>If you want to plot all of these on top of each other (instead of stacked), you could turn off plotting of the interval to make the plot easier to read using <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye(show_interval = FALSE, ...)</a></code>. A shortcut for <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye(show_interval = FALSE, ...)</a></code> is <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slab()</a></code>. We’ll also turn off the fill color with <code>fill = NA</code> to make the stacking easier to see, and use outline <code>color</code> to show the value of <code>alpha</code>:</p>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">5</span>, <span class="fl">100</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">10</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"beta"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">alpha</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">alpha</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fl">NA</span>) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_slab</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fl">NA</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fl">FALSE</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_color_viridis_c</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_slabh(fill = NA)"</span>,
+    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_slab(fill = NA)"</span>,
     <span class="kw">x</span> <span class="kw">=</span> <span class="st">"Beta(alpha,10) distribution"</span>,
     <span class="kw">y</span> <span class="kw">=</span> <span class="kw">NULL</span>
   )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/beta_overplotted_slabh-1.png" width="648"></p>
-<p>The approach using <code>arg1</code>, … <code>arg9</code> can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the <code>args</code> aesthetic. We’ll use it along with the <code>brms</code> package’s implementation of the scaled and shifted Student t distribution (<code><a href="https://rdrr.io/pkg/brms/man/StudentT.html">brms::dstudent_t()</a></code>, etc):</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+<p>The approach of using <code>arg1</code>, … <code>arg9</code> can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the <code>args</code> aesthetic. We’ll use it along with the <code>brms</code> package’s implementation of the scaled and shifted Student t distribution (<code><a href="https://rdrr.io/pkg/brms/man/StudentT.html">brms::dstudent_t()</a></code>, etc):</p>
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
   ~ <span class="no">dist</span>,      ~ <span class="no">args</span>,
   <span class="st">"norm"</span>,      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">0</span>, <span class="fl">1</span>),
   <span class="st">"student_t"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">3</span>, <span class="fl">0</span>, <span class="fl">1</span>)
 ) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">args</span> <span class="kw">=</span> <span class="no">args</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_halfeyeh()"</span>)</pre></body></html></div>
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_halfeye()"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/norm_vs_t-1.png" width="432"></p>
 <p>A particularly good use of the <code>dist</code> stats is to visualize priors. For example, with <code>brms</code> you can specify priors using the <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html">brms::prior()</a></code> function. E.g., I might set some priors on the betas and the standard deviation in a model:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># NB these priors are made up!</span>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># NB these priors are made up!</span>
 <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
   <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">b</span>),
   <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsfamily.html">lognormal</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
@@ -318,7 +303,7 @@ img {
 ## 1    normal(0, 1)     b                                 
 ## 2 lognormal(0, 1) sigma</code></pre>
 <p>The <code>parse_dist</code> function can make it easier to visualize these: it takes in string specifications like those produced by <code>brms</code> — <code>"normal(0,1)"</code> and <code>"lognormal(0,1)"</code> above — and translates them into <code>.dist</code> and <code>.args</code> columns:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
   <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">b</span>),
   <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsfamily.html">lognormal</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
 ) <span class="kw">%&gt;%</span>
@@ -327,43 +312,42 @@ img {
 ## 1    normal(0, 1)     b                                   norm  0, 1
 ## 2 lognormal(0, 1) sigma                                  lnorm  0, 1</code></pre>
 <p>Notice that it also automatically translate some common distribution names (e.g. “normal” and “lognormal”) into their equivalent R function names (<code>"norm"</code> and <code>"lnorm"</code>). This makes it easy to use them with <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code> and its variants:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
   <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">b</span>),
   <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsfamily.html">lognormal</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
 ) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/parse_dist.html">parse_dist</a></span>(<span class="no">prior</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">class</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">.dist</span>, <span class="kw">args</span> <span class="kw">=</span> <span class="no">.args</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_halfeyeh()"</span>,
+    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_halfeye()"</span>,
     <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"with brms::prior() and tidybayes::parse_dist() to visualize priors"</span>,
     <span class="kw">x</span> <span class="kw">=</span> <span class="kw">NULL</span>
   )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/prior_dist_halfeyeh-1.png" width="648"></p>
 <p>The <code>stat_dist_...</code> family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"lnorm"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="fl">10</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="fl">2</span>*<span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="fl">10</span>))) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() +
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"lnorm"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="fl">10</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="fl">2</span>*<span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="fl">10</span>))) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_log10</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> <span class="fl">10</span>^<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">5</span>,<span class="fl">7</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="fl">2</span>))</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dist_halfeyeh_log_scale-1.png" width="432"></p>
 <p>As expected, a log-Normal density plotted on the log scale appears Normal. The Jacobian for the scale transformation is applied to the density so that the correct density is shown on the log scale. Internally, numerical differentiation is used to calculate the Jacobian so that the <code>stat_dist_...</code> family works generically across the different scale transformations supported by ggplot.</p>
 </div>
-<div id="summing-up-eye-plots-stat_dist_halfeyeh" class="section level3">
+<div id="summing-up-eye-plots-stat_dist_halfeye" class="section level3">
 <h3 class="hasAnchor">
-<a href="#summing-up-eye-plots-stat_dist_halfeyeh" class="anchor"></a>Summing up eye plots: <code>stat_[dist_][half]eye[h]</code>
+<a href="#summing-up-eye-plots-stat_dist_halfeye" class="anchor"></a>Summing up eye plots: <code>stat_[dist_][half]eye</code>
 </h3>
-<p>All of the above geoms follow the naming scheme <code>stat_[dist_][half]eye[h]</code>.</p>
+<p>All of the above geoms follow the naming scheme <code>stat_[dist_][half]eye</code>.</p>
 <ul>
 <li>Add <code>dist_</code> to the name to get stats for analytical distributions (otherwise it is for sample data).</li>
 <li>Add <code>half</code> to the name to get half-eyes (densities) instead of eyes (violins).</li>
-<li>Add <code>h</code> to the name to get the horizontal version.</li>
 </ul>
 </div>
 </div>
 <div id="histogram-interval-plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#histogram-interval-plots" class="anchor"></a>Histogram + interval plots</h2>
-<p>In some cases you might prefer histograms to density plots. <code>stat_histinterval[h]</code> provides an alternative to <code>stat_halfeye[h]</code> that uses histograms instead of densities:</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
+<p>In some cases you might prefer histograms to density plots. <code>stat_histinterval</code> provides an alternative to <code>stat_halfeye</code> that uses histograms instead of densities:</p>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
   <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
 
@@ -372,31 +356,31 @@ img {
   <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
 
 <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>,
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_histinterval[h]"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_histinterval()"</span>),
-  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histintervalh</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_histintervalh()"</span>)
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_histinterval()"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"horizontal"</span>),
+  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"vertical"</span>)
 )</pre></body></html></div>
-<p><img src="slabinterval_files/figure-html/stat_histintervalh-1.png" width="648"></p>
+<p><img src="slabinterval_files/figure-html/stat_histinterval_horizontal-1.png" width="648"></p>
 <p>You can use the <code>slab_color</code> aesthetic to show the outline of the bars. By default the outlines are only drawn on top of the bars, as typical tasks with histograms involve area estimation, so the outlines between bars are not strictly necessary and may be distracting. However, if you wish to include those outlines, you can set <code>outline_bars = TRUE</code>:</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>,
-  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histintervalh</a></span>(<span class="kw">slab_color</span> <span class="kw">=</span> <span class="st">"gray45"</span>, <span class="kw">outline_bars</span> <span class="kw">=</span> <span class="fl">FALSE</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_histintervalh"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"outline_bars = FALSE (default)"</span>),
-  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histintervalh</a></span>(<span class="kw">slab_color</span> <span class="kw">=</span> <span class="st">"gray45"</span>, <span class="kw">outline_bars</span> <span class="kw">=</span> <span class="fl">TRUE</span>) +
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>,
+  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histinterval</a></span>(<span class="kw">slab_color</span> <span class="kw">=</span> <span class="st">"gray45"</span>, <span class="kw">outline_bars</span> <span class="kw">=</span> <span class="fl">FALSE</span>) +
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_histinterval"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"outline_bars = FALSE (default)"</span>),
+  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_histinterval</a></span>(<span class="kw">slab_color</span> <span class="kw">=</span> <span class="st">"gray45"</span>, <span class="kw">outline_bars</span> <span class="kw">=</span> <span class="fl">TRUE</span>) +
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"outline_bars = TRUE"</span>)
 )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/stat_histintervalh_outlines-1.png" width="648"></p>
-<p>There are currently no analytical (<code>stat_dist_</code>) versions of <code><a href="../reference/stat_sample_slabinterval.html">stat_histinterval()</a></code> / <code><a href="../reference/stat_sample_slabinterval.html">stat_histintervalh()</a></code>.</p>
+<p>There are currently no analytical (<code>stat_dist_</code>) versions of <code><a href="../reference/stat_sample_slabinterval.html">stat_histinterval()</a></code>.</p>
 </div>
 <div id="ccdf-bar-plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ccdf-bar-plots" class="anchor"></a>CCDF bar plots</h2>
 <p>Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These <a href="http://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf">can be more effective for some decision-making tasks</a> than densities or intervals, and require fewer assumptions to create from sample data than density plots.</p>
 <p>For all of the examples above, both on sample data and analytical distributions, you can replace <code>[half]eye</code> with <code>[c]cdfinterval</code> to get a stat that creates a CDF or CCDF bar plot.</p>
-<div id="on-sample-data-stat_ccdfintervalh" class="section level3">
+<div id="on-sample-data-stat_ccdfinterval" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-sample-data-stat_ccdfintervalh" class="anchor"></a>On sample data: <code>stat_[c]cdfinterval[h]</code>
+<a href="#on-sample-data-stat_ccdfinterval" class="anchor"></a>On sample data: <code>stat_[c]cdfinterval</code>
 </h3>
-<p><code>stat_[c]cdfinterval[h]</code> has the following basic combinations:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
+<p><code>stat_[c]cdfinterval</code> has the following basic combinations:</p>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
   <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
 
@@ -405,20 +389,20 @@ img {
   <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
 
 <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>,
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_[c]cdfinterval[h]"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_ccdfinterval()"</span>),
-  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfintervalh</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_ccdfintervalh()"</span>),
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_cdfinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_cdfinterval()"</span>),
-  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_cdfintervalh</a></span>()  + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"stat_cdfintervalh()"</span>)
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_ccdfinterval()"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"vertical"</span>),
+  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"horizontal"</span>),
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_cdfinterval</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_cdfinterval()"</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"vertical"</span>),
+  <span class="no">ph</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_cdfinterval</a></span>()  + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"horizontal"</span>)
 )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/cdfinterval_family-1.png" width="648"></p>
-<p>The CCDF interval plots are probably more useful in general, as the bars typical grow up from the baseline. For example, replacing <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> with <code><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval()</a></code> in our previous subgroup plot produces CCDF bar plots:</p>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<p>The CCDF interval plots are probably more useful than the CDF interval plots in most cases, as the bars typically grow up from the baseline. For example, replacing <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> with <code><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval()</a></code> in our previous subgroup plot produces CCDF bar plots:</p>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_ccdfinterval(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/ccdf_barplot-1.png" width="648"></p>
 <p>The extents of the bars are determined automatically by range of the data in the samples. However, for bar charts it is often good practice to draw the bars from a meaningful reference point (this point is often 0). You can use <code><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">ggplot2::expand_limits()</a></code> to ensure the bar is drawn down to 0:</p>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0</span>) +
@@ -427,7 +411,7 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_ccdfinterval(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/ccdf_dodge-1.png" width="648"></p>
 <p>You can also adjust the position of the slab relative to the position of the interval using the <code>justification</code> parameter:</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>, <span class="kw">justification</span> <span class="kw">=</span> <span class="fl">1</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0</span>) +
@@ -435,28 +419,28 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">clip</span> <span class="kw">=</span> <span class="st">"off"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_ccdfinterval(position = 'dodge', justification = 1)"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/ccdf_justification-1.png" width="648"></p>
-<p>The <code>side</code> parameter also works as with <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Here we’ll demonstrate with <code><a href="../reference/stat_sample_slabinterval.html">stat_ccdfintervalh()</a></code>, the horizontal version:</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
+<p>The <code>side</code> parameter also works in the same way it does with <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Here we’ll demonstrate it horizontally:</p>
+<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="fl">0</span>) +
   <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/panel_border.html">panel_border</a></span>()
 
 <span class="fu"><a href="https://rdrr.io/pkg/cowplot/man/plot_grid.html">plot_grid</a></span>(<span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>,
   <span class="co"># side = "left" would give the same result</span>
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfintervalh</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"bottom"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_ccdfintervalh()"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'bottom'"</span>),
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfintervalh</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"both"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'both'"</span>),
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"bottom"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_ccdfinterval()"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'bottom'"</span>),
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"both"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'both'"</span>),
   <span class="co"># side = "right" would give the same result</span>
-  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfintervalh</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"top"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'top'"</span>)
+  <span class="no">p</span> + <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="kw">side</span> <span class="kw">=</span> <span class="st">"top"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"side = 'top'"</span>)
 )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/ccdf_side-1.png" width="648"></p>
 </div>
-<div id="on-analytical-distributions-stat_dist_ccdfintervalh" class="section level3">
+<div id="on-analytical-distributions-stat_dist_ccdfinterval" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-analytical-distributions-stat_dist_ccdfintervalh" class="anchor"></a>On analytical distributions: <code>stat_dist_[c]cdfinterval[h]</code>
+<a href="#on-analytical-distributions-stat_dist_ccdfinterval" class="anchor"></a>On analytical distributions: <code>stat_dist_[c]cdfinterval</code>
 </h3>
 <p>You can also use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval()</a></code> instead if you wish to visualize analytical distributions, just as you can use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code>.</p>
-<p>By default, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval()</a></code> uses the quantiles at <code>p = 0.001</code> and <code>p = 0.999</code> in the distributions are used to determine their extent. You can change this setting using the <code>p_limits</code> parameter, or use <code><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits()</a></code> to ensure a particular value is shown as before:</p>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
+<p>By default, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval()</a></code> uses the quantiles at <code>p = 0.001</code> and <code>p = 0.999</code> in the distributions are used to determine their extent. You can change this setting using the <code>p_limits</code> parameter, or use <code><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits()</a></code> to ensure a particular value is shown, as before:</p>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mean</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sd</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0</span>) +
@@ -464,50 +448,49 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dist_ccdf_dodge-1.png" width="648"></p>
 </div>
-<div id="summing-up-cdf-bar-plots-stat_dist_ccdfintervalh" class="section level3">
+<div id="summing-up-cdf-bar-plots-stat_dist_ccdfinterval" class="section level3">
 <h3 class="hasAnchor">
-<a href="#summing-up-cdf-bar-plots-stat_dist_ccdfintervalh" class="anchor"></a>Summing up CDF bar plots: <code>stat_[dist_][c]cdfinterval[h]</code>
+<a href="#summing-up-cdf-bar-plots-stat_dist_ccdfinterval" class="anchor"></a>Summing up CDF bar plots: <code>stat_[dist_][c]cdfinterval</code>
 </h3>
-<p>All of the above geoms follow the naming scheme <code>stat_[dist_][c]cdfinterval[h]</code>.</p>
+<p>All of the above geoms follow the naming scheme <code>stat_[dist_][c]cdfinterval</code>.</p>
 <ul>
 <li>Add <code>dist_</code> to the name to get stats for analytical distributions (otherwise it is for sample data).</li>
 <li>Add <code>c</code> to the name to get CCDFs instead of CDFs.</li>
-<li>Add <code>h</code> to the name to get the horizontal version.</li>
 </ul>
 </div>
 </div>
 <div id="gradient-plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#gradient-plots" class="anchor"></a>Gradient plots</h2>
-<p>An alternative approach to mapping density onto the <code>thickness</code> aesthetic of the slab is to instead map it onto its <code>alpha</code> value (i.e., opacity). This is what the <code>stat_[dist_]gradientinterval[h]</code> family does (actually, it uses <code>slab_alpha</code>, a variant of the <code>alpha</code> aesthetic).</p>
-<div id="on-sample-data-stat_gradientintervalh" class="section level3">
+<p>An alternative approach to mapping density onto the <code>thickness</code> aesthetic of the slab is to instead map it onto its <code>alpha</code> value (i.e., opacity). This is what the <code>stat_[dist_]gradientinterval</code> family does (actually, it uses <code>slab_alpha</code>, a variant of the <code>alpha</code> aesthetic, described below).</p>
+<div id="on-sample-data-stat_gradientinterval" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-sample-data-stat_gradientintervalh" class="anchor"></a>On sample data: <code>stat_gradientinterval[h]</code>
+<a href="#on-sample-data-stat_gradientinterval" class="anchor"></a>On sample data: <code>stat_gradientinterval</code>
 </h3>
 <p>For example, replacing <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> with <code><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval()</a></code> produces gradient + interval plots:</p>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_gradientinterval(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/gradient_dodge-1.png" width="648"></p>
 <p><code><a href="../reference/stat_sample_slabinterval.html">stat_gradientinterval()</a></code> maps density onto the <code>slab_alpha</code> aesthetic, which is a variant of the ggplot <code>alpha</code> scale that specifically targets alpha (opacity) values of the slab portion of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code>. This aesthetic has default ranges and limits that are a little different from the base ggplot <code>alpha</code> scale and which ensure that densities of 0 are mapped onto opacities of 0. You can use <code><a href="../reference/scales.html">scale_slab_alpha_continuous()</a></code> to adjust this scale’s settings.</p>
 </div>
-<div id="on-analytical-distributions-stat_dist_ccdfintervalh-1" class="section level3">
+<div id="on-analytical-distributions-stat_dist_ccdfinterval-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-analytical-distributions-stat_dist_ccdfintervalh-1" class="anchor"></a>On analytical distributions: <code>stat_dist_[c]cdfinterval[h]</code>
+<a href="#on-analytical-distributions-stat_dist_ccdfinterval-1" class="anchor"></a>On analytical distributions: <code>stat_dist_[c]cdfinterval</code>
 </h3>
 <p>As with other plot types, you can also use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval()</a></code> instead if you wish to visualize analytical distributions:</p>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mean</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sd</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_gradientinterval(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dist_gradient_dodge-1.png" width="648"></p>
 </div>
-<div id="summing-up-gradient-plots-stat_dist_gradientintervalh" class="section level3">
+<div id="summing-up-gradient-plots-stat_dist_gradientinterval" class="section level3">
 <h3 class="hasAnchor">
-<a href="#summing-up-gradient-plots-stat_dist_gradientintervalh" class="anchor"></a>Summing up gradient plots: <code>stat_[dist_]gradientinterval[h]</code>
+<a href="#summing-up-gradient-plots-stat_dist_gradientinterval" class="anchor"></a>Summing up gradient plots: <code>stat_[dist_]gradientinterval</code>
 </h3>
-<p>All of the above geoms follow the naming scheme <code>stat_[dist_]gradientinterval[h]</code>.</p>
+<p>All of the above geoms follow the naming scheme <code>stat_[dist_]gradientinterval</code>.</p>
 <ul>
 <li>Add <code>dist_</code> to the name to get stats for analytical distributions (otherwise it is for sample data).</li>
 <li>Add <code>h</code> to the name to get the horizontal version.</li>
@@ -518,18 +501,18 @@ img {
 <h2 class="hasAnchor">
 <a href="#dotplots" class="anchor"></a>Dotplots</h2>
 <p>The encodings thus far are <em>continuous</em> probability encodings: they map probabilities or probability densities onto aesthetics like x/y position or transparency. An alternative is <em>discrete</em> or <em>frequency-framing</em> uncertainty visualizations, such as <em>dotplots</em> and <em>quantile dotplots</em>. These represent distributions as number of discrete possible outcomes.</p>
-<div id="on-sample-data-stat_dotsh" class="section level3">
+<div id="on-sample-data-stat_dots" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-sample-data-stat_dotsh" class="anchor"></a>On sample data: <code>stat_dots[h]</code>
+<a href="#on-sample-data-stat_dots" class="anchor"></a>On sample data: <code>stat_dots</code>
 </h3>
 <p>For example, replacing <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye()</a></code> with <code><a href="../reference/geom_dotsinterval.html">stat_dots()</a></code> produces dotplots:</p>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dots(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dots_dodge-1.png" width="648"></p>
 <p>Unlike the base <code><a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html">ggplot2::geom_dotplot()</a></code> geom, <code><a href="../reference/geom_dotsinterval.html">tidybayes::geom_dots()</a></code> automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:</p>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dots(slab_color = NA)"</span>)</pre></body></html></div>
@@ -540,40 +523,39 @@ img {
 <a href="#quantile-dotplots" class="anchor"></a>Quantile dotplots</h3>
 <p>The above plots are a bit hard to read due to the large number of dots. Particularly when summarizing posterior distributions or predictive distributions, it can make sense to plot a smaller number of dots (say 20, 50 or 100) that are <em>representative</em> of the full sample. One such approach is to plot <em>quantiles</em>, thereby creating <em>quantile dotplots</em>, which can help people make decisions under uncertainty (<a href="https://doi.org/10.1145/2858036.2858558">Kay 2016</a>, <a href="https://doi.org/10.1145/3173574.3173718">Fernandes 2018</a>).</p>
 <p>The <code>quantiles</code> argument to <code>stat_dots</code> constructs a quantile dotplot with the specified number of quantiles. Here is one with 50 quantiles, so each dot represents approximately a 2% (1/50) chance. We’ll turn off outline color too (<code>color = NA</code>):</p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>, <span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">50</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fl">NA</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dots(quantiles = 50)"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/quantile_dots_dodge-1.png" width="648"></p>
 </div>
-<div id="on-analytical-distributions-stat_dist_dotsh" class="section level3">
+<div id="on-analytical-distributions-stat_dist_dots" class="section level3">
 <h3 class="hasAnchor">
-<a href="#on-analytical-distributions-stat_dist_dotsh" class="anchor"></a>On analytical distributions: <code>stat_dist_dots[h]</code>
+<a href="#on-analytical-distributions-stat_dist_dots" class="anchor"></a>On analytical distributions: <code>stat_dist_dots</code>
 </h3>
-<p>As with other plot types, you can also use <code><a href="../reference/geom_dotsinterval.html">stat_dist_dots()</a></code> instead if you wish to visualize analytical distributions. Analytical dotplots default to 100-dot quantile dotplots (as above, this can be adjusted with the <code>quantiles</code> argument). Shapes of the dots can also be changed using the <code>shape</code> aesthetic, and as with all slabinterval geoms, fill and color aesthetics can be varied within the geoms:</p>
-<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mean</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sd</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="no">y</span> <span class="kw">&lt;</span> <span class="fl">5</span>), <span class="kw">shape</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
+<p>As with other plot types, you can also use <code><a href="../reference/geom_dotsinterval.html">stat_dist_dots()</a></code> instead if you wish to visualize analytical distributions. Analytical dotplots default to 100-dot quantile dotplots (as above, this can be adjusted with the <code>quantiles</code> argument). Shapes of the dots can also be changed using the <code>shape</code> aesthetic, and as with all slabinterval geoms, fill and color aesthetics can be varied within the geoms, as demonstrated below (we’ll also put the group on the y axis to plot it horizontally):</p>
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mean</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sd</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="no">x</span> <span class="kw">&lt;</span> <span class="fl">5</span>), <span class="kw">shape</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dots</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fl">NA</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_dots(aes(fill = stat(y &lt; 5), shape = subgroup))"</span>) +
   <span class="co"># we'll use these shapes since they retain outlines</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_shape_manual</a></span>(<span class="kw">values</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">21</span>,<span class="fl">22</span>,<span class="fl">23</span>))</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dist_dots_shape_color-1.png" width="648"></p>
 <p>As with other slabinterval geoms, the <code>side</code> argument can also be used to construct violin-style dotplots. This example also shows the use of <code>dotsinterval</code> in place of <code>dots</code> to construct a combined quantile dotplot violin + interval plot. We also set <code>slab_color = NA</code> to turn off the outline on the dots:</p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="no">dist_df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="st">"norm"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="no">mean</span>, <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">sd</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dotsinterval</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>, <span class="kw">side</span> <span class="kw">=</span> <span class="st">"both"</span>, <span class="kw">slab_color</span> <span class="kw">=</span> <span class="fl">NA</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dist_dotsinterval(side = 'both', slab_color = NA)"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dist_dots_violin-1.png" width="648"></p>
 </div>
-<div id="summing-up-dotplots-stat_dist_dotsintervalh" class="section level3">
+<div id="summing-up-dotplots-stat_dist_dotsinterval" class="section level3">
 <h3 class="hasAnchor">
-<a href="#summing-up-dotplots-stat_dist_dotsintervalh" class="anchor"></a>Summing up dotplots: <code>stat_[dist_]dots[interval][h]</code>
+<a href="#summing-up-dotplots-stat_dist_dotsinterval" class="anchor"></a>Summing up dotplots: <code>stat_[dist_]dots[interval]</code>
 </h3>
-<p>All of the above geoms follow the naming scheme <code>stat_[dist_]dots[interval][h]</code>.</p>
+<p>All of the above geoms follow the naming scheme <code>stat_[dist_]dots[interval]</code>.</p>
 <ul>
 <li>Add <code>dist_</code> to the name to get stats for analytical distributions (otherwise it is for sample data).</li>
 <li>Add <code>interval</code> to the name to get the version with a point+interval geom overlaid.</li>
-<li>Add <code>h</code> to the name to get the horizontal version.</li>
 </ul>
 </div>
 </div>
@@ -589,8 +571,8 @@ img {
 <div id="ccdf-gradients" class="section level3">
 <h3 class="hasAnchor">
 <a href="#ccdf-gradients" class="anchor"></a>CCDF Gradients</h3>
-<p>For example, <code>stat_ccdfinterval</code> maps the output of the evaluated function (in its case, the CCDF) onto the <code>thickness</code> aesthetic of the <code>slabinterval</code> geom, which determines how thick the slab is. This is the equivalent of setting <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes(thickness = stat(f))</a></code>. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat(f)</a></code> onto the <code>slab_alpha</code> aesthetic instead, and setting <code>thickness</code> to a constant (1):</p>
-<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
+<p>For example, <code><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval()</a></code> maps the output of the evaluated function (in its case, the CCDF) onto the <code>thickness</code> aesthetic of the <code>slabinterval</code> geom, which determines how thick the slab is. This is the equivalent of setting <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes(thickness = stat(f))</a></code>. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat(f)</a></code> onto the <code>slab_alpha</code> aesthetic instead, and setting <code>thickness</code> to a constant (1):</p>
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_ccdfinterval</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">slab_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="no">f</span>)), <span class="kw">thickness</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="fl">0</span>) +
@@ -603,7 +585,7 @@ img {
 <h3 class="hasAnchor">
 <a href="#highlighting-and-other-combinations" class="anchor"></a>Highlighting and other combinations</h3>
 <p>The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. Take the earlier example of visualizing priors:</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
   ~ <span class="no">dist</span>,      ~ <span class="no">args</span>,
   <span class="st">"norm"</span>,      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">0</span>, <span class="fl">1</span>),
   <span class="st">"student_t"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">3</span>, <span class="fl">0</span>, <span class="fl">1</span>)
@@ -611,22 +593,22 @@ img {
 
 <span class="no">priors</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">args</span> <span class="kw">=</span> <span class="no">args</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_halfeyeh()"</span>)</pre></body></html></div>
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_halfeye()"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/norm_vs_t_2-1.png" width="648"></p>
 <p>We can add a mapping to the <code>fill</code> aesthetic to highlight a region of interest, say ±1.5:</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">args</span> <span class="kw">=</span> <span class="no">args</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">x</span>) <span class="kw">&lt;</span> <span class="fl">1.5</span>))) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_halfeyeh(aes(fill = stat(abs(x) &lt; 1.5)))"</span>) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">x</span>) <span class="kw">&lt;</span> <span class="fl">1.5</span>))) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_halfeye(aes(fill = stat(abs(x) &lt; 1.5)))"</span>) +
   <span class="co"># we'll use a nicer palette than the default for highlighting:</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="kw">values</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray85"</span>, <span class="st">"skyblue"</span>))</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/norm_vs_t_highlight-1.png" width="648"></p>
 <p>We could also combine these aesthetics arbitrarily. Here is a (probably not very useful) eye plot + gradient plot combination, with the portion of the distribution above 1 highlighted:</p>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">args</span> <span class="kw">=</span> <span class="no">args</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_eyeh</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="no">f</span>), <span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">1</span>))) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_eyeh(aes(alpha = stat(f), fill = stat(x &gt; 1)))"</span>) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">slab_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="no">f</span>), <span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(<span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">1</span>))) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_eye(aes(slab_alpha = stat(f), fill = stat(x &gt; 1)))"</span>) +
   <span class="co"># we'll use a nicer palette than the default for highlighting:</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="kw">values</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray75"</span>, <span class="st">"skyblue"</span>))</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/norm_vs_t_gradient_eye-1.png" width="648"></p>
