@@ -299,8 +299,10 @@ a call to a position adjustment function.</p></td>
     <dt><code>side</code></dt><dd><p>Which side to draw the slab on. <code>"topright"</code>, <code>"top"</code>, and <code>"right"</code> are synonyms
 which cause the slab to be drawn on the top or the right depending on if <code>orientation</code> is <code>"horizontal"</code>
 or <code>"vertical"</code>. <code>"bottomleft"</code>, <code>"bottom"</code>, and <code>"left"</code> are synonyms which cause the slab
-to be drawn on the bottom of the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
-<code>"vertical"</code>. <code>"both"</code> draws the slab mirrored on both sides (as in a violin plot).</p></dd>
+to be drawn on the bottom or the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
+<code>"vertical"</code>. <code>"topleft"</code> causes the slab to be drawn on the top or the left, and <code>"bottomright"</code>
+causes the slab to be drawn on the bottom or the right. <code>"both"</code> draws the slab mirrored on both
+sides (as in a violin plot).</p></dd>
     <dt><code>scale</code></dt><dd><p>What proportion of the region allocated to this geom to use to draw the slab. If <code>scale = 1</code>,
 slabs that use the maximum range will just touch each other. Default is <code>0.9</code> to leave some space.</p></dd>
     <dt><code>justification</code></dt><dd><p>Justification of the interval relative to the slab, where <code>0</code> indicates bottom/left
@@ -372,11 +374,16 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
     <tr>
       <th>orientation</th>
       <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
-vertically (<code>"vertical"</code>). When horizontal (resp. vertical), the geom uses the <code>y</code> (resp. <code>x</code>)
-aesthetic to identify different groups, then for each group uses the <code>x</code> (resp. <code>y</code>) aesthetic and the
-<code>thickness</code> aesthetic to draw a function as an slab, and draws points and intervals horizontally
-(resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp. <code>ymin</code>, <code>y</code>, and <code>ymax</code>)
-aesthetics.</p></td>
+vertically (<code>"vertical"</code>). The default, <code>NA</code>, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the <code>y</code> (resp. <code>x</code>) aesthetic to identify different groups, then for each group uses
+the <code>x</code> (resp. <code>y</code>) aesthetic and the <code>thickness</code> aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp.
+<code>ymin</code>, <code>y</code>, and <code>ymax</code>) aesthetics. For compatibility with the base
+ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
+<code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: <code>"x"</code> and <code>"y"</code> are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).</p></td>
     </tr>
     <tr>
       <th>geom</th>

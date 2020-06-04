@@ -181,7 +181,7 @@ arguments.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pdf"</span>, <span class='st'>"cdf"</span>, <span class='st'>"ccdf"</span>),
   <span class='kw'>p_limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.001</span>, <span class='fl'>0.999</span>),
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vertical"</span>, <span class='st'>"horizontal"</span>),
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>501</span>,
   <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.66</span>, <span class='fl'>0.95</span>),
@@ -204,7 +204,7 @@ arguments.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
 
@@ -212,7 +212,7 @@ arguments.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
@@ -221,7 +221,7 @@ arguments.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
 
@@ -229,7 +229,7 @@ arguments.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
@@ -331,11 +331,16 @@ for the distribution from the quantile at <code>p = .001</code> to the quantile 
     <tr>
       <th>orientation</th>
       <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
-vertically (<code>"vertical"</code>). When horizontal (resp. vertical), the geom uses the <code>y</code> (resp. <code>x</code>)
-aesthetic to identify different groups, then for each group uses the <code>x</code> (resp. <code>y</code>) aesthetic and the
-<code>thickness</code> aesthetic to draw a function as an slab, and draws points and intervals horizontally
-(resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp. <code>ymin</code>, <code>y</code>, and <code>ymax</code>)
-aesthetics.</p></td>
+vertically (<code>"vertical"</code>). The default, <code>NA</code>, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the <code>y</code> (resp. <code>x</code>) aesthetic to identify different groups, then for each group uses
+the <code>x</code> (resp. <code>y</code>) aesthetic and the <code>thickness</code> aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp.
+<code>ymin</code>, <code>y</code>, and <code>ymax</code>) aesthetics. For compatibility with the base
+ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
+<code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: <code>"x"</code> and <code>"y"</code> are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).</p></td>
     </tr>
     <tr>
       <th>limits</th>
@@ -385,8 +390,10 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
       <td><p>Which side to draw the slab on. <code>"topright"</code>, <code>"top"</code>, and <code>"right"</code> are synonyms
 which cause the slab to be drawn on the top or the right depending on if <code>orientation</code> is <code>"horizontal"</code>
 or <code>"vertical"</code>. <code>"bottomleft"</code>, <code>"bottom"</code>, and <code>"left"</code> are synonyms which cause the slab
-to be drawn on the bottom of the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
-<code>"vertical"</code>. <code>"both"</code> draws the slab mirrored on both sides (as in a violin plot).</p></td>
+to be drawn on the bottom or the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
+<code>"vertical"</code>. <code>"topleft"</code> causes the slab to be drawn on the top or the left, and <code>"bottomright"</code>
+causes the slab to be drawn on the bottom or the right. <code>"both"</code> draws the slab mirrored on both
+sides (as in a violin plot).</p></td>
     </tr>
     <tr>
       <th>justification</th>
@@ -425,17 +432,16 @@ that describes a distribution plus an interval. Several "shortcut" stats are pro
 which combine multiple options to create useful geoms, particularly <em>eye plots</em>
 (a combination of a violin plot and interval), <em>half-eye plots</em> (a density plus interval),
 and <em>CCDF bar plots</em> (a complementary CDF plus interval).</p>
-<p>The shortcut stat names follow the pattern <code>stat_dist_[name][h|]</code>, where the trailing
-<code>h</code> (if present) indicates the horizontal version of the stat.</p>
+<p>The shortcut stat names follow the pattern <code>stat_dist_[name]</code>.</p>
 <p>Stats include:</p>
 <ul>
-<li><p><code>stat_dist_eye</code> / <code>stat_dist_eyeh</code>: Eye plots (violin + interval)</p></li>
-<li><p><code>stat_dist_halfeye</code> / <code>stat_dist_halfeyeh</code>: Half-eye plots (density + interval)</p></li>
-<li><p><code>stat_dist_ccdfinterval</code> / <code>stat_dist_ccdfintervalh</code>: CCDF bar plots (CCDF + interval)</p></li>
-<li><p><code>stat_dist_cdfinterval</code> / <code>stat_dist_cdfintervalh</code>: CDF bar plots (CDF + interval)</p></li>
-<li><p><code>stat_dist_gradientinterval</code> / <code>stat_dist_gradientintervalh</code>: Density gradient + interval plots</p></li>
-<li><p><code>stat_dist_pointinterval</code> / <code>stat_dist_pointintervalh</code>: Point + interval plots</p></li>
-<li><p><code>stat_dist_interval</code> / <code>stat_dist_intervalh</code>: Interval plots</p></li>
+<li><p><code>stat_dist_eye</code>: Eye plots (violin + interval)</p></li>
+<li><p><code>stat_dist_halfeye</code>: Half-eye plots (density + interval)</p></li>
+<li><p><code>stat_dist_ccdfinterval</code>: CCDF bar plots (CCDF + interval)</p></li>
+<li><p><code>stat_dist_cdfinterval</code>: CDF bar plots (CDF + interval)</p></li>
+<li><p><code>stat_dist_gradientinterval</code>: Density gradient + interval plots</p></li>
+<li><p><code>stat_dist_pointinterval</code>: Point + interval plots</p></li>
+<li><p><code>stat_dist_interval</code>: Interval plots</p></li>
 </ul>
 
 <p>These stats expect a <code>dist</code> aesthetic to specify a distribution name
@@ -545,7 +551,7 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 <span class='co'># scale, where it will appear Normal:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"lnorm"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>dist</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>10</span>), <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='fl'>2</span>*<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>10</span>))) +
-  <span class='fu'>stat_dist_halfeyeh</span>() +
+  <span class='fu'>stat_dist_halfeye</span>() +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='fl'>10</span>^<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(-<span class='fl'>5</span>,<span class='fl'>7</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>2</span>))</div><div class='img'><img src='stat_dist_slabinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 # see vignette("slabinterval") for many more examples.
 

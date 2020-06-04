@@ -183,7 +183,7 @@ will perform the summarization using a <code><a href='point_interval.html'>point
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"pointinterval"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='no'>...</span>,
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>interval_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
   <span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>median_qi</span>,
@@ -259,11 +259,16 @@ a call to a position adjustment function.</p></td>
     <tr>
       <th>orientation</th>
       <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
-vertically (<code>"vertical"</code>). When horizontal (resp. vertical), the geom uses the <code>y</code> (resp. <code>x</code>)
-aesthetic to identify different groups, then for each group uses the <code>x</code> (resp. <code>y</code>) aesthetic and the
-<code>thickness</code> aesthetic to draw a function as an slab, and draws points and intervals horizontally
-(resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp. <code>ymin</code>, <code>y</code>, and <code>ymax</code>)
-aesthetics.</p></td>
+vertically (<code>"vertical"</code>). The default, <code>NA</code>, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the <code>y</code> (resp. <code>x</code>) aesthetic to identify different groups, then for each group uses
+the <code>x</code> (resp. <code>y</code>) aesthetic and the <code>thickness</code> aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp.
+<code>ymin</code>, <code>y</code>, and <code>ymax</code>) aesthetics. For compatibility with the base
+ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
+<code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: <code>"x"</code> and <code>"y"</code> are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).</p></td>
     </tr>
     <tr>
       <th>interval_function</th>
@@ -377,14 +382,14 @@ Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in t
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh()</a></code> for the geom versions, intended
+    <div class='dont-index'><p>See <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> for the geom versions, intended
 for use on points and intervals that have already been summarized using a <code><a href='point_interval.html'>point_interval()</a></code> function.
-See <code><a href='stat_interval.html'>stat_interval()</a></code> / <code><a href='stat_interval.html'>stat_intervalh()</a></code> for a similar stat intended for intervals without
+See <code><a href='stat_interval.html'>stat_interval()</a></code> for a similar stat intended for intervals without
 point summaries. See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a></code> for a variety of other
 stats that combine intervals with densities and CDFs.</p>
-<p>See <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh()</a></code> for the geom versions, intended
+<p>See <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> for the geom versions, intended
 for use on points and intervals that have already been summarized using a <code><a href='point_interval.html'>point_interval()</a></code> function.
-See <code><a href='stat_interval.html'>stat_interval()</a></code> / <code><a href='stat_interval.html'>stat_intervalh()</a></code> for a similar stat intended for intervals without
+See <code><a href='stat_interval.html'>stat_interval()</a></code> for a similar stat intended for intervals without
 point summaries.
 See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a></code> for a variety of other
 stats that combine intervals with densities and CDFs.
@@ -401,7 +406,7 @@ available to these geoms.</p></div>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointintervalh</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +

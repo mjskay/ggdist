@@ -294,20 +294,20 @@ first apply <code><a href='https://rdrr.io/r/stats/relevel.html'>relevel()</a></
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>compare_levels</span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 8</span><span>
-#&gt; </span><span style='color: #555555;'># Groups:   i [3]</span><span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 8</span><span>
+#&gt; </span><span style='color: #949494;'># Groups:   i [3]</span><span>
 #&gt;   i         j     b   .lower .upper .width .point .interval
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'>1</span><span> 2 - 1     1 0.343 -</span><span style='color: #BB0000;'>0.009</span><span style='color: #BB0000;text-decoration: underline;'>37</span><span>  0.684   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>2</span><span> 3 - 1     1 0.734  0.416    1.08    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>3</span><span> 3 - 2     1 0.402 -</span><span style='color: #BB0000;'>0.013</span><span style='color: #BB0000;text-decoration: underline;'>3</span><span>   0.791   0.95 median qi       </div><div class='input'>
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> 2 - 1     1 0.343 -</span><span style='color: #BB0000;'>0.009</span><span style='color: #BB0000;text-decoration: underline;'>37</span><span>  0.684   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> 3 - 1     1 0.734  0.416    1.08    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> 3 - 2     1 0.402 -</span><span style='color: #BB0000;'>0.013</span><span style='color: #BB0000;text-decoration: underline;'>3</span><span>   0.791   0.95 median qi       </div><div class='input'>
 <span class='co'># Or let's plot all comparisons against the first level (control):</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>j</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>j</span> <span class='kw'>==</span> <span class='fl'>1</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>compare_levels</span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>comparison</span> <span class='kw'>=</span> <span class='no'>control</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>b</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>)) +
-  <span class='fu'><a href='stat_sample_slabinterval.html'>stat_halfeyeh</a></span>()</div><div class='img'><img src='compare_levels-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='stat_sample_slabinterval.html'>stat_halfeye</a></span>()</div><div class='img'><img src='compare_levels-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Or let's plot comparisons of all levels of j within</span>
 <span class='co'># all levels of i</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
@@ -315,7 +315,7 @@ first apply <code><a href='https://rdrr.io/r/stats/relevel.html'>relevel()</a></
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>i</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>compare_levels</span>(<span class='no'>b</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>j</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>b</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>j</span>)) +
-  <span class='fu'><a href='stat_sample_slabinterval.html'>stat_halfeyeh</a></span>() +
+  <span class='fu'><a href='stat_sample_slabinterval.html'>stat_halfeye</a></span>() +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(<span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/vars.html'>vars</a></span>(<span class='no'>i</span>))</div><div class='img'><img src='compare_levels-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></span></pre>
   </div>

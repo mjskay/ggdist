@@ -182,7 +182,7 @@ CCDF bar plots etc.</p>
   <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"Sturges"</span>,
   <span class='kw'>outline_bars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vertical"</span>, <span class='st'>"horizontal"</span>),
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>501</span>,
   <span class='kw'>interval_function</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -206,7 +206,7 @@ CCDF bar plots etc.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
 
@@ -214,7 +214,7 @@ CCDF bar plots etc.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"ccdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
@@ -223,7 +223,7 @@ CCDF bar plots etc.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
 
@@ -231,7 +231,7 @@ CCDF bar plots etc.</p>
   <span class='no'>...</span>,
   <span class='kw'>slab_type</span> <span class='kw'>=</span> <span class='st'>"cdf"</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"top"</span>,
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"topleft"</span>,
   <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='st'>"horizontal"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"none"</span>
 )
@@ -334,11 +334,16 @@ is drawn only along the tops of the bars; if <code>TRUE</code>, outlines in betw
     <tr>
       <th>orientation</th>
       <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
-vertically (<code>"vertical"</code>). When horizontal (resp. vertical), the geom uses the <code>y</code> (resp. <code>x</code>)
-aesthetic to identify different groups, then for each group uses the <code>x</code> (resp. <code>y</code>) aesthetic and the
-<code>thickness</code> aesthetic to draw a function as an slab, and draws points and intervals horizontally
-(resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp. <code>ymin</code>, <code>y</code>, and <code>ymax</code>)
-aesthetics.</p></td>
+vertically (<code>"vertical"</code>). The default, <code>NA</code>, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the <code>y</code> (resp. <code>x</code>) aesthetic to identify different groups, then for each group uses
+the <code>x</code> (resp. <code>y</code>) aesthetic and the <code>thickness</code> aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp.
+<code>ymin</code>, <code>y</code>, and <code>ymax</code>) aesthetics. For compatibility with the base
+ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
+<code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: <code>"x"</code> and <code>"y"</code> are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).</p></td>
     </tr>
     <tr>
       <th>limits</th>
@@ -403,8 +408,10 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
       <td><p>Which side to draw the slab on. <code>"topright"</code>, <code>"top"</code>, and <code>"right"</code> are synonyms
 which cause the slab to be drawn on the top or the right depending on if <code>orientation</code> is <code>"horizontal"</code>
 or <code>"vertical"</code>. <code>"bottomleft"</code>, <code>"bottom"</code>, and <code>"left"</code> are synonyms which cause the slab
-to be drawn on the bottom of the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
-<code>"vertical"</code>. <code>"both"</code> draws the slab mirrored on both sides (as in a violin plot).</p></td>
+to be drawn on the bottom or the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
+<code>"vertical"</code>. <code>"topleft"</code> causes the slab to be drawn on the top or the left, and <code>"bottomright"</code>
+causes the slab to be drawn on the bottom or the right. <code>"both"</code> draws the slab mirrored on both
+sides (as in a violin plot).</p></td>
     </tr>
     <tr>
       <th>justification</th>
@@ -440,18 +447,17 @@ which combine multiple options to create useful geoms, particularly <em>eye</em>
 (a combination of a violin plot and interval), <em>half-eye</em> plots (a density plus interval),
 and <em>CCDF bar plots</em> (a complementary CDF plus interval). These can be
 handy for visualizing posterior distributions in Bayesian inference, amongst other things.</p>
-<p>The shortcut stat names follow the pattern <code>stat_[name][h|]</code>, where the trailing
-<code>h</code> (if present) indicates the horizontal version of the stat.</p>
+<p>The shortcut stat names follow the pattern <code>stat_[name]</code>.</p>
 <p>Stats include:</p>
 <ul>
-<li><p><code>stat_eye</code> / <code>stat_eyeh</code>: Eye plots (violin + interval)</p></li>
-<li><p><code>stat_halfeye</code> / <code>stat_halfeyeh</code>: Half-eye plots (density + interval)</p></li>
-<li><p><code>stat_ccdfinterval</code> / <code>stat_ccdfintervalh</code>: CCDF bar plots (CCDF + interval)</p></li>
-<li><p><code>stat_cdfinterval</code> / <code>stat_cdfintervalh</code>: CDF bar plots (CDF + interval)</p></li>
-<li><p><code>stat_gradientinterval</code> / <code>stat_gradientintervalh</code>: Density gradient + interval plots</p></li>
-<li><p><code>stat_histinterval</code> / <code>stat_histintervalh</code>: Histogram + interval plots</p></li>
-<li><p><code>stat_pointinterval</code> / <code>stat_pointintervalh</code>: Point + interval plots</p></li>
-<li><p><code>stat_interval</code> / <code>stat_intervalh</code>: Interval plots</p></li>
+<li><p><code>stat_eye</code>: Eye plots (violin + interval)</p></li>
+<li><p><code>stat_halfeye</code>: Half-eye plots (density + interval)</p></li>
+<li><p><code>stat_ccdfinterval</code>: CCDF bar plots (CCDF + interval)</p></li>
+<li><p><code>stat_cdfinterval</code>: CDF bar plots (CDF + interval)</p></li>
+<li><p><code>stat_gradientinterval</code>: Density gradient + interval plots</p></li>
+<li><p><code>stat_histinterval</code>: Histogram + interval plots</p></li>
+<li><p><code>stat_pointinterval</code>: Point + interval plots</p></li>
+<li><p><code>stat_interval</code>: Interval plots</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>

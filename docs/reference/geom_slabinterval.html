@@ -181,9 +181,10 @@ corresponding intervals.</p>
   <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='no'>...</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"top"</span>, <span class='st'>"right"</span>, <span class='st'>"bottomleft"</span>, <span class='st'>"bottom"</span>, <span class='st'>"left"</span>, <span class='st'>"both"</span>),
+  <span class='kw'>side</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"top"</span>, <span class='st'>"right"</span>, <span class='st'>"bottomleft"</span>, <span class='st'>"bottom"</span>, <span class='st'>"left"</span>, <span class='st'>"topleft"</span>,
+    <span class='st'>"bottomright"</span>, <span class='st'>"both"</span>),
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vertical"</span>, <span class='st'>"horizontal"</span>),
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>justification</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"panels"</span>, <span class='st'>"xy"</span>, <span class='st'>"groups"</span>, <span class='st'>"none"</span>),
   <span class='kw'>interval_size_domain</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>6</span>),
@@ -253,8 +254,10 @@ a call to a position adjustment function.</p></td>
       <td><p>Which side to draw the slab on. <code>"topright"</code>, <code>"top"</code>, and <code>"right"</code> are synonyms
 which cause the slab to be drawn on the top or the right depending on if <code>orientation</code> is <code>"horizontal"</code>
 or <code>"vertical"</code>. <code>"bottomleft"</code>, <code>"bottom"</code>, and <code>"left"</code> are synonyms which cause the slab
-to be drawn on the bottom of the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
-<code>"vertical"</code>. <code>"both"</code> draws the slab mirrored on both sides (as in a violin plot).</p></td>
+to be drawn on the bottom or the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
+<code>"vertical"</code>. <code>"topleft"</code> causes the slab to be drawn on the top or the left, and <code>"bottomright"</code>
+causes the slab to be drawn on the bottom or the right. <code>"both"</code> draws the slab mirrored on both
+sides (as in a violin plot).</p></td>
     </tr>
     <tr>
       <th>scale</th>
@@ -264,11 +267,16 @@ slabs that use the maximum range will just touch each other. Default is <code>0.
     <tr>
       <th>orientation</th>
       <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
-vertically (<code>"vertical"</code>). When horizontal (resp. vertical), the geom uses the <code>y</code> (resp. <code>x</code>)
-aesthetic to identify different groups, then for each group uses the <code>x</code> (resp. <code>y</code>) aesthetic and the
-<code>thickness</code> aesthetic to draw a function as an slab, and draws points and intervals horizontally
-(resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp. <code>ymin</code>, <code>y</code>, and <code>ymax</code>)
-aesthetics.</p></td>
+vertically (<code>"vertical"</code>). The default, <code>NA</code>, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the <code>y</code> (resp. <code>x</code>) aesthetic to identify different groups, then for each group uses
+the <code>x</code> (resp. <code>y</code>) aesthetic and the <code>thickness</code> aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp.
+<code>ymin</code>, <code>y</code>, and <code>ymax</code>) aesthetics. For compatibility with the base
+ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
+<code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: <code>"x"</code> and <code>"y"</code> are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).</p></td>
     </tr>
     <tr>
       <th>justification</th>
@@ -368,14 +376,12 @@ row in the input data corresponds to: <code>"slab"</code> or <code>"interval"</c
 manually is typically only necessary if you use this geom directly; the numerous wrapper geoms will
 usually set this aesthetic for you as needed, and their use is recommended unless you have a very custom
 use case.</p>
-<p>Wrapper geoms and stats include:</p>
-<ul>
+<p>Wrapper geoms and stats include:</p><ul>
 <li><p><code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a></code> and associated stats</p></li>
 <li><p><code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code> and associated stats</p></li>
-<li><p><code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh()</a></code></p></li>
-<li><p><code><a href='stat_pointinterval.html'>stat_pointinterval()</a></code> / <code><a href='stat_pointinterval.html'>stat_pointintervalh()</a></code></p></li>
-<li><p><code><a href='geom_interval.html'>geom_interval()</a></code> / <code><a href='geom_interval.html'>geom_intervalh()</a></code></p></li>
-<li><p><code><a href='stat_interval.html'>stat_interval()</a></code> / <code><a href='stat_interval.html'>stat_intervalh()</a></code></p></li>
+<li><p><code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> / <code><a href='stat_pointinterval.html'>stat_pointinterval()</a></code></p></li>
+<li><p><code><a href='geom_interval.html'>geom_interval()</a></code> / <code><a href='stat_interval.html'>stat_interval()</a></code></p></li>
+<li><p><code><a href='geom_dotsinterval.html'>geom_dots()</a></code> / <code><a href='geom_dotsinterval.html'>stat_dots()</a></code></p></li>
 </ul>
 
 <p>Typically, the <code>geom_*</code> versions are meant for use with already-summarized data (such as intervals) and the
@@ -423,7 +429,7 @@ Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</cod
 
     <div class='dont-index'><p>See <code><a href='geom_lineribbon.html'>geom_lineribbon()</a></code> for a combination geom designed for fit curves plus probability bands.
 See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a></code> and <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code> for families of stats
-built on top of this geom for common use cases (like <code>stat_halfeyeh</code>).
+built on top of this geom for common use cases (like <code><a href='stat_sample_slabinterval.html'>stat_halfeye()</a></code>).
 See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

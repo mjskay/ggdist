@@ -176,6 +176,7 @@ designed for use with output from <code><a href='point_interval.html'>point_inte
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='no'>...</span>,
   <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
@@ -229,6 +230,20 @@ ribbons, <code>"mid"</code> is probably what you want (for the other two step ap
 vert first or vert last x value will not be visible).</p></td>
     </tr>
     <tr>
+      <th>orientation</th>
+      <td><p>Whether this geom is drawn horizontally (<code>"horizontal"</code>) or
+vertically (<code>"vertical"</code>). The default, <code>NA</code>, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the <code>y</code> (resp. <code>x</code>) aesthetic to identify different groups, then for each group uses
+the <code>x</code> (resp. <code>y</code>) aesthetic and the <code>thickness</code> aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the <code>xmin</code>, <code>x</code>, and <code>xmax</code> (resp.
+<code>ymin</code>, <code>y</code>, and <code>ymax</code>) aesthetics. For compatibility with the base
+ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
+<code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: <code>"x"</code> and <code>"y"</code> are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).</p></td>
+    </tr>
+    <tr>
       <th>na.rm</th>
       <td><p>If <code>FALSE</code>, the default, missing values are removed with
 a warning. If <code>TRUE</code>, missing values are silently removed.</p></td>
@@ -261,7 +276,7 @@ often more convenient than a vanilla <code><a href='https://ggplot2.tidyverse.or
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>See <code><a href='stat_lineribbon.html'>stat_lineribbon()</a></code> for a version that does summarizing of samples into points and intervals
-within ggplot. See <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> / <code><a href='geom_pointinterval.html'>geom_pointintervalh()</a></code> for a similar geom intended
+within ggplot. See <code><a href='geom_pointinterval.html'>geom_pointinterval()</a></code> for a similar geom intended
 for point summaries and intervals. See <code><a href='https://ggplot2.tidyverse.org/reference/geom_ribbon.html'>geom_ribbon()</a></code> and <code><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line()</a></code> for the geoms this is
 based on.</p></div>
 

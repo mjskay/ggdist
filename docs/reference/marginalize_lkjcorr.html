@@ -234,7 +234,7 @@ family of ggplot2 stats.</p>
   <span class='fu'><a href='parse_dist.html'>parse_dist</a></span>(<span class='no'>prior</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>marginalize_lkjcorr</span>(<span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>2</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>prior</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>.dist</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='no'>.args</span>)) +
-  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeyeh</a></span>() +
+  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeye</a></span>() +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>xlim</a></span>(-<span class='fl'>1</span>, <span class='fl'>1</span>) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span>(<span class='st'>"Marginal correlation for LKJ(3) prior on 2x2 correlation matrix"</span>)</div><div class='img'><img src='marginalize_lkjcorr-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Say our prior list has multiple LKJ priors on correlation matrices</span>
