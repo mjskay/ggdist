@@ -17,15 +17,15 @@ rescale_slab_thickness = function(s_data, side, scale, orientation, justificatio
   thickness_scale = scale * min(s_data[[height]])
   y_scale = thickness_scale / s_data[[height]]
 
-  switch_side(side,
-    top = {
+  switch_side(side, orientation,
+    topright = {
       # the slight nudge of justification * s_data[[height]] * (1 - y_scale) ensures that
       # justifications work properly when scale != 1 (and similarly for other values of `side`)
       s_data[[y]] = s_data[[ymin]] + justification * s_data[[height]] * (1 - y_scale)
       s_data[[ymin]] = s_data[[y]]
       s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale
     },
-    bottom = {
+    bottomleft = {
       s_data[[y]] = s_data[[ymax]] - (1 - justification) * s_data[[height]] * (1 - y_scale)
       s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale
       s_data[[ymax]] = s_data[[y]]
@@ -61,14 +61,14 @@ draw_slabs = function(self, s_data, panel_params, coord,
       #split out slab data according to aesthetics that we want to be able to
       # vary along the length of the slab, then assemble the top and bottom lines
       # into a single entity
-      slab_data = group_slab_data_by(d, c("fill", "alpha"), x, y, ymin, ymax, "both")
+      slab_data = group_slab_data_by(d, c("fill", "alpha"), orientation, side = "both")
       GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
     }
 
     if (!is.null(d$colour) && !all(is.na(d$colour))) {
       # we have an outline to draw around the outside of the slab:
       # the definition of "outside" depends on the value of `side`:
-      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), x, y, ymin, ymax, side)
+      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), orientation, side)
       gList(slab_grob, draw_path(outline_data, panel_params, coord))
     } else {
       slab_grob
@@ -231,8 +231,10 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @param side Which side to draw the slab on. `"topright"`, `"top"`, and `"right"` are synonyms
 #' which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`
 #' or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab
-#' to be drawn on the bottom of the left depending on if `orientation` is `"horizontal"` or
-#' `"vertical"`. `"both"` draws the slab mirrored on both sides (as in a violin plot).
+#' to be drawn on the bottom or the left depending on if `orientation` is `"horizontal"` or
+#' `"vertical"`. `"topleft"` causes the slab to be drawn on the top or the left, and `"bottomright"`
+#' causes the slab to be drawn on the bottom or the right. `"both"` draws the slab mirrored on both
+#' sides (as in a violin plot).
 #' @param scale What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
 #' slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.
 #' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
@@ -307,7 +309,7 @@ geom_slabinterval = function(
   # 4. The argument definitions of GeomSlabinterval$draw_panel
   # This is needed to support how defaults work with child geoms,
   # amongst other things
-  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
+  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   scale = 0.9,
   orientation = NA,
   justification = NULL,
@@ -551,7 +553,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # determine bounding boxes based on justification: position
     # the min/max bounds around y such that y is at the correct
     # justification relative to the bounds
-    justification = get_justification(params$justification, params$side)
+    justification = get_justification(params$justification, params$side, params$orientation)
     data[[ymin]] = data[[y]] - justification * data[[height]]
     data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
 
@@ -599,7 +601,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # recover height: position_dodge adjusts ymax/ymin but not height
     data[[height]] = data[[ymax]] - data[[ymin]]
 
-    justification = get_justification(justification, side)
+    justification = get_justification(justification, side, orientation)
 
     slab_grobs = if (show_slab && !is.null(data$thickness)) {
       # thickness values were provided, draw the slabs
@@ -628,24 +630,49 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
 # side and justification calculations -------------------------------------
 
-switch_side = function(side, top, bottom, both) {
-  switch(side,
-    top = ,
-    topright = ,
-    right = top,
-    bottom = ,
-    left = ,
-    bottomleft = bottom,
-    both = both,
-    stop("Invalid side: `", side, "`")
+switch_side = function(side, orientation, topright, bottomleft, both) {
+  switch(orientation,
+    y = ,
+    horizontal = switch(side,
+      top = ,
+      topright = ,
+      topleft = ,
+      right = topright,
+
+      bottom = ,
+      bottomleft = ,
+      bottomright = ,
+      left = bottomleft,
+
+      both = both,
+
+      stop("Invalid side: `", side, "`")
+    ),
+    x = ,
+    vertical = switch(side,
+      right = ,
+      topright = ,
+      bottomright = ,
+      top = topright,
+
+      left = ,
+      topleft = ,
+      bottomleft = ,
+      bottom = bottomleft,
+
+      both = both,
+
+      stop("Invalid side: `", side, "`")
+    ),
+    stop("Invalid orientation: `", orientation, "`")
   )
 }
 
-get_justification = function(justification, side) {
+get_justification = function(justification, side, orientation) {
   if (is.null(justification)) {
-    switch_side(side,
-      top = 0,
-      bottom = 1,
+    switch_side(side, orientation,
+      topright = 0,
+      bottomleft = 1,
       both = 0.5
     )
   } else {
@@ -659,7 +686,11 @@ get_justification = function(justification, side) {
 # groups slab data into contiguous components based on (usually) fill, colour, and alpha aesthetics,
 # interpolating values ymin/ymax values at the cutpoints, then returns the necessary data frame
 # (depending on `side`) that has top, bottom, or both sides to it
-group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha"), x = "x", y = "y", ymin = "ymin", ymax = "ymax", side = "top") {
+group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha"),
+  orientation = "horizontal", side = "topright"
+) {
+  define_orientation_variables(orientation)
+
   aesthetics = intersect(aesthetics, names(slab_data))
   groups = factor(do.call(paste, slab_data[,aesthetics]))
 
@@ -694,19 +725,19 @@ group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha
   }
 
   # only calculate top / bottom as needed depending on `side`
-  top = function() {
+  topright = function() {
     slab_data[[y]] = slab_data[[ymax]]
     slab_data
   }
-  bottom = function() {
+  bottomleft = function() {
     slab_data = slab_data[nrow(slab_data):1,]
     slab_data[[y]] = slab_data[[ymin]]
     slab_data
   }
-  switch_side(side,
-    top = top(),
-    bottom = bottom(),
-    both = bind_rows(top(), bottom())
+  switch_side(side, orientation,
+    topright = topright(),
+    bottomleft = bottomleft(),
+    both = bind_rows(topright(), bottomleft())
   )
 }
 

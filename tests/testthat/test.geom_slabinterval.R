@@ -34,7 +34,7 @@ test_that("group_slab_data_by works", {
   expect_equal(grouped_slab_data, ref)
 
   df$fill = "a"
-  expect_equal(group_slab_data_by(df, side = "top"), mutate(df, y = ymax))
+  expect_equal(group_slab_data_by(df, side = "topright"), mutate(df, y = ymax))
 
 })
 

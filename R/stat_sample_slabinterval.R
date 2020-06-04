@@ -306,14 +306,14 @@ stat_eyeh = function(..., side = "both", orientation = "horizontal")
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_ccdfinterval = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "left", normalize = "none"
+  slab_type = "ccdf", justification = 0.5, side = "topleft", normalize = "none"
 ) {
   stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_ccdfintervalh = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
+  slab_type = "ccdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
 ) {
   stat_sample_slabinterval(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
@@ -323,14 +323,14 @@ stat_ccdfintervalh = function(...,
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_cdfinterval = function(...,
-  slab_type = "cdf", justification = 0.5, side = "left", normalize = "none"
+  slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
 ) {
   stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_cdfintervalh = function(...,
-  slab_type = "cdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
+  slab_type = "cdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
 ) {
   stat_sample_slabinterval(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize

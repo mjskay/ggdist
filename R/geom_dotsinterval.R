@@ -11,7 +11,7 @@
 dots_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1, stackratio = 1, binwidth = NA,
-  side = "top"
+  side = "topright", orientation = "vertical"
 ) {
   datas = data %>%
     arrange_at(x) %>%
@@ -21,7 +21,7 @@ dots_grob = function(data, max_height, x, y,
   gTree(
     datas = datas, max_height = max_height, x_ = x, y_ = y,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth,
-    side = side,
+    side = side, orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
 }
@@ -37,6 +37,7 @@ makeContent.dots_grob = function(x) {
   y = grob_$y_
   bin_method = automatic_bin
   side = grob_$side
+  orientation = grob_$orientation
 
   sizeratio = 1.43
   stackratio = 1.07 * grob_$stackratio
@@ -153,11 +154,11 @@ makeContent.dots_grob = function(x) {
       bin_df[[x]] = bin_df$midpoint
 
       y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
-      switch_side(side,
-        top = {
+      switch_side(side, orientation,
+        topright = {
           y_start = h$y_spacing / 2
         },
-        bottom = {
+        bottomleft = {
           y_offset = - y_offset
           y_start = - h$y_spacing / 2
         },
@@ -223,7 +224,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,
       binwidth = child_params$binwidth,
-      side = side
+      side = side,
+      orientation = orientation
     ))
 
   # when side = "top", need to invert draw order so that overlaps happen in a sensible way

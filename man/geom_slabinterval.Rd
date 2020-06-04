@@ -12,7 +12,8 @@ geom_slabinterval(
   stat = "identity",
   position = "identity",
   ...,
-  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "both"),
+  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
+    "bottomright", "both"),
   scale = 0.9,
   orientation = NA,
   justification = NULL,
@@ -73,8 +74,10 @@ a call to a position adjustment function.}
 \item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"both"} draws the slab mirrored on both sides (as in a violin plot).}
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).}
 
 \item{scale}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
 slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}

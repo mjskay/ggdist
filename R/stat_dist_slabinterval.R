@@ -376,14 +376,14 @@ stat_dist_eyeh = function(..., side = "both", orientation = "horizontal")
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_ccdfinterval = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "left", normalize = "none"
+  slab_type = "ccdf", justification = 0.5, side = "topleft", normalize = "none"
 ) {
   stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_ccdfintervalh = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
+  slab_type = "ccdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
 ) {
   stat_dist_slabinterval(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
@@ -393,14 +393,14 @@ stat_dist_ccdfintervalh = function(...,
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_cdfinterval = function(...,
-  slab_type = "cdf", justification = 0.5, side = "left", normalize = "none"
+  slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
 ) {
   stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_cdfintervalh = function(...,
-  slab_type = "cdf", justification = 0.5, side = "top", orientation = "horizontal", normalize = "none"
+  slab_type = "cdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
 ) {
   stat_dist_slabinterval(...,
     slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize

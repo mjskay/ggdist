@@ -53,7 +53,7 @@ stat_ccdfinterval(
   ...,
   slab_type = "ccdf",
   justification = 0.5,
-  side = "left",
+  side = "topleft",
   normalize = "none"
 )
 
@@ -61,7 +61,7 @@ stat_ccdfintervalh(
   ...,
   slab_type = "ccdf",
   justification = 0.5,
-  side = "top",
+  side = "topleft",
   orientation = "horizontal",
   normalize = "none"
 )
@@ -70,7 +70,7 @@ stat_cdfinterval(
   ...,
   slab_type = "cdf",
   justification = 0.5,
-  side = "left",
+  side = "topleft",
   normalize = "none"
 )
 
@@ -78,7 +78,7 @@ stat_cdfintervalh(
   ...,
   slab_type = "cdf",
   justification = 0.5,
-  side = "top",
+  side = "topleft",
   orientation = "horizontal",
   normalize = "none"
 )
@@ -214,8 +214,10 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom of the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"both"} draws the slab mirrored on both sides (as in a violin plot).}
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).}
 
 \item{justification}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}

@@ -86,7 +86,7 @@ describing multiple realizations from a distribution.
 \item \code{ggeye} is deprecated: for a package whose goal is flexible and customizable
 visualization, monolithic functions are inflexible and do not sufficiently capitalize on users'
 existing knowledge of ggplot; instead, I think it is more flexible to design geoms and stats
-that can used within a complete ggplot workflow. \code{\link[=geom_eyeh]{geom_eyeh()}} offers a horizontal
+that can used within a complete ggplot workflow. \code{\link[=stat_eye]{stat_eye()}} offers a horizontal
 eye plot geom that can be used instead of \code{ggeye}.
 
 }
