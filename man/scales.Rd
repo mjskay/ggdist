@@ -225,7 +225,7 @@ library(ggplot2)
 data.frame(distribution = "Normal(1,2)") \%>\%
   parse_dist(distribution) \%>\%
   ggplot(aes(y = distribution, dist = .dist, args = .args)) +
-  stat_dist_halfeyeh(
+  stat_dist_halfeye(
     shape = 21,  # this point shape has a fill and outline
     point_color = "red",
     point_fill = "black",

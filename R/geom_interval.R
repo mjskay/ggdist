@@ -23,8 +23,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' [mode_hdi()], etc.
 #'
 #' Specifically, `geom_interval` acts as if its default aesthetics are
-#' `aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))`. `geom_intervalh` acts as if
-#' its default aesthetics are `aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))`.
+#' `aes(color = fct_rev(ordered(.width)))`.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval")
 #' @inheritParams geom_slabinterval
@@ -32,9 +31,9 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
 #' `"dodge"` can be useful if you have overlapping intervals.
 #' @author Matthew Kay
-#' @seealso See [stat_interval()] / [stat_intervalh()] for the stat versions, intended
+#' @seealso See [stat_interval()] for the stat version, intended
 #' for use on samples from a distribution.
-#' See [geom_interval()] / [geom_intervalh()] for a similar geom intended for intervals without
+#' See [geom_interval()] for a similar geom intended for intervals without
 #' point summaries.
 #' See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
@@ -47,17 +46,20 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' data(RankCorr, package = "tidybayes")
 #'
+#' # orientation is detected automatically based on
+#' # use of xmin/xmax or ymin/ymax
+#'
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%
 #'   median_qi(.width = c(.5, .8, .95, .99)) %>%
-#'   ggplot(aes(y = i, x = u_tau)) +
-#'   geom_intervalh() +
+#'   ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
+#'   geom_interval() +
 #'   scale_color_brewer()
 #'
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%
 #'   median_qi(.width = c(.5, .8, .95, .99)) %>%
-#'   ggplot(aes(x = i, y = u_tau)) +
+#'   ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
 #'   geom_interval() +
 #'   scale_color_brewer()
 #'
@@ -80,7 +82,7 @@ geom_interval = function(
   layer_geom_slabinterval(
     data = data,
     mapping = mapping,
-    default_mapping = aes(ymin = .lower, ymax = .upper, color = forcats::fct_rev(ordered(.width))),
+    default_mapping = aes(color = forcats::fct_rev(ordered(.width))),
     stat = stat,
     geom = GeomInterval,
     position = position,

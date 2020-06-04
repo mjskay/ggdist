@@ -213,14 +213,11 @@ get_line_size = function(i_data, size_domain, size_range) {
 #'
 #' Wrapper geoms and stats include:
 #'
-#' \itemize{
-#'   \item [stat_sample_slabinterval()] and associated stats
-#'   \item [stat_dist_slabinterval()] and associated stats
-#'   \item [geom_pointinterval()] / [geom_pointintervalh()]
-#'   \item [stat_pointinterval()] / [stat_pointintervalh()]
-#'   \item [geom_interval()] / [geom_intervalh()]
-#'   \item [stat_interval()] / [stat_intervalh()]
-#' }
+#'  - [stat_sample_slabinterval()] and associated stats
+#'  - [stat_dist_slabinterval()] and associated stats
+#'  - [geom_pointinterval()] / [stat_pointinterval()]
+#'  - [geom_interval()] / [stat_interval()]
+#'  - [geom_dots()] / [stat_dots()]
 #'
 #' Typically, the `geom_*` versions are meant for use with already-summarized data (such as intervals) and the
 #' `stat_*` versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
@@ -281,7 +278,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @author Matthew Kay
 #' @seealso See [geom_lineribbon()] for a combination geom designed for fit curves plus probability bands.
 #' See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of stats
-#' built on top of this geom for common use cases (like `stat_halfeyeh`).
+#' built on top of this geom for common use cases (like [stat_halfeye()]).
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples
 #'

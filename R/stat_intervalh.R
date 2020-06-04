@@ -1,4 +1,4 @@
-# A stat_summaryh with a geom_intervalh
+# Horizontal stat_interval
 #
 # Author: mjskay
 ###############################################################################

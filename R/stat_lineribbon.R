@@ -20,8 +20,8 @@
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics
 #' are mapped. `FALSE` never includes, and `TRUE` always includes.
 #' @seealso See [geom_lineribbon()] for the geom version, intended for use on points and intervals that have
-#' already been summarized using a [point_interval()] function. See [stat_pointinterval()] /
-#' [stat_pointintervalh()] for a similar stat intended for point summaries and intervals.
+#' already been summarized using a [point_interval()] function. See [stat_pointinterval()]
+#' for a similar stat intended for point summaries and intervals.
 #' @examples
 #'
 #' library(dplyr)
@@ -97,7 +97,22 @@ StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
 
   default_params = defaults(list(
     .width = c(.50, .80, .95)
-  ), StatPointinterval$default_params)
+  ), StatPointinterval$default_params),
+
+  setup_params = function(self, data, params) {
+    params = defaults(params, self$default_params)
+
+    # detect orientation -- this must be done before calling up to StatSlabInterval
+    # since auto-detection here is different (main_is_orthogonal needs to be FALSE)
+    params$flipped_aes = get_flipped_aes(data, params,
+      range_is_orthogonal = TRUE, ambiguous = TRUE, group_has_equal = TRUE
+    )
+    params$orientation = get_orientation(params$flipped_aes)
+
+    params = ggproto_parent(StatPointinterval, self)$setup_params(data, params)
+
+    params
+  }
 )
 
 

@@ -67,10 +67,13 @@ expand.grid(
   K = 2:6
 ) \%>\%
   ggplot(aes(y = fct_rev(ordered(eta)), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
-  stat_dist_slabh(p_limits = c(0,1)) +
+  stat_dist_slab(p_limits = c(0,1)) +
   facet_grid(~ paste0(K, "x", K)) +
   labs(
-    title = "Marginal correlation for LKJ(eta) prior on different matrix sizes:\ndlkjcorr_marginal(K, eta)",
+    title = paste0(
+      "Marginal correlation for LKJ(eta) prior on different matrix sizes:\n",
+      "dlkjcorr_marginal(K, eta)"
+    ),
     subtitle = "Correlation matrix size (KxK)",
     y = "eta",
     x = "Marginal correlation"

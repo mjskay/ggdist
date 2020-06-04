@@ -136,6 +136,6 @@ tibble(
 }
 \seealso{
 See \code{\link[=geom_lineribbon]{geom_lineribbon()}} for the geom version, intended for use on points and intervals that have
-already been summarized using a \code{\link[=point_interval]{point_interval()}} function. See \code{\link[=stat_pointinterval]{stat_pointinterval()}} /
-\code{\link[=stat_pointintervalh]{stat_pointintervalh()}} for a similar stat intended for point summaries and intervals.
+already been summarized using a \code{\link[=point_interval]{point_interval()}} function. See \code{\link[=stat_pointinterval]{stat_pointinterval()}}
+for a similar stat intended for point summaries and intervals.
 }

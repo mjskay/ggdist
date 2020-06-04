@@ -124,7 +124,7 @@ comparison_types = within(list(), {
 #'   filter(j == 1) %>%
 #'   compare_levels(b, by = i, comparison = control) %>%
 #'   ggplot(aes(x = b, y = i)) +
-#'   stat_halfeyeh()
+#'   stat_halfeye()
 #'
 #' # Or let's plot comparisons of all levels of j within
 #' # all levels of i
@@ -133,7 +133,7 @@ comparison_types = within(list(), {
 #'   group_by(i) %>%
 #'   compare_levels(b, by = j) %>%
 #'   ggplot(aes(x = b, y = j)) +
-#'   stat_halfeyeh() +
+#'   stat_halfeye() +
 #'   facet_grid(cols = vars(i))
 #'
 #' @importFrom tidyselect vars_pull

@@ -25,8 +25,8 @@ slabs that use the maximum range will just touch each other. Default is \code{0.
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 }
 \description{
-These are deprecated spellings of \code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_eyeh]{stat_eyeh()}},
-and \code{\link[=stat_halfeyeh]{stat_halfeyeh()}}. Use those functions instead.
+These are deprecated spellings of \code{\link[=stat_eye]{stat_eye()}}
+and \code{\link[=stat_halfeye]{stat_halfeye()}}. Use those functions instead.
 }
 \examples{
 

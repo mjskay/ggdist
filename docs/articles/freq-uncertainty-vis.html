@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Frequentist uncertainty visualization</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-02</h4>
+            <h4 class="date">2020-06-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/freq-uncertainty-vis.Rmd"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
       <div class="hidden name"><code>freq-uncertainty-vis.Rmd</code></div>
@@ -193,7 +193,7 @@ img {
 ## Residual standard error: 0.5478 on 45 degrees of freedom
 ## Multiple R-squared:  0.7694, Adjusted R-squared:  0.7489 
 ## F-statistic: 37.53 on 4 and 45 DF,  p-value: 8.472e-14</code></pre>
-<p>So let’s try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh()</a></code> to plot them. The sampling distribution for parameter <span class="math inline">\(i\)</span>, <span class="math inline">\(\beta_i\)</span>, from an <code>lm</code> model is a scaled-and-shifted t distribution:</p>
+<p>So let’s try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye()</a></code> to plot them. The sampling distribution for parameter <span class="math inline">\(i\)</span>, <span class="math inline">\(\beta_i\)</span>, from an <code>lm</code> model is a scaled-and-shifted t distribution:</p>
 <p><span class="math display">\[
 \beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\beta_i}\right)
 \]</span></p>
@@ -221,7 +221,7 @@ img {
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">m_ABC</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">term</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>(
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>(
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">estimate</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">std.error</span>)
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-6-1.png" width="648"></p>
@@ -244,7 +244,7 @@ img {
   <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeyeh</a></span>(
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>(
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>),
     <span class="kw">scale</span> <span class="kw">=</span> <span class="fl">.5</span>
   ) +
@@ -257,7 +257,7 @@ img {
   <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientintervalh</a></span>(
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval</a></span>(
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>),
     <span class="kw">scale</span> <span class="kw">=</span> <span class="fl">.5</span>
   )</pre></body></html></div>
@@ -267,7 +267,7 @@ img {
   <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
-  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfintervalh</a></span>(
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval</a></span>(
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>)
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-9-1.png" width="648"></p>
@@ -276,7 +276,7 @@ img {
   <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">m_ABC</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">condition</span>)) +
-  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dotsh</a></span>(
+  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dots</a></span>(
     <span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">100</span>,
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">.fitted</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">.se.fit</span>)
   )</pre></body></html></div>

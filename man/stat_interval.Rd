@@ -199,7 +199,7 @@ data(RankCorr, package = "tidybayes")
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
   ggplot(aes(y = i, x = u_tau)) +
-  stat_intervalh() +
+  stat_interval() +
   scale_color_brewer()
 
 RankCorr \%>\%
@@ -210,9 +210,9 @@ RankCorr \%>\%
 
 }
 \seealso{
-See \code{\link[=geom_interval]{geom_interval()}} / \code{\link[=geom_intervalh]{geom_intervalh()}} for the geom versions, intended
+See \code{\link[=geom_interval]{geom_interval()}} for the geom versions, intended
 for use on points and intervals that have already been summarized using a \code{\link[=point_interval]{point_interval()}} function.
-See \code{\link[=stat_pointinterval]{stat_pointinterval()}} / \code{\link[=stat_pointintervalh]{stat_pointintervalh()}} for a similar stat intended for
+See \code{\link[=stat_pointinterval]{stat_pointinterval()}} for a similar stat intended for
 point summaries and intervals.
 See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} for a variety of other
 stats that combine intervals with densities and CDFs.

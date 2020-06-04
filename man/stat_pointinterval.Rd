@@ -195,7 +195,7 @@ data(RankCorr, package = "tidybayes")
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
   ggplot(aes(y = i, x = u_tau)) +
-  stat_pointintervalh(.width = c(.66, .95))
+  stat_pointinterval(.width = c(.66, .95))
 
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
@@ -204,15 +204,15 @@ RankCorr \%>\%
 
 }
 \seealso{
-See \code{\link[=geom_pointinterval]{geom_pointinterval()}} / \code{\link[=geom_pointintervalh]{geom_pointintervalh()}} for the geom versions, intended
+See \code{\link[=geom_pointinterval]{geom_pointinterval()}} for the geom versions, intended
 for use on points and intervals that have already been summarized using a \code{\link[=point_interval]{point_interval()}} function.
-See \code{\link[=stat_interval]{stat_interval()}} / \code{\link[=stat_intervalh]{stat_intervalh()}} for a similar stat intended for intervals without
+See \code{\link[=stat_interval]{stat_interval()}} for a similar stat intended for intervals without
 point summaries. See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} for a variety of other
 stats that combine intervals with densities and CDFs.
 
-See \code{\link[=geom_pointinterval]{geom_pointinterval()}} / \code{\link[=geom_pointintervalh]{geom_pointintervalh()}} for the geom versions, intended
+See \code{\link[=geom_pointinterval]{geom_pointinterval()}} for the geom versions, intended
 for use on points and intervals that have already been summarized using a \code{\link[=point_interval]{point_interval()}} function.
-See \code{\link[=stat_interval]{stat_interval()}} / \code{\link[=stat_intervalh]{stat_intervalh()}} for a similar stat intended for intervals without
+See \code{\link[=stat_interval]{stat_interval()}} for a similar stat intended for intervals without
 point summaries.
 See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} for a variety of other
 stats that combine intervals with densities and CDFs.

@@ -81,14 +81,13 @@ manipulation and visualization tasks common to many models:
     useful output, but `tidybayes` also includes several geoms and stats
     to simplify common combinations of `stats` and `geoms` with sensible
     defaults suitable for visualizing posterior point summaries and
-    intervals (`geom_pointinterval()`, `geom_pointintervalh()`,
-    `stat_pointinterval()`, `stat_pointintervalh()`), visualizing
-    distributions with point summaries and intervals (the
+    intervals (`geom_pointinterval()`, `stat_pointinterval()`),
+    visualizing distributions with point summaries and intervals (the
     `stat_sample_slabinterval()` family of stats, including eye plots,
     half-eye plots, CCDF bar plots, gradient plots, dotplots, and
     histograms), and visualizing fit lines with an arbitrary number of
-    uncertainty bands (`geom_lineribbon` and `stat_lineribbon`). Priors
-    can also be visualized in the same way using the
+    uncertainty bands (`geom_lineribbon()` and `stat_lineribbon()`).
+    Priors can also be visualized in the same way using the
     `stat_dist_slabinterval()` family of stats. The
     `geom_dotsinterval()` family also automatically finds good binning
     parameters for dotplots, and can be used to easily construct
@@ -172,7 +171,6 @@ rstanarm, and (theoretically) any model type supported by
 library(magrittr)
 library(dplyr)
 library(ggplot2)
-library(ggstance)
 library(rstan)
 library(tidybayes)
 library(emmeans)
@@ -283,11 +281,6 @@ m %>%
   head(15)  # just show the first few rows
 ```
 
-    ## Warning: `combine()` is deprecated as of dplyr 1.0.0.
-    ## Please use `vctrs::vec_c()` instead.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
-
     ## # A tibble: 15 x 6
     ## # Groups:   condition [1]
     ##    condition condition_mean .chain .iteration .draw response_sd
@@ -318,25 +311,26 @@ different `condition` (some other formats supported by `tidybayes` are
 discussed in `vignette("tidybayes")`; in particular, the format returned
 by `gather_draws`).
 
-### Plotting posteriors as eye plots: `stat_eye` / `stat_eyeh`
+### Plotting posteriors as eye plots: `stat_eye()`
 
 Automatic splitting of indices into columns makes it easy to plot the
-condition means here. We will employ the `tidybayes::stat_eyeh` geom
-(horizontal version of `tidybayes::stat_eye`), which combines a violin
-plot of the posterior density, median, 66% and 95% quantile interval to
-give an “eye plot” of the posterior. The point and interval types are
-customizable using the `point_interval` family of functions. A
-“half-eye” plot (non-mirrored density) is also available as
-`tidybayes::stat_halfeyeh`.
+condition means here. We will employ the `tidybayes::stat_eye()` geom,
+which combines a violin plot of the posterior density, median, 66% and
+95% quantile interval to give an “eye plot” of the posterior. The point
+and interval types are customizable using the `point_interval()` family
+of functions. A “half-eye” plot (non-mirrored density) is also available
+as `tidybayes::stat_halfeye()`. All tidybayes geometries automatically
+detect their appropriate orientation, though this can be overridden with
+the `orientation` parameter if the detection fails.
 
 ``` r
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
-  stat_eyeh()
+  stat_eye()
 ```
 
-![](man/figures/README/stat_eyeh-1.png)<!-- -->
+![](man/figures/README/stat_eye-1.png)<!-- -->
 
 Or one can employ the similar “half-eye” plot:
 
@@ -344,10 +338,10 @@ Or one can employ the similar “half-eye” plot:
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
-  stat_halfeyeh()
+  stat_halfeye()
 ```
 
-![](man/figures/README/stat_halfeyeh-1.png)<!-- -->
+![](man/figures/README/stat_halfeye-1.png)<!-- -->
 
 A variety of other stats and geoms for visualizing priors and posteriors
 are available; see `vignette("slabinterval")` for an overview of them.
@@ -369,14 +363,14 @@ the plot, 100 in the example below).
 Within the slabinterval family of geoms in tidybayes is the `dots` and
 `dotsinterval` family, which automatically determine appropriate bin
 sizes for dotplots and can calculate quantiles from samples to construct
-quantile dotplots. `stat_dotsh()` is the horizontal variant designed for
-use on samples:
+quantile dotplots. `stat_dots()` is the variant designed for use on
+samples:
 
 ``` r
 m %>%
   spread_draws(condition_mean[condition]) %>%
   ggplot(aes(x = condition_mean, y = condition)) +
-  stat_dotsh(quantiles = 100) 
+  stat_dots(quantiles = 100) 
 ```
 
 ![](man/figures/README/quantile_dotplots-1.png)<!-- -->
@@ -464,7 +458,7 @@ This makes it easy to bind the two results together and plot them:
 ``` r
 bind_rows(linear_results, bayes_results) %>%
   ggplot(aes(y = condition, x = estimate, xmin = conf.low, xmax = conf.high, color = model)) +
-  geom_pointintervalh(position = position_dodgev(height = .3))
+  geom_pointinterval(position = position_dodge(width = .3))
 ```
 
 ![](man/figures/README/broom_bind-1.png)<!-- -->
@@ -498,11 +492,11 @@ m %>%
   ggplot(aes(y = condition)) +
   
   # posterior predictive intervals
-  stat_intervalh(aes(x = prediction), .width = c(.5, .8, .95)) +
+  stat_interval(aes(x = prediction), .width = c(.5, .8, .95)) +
   scale_color_brewer() +
   
   # median and quantile intervals of condition mean
-  stat_pointintervalh(aes(x = condition_mean), .width = c(.66, .95), position = position_nudge(y = -0.2)) +
+  stat_pointinterval(aes(x = condition_mean), .width = c(.66, .95), position = position_nudge(y = -0.2)) +
   
   # data
   geom_point(aes(x = response), data = ABC)

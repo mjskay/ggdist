@@ -7,8 +7,8 @@
 
 #' Eye plots of densities with point and interval summaries (Deprecated spellings)
 #'
-#' These are deprecated spellings of [stat_eye()], [stat_eyeh()],
-#' and [stat_halfeyeh()]. Use those functions instead.
+#' These are deprecated spellings of [stat_eye()]
+#' and [stat_halfeye()]. Use those functions instead.
 #'
 #' @inheritParams stat_sample_slabinterval
 #' @inheritParams geom_slabinterval
@@ -69,7 +69,7 @@ geom_eyeh = function(
   .width = .Deprecated_argument_alias(.width, .prob)
   scale = .Deprecated_argument_alias(scale, relative_scale)
 
-  stat_eyeh(..., .width = .width, scale = scale)
+  stat_eye(..., .width = .width, scale = scale, orientation = "horizontal")
 }
 
 #' @rdname geom_eye
@@ -86,5 +86,5 @@ geom_halfeyeh = function(
   .width = .Deprecated_argument_alias(.width, .prob)
   scale = .Deprecated_argument_alias(scale, relative_scale)
 
-  stat_halfeyeh(..., .width = .width, scale = scale)
+  stat_halfeye(..., .width = .width, scale = scale, orientation = "horizontal")
 }

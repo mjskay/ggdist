@@ -39,7 +39,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' corresponding to the interval. This behavior allows `point_interval`
 #' and its derived functions (like `median_qi`, `mean_qi`, `mode_hdi`, etc)
 #' to be easily used to plot intervals in ggplot stats using methods like
-#' [stat_eye()], [stat_halfeyeh()], or [stat_summary()].
+#' [stat_eye()], [stat_halfeye()], or [stat_summary()].
 #'
 #' The functions ending in `h` (e.g., `point_intervalh`, `median_qih`)
 #' behave identically to the function without the h, except that when passed a vector,
@@ -48,7 +48,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #' `fun.data = ` argument of `stat_summaryh`. **Note:** these
 #' functions are not necessary if you use the `point_interval`
 #' argument of `stat`s and `geom`s in the `tidybayes` package (e.g.
-#' [stat_pointintervalh()], [stat_halfeyeh()], etc), as
+#' [stat_pointinterval()], [stat_halfeye()], etc), as
 #' these automatically adjust the function output to match their required aesthetics.
 #'
 #' `median_qi`, `mode_hdi`, etc are short forms for
@@ -141,7 +141,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' multimodal_draws %>%
 #'   ggplot(aes(x = x, y = 0)) +
-#'   stat_halfeyeh(point_interval = mode_hdi, .width = c(.66, .95))
+#'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
 #' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at

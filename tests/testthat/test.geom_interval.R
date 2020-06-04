@@ -64,7 +64,7 @@ test_that("grouped intervals work", {
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.5, .75, .90)) %>%
-    ggplot(aes(x = i, y = u_tau)) +
+    ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
     geom_interval() +
     scale_color_brewer()
 

@@ -43,7 +43,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
 #' @author Matthew Kay
 #' @seealso See [stat_lineribbon()] for a version that does summarizing of samples into points and intervals
-#' within ggplot. See [geom_pointinterval()] / [geom_pointintervalh()] for a similar geom intended
+#' within ggplot. See [geom_pointinterval()] for a similar geom intended
 #' for point summaries and intervals. See [geom_ribbon()] and [geom_line()] for the geoms this is
 #' based on.
 #' @examples
@@ -137,7 +137,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
     # detect orientation
     params$flipped_aes = get_flipped_aes(data, params,
-      main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE
+      range_is_orthogonal = TRUE, ambiguous = TRUE, group_has_equal = TRUE
     )
     params$orientation = get_orientation(params$flipped_aes)
 

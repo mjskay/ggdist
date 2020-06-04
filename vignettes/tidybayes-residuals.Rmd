@@ -141,7 +141,7 @@ A graphical depiction of the censoring process might be something like this:
 ```{r, fig.width = large_height/2.8, fig.height = large_height}
 uncensored_plot = cens_df %>%
   ggplot(aes(y = "", x = y_star)) +
-  stat_slabh() +
+  stat_slab() +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
   scale_x_continuous(breaks = -4:4, limits = c(-4, 4)) +
@@ -397,7 +397,7 @@ Note the presence of outliers:
 ```{r, fig.width = med_height, fig.height = med_width}
 uncensored_plot = cens_df_t %>%
   ggplot(aes(y = "", x = y)) +
-  stat_slabh() +
+  stat_slab() +
   geom_jitter(aes(y = 0.75, color = ordered(y_lower)), position = position_jitter(height = 0.2), show.legend = FALSE) +
   ylab(NULL) +
   scale_x_continuous(breaks = -10:10, limits = c(-10, 10)) +

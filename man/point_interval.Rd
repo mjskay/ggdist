@@ -183,7 +183,7 @@ data frame with one row per value of \code{.width} and three columns:
 corresponding to the interval. This behavior allows \code{point_interval}
 and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 to be easily used to plot intervals in ggplot stats using methods like
-\code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_halfeyeh]{stat_halfeyeh()}}, or \code{\link[=stat_summary]{stat_summary()}}.
+\code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_halfeye]{stat_halfeye()}}, or \code{\link[=stat_summary]{stat_summary()}}.
 
 The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih})
 behave identically to the function without the h, except that when passed a vector,
@@ -192,7 +192,7 @@ they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
 \verb{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
 functions are not necessary if you use the \code{point_interval}
 argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
-\code{\link[=stat_pointintervalh]{stat_pointintervalh()}}, \code{\link[=stat_halfeyeh]{stat_halfeyeh()}}, etc), as
+\code{\link[=stat_pointinterval]{stat_pointinterval()}}, \code{\link[=stat_halfeye]{stat_halfeye()}}, etc), as
 these automatically adjust the function output to match their required aesthetics.
 
 \code{median_qi}, \code{mode_hdi}, etc are short forms for
@@ -254,7 +254,7 @@ multimodal_draws \%>\%
 
 multimodal_draws \%>\%
   ggplot(aes(x = x, y = 0)) +
-  stat_halfeyeh(point_interval = mode_hdi, .width = c(.66, .95))
+  stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 
 }
 \author{

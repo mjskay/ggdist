@@ -22,8 +22,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' functions like [median_qi()], [mean_qi()], [mode_hdi()], etc.
 #'
 #' Specifically, `geom_pointinterval` acts as if its default aesthetics are
-#' `aes(ymin = .lower, ymax = .upper, size = -.width)`. `geom_pointintervalh` acts as if its default
-#' aesthetics are `aes(xmin = .lower, xmax = .upper, size = -.width)`.
+#' `aes(size = -.width)`.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomPointinterval, geom_name = "geom_pointinterval")
 #' @inheritParams geom_slabinterval
@@ -36,9 +35,9 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @author Matthew Kay
 #' @seealso See [geom_slabinterval()] for the geom that these geoms wrap. All parameters of that geom are
 #' available to these geoms.
-#' @seealso See [stat_pointinterval()] / [stat_pointintervalh()] for the stat versions, intended
+#' @seealso See [stat_pointinterval()] for the stat version, intended
 #' for use on samples from a distribution.
-#' See [geom_interval()] / [geom_intervalh()] for a similar stat intended for intervals without
+#' See [geom_interval()] for a similar stat intended for intervals without
 #' point summaries.
 #' See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
@@ -51,16 +50,19 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' data(RankCorr, package = "tidybayes")
 #'
-#' RankCorr %>%
-#'   spread_draws(u_tau[i]) %>%
-#'   median_qi(.width = c(.8, .95)) %>%
-#'   ggplot(aes(y = i, x = u_tau)) +
-#'   geom_pointintervalh()
+#' # orientation is detected automatically based on
+#' # use of xmin/xmax or ymin/ymax
 #'
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%
 #'   median_qi(.width = c(.8, .95)) %>%
-#'   ggplot(aes(x = i, y = u_tau)) +
+#'   ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
+#'   geom_pointinterval()
+#'
+#' RankCorr %>%
+#'   spread_draws(u_tau[i]) %>%
+#'   median_qi(.width = c(.8, .95)) %>%
+#'   ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
 #'   geom_pointinterval()
 #'
 #' @import ggplot2
@@ -82,7 +84,7 @@ geom_pointinterval = function(
   layer_geom_slabinterval(
     data = data,
     mapping = mapping,
-    default_mapping = aes(ymin = .lower, ymax = .upper, size = -.width),
+    default_mapping = aes(size = -.width),
     stat = stat,
     geom = GeomPointinterval,
     position = position,

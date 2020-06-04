@@ -135,8 +135,7 @@ of functions, making them often more convenient than vanilla \code{\link[=geom_p
 functions like \code{\link[=median_qi]{median_qi()}}, \code{\link[=mean_qi]{mean_qi()}}, \code{\link[=mode_hdi]{mode_hdi()}}, etc.
 
 Specifically, \code{geom_pointinterval} acts as if its default aesthetics are
-\code{aes(ymin = .lower, ymax = .upper, size = -.width)}. \code{geom_pointintervalh} acts as if its default
-aesthetics are \code{aes(xmin = .lower, xmax = .upper, size = -.width)}.
+\code{aes(size = -.width)}.
 }
 \section{Aesthetics}{
 
@@ -186,16 +185,19 @@ library(ggplot2)
 
 data(RankCorr, package = "tidybayes")
 
-RankCorr \%>\%
-  spread_draws(u_tau[i]) \%>\%
-  median_qi(.width = c(.8, .95)) \%>\%
-  ggplot(aes(y = i, x = u_tau)) +
-  geom_pointintervalh()
+# orientation is detected automatically based on
+# use of xmin/xmax or ymin/ymax
 
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
   median_qi(.width = c(.8, .95)) \%>\%
-  ggplot(aes(x = i, y = u_tau)) +
+  ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
+  geom_pointinterval()
+
+RankCorr \%>\%
+  spread_draws(u_tau[i]) \%>\%
+  median_qi(.width = c(.8, .95)) \%>\%
+  ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
   geom_pointinterval()
 
 }
@@ -203,9 +205,9 @@ RankCorr \%>\%
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geom that these geoms wrap. All parameters of that geom are
 available to these geoms.
 
-See \code{\link[=stat_pointinterval]{stat_pointinterval()}} / \code{\link[=stat_pointintervalh]{stat_pointintervalh()}} for the stat versions, intended
+See \code{\link[=stat_pointinterval]{stat_pointinterval()}} for the stat version, intended
 for use on samples from a distribution.
-See \code{\link[=geom_interval]{geom_interval()}} / \code{\link[=geom_intervalh]{geom_intervalh()}} for a similar stat intended for intervals without
+See \code{\link[=geom_interval]{geom_interval()}} for a similar stat intended for intervals without
 point summaries.
 See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} for a variety of other
 stats that combine intervals with densities and CDFs.

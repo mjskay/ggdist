@@ -43,10 +43,13 @@
 #'   K = 2:6
 #' ) %>%
 #'   ggplot(aes(y = fct_rev(ordered(eta)), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
-#'   stat_dist_slabh(p_limits = c(0,1)) +
+#'   stat_dist_slab(p_limits = c(0,1)) +
 #'   facet_grid(~ paste0(K, "x", K)) +
 #'   labs(
-#'     title = "Marginal correlation for LKJ(eta) prior on different matrix sizes:\ndlkjcorr_marginal(K, eta)",
+#'     title = paste0(
+#'       "Marginal correlation for LKJ(eta) prior on different matrix sizes:\n",
+#'       "dlkjcorr_marginal(K, eta)"
+#'     ),
 #'     subtitle = "Correlation matrix size (KxK)",
 #'     y = "eta",
 #'     x = "Marginal correlation"
@@ -141,7 +144,7 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #'   parse_dist(prior) %>%
 #'   marginalize_lkjcorr(K = 2) %>%
 #'   ggplot(aes(y = prior, dist = .dist, args = .args)) +
-#'   stat_dist_halfeyeh() +
+#'   stat_dist_halfeye() +
 #'   xlim(-1, 1) +
 #'   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
 #'

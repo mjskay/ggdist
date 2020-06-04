@@ -56,7 +56,7 @@
 #' @seealso See [geom_slabinterval()] for the geom version, intended
 #' for use on data that has already been translated into function evaluations, points, and intervals.
 #' See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of stats
-#' built on top of this stat for common use cases (like `stat_halfeyeh`).
+#' built on top of this stat for common use cases (like `stat_halfeye`).
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples
 #'

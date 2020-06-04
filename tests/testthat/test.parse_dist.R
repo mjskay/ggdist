@@ -35,7 +35,7 @@ test_that("parse_dist + marginalize_lkjcorr produces correct results", {
       parse_dist(prior) %>%
       marginalize_lkjcorr(K = 2) %>%
       ggplot(aes(y = prior, dist = .dist, args = .args)) +
-      stat_dist_halfeyeh(n = 20) +
+      stat_dist_halfeye(n = 20) +
       xlim(-1, 1) +
       xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
   )

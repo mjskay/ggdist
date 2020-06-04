@@ -49,7 +49,7 @@ if (capabilities("cairo")) {
 
 ## Introduction
   
-This vignette describes how to use the `tidybayes` package to extract [tidy](http://dx.doi.org/10.18637/jss.v059.i10) data frames of draws from posterior distributions of model variables, fits, and predictions from `rstanarm`. For a more general introduction to `tidybayes` and its use on general-purpose Bayesian modeling languages (like Stan and JAGS), see <code>[vignette("tidybayes")](tidybayes.html)</code>.
+This vignette describes how to use the `tidybayes` package to extract [tidy](http://dx.doi.org/10.18637/jss.v059.i10) data frames of draws from posterior distributions of model variables, fits, and predictions from `rstanarm`. For a more general introduction to `tidybayes` and its use on general-purpose Bayesian modeling languages (like Stan and JAGS), see `vignette("tidybayes")`.
 
 
 ## Setup
@@ -142,7 +142,7 @@ m
 
 ## Extracting draws from a fit in tidy-format using `spread_draws`
 
-Now that we have our results, the fun begins: getting the draws out in a tidy format! First, we'll use the `get_variables` function to get a list of raw model variables names so that we know what variables we can extract from the model:
+Now that we have our results, the fun begins: getting the draws out in a tidy format! First, we'll use the `get_variables()` function to get a list of raw model variables names so that we know what variables we can extract from the model:
 
 ```{r}
 get_variables(m)
@@ -158,7 +158,7 @@ Here, `(Intercept)` is the global mean, and the `b` parameters are offsets from 
 
 We might want a data frame where each row is a draw from either `b[(Intercept) condition:A]`, `b[(Intercept) condition:B]`, `...:C]`, `...:D]`, or `...:E]`, and where we have columns indexing which chain/iteration/draw the row came from and which condition (`A` to `E`) it is for. That would allow us to easily compute quantities grouped by condition, or generate plots by condition using ggplot, or even merge draws with the original data to plot data and posteriors.
 
-The workhorse of `tidybayes` is the `spread_draws` function, which does this extraction for us. It includes a simple specification format that we can use to extract model variables and their indices into tidy-format data frames.
+The workhorse of `tidybayes` is the `spread_draws()` function, which does this extraction for us. It includes a simple specification format that we can use to extract model variables and their indices into tidy-format data frames.
 
 ### Gathering variable indices into a separate column in a tidy format data frame
 
@@ -166,11 +166,11 @@ Given a parameter like this:
 
 `b[(Intercept) condition:D]`
 
-We can provide `spread_draws` with a column specification like this:
+We can provide `spread_draws()` with a column specification like this:
 
 `b[term,group]`
 
-Where `term` corresponds to `(Intercept)` and `group` to `condition:D`. There is nothing too magical about what `spread_draws` does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the `sep` argument). It lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)` and `condition:D`, and `spread_draws` lets us extract these indices as columns in the resulting tidy data frame of draws from `b`:
+Where `term` corresponds to `(Intercept)` and `group` to `condition:D`. There is nothing too magical about what `spread_draws()` does with this specification: under the hood, it splits the parameter indices by commas and spaces (you can split by other characters by changing the `sep` argument). It lets you assign columns to the resulting indices in order. So `b[(Intercept) condition:D]` has indices `(Intercept)` and `condition:D`, and `spread_draws()` lets us extract these indices as columns in the resulting tidy data frame of draws from `b`:
 
 ```{r}
 m %>%
@@ -205,7 +205,7 @@ m %>%
   head(10)
 ```
 
-Alternatively, we could change the `sep` argument to `spread_draws` to also split on `:` (`sep` is a regular expression). __Note:__ This works in this example, but will not work well on rstanarm models where interactions between factors are used as grouping levels in a multilevel model, thus `:` is not included in the default separators.
+Alternatively, we could change the `sep` argument to `spread_draws()` to also split on `:` (`sep` is a regular expression). __Note:__ This works in this example, but will not work well on rstanarm models where interactions between factors are used as grouping levels in a multilevel model, thus `:` is not included in the default separators.
 
 ```{r}
 m %>% 
@@ -214,13 +214,13 @@ m %>%
 ```
 
 
-__Note:__ If you have used `spread_draws` with a raw sample from Stan or JAGS, you may be used to using `recover_types` before `spread_draws` to get index column values back (e.g. if the index was a factor). This is not necessary when using `spread_draws` on `rstanarm` models, because those models already contain that information in their variable names. For more on `recover_types`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
+__Note:__ If you have used `spread_draws()` with a raw sample from Stan or JAGS, you may be used to using `recover_types()` before `spread_draws()` to get index column values back (e.g. if the index was a factor). This is not necessary when using `spread_draws()` on `rstanarm` models, because those models already contain that information in their variable names. For more on `recover_types()`, see `vignette("tidybayes")`.
 
 ## Point summaries and intervals
 
 ### With simple model variables
 
-`tidybayes` provides a family of functions for generating point summaries and intervals from draws in a tidy format. These functions follow the naming scheme `[median|mean|mode]_[qi|hdi]`, for example, `median_qi`, `mean_qi`, `mode_hdi`, and so on. The first name (before the `_`) indicates the type of point summary, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom point or interval functions can also be applied using the `point_interval` function.
+`tidybayes` provides a family of functions for generating point summaries and intervals from draws in a tidy format. These functions follow the naming scheme `[median|mean|mode]_[qi|hdi]`, for example, `median_qi()`, `mean_qi()`, `mode_hdi()`, and so on. The first name (before the `_`) indicates the type of point summary, and the second name indicates the type of interval. `qi` yields a quantile interval (a.k.a. equi-tailed interval, central interval, or percentile interval) and `hdi` yields a highest (posterior) density interval. Custom point or interval functions can also be applied using the `point_interval()` function.
 
 For example, we might extract the draws corresponding to the posterior distributions of the overall mean and standard deviation of observations:
 
@@ -230,7 +230,7 @@ m %>%
   head(10)
 ```
 
-Like with `b[term,group]`, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply `median_qi`:
+Like with `b[term,group]`, this gives us a tidy data frame. If we want the median and 95% quantile interval of the variables, we can apply `median_qi()`:
 
 ```{r}
 m %>%
@@ -238,7 +238,7 @@ m %>%
   median_qi(`(Intercept)`, sigma)
 ```
 
-We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, `median_qi` will use every column that is not a grouping column or a special column (like `.chain`, `.iteration`, or `.draw`). Thus in the above example, `(Intercept)` and `sigma` are redundant arguments to `median_qi` because they are also the only columns we gathered from the model. So we can simplify this to:
+We can specify the columns we want to get medians and intervals from, as above, or if we omit the list of columns, `median_qi()` will use every column that is not a grouping column or a special column (like `.chain`, `.iteration`, or `.draw`). Thus in the above example, `(Intercept)` and `sigma` are redundant arguments to `median_qi()` because they are also the only columns we gathered from the model. So we can simplify this to:
 
 ```{r}
 m %>%
@@ -246,7 +246,7 @@ m %>%
   median_qi()
 ```
 
-If you would rather have a long-format list of intervals, use `gather_draws` instead:
+If you would rather have a long-format list of intervals, use `gather_draws()` instead:
 
 ```{r}
 m %>%
@@ -254,11 +254,11 @@ m %>%
   median_qi()
 ```
 
-For more on `gather_draws`, see <code>[vignette("tidybayes")](tidybayes.html)</code>.
+For more on `gather_draws()`, see `vignette("tidybayes")`.
 
 ### With indexed variables
 
-When we have a model variable with one or more indices, such as `b`, we can apply `median_qi` (or other functions in the `point_interval` family) as we did before:
+When we have a model variable with one or more indices, such as `b`, we can apply `median_qi()` (or other functions in the `point_interval()` family) as we did before:
 
 ```{r}
 m %>%
@@ -266,7 +266,7 @@ m %>%
   median_qi()
 ```
 
-How did `median_qi` know what to aggregate? Data frames returned by `spread_draws` are automatically grouped by all index variables you pass to it; in this case, that means `spread_draws` groups its results by `group`. `median_qi` respects those groups, and calculates the point summaries and intervals within all groups. Then, because no columns were passed to `median_qi`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
+How did `median_qi()` know what to aggregate? Data frames returned by `spread_draws()` are automatically grouped by all index variables you pass to it; in this case, that means `spread_draws()` groups its results by `group`. `median_qi()` respects those groups, and calculates the point summaries and intervals within all groups. Then, because no columns were passed to `median_qi()`, it acts on the only non-special (`.`-prefixed) and non-group column, `b`. So the above shortened syntax is equivalent to this more verbose call:
 
 ```{r}
 m %>%
@@ -277,7 +277,7 @@ m %>%
 
 ## Combining variables with different indices in a single tidy format data frame
 
-`spread_draws` and `gather_draws` support extracting variables that have different indices into the same data frame. Indices with the same name are automatically matched up, and values are duplicated as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this `condition_mean`). In this model, that mean is the intercept (`(Intercept)`) plus the effect for a given condition (`b`). 
+`spread_draws()` and `gather_draws()` support extracting variables that have different indices into the same data frame. Indices with the same name are automatically matched up, and values are duplicated as necessary to produce one row per all combination of levels of all indices. For example, we might want to calculate the mean within each condition (call this `condition_mean`). In this model, that mean is the intercept (`(Intercept)`) plus the effect for a given condition (`b`). 
 
 We can gather draws from `(Intercept)` and `b` together in a single data frame:
 
@@ -296,7 +296,7 @@ m %>%
   median_qi(condition_mean)
 ```
 
-`median_qi` uses tidy evaluation (see `vignette("tidy-evaluation", package = "rlang")`), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of `condition_mean` from `mutate` into `median_qi`:
+`median_qi()` uses tidy evaluation (see `vignette("tidy-evaluation", package = "rlang")`), so it can take column expressions, not just column names. Thus, we can simplify the above example by moving the calculation of `condition_mean` from `mutate` into `median_qi()`:
 
 ```{r}
 m %>%
@@ -306,20 +306,20 @@ m %>%
 
 ## Plotting points and intervals
 
-Plotting point summaries and with one interval is straightforward using the `geom_pointinterval` or `geom_pointintervalh` geoms:
+Plotting point summaries and with one interval is straightforward using `geom_pointinterval()`:
 
 ```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   median_qi(condition_mean = `(Intercept)` + b) %>%
   ggplot(aes(y = group, x = condition_mean, xmin = .lower, xmax = .upper)) +
-  geom_pointintervalh()
+  geom_pointinterval()
 ```
 
 
 ## Intervals with multiple probability levels
 
-`median_qi` and its sister functions can also produce an arbitrary number of probability intervals by setting the `.width =` argument:
+`median_qi()` and its sister functions can also produce an arbitrary number of probability intervals by setting the `.width =` argument:
 
 ```{r}
 m %>%
@@ -327,37 +327,37 @@ m %>%
   median_qi(condition_mean = `(Intercept)` + b, .width = c(.95, .8, .5))
 ```
 
-The results are in a tidy format: one row per group and uncertainty interval width (`.width`). This facilitates plotting. For example, assigning `-.width` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointintervalh` geom automatically sets the `xmin`, `xmax`, and `size` aesthetics appropriately based on the `.lower`, `.upper`, and `.width` columns in the data to produce plots of points with multiple probability levels:
+The results are in a tidy format: one row per group and uncertainty interval width (`.width`). This facilitates plotting. For example, assigning `-.width` to the `size` aesthetic will show all intervals, making thicker lines correspond to smaller intervals. The `geom_pointinterval()` geom automatically sets the `size` aesthetic appropriately based on the `.width` columns in the data to produce plots of points with multiple probability levels:
 
 ```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   median_qi(condition_mean = `(Intercept)` + b, .width = c(.95, .66)) %>%
-  ggplot(aes(y = group, x = condition_mean)) +
-  geom_pointintervalh() 
+  ggplot(aes(y = group, x = condition_mean, xmin = .lower, xmax = .upper)) +
+  geom_pointinterval()
 ```
 
 
 ## Intervals with densities
 
-To see the density along with the intervals, we can use `stat_eyeh` (horizontal "eye plots", which combine intervals with violin plots), or `stat_halfeyeh` (horizontal interval + density plots):
+To see the density along with the intervals, we can use `stat_eye()` ("eye plots", which combine intervals with violin plots), or `stat_halfeye()` (interval + density plots):
 
 ```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   mutate(condition_mean = `(Intercept)` + b) %>%
   ggplot(aes(y = group, x = condition_mean)) +
-  stat_halfeyeh() 
+  stat_halfeye()
 ```
 
-Or say you want to annotate portions of the densities in color; the `fill` aesthetic can vary within a slab in all geoms and stats in the `geom_slabinterval()` family, including `stat_halfeyeh()`. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:
+Or say you want to annotate portions of the densities in color; the `fill` aesthetic can vary within a slab in all geoms and stats in the `geom_slabinterval()` family, including `stat_halfeye()`. For example, if you want to annotate a domain-specific region of practical equivalence (ROPE), you could do something like this:
 
 ```{r fig.width = small_width, fig.height = tiny_height}
 m %>%
   spread_draws(`(Intercept)`, b[,group]) %>%
   mutate(condition_mean = `(Intercept)` + b) %>%
   ggplot(aes(y = group, x = condition_mean, fill = stat(abs(x) < .8))) +
-  stat_halfeyeh() +
+  stat_halfeye() +
   geom_vline(xintercept = c(-.8, .8), linetype = "dashed") +
   scale_fill_manual(values = c("gray80", "skyblue"))
 ```
@@ -374,7 +374,7 @@ See `vignette("slabinterval")` for an overview.
 
 ## Posterior fits
 
-Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_draws`, which is analogous to `rstanarm::posterior_linpred` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of draws from posterior fits:
+Rather than calculating conditional means manually as in the previous example, we could use `add_fitted_draws()`, which is analogous to `rstanarm::posterior_linpred()` (giving posterior draws from the model's linear predictor, in this case, posterior distributions of conditional means), but uses a tidy data format. We can combine it with `modelr::data_grid()` to first generate a grid describing the fits we want, then transform that grid into a long-format data frame of draws from posterior fits:
 
 ```{r}
 ABC %>%
@@ -383,14 +383,14 @@ ABC %>%
   head(10)
 ```
 
-To plot this example, we'll also show the use of `stat_pointintervalh` instead of `geom_pointintervalh`, which summarizes draws into point summaries and intervals within ggplot:
+To plot this example, we'll also show the use of `stat_pointinterval()` instead of `geom_pointinterval()`, which summarizes draws into point summaries and intervals within ggplot:
 
 ```{r fig.width = tiny_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
   ggplot(aes(x = .value, y = condition)) +
-  stat_pointintervalh(.width = c(.66, .95))
+  stat_pointinterval(.width = c(.66, .95))
 ```
 
 
@@ -398,14 +398,14 @@ ABC %>%
 
 Intervals are nice if the alpha level happens to line up with whatever decision you are trying to make, but getting a shape of the posterior is better (hence eye plots, above). On the other hand, making inferences from density plots is imprecise (estimating the area of one shape as a proportion of another is a hard perceptual task). Reasoning about probability in frequency formats is easier, motivating [quantile dotplots](https://github.com/mjskay/when-ish-is-my-bus/blob/master/quantile-dotplots.md) ([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes et al. 2018](https://doi.org/10.1145/3173574.3173718)), which also allow precise estimation of arbitrary intervals (down to the dot resolution of the plot, 100 in the example below). 
 
-Within the slabinterval family of geoms in tidybayes is the `dots` and `dotsinterval` family, which automatically determine appropriate bin sizes for dotplots and can calculate quantiles from samples to construct quantile dotplots. `stat_dotsh()` is the horizontal variant designed for use on samples:
+Within the slabinterval family of geoms in tidybayes is the `dots` and `dotsinterval` family, which automatically determine appropriate bin sizes for dotplots and can calculate quantiles from samples to construct quantile dotplots. `stat_dots()` is the horizontal variant designed for use on samples:
 
 ```{r fig.width = med_width, fig.height = med_height}
 ABC %>%
   data_grid(condition) %>%
   add_fitted_draws(m) %>%
   ggplot(aes(x = .value, y = condition)) +
-  stat_dotsh(quantiles = 100)
+  stat_dots(quantiles = 100)
 ```
 
 The idea is to get away from thinking about the posterior as indicating one canonical point or interval, but instead to represent it as (say) 100 approximately equally likely points.
@@ -413,26 +413,26 @@ The idea is to get away from thinking about the posterior as indicating one cano
 
 ## Posterior predictions
 
-Where `add_fitted_draws` is analogous to `rstanarm::posterior_linpred`, `add_predicted_draws` is analogous to `rstanarm::posterior_predict`, giving draws from the posterior predictive distribution.
+Where `add_fitted_draws()` is analogous to `rstanarm::posterior_linpred()`, `add_predicted_draws()` is analogous to `rstanarm::posterior_predict()`, giving draws from the posterior predictive distribution.
 
-Here is an example of posterior predictive distributions plotted using `stat_slabh()`:
+Here is an example of posterior predictive distributions plotted using `stat_slab()`:
 
 ```{r fig.width = small_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
   ggplot(aes(x = .prediction, y = condition)) +
-  stat_slabh()
+  stat_slab()
 ```
 
-We could also use `tidybayes::stat_intervalh` to plot predictive bands alongside the data:
+We could also use `tidybayes::stat_interval()` to plot predictive bands alongside the data:
 
 ```{r fig.width = small_width, fig.height = tiny_height}
 ABC %>%
   data_grid(condition) %>%
   add_predicted_draws(m) %>%
   ggplot(aes(y = condition, x = .prediction)) +
-  stat_intervalh() +
+  stat_interval() +
   geom_point(aes(x = response), data = ABC) +
   scale_color_brewer()
 ```
@@ -451,8 +451,8 @@ preds = grid %>%
 
 ABC %>%
   ggplot(aes(y = condition, x = response)) +
-  stat_intervalh(aes(x = .prediction), data = preds) +
-  stat_pointintervalh(aes(x = .value), data = fits, .width = c(.66, .95), position = position_nudge(y = -0.3)) +
+  stat_interval(aes(x = .prediction), data = preds) +
+  stat_pointinterval(aes(x = .value), data = fits, .width = c(.66, .95), position = position_nudge(y = -0.3)) +
   geom_point() +
   scale_color_brewer()
 ```
@@ -546,9 +546,9 @@ mtcars %>%
 
 ## Comparing levels of a factor
 
-If we wish compare the means from each condition, `compare_levels` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences. 
+If we wish compare the means from each condition, `compare_levels()` facilitates comparisons of the value of some variable across levels of a factor. By default it computes all pairwise differences. 
 
-Let's demonstrate `compare_levels` with another plotting geom, `stat_halfeyeh`, which gives horizontal "half-eye" plots, combining intervals with a density plot:
+Let's demonstrate `compare_levels()` with `stat_halfeye()`:
 
 ```{r fig.width = small_width, fig.height = small_height}
 #N.B. the syntax for compare_levels is experimental and may change
@@ -556,7 +556,7 @@ m %>%
   spread_draws(b[,,condition], sep = "[, :]") %>%
   compare_levels(b, by = condition) %>%
   ggplot(aes(y = condition, x = b)) +
-  stat_halfeyeh()
+  stat_halfeye()
 ```
 
 If you prefer "caterpillar" plots, ordered by something like the mean of the difference, you can reorder the factor before plotting:
@@ -569,7 +569,7 @@ m %>%
   ungroup() %>%
   mutate(condition = reorder(condition, b)) %>%
   ggplot(aes(y = condition, x = b)) +
-  stat_halfeyeh() +
+  stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") 
 ```
 
@@ -584,7 +584,7 @@ data(esoph)
 m_esoph_rs = stan_polr(tobgp ~ agegp, data = esoph, prior = R2(0.25), prior_counts = rstanarm::dirichlet(1))
 ```
 
-The `rstanarm::posterior_linpred` function for ordinal regression models in rstanarm returns only the link-level prediction for each draw (in contrast to `brms::fitted.brmsfit`, which returns one prediction per category for ordinal models, see the ordinal regression examples in `vignette("tidy-brms")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal `rstanarm` models, `add_fitted_draws` just returns the link-level prediction (**Note**: setting `scale = "response"` for such models will not usually make sense). 
+The `rstanarm::posterior_linpred()` function for ordinal regression models in rstanarm returns only the link-level prediction for each draw (in contrast to `brms::fitted.brmsfit()`, which returns one prediction per category for ordinal models, see the ordinal regression examples in `vignette("tidy-brms")`). The philosophy of `tidybayes` is to tidy whatever format is output by a model, so in keeping with that philosophy, when applied to ordinal `rstanarm` models, `add_fitted_draws()` just returns the link-level prediction (**Note**: setting `scale = "response"` for such models will not usually make sense). 
 
 For example, here is a plot of the link-level fit:
 
@@ -616,7 +616,7 @@ To derive these values, we need two things:
 
 - The $\alpha_j$ values. These are threshold parameters fitted by the model. For convenience, if there are $k$ levels, we will take $\alpha_k = +\infty$, since the probability of being in the top level or below it is 1.
 
-- The $\beta x$ values. These are just the `.value` column returned by `add_fitted_draws`.
+- The $\beta x$ values. These are just the `.value` column returned by `add_fitted_draws()`.
 
 The thresholds in `rstanarm` are coefficients with names containing `|`, indicating which categories they are thresholds between. We can see those parameters in the list of variables in the model:
 
@@ -624,7 +624,7 @@ The thresholds in `rstanarm` are coefficients with names containing `|`, indicat
 get_variables(m_esoph_rs)
 ```
 
-We can extract those automatically by using the `regex = TRUE` argument to `gather_draws` to find all variables containing a `|` character. We will then use `summarise_all(list)` to turn these thresholds into a list column, and add a final threshold equal to $+\infty$ (to represent the highest category):
+We can extract those automatically by using the `regex = TRUE` argument to `gather_draws()` to find all variables containing a `|` character. We will then use `dplyr::summarise_all(list)` to turn these thresholds into a list column, and add a final threshold equal to $+\infty$ (to represent the highest category):
 
 ```{r}
 thresholds = m_esoph_rs %>%
@@ -643,7 +643,7 @@ For example, the threshold vector from one row of this data frame (i.e., from on
 thresholds[1,]$threshold
 ```
 
-We can combine those thresholds (the $\alpha_j$ values from the above formula) with the `.value` from `add_fitted_draws` ($\beta x$ from the above formula) to calculate per-category probabilities:
+We can combine those thresholds (the $\alpha_j$ values from the above formula) with the `.value` from `add_fitted_draws()` ($\beta x$ from the above formula) to calculate per-category probabilities:
 
 ```{r fig.width = med_width, fig.height = med_height}
 esoph %>%
@@ -686,15 +686,15 @@ esoph_plot = esoph %>%
   xlab("age group")
 
 esoph_plot +
-  stat_summaryh(fun.x = median, geom = "barh", fill = "gray75", width = 1, color = "white") +
-  stat_pointintervalh() 
+  stat_summary(fun = median, geom = "bar", fill = "gray75", width = 1, color = "white") +
+  stat_pointinterval()
 ```
 
 The bars in this case might present a false sense of precision, so we could also try CCDF barplots instead:
 
 ```{r fig.width = large_width, fig.height = large_height/2}
 esoph_plot +
-  stat_ccdfintervalh() +
+  stat_ccdfinterval() +
   expand_limits(x = 0) #ensure bars go to 0
 ```
 

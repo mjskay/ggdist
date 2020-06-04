@@ -128,19 +128,18 @@ dist_interval_function = function(df, .width, trans, ...) {
 #' (a combination of a violin plot and interval), *half-eye plots* (a density plus interval),
 #' and *CCDF bar plots* (a complementary CDF plus interval).
 #'
-#' The shortcut stat names follow the pattern `stat_dist_[name][h|]`, where the trailing
-#' `h` (if present) indicates the horizontal version of the stat.
+#' The shortcut stat names follow the pattern `stat_dist_[name]`.
 #'
 #' Stats include:
 #'
 #' \itemize{
-#'   \item `stat_dist_eye` / `stat_dist_eyeh`: Eye plots (violin + interval)
-#'   \item `stat_dist_halfeye` / `stat_dist_halfeyeh`: Half-eye plots (density + interval)
-#'   \item `stat_dist_ccdfinterval` / `stat_dist_ccdfintervalh`: CCDF bar plots (CCDF + interval)
-#'   \item `stat_dist_cdfinterval` / `stat_dist_cdfintervalh`: CDF bar plots (CDF + interval)
-#'   \item `stat_dist_gradientinterval` / `stat_dist_gradientintervalh`: Density gradient + interval plots
-#'   \item `stat_dist_pointinterval` / `stat_dist_pointintervalh`: Point + interval plots
-#'   \item `stat_dist_interval` / `stat_dist_intervalh`: Interval plots
+#'   \item `stat_dist_eye`: Eye plots (violin + interval)
+#'   \item `stat_dist_halfeye`: Half-eye plots (density + interval)
+#'   \item `stat_dist_ccdfinterval`: CCDF bar plots (CCDF + interval)
+#'   \item `stat_dist_cdfinterval`: CDF bar plots (CDF + interval)
+#'   \item `stat_dist_gradientinterval`: Density gradient + interval plots
+#'   \item `stat_dist_pointinterval`: Point + interval plots
+#'   \item `stat_dist_interval`: Interval plots
 #' }
 #'
 #' These stats expect a `dist` aesthetic to specify a distribution name
@@ -206,7 +205,7 @@ dist_interval_function = function(df, .width, trans, ...) {
 #' # scale, where it will appear Normal:
 #' data.frame(dist = "lnorm") %>%
 #'   ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
-#'   stat_dist_halfeyeh() +
+#'   stat_dist_halfeye() +
 #'   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 #'
 #' # see vignette("slabinterval") for many more examples.

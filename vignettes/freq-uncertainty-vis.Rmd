@@ -108,7 +108,7 @@ The default summary is not great from an uncertainty communication perspective:
 summary(m_ABC)
 ```
 
-So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeyeh()` to plot them. The sampling distribution for parameter $i$, $\beta_i$, from an `lm` model is a scaled-and-shifted t distribution:
+So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeye()` to plot them. The sampling distribution for parameter $i$, $\beta_i$, from an `lm` model is a scaled-and-shifted t distribution:
 
 $$
 \beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\beta_i}\right)
@@ -132,7 +132,7 @@ Putting everything together, we have:
 m_ABC %>%
   tidy() %>%
   ggplot(aes(y = term)) +
-  stat_dist_halfeyeh(
+  stat_dist_halfeye(
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = estimate, arg3 = std.error)
   )
 ```
@@ -156,7 +156,7 @@ ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = .) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_halfeyeh(
+  stat_dist_halfeye(
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
     scale = .5
   ) +
@@ -172,7 +172,7 @@ ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = .) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_gradientintervalh(
+  stat_dist_gradientinterval(
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
     scale = .5
   )
@@ -185,7 +185,7 @@ ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = .) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_ccdfintervalh(
+  stat_dist_ccdfinterval(
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
   )
 ```
@@ -197,7 +197,7 @@ ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = .) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_dotsh(
+  stat_dist_dots(
     quantiles = 100,
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
   )

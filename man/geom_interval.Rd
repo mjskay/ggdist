@@ -141,8 +141,7 @@ when used with functions like \code{\link[=median_qi]{median_qi()}}, \code{\link
 \code{\link[=mode_hdi]{mode_hdi()}}, etc.
 
 Specifically, \code{geom_interval} acts as if its default aesthetics are
-\code{aes(ymin = .lower, ymax = .upper, color = fct_rev(ordered(.width)))}. \code{geom_intervalh} acts as if
-its default aesthetics are \code{aes(xmin = .lower, xmax = .upper, color = fct_rev(ordered(.width)))}.
+\code{aes(color = fct_rev(ordered(.width)))}.
 }
 \section{Aesthetics}{
 
@@ -192,25 +191,28 @@ library(ggplot2)
 
 data(RankCorr, package = "tidybayes")
 
+# orientation is detected automatically based on
+# use of xmin/xmax or ymin/ymax
+
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
   median_qi(.width = c(.5, .8, .95, .99)) \%>\%
-  ggplot(aes(y = i, x = u_tau)) +
-  geom_intervalh() +
+  ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
+  geom_interval() +
   scale_color_brewer()
 
 RankCorr \%>\%
   spread_draws(u_tau[i]) \%>\%
   median_qi(.width = c(.5, .8, .95, .99)) \%>\%
-  ggplot(aes(x = i, y = u_tau)) +
+  ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
   geom_interval() +
   scale_color_brewer()
 
 }
 \seealso{
-See \code{\link[=stat_interval]{stat_interval()}} / \code{\link[=stat_intervalh]{stat_intervalh()}} for the stat versions, intended
+See \code{\link[=stat_interval]{stat_interval()}} for the stat version, intended
 for use on samples from a distribution.
-See \code{\link[=geom_interval]{geom_interval()}} / \code{\link[=geom_intervalh]{geom_intervalh()}} for a similar geom intended for intervals without
+See \code{\link[=geom_interval]{geom_interval()}} for a similar geom intended for intervals without
 point summaries.
 See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} for a variety of other
 stats that combine intervals with densities and CDFs.

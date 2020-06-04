@@ -102,20 +102,19 @@ sample_slab_function = function(
 #' and *CCDF bar plots* (a complementary CDF plus interval). These can be
 #' handy for visualizing posterior distributions in Bayesian inference, amongst other things.
 #'
-#' The shortcut stat names follow the pattern `stat_[name][h|]`, where the trailing
-#' `h` (if present) indicates the horizontal version of the stat.
+#' The shortcut stat names follow the pattern `stat_[name]`.
 #'
 #' Stats include:
 #'
 #' \itemize{
-#'   \item `stat_eye` / `stat_eyeh`: Eye plots (violin + interval)
-#'   \item `stat_halfeye` / `stat_halfeyeh`: Half-eye plots (density + interval)
-#'   \item `stat_ccdfinterval` / `stat_ccdfintervalh`: CCDF bar plots (CCDF + interval)
-#'   \item `stat_cdfinterval` / `stat_cdfintervalh`: CDF bar plots (CDF + interval)
-#'   \item `stat_gradientinterval` / `stat_gradientintervalh`: Density gradient + interval plots
-#'   \item `stat_histinterval` / `stat_histintervalh`: Histogram + interval plots
-#'   \item `stat_pointinterval` / `stat_pointintervalh`: Point + interval plots
-#'   \item `stat_interval` / `stat_intervalh`: Interval plots
+#'   \item `stat_eye`: Eye plots (violin + interval)
+#'   \item `stat_halfeye`: Half-eye plots (density + interval)
+#'   \item `stat_ccdfinterval`: CCDF bar plots (CCDF + interval)
+#'   \item `stat_cdfinterval`: CDF bar plots (CDF + interval)
+#'   \item `stat_gradientinterval`: Density gradient + interval plots
+#'   \item `stat_histinterval`: Histogram + interval plots
+#'   \item `stat_pointinterval`: Point + interval plots
+#'   \item `stat_interval`: Interval plots
 #' }
 #'
 #' @eval rd_slabinterval_aesthetics(stat = StatSampleSlabinterval)

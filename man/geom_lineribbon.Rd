@@ -109,7 +109,7 @@ tibble(x = 1:10) \%>\%
 }
 \seealso{
 See \code{\link[=stat_lineribbon]{stat_lineribbon()}} for a version that does summarizing of samples into points and intervals
-within ggplot. See \code{\link[=geom_pointinterval]{geom_pointinterval()}} / \code{\link[=geom_pointintervalh]{geom_pointintervalh()}} for a similar geom intended
+within ggplot. See \code{\link[=geom_pointinterval]{geom_pointinterval()}} for a similar geom intended
 for point summaries and intervals. See \code{\link[=geom_ribbon]{geom_ribbon()}} and \code{\link[=geom_line]{geom_line()}} for the geoms this is
 based on.
 }

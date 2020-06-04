@@ -197,7 +197,7 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geom version, intended
 for use on data that has already been translated into function evaluations, points, and intervals.
 See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} for families of stats
-built on top of this stat for common use cases (like \code{stat_halfeyeh}).
+built on top of this stat for common use cases (like \code{stat_halfeye}).
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }
 \keyword{internal}

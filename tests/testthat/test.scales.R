@@ -16,7 +16,7 @@ test_that("direct scale setting works", {
   vdiffr::expect_doppelganger("direct scale setting",
     data.frame(dist = "norm", mean = 1, sd = 2) %>%
       ggplot(aes(y = "", dist = dist, arg1 = mean, arg2 = sd)) +
-      stat_dist_halfeyeh(
+      stat_dist_halfeye(
         n = 20,
         shape = 21,  # this point shape has a fill and outline
         point_color = "red",

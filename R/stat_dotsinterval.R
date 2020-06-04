@@ -62,7 +62,7 @@ dots_dist_slab_function = function(
 }
 
 
-# stat_dotsinterval[h] ------------------------------------------------
+# stat_dotsinterval ------------------------------------------------
 
 #' @rdname geom_dotsinterval
 #' @export
@@ -176,7 +176,7 @@ stat_dotsh = function(..., orientation = "horizontal") {
 }
 
 
-# stat_dist_dotsinterval[h] -----------------------------------------------
+# stat_dist_dotsinterval -----------------------------------------------
 
 #' @rdname geom_dotsinterval
 #' @export

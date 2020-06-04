@@ -59,14 +59,14 @@ test_that("grouped pointintervals work", {
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%
-    ggplot(aes(x = i, y = u_tau)) +
+    ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
     geom_pointinterval(interval_size_range = c(1,4), fatten_point = 3)
 
   vdiffr::expect_doppelganger("grouped pointintervals with custom fatten", forward_plot)
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%
-    ggplot(aes(x = i, y = u_tau, interval_size = forcats::fct_rev(ordered(.width))), point_size = 3) +
+    ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper, interval_size = forcats::fct_rev(ordered(.width))), point_size = 3) +
     geom_pointinterval()
 
   vdiffr::expect_doppelganger("grouped pointintervals with interval_size and legend", forward_plot)
@@ -99,7 +99,7 @@ test_that("orientation detection on pointintervals works", {
     p + geom_pointinterval(aes(color = g, y = v, ymin = l, ymax = u), orientation = NA, position = "dodge")
   )
 
-  vdiffr::expect_doppelganger("horizontal pointinterval orientation detection plus dodge",
+  vdiffr::expect_doppelganger("horizontal pointinterval orientation detection, dodge",
     p + geom_pointinterval(aes(color = g, x = v, xmin = l, xmax = u), orientation = NA, position = "dodge")
   )
 

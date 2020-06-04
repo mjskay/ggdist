@@ -54,7 +54,7 @@ data.frame(prior = "lkjcorr(3)") \%>\%
   parse_dist(prior) \%>\%
   marginalize_lkjcorr(K = 2) \%>\%
   ggplot(aes(y = prior, dist = .dist, args = .args)) +
-  stat_dist_halfeyeh() +
+  stat_dist_halfeye() +
   xlim(-1, 1) +
   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
 

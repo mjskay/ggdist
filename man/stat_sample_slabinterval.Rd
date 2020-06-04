@@ -250,20 +250,19 @@ which combine multiple options to create useful geoms, particularly \emph{eye} p
 and \emph{CCDF bar plots} (a complementary CDF plus interval). These can be
 handy for visualizing posterior distributions in Bayesian inference, amongst other things.
 
-The shortcut stat names follow the pattern \verb{stat_[name][h|]}, where the trailing
-\code{h} (if present) indicates the horizontal version of the stat.
+The shortcut stat names follow the pattern \code{stat_[name]}.
 
 Stats include:
 
 \itemize{
-\item \code{stat_eye} / \code{stat_eyeh}: Eye plots (violin + interval)
-\item \code{stat_halfeye} / \code{stat_halfeyeh}: Half-eye plots (density + interval)
-\item \code{stat_ccdfinterval} / \code{stat_ccdfintervalh}: CCDF bar plots (CCDF + interval)
-\item \code{stat_cdfinterval} / \code{stat_cdfintervalh}: CDF bar plots (CDF + interval)
-\item \code{stat_gradientinterval} / \code{stat_gradientintervalh}: Density gradient + interval plots
-\item \code{stat_histinterval} / \code{stat_histintervalh}: Histogram + interval plots
-\item \code{stat_pointinterval} / \code{stat_pointintervalh}: Point + interval plots
-\item \code{stat_interval} / \code{stat_intervalh}: Interval plots
+\item \code{stat_eye}: Eye plots (violin + interval)
+\item \code{stat_halfeye}: Half-eye plots (density + interval)
+\item \code{stat_ccdfinterval}: CCDF bar plots (CCDF + interval)
+\item \code{stat_cdfinterval}: CDF bar plots (CDF + interval)
+\item \code{stat_gradientinterval}: Density gradient + interval plots
+\item \code{stat_histinterval}: Histogram + interval plots
+\item \code{stat_pointinterval}: Point + interval plots
+\item \code{stat_interval}: Interval plots
 }
 }
 \section{Aesthetics}{

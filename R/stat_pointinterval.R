@@ -19,14 +19,14 @@
 #' @param .prob Deprecated. Use `.width` instead.
 #' @param fun.data Deprecated. Use `point_interval` or `interval_function` instead.
 #' @param fun.args Deprecated. Use `interval_args` instead.
-#' @seealso See [geom_pointinterval()] / [geom_pointintervalh()] for the geom versions, intended
+#' @seealso See [geom_pointinterval()] for the geom versions, intended
 #' for use on points and intervals that have already been summarized using a [point_interval()] function.
-#' See [stat_interval()] / [stat_intervalh()] for a similar stat intended for intervals without
+#' See [stat_interval()] for a similar stat intended for intervals without
 #' point summaries. See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
-#' @seealso See [geom_pointinterval()] / [geom_pointintervalh()] for the geom versions, intended
+#' @seealso See [geom_pointinterval()] for the geom versions, intended
 #' for use on points and intervals that have already been summarized using a [point_interval()] function.
-#' See [stat_interval()] / [stat_intervalh()] for a similar stat intended for intervals without
+#' See [stat_interval()] for a similar stat intended for intervals without
 #' point summaries.
 #' See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
@@ -42,7 +42,7 @@
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%
 #'   ggplot(aes(y = i, x = u_tau)) +
-#'   stat_pointintervalh(.width = c(.66, .95))
+#'   stat_pointinterval(.width = c(.66, .95))
 #'
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%

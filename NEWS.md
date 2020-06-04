@@ -1,3 +1,10 @@
+# tidybayes 2.0.3.9000
+
+* `geom_interval()` and `geom_pointinterval()` no longer automatically set the `ymin` and `ymax` aesthetics in order
+  to work better with automatic orientation detection. `geom_intervalh()` and `geom_pointintervalh()` still do,
+  since they are deprecated anyway (so supporting the old behavior is fine in these functions).
+
+
 # tidybayes 2.0.3
 
 Minor fixes for changes in tibble 3.0.0

@@ -16,9 +16,9 @@
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval", stat = StatInterval)
 #' @inheritParams stat_pointinterval
 #' @inheritParams geom_slabinterval
-#' @seealso See [geom_interval()] / [geom_intervalh()] for the geom versions, intended
+#' @seealso See [geom_interval()] for the geom versions, intended
 #' for use on points and intervals that have already been summarized using a [point_interval()] function.
-#' See [stat_pointinterval()] / [stat_pointintervalh()] for a similar stat intended for
+#' See [stat_pointinterval()] for a similar stat intended for
 #' point summaries and intervals.
 #' See [stat_sample_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
@@ -34,7 +34,7 @@
 #' RankCorr %>%
 #'   spread_draws(u_tau[i]) %>%
 #'   ggplot(aes(y = i, x = u_tau)) +
-#'   stat_intervalh() +
+#'   stat_interval() +
 #'   scale_color_brewer()
 #'
 #' RankCorr %>%
