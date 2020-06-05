@@ -12,10 +12,19 @@
 #' <https://github.com/mjskay/ranking-correlation>. The original experiment (but not this analysis of it)
 #' is described in Harrison *et al.* (2014).
 #'
-#' This version of the posterior sample is thinned substantially and has omitted several
+#' `data("RankCorr")` is a substantially thinned version of the original posterior sample and has omitted several
 #' parameters in order for it to be a more manageable size.
 #'
+#' `data("RankCorr_u_tau")` is used for testing and examples and is the equivalent of the following:
+#'
+#' ```
+#' data("RankCorr")
+#' RankCorr_u_tau = RankCorr %>%
+#'   tidybayes::spread_draws(u_tau[i])
+#' ```
+#'
 #' @name RankCorr
+#' @aliases RankCorr_u_tau
 #' @docType data
 #' @keywords datasets internal
 #' @references

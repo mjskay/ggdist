@@ -3,6 +3,7 @@
 \docType{data}
 \name{RankCorr}
 \alias{RankCorr}
+\alias{RankCorr_u_tau}
 \title{Thinned subset of posterior sample from a Bayesian analysis of perception of correlation.}
 \description{
 Data from Kay and Heer (2016), primarily used for testing and examples.
@@ -12,8 +13,13 @@ For more details, see Kay and Heer (2016) or the Github repository describing th
 \url{https://github.com/mjskay/ranking-correlation}. The original experiment (but not this analysis of it)
 is described in Harrison \emph{et al.} (2014).
 
-This version of the posterior sample is thinned substantially and has omitted several
+\code{data("RankCorr")} is a substantially thinned version of the posterior sample and has omitted several
 parameters in order for it to be a more manageable size.
+
+\code{data("RankCorr_u_tau")} is used for testing and examples and is the equivalent of the following:\preformatted{data("RankCorr")
+RankCorr_u_tau = RankCorr \%>\%
+  tidybayes::spread_draws(u_tau[i])
+}
 }
 \references{
 Kay, Matthew, and Jeffrey Heer.

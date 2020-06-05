@@ -23,4 +23,10 @@ RankCorr = raw %>%
   }) %>%
   as.mcmc.list()
 
-devtools::use_data(RankCorr, overwrite = TRUE, compress = 'xz')
+usethis::use_data(RankCorr, overwrite = TRUE, compress = 'xz')
+
+RankCorr_u_tau = RankCorr %>%
+  tidybayes::spread_draws(u_tau[i]) %>%
+  as.data.frame()
+
+usethis::use_data(RankCorr_u_tau, overwrite = TRUE, compress = 'xz')
