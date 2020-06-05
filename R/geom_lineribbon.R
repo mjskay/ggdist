@@ -55,8 +55,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'   group_by_all() %>%
 #'   do(tibble(y = rnorm(100, .$x))) %>%
 #'   median_qi(.width = c(.5, .8, .95)) %>%
-#'   ggplot(aes(x = x, y = y)) +
-#'   # automatically uses aes(ymin = .lower, ymax = .upper, fill = fct_rev(ordered(.width)))
+#'   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
+#'   # automatically uses aes(fill = fct_rev(ordered(.width)))
 #'   geom_lineribbon() +
 #'   scale_fill_brewer()
 #'
