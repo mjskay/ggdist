@@ -23,7 +23,7 @@ dir.create("README_models", showWarnings = FALSE)
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
 <!--[![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)-->
 
-<!--![Preview of ggdist plots](man/figures/preview.png)-->
+![Preview of ggdist plots](man/figures/preview.png)
 
 `ggdist` is an R package that provides a flexible set of `ggplot2` geoms and stats designed
 especially for visualizing distributions and uncertainty. It is designed for both
