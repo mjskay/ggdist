@@ -3,7 +3,7 @@ note <- sprintf("R package version %s", meta$Version)
 
 bibentry(
   bibtype = "Manual",
-  title = paste("{ggdist}: Visualizations of Distributions and Uncertainty"),
+  title = paste("{ggdist}: Distribution and Uncertainty Visualization"),
   author = c(person("Matthew", "Kay")),
   year = year,
   note = note,

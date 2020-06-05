@@ -1,5 +1,5 @@
 Package: ggdist
-Title: Visualizations of Distributions and Uncertainty
+Title: Distribution and Uncertainty Visualization
 Version: 2.0.3.9000
 Date: 2020-06-04
 Authors@R: c(
@@ -18,46 +18,28 @@ Imports:
     dplyr (>= 0.8.0),
     tidyr (>= 1.0.0),
     ggplot2 (>= 3.3.0),
-    coda,
     purrr (>= 0.2.3),
     rlang (>= 0.3.0),
     scales,
     grid,
     forcats,
     HDInterval,
-    arrayhelpers,
-    tidyselect,
-    tibble,
-    magrittr
+    tibble
 Suggests:
     knitr,
     testthat,
     vdiffr (>= 0.3.0),
     svglite,
-    rstan (>= 2.17.0),
-    runjags,
-    rjags,
-    jagsUI,
-    rstanarm (>= 2.19.2),
-    emmeans,
     broom (>= 0.4.3),
-    dotwhisker,
-    MCMCglmm,
-    bayesplot,
     modelr,
-    brms (>= 2.13.0),
     cowplot,
     covr,
     gdtools,
     rmarkdown,
     ggrepel,
-    bindrcpp,
     RColorBrewer,
-    gganimate,
-    gifski,
     png,
-    pkgdown,
-    transformr
+    pkgdown
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
@@ -67,40 +49,20 @@ RoxygenNote: 7.1.0
 LazyData: true
 Encoding: UTF-8
 Collate:
-    "tidybayes-package.R"
-    "add_draws.R"
+    "ggdist-package.R"
     "binning_methods.R"
-    "combine_chains.R"
-    "compare_levels.R"
-    "compose_data.R"
-    "data.R"
-    "density_bins.R"
     "draw_key_slabinterval.R"
-    "fitted_draws.R"
     "flip_aes.R"
-    "gather_draws.R"
-    "gather_emmeans_draws.R"
-    "gather_pairs.R"
-    "gather_variables.R"
     "geom.R"
     "geom_slabinterval.R"
     "geom_dotsinterval.R"
     "geom_interval.R"
     "geom_lineribbon.R"
     "geom_pointinterval.R"
-    "get_variables.R"
-    "global_variables.R"
     "lkjcorr_marginal.R"
-    "onAttach.R"
     "parse_dist.R"
     "point_interval.R"
-    "predict_curve.R"
-    "predicted_draws.R"
-    "recover_types.R"
-    "residual_draws.R"
-    "sample_draws.R"
     "scales.R"
-    "spread_draws.R"
     "stat.R"
     "stat_slabinterval.R"
     "stat_dist_slabinterval.R"
@@ -109,13 +71,7 @@ Collate:
     "stat_pointinterval.R"
     "stat_interval.R"
     "stat_lineribbon.R"
-    "theme_tidybayes.R"
-    "tidy_draws.R"
+    "theme_ggdist.R"
     "tidy_format_translators.R"
-    "tidybayes-models.R"
-    "ungather_draws.R"
-    "unspread_draws.R"
     "util.R"
-    "x_at_y.R"
-    "deprecated.R"
 Roxygen: list(markdown = TRUE)

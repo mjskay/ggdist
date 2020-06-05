@@ -111,7 +111,7 @@ draw_key_lineribbon = function(data, params, size) {
 #' @format NULL
 #' @usage NULL
 #' @importFrom plyr dlply ddply
-#' @importFrom purrr map map_dbl
+#' @importFrom purrr map map_dbl reduce
 #' @import ggplot2
 #' @export
 GeomLineribbon = ggproto("GeomLineribbon", Geom,

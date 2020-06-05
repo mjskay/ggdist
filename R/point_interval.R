@@ -317,7 +317,6 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
 }
 
-#' @importFrom coda HPDinterval as.mcmc
 #' @export
 #' @rdname point_interval
 hdi = function(x, .width = .95, .prob, na.rm = FALSE) {

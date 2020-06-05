@@ -1,15 +1,14 @@
 
-# ggdist: Visualizations of distributions and uncertainty <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
+# ggdist: Distribution and uncertainty visualization <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
 
 [![Build
 status](https://travis-ci.org/mjskay/ggdist.png?branch=master)](https://travis-ci.org/mjskay/ggdist)
 [![R build
 status](https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggdist/actions)
-[![Coverage
-status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/ggdist?branch=master)
 [![CRAN
 status](http://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
+<!--[![Coverage status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/ggdist?branch=master)-->
 <!--[![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)-->
 
 ![Preview of ggdist plots](man/figures/preview.png)
@@ -20,10 +19,10 @@ uncertainty. It is designed for both frequentist and Bayesian
 uncertainty visualization, taking the view that uncertainty
 visualization can be unified through the perspective of distribution
 visualization: for frequentist models, one visualizes confidence
-distributions; for Bayesian models, one visualizes probability
-distributions.
-
-`ggdist` several types of geoms and stats:
+distributions or bootstrap distributions (see
+`vignette("freq-uncertainty-vis")`); for Bayesian models, one visualizes
+probability distributions (see `vignette("tidybayes", package =
+"tidybayes")`).
 
 The `geom_slabinterval()` / `stat_slabinterval()` /
 `stat_dist_slabinterval()` family (see `vignette("slabinterval")`)
@@ -79,7 +78,7 @@ reproduce the issue. Pull requests should be filed against the
 
 ## Citing `ggdist`
 
-Matthew Kay (2020). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 2.0.3.9000,
+Matthew Kay (2020). *ggdist: Distribution and Uncertainty
+Visualization*. R package version 2.0.3.9000,
 <https://mjskay.github.io/ggdist/>.
 <!-- DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).-->

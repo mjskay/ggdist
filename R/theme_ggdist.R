@@ -1,9 +1,9 @@
-# theme_tidybayes: Simple ggplot2 theme for tidybayes
+# theme_ggdist: Simple ggplot2 theme for ggdist
 #
 # Author: mjskay
 ###############################################################################
 
-#' Simple, light ggplot2 theme for tidybayes
+#' Simple, light ggplot2 theme for ggdist
 #'
 #' A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.
 #'
@@ -20,11 +20,11 @@
 #'
 #' library(ggplot2)
 #'
-#' theme_set(theme_tidybayes())
+#' theme_set(theme_ggdist())
 #'
 #' @import ggplot2
 #' @export
-theme_tidybayes = function() {
+theme_ggdist = function() {
   theme_light() + theme(
     axis.line.x = element_line(color = "gray70", size = rel(0.5)),
     axis.line.y = element_line(color = "gray70", size = rel(0.5)),
@@ -38,7 +38,7 @@ theme_tidybayes = function() {
   )
 }
 
-#' @rdname theme_tidybayes
+#' @rdname theme_ggdist
 #' @export
 facet_title_left_horizontal = function() {
   theme(
@@ -46,7 +46,7 @@ facet_title_left_horizontal = function() {
   )
 }
 
-#' @rdname theme_tidybayes
+#' @rdname theme_ggdist
 #' @export
 facet_title_right_horizontal = function() {
   theme(
@@ -54,7 +54,7 @@ facet_title_right_horizontal = function() {
   )
 }
 
-#' @rdname theme_tidybayes
+#' @rdname theme_ggdist
 #' @export
 axis_titles_bottom_left = function() {
   theme(

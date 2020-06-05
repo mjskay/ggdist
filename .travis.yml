@@ -8,51 +8,28 @@ warnings_are_errors: TRUE
 r_build_args: '--no-build-vignettes'
 r_check_args: '--ignore-vignettes'
 
-addons:
-  apt:
-    packages:
-      - jags
-      - cargo           # for gifski
-      - libudunits2-dev # for units (transformr)
-      - libgdal-dev     # for sf (transformr)
-
 r_binary_packages:
   - plyr
   - dplyr
   - tidyr
   - ggplot2
-  - coda
   - purrr
   - rlang
   - forcats
-  - tidyselect
   - tibble
   - magrittr
   - knitr
   - testthat
   - svglite
-  - rstan
-  - runjags
-  - rjags
-  - jagsUI
-  - rstanarm
-  - emmeans
   - broom
-  - MCMCglmm
-  - bayesplot
   - modelr
-  - brms
   - cowplot
-  - ggridges
   - covr
   - gdtools
   - rmarkdown
   - ggrepel
-  - bindrcpp
   - RColorBrewer
-  - gganimate
   - png
-#  - ggstance
 
 env:
   global:

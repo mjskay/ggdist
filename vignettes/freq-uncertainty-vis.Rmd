@@ -49,7 +49,7 @@ if (capabilities("cairo")) {
 
 ## Introduction
   
-This vignette shows how to combine the `tidybayes` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize sampling distributions instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
+This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize sampling distributions instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
 
 ## Setup
   
@@ -58,13 +58,13 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
-library(tidybayes)
+library(ggdist)
 library(ggplot2)
 library(brms)       # needed for dstudent_t(), etc; not for model fitting
 library(broom)
 library(modelr)
 
-theme_set(theme_tidybayes())
+theme_set(theme_ggdist())
 ```
 
 ```{r hidden_options, include=FALSE}
@@ -74,7 +74,7 @@ options(width = 120)
 
 ## Point estimates
 
-We'll start with an ordinary least squares (OLS) linear regression analysis of the simple `ABC` dataset used in `vignette("tidybayes")`:
+We'll start with an ordinary least squares (OLS) linear regression analysis of the simple `ABC` dataset used in `vignette("tidybayes", package = "tidybayes")`:
 
 ```{r}
 set.seed(5)
@@ -137,7 +137,7 @@ m_ABC %>%
   )
 ```
 
-If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models). Here we want the sampling distribution for the mean in condition $c$, $\mu_c$:
+If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we can use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models). Here we want the sampling distribution for the mean in condition $c$, $\mu_c$:
 
 $$
 \mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\mu_c} \right)

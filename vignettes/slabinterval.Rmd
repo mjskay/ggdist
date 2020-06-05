@@ -49,7 +49,7 @@ if (capabilities("cairo")) {
 
 ## Introduction
   
-This vignette describes the slab+interval geoms and stats in `tidybayes`. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models, or even sampling distributions from other models) straightforward, and support a range of useful plots, including intervals, eye plots (densities + intervals), CCDF bar plots (complementary cumulative distribution functions + intervals), gradient plots, and histograms.
+This vignette describes the slab+interval geoms and stats in `ggdist`. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models, or even sampling distributions from other models) straightforward, and support a range of useful plots, including intervals, eye plots (densities + intervals), CCDF bar plots (complementary cumulative distribution functions + intervals), gradient plots, and histograms.
 
 ## Setup
   
@@ -58,12 +58,12 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
-library(tidybayes)
+library(ggdist)
 library(ggplot2)
 library(cowplot)
 library(brms)
 
-theme_set(theme_tidybayes())
+theme_set(theme_ggdist())
 ```
 
 ```{r hidden_options, include=FALSE}
@@ -157,9 +157,9 @@ plot_grid(ncol = 2, align = "h", rel_widths = c(0.65, 0.35),
 )
 ```
 
-Tidybayes has a pantheon of geoms and stats that stem from a common root: `geom_slabinterval()` and `stat_slabinterval()`. These geoms consist of a "slab" (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components. 
+`ggdist` has a pantheon of geoms and stats that stem from a common root: `geom_slabinterval()` and `stat_slabinterval()`. These geoms consist of a "slab" (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components. 
 
-Using `geom_slabinterval()` and `stat_slabinterval()` directly is not necessarily advisable: they are highly configurable on their own, but this configurability requires remembering a bunch of combinations of options to use. Instead, tidybayes contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:
+Using `geom_slabinterval()` and `stat_slabinterval()` directly is not necessarily advisable: they are highly configurable on their own, but this configurability requires remembering a bunch of combinations of options to use. Instead, ggdist contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:
 
 `[geom|stat|stat_dist]_[name]`
 
@@ -203,7 +203,7 @@ df %>%
   ggtitle("stat_eye()")
 ```
 
-Users of older versions of tidybayes might have used `geom_eye()`, which is the older spelling of `stat_eye()`. Due to the name standardization in version 2 of tidybayes (see the description above), `stat_eye()` is now the preferred spelling. `geom_eye()` will continue to work for now, but is deprecated and may throw a warning in future versions.
+Users of older versions of `tidybayes` (which used to contain the `ggdist` geoms) might have used `geom_eye()`, which is the older spelling of `stat_eye()`. Due to the name standardization in version 2 of `tidybayes` (see the description above), `stat_eye()` is now the preferred spelling. `geom_eye()` will continue to work for now, but is deprecated and may throw a warning in future versions.
 
 We can also use `stat_halfeye()` instead to get densities instead of violins:
 
@@ -572,7 +572,7 @@ df %>%
   labs(title = "stat_dots(position = 'dodge')")
 ```
 
-Unlike the base `ggplot2::geom_dotplot()` geom, `tidybayes::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:
+Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:
 
 ```{r dots_dodge_nocolor, fig.width = med_width, fig.height = small_height}
 df %>%

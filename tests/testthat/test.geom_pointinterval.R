@@ -24,7 +24,7 @@ test_that("horizontal grouped pointintervals work", {
       median_hdci(.width = c(.66, .95)) %>%
       ggplot(aes(y = i, x = u_tau)) +
       geom_pointintervalh(show.legend = TRUE) +
-      theme_tidybayes()
+      theme_ggdist()
   ))
 
   expect_warning(vdiffr::expect_doppelganger("grouped pointintervals (h, stat)",

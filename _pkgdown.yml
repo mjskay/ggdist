@@ -1,4 +1,4 @@
-url: http://mjskay.github.io/tidybayes
+url: http://mjskay.github.io/ggdist
 
 
 template:
@@ -14,59 +14,9 @@ authors:
 
 reference:
 - title: Package overview
-  desc:  Overview of tidybayes.
+  desc:  Overview of ggdist.
   contents:
-  - tidybayes-package
-  - tidybayes-models
-
-- title: Composing data for input to a model
-  desc:  Transform tidy data frames into data lists appropriate for model types like Stan and JAGS
-  contents:
-  - compose_data
-  - data_list
-  - as_data_list
-  - n_prefix
-  - x_at_y
-
-- title: Extracting posteriors
-  desc:  Get tidy draws of posterior distributions from objects (and helper functions for examining objects)
-  contents:
-  - get_variables
-  - recover_types
-  - gather_draws
-  - spread_draws
-  - tidy_draws
-  - gather_emmeans_draws
-  - ungather_draws
-  - unspread_draws
-
-- title: Extracting fits, predictions, and residuals
-  desc:  Get tidy draws from transformed linear predictors ("fits"), posterior predictions, or residuals
-  contents:
-  - add_fitted_draws
-  - fitted_draws
-  - add_linpred_draws
-  - linpred_draws
-  - add_predicted_draws
-  - predicted_draws
-  - add_residual_draws
-  - residual_draws
-  - add_draws
-
-- title: Manipulating tidy data frames of draws
-  desc:  Convenience functions for common data manipulation tasks with tidy data frames of draws
-  contents:
-  - sample_draws
-  - compare_levels
-  - gather_variables
-  - gather_pairs
-  - to_broom_names
-  - from_broom_names
-  - to_ggmcmc_names
-  - from_ggmcmc_names
-  - combine_chains
-  - density_bins
-  - histogram_bins
+  - ggdist-package
 
 - title: Point summaries and intervals
   desc:  Calculate point summaries and intervals on (grouped) data frames of draws
@@ -83,7 +33,8 @@ reference:
   - ends_with("qih")
 
 - title: Visualizing draws
-  desc:  Stats and geoms for visualizing tidy data frames of draws
+  desc:  Stats and geoms for visualizing tidy data frames of draws (e.g. sample data,
+    draws from a bootstrap distributation, draws from a Bayesian posterior).
   contents:
   - geom_slabinterval
   - stat_sample_slabinterval
@@ -97,7 +48,8 @@ reference:
   - stat_dotsinterval
 
 - title: Visualizing analytical distributions
-  desc:  Stats, geoms, and helper functions for visualizing analytical distributions, such as priors
+  desc:  Stats, geoms, and helper functions for visualizing analytical distributions (e.g.
+    frequentist confidence distributions, Bayesian priors).
   contents:
   - stat_dist_slabinterval
   - stat_dist_dotsinterval
@@ -105,22 +57,24 @@ reference:
   - lkjcorr_marginal
   - marginalize_lkjcorr
 
+- title: Compatibility with other packages
+  desc:  Functions to convert the ggdist naming scheme (for `point_interval()`) to
+    and from other packages' naming schemes.
+  contents:
+  - to_broom_names
+  - from_broom_names
+  - to_ggmcmc_names
+  - from_ggmcmc_names
+
 - title: GGplot scales
   desc:  Scales for custom aesthetics used by tidybayes geoms and stats
   contents:
   - scales
 
 - title: GGplot theme
-  desc:  Tidybayes theme for ggplot2
+  desc:  ggdist theme for ggplot2
   contents:
-  - theme_tidybayes
+  - theme_ggdist
   - facet_title_left_horizontal
   - facet_title_right_horizontal
   - axis_titles_bottom_left
-
-- title: Deprecated functions
-  desc: Deprecated functions
-  contents:
-  - "tidybayes-deprecated"
-  - predict_curve
-  - predict_curve_density
