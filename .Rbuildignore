@@ -13,13 +13,11 @@
 ^README.md$
 ^README_files$
 ^README_cache$
-^clean_vignette_cache\.sh$
 ^\.lintr$
 ^docs$
 ^_pkgdown\.yml$
 ^pkgdown/.*$
 ^pkgdown$
-^build_test_models\.R$
 ^codecov\.yml$
 ^\.covrignore$
 ^cran-comments.md$
@@ -27,9 +25,6 @@
 ^data-raw$
 ^figures-source$
 ^vignettes/.*_cache$
-^benchmarks.*$
 ^revdep$
 ^man/figures/README$
-^vignettes/models$
-^README_models$
 ^\.github$
