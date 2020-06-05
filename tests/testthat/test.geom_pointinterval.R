@@ -80,6 +80,9 @@ test_that("grouped pointintervals work", {
 })
 
 test_that("orientation detection on pointintervals works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
   p = data.frame(
     v = c(1,2),
     l = c(0, 1),

@@ -162,6 +162,9 @@ test_that("scale transformation works", {
 })
 
 test_that("orientation detection works properly on stat_dist", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
   vdiffr::expect_doppelganger("stat_dist with no main axis",
     ggplot(data.frame(), aes(dist = "norm")) + stat_dist_slabinterval(n = 10)
   )

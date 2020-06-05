@@ -64,6 +64,9 @@ test_that("group_slab works", {
 # normalization -----------------------------------------------------------
 
 test_that("normalize works", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
   p = tribble(
     ~y, ~id, ~p, ~ dist, ~ mu, ~ sigma,
     1,  "A",  1, "norm",    0,       1,
