@@ -24,13 +24,13 @@ test_that("vanilla dots geoms and stats work", {
     p + geom_dots(aes(x = dist, y = x))
   )
 
-  expect_warning(vdiffr::expect_doppelganger("vanilla geom_dotsh",
-    p + geom_dotsh(aes(y = dist, x = x))
-  ), "Deprecated")
+  vdiffr::expect_doppelganger("vanilla geom_dotsh",
+    p + geom_dots(aes(y = dist, x = x))
+  )
 
-  expect_warning(vdiffr::expect_doppelganger("stat_dotsh with a group with 1 dot",
-    p + stat_dotsh(aes(y = dist, x = x, color = x > 2))
-  ), "Deprecated")
+  vdiffr::expect_doppelganger("stat_dotsh with a group with 1 dot",
+    p + stat_dots(aes(y = dist, x = x, color = x > 2))
+  )
 
   vdiffr::expect_doppelganger("stat_dotsh with a group with 2 dots",
     p + stat_dots(aes(y = dist, x = x, color = x > 1))

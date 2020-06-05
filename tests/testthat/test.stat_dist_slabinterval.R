@@ -38,19 +38,17 @@ test_that("distribution eye plots work with the args aesthetic", {
     p + stat_dist_halfeye(aes(x = dist), na.rm = TRUE, n = 40)
   )
 
-  # test deprecation warning
-  expect_warning(vdiffr::expect_doppelganger("horizontal half-eye using args",
-    p + stat_dist_halfeyeh(aes(y = dist), na.rm = TRUE, n = 40)
-  ), "Deprecated")
+  vdiffr::expect_doppelganger("horizontal half-eye using args",
+    p + stat_dist_halfeye(aes(y = dist), na.rm = TRUE, n = 40)
+  )
 
   vdiffr::expect_doppelganger("ccdfinterval using args",
     p + stat_dist_ccdfinterval(aes(x = dist), na.rm = TRUE, n = 40)
   )
 
-  # test deprecation warning
-  expect_warning(vdiffr::expect_doppelganger("ccdfintervalh using args",
-    p + stat_dist_ccdfintervalh(aes(y = dist), na.rm = TRUE, n = 40)
-  ), "Deprecated")
+  vdiffr::expect_doppelganger("ccdfintervalh using args",
+    p + stat_dist_ccdfinterval(aes(y = dist), na.rm = TRUE, n = 40)
+  )
 
   vdiffr::expect_doppelganger("cdfinterval using args",
     p + stat_dist_cdfinterval(aes(x = dist), na.rm = TRUE, n = 40)

@@ -10,30 +10,29 @@ library(tidyr)
 context("geom_interval")
 
 # use a subset of RankCorr so tests are faster
-data(RankCorr, package = "tidybayes")
-RankCorr_s = RankCorr[[1]][1:100,]
-RankCorr_u_tau = RankCorr_s %>%
-  spread_draws(u_tau[i]) %>%
-  filter(i %in% 1:3)
+data(RankCorr_u_tau, package = "ggdist")
+RankCorr_u_tau = RankCorr_u_tau %>%
+  filter(i %in% 1:3, .iteration %in% 1:50) %>%
+  group_by(i)
 
 test_that("horizontal grouped intervals work", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
-  expect_warning(vdiffr::expect_doppelganger("grouped intervals (h)",
+  vdiffr::expect_doppelganger("grouped intervals (h)",
     RankCorr_u_tau %>%
       mean_qi(.width = c(.5, .75, .90)) %>%
-      ggplot(aes(y = i, x = u_tau)) +
-      geom_intervalh() +
+      ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
+      geom_interval() +
       scale_color_brewer()
-  ), "Deprecated")
+  )
 
-  expect_warning(vdiffr::expect_doppelganger("grouped intervals (h, stat)",
+  vdiffr::expect_doppelganger("grouped intervals (h, stat)",
     RankCorr_u_tau %>%
       ggplot(aes(y = i, x = u_tau)) +
-      stat_intervalh(.width = c(.5, .75, .90)) +
+      stat_interval(.width = c(.5, .75, .90)) +
       scale_color_brewer()
-  ), "Deprecated")
+  )
 
   vdiffr::expect_doppelganger("grouped intervals (h, stat, mode_hdi)",
     RankCorr_u_tau %>%

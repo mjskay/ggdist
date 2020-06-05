@@ -10,6 +10,28 @@ deparse0 = function(expr, width.cutoff = 500, ...) {
   paste0(deparse(expr, width.cutoff = width.cutoff, ...), collapse = "")
 }
 
+# get all variable names from an expression
+# based on http://adv-r.had.co.nz/dsl.html
+all_names = function(x) {
+  if (is.atomic(x)) {
+    NULL
+  } else if (is.name(x)) {
+    name = as.character(x)
+    if (name == "") {
+      NULL
+    }
+    else {
+      name
+    }
+  } else if (is.call(x) || is.pairlist(x)) {
+    children = lapply(x[-1], all_names)
+    unique(unlist(children))
+  } else {
+    stop("Don't know how to handle type `", typeof(x), "`",
+      call. = FALSE)
+  }
+}
+
 
 # deprecations and warnings -----------------------------------------------
 
