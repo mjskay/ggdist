@@ -54,7 +54,7 @@ distribution names R recognizes. Unrecognized names are left as-is.}
 Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
 a data frame, suitable for use with \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and its shortcut stats
 (like \code{stat_dist_halfeye}). This format is output
-by \code{\link[brms:get_prior]{brms::get_prior()}}, making it particularly useful for visualizing priors from
+by \code{brms::get_prior}, making it particularly useful for visualizing priors from
 brms models.
 }
 \details{

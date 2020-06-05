@@ -226,7 +226,7 @@ arguments. Distribution names should correspond to R functions that have \code{"
 
 See the \code{\link[=parse_dist]{parse_dist()}} function for a useful way to generate \code{dist} and \code{args}
 values from human-readable distribution specs (like \code{"normal(0,1)"}). Such specs are also
-produced by other packages (like the \code{\link[brms:get_prior]{brms::get_prior()}} function in brms); thus,
+produced by other packages (like the \code{brms::get_prior} function in brms); thus,
 \code{\link[=parse_dist]{parse_dist()}} combined with the stats described here can help you visualize the output
 of those functions.
 }
@@ -287,7 +287,7 @@ In addition, in their default configuration (paired with \code{\link[=geom_slabi
 \item \code{group}
 }
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
-Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation.
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[ggdist]{scales} documentation.
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 

@@ -150,7 +150,7 @@ dist_interval_function = function(df, .width, trans, ...) {
 #'
 #' See the [parse_dist()] function for a useful way to generate `dist` and `args`
 #' values from human-readable distribution specs (like `"normal(0,1)"`). Such specs are also
-#' produced by other packages (like the [brms::get_prior()] function in brms); thus,
+#' produced by other packages (like the `brms::get_prior` function in brms); thus,
 #' [parse_dist()] combined with the stats described here can help you visualize the output
 #' of those functions.
 #'

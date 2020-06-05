@@ -128,7 +128,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     stat_aesthetics,
     geom_aesthetics,
     "See examples of some of these aesthetics in action in \\code{vignette(\"slabinterval\")}. ",
-    "Learn more about the sub-geom aesthetics (like \\code{interval_color}) in the \\link[tidybayes]{scales} documentation. ",
+    "Learn more about the sub-geom aesthetics (like \\code{interval_color}) in the \\link[ggdist]{scales} documentation. ",
     "Learn more about basic ggplot aesthetics in \\code{vignette(\"ggplot2-specs\")}. "
   )
 }

@@ -161,7 +161,7 @@ These geoms support the following aesthetics:
 \item \code{group}
 }
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
-Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[tidybayes]{scales} documentation.
+Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[ggdist]{scales} documentation.
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 
