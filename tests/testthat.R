@@ -2,6 +2,6 @@
 Sys.setenv("R_TESTS" = "")
 
 library(testthat)
-library(tidybayes)
+library(ggdist)
 
-test_check("tidybayes")
+test_check("ggdist")

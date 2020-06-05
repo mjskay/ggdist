@@ -6,8 +6,6 @@ output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
-params:
-  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
 vignette: >
   %\VignetteIndexEntry{Slab + interval stats and geoms}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,8 +35,7 @@ if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
 
 knitr::opts_chunk$set(
   fig.width = small_width,
-  fig.height = small_height,
-  eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
+  fig.height = small_height
 )
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
@@ -61,7 +58,6 @@ library(tidyr)
 library(ggdist)
 library(ggplot2)
 library(cowplot)
-library(brms)
 
 theme_set(theme_ggdist())
 ```
@@ -323,7 +319,7 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   )
 ```
 
-The approach of using `arg1`, ... `arg9` can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the `args` aesthetic. We'll use it along with the `brms` package's implementation of the scaled and shifted Student t distribution (`brms::dstudent_t()`, etc):
+The approach of using `arg1`, ... `arg9` can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the `args` aesthetic. `ggdist` includes an implementation of the scaled and shifted Student t distribution (`dstudent_t()`, `pstudent_t()`, etc) as it is often needed for visualizing frequentist confidence distributions (see `vignette("freq-uncertainty-vis")`) and Bayesian priors:
 
 ```{r norm_vs_t, fig.width = small_height, fig.height = small_height}
 tribble(
@@ -336,33 +332,43 @@ tribble(
   ggtitle("stat_dist_halfeye()")
 ```
 
-A particularly good use of the `dist` stats is to visualize priors. For example, with `brms` you can specify priors using the `brms::prior()` function. E.g., I might set some priors on the betas and the standard deviation in a model:
+A particularly good use of the `dist` stats is to visualize priors. For example, with `brms` you can specify priors using the `brms::prior()` function, which creates data frames with a `"prior"` column indicating the name of the prior distribution as a string. E.g., I might set some priors on the betas and the standard deviation in a model with something like this:
 
-```{r priors}
+```{r priors_fake, eval=FALSE}
 # NB these priors are made up!
-c(
+priors = c(
   prior(normal(0,1), class = b),
   prior(lognormal(0,1), class = sigma)
 )
+priors
+```
+
+```{r priors, echo=FALSE}
+# we want to avoid a brms dependency, so we fake it above and
+# just show the output of brms::prior() here
+priors = data.frame(
+  prior = c("normal(0, 1)", "lognormal(0, 1)"),
+  class = c("b", "sigma"), coef = c("", ""),
+  group = c("", ""),
+  resp = c("", ""),
+  dpar = c("", ""),
+  nlpar = c("", ""),
+  bound = c("", "")
+)
+priors
 ```
 
 The `parse_dist` function can make it easier to visualize these: it takes in string specifications like those produced by `brms` --- `"normal(0,1)"` and `"lognormal(0,1)"` above --- and translates them into `.dist` and `.args` columns:
 
 ```{r parse_dist}
-c(
-  prior(normal(0,1), class = b),
-  prior(lognormal(0,1), class = sigma)
-) %>%
+priors %>%
   parse_dist(prior)
 ```
 
 Notice that it also automatically translate some common distribution names (e.g. "normal" and "lognormal") into their equivalent R function names (`"norm"` and `"lnorm"`). This makes it easy to use them with `stat_dist_eye()` and its variants:
 
 ```{r prior_dist_halfeyeh}
-c(
-  prior(normal(0,1), class = b),
-  prior(lognormal(0,1), class = sigma)
-) %>%
+priors %>%
   parse_dist(prior) %>%
   ggplot(aes(y = class, dist = .dist, args = .args)) +
   stat_dist_halfeye() +

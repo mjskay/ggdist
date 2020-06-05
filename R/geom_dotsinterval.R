@@ -8,6 +8,7 @@
 # dots_grob ---------------------------------------------------------------
 
 #' @importFrom ggplot2 .stroke .pt
+#' @importFrom dplyr %>% arrange_at group_by_at group_split
 dots_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1, stackratio = 1, binwidth = NA,

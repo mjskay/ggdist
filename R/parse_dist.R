@@ -51,26 +51,8 @@
 #' data.frame(prior = c("normal(0,1)", "student_t(3,0,1)")) %>%
 #'   parse_dist(prior)
 #'
-#' if (
-#'   require("brms", quietly = TRUE)
-#' ) {
-#'
-#'   # parse_dist is particularly useful with brms prior specifications,
-#'   # which follow the same format...
-#'
-#'   # get priors for a brms model
-#'   priors = get_prior(mpg ~ log(hp), data = mtcars, family = lognormal)
-#'
-#'   # The `prior` column output by `get_prior()` is a character vector
-#'   # of distribution specifications. We can parse this directly...
-#'   parse_dist(priors$prior)
-#'
-#'   # ... or we can parse it and have it added back onto the original data frame
-#'   # (this form is likely more useful for plotting, since the other columns
-#'   # are retained)
-#'   parse_dist(priors, prior)
-#'
-#' }
+#' # parse_dist is particularly useful with the output of brms::prior(),
+#' # which follow the same format as above
 #'
 #' @importFrom tibble tibble
 #' @importFrom purrr map_dfr
@@ -153,7 +135,7 @@ r_dist_lookup = c(
   exponential = "exp",
   chisquare = "chisq",
   uniform = "unif",
-  studentt = "student_t",  # for brms::student_t
+  studentt = "student_t",
   studentst = "student_t",
   binomial = "binom",
   geometric = "geom",

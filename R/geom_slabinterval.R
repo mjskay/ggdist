@@ -683,6 +683,7 @@ get_justification = function(justification, side, orientation) {
 # groups slab data into contiguous components based on (usually) fill, colour, and alpha aesthetics,
 # interpolating values ymin/ymax values at the cutpoints, then returns the necessary data frame
 # (depending on `side`) that has top, bottom, or both sides to it
+#' @importFrom dplyr lag lead
 group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha"),
   orientation = "horizontal", side = "topright"
 ) {

@@ -6,8 +6,6 @@ output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
-params:
-  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
 vignette: >
   %\VignetteIndexEntry{Frequentist uncertainty visualization}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,8 +35,7 @@ if (requireNamespace("pkgdown", quietly = TRUE) && pkgdown::in_pkgdown()) {
 
 knitr::opts_chunk$set(
   fig.width = small_width,
-  fig.height = small_height,
-  eval = if (isTRUE(exists("params"))) params$EVAL else FALSE
+  fig.height = small_height
 )
 if (capabilities("cairo")) {
   knitr::opts_chunk$set(
@@ -60,7 +57,6 @@ library(dplyr)
 library(tidyr)
 library(ggdist)
 library(ggplot2)
-library(brms)       # needed for dstudent_t(), etc; not for model fitting
 library(broom)
 library(modelr)
 
@@ -207,7 +203,7 @@ See `vignette("slabinterval")` for more examples of uncertainty geoms and stats 
 
 ## For a fit line
 
-The same principle of reconstructing the sampling distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms")`, but using `lm()` instead:
+The same principle of reconstructing the sampling distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms", package = "tidybayes")`, but using `lm()` instead:
 
 ```{r}
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)

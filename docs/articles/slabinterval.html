@@ -133,7 +133,6 @@ img {
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggdist</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cowplot</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)
 
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_ggdist.html">theme_ggdist</a></span>())</pre></body></html></div>
 </div>
@@ -271,7 +270,7 @@ img {
     <span class="kw">y</span> <span class="kw">=</span> <span class="kw">NULL</span>
   )</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/beta_overplotted_slabh-1.png" width="648"></p>
-<p>The approach of using <code>arg1</code>, … <code>arg9</code> can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the <code>args</code> aesthetic. We’ll use it along with the <code>brms</code> package’s implementation of the scaled and shifted Student t distribution (<code><a href="https://rdrr.io/pkg/brms/man/StudentT.html">brms::dstudent_t()</a></code>, etc):</p>
+<p>The approach of using <code>arg1</code>, … <code>arg9</code> can work well when comparing similar distributions, but is harder to use with different distribution types. For example, if we wished to compare a Student t distribution and Normal distribution, the arguments may not line up. This is a good case to use list columns and the <code>args</code> aesthetic. <code>ggdist</code> includes an implementation of the scaled and shifted Student t distribution (<code><a href="http://mjskay.github.io/ggdist/reference/student_t.html">dstudent_t()</a></code>, <code><a href="http://mjskay.github.io/ggdist/reference/student_t.html">pstudent_t()</a></code>, etc) as it is often needed for visualizing frequentist confidence distributions (see <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>) and Bayesian priors:</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
   ~ <span class="no">dist</span>,      ~ <span class="no">args</span>,
   <span class="st">"norm"</span>,      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fl">0</span>, <span class="fl">1</span>),
@@ -281,29 +280,24 @@ img {
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_dist_halfeye()"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/norm_vs_t-1.png" width="432"></p>
-<p>A particularly good use of the <code>dist</code> stats is to visualize priors. For example, with <code>brms</code> you can specify priors using the <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html">brms::prior()</a></code> function. E.g., I might set some priors on the betas and the standard deviation in a model:</p>
+<p>A particularly good use of the <code>dist</code> stats is to visualize priors. For example, with <code>brms</code> you can specify priors using the <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html">brms::prior()</a></code> function, which creates data frames with a <code>"prior"</code> column indicating the name of the prior distribution as a string. E.g., I might set some priors on the betas and the standard deviation in a model with something like this:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># NB these priors are made up!</span>
-<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">b</span>),
-  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsfamily.html">lognormal</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
-)</pre></body></html></div>
+<span class="no">priors</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+  <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">b</span>),
+  <span class="fu">prior</span>(<span class="fu">lognormal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
+)
+<span class="no">priors</span></pre></body></html></div>
 <pre><code>##             prior class coef group resp dpar nlpar bound
 ## 1    normal(0, 1)     b                                 
 ## 2 lognormal(0, 1) sigma</code></pre>
 <p>The <code>parse_dist</code> function can make it easier to visualize these: it takes in string specifications like those produced by <code>brms</code> — <code>"normal(0,1)"</code> and <code>"lognormal(0,1)"</code> above — and translates them into <code>.dist</code> and <code>.args</code> columns:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">b</span>),
-  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsfamily.html">lognormal</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
-) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/parse_dist.html">parse_dist</a></span>(<span class="no">prior</span>)</pre></body></html></div>
 <pre><code>##             prior class coef group resp dpar nlpar bound .dist .args
 ## 1    normal(0, 1)     b                                   norm  0, 1
 ## 2 lognormal(0, 1) sigma                                  lnorm  0, 1</code></pre>
 <p>Notice that it also automatically translate some common distribution names (e.g. “normal” and “lognormal”) into their equivalent R function names (<code>"norm"</code> and <code>"lnorm"</code>). This makes it easy to use them with <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code> and its variants:</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu">normal</span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">b</span>),
-  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/set_prior.html">prior</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsfamily.html">lognormal</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">class</span> <span class="kw">=</span> <span class="no">sigma</span>)
-) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/parse_dist.html">parse_dist</a></span>(<span class="no">prior</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">class</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">.dist</span>, <span class="kw">args</span> <span class="kw">=</span> <span class="no">.args</span>)) +
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span>() +

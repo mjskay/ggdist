@@ -54,6 +54,7 @@ reference:
   - stat_dist_slabinterval
   - stat_dist_dotsinterval
   - parse_dist
+  - student_t
   - lkjcorr_marginal
   - marginalize_lkjcorr
 

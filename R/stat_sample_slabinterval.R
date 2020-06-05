@@ -24,7 +24,8 @@ weighted_ecdf = function(x, weights = NULL) {
 }
 
 #' @importFrom rlang missing_arg
-#' @importFrom stats ecdf
+#' @importFrom stats ecdf density
+#' @importFrom graphics hist
 sample_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = NA,
   adjust = 1, trim = TRUE, breaks = "Sturges", outline_bars = FALSE, trans = scales::identity_trans(), ...

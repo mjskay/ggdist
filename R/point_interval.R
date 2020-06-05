@@ -144,9 +144,10 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
 #' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
-#' @importFrom dplyr do bind_cols group_vars summarise_at
+#' @importFrom dplyr do bind_cols group_vars summarise_at %>%
 #' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
+#' @importFrom stats median
 #' @export
 point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
@@ -319,6 +320,7 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 
 #' @export
 #' @rdname point_interval
+#' @importFrom stats density
 hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
   if (!na.rm && any(is.na(x))) {
@@ -337,6 +339,7 @@ hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
 #' @export
 #' @rdname point_interval
 #' @importFrom rlang is_integerish
+#' @importFrom stats density
 Mode = function(x, na.rm = FALSE) {
   if (na.rm) {
     x = x[!is.na(x)]

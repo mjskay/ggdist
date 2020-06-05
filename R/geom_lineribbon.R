@@ -208,6 +208,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
 # helpers -----------------------------------------------------------------
 
+#' @importFrom dplyr lag lead
 stepify = function(df, x = "x", direction = "hv") {
   n = nrow(df)
 

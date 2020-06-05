@@ -72,6 +72,7 @@ Collate:
     "stat_pointinterval.R"
     "stat_interval.R"
     "stat_lineribbon.R"
+    "student_t.R"
     "theme_ggdist.R"
     "tidy_format_translators.R"
     "util.R"

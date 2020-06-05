@@ -4,6 +4,7 @@
 ###############################################################################
 
 library(dplyr)
+library(tidyr)
 
 context("geom_dotsinterval")
 

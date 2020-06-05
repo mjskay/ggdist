@@ -258,40 +258,9 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
   <span class='fu'>parse_dist</span>(<span class='no'>prior</span>)</div><div class='output co'>#&gt;              prior     .dist   .args
 #&gt; 1      normal(0,1)      norm    0, 1
 #&gt; 2 student_t(3,0,1) student_t 3, 0, 1</div><div class='input'>
-<span class='kw'>if</span> (
-  <span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='st'>"brms"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-) {
+# parse_dist is particularly useful with the output of brms::prior(),
+# which follow the same format as above
 
-  <span class='co'># parse_dist is particularly useful with brms prior specifications,</span>
-  <span class='co'># which follow the same format...</span>
-
-  <span class='co'># get priors for a brms model</span>
-  <span class='no'>priors</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/brms/man/get_prior.html'>get_prior</a></span>(<span class='no'>mpg</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>hp</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>lognormal</span>)
-
-  <span class='co'># The `prior` column output by `get_prior()` is a character vector</span>
-  <span class='co'># of distribution specifications. We can parse this directly...</span>
-  <span class='fu'>parse_dist</span>(<span class='no'>priors</span>$<span class='no'>prior</span>)
-
-  <span class='co'># ... or we can parse it and have it added back onto the original data frame</span>
-  <span class='co'># (this form is likely more useful for plotting, since the other columns</span>
-  <span class='co'># are retained)</span>
-  <span class='fu'>parse_dist</span>(<span class='no'>priors</span>, <span class='no'>prior</span>)
-
-}</div><div class='output co'>#&gt; <span class='message'>Loading 'brms' package (version 2.13.0). Useful instructions</span>
-#&gt; <span class='message'>can be found by typing help('brms'). A more detailed introduction</span>
-#&gt; <span class='message'>to the package is available through vignette('brms_overview').</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: 'brms'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:stats':</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    ar</span></div><div class='output co'>#&gt;                  prior     class  coef group resp dpar nlpar bound     .dist
-#&gt; 1                              b                                        &lt;NA&gt;
-#&gt; 2                              b loghp                                  &lt;NA&gt;
-#&gt; 3 student_t(3, 3, 2.5) Intercept                                   student_t
-#&gt; 4 student_t(3, 0, 2.5)     sigma                                   student_t
-#&gt;           .args
-#&gt; 1            NA
-#&gt; 2            NA
-#&gt; 3 3.0, 3.0, 2.5
-#&gt; 4 3.0, 0.0, 2.5</div><div class='input'>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

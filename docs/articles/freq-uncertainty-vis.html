@@ -132,7 +132,6 @@ img {
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggdist</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)       <span class="co"># needed for dstudent_t(), etc; not for model fitting</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">modelr</span>)
 
@@ -274,7 +273,7 @@ img {
 <div id="for-a-fit-line" class="section level2">
 <h2 class="hasAnchor">
 <a href="#for-a-fit-line" class="anchor"></a>For a fit line</h2>
-<p>The same principle of reconstructing the sampling distribution allows us to use <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> to construct uncertainty bands around regression fit lines. Here we’ll reconstruct an example with the <code>mtcars</code> dataset from <code>vignette("tidy-brms")</code>, but using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> instead:</p>
+<p>The same principle of reconstructing the sampling distribution allows us to use <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> to construct uncertainty bands around regression fit lines. Here we’ll reconstruct an example with the <code>mtcars</code> dataset from <code><a href="http://mjskay.github.io/tidybayes/articles/tidy-brms.html">vignette("tidy-brms", package = "tidybayes")</a></code>, but using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> instead:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">m_mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> * <span class="no">cyl</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>)</pre></body></html></div>
 <p>Again we’ll use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>, but now we’ll employ <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>:</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>

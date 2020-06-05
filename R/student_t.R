@@ -12,7 +12,7 @@
 #'
 #' @inheritParams stats::dt
 #' @param mu Location parameter (median)
-#' @param scale Scale parameter
+#' @param sigma Scale parameter
 #' @seealso [parse_dist()] and parsing distribution specs and the [stat_dist_slabinterval()]
 #' family of stats for visualizing them.
 #' @examples
@@ -22,21 +22,20 @@
 #' library(forcats)
 #'
 #' expand.grid(
-#'   eta = 1:6,
-#'   K = 2:6
+#'   df = c(3,5,10,30),
+#'   scale = c(1,1.5)
 #' ) %>%
-#'   ggplot(aes(y = fct_rev(ordered(eta)), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
-#'   stat_dist_slab(p_limits = c(0,1)) +
-#'   facet_grid(~ paste0(K, "x", K)) +
+#'   ggplot(aes(y = 0, dist = "student_t", arg1 = df, arg2 = 0, arg3 = scale, color = ordered(df))) +
+#'   stat_dist_slab(p_limits = c(.01, .99), fill = NA) +
+#'   scale_y_continuous(breaks = NULL) +
+#'   facet_grid( ~ scale) +
 #'   labs(
-#'     title = paste0(
-#'       "Marginal correlation for LKJ(eta) prior on different matrix sizes:\n",
-#'       "dlkjcorr_marginal(K, eta)"
-#'     ),
-#'     subtitle = "Correlation matrix size (KxK)",
-#'     y = "eta",
-#'     x = "Marginal correlation"
+#'     title = "dstudent_t(x, df, 0, sigma)",
+#'     subtitle = "Scale (sigma)",
+#'     y = NULL,
+#'     x = NULL
 #'   ) +
+#'   theme_ggdist() +
 #'   theme(axis.title = element_text(hjust = 0))
 #'
 #' @name student_t
