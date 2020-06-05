@@ -170,19 +170,19 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 library(magrittr)
 library(ggplot2)
 
-data(RankCorr, package = "tidybayes")
+data(RankCorr_u_tau, package = "ggdist")
 
 # orientation is detected automatically based on
 # use of xmin/xmax or ymin/ymax
 
-RankCorr \%>\%
-  spread_draws(u_tau[i]) \%>\%
+RankCorr_u_tau \%>\%
+  group_by(i) \%>\%
   median_qi(.width = c(.8, .95)) \%>\%
   ggplot(aes(y = i, x = u_tau, xmin = .lower, xmax = .upper)) +
   geom_pointinterval()
 
-RankCorr \%>\%
-  spread_draws(u_tau[i]) \%>\%
+RankCorr_u_tau \%>\%
+  group_by(i) \%>\%
   median_qi(.width = c(.8, .95)) \%>\%
   ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper)) +
   geom_pointinterval()

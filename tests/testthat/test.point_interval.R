@@ -13,7 +13,7 @@ ff_labels = c("a", "b", "c")
 
 get_draws = function() {
   #observations of tau grouped by the factor ff (with levels ff_labels)
-  data(RankCorr, package = "tidybayes")
+  data(RankCorr, package = "ggdist")
   rank_corr = RankCorr[[1]]
   plyr::ldply(1:3, function(i) {
     data.frame(

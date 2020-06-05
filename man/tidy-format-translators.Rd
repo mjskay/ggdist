@@ -54,11 +54,16 @@ prefixed with \code{from_} translate from that format back to the ggdist/tidybay
 
 library(magrittr)
 
-data(line, package = "coda")
+data(RankCorr_u_tau, package = "ggdist")
 
-line \%>\%
-  gather_draws(alpha, beta, sigma) \%>\%
-  median_qi() \%>\%
+df = RankCorr_u_tau \%>\%
+  dplyr::rename(.variable = i, .value = u_tau) \%>\%
+  group_by(.variable) \%>\%
+  median_qi(.value)
+
+df
+
+df \%>\%
   to_broom_names()
 
 }

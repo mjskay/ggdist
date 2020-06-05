@@ -37,15 +37,13 @@
 #' library(magrittr)
 #' library(ggplot2)
 #'
-#' data(RankCorr, package = "tidybayes")
+#' data(RankCorr_u_tau, package = "ggdist")
 #'
-#' RankCorr %>%
-#'   spread_draws(u_tau[i]) %>%
+#' RankCorr_u_tau %>%
 #'   ggplot(aes(y = i, x = u_tau)) +
 #'   stat_pointinterval(.width = c(.66, .95))
 #'
-#' RankCorr %>%
-#'   spread_draws(u_tau[i]) %>%
+#' RankCorr_u_tau %>%
 #'   ggplot(aes(x = i, y = u_tau)) +
 #'   stat_pointinterval(.width = c(.66, .95))
 #'
