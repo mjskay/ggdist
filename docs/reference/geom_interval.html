@@ -350,7 +350,7 @@ available to these geoms.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr_u_tau</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ggdist"</span>)
@@ -359,17 +359,17 @@ available to these geoms.</p></div>
 <span class='co'># use of xmin/xmax or ymin/ymax</span>
 
 <span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>group_by</span>(<span class='no'>i</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>i</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>.lower</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>.upper</span>)) +
   <span class='fu'>geom_interval</span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span>()</div><div class='output co'>#&gt; <span class='error'>Error in group_by(., i): could not find function "group_by"</span></div><div class='input'>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span>()</div><div class='img'><img src='geom_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>group_by</span>(<span class='no'>i</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>i</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>.lower</span>, <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>.upper</span>)) +
   <span class='fu'>geom_interval</span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span>()</div><div class='output co'>#&gt; <span class='error'>Error in group_by(., i): could not find function "group_by"</span></div><div class='input'>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span>()</div><div class='img'><img src='geom_interval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

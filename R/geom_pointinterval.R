@@ -45,7 +45,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' available to these geoms.
 #' @examples
 #'
-#' library(magrittr)
+#' library(dplyr)
 #' library(ggplot2)
 #'
 #' data(RankCorr_u_tau, package = "ggdist")

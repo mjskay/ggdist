@@ -52,7 +52,7 @@ prefixed with \code{from_} translate from that format back to the ggdist/tidybay
 }
 \examples{
 
-library(magrittr)
+library(dplyr)
 
 data(RankCorr_u_tau, package = "ggdist")
 

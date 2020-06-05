@@ -42,7 +42,7 @@
 #' @keywords manip
 #' @examples
 #'
-#' library(magrittr)
+#' library(dplyr)
 #'
 #' data(RankCorr_u_tau, package = "ggdist")
 #'

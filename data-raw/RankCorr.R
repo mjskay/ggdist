@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-library(magrittr)
+library(dplyr)
 library(coda)
 
 # raw RankCorr mcmc.list

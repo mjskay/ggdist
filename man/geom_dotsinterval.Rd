@@ -278,7 +278,34 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 
 \examples{
 
-# TODO
+library(dplyr)
+library(ggplot2)
+
+data(RankCorr_u_tau, package = "ggdist")
+
+# orientation is detected automatically based on
+# which axis is discrete
+
+RankCorr_u_tau \%>\%
+  ggplot(aes(x = u_tau)) +
+  geom_dots()
+
+RankCorr_u_tau \%>\%
+  ggplot(aes(y = u_tau)) +
+  geom_dots()
+
+# stat_dots can summarize quantiles, creating quantile dotplots
+
+RankCorr_u_tau \%>\%
+  ggplot(aes(x = u_tau, y = i)) +
+  stat_dots(quantiles = 100)
+
+# color and fill aesthetics can be mapped within the geom
+# dotsinterval adds an interval
+
+RankCorr_u_tau \%>\%
+  ggplot(aes(x = u_tau, y = i, fill = stat(x > 6))) +
+  stat_dotsinterval(quantiles = 100)
 
 }
 \references{
