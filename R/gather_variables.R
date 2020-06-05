@@ -4,20 +4,6 @@
 ###############################################################################
 
 
-
-# deprecated names for gather_variables -----------------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-gather_terms = function(...) {
-  .Deprecated("gather_variables", package = "tidybayes") # nocov
-  to_broom_names(gather_variables(...)) # nocov
-}
-
-
-
 # gather_variables --------------------------------------------------------
 
 #' Gather variables from a tidy data frame of draws from variables into a single column

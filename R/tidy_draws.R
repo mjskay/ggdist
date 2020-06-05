@@ -4,29 +4,6 @@
 ###############################################################################
 
 
-
-# deprecated names for tidy_draws --------------------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-as_sample_tibble = function(...) {
-  .Deprecated("tidy_draws", package = "tidybayes") # nocov
-  tidy_draws(...)                                  # nocov
-}
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-as_sample_data_frame = function(...) {
-  .Deprecated("tidy_draws", package = "tidybayes") # nocov
-  tidy_draws(...)                                  # nocov
-}
-
-
-
 #' Get a sample of posterior draws from a model as a tibble
 #'
 #' Extract draws from a Bayesian fit into a wide-format data frame with a

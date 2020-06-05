@@ -295,19 +295,7 @@ of the generic function <code>as_constructor</code>.</p>
     <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>condition_mean</span>[<span class='no'>condition</span>]) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='point_interval.html'>median_qi</a></span>()
 
-}</div><div class='output co'>#&gt; <span class='message'>rstan (Version 2.19.3, GitRev: 2e1f913d3ca3)</span></div><div class='output co'>#&gt; <span class='message'>For execution on a local, multicore CPU with excess RAM we recommend calling</span>
-#&gt; <span class='message'>options(mc.cores = parallel::detectCores()).</span>
-#&gt; <span class='message'>To avoid recompilation of unchanged Stan programs, we recommend calling</span>
-#&gt; <span class='message'>rstan_options(auto_write = TRUE)</span></div><div class='output co'>#&gt; <span class='message'>For improved execution time, we recommend calling</span>
-#&gt; <span class='message'>Sys.setenv(LOCAL_CPPFLAGS = '-march=corei7 -mtune=corei7')</span>
-#&gt; <span class='message'>although this causes Stan to throw an error on a few processors.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: 'rstan'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:tidyr':</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    extract</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:coda':</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    traceplot</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:magrittr':</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    extract</span></div><div class='output co'>#&gt; 
+}</div><div class='output co'>#&gt; 
 #&gt; SAMPLING FOR MODEL 'cd9b191279da85ce85fc8454c66a58e5' NOW (CHAIN 1).
 #&gt; Chain 1: 
 #&gt; Chain 1: Gradient evaluation took 0 seconds
@@ -328,21 +316,21 @@ of the generic function <code>as_constructor</code>.</p>
 #&gt; Chain 1: Iteration: 450 / 500 [ 90%]  (Sampling)
 #&gt; Chain 1: Iteration: 500 / 500 [100%]  (Sampling)
 #&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.171 seconds (Warm-up)
-#&gt; Chain 1:                0.191 seconds (Sampling)
-#&gt; Chain 1:                0.362 seconds (Total)
+#&gt; Chain 1:  Elapsed Time: 0.195 seconds (Warm-up)
+#&gt; Chain 1:                0.184 seconds (Sampling)
+#&gt; Chain 1:                0.379 seconds (Total)
 #&gt; Chain 1: </div><div class='output co'>#&gt; <span class='warning'>Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>
 #&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
 #&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#bulk-ess</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span>
 #&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
-#&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#tail-ess</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
+#&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#tail-ess</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 7</span><span>
 #&gt;   condition condition_mean .lower .upper .width .point .interval
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'>1</span><span> A                  0.188 -</span><span style='color: #BB0000;'>0.196</span><span>  0.559   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>2</span><span> B                  0.999  0.676  1.36    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>3</span><span> C                  1.85   1.49   2.18    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>4</span><span> D                  1.04   0.657  1.33    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>5</span><span> E                 -</span><span style='color: #BB0000;'>0.883</span><span> -</span><span style='color: #BB0000;'>1.22</span><span>  -</span><span style='color: #BB0000;'>0.523</span><span>   0.95 median qi       </div><div class='input'># }
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> A                  0.188 -</span><span style='color: #BB0000;'>0.196</span><span>  0.559   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> B                  0.999  0.676  1.36    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> C                  1.85   1.49   2.18    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> D                  1.04   0.657  1.33    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span> E                 -</span><span style='color: #BB0000;'>0.883</span><span> -</span><span style='color: #BB0000;'>1.22</span><span>  -</span><span style='color: #BB0000;'>0.523</span><span>   0.95 median qi       </div><div class='input'># }
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

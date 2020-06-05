@@ -72,7 +72,6 @@ reference:
   desc:  Calculate point summaries and intervals on (grouped) data frames of draws
   contents:
   - point_interval
-  - point_intervalh
   - qi
   - hdi
   - Mode
@@ -89,16 +88,12 @@ reference:
   - geom_slabinterval
   - stat_sample_slabinterval
   - geom_interval
-  - geom_intervalh
   - geom_lineribbon
   - geom_pointinterval
-  - geom_pointintervalh
   - geom_dotsinterval
   - stat_interval
-  - stat_intervalh
   - stat_lineribbon
   - stat_pointinterval
-  - stat_pointintervalh
   - stat_dotsinterval
 
 - title: Visualizing analytical distributions
@@ -126,9 +121,6 @@ reference:
 - title: Deprecated functions
   desc: Deprecated functions
   contents:
-  - tidybayes-deprecated
-  - geom_eye
-  - geom_eyeh
-  - geom_halfeyeh
+  - "tidybayes-deprecated"
   - predict_curve
   - predict_curve_density

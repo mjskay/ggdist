@@ -156,6 +156,191 @@ ggeye = function(data = NULL, mapping = NULL, ...) {
 }
 
 
+# deprecated names for [add_]fitted_draws -------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+fitted_samples = function(model, newdata, ..., n = NULL) {
+  .Deprecated("fitted_draws", package = "tidybayes") # nocov
+  fitted_samples_(model, newdata,  ..., n = n)       # nocov
+}
+fitted_samples_ = function(model, newdata, var = "estimate", ..., n = NULL, category = "category") {
+  combine_chains_for_deprecated_(fitted_draws(                      # nocov
+    model, newdata, value = var, ..., n = n, category = category    # nocov
+  ))                                                                # nocov
+}
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+add_fitted_samples = function(newdata, model, ..., n = NULL) {
+  .Deprecated("add_fitted_draws", package = "tidybayes") # nocov
+  fitted_samples_(model, newdata, ..., n = n)            # nocov
+}
+
+
+# deprecated names for [add_]predicted_draws ----------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+predicted_samples = function(model, newdata, ..., n = NULL) {
+  .Deprecated("predicted_draws", package = "tidybayes") # nocov
+  predicted_samples_(model, newdata, ..., n = n) # nocov
+}
+predicted_samples_ = function(model, newdata, var = "pred", ..., n = NULL) {
+  combine_chains_for_deprecated_(predicted_draws( # nocov
+    model, newdata, prediction = var, ..., n = n  # nocov
+  ))                                              # nocov
+}
+
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+add_predicted_samples = function(newdata, model, ..., n = NULL) {
+  .Deprecated("add_predicted_draws", package = "tidybayes") # nocov
+  predicted_samples_(model, newdata, ..., n = n)         # nocov
+}
+
+
+# deprecated names for gather_draws --------------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+gather_samples = function(...) {
+  .Deprecated("gather_draws", package = "tidybayes") # nocov
+  to_broom_names(gather_draws(...))  # nocov
+}
+
+
+# deprecated names for gather_emmeans_draws -----------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+gather_lsmeans_samples = function(...) {
+  .Deprecated("gather_emmeans_draws", package = "tidybayes") # nocov
+  combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
+}
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+gather_emmeans_samples = function(...) {
+  .Deprecated("gather_emmeans_draws", package = "tidybayes") # nocov
+  combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
+}
+
+
+# deprecated names for gather_variables -----------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+gather_terms = function(...) {
+  .Deprecated("gather_variables", package = "tidybayes") # nocov
+  to_broom_names(gather_variables(...)) # nocov
+}
+
+
+# deprecated names for spread_draws --------------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+extract_samples = function(...) {
+  .Deprecated("spread_draws", package = "tidybayes") # nocov
+  spread_draws(...)               # nocov
+}
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+tidy_samples = function(...) {
+  .Deprecated("spread_draws", package = "tidybayes") # nocov
+  spread_draws(...)              # nocov
+}
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+spread_samples = function(...) {
+  .Deprecated("spread_draws", package = "tidybayes") # nocov
+  spread_draws(...)              # nocov
+}
+
+
+# deprecated names for tidy_draws --------------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+as_sample_tibble = function(...) {
+  .Deprecated("tidy_draws", package = "tidybayes") # nocov
+  tidy_draws(...)                                  # nocov
+}
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+as_sample_data_frame = function(...) {
+  .Deprecated("tidy_draws", package = "tidybayes") # nocov
+  tidy_draws(...)                                  # nocov
+}
+
+
+# deprecated names for ungather_draws --------------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+ungather_samples = function(..., term = "term", estimate = "estimate", indices = c(".chain", ".iteration", ".draw")) {
+  .Deprecated("ungather_draws", package = "tidybayes") # nocov
+  ungather_draws(..., variable = term, value = estimate, draw_indices = indices)  # nocov
+}
+
+
+# deprecated names for unspread_draws --------------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+unspread_samples = function(..., indices = c(".chain", ".iteration", ".draw")) {
+  .Deprecated("unspread_draws", package = "tidybayes") # nocov
+  unspread_draws(..., draw_indices = indices)               # nocov
+}
+
+
+# deprecated names for get_variables --------------------------------------
+
+#' @rdname tidybayes-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+parameters = function(model) {
+  .Deprecated("get_variables", package = "tidybayes") # nocov
+  get_variables(model)  # nocov
+}
+
+
 # deprecated eye geom spellings -------------------------------------------
 
 #' @rdname tidybayes-deprecated

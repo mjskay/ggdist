@@ -50,7 +50,10 @@
 
 <meta property="og:title" content="Deprecated functions, arguments, and column names in tidybayes — tidybayes-deprecated" />
 <meta property="og:description" content="Deprecated functions, arguments, and column names and their alternatives are listed below.
-Many of the deprecations are due to a naming scheme overhaul in tidybayes version 1.0." />
+Many of the deprecations are due to a naming scheme overhaul in tidybayes version 1.0
+(see Deprecated Functions and Deprecated Arguments and Column Names below) or due to
+the deprecation of horizontal shortcut geoms and stats in tidybayes 2.1 (see
+Deprecated Horizontal Shortcut Geoms and Stats)." />
 <meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
 
 
@@ -160,13 +163,16 @@ Many of the deprecations are due to a naming scheme overhaul in tidybayes versio
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Deprecated functions, arguments, and column names in tidybayes</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/fitted_draws.R'><code>R/fitted_draws.R</code></a>, <a href='https://github.com/mjskay/tidybayes/blob/master/R/gather_draws.R'><code>R/gather_draws.R</code></a>, and 8 more</small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>tidybayes-deprecated.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Deprecated functions, arguments, and column names and their alternatives are listed below.
-Many of the deprecations are due to a naming scheme overhaul in tidybayes version 1.0.</p>
+Many of the deprecations are due to a naming scheme overhaul in tidybayes version 1.0
+(see <em>Deprecated Functions</em> and <em>Deprecated Arguments and Column Names</em> below) or due to
+the deprecation of horizontal shortcut geoms and stats in tidybayes 2.1 (see
+<em>Deprecated Horizontal Shortcut Geoms and Stats</em>).</p>
     </div>
 
 
@@ -223,6 +229,41 @@ visualization, monolithic functions are inflexible and do not sufficiently capit
 existing knowledge of ggplot; instead, I think it is more flexible to design geoms and stats
 that can used within a complete ggplot workflow. <code><a href='stat_sample_slabinterval.html'>stat_eye()</a></code> offers a horizontal
 eye plot geom that can be used instead of <code>ggeye</code>.</p></li>
+<li><p>See tidybayes-deprecated-geoms for a list of deprecated geoms (mainly
+horizontal shortcut geoms that are no longer necessary due to automatic orientation detection.)</p></li>
+</ul>
+
+    <h2 class="hasAnchor" id="deprecated-eye-geom-spellings"><a class="anchor" href="#deprecated-eye-geom-spellings"></a>Deprecated Eye Geom Spellings</h2>
+
+    
+
+
+<p><code>geom_eye</code>, <code>geom_eyeh</code>, and <code>geom_halfeyeh</code> are deprecated spellings of <code><a href='stat_sample_slabinterval.html'>stat_eye()</a></code> and
+<code><a href='stat_sample_slabinterval.html'>stat_halfeye()</a></code> from before name standardization of stats and geoms. Use those functions instead.</p>
+    <h2 class="hasAnchor" id="deprecated-horizontal-shortcut-geoms-and-stats"><a class="anchor" href="#deprecated-horizontal-shortcut-geoms-and-stats"></a>Deprecated Horizontal Shortcut Geoms and Stats</h2>
+
+    
+
+
+<p>Due to the introduction of automatic orientation detection in tidybayes 2.1,
+shortcut geoms and stats (which end in <code>h</code>) are no longer necessary, and are
+deprecated. In most cases, these can simply be replaced with the same
+geom without the <code>h</code> suffix and they will remain horizontal; e.g.
+<code><a href='stat_sample_slabinterval.html'>stat_halfeyeh(...)</a></code> can simply be replaced with <code><a href='stat_sample_slabinterval.html'>stat_halfeye(...)</a></code>.
+If automatic orientation detection fails, override it with the <code>orientation</code>
+parameter; e.g. <code><a href='stat_sample_slabinterval.html'>stat_halfeye(orientation = "horizontal")</a></code>.</p>
+<p>These deprecated stats and geoms include:</p><ul>
+<li><p><code>stat_eyeh</code> / <code>stat_dist_eyeh</code></p></li>
+<li><p><code>stat_halfeyeh</code> / <code>stat_dist_halfeyeh</code></p></li>
+<li><p><code>geom_slabh</code> / <code>stat_slabh</code> / <code>stat_dist_slabh</code></p></li>
+<li><p><code>geom_intervalh</code> / <code>stat_intervalh</code> / <code>stat_dist_intervalh</code></p></li>
+<li><p><code>geom_pointintervalh</code> / <code>stat_pointintervalh</code> / <code>stat_dist_pointintervalh</code></p></li>
+<li><p><code>stat_gradientintervalh</code> / <code>stat_dist_gradientintervalh</code></p></li>
+<li><p><code>stat_cdfintervalh</code> / <code>stat_dist_cdfintervalh</code></p></li>
+<li><p><code>stat_ccdfintervalh</code> / <code>stat_dist_ccdfintervalh</code></p></li>
+<li><p><code>geom_dotsh</code> / <code>stat_dotsh</code> / <code>stat_dist_dotsh</code></p></li>
+<li><p><code>geom_dotsintervalh</code> / <code>stat_intervalh</code> / <code>stat_dist_intervalh</code></p></li>
+<li><p><code>stat_histintervalh</code></p></li>
 </ul>
 
     <h2 class="hasAnchor" id="deprecated-arguments-and-column-names"><a class="anchor" href="#deprecated-arguments-and-column-names"></a>Deprecated Arguments and Column Names</h2>

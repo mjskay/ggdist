@@ -4,19 +4,6 @@
 ###############################################################################
 
 
-# deprecated names for gather_draws --------------------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-gather_samples = function(...) {
-  .Deprecated("gather_draws", package = "tidybayes") # nocov
-  to_broom_names(gather_draws(...))  # nocov
-}
-
-
-
 # gather_draws ------------------------------------------------------------
 
 #' @rdname spread_draws

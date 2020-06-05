@@ -8,36 +8,6 @@
 globalVariables(c(".."))
 
 
-# deprecated names for spread_draws --------------------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-extract_samples = function(...) {
-  .Deprecated("spread_draws", package = "tidybayes") # nocov
-  spread_draws(...)               # nocov
-}
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-tidy_samples = function(...) {
-  .Deprecated("spread_draws", package = "tidybayes") # nocov
-  spread_draws(...)              # nocov
-}
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-spread_samples = function(...) {
-  .Deprecated("spread_draws", package = "tidybayes") # nocov
-  spread_draws(...)              # nocov
-}
-
-
 # spread_draws ----------------------------------------------------------
 
 #' Extract draws of variables in a Bayesian model fit into a tidy data format

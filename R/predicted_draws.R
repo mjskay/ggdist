@@ -4,35 +4,6 @@
 ###############################################################################
 
 
-
-# deprecated names for [add_]predicted_draws ----------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-predicted_samples = function(model, newdata, ..., n = NULL) {
-  .Deprecated("predicted_draws", package = "tidybayes") # nocov
-  predicted_samples_(model, newdata, ..., n = n) # nocov
-}
-predicted_samples_ = function(model, newdata, var = "pred", ..., n = NULL) {
-  combine_chains_for_deprecated_(predicted_draws( # nocov
-    model, newdata, prediction = var, ..., n = n  # nocov
-  ))                                              # nocov
-}
-
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-add_predicted_samples = function(newdata, model, ..., n = NULL) {
-  .Deprecated("add_predicted_draws", package = "tidybayes") # nocov
-  predicted_samples_(model, newdata, ..., n = n)         # nocov
-}
-
-
-
 # [add_]predicted_draws ---------------------------------------------------
 
 #' Add draws from the posterior fit, predictions, or residuals of a model to a data frame

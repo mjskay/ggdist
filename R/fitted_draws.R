@@ -4,34 +4,6 @@
 ###############################################################################
 
 
-
-# deprecated names for [add_]fitted_draws -------------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-fitted_samples = function(model, newdata, ..., n = NULL) {
-  .Deprecated("fitted_draws", package = "tidybayes") # nocov
-  fitted_samples_(model, newdata,  ..., n = n)       # nocov
-}
-fitted_samples_ = function(model, newdata, var = "estimate", ..., n = NULL, category = "category") {
-  combine_chains_for_deprecated_(fitted_draws(                      # nocov
-    model, newdata, value = var, ..., n = n, category = category    # nocov
-  ))                                                                # nocov
-}
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-add_fitted_samples = function(newdata, model, ..., n = NULL) {
-  .Deprecated("add_fitted_draws", package = "tidybayes") # nocov
-  fitted_samples_(model, newdata, ..., n = n)            # nocov
-}
-
-
-
 # [add_]fitted_draws / linpred_draws aliases -------------------------------------------------
 
 #' @rdname add_predicted_draws

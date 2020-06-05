@@ -238,47 +238,47 @@ repeated for every value of <code>"v"</code>) or <code>"b[i,v]"</code> (when <co
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>b</span>[<span class='no'>i</span>,<span class='no'>v</span>], <span class='no'>tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_variables</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 24 x 9</span><span>
-#&gt; </span><span style='color: #555555;'># Groups:   i, v [12]</span><span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 24 x 9</span><span>
+#&gt; </span><span style='color: #949494;'># Groups:   i, v [12]</span><span>
 #&gt;        i     v .variable .value  .lower .upper .width .point .interval
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'> 1</span><span>     1     1 b         -</span><span style='color: #BB0000;'>1.08</span><span>  -</span><span style='color: #BB0000;'>1.27</span><span>   -</span><span style='color: #BB0000;'>0.897</span><span>   0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 2</span><span>     1     1 tau        6.03   5.03    7.11    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 3</span><span>     1     2 b         -</span><span style='color: #BB0000;'>1.83</span><span>  -</span><span style='color: #BB0000;'>2.08</span><span>   -</span><span style='color: #BB0000;'>1.54</span><span>    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 4</span><span>     1     2 tau        6.03   5.03    7.11    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 5</span><span>     1     3 b          0.175  0.044</span><span style='text-decoration: underline;'>7</span><span>  0.322   0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 6</span><span>     1     3 tau        6.03   5.03    7.11    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 7</span><span>     1     4 b         -</span><span style='color: #BB0000;'>0.101</span><span> -</span><span style='color: #BB0000;'>0.347</span><span>   0.134   0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 8</span><span>     1     4 tau        6.03   5.03    7.11    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 9</span><span>     2     1 b         -</span><span style='color: #BB0000;'>0.739</span><span> -</span><span style='color: #BB0000;'>1.01</span><span>   -</span><span style='color: #BB0000;'>0.430</span><span>   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>10</span><span>     2     1 tau        3.30   2.41    4.46    0.95 median qi       
-#&gt; </span><span style='color: #555555;'># ... with 14 more rows</span><span></div><div class='input'>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     1     1 b         -</span><span style='color: #BB0000;'>1.08</span><span>  -</span><span style='color: #BB0000;'>1.27</span><span>   -</span><span style='color: #BB0000;'>0.897</span><span>   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     1     1 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     1     2 b         -</span><span style='color: #BB0000;'>1.83</span><span>  -</span><span style='color: #BB0000;'>2.08</span><span>   -</span><span style='color: #BB0000;'>1.54</span><span>    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     1     2 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     1     3 b          0.175  0.044</span><span style='text-decoration: underline;'>7</span><span>  0.322   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     1     3 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     1     4 b         -</span><span style='color: #BB0000;'>0.101</span><span> -</span><span style='color: #BB0000;'>0.347</span><span>   0.134   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     1     4 tau        6.03   5.03    7.11    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     2     1 b         -</span><span style='color: #BB0000;'>0.739</span><span> -</span><span style='color: #BB0000;'>1.01</span><span>   -</span><span style='color: #BB0000;'>0.430</span><span>   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>     2     1 tau        3.30   2.41    4.46    0.95 median qi       
+#&gt; </span><span style='color: #949494;'># ... with 14 more rows</span><span></div><div class='input'>
 <span class='co'># the first three lines below are roughly equivalent to ggmcmc::ggs(RankCorr)</span>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_draws.html'>tidy_draws</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>gather_variables</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 19 x 7</span><span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>()</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 19 x 7</span><span>
 #&gt;    .variable  .value  .lower  .upper .width .point .interval
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'> 1</span><span> b[1,1]    -</span><span style='color: #BB0000;'>1.08</span><span>   -</span><span style='color: #BB0000;'>1.27</span><span>   -</span><span style='color: #BB0000;'>0.897</span><span>    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 2</span><span> b[1,2]    -</span><span style='color: #BB0000;'>1.83</span><span>   -</span><span style='color: #BB0000;'>2.08</span><span>   -</span><span style='color: #BB0000;'>1.54</span><span>     0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 3</span><span> b[1,3]     0.175   0.044</span><span style='text-decoration: underline;'>7</span><span>  0.322    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 4</span><span> b[1,4]    -</span><span style='color: #BB0000;'>0.101</span><span>  -</span><span style='color: #BB0000;'>0.347</span><span>   0.134    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 5</span><span> b[2,1]    -</span><span style='color: #BB0000;'>0.739</span><span>  -</span><span style='color: #BB0000;'>1.01</span><span>   -</span><span style='color: #BB0000;'>0.430</span><span>    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 6</span><span> b[2,2]     0.090</span><span style='text-decoration: underline;'>9</span><span> -</span><span style='color: #BB0000;'>0.384</span><span>   0.602    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 7</span><span> b[2,3]    -</span><span style='color: #BB0000;'>0.175</span><span>  -</span><span style='color: #BB0000;'>0.410</span><span>   0.056</span><span style='text-decoration: underline;'>3</span><span>   0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 8</span><span> b[2,4]     0.270  -</span><span style='color: #BB0000;'>0.151</span><span>   0.710    0.95 median qi       
-#&gt; </span><span style='color: #555555;'> 9</span><span> b[3,1]    -</span><span style='color: #BB0000;'>0.340</span><span>  -</span><span style='color: #BB0000;'>0.609</span><span>  -</span><span style='color: #BB0000;'>0.061</span><span style='color: #BB0000;text-decoration: underline;'>5</span><span>   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>10</span><span> b[3,2]    -</span><span style='color: #BB0000;'>0.732</span><span>  -</span><span style='color: #BB0000;'>1.18</span><span>   -</span><span style='color: #BB0000;'>0.286</span><span>    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>11</span><span> b[3,3]     0.063</span><span style='text-decoration: underline;'>6</span><span> -</span><span style='color: #BB0000;'>0.163</span><span>   0.312    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>12</span><span> b[3,4]     0.091</span><span style='text-decoration: underline;'>8</span><span> -</span><span style='color: #BB0000;'>0.327</span><span>   0.463    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>13</span><span> tau[1]     6.03    5.03    7.11     0.95 median qi       
-#&gt; </span><span style='color: #555555;'>14</span><span> tau[2]     3.30    2.41    4.46     0.95 median qi       
-#&gt; </span><span style='color: #555555;'>15</span><span> tau[3]     3.65    2.73    4.72     0.95 median qi       
-#&gt; </span><span style='color: #555555;'>16</span><span> typical_r  0.548   0.309   0.778    0.95 median qi       
-#&gt; </span><span style='color: #555555;'>17</span><span> u_tau[1]   5.62    3.86    8.03     0.95 median qi       
-#&gt; </span><span style='color: #555555;'>18</span><span> u_tau[2]   5.48    3.46    9.07     0.95 median qi       
-#&gt; </span><span style='color: #555555;'>19</span><span> u_tau[3]   4.96    3.10    7.86     0.95 median qi       </div><div class='input'>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> b[1,1]    -</span><span style='color: #BB0000;'>1.08</span><span>   -</span><span style='color: #BB0000;'>1.27</span><span>   -</span><span style='color: #BB0000;'>0.897</span><span>    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> b[1,2]    -</span><span style='color: #BB0000;'>1.83</span><span>   -</span><span style='color: #BB0000;'>2.08</span><span>   -</span><span style='color: #BB0000;'>1.54</span><span>     0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> b[1,3]     0.175   0.044</span><span style='text-decoration: underline;'>7</span><span>  0.322    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> b[1,4]    -</span><span style='color: #BB0000;'>0.101</span><span>  -</span><span style='color: #BB0000;'>0.347</span><span>   0.134    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> b[2,1]    -</span><span style='color: #BB0000;'>0.739</span><span>  -</span><span style='color: #BB0000;'>1.01</span><span>   -</span><span style='color: #BB0000;'>0.430</span><span>    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> b[2,2]     0.090</span><span style='text-decoration: underline;'>9</span><span> -</span><span style='color: #BB0000;'>0.384</span><span>   0.602    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> b[2,3]    -</span><span style='color: #BB0000;'>0.175</span><span>  -</span><span style='color: #BB0000;'>0.410</span><span>   0.056</span><span style='text-decoration: underline;'>3</span><span>   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> b[2,4]     0.270  -</span><span style='color: #BB0000;'>0.151</span><span>   0.710    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> b[3,1]    -</span><span style='color: #BB0000;'>0.340</span><span>  -</span><span style='color: #BB0000;'>0.609</span><span>  -</span><span style='color: #BB0000;'>0.061</span><span style='color: #BB0000;text-decoration: underline;'>5</span><span>   0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> b[3,2]    -</span><span style='color: #BB0000;'>0.732</span><span>  -</span><span style='color: #BB0000;'>1.18</span><span>   -</span><span style='color: #BB0000;'>0.286</span><span>    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>11</span><span> b[3,3]     0.063</span><span style='text-decoration: underline;'>6</span><span> -</span><span style='color: #BB0000;'>0.163</span><span>   0.312    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>12</span><span> b[3,4]     0.091</span><span style='text-decoration: underline;'>8</span><span> -</span><span style='color: #BB0000;'>0.327</span><span>   0.463    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>13</span><span> tau[1]     6.03    5.03    7.11     0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>14</span><span> tau[2]     3.30    2.41    4.46     0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>15</span><span> tau[3]     3.65    2.73    4.72     0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>16</span><span> typical_r  0.548   0.309   0.778    0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>17</span><span> u_tau[1]   5.62    3.86    8.03     0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>18</span><span> u_tau[2]   5.48    3.46    9.07     0.95 median qi       
+#&gt; </span><span style='color: #BCBCBC;'>19</span><span> u_tau[3]   4.96    3.10    7.86     0.95 median qi       </div><div class='input'>
 # }
 </div></span></pre>
   </div>

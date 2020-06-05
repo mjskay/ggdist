@@ -4,28 +4,6 @@
 ###############################################################################
 
 
-# deprecated names for gather_emmeans_draws -----------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-gather_lsmeans_samples = function(...) {
-  .Deprecated("gather_emmeans_draws", package = "tidybayes") # nocov
-  combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
-}
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-gather_emmeans_samples = function(...) {
-  .Deprecated("gather_emmeans_draws", package = "tidybayes") # nocov
-  combine_chains_for_deprecated_(gather_emmeans_draws(..., value = "estimate")) # nocov
-}
-
-
-
 # gather_emmeans_draws -----------------------------
 
 #' Extract a tidy data frame of draws of posterior distributions of "estimated marginal means" (emmeans/lsmeans) from

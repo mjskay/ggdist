@@ -4,19 +4,6 @@
 ###############################################################################
 
 
-# deprecated names for get_variables --------------------------------------
-
-#' @rdname tidybayes-deprecated
-#' @format NULL
-#' @usage NULL
-#' @export
-parameters = function(model) {
-  .Deprecated("get_variables", package = "tidybayes") # nocov
-  get_variables(model)  # nocov
-}
-
-
-
 #' Get the names of the variables in a fitted Bayesian model
 #'
 #' Get a character vector of the names of the variables in a variety of fitted

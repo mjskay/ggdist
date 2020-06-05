@@ -390,10 +390,8 @@ information on multimodality and continuous versus discontinuous intervals.</p>
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>),
     <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
   ) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='no'>y</span>)</div><div class='output co'>#&gt;             x   x.lower  x.upper        y   y.lower  y.upper .width .point
-#&gt; 1 -0.05057431 -2.012529 1.934141 1.983618 -1.946229 5.947635   0.95 median
-#&gt;   .interval
-#&gt; 1        qi</div><div class='input'>
+  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='no'>y</span>)</div><div class='output co'>#&gt;             x   x.lower  x.upper        y   y.lower  y.upper .width .point .interval
+#&gt; 1 -0.05057431 -2.012529 1.934141 1.983618 -1.946229 5.947635   0.95 median        qi</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
     <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>),
     <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"a"</span>
