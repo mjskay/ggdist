@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point summary + multiple probability interval plots (ggplot stat) — stat_pointinterval • tidybayes</title>
+<title>Point summary + multiple probability interval plots (ggplot stat) — stat_pointinterval • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -55,7 +55,7 @@ While the corresponding geoms are intended for use on
 data frames that have already been summarized using a point_interval()
 function, these stats are intended for use directly on data frames of draws, and
 will perform the summarization using a point_interval() function." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -96,7 +96,7 @@ will perform the summarization using a point_interval() function." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -108,9 +108,6 @@ will perform the summarization using a point_interval() function." />
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -128,15 +125,6 @@ will perform the summarization using a point_interval() function." />
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -145,7 +133,7 @@ will perform the summarization using a point_interval() function." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -164,7 +152,7 @@ will perform the summarization using a point_interval() function." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Point summary + multiple probability interval plots (ggplot stat)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/stat_pointinterval.R'><code>R/stat_pointinterval.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/stat_pointinterval.R'><code>R/stat_pointinterval.R</code></a></small>
     <div class="hidden name"><code>stat_pointinterval.Rd</code></div>
     </div>
 
@@ -358,7 +346,7 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
 <li><p><code>thickness</code></p></li>
 <li><p><code>group</code></p></li>
 </ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.
-Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation.
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='http://mjskay.github.io/tidybayes/reference/scales.html'>scales</a> documentation.
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -384,13 +372,13 @@ available to these geoms.</p></div>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidybayes"</span>)
 
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'>spread_draws</span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; <span class='error'>Error in spread_draws(., u_tau[i]): could not find function "spread_draws"</span></div><div class='input'>
 <span class='no'>RankCorr</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_draws.html'>spread_draws</a></span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
+  <span class='fu'>spread_draws</span>(<span class='no'>u_tau</span>[<span class='no'>i</span>]) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>)) +
-  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='stat_pointinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'>stat_pointinterval</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; <span class='error'>Error in spread_draws(., u_tau[i]): could not find function "spread_draws"</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

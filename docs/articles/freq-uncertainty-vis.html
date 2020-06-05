@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Frequentist uncertainty visualization • tidybayes</title>
+<title>Frequentist uncertainty visualization • ggdist</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,8 +19,8 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Frequentist uncertainty visualization">
-<meta property="og:description" content="tidybayes">
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg">
+<meta property="og:description" content="ggdist">
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -44,7 +44,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -56,9 +56,6 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -76,15 +73,6 @@
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -93,7 +81,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -114,9 +102,9 @@
       <h1 data-toc-skip>Frequentist uncertainty visualization</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-04</h4>
+            <h4 class="date">2020-06-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/freq-uncertainty-vis.Rmd"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/freq-uncertainty-vis.Rmd"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
       <div class="hidden name"><code>freq-uncertainty-vis.Rmd</code></div>
 
     </div>
@@ -134,7 +122,7 @@ img {
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette shows how to combine the <code>tidybayes</code> geoms with output from the <code>broom</code> package to enable visualization of uncertainty from frequentist models. The general idea is to use the <code>stat_dist_...</code> family of ggplot stats to visualize sampling distributions instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.</p>
+<p>This vignette shows how to combine the <code>ggdist</code> geoms with output from the <code>broom</code> package to enable visualization of uncertainty from frequentist models. The general idea is to use the <code>stat_dist_...</code> family of ggplot stats to visualize sampling distributions instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.</p>
 </div>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
@@ -142,18 +130,18 @@ img {
 <p>The following libraries are required to run this vignette:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidybayes</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggdist</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)       <span class="co"># needed for dstudent_t(), etc; not for model fitting</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">modelr</span>)
 
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>())</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_ggdist.html">theme_ggdist</a></span>())</pre></body></html></div>
 </div>
 <div id="point-estimates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#point-estimates" class="anchor"></a>Point estimates</h2>
-<p>We’ll start with an ordinary least squares (OLS) linear regression analysis of the simple <code>ABC</code> dataset used in <code><a href="../articles/tidybayes.html">vignette("tidybayes")</a></code>:</p>
+<p>We’ll start with an ordinary least squares (OLS) linear regression analysis of the simple <code>ABC</code> dataset used in <code><a href="http://mjskay.github.io/tidybayes/articles/tidybayes.html">vignette("tidybayes", package = "tidybayes")</a></code>:</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">5</span>)
 <span class="no">n</span> <span class="kw">=</span> <span class="fl">10</span>
 <span class="no">n_condition</span> <span class="kw">=</span> <span class="fl">5</span>
@@ -225,7 +213,7 @@ img {
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">estimate</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">std.error</span>)
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-6-1.png" width="648"></p>
-<p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code> (similar to how we use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="../reference/add_predicted_draws.html">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we want the sampling distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\mu_c\)</span>:</p>
+<p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code> (similar to how we can use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="http://mjskay.github.io/tidybayes/reference/add_predicted_draws.html">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we want the sampling distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\mu_c\)</span>:</p>
 <p><span class="math display">\[
 \mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\mu_c} \right)
 \]</span></p>
@@ -286,7 +274,7 @@ img {
 <div id="for-a-fit-line" class="section level2">
 <h2 class="hasAnchor">
 <a href="#for-a-fit-line" class="anchor"></a>For a fit line</h2>
-<p>The same principle of reconstructing the sampling distribution allows us to use <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> to construct uncertainty bands around regression fit lines. Here we’ll reconstruct an example with the <code>mtcars</code> dataset from <code><a href="../articles/tidy-brms.html">vignette("tidy-brms")</a></code>, but using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> instead:</p>
+<p>The same principle of reconstructing the sampling distribution allows us to use <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> to construct uncertainty bands around regression fit lines. Here we’ll reconstruct an example with the <code>mtcars</code> dataset from <code>vignette("tidy-brms")</code>, but using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> instead:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">m_mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> * <span class="no">cyl</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>)</pre></body></html></div>
 <p>Again we’ll use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>, but now we’ll employ <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>:</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>

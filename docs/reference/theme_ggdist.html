@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy Data and 'Geoms' for Bayesian Models — tidybayes-package • tidybayes</title>
+<title>Simple, light ggplot2 theme for ggdist — theme_ggdist • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,10 +48,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Tidy Data and 'Geoms' for Bayesian Models — tidybayes-package" />
-<meta property="og:description" content="tidybayes is an R package that aims to make it easy to integrate
-popular Bayesian modeling methods into a tidy data + ggplot workflow." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:title" content="Simple, light ggplot2 theme for ggdist — theme_ggdist" />
+<meta property="og:description" content="A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it." />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -92,7 +91,7 @@ popular Bayesian modeling methods into a tidy data + ggplot workflow." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -104,9 +103,6 @@ popular Bayesian modeling methods into a tidy data + ggplot workflow." />
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -124,15 +120,6 @@ popular Bayesian modeling methods into a tidy data + ggplot workflow." />
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -141,7 +128,7 @@ popular Bayesian modeling methods into a tidy data + ggplot workflow." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -159,40 +146,39 @@ popular Bayesian modeling methods into a tidy data + ggplot workflow." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy Data and 'Geoms' for Bayesian Models</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/tidybayes-package.R'><code>R/tidybayes-package.R</code></a></small>
-    <div class="hidden name"><code>tidybayes-package.Rd</code></div>
+    <h1>Simple, light ggplot2 theme for ggdist</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/theme_ggdist.R'><code>R/theme_ggdist.R</code></a></small>
+    <div class="hidden name"><code>theme_ggdist.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>tidybayes</code> is an R package that aims to make it easy to integrate
-popular Bayesian modeling methods into a tidy data + ggplot workflow.</p>
+    <p>A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>theme_ggdist</span>()
+
+<span class='fu'>facet_title_left_horizontal</span>()
+
+<span class='fu'>facet_title_right_horizontal</span>()
+
+<span class='fu'>axis_titles_bottom_left</span>()</pre>
 
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Tidy data frames (one observation per row) are particularly convenient for
-use in a variety of R data manipulation and visualization packages (Wickham 2014).
-However, when using Bayesian modeling functions like JAGS or Stan in R,
-we often have to translate this data into a form the model understands,
-and then after running the model, translate the resulting sample (or
-predictions) into a more tidy format for use with other R functions.
-<code>tidybayes</code> aims to simplify these two common (often tedious)
-operations. It also provides a variety of ggplot geometries aimed
-at making the visualization of model output easier.</p>
-<p>For a comprehensive overview of the package, see <code><a href='../articles/tidybayes.html'>vignette("tidybayes")</a></code>.
-For overviews aimed at the <code>rstanarm</code> and <code>brms</code> packages, see
-<code><a href='../articles/tidy-rstanarm.html'>vignette("tidy-rstanarm")</a></code> and <code><a href='../articles/tidy-brms.html'>vignette("tidy-brms")</a></code>. For an overview
-of the majority of geoms in tidybayes, see <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.</p>
-<p>For a list of supported models, see <a href='tidybayes-models.html'>tidybayes-models</a>.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+    <p>A ggplot2 theme</p>
+<p>This is a relatively minimalist ggplot2 theme, intended to be used for making publication-ready plots.
+It is currently based on <code><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>ggplot2::theme_light()</a></code>.</p>
+<p>A word of warning: this theme may (and very likely will) change in the future as I tweak it to my taste.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>Wickham, Hadley. (2014). Tidy data. <em>Journal of Statistical Software</em>,
-59(10), 1-23. doi: <a href='https://doi.org/10.18637/jss.v059.i10'>10.18637/jss.v059.i10</a>
-.</p>
+    <div class='dont-index'><p><code><a href='https://ggplot2.tidyverse.org/reference/theme.html'>ggplot2::theme()</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>ggplot2::theme_set()</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span>(<span class='fu'>theme_ggdist</span>())</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

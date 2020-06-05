@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Translate between different tidy data frame formats for draws from distributions — tidy-format-translators • tidybayes</title>
+<title>Translate between different tidy data frame formats for draws from distributions — tidy-format-translators • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -51,7 +51,7 @@
 <meta property="og:title" content="Translate between different tidy data frame formats for draws from distributions — tidy-format-translators" />
 <meta property="og:description" content="These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
 formats (each format using a different naming scheme)." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -92,7 +92,7 @@ formats (each format using a different naming scheme)." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -104,9 +104,6 @@ formats (each format using a different naming scheme)." />
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -124,15 +121,6 @@ formats (each format using a different naming scheme)." />
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -141,7 +129,7 @@ formats (each format using a different naming scheme)." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -160,7 +148,7 @@ formats (each format using a different naming scheme)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Translate between different tidy data frame formats for draws from distributions</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/tidy_format_translators.R'><code>R/tidy_format_translators.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/tidy_format_translators.R'><code>R/tidy_format_translators.R</code></a></small>
     <div class="hidden name"><code>tidy-format-translators.Rd</code></div>
     </div>
 
@@ -219,15 +207,10 @@ prefixed with <code>from_</code> translate from that format back to the tidybaye
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>line</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"coda"</span>)
 
 <span class='no'>line</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='spread_draws.html'>gather_draws</a></span>(<span class='no'>alpha</span>, <span class='no'>beta</span>, <span class='no'>sigma</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>gather_draws</span>(<span class='no'>alpha</span>, <span class='no'>beta</span>, <span class='no'>sigma</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='point_interval.html'>median_qi</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>to_broom_names</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 7</span><span>
-#&gt;   term  estimate conf.low conf.high .width .point .interval
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> alpha    3.02     1.97       3.88   0.95 median qi       
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> beta     0.796    0.143      1.47   0.95 median qi       
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> sigma    0.791    0.425      2.56   0.95 median qi       </div><div class='input'>
-</div></span></pre>
+  <span class='fu'>to_broom_names</span>()</div><div class='output co'>#&gt; <span class='error'>Error in gather_draws(., alpha, beta, sigma): could not find function "gather_draws"</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

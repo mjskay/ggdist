@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Slab + point + interval meta-geom — geom_slabinterval • tidybayes</title>
+<title>Slab + point + interval meta-geom — geom_slabinterval • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -54,7 +54,7 @@ intervals. It acts as a meta-geom for many other tidybayes geoms that are wrappe
 eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots, and supports both horizontal and
 vertical orientations, dodging (via the position argument), and relative justification of slabs with their
 corresponding intervals." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -95,7 +95,7 @@ corresponding intervals." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -107,9 +107,6 @@ corresponding intervals." />
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -127,15 +124,6 @@ corresponding intervals." />
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -144,7 +132,7 @@ corresponding intervals." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -163,7 +151,7 @@ corresponding intervals." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Slab + point + interval meta-geom</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/geom_slabinterval.R'><code>R/geom_slabinterval.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/geom_slabinterval.R'><code>R/geom_slabinterval.R</code></a></small>
     <div class="hidden name"><code>geom_slabinterval.Rd</code></div>
     </div>
 
@@ -421,7 +409,7 @@ use case.</p>
 <li><p><code>thickness</code></p></li>
 <li><p><code>group</code></p></li>
 </ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.
-Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation.
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='http://mjskay.github.io/tidybayes/reference/scales.html'>scales</a> documentation.
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

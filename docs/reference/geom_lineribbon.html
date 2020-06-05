@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Line + multiple probability ribbon plots (ggplot geom) — geom_lineribbon • tidybayes</title>
+<title>Line + multiple probability ribbon plots (ggplot geom) — geom_lineribbon • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -51,7 +51,7 @@
 <meta property="og:title" content="Line + multiple probability ribbon plots (ggplot geom) — geom_lineribbon" />
 <meta property="og:description" content="A combination of geom_line() and geom_ribbon() with default aesthetics
 designed for use with output from point_interval()." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -92,7 +92,7 @@ designed for use with output from point_interval()." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -104,9 +104,6 @@ designed for use with output from point_interval()." />
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -124,15 +121,6 @@ designed for use with output from point_interval()." />
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -141,7 +129,7 @@ designed for use with output from point_interval()." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -160,7 +148,7 @@ designed for use with output from point_interval()." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Line + multiple probability ribbon plots (ggplot geom)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/geom_lineribbon.R'><code>R/geom_lineribbon.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/geom_lineribbon.R'><code>R/geom_lineribbon.R</code></a></small>
     <div class="hidden name"><code>geom_lineribbon.Rd</code></div>
     </div>
 
@@ -282,8 +270,12 @@ based on.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'dplyr'</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:stats':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:base':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
 <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tibble</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by_all.html'>group_by_all</a></span>() <span class='kw'>%&gt;%</span>
@@ -292,7 +284,7 @@ based on.</p></div>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>)) +
   <span class='co'># automatically uses aes(ymin = .lower, ymax = .upper, fill = fct_rev(ordered(.width)))</span>
   <span class='fu'>geom_lineribbon</span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_fill_brewer</a></span>()</div><div class='img'><img src='geom_lineribbon-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_fill_brewer</a></span>()</div><div class='output co'>#&gt; <span class='error'>Error in all_names(quo_get_expr(default_mapping[[aesthetic]])): could not find function "all_names"</span></div><div class='img'><img src='geom_lineribbon-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

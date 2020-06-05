@@ -4,12 +4,8 @@ pkgdown_sha: ~
 articles:
   freq-uncertainty-vis: freq-uncertainty-vis.html
   slabinterval: slabinterval.html
-  tidy-brms: tidy-brms.html
-  tidy-rstanarm: tidy-rstanarm.html
-  tidybayes-residuals: tidybayes-residuals.html
-  tidybayes: tidybayes.html
-last_built: 2020-06-02T16:04Z
+last_built: 2020-06-05T05:34Z
 urls:
-  reference: http://mjskay.github.io/tidybayes/reference
-  article: http://mjskay.github.io/tidybayes/articles
+  reference: http://mjskay.github.io/ggdist/reference
+  article: http://mjskay.github.io/ggdist/articles
 

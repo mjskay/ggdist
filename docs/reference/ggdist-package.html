@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate lookup vectors for composing nested indices — x_at_y • tidybayes</title>
+<title>Distribution and Uncertainty Visualization — ggdist-package • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,10 +48,10 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Generate lookup vectors for composing nested indices — x_at_y" />
-<meta property="og:description" content="Generates a lookup vector such that x_at_y(x, y)[y] == x. Particularly useful
-for generating lookup tables for nested indices in conjunction with compose_data()." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:title" content="Distribution and Uncertainty Visualization — ggdist-package" />
+<meta property="og:description" content="ggdist is an R package that aims to make it easy to integrate
+popular Bayesian modeling methods into a tidy data + ggplot workflow." />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -92,7 +92,7 @@ for generating lookup tables for nested indices in conjunction with compose_data
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -104,9 +104,6 @@ for generating lookup tables for nested indices in conjunction with compose_data
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -124,15 +121,6 @@ for generating lookup tables for nested indices in conjunction with compose_data
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -141,7 +129,7 @@ for generating lookup tables for nested indices in conjunction with compose_data
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -159,75 +147,32 @@ for generating lookup tables for nested indices in conjunction with compose_data
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate lookup vectors for composing nested indices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/x_at_y.R'><code>R/x_at_y.R</code></a></small>
-    <div class="hidden name"><code>x_at_y.Rd</code></div>
+    <h1>Distribution and Uncertainty Visualization</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/ggdist-package.R'><code>R/ggdist-package.R</code></a></small>
+    <div class="hidden name"><code>ggdist-package.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generates a lookup vector such that <code>x_at_y(x, y)[y] == x</code>. Particularly useful
-for generating lookup tables for nested indices in conjunction with <code><a href='compose_data.html'>compose_data()</a></code>.</p>
+    <p><code>ggdist</code> is an R package that aims to make it easy to integrate
+popular Bayesian modeling methods into a tidy data + ggplot workflow.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>x_at_y</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>Values in the resulting lookup vector. There should be only
-one unique value of <code>x</code> for every corresponding value of <code>y</code>.</p></td>
-    </tr>
-    <tr>
-      <th>y</th>
-      <td><p>Keys in the resulting lookup vector. Should be factors or integers.</p></td>
-    </tr>
-    <tr>
-      <th>missing</th>
-      <td><p>Missing levels from <code>y</code> will be filled in with this value
-in the resulting lookup vector. Default <code>NA</code>.</p></td>
-    </tr>
-    </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>x_at_y(x, y)</code> returns a vector <code>k</code> such that <code>k[y] == x</code>. It also
-fills in missing values in <code>y</code>: if <code>y</code> is an integer, <code>k</code> will contain
-entries for all values from <code>1</code> to <code><a href='https://rdrr.io/r/base/Extremes.html'>max(y)</a></code>; if <code>y</code> is a factor,
-<code>k</code> will contain entries for all values from <code>1</code> to <code><a href='https://rdrr.io/r/base/nlevels.html'>nlevels(y)</a></code>.
-Missing values are replaced with <code>missing</code> (default <code>NA</code>).</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <p><code>ggdist</code> is an R package that provides a flexible set of <code>ggplot2</code> geoms and stats designed
+especially for visualizing distributions and uncertainty. It is designed for both
+frequentist and Bayesian uncertainty visualization, taking the view that uncertainty
+visualization can be unified through the perspective of distribution visualization:
+for frequentist models, one visualizes confidence distributions or bootstrap distributions
+(see <code><a href='../articles/freq-uncertainty-vis.html'>vignette("freq-uncertainty-vis")</a></code>); for Bayesian models, one visualizes probability
+distributions (see <code><a href='http://mjskay.github.io/tidybayes/articles/tidybayes.html'>vignette("tidybayes", package = "tidybayes")</a></code>).</p>
+<p>The <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> / <code><a href='stat_slabinterval.html'>stat_slabinterval()</a></code> / <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code> family (see <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>) includes
+point summaries and intervals, eye plots, half-eye plots, CCDF bar plots, gradient plots, dotplots, and histograms.</p>
+<p>The <code><a href='geom_lineribbon.html'>geom_lineribbon()</a></code> / <code><a href='stat_lineribbon.html'>stat_lineribbon()</a></code> / <code><a href='stat_lineribbon.html'>stat_dist_lineribbon()</a></code> family makes it easy to visualize fit lines with an arbitrary
+number of uncertainty bands.</p>
 
-    <div class='dont-index'><p><code><a href='compose_data.html'>compose_data()</a></code>.</p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)
-
-<span class='no'>df</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"p"</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>))),
-  <span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"s"</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>)))
-)
-
-<span class='co'># turns site into a nested index: site[p] gives the site for plot p</span>
-<span class='no'>df</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='compose_data.html'>compose_data</a></span>(<span class='kw'>site</span> <span class='kw'>=</span> <span class='fu'>x_at_y</span>(<span class='no'>site</span>, <span class='no'>plot</span>))</div><div class='output co'>#&gt; $plot
-#&gt;  [1] 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
-#&gt; 
-#&gt; $n_plot
-#&gt; [1] 8
-#&gt; 
-#&gt; $site
-#&gt; [1] 1 1 2 2 3 3 4 4
-#&gt; 
-#&gt; $n_site
-#&gt; [1] 4
-#&gt; 
-#&gt; $n
-#&gt; [1] 16
-#&gt; </div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

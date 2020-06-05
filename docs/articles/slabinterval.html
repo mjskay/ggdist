@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slab + interval stats and geoms • tidybayes</title>
+<title>Slab + interval stats and geoms • ggdist</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,8 +19,8 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Slab + interval stats and geoms">
-<meta property="og:description" content="tidybayes">
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg">
+<meta property="og:description" content="ggdist">
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -44,7 +44,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -56,9 +56,6 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -76,15 +73,6 @@
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -93,7 +81,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -114,9 +102,9 @@
       <h1 data-toc-skip>Slab + interval stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-04</h4>
+            <h4 class="date">2020-06-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/mjskay/tidybayes/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
 
     </div>
@@ -134,7 +122,7 @@ img {
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette describes the slab+interval geoms and stats in <code>tidybayes</code>. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models, or even sampling distributions from other models) straightforward, and support a range of useful plots, including intervals, eye plots (densities + intervals), CCDF bar plots (complementary cumulative distribution functions + intervals), gradient plots, and histograms.</p>
+<p>This vignette describes the slab+interval geoms and stats in <code>ggdist</code>. This is a flexible family of stats and geoms designed to make plotting distributions (such as priors and posteriors in Bayesian models, or even sampling distributions from other models) straightforward, and support a range of useful plots, including intervals, eye plots (densities + intervals), CCDF bar plots (complementary cumulative distribution functions + intervals), gradient plots, and histograms.</p>
 </div>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
@@ -142,19 +130,19 @@ img {
 <p>The following libraries are required to run this vignette:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidybayes</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggdist</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cowplot</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">brms</span>)
 
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_tidybayes.html">theme_tidybayes</a></span>())</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span>(<span class="fu"><a href="../reference/theme_ggdist.html">theme_ggdist</a></span>())</pre></body></html></div>
 </div>
 <div id="roadmap-it-all-starts-with-slabinterval" class="section level2">
 <h2 class="hasAnchor">
 <a href="#roadmap-it-all-starts-with-slabinterval" class="anchor"></a>Roadmap: It all starts with “slabinterval”</h2>
 <p><img src="slabinterval_files/figure-html/slabinterval_family-1.png" width="672"></p>
-<p>Tidybayes has a pantheon of geoms and stats that stem from a common root: <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>. These geoms consist of a “slab” (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components.</p>
-<p>Using <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> directly is not necessarily advisable: they are highly configurable on their own, but this configurability requires remembering a bunch of combinations of options to use. Instead, tidybayes contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:</p>
+<p><code>ggdist</code> has a pantheon of geoms and stats that stem from a common root: <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>. These geoms consist of a “slab” (say, a density or a CDF), one or more intervals, and a point summary. These components may be computed in a number of different ways, and different variants of the geom will or will not include all components.</p>
+<p>Using <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> directly is not necessarily advisable: they are highly configurable on their own, but this configurability requires remembering a bunch of combinations of options to use. Instead, ggdist contains a number of pre-configured, easier-to-remember stats and geoms built on top of the slabinterval. These follow the following naming scheme:</p>
 <p><code>[geom|stat|stat_dist]_[name]</code></p>
 <p>For example, <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye()</a></code>, <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>, <code><a href="../reference/stat_pointinterval.html">stat_pointinterval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, etc. The naming scheme works as follows:</p>
 <ul>
@@ -190,7 +178,7 @@ img {
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_eye</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"stat_eye()"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/group_eye-1.png" width="432"></p>
-<p>Users of older versions of tidybayes might have used <code><a href="../reference/geom_eye.html">geom_eye()</a></code>, which is the older spelling of <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Due to the name standardization in version 2 of tidybayes (see the description above), <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> is now the preferred spelling. <code><a href="../reference/geom_eye.html">geom_eye()</a></code> will continue to work for now, but is deprecated and may throw a warning in future versions.</p>
+<p>Users of older versions of <code>tidybayes</code> (which used to contain the <code>ggdist</code> geoms) might have used <code>geom_eye()</code>, which is the older spelling of <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code>. Due to the name standardization in version 2 of <code>tidybayes</code> (see the description above), <code><a href="../reference/stat_sample_slabinterval.html">stat_eye()</a></code> is now the preferred spelling. <code>geom_eye()</code> will continue to work for now, but is deprecated and may throw a warning in future versions.</p>
 <p>We can also use <code><a href="../reference/stat_sample_slabinterval.html">stat_halfeye()</a></code> instead to get densities instead of violins:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>)) +
@@ -511,7 +499,7 @@ img {
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"stat_dots(position = 'dodge')"</span>)</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/dots_dodge-1.png" width="648"></p>
-<p>Unlike the base <code><a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html">ggplot2::geom_dotplot()</a></code> geom, <code><a href="../reference/geom_dotsinterval.html">tidybayes::geom_dots()</a></code> automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:</p>
+<p>Unlike the base <code><a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html">ggplot2::geom_dotplot()</a></code> geom, <code><a href="../reference/geom_dotsinterval.html">ggdist::geom_dots()</a></code> automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:</p>
 <div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="no">df</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">subgroup</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">subgroup</span>)) +
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span>(<span class="kw">position</span> <span class="kw">=</span> <span class="st">"dodge"</span>) +

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat) — stat_sample_slabinterval • tidybayes</title>
+<title>Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat) — stat_sample_slabinterval • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -52,7 +52,7 @@
 <meta property="og:description" content="Stats for computing densities and CDFs + intervals from samples for use with
 geom_slabinterval(). Useful for creating eye plots, half-eye plots,
 CCDF bar plots etc." />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -93,7 +93,7 @@ CCDF bar plots etc." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -105,9 +105,6 @@ CCDF bar plots etc." />
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -125,15 +122,6 @@ CCDF bar plots etc." />
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -142,7 +130,7 @@ CCDF bar plots etc." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -161,7 +149,7 @@ CCDF bar plots etc." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/tidybayes/blob/master/R/stat_sample_slabinterval.R'><code>R/stat_sample_slabinterval.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/stat_sample_slabinterval.R'><code>R/stat_sample_slabinterval.R</code></a></small>
     <div class="hidden name"><code>stat_sample_slabinterval.Rd</code></div>
     </div>
 
@@ -476,7 +464,7 @@ handy for visualizing posterior distributions in Bayesian inference, amongst oth
 <li><p><code>thickness</code></p></li>
 <li><p><code>group</code></p></li>
 </ul><p>See examples of some of these aesthetics in action in <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code>.
-Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='scales.html'>scales</a> documentation.
+Learn more about the sub-geom aesthetics (like <code>interval_color</code>) in the <a href='http://mjskay.github.io/tidybayes/reference/scales.html'>scales</a> documentation.
 Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
     <h2 class="hasAnchor" id="computed-variables"><a class="anchor" href="#computed-variables"></a>Computed Variables</h2>
 
@@ -501,8 +489,10 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'tidyr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:magrittr':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    extract</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
 <span class='co'># consider the following example data:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>1234</span>)

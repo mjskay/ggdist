@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • tidybayes</title>
+<title>Changelog • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -49,7 +49,7 @@
   
 
 <meta property="og:title" content="Changelog" />
-<meta property="og:image" content="http://mjskay.github.io/tidybayes/logo.svg" />
+<meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
 
@@ -90,7 +90,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidybayes</a>
+        <a class="navbar-link" href="../index.html">ggdist</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
       </span>
     </div>
@@ -102,9 +102,6 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/tidybayes.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -122,15 +119,6 @@
     <li>
       <a href="../articles/slabinterval.html">Slab + interval stats and geoms</a>
     </li>
-    <li>
-      <a href="../articles/tidy-brms.html">Extracting and visualizing tidy draws from brms models</a>
-    </li>
-    <li>
-      <a href="../articles/tidy-rstanarm.html">Extracting and visualizing tidy draws from rstanarm models</a>
-    </li>
-    <li>
-      <a href="../articles/tidybayes-residuals.html">Extracting and visualizing tidy residuals from Bayesian models</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -139,7 +127,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mjskay/tidybayes/">
+  <a href="https://github.com/mjskay/ggdist/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -158,122 +146,17 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/mjskay/tidybayes/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+      <small>Source: <a href='https://github.com/mjskay/ggdist/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="tidybayes-203" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.3">
-<a href="#tidybayes-203" class="anchor"></a>tidybayes 2.0.3<small> 2020-04-04 </small>
-</h1>
-<p>Minor fixes for changes in tibble 3.0.0</p>
-</div>
-    <div id="tidybayes-202" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.2">
-<a href="#tidybayes-202" class="anchor"></a>tidybayes 2.0.2<small> 2020-03-19 </small>
-</h1>
-<p>Various minor forward and backward compatibility fixes:</p>
+    <div id="ggdist-2039000" class="section level1">
+<h1 class="page-header" data-toc-text="2.0.3.9000">
+<a href="#ggdist-2039000" class="anchor"></a>ggdist 2.0.3.9000</h1>
 <ul>
-<li>Fix <code>stringsAsFactors</code> issues for R 4</li>
-<li>Fix issues with <code>[[&lt;-</code> for R 4</li>
-<li>Fix minor issues with dplyr 1.0.0</li>
-<li>Use <code><a href="https://rdrr.io/r/base/parse.html">parse()</a></code> instead of <code><a href="https://rdrr.io/r/base/parse.html">str2lang()</a></code> for compatibility with R &lt;= 3.6</li>
-</ul>
-</div>
-    <div id="tidybayes-201" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.1">
-<a href="#tidybayes-201" class="anchor"></a>tidybayes 2.0.1<small> 2020-01-28 </small>
-</h1>
-<ul>
-<li>Various geoms and stats have been merged together under the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> “meta-geom” (<a href='https://github.com/mjskay/tidybayes/issues/84'>#84</a>). This has enabled a bunch of new geoms to be created (see <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> and fixed a number of outstanding issues:
-<ul>
-<li>Histogram geoms and histogram+interval geoms (<a href='https://github.com/mjskay/tidybayes/issues/162'>#162</a>)</li>
-<li>CCDF bar charts and gradient plots</li>
-<li>The alpha aesthetic can now be mapped on eye plots (and all related geoms) (<a href='https://github.com/mjskay/tidybayes/issues/163'>#163</a>)</li>
-<li>Vertical version of eye plot (and vertical/horizontal variants of all slabinterval variants) (<a href='https://github.com/mjskay/tidybayes/issues/56'>#56</a>)</li>
-<li>Intervals and densities are now correctly grouped in eye plots (e.g. when dodging) (<a href='https://github.com/mjskay/tidybayes/issues/83'>#83</a>)</li>
-<li>Fill and color aesthetics can now be mapped within the slab part of eyes (and all slabintervals), allowing gradients to be made easily (<a href='https://github.com/mjskay/tidybayes/issues/136'>#136</a>) and regions of practical equivalence (ROPEs) to be annotated easily. Examples of ROPEs have been added to the main vignettes (<a href='https://github.com/mjskay/tidybayes/issues/129'>#129</a>).</li>
-<li>Intervals and eyes support <code>position = "dodge"</code> correctly (<a href='https://github.com/mjskay/tidybayes/issues/180'>#180</a>)</li>
-<li>The new geoms (and replacements for old ones) have custom scales allowing fine-grained targeting of fill, color, and size aesthetics of all the component parts of the composite geoms.</li>
-<li>There is a new sub-family of auto-sizing Wilkinson dotplot stats and geoms, <code><a href="../reference/geom_dotsinterval.html">geom_dots()</a></code> and <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> (<a href='https://github.com/mjskay/tidybayes/issues/210'>#210</a>). These include a <code>quantiles</code> parameter on the stats to make it easy to create quantile dotplots.</li>
-</ul>
-</li>
-<li>Analytical distributions can be visualized using the new <code>stat_dist_...</code> family of geoms for both the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> (see <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabinterval()</a></code> and <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>).</li>
-<li>The new <code><a href="../reference/parse_dist.html">parse_dist()</a></code>, which parses distribution specifications (like <code>normal(0,1)</code>) into tidy columns, can be combined with the <code>stat_dist_...</code> family of geoms to easily to visualize priors (e.g. from <code>brms</code>).</li>
-<li>New distribution functions for the marginal LKJ distribution (<code><a href="../reference/lkjcorr_marginal.html">dlkjcorr_marginal()</a></code> and company), combined with <code><a href="../reference/parse_dist.html">parse_dist()</a></code> and the <code>stat_dist_...</code> family make it easy to visualize the marginal LKJ prior on a cell in a correlation matrix. (<a href='https://github.com/mjskay/tidybayes/issues/191'>#191</a> <a href='https://github.com/mjskay/tidybayes/issues/192'>#192</a>)</li>
-<li>There is a new vignette on frequentist uncertainty visualization, <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>, also made possible by the new <code>stat_dist_...</code> family of geoms (<a href='https://github.com/mjskay/tidybayes/issues/188'>#188</a>)</li>
+<li>Initial split from tidybayes</li>
+<li>automatic orientation determination in geoms</li>
 <li>
-<code><a href="../reference/tidy_draws.html">tidy_draws()</a></code> can now be applied to already-tidied data frames, allowing dependent functions (like <code><a href="../reference/spread_draws.html">spread_draws()</a></code> and <code><a href="../reference/spread_draws.html">gather_draws()</a></code>) to also be applied to data frames directly (<a href='https://github.com/mjskay/tidybayes/issues/82'>#82</a>). This can be a useful optimization in workflows where the initial tidying is slow but spreading/gathering is fast (see discussion in <a href='https://github.com/mjskay/tidybayes/issues/144'>#144</a>)</li>
-<li>Kruschke-style distribution-of-distribution plots are now easier to construct with <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabh()</a></code>. An example of this usage is in <code><a href="../articles/tidy-brms.html">vignette("tidy-brms")</a></code>.</li>
-<li>
-<code><a href="../reference/point_interval.html">hdi()</a></code> now uses trimmed densities by default to avoid odd behavior with bounded distributions (<a href='https://github.com/mjskay/tidybayes/issues/165'>#165</a>).</li>
-<li>
-<code><a href="../reference/compare_levels.html">compare_levels(comparison = )</a></code> now uses a modern tidy approach to dealing with unevaluated expressions, so <code><a href="https://rlang.r-lib.org/reference/nse-defuse.html">rlang::exprs()</a></code> can be used in place of <code><a href="https://rdrr.io/pkg/plyr/man/quoted.html">plyr::.()</a></code> (<a href='https://github.com/mjskay/tidybayes/issues/174'>#174</a>, <a href='https://github.com/mjskay/tidybayes/issues/175'>#175</a>)</li>
-<li>
-<code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> now works with <code>ggnewscale</code> (<a href='https://github.com/mjskay/tidybayes/issues/178'>#178</a>)</li>
-<li>
-<code><a href="../reference/add_predicted_draws.html">fitted_draws()</a></code>/<code><a href="../reference/add_predicted_draws.html">predicted_draws()</a></code> give more helpful error messages on unsupported models (<a href='https://github.com/mjskay/tidybayes/issues/177'>#177</a>)</li>
-</ul>
-</div>
-    <div id="tidybayes-110" class="section level1">
-<h1 class="page-header" data-toc-text="1.1.0">
-<a href="#tidybayes-110" class="anchor"></a>tidybayes 1.1.0<small> 2019-06-02 </small>
-</h1>
-<p>New features and documentation:</p>
-<ul>
-<li>Support matrices, n-d arrays, and lists of vectors in compose_data (<a href='https://github.com/mjskay/tidybayes/issues/159'>#159</a>)</li>
-<li>Support nested vectors, matrices, n-d arrays, and ragged arrays through x[.,.] syntax in gather/spread_draws (<a href='https://github.com/mjskay/tidybayes/issues/154'>#154</a>)</li>
-<li>Add detached-line-ribbon HOPs example for ordinal models in brms vignette</li>
-</ul>
-<p>Bug fixes:</p>
-<ul>
-<li>Fixed errors on CRAN from changes in brms</li>
-<li>Properly handle Dirichlet responses in predicted_draws (<a href='https://github.com/mjskay/tidybayes/issues/164'>#164</a>)</li>
-</ul>
-</div>
-    <div id="tidybayes-104" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.4">
-<a href="#tidybayes-104" class="anchor"></a>tidybayes 1.0.4<small> 2019-02-19 </small>
-</h1>
-<p>New features and documentation:</p>
-<ul>
-<li>Initial support for add_residual_draws, towards <a href='https://github.com/mjskay/tidybayes/issues/133'>#133</a></li>
-<li>Add tidybayes-residuals vignette</li>
-<li>Add add_draws to support models that add_[fitted|predicted]_draws does not (closes <a href='https://github.com/mjskay/tidybayes/issues/149'>#149</a>)</li>
-<li>Add sample_draws to make it easier to take fewer draws anywhere in the pipeline (towards <a href='https://github.com/mjskay/tidybayes/issues/144'>#144</a>)</li>
-<li>Add hypothetical outcome plots (HOPs) to examples</li>
-</ul>
-<p>Minor changes:</p>
-<ul>
-<li>Fixed errors on CRAN from changes in dplyr</li>
-<li>Fix bug to support multivariate models in <code><a href="../reference/add_predicted_draws.html">predicted_draws()</a></code>, closes <a href='https://github.com/mjskay/tidybayes/issues/134'>#134</a></li>
-<li>Add support for <code>emm_list</code> in <code><a href="../reference/gather_emmeans_draws.html">gather_emmeans_draws()</a></code>, closes <a href='https://github.com/mjskay/tidybayes/issues/126'>#126</a></li>
-<li>Default for show.legend no longer omits all guides</li>
-<li>Make default <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> color black, closes <a href='https://github.com/mjskay/tidybayes/issues/153'>#153</a></li>
-</ul>
-</div>
-    <div id="tidybayes-103" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.3">
-<a href="#tidybayes-103" class="anchor"></a>tidybayes 1.0.3<small> 2018-10-22 </small>
-</h1>
-<ul>
-<li>Added <code>gather_pairs</code> method for creating custom scatterplot matrices (and more!)</li>
-<li>Ordinal models in brms now use original category labels (<a href='https://github.com/mjskay/tidybayes/issues/122'>#122</a>)</li>
-<li>
-<code>NA</code> values are now better supported in <code>point_interval</code>, and it has an <code>na.rm</code> argument (<a href='https://github.com/mjskay/tidybayes/issues/123'>#123</a>)</li>
-<li>Added sampler diagnostics to tidy_draws() Stan output (<a href='https://github.com/mjskay/tidybayes/issues/109'>#109</a>)</li>
-<li>Added MCMCglmm+emmeans example to vignettes</li>
-<li>Add guards to prevent usage of packages listed in <code>Suggests</code>
-</li>
-</ul>
-</div>
-    <div id="tidybayes-100" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.0">
-<a href="#tidybayes-100" class="anchor"></a>tidybayes 1.0.0<small> Unreleased </small>
-</h1>
-<p>Major changes:</p>
-<ul>
-<li>First CRAN release.</li>
-<li>Various function, argument, and column name changes towards unification with the Stan ecosystem. See help(“tidybayes-deprecated”) for more information.</li>
+<code><a href="../reference/geom_interval.html">geom_interval()</a></code> and <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics in order to work better with automatic orientation detection. <code>geom_intervalh()</code> and <code>geom_pointintervalh()</code> still do, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
 </ul>
 </div>
   </div>
