@@ -49,8 +49,8 @@
   
 
 <meta property="og:title" content="Translate between different tidy data frame formats for draws from distributions — tidy-format-translators" />
-<meta property="og:description" content="These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
-formats (each format using a different naming scheme)." />
+<meta property="og:description" content="These functions translate ggdist/tidybayes-style data frames to/from different data frame
+formats (each format using a different naming scheme for its columns)." />
 <meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
@@ -153,8 +153,8 @@ formats (each format using a different naming scheme)." />
     </div>
 
     <div class="ref-description">
-    <p>These functions translate tidybayes-style tidy data frames of draws to/from different tidy data frame
-formats (each format using a different naming scheme).</p>
+    <p>These functions translate ggdist/tidybayes-style data frames to/from different data frame
+formats (each format using a different naming scheme for its columns).</p>
     </div>
 
     <pre class="usage"><span class='fu'>to_broom_names</span>(<span class='no'>data</span>)
@@ -180,8 +180,8 @@ formats (each format using a different naming scheme).</p>
 translation scheme above.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Function prefixed with <code>to_</code> translate from the tidybayes format to another format, functions
-prefixed with <code>from_</code> translate from that format back to the tidybayes format. Formats include:</p>
+    <p>Function prefixed with <code>to_</code> translate from the ggdist/tidybayes format to another format, functions
+prefixed with <code>from_</code> translate from that format back to the ggdist/tidybayes format. Formats include:</p>
 <p><code>to_broom_names()</code> / <code>from_broom_names()</code>:</p>
 <ul>
 <li><p><code>.variable</code> &lt;-&gt; <code>term</code></p></li>
@@ -204,13 +204,27 @@ prefixed with <code>from_</code> translate from that format back to the tidybaye
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>line</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"coda"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr_u_tau</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ggdist"</span>)
 
-<span class='no'>line</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>gather_draws</span>(<span class='no'>alpha</span>, <span class='no'>beta</span>, <span class='no'>sigma</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>to_broom_names</span>()</div><div class='output co'>#&gt; <span class='error'>Error in gather_draws(., alpha, beta, sigma): could not find function "gather_draws"</span></div><div class='input'>
-</div></pre>
+<span class='no'>df</span> <span class='kw'>=</span> <span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span>(<span class='kw'>.variable</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>.value</span> <span class='kw'>=</span> <span class='no'>u_tau</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>group_by</span>(<span class='no'>.variable</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='no'>.value</span>)
+
+<span class='no'>df</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 7</span><span>
+#&gt;   .variable .value .lower .upper .width .point .interval
+#&gt;       </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
+#&gt; </span><span style='color: #555555;'>1</span><span>         1   5.62   3.86   8.03   0.95 median qi       
+#&gt; </span><span style='color: #555555;'>2</span><span>         2   5.48   3.46   9.07   0.95 median qi       
+#&gt; </span><span style='color: #555555;'>3</span><span>         3   4.96   3.10   7.86   0.95 median qi       </div><div class='input'>
+<span class='no'>df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>to_broom_names</span>()</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 7</span><span>
+#&gt;    term estimate conf.low conf.high .width .point .interval
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
+#&gt; </span><span style='color: #555555;'>1</span><span>     1     5.62     3.86      8.03   0.95 median qi       
+#&gt; </span><span style='color: #555555;'>2</span><span>     2     5.48     3.46      9.07   0.95 median qi       
+#&gt; </span><span style='color: #555555;'>3</span><span>     3     4.96     3.10      7.86   0.95 median qi       </div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

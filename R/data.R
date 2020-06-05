@@ -15,12 +15,11 @@
 #' `data("RankCorr")` is a substantially thinned version of the original posterior sample and has omitted several
 #' parameters in order for it to be a more manageable size.
 #'
-#' `data("RankCorr_u_tau")` is used for testing and examples and is the equivalent of the following:
+#' `data("RankCorr_u_tau")` is used for testing and examples and is roughly the equivalent of the following:
 #'
 #' ```
 #' data("RankCorr")
-#' RankCorr_u_tau = RankCorr %>%
-#'   tidybayes::spread_draws(u_tau[i])
+#' RankCorr_u_tau = tidybayes::spread_draws(RankCorr, u_tau[i]))
 #' ```
 #'
 #' @name RankCorr

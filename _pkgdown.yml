@@ -78,3 +78,8 @@ reference:
   - facet_title_left_horizontal
   - facet_title_right_horizontal
   - axis_titles_bottom_left
+
+- title: Datasets
+  desc:  Datasets used for examples and testing
+  contents:
+  - RankCorr
