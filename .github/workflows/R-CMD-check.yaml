@@ -19,7 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-#          - {os: windows-latest, r: 'release', suffix: 'quick', not_cran: 'false', vignettes: '"--no-build-vignettes"'}
           - {os: windows-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: macOS-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: macOS-latest, r: 'devel', suffix: '', not_cran: 'true', vignettes: 'NULL'}
@@ -82,6 +81,6 @@ jobs:
           path: check
 
       - name: Test coverage
-        if: matrix.config.r == 'release' && runner.os == 'Windows' && matrix.config.suffix == 'quick'
+        if: matrix.config.r == 'release' && runner.os == 'Windows'
         run: covr::codecov()
         shell: Rscript {0}
