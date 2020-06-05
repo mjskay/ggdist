@@ -13,7 +13,7 @@ if (capabilities("cairo")) {
 }
 ```
 
-# ggdist: Distribution and uncertainty visualization
+# ggdist: Visualizations of distributions and uncertainty
 
 [![R build status](https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggdist/actions)
 [![Coverage status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/ggdist?branch=master)
@@ -102,4 +102,4 @@ I welcome feedback, suggestions, issues, and contributions! Contact me at <mjska
 
 ## Citing `ggdist`
 
-Matthew Kay (`r format(Sys.Date(), "%Y")`). _ggdist: Distribution and Uncertainty Visualization_. R package version `r getNamespaceVersion("ggdist")`, <https://mjskay.github.io/ggdist/>. DOI: [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
+Matthew Kay (`r format(Sys.Date(), "%Y")`). _ggdist: Visualizations of Distributions and Uncertainty_. R package version `r getNamespaceVersion("ggdist")`, <https://mjskay.github.io/ggdist/>. DOI: [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

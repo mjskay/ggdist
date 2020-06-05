@@ -1,4 +1,4 @@
-#' Distribution and Uncertainty Visualization
+#' Visualizations of Distributions and Uncertainty
 #'
 #' @docType package
 #' @name ggdist-package

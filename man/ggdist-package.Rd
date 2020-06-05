@@ -4,7 +4,7 @@
 \name{ggdist-package}
 \alias{ggdist-package}
 \alias{ggdist}
-\title{Distribution and Uncertainty Visualization}
+\title{Visualizations of Distributions and Uncertainty}
 \description{
 \code{ggdist} is an R package that aims to make it easy to integrate
 popular Bayesian modeling methods into a tidy data + ggplot workflow.

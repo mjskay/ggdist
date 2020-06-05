@@ -1,5 +1,5 @@
 
-# ggdist: Distribution and uncertainty visualization
+# ggdist: Visualizations of distributions and uncertainty
 
 [![R build
 status](https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggdist/actions)
@@ -77,7 +77,7 @@ reproduce the issue. Pull requests should be filed against the
 
 ## Citing `ggdist`
 
-Matthew Kay (2020). *ggdist: Distribution and Uncertainty
-Visualization*. R package version 2.0.3.9000,
+Matthew Kay (2020). *ggdist: Visualizations of Distributions and
+Uncertainty*. R package version 2.0.3.9000,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
