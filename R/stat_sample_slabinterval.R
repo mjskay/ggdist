@@ -290,17 +290,10 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_halfeye = function(...) stat_sample_slabinterval(...)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_halfeyeh = function(..., orientation = "horizontal") stat_sample_slabinterval(..., orientation = orientation)
 
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_eye = function(..., side = "both") stat_sample_slabinterval(..., side = side)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_eyeh = function(..., side = "both", orientation = "horizontal")
-  stat_sample_slabinterval(..., side = side, orientation = orientation)
 
 #' @export
 #' @rdname stat_sample_slabinterval
@@ -309,15 +302,6 @@ stat_ccdfinterval = function(...,
 ) {
   stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_ccdfintervalh = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
-) {
-  stat_sample_slabinterval(...,
-    slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
-  )
-}
 
 #' @export
 #' @rdname stat_sample_slabinterval
@@ -325,15 +309,6 @@ stat_cdfinterval = function(...,
   slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
 ) {
   stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
-}
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_cdfintervalh = function(...,
-  slab_type = "cdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
-) {
-  stat_sample_slabinterval(...,
-    slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
-  )
 }
 
 #' @export
@@ -378,19 +353,12 @@ StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
     justification = 0.5
   ), StatSampleSlabinterval$default_params)
 )
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_gradientintervalh = function(..., orientation = "horizontal") {
-  stat_gradientinterval(..., orientation = orientation)
-}
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_histinterval = function(..., slab_type = "histogram") stat_sample_slabinterval(..., slab_type = slab_type)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_histintervalh = function(..., slab_type = "histogram" , orientation = "horizontal")
-  stat_sample_slabinterval(..., slab_type = slab_type, orientation = orientation)
+stat_histinterval = function(..., slab_type = "histogram") {
+  stat_sample_slabinterval(..., slab_type = slab_type)
+}
 
 #' @export
 #' @rdname stat_sample_slabinterval
@@ -428,8 +396,3 @@ StatSlab = ggproto("StatSlab", StatSampleSlabinterval,
   ), StatSampleSlabinterval$default_params)
 )
 StatSlab$default_aes$size = NULL
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_slabh = function(..., orientation = "horizontal") {
-  stat_slab(..., orientation = orientation)
-}

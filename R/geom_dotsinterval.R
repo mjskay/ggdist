@@ -448,12 +448,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 # shortcut geoms ----------------------------------------------------------
 #' @export
 #' @rdname geom_dotsinterval
-geom_dotsintervalh = function(..., orientation = "horizontal") {
-  geom_dotsinterval(..., orientation = orientation)
-}
-
-#' @export
-#' @rdname geom_dotsinterval
 geom_dots = function(
   mapping = NULL,
   data = NULL,
@@ -524,8 +518,3 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
 # have to unset these here because defaults() does not treat NULLs as unsetting values
 GeomDots$default_key_aes$slab_colour = NULL
 GeomDots$default_key_aes$slab_size = NULL
-#' @export
-#' @rdname geom_dotsinterval
-geom_dotsh = function(..., orientation = "horizontal") {
-  geom_dots(..., orientation = orientation)
-}

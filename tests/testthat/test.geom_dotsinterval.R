@@ -24,16 +24,16 @@ test_that("vanilla dots geoms and stats work", {
     p + geom_dots(aes(x = dist, y = x))
   )
 
-  vdiffr::expect_doppelganger("vanilla geom_dotsh",
+  expect_warning(vdiffr::expect_doppelganger("vanilla geom_dotsh",
     p + geom_dotsh(aes(y = dist, x = x))
-  )
+  ), "Deprecated")
 
-  vdiffr::expect_doppelganger("stat_dotsh with a group with 1 dot",
+  expect_warning(vdiffr::expect_doppelganger("stat_dotsh with a group with 1 dot",
     p + stat_dotsh(aes(y = dist, x = x, color = x > 2))
-  )
+  ), "Deprecated")
 
   vdiffr::expect_doppelganger("stat_dotsh with a group with 2 dots",
-    p + stat_dotsh(aes(y = dist, x = x, color = x > 1))
+    p + stat_dots(aes(y = dist, x = x, color = x > 1))
   )
 
   set.seed(1234)
@@ -50,7 +50,7 @@ test_that("vanilla dots geoms and stats work", {
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dotsintervalh",
-    p + stat_dotsintervalh(aes(y = dist, x = x), quantiles = 20)
+    p + stat_dotsinterval(aes(y = dist, x = x), quantiles = 20)
   )
 
 })
@@ -72,7 +72,7 @@ test_that("stat_dist_dots[interval] works", {
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dotsh",
-    p + stat_dist_dotsh(aes(y = dist), n = 20)
+    p + stat_dist_dots(aes(y = dist), n = 20)
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dotsinterval",
@@ -80,7 +80,7 @@ test_that("stat_dist_dots[interval] works", {
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dotsintervalh",
-    p + stat_dist_dotsintervalh(aes(y = dist), n = 20)
+    p + stat_dist_dotsinterval(aes(y = dist), n = 20)
   )
 
 })

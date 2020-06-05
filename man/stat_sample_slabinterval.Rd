@@ -3,19 +3,12 @@
 \name{stat_sample_slabinterval}
 \alias{stat_sample_slabinterval}
 \alias{stat_halfeye}
-\alias{stat_halfeyeh}
 \alias{stat_eye}
-\alias{stat_eyeh}
 \alias{stat_ccdfinterval}
-\alias{stat_ccdfintervalh}
 \alias{stat_cdfinterval}
-\alias{stat_cdfintervalh}
 \alias{stat_gradientinterval}
-\alias{stat_gradientintervalh}
 \alias{stat_histinterval}
-\alias{stat_histintervalh}
 \alias{stat_slab}
-\alias{stat_slabh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)}
 \usage{
 stat_sample_slabinterval(
@@ -43,11 +36,7 @@ stat_sample_slabinterval(
 
 stat_halfeye(...)
 
-stat_halfeyeh(..., orientation = "horizontal")
-
 stat_eye(..., side = "both")
-
-stat_eyeh(..., side = "both", orientation = "horizontal")
 
 stat_ccdfinterval(
   ...,
@@ -57,29 +46,11 @@ stat_ccdfinterval(
   normalize = "none"
 )
 
-stat_ccdfintervalh(
-  ...,
-  slab_type = "ccdf",
-  justification = 0.5,
-  side = "topleft",
-  orientation = "horizontal",
-  normalize = "none"
-)
-
 stat_cdfinterval(
   ...,
   slab_type = "cdf",
   justification = 0.5,
   side = "topleft",
-  normalize = "none"
-)
-
-stat_cdfintervalh(
-  ...,
-  slab_type = "cdf",
-  justification = 0.5,
-  side = "topleft",
-  orientation = "horizontal",
   normalize = "none"
 )
 
@@ -95,11 +66,7 @@ stat_gradientinterval(
   inherit.aes = TRUE
 )
 
-stat_gradientintervalh(..., orientation = "horizontal")
-
 stat_histinterval(..., slab_type = "histogram")
-
-stat_histintervalh(..., slab_type = "histogram", orientation = "horizontal")
 
 stat_slab(
   mapping = NULL,
@@ -110,8 +77,6 @@ stat_slab(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-stat_slabh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or

@@ -127,11 +127,6 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
     params
   }
 )
-#' @export
-#' @rdname geom_dotsinterval
-stat_dotsintervalh = function(..., orientation = "horizontal") {
-  stat_dotsinterval(..., orientation = orientation)
-}
 
 #' @export
 #' @rdname geom_dotsinterval
@@ -169,11 +164,6 @@ StatDots = ggproto("StatDots", StatDotsinterval,
   ), StatDotsinterval$default_params)
 )
 StatDots$default_aes$size = NULL
-#' @export
-#' @rdname geom_dotsinterval
-stat_dotsh = function(..., orientation = "horizontal") {
-  stat_dots(..., orientation = orientation)
-}
 
 
 # stat_dist_dotsinterval -----------------------------------------------
@@ -256,11 +246,6 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
     params
   }
 )
-#' @export
-#' @rdname geom_dotsinterval
-stat_dist_dotsintervalh = function(..., orientation = "horizontal") {
-  stat_dist_dotsinterval(..., orientation = orientation)
-}
 
 #' @export
 #' @rdname geom_dotsinterval
@@ -298,8 +283,3 @@ StatDistDots = ggproto("StatDistDots", StatDistDotsinterval,
   ), StatDistDotsinterval$default_params)
 )
 StatDistDots$default_aes$size = NULL
-#' @export
-#' @rdname geom_dotsinterval
-stat_dist_dotsh = function(..., orientation = "horizontal") {
-  stat_dist_dots(..., orientation = orientation)
-}

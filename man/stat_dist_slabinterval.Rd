@@ -3,21 +3,13 @@
 \name{stat_dist_slabinterval}
 \alias{stat_dist_slabinterval}
 \alias{stat_dist_halfeye}
-\alias{stat_dist_halfeyeh}
 \alias{stat_dist_eye}
-\alias{stat_dist_eyeh}
 \alias{stat_dist_ccdfinterval}
-\alias{stat_dist_ccdfintervalh}
 \alias{stat_dist_cdfinterval}
-\alias{stat_dist_cdfintervalh}
 \alias{stat_dist_gradientinterval}
-\alias{stat_dist_gradientintervalh}
 \alias{stat_dist_pointinterval}
-\alias{stat_dist_pointintervalh}
 \alias{stat_dist_interval}
-\alias{stat_dist_intervalh}
 \alias{stat_dist_slab}
-\alias{stat_dist_slabh}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)}
 \usage{
 stat_dist_slabinterval(
@@ -41,11 +33,7 @@ stat_dist_slabinterval(
 
 stat_dist_halfeye(...)
 
-stat_dist_halfeyeh(..., orientation = "horizontal")
-
 stat_dist_eye(..., side = "both")
-
-stat_dist_eyeh(..., side = "both", orientation = "horizontal")
 
 stat_dist_ccdfinterval(
   ...,
@@ -55,29 +43,11 @@ stat_dist_ccdfinterval(
   normalize = "none"
 )
 
-stat_dist_ccdfintervalh(
-  ...,
-  slab_type = "ccdf",
-  justification = 0.5,
-  side = "topleft",
-  orientation = "horizontal",
-  normalize = "none"
-)
-
 stat_dist_cdfinterval(
   ...,
   slab_type = "cdf",
   justification = 0.5,
   side = "topleft",
-  normalize = "none"
-)
-
-stat_dist_cdfintervalh(
-  ...,
-  slab_type = "cdf",
-  justification = 0.5,
-  side = "topleft",
-  orientation = "horizontal",
   normalize = "none"
 )
 
@@ -93,11 +63,7 @@ stat_dist_gradientinterval(
   inherit.aes = TRUE
 )
 
-stat_dist_gradientintervalh(..., orientation = "horizontal")
-
 stat_dist_pointinterval(..., show_slab = FALSE)
-
-stat_dist_pointintervalh(..., show_slab = FALSE, orientation = "horizontal")
 
 stat_dist_interval(
   mapping = NULL,
@@ -111,8 +77,6 @@ stat_dist_interval(
   inherit.aes = TRUE
 )
 
-stat_dist_intervalh(..., orientation = "horizontal")
-
 stat_dist_slab(
   mapping = NULL,
   data = NULL,
@@ -122,8 +86,6 @@ stat_dist_slab(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-stat_dist_slabh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or

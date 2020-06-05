@@ -3,7 +3,6 @@
 \name{geom_slabinterval}
 \alias{geom_slabinterval}
 \alias{geom_slab}
-\alias{geom_slabh}
 \title{Slab + point + interval meta-geom}
 \usage{
 geom_slabinterval(
@@ -39,8 +38,6 @@ geom_slab(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-geom_slabh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or

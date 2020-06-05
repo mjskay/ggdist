@@ -810,9 +810,3 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
 # have to unset these here because defaults() does not treat NULLs as unsetting values
 GeomSlab$default_key_aes$slab_colour = NULL
 GeomSlab$default_key_aes$slab_size = NULL
-
-#' @export
-#' @rdname geom_slabinterval
-geom_slabh = function(..., orientation = "horizontal") {
-  geom_slab(..., orientation = orientation)
-}

@@ -31,31 +31,33 @@ test_that("distribution eye plots work with the args aesthetic", {
   )
 
   vdiffr::expect_doppelganger("horizontal eye using args",
-    p + stat_dist_eyeh(aes(y = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_eye(aes(y = dist), na.rm = TRUE, n = 40)
   )
 
   vdiffr::expect_doppelganger("vertical half-eye using args",
     p + stat_dist_halfeye(aes(x = dist), na.rm = TRUE, n = 40)
   )
 
-  vdiffr::expect_doppelganger("horizontal half-eye using args",
+  # test deprecation warning
+  expect_warning(vdiffr::expect_doppelganger("horizontal half-eye using args",
     p + stat_dist_halfeyeh(aes(y = dist), na.rm = TRUE, n = 40)
-  )
+  ), "Deprecated")
 
   vdiffr::expect_doppelganger("ccdfinterval using args",
     p + stat_dist_ccdfinterval(aes(x = dist), na.rm = TRUE, n = 40)
   )
 
-  vdiffr::expect_doppelganger("ccdfintervalh using args",
+  # test deprecation warning
+  expect_warning(vdiffr::expect_doppelganger("ccdfintervalh using args",
     p + stat_dist_ccdfintervalh(aes(y = dist), na.rm = TRUE, n = 40)
-  )
+  ), "Deprecated")
 
   vdiffr::expect_doppelganger("cdfinterval using args",
     p + stat_dist_cdfinterval(aes(x = dist), na.rm = TRUE, n = 40)
   )
 
   vdiffr::expect_doppelganger("cdfintervalh using args",
-    p + stat_dist_cdfintervalh(aes(y = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_cdfinterval(aes(y = dist), na.rm = TRUE, n = 40)
   )
 
 })
@@ -67,7 +69,7 @@ test_that("stat fill aesthetic on halfeye works", {
   vdiffr::expect_doppelganger("gradient fill/color halfeye",
     data.frame(dist = "norm", mean = 0, sd = 1) %>%
       ggplot(aes(y = 1, dist = dist, arg1 = mean, arg2 = sd, slab_color = stat(x > 0), fill = stat(f), slab_linetype = stat(x > -1), slab_size = stat(x > 1))) +
-      stat_dist_halfeyeh(n = 10)
+      stat_dist_halfeye(n = 10)
   )
 })
 
@@ -87,7 +89,7 @@ test_that("stat_dist_gradientinterval works", {
     p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99))
   )
   vdiffr::expect_doppelganger("dist_gradientintervalh with two groups",
-    p + stat_dist_gradientintervalh(aes(y = dist), n = 20, p_limits = c(0.01, 0.99))
+    p + stat_dist_gradientinterval(aes(y = dist), n = 20, p_limits = c(0.01, 0.99))
   )
 })
 
@@ -107,21 +109,21 @@ test_that("stat_dist_pointinterval, interval, and slab work", {
     p + stat_dist_pointinterval(aes(x = dist), n = 20)
   )
   vdiffr::expect_doppelganger("dist_pointintervalh with two groups",
-    p + stat_dist_pointintervalh(aes(y = dist), n = 20)
+    p + stat_dist_pointinterval(aes(y = dist), n = 20)
   )
 
   vdiffr::expect_doppelganger("dist_interval with two groups",
     p + stat_dist_interval(aes(x = dist), n = 20)
   )
   vdiffr::expect_doppelganger("dist_intervalh with two groups",
-    p + stat_dist_intervalh(aes(y = dist), n = 20)
+    p + stat_dist_interval(aes(y = dist), n = 20)
   )
 
   vdiffr::expect_doppelganger("dist_slab with two groups",
     p + stat_dist_slab(aes(x = dist), n = 20)
   )
   vdiffr::expect_doppelganger("dist_slabh with two groups",
-    p + stat_dist_slabh(aes(y = dist), n = 20)
+    p + stat_dist_slab(aes(y = dist), n = 20)
   )
 })
 
@@ -140,11 +142,11 @@ test_that("scale transformation works", {
     scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 
   vdiffr::expect_doppelganger("dist_halfeyeh log scale transform",
-    p_log + stat_dist_halfeyeh(n = 100)
+    p_log + stat_dist_halfeye(n = 100)
   )
 
   vdiffr::expect_doppelganger("dist_ccdfintervalh log scale transform",
-    p_log + stat_dist_ccdfintervalh(n = 100)
+    p_log + stat_dist_ccdfinterval(n = 100)
   )
 
 
@@ -153,11 +155,11 @@ test_that("scale transformation works", {
     scale_x_reverse()
 
   vdiffr::expect_doppelganger("dist_halfeyeh reverse scale transform",
-    p_rev + stat_dist_halfeyeh(n = 100)
+    p_rev + stat_dist_halfeye(n = 100)
   )
 
   vdiffr::expect_doppelganger("dist_ccdfintervalh reverse scale transform",
-    p_rev + stat_dist_ccdfintervalh(n = 100)
+    p_rev + stat_dist_ccdfinterval(n = 100)
   )
 })
 

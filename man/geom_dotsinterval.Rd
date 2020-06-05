@@ -2,17 +2,11 @@
 % Please edit documentation in R/geom_dotsinterval.R, R/stat_dotsinterval.R
 \name{geom_dotsinterval}
 \alias{geom_dotsinterval}
-\alias{geom_dotsintervalh}
 \alias{geom_dots}
-\alias{geom_dotsh}
 \alias{stat_dotsinterval}
-\alias{stat_dotsintervalh}
 \alias{stat_dots}
-\alias{stat_dotsh}
 \alias{stat_dist_dotsinterval}
-\alias{stat_dist_dotsintervalh}
 \alias{stat_dist_dots}
-\alias{stat_dist_dotsh}
 \title{Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)}
 \usage{
 geom_dotsinterval(
@@ -29,8 +23,6 @@ geom_dotsinterval(
   inherit.aes = TRUE
 )
 
-geom_dotsintervalh(..., orientation = "horizontal")
-
 geom_dots(
   mapping = NULL,
   data = NULL,
@@ -41,8 +33,6 @@ geom_dots(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-geom_dotsh(..., orientation = "horizontal")
 
 stat_dotsinterval(
   mapping = NULL,
@@ -57,8 +47,6 @@ stat_dotsinterval(
   inherit.aes = TRUE
 )
 
-stat_dotsintervalh(..., orientation = "horizontal")
-
 stat_dots(
   mapping = NULL,
   data = NULL,
@@ -68,8 +56,6 @@ stat_dots(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-stat_dotsh(..., orientation = "horizontal")
 
 stat_dist_dotsinterval(
   mapping = NULL,
@@ -83,8 +69,6 @@ stat_dist_dotsinterval(
   inherit.aes = TRUE
 )
 
-stat_dist_dotsintervalh(..., orientation = "horizontal")
-
 stat_dist_dots(
   mapping = NULL,
   data = NULL,
@@ -94,8 +78,6 @@ stat_dist_dots(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-stat_dist_dotsh(..., orientation = "horizontal")
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
@@ -136,6 +118,17 @@ causes the slab to be drawn on the bottom or the right. \code{"both"} draws the 
 sides (as in a violin plot).}
     \item{\code{scale}}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
 slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+    \item{\code{orientation}}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
     \item{\code{justification}}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
 is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
@@ -188,18 +181,6 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
-
-\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
 \item{geom}{Use to override the default connection between
 \code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}

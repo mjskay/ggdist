@@ -360,17 +360,10 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_halfeye = function(...) stat_dist_slabinterval(...)
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_halfeyeh = function(..., orientation = "horizontal") stat_dist_slabinterval(..., orientation = orientation)
 
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_eye = function(..., side = "both") stat_dist_slabinterval(..., side = side)
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_eyeh = function(..., side = "both", orientation = "horizontal")
-  stat_dist_slabinterval(..., side = side, orientation = orientation)
 
 #' @export
 #' @rdname stat_dist_slabinterval
@@ -379,15 +372,6 @@ stat_dist_ccdfinterval = function(...,
 ) {
   stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_ccdfintervalh = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
-) {
-  stat_dist_slabinterval(...,
-    slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
-  )
-}
 
 #' @export
 #' @rdname stat_dist_slabinterval
@@ -395,15 +379,6 @@ stat_dist_cdfinterval = function(...,
   slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
 ) {
   stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
-}
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_cdfintervalh = function(...,
-  slab_type = "cdf", justification = 0.5, side = "topleft", orientation = "horizontal", normalize = "none"
-) {
-  stat_dist_slabinterval(...,
-    slab_type = slab_type, justification = justification, side = side, orientation = orientation, normalize = normalize
-  )
 }
 
 #' @export
@@ -438,11 +413,6 @@ stat_dist_gradientinterval = function(
     )
   )
 }
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_gradientintervalh = function(..., orientation = "horizontal") {
-  stat_dist_gradientinterval(..., orientation = orientation)
-}
 StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     thickness = 1,
@@ -457,11 +427,6 @@ StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinter
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_pointinterval = function(..., show_slab = FALSE) stat_dist_slabinterval(..., show_slab = show_slab)
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_pointintervalh = function(..., show_slab = FALSE, orientation = "horizontal") {
-  stat_dist_slabinterval(..., show_slab = show_slab, orientation = orientation)
-}
 
 #' @export
 #' @rdname stat_dist_slabinterval
@@ -510,11 +475,6 @@ StatDistInterval = ggproto("StatDistInterval", StatDistSlabinterval,
 # because otherwise it stays in the list as a value = NULL
 # instead of being removed
 StatDistInterval$default_aes$size = NULL
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_intervalh = function(..., orientation = "horizontal") {
-  stat_dist_interval(..., orientation = orientation)
-}
 
 #' @export
 #' @rdname stat_dist_slabinterval
@@ -552,8 +512,3 @@ StatDistSlab = ggproto("StatDistSlab", StatDistSlabinterval,
   ), StatDistSlabinterval$default_params)
 )
 StatDistSlab$default_aes$size = NULL
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_slabh = function(..., orientation = "horizontal") {
-  stat_dist_slab(..., orientation = orientation)
-}
