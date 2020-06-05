@@ -39,7 +39,11 @@ if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
 
 ## Introduction
   
-This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize sampling distributions instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
+This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize *confidence distributions* instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
+
+*Confidence distributions* are a way of unifying the notion of sampling distributions, bootstrap distributions, and several other concepts in frequentist inference. They are a convenient tool for visualizing uncertainty in a way that generalizes across Bayesian and frequentist frameworks: where in a Bayesian framework we might visualize a *probability* distribution, in the frequentist framework we visualize a *confidence* distribution. This gives us a way to use the same geometries for uncertainty visualization in either framework.
+
+For more on confidence distributions, see: Xie, Min‐ge, and Kesar Singh. [Confidence distribution, the frequentist distribution estimator of a parameter: A review](https://www.stat.rutgers.edu/home/mxie/RCPapers/insr.12000.pdf). _International Statistical Review_ 81.1 (2013): 3-39.
 
 ## Setup
   
@@ -97,17 +101,17 @@ The default summary is not great from an uncertainty communication perspective:
 summary(m_ABC)
 ```
 
-So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeye()` to plot them. The sampling distribution for parameter $i$, $\beta_i$, from an `lm` model is a scaled-and-shifted t distribution:
+So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeye()` to plot them. The confidence distribution for parameter $i$, $\tilde\beta_i$, from an `lm` model is a scaled-and-shifted t distribution:
 
 $$
-\beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\beta_i}\right)
+\tilde\beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\hat\beta_i}\right)
 $$
 
 With:
 
 - $\nu$: *degrees of freedom*, equal to `df.residual(m_ABC)`
 - $\hat\beta_i$: *location*, equal to the point estimate of the parameter (`estimate` column from `broom::tidy()`)
-- $\sigma_{\beta_i}$: *scale*, equal to the standard error of the parameter estimate (`std.error` column from `broom::tidy()`)
+- $\sigma_{\hat\beta_i}$: *scale*, equal to the standard error of the parameter estimate (`std.error` column from `broom::tidy()`)
 
 We can get the estimates and standard errors easily by using `broom::tidy()`:
 
@@ -126,17 +130,17 @@ m_ABC %>%
   )
 ```
 
-If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we can use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models). Here we want the sampling distribution for the mean in condition $c$, $\mu_c$:
+If we would rather see uncertainty in conditional means, we can instead use `modelr::data_grid()` along with `broom::augment()` (similar to how we can use `modelr::data_grid()` with `tidybayes::add_fitted_draws()` for Bayesian models). Here we want the confidence distribution for the mean in condition $c$, $\tilde\mu_c$:
 
 $$
-\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\mu_c} \right)
+\tilde\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\hat\mu_c} \right)
 $$
 
 With:
 
 - $\nu$: *degrees of freedom*, equal to `df.residual(m_ABC)`
 - $\hat\mu_c$: *location*, equal to the point estimate of the mean in condition $c$ (`.fitted` column from `broom::augment()`)
-- $\sigma_{\mu_c}$: *scale*, equal to the standard error of the mean in condition $c$ (`.se.fit` column from `broom::augment()`)
+- $\sigma_{\hat\mu_c}$: *scale*, equal to the standard error of the mean in condition $c$ (`.se.fit` column from `broom::augment()`)
 
 Putting everything together, we have:
 
@@ -196,7 +200,7 @@ See `vignette("slabinterval")` for more examples of uncertainty geoms and stats 
 
 ## For a fit line
 
-The same principle of reconstructing the sampling distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms", package = "tidybayes")`, but using `lm()` instead:
+The same principle of reconstructing the confidence distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms", package = "tidybayes")`, but using `lm()` instead:
 
 ```{r}
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)

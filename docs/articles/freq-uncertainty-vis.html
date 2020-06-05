@@ -122,7 +122,9 @@ img {
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette shows how to combine the <code>ggdist</code> geoms with output from the <code>broom</code> package to enable visualization of uncertainty from frequentist models. The general idea is to use the <code>stat_dist_...</code> family of ggplot stats to visualize sampling distributions instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.</p>
+<p>This vignette shows how to combine the <code>ggdist</code> geoms with output from the <code>broom</code> package to enable visualization of uncertainty from frequentist models. The general idea is to use the <code>stat_dist_...</code> family of ggplot stats to visualize <em>confidence distributions</em> instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.</p>
+<p><em>Confidence distributions</em> are a way of unifying the notion of sampling distributions, bootstrap distributions, and several other concepts in frequentist inference. They are a convenient tool for visualizing uncertainty in a way that generalizes across Bayesian and frequentist frameworks: where in a Bayesian framework we might visualize a <em>probability</em> distribution, in the frequentist framework we visualize a <em>confidence</em> distribution. This gives us a way to use the same geometries for uncertainty visualization in either framework.</p>
+<p>For more on confidence distributions, see: Xie, Min‐ge, and Kesar Singh. <a href="https://www.stat.rutgers.edu/home/mxie/RCPapers/insr.12000.pdf">Confidence distribution, the frequentist distribution estimator of a parameter: A review</a>. <em>International Statistical Review</em> 81.1 (2013): 3-39.</p>
 </div>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
@@ -180,9 +182,9 @@ img {
 ## Residual standard error: 0.5478 on 45 degrees of freedom
 ## Multiple R-squared:  0.7694, Adjusted R-squared:  0.7489 
 ## F-statistic: 37.53 on 4 and 45 DF,  p-value: 8.472e-14</code></pre>
-<p>So let’s try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye()</a></code> to plot them. The sampling distribution for parameter <span class="math inline">\(i\)</span>, <span class="math inline">\(\beta_i\)</span>, from an <code>lm</code> model is a scaled-and-shifted t distribution:</p>
+<p>So let’s try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye()</a></code> to plot them. The confidence distribution for parameter <span class="math inline">\(i\)</span>, <span class="math inline">\(\tilde\beta_i\)</span>, from an <code>lm</code> model is a scaled-and-shifted t distribution:</p>
 <p><span class="math display">\[
-\beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\beta_i}\right)
+\tilde\beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\hat\beta_i}\right)
 \]</span></p>
 <p>With:</p>
 <ul>
@@ -192,7 +194,7 @@ img {
 <li>
 <span class="math inline">\(\hat\beta_i\)</span>: <em>location</em>, equal to the point estimate of the parameter (<code>estimate</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>)</li>
 <li>
-<span class="math inline">\(\sigma_{\beta_i}\)</span>: <em>scale</em>, equal to the standard error of the parameter estimate (<code>std.error</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>)</li>
+<span class="math inline">\(\sigma_{\hat\beta_i}\)</span>: <em>scale</em>, equal to the standard error of the parameter estimate (<code>std.error</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>)</li>
 </ul>
 <p>We can get the estimates and standard errors easily by using <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>:</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">m_ABC</span>)</pre></body></html></div>
@@ -212,9 +214,9 @@ img {
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">dist</span> <span class="kw">=</span> <span class="st">"student_t"</span>, <span class="kw">arg1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span>(<span class="no">m_ABC</span>), <span class="kw">arg2</span> <span class="kw">=</span> <span class="no">estimate</span>, <span class="kw">arg3</span> <span class="kw">=</span> <span class="no">std.error</span>)
   )</pre></body></html></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/unnamed-chunk-6-1.png" width="648"></p>
-<p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code> (similar to how we can use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="http://mjskay.github.io/tidybayes/reference/add_predicted_draws.html">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we want the sampling distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\mu_c\)</span>:</p>
+<p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code> (similar to how we can use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="http://mjskay.github.io/tidybayes/reference/add_predicted_draws.html">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we want the confidence distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\tilde\mu_c\)</span>:</p>
 <p><span class="math display">\[
-\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\mu_c} \right)
+\tilde\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\hat\mu_c} \right)
 \]</span></p>
 <p>With:</p>
 <ul>
@@ -224,7 +226,7 @@ img {
 <li>
 <span class="math inline">\(\hat\mu_c\)</span>: <em>location</em>, equal to the point estimate of the mean in condition <span class="math inline">\(c\)</span> (<code>.fitted</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code>)</li>
 <li>
-<span class="math inline">\(\sigma_{\mu_c}\)</span>: <em>scale</em>, equal to the standard error of the mean in condition <span class="math inline">\(c\)</span> (<code>.se.fit</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code>)</li>
+<span class="math inline">\(\sigma_{\hat\mu_c}\)</span>: <em>scale</em>, equal to the standard error of the mean in condition <span class="math inline">\(c\)</span> (<code>.se.fit</code> column from <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::augment()</a></code>)</li>
 </ul>
 <p>Putting everything together, we have:</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">ABC</span> <span class="kw">%&gt;%</span>
@@ -273,7 +275,7 @@ img {
 <div id="for-a-fit-line" class="section level2">
 <h2 class="hasAnchor">
 <a href="#for-a-fit-line" class="anchor"></a>For a fit line</h2>
-<p>The same principle of reconstructing the sampling distribution allows us to use <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> to construct uncertainty bands around regression fit lines. Here we’ll reconstruct an example with the <code>mtcars</code> dataset from <code><a href="http://mjskay.github.io/tidybayes/articles/tidy-brms.html">vignette("tidy-brms", package = "tidybayes")</a></code>, but using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> instead:</p>
+<p>The same principle of reconstructing the confidence distribution allows us to use <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> to construct uncertainty bands around regression fit lines. Here we’ll reconstruct an example with the <code>mtcars</code> dataset from <code><a href="http://mjskay.github.io/tidybayes/articles/tidy-brms.html">vignette("tidy-brms", package = "tidybayes")</a></code>, but using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> instead:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">m_mpg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> * <span class="no">cyl</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">mtcars</span>)</pre></body></html></div>
 <p>Again we’ll use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="https://rdrr.io/pkg/broom/man/reexports.html">broom::tidy()</a></code>, but now we’ll employ <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>:</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">mtcars</span> <span class="kw">%&gt;%</span>
