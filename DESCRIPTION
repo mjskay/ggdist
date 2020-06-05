@@ -1,18 +1,16 @@
-Package: tidybayes
-Title: Tidy Data and 'Geoms' for Bayesian Models
+Package: ggdist
+Title: Visualizations of Distributions and Uncertainty
 Version: 2.0.3.9000
-Date: 2020-04-04
+Date: 2020-06-04
 Authors@R: c(
-        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu"),
-        person("Timothy", "Mastny", role = "ctb", email = "tim.mastny@gmail.com")
+        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu")
     )
 Maintainer: Matthew Kay <mjskay@umich.edu>
-Description: Compose data for and extract, manipulate, and visualize posterior draws from Bayesian models
-    ('JAGS', 'Stan', 'rstanarm', 'brms', 'MCMCglmm', 'coda', ...) in a tidy data format. Functions are provided
-    to help extract tidy data frames of draws from Bayesian models and that generate point
-    summaries and intervals in a tidy format. In addition, 'ggplot2' 'geoms' and 'stats' are provided for
-    common visualization primitives like points with multiple uncertainty intervals, eye plots (intervals plus
-    densities), and fit curves with multiple, arbitrary uncertainty bands.
+Description: 'Geoms' and 'stats' for visualizing distributions using 'ggplot2', particularly tuned for
+    visualizing uncertainty in a frequentist mode (using confidence distributions or bootstrap samples) or
+    a Bayesian mode (using posterior samples). Provides a variety of visualization primitives, including
+    points with multiple uncertainty intervals, eye plots (intervals plus densities), grandient plots,
+    dotplots, CCDF barplots, and fit curves with multiple, arbitrary uncertainty bands.
 Depends:
     R (>= 3.5.0)
 Imports:
@@ -62,8 +60,8 @@ Suggests:
     transformr
 License: GPL (>= 3)
 Language: en-US
-BugReports: https://github.com/mjskay/tidybayes/issues/new
-URL: http://mjskay.github.io/tidybayes, https://github.com/mjskay/tidybayes
+BugReports: https://github.com/mjskay/ggdist/issues/new
+URL: http://mjskay.github.io/ggdist, https://github.com/mjskay/ggdist
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0
 LazyData: true

@@ -4,7 +4,7 @@
 .Rhistory
 .RData
 .Rproj*
-tidybayes.Rproj
+ggdist.Rproj
 vignettes/ABC.rda
 vignettes/ABC.rds
 vignettes/*_cache/
