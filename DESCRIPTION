@@ -51,6 +51,7 @@ Encoding: UTF-8
 Collate:
     "ggdist-package.R"
     "binning_methods.R"
+    "data.R"
     "draw_key_slabinterval.R"
     "flip_aes.R"
     "geom.R"
