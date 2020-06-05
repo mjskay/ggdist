@@ -3,10 +3,10 @@ note <- sprintf("R package version %s", meta$Version)
 
 bibentry(
   bibtype = "Manual",
-  title = paste("{tidybayes}: Tidy Data and Geoms for {Bayesian} Models"),
+  title = paste("{ggdist}: Visualizations of Distributions and Uncertainty"),
   author = c(person("Matthew", "Kay")),
   year = year,
   note = note,
-  url = "http://mjskay.github.io/tidybayes/",
-  doi = "10.5281/zenodo.1308151"
+  url = "http://mjskay.github.io/ggdist/"
+#,  doi = "10.5281/zenodo.1308151"
 )
