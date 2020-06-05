@@ -1,15 +1,14 @@
 
 # ggdist: Distribution and uncertainty visualization
 
-[![Build
-status](https://travis-ci.org/mjskay/ggdist.png?branch=master)](https://travis-ci.org/mjskay/ggdist)
 [![R build
 status](https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggdist/actions)
+[![Coverage
+status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/ggdist?branch=master)
 [![CRAN
 status](http://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
-<!--[![Coverage status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/ggdist?branch=master)-->
-<!--[![DOI](https://zenodo.org/badge/33396684.svg)](https://zenodo.org/badge/latestdoi/33396684)-->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879621.svg)](https://doi.org/10.5281/zenodo.3879621)
 
 ![Preview of ggdist plots](man/figures/preview.png)
 
@@ -80,5 +79,5 @@ reproduce the issue. Pull requests should be filed against the
 
 Matthew Kay (2020). *ggdist: Distribution and Uncertainty
 Visualization*. R package version 2.0.3.9000,
-<https://mjskay.github.io/ggdist/>.
-<!-- DOI: [10.5281/zenodo.1308151](https://doi.org/10.5281/zenodo.1308151).-->
+<https://mjskay.github.io/ggdist/>. DOI:
+[10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
