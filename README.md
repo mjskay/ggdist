@@ -1,5 +1,5 @@
 
-# ggdist: Distribution and uncertainty visualization <img id="tidybayes_logo" src="man/figures/logo.svg" align="right" />
+# ggdist: Distribution and uncertainty visualization
 
 [![Build
 status](https://travis-ci.org/mjskay/ggdist.png?branch=master)](https://travis-ci.org/mjskay/ggdist)
