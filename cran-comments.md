@@ -4,7 +4,7 @@ The tidybayes package has grown into two related, large pieces of functionality:
 for visualizing distributions and uncertainty, and (2) functions for manipulating posteriors
 from Bayesian models. Because the visualization functions (category 1) can also be applied to
 non-Bayesian models (and have become a large-ish API unto themselves), I created this new
-package (ggdist) to contains all of those functions. 
+package (ggdist) to contain all of those functions. 
 
 If/when ggdist hits CRAN, I will submit a new version of tidybayes that depends on ggdist
 for the visualization functions so there is only one implementation of them across the two 
