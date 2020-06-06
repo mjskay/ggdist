@@ -1,7 +1,7 @@
 Package: ggdist
 Title: Distribution and Uncertainty Visualization
-Version: 2.0.3.9000
-Date: 2020-06-04
+Version: 2.1.0
+Date: 2020-06-05
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu")
     )
@@ -9,7 +9,7 @@ Maintainer: Matthew Kay <mjskay@umich.edu>
 Description: 'Geoms' and 'stats' for visualizing distributions using 'ggplot2', particularly tuned for
     visualizing uncertainty in a frequentist mode (using confidence distributions or bootstrap samples) or
     a Bayesian mode (using posterior samples). Provides a variety of visualization primitives, including
-    points with multiple uncertainty intervals, eye plots (intervals plus densities), grandient plots,
+    points with multiple uncertainty intervals, eye plots (intervals plus densities), gradient plots,
     dotplots, CCDF barplots, and fit curves with multiple, arbitrary uncertainty bands.
 Depends:
     R (>= 3.5.0)

@@ -24,6 +24,7 @@ Fernandes
 Franconeri
 Fumeng
 Gah
+ge
 geoms
 ggplot
 ggproto
@@ -43,6 +44,7 @@ io
 ish
 jagsUI
 kable
+Kesar
 knitr
 Kruschke
 Kurowicka
@@ -52,6 +54,8 @@ lceil
 le
 Lewandowski
 lfloor
+lineribbon
+lineribbons
 LKJ
 lsmeans
 mathbf
@@ -85,6 +89,7 @@ stanreg
 summarization
 textrm
 tibble
+tidybayes
 tidyverse
 toc
 unevaluated
@@ -93,4 +98,5 @@ VignetteEncoding
 VignetteEngine
 VignetteIndexEntry
 Wickham
+Xie
 zenodo

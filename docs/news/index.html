@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
       </span>
     </div>
 
@@ -149,14 +149,18 @@
       <small>Source: <a href='https://github.com/mjskay/ggdist/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="ggdist-2039000" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.3.9000">
-<a href="#ggdist-2039000" class="anchor"></a>ggdist 2.0.3.9000</h1>
+    <div id="ggdist-210" class="section level1">
+<h1 class="page-header" data-toc-text="2.1.0">
+<a href="#ggdist-210" class="anchor"></a>ggdist 2.1.0</h1>
 <ul>
-<li>Initial split from tidybayes</li>
-<li>automatic orientation determination in geoms</li>
+<li>Initial split from tidybayes: ggdist now contains all stats/geoms from tidybayes (except deprecated ones), all support functions for stats/geoms (such as <code><a href="../reference/point_interval.html">point_interval()</a></code>), <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, and <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. Tidybayes will retain all other functions, and will re-export all <code>ggdist</code> functions for now.</li>
+<li>All stats and geoms now support automatic orientation determination. Thus, all <code>h</code>-suffix geoms are now deprecated. Those geoms have been left in <code>tidybayes</code> and give a deprecation warning when used; they cannot be used from <code>ggdist</code> directly.</li>
 <li>
-<code><a href="../reference/geom_interval.html">geom_interval()</a></code> and <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics in order to work better with automatic orientation detection. <code>geom_intervalh()</code> and <code>geom_pointintervalh()</code> still do, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
+<code><a href="../reference/geom_interval.html">geom_interval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics if <code>.lower</code> or <code>.upper</code> are present in the data. This allows them to work better with automatic orientation detection (and was a bad feature to have existed in the first place anyway). The deprecated <code><a href="http://mjskay.github.io/tidybayes/reference/geom_interval.html">tidybayes::geom_intervalh()</a></code> and <code><a href="http://mjskay.github.io/tidybayes/reference/geom_pointinterval.html">tidybayes::geom_pointintervalh()</a></code> still automatically set those aesthetics, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
+<li>
+<code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code>/<code><a href="../reference/stat_lineribbon.html">stat_lineribbon()</a></code> now supports a <code>step</code> argument for creating stepped lineribbons. H/T to Solomon Kurz for the suggestion.</li>
+<li>
+<code>ggdist</code> now has its own implementation of the scaled and shifted Student’s t distribution (<code><a href="../reference/student_t.html">dstudent_t()</a></code>, <code><a href="../reference/student_t.html">qstudent_t()</a></code>, etc), since it is very useful for visualizing confidence distributions.</li>
 </ul>
 </div>
   </div>
