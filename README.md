@@ -12,16 +12,17 @@ status](http://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/
 
 ![Preview of ggdist plots](man/figures/preview.png)
 
-`ggdist` is an R package that provides a flexible set of `ggplot2` geoms
-and stats designed especially for visualizing distributions and
-uncertainty. It is designed for both frequentist and Bayesian
-uncertainty visualization, taking the view that uncertainty
-visualization can be unified through the perspective of distribution
-visualization: for frequentist models, one visualizes confidence
-distributions or bootstrap distributions (see
+[ggdist](http://mjskay.github.io/ggdist/) is an R package that provides
+a flexible set of `ggplot2` geoms and stats designed especially for
+visualizing distributions and uncertainty. It is designed for both
+frequentist and Bayesian uncertainty visualization, taking the view that
+uncertainty visualization can be unified through the perspective of
+distribution visualization: for frequentist models, one visualizes
+confidence distributions or bootstrap distributions (see
 `vignette("freq-uncertainty-vis")`); for Bayesian models, one visualizes
-probability distributions (see `vignette("tidybayes", package =
-"tidybayes")`).
+probability distributions (see the
+[tidybayes](http://mjskay.github.io/tidybayes/) package, which builds on
+top of `ggdist`).
 
 The `geom_slabinterval()` / `stat_slabinterval()` /
 `stat_dist_slabinterval()` family (see `vignette("slabinterval")`)

@@ -197,8 +197,6 @@ multiple groups in a grouped data frame).</p>
   <span class='no'>.prob</span>
 )
 
-<span class='fu'>point_intervalh</span>(<span class='no'>...</span>)
-
 <span class='fu'>qi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
@@ -209,39 +207,21 @@ multiple groups in a grouped data frame).</p>
 
 <span class='fu'>mean_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
-<span class='fu'>mean_qih</span>(<span class='no'>...</span>)
-
 <span class='fu'>median_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
-
-<span class='fu'>median_qih</span>(<span class='no'>...</span>)
 
 <span class='fu'>mode_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
-<span class='fu'>mode_qih</span>(<span class='no'>...</span>)
-
 <span class='fu'>mean_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
-
-<span class='fu'>mean_hdih</span>(<span class='no'>...</span>)
 
 <span class='fu'>median_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
-<span class='fu'>median_hdih</span>(<span class='no'>...</span>)
-
 <span class='fu'>mode_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
-
-<span class='fu'>mode_hdih</span>(<span class='no'>...</span>)
 
 <span class='fu'>mean_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
-<span class='fu'>mean_hdcih</span>(<span class='no'>...</span>)
-
 <span class='fu'>median_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
 
-<span class='fu'>median_hdcih</span>(<span class='no'>...</span>)
-
-<span class='fu'>mode_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
-
-<span class='fu'>mode_hdcih</span>(<span class='no'>...</span>)</pre>
+<span class='fu'>mode_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -333,15 +313,6 @@ corresponding to the interval. This behavior allows <code>point_interval</code>
 and its derived functions (like <code>median_qi</code>, <code>mean_qi</code>, <code>mode_hdi</code>, etc)
 to be easily used to plot intervals in ggplot stats using methods like
 <code><a href='stat_sample_slabinterval.html'>stat_eye()</a></code>, <code><a href='stat_sample_slabinterval.html'>stat_halfeye()</a></code>, or <code><a href='https://ggplot2.tidyverse.org/reference/stat_summary.html'>stat_summary()</a></code>.</p>
-<p>The functions ending in <code>h</code> (e.g., <code>point_intervalh</code>, <code>median_qih</code>)
-behave identically to the function without the h, except that when passed a vector,
-they return a data frame with <code>x</code>/<code>xmin</code>/<code>xmax</code> instead of
-<code>y</code>/<code>ymin</code>/<code>ymax</code>. This allows them to be used as values of the
-<code>fun.data = </code> argument of <code>stat_summaryh</code>. <strong>Note:</strong> these
-functions are not necessary if you use the <code>point_interval</code>
-argument of <code>stat</code>s and <code>geom</code>s in the <code>tidybayes</code> package (e.g.
-<code><a href='stat_pointinterval.html'>stat_pointinterval()</a></code>, <code><a href='stat_sample_slabinterval.html'>stat_halfeye()</a></code>, etc), as
-these automatically adjust the function output to match their required aesthetics.</p>
 <p><code>median_qi</code>, <code>mode_hdi</code>, etc are short forms for
 <code>point_interval(..., .point = median, .interval = qi)</code>, etc.</p>
 <p><code>qi</code> yields the quantile interval (also known as the percentile interval or
