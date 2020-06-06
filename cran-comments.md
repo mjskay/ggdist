@@ -1,24 +1,31 @@
 ## Submission comments
-This is a minor submission to fix issues with tibble 3.0.0.
+This is a new submission as part of splitting tidybayes (already on CRAN) into two parts.
+The tidybayes package has grown into two related, large pieces of functionality: (1) functions
+for visualizing distributions and uncertainty, and (2) functions for manipulating posteriors
+from Bayesian models. Because the visualization functions (category 1) can also be applied to
+non-Bayesian models (and have become a large-ish API unto themselves), I created this new
+package (ggdist) to contains all of those functions. 
+
+If/when ggdist hits CRAN, I will submit a new version of tidybayes that depends on ggdist
+for the visualization functions so there is only one implementation of them across the two 
+packages. Tidybayes will re-export the visualization functions from ggdist so that existing
+code that depends on tidybayes is not affected.
 
 ## Test environments
-* Windows 10 (local), R-release 3.6.3
-* Linux (travis), R-release 3.6.2
-* Windows 10 (local), R-devel 2020-03-16 r77936
-* Windows (win-builder), R-release 3.6.3
-* Windows (win-builder), R-devel
+* Windows 10 (local), R-release 4.0.0
+* MacOS (Github), R-release 4.0.0
+* MacOS (Github), R-devel 2020-06-04 r78644
+* Linux (Github), R-release 4.0.0
+* Windows (win-builder), R-release 4.0.0
+* Solaris (rhub), R-release 4.0.0
 
 ## R CMD check results
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+> checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'Matthew Kay <mjskay@umich.edu>'
+  
+  New submission
 
 ## Downstream dependencies
-There are two downstream dependencies for this package. Both 
-have fewer errors with the new version of tidybayes.
-
-- mcp:
-  - on CRAN:     1 error , 0 warnings, 1 note  (28 failed tests)
-  - new version: 1 error , 0 warnings, 0 notes ( 4 failed tests)
-
-- trialr:
-  - on CRAN:     1 error , 1 warning , 3 notes ( 3 failed tests)
-  - new version: 0 errors, 0 warnings, 3 notes ( 0 failed tests)
+As it is a new package, there are no downstream dependencies for this package.
