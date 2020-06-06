@@ -245,7 +245,6 @@ test_that("point_interval works on vectors", {
   )
 
   expect_equal(mean_qi(x), ref)
-  expect_equal(mean_qih(x), rename(ref, x = y, xmin = ymin, xmax = ymax))
 })
 
 test_that("various point summaries and intervals give correct numbers", {

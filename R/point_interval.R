@@ -41,16 +41,6 @@ globalVariables(c("y", "ymin", "ymax"))
 #' to be easily used to plot intervals in ggplot stats using methods like
 #' [stat_eye()], [stat_halfeye()], or [stat_summary()].
 #'
-#' The functions ending in `h` (e.g., `point_intervalh`, `median_qih`)
-#' behave identically to the function without the h, except that when passed a vector,
-#' they return a data frame with `x`/`xmin`/`xmax` instead of
-#' `y`/`ymin`/`ymax`. This allows them to be used as values of the
-#' `fun.data = ` argument of `stat_summaryh`. **Note:** these
-#' functions are not necessary if you use the `point_interval`
-#' argument of `stat`s and `geom`s in the `tidybayes` package (e.g.
-#' [stat_pointinterval()], [stat_halfeye()], etc), as
-#' these automatically adjust the function output to match their required aesthetics.
-#'
 #' `median_qi`, `mode_hdi`, etc are short forms for
 #' `point_interval(..., .point = median, .interval = qi)`, etc.
 #'
@@ -300,10 +290,6 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   }
 }
 
-#' @rdname point_interval
-#' @export
-point_intervalh = flip_aes(point_interval)
-
 #' @importFrom stats quantile
 #' @export
 #' @rdname point_interval
@@ -377,16 +363,8 @@ mean_qi = function(.data, ..., .width = .95)
 
 #' @export
 #' @rdname point_interval
-mean_qih = flip_aes(mean_qi)
-
-#' @export
-#' @rdname point_interval
 median_qi = function(.data, ..., .width = .95)
   point_interval(.data, ..., .width = .width, .point = median, .interval = qi)
-
-#' @export
-#' @rdname point_interval
-median_qih = flip_aes(median_qi)
 
 #' @export
 #' @rdname point_interval
@@ -395,16 +373,8 @@ mode_qi = function(.data, ..., .width = .95)
 
 #' @export
 #' @rdname point_interval
-mode_qih = flip_aes(mode_qi)
-
-#' @export
-#' @rdname point_interval
 mean_hdi = function(.data, ..., .width = .95)
   point_interval(.data, ..., .width = .width, .point = mean, .interval = hdi)
-
-#' @export
-#' @rdname point_interval
-mean_hdih = flip_aes(mean_hdi)
 
 #' @export
 #' @rdname point_interval
@@ -413,16 +383,8 @@ median_hdi = function(.data, ..., .width = .95)
 
 #' @export
 #' @rdname point_interval
-median_hdih = flip_aes(median_hdi)
-
-#' @export
-#' @rdname point_interval
 mode_hdi = function(.data, ..., .width = .95)
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = hdi)
-
-#' @export
-#' @rdname point_interval
-mode_hdih = flip_aes(mode_hdi)
 
 #' @export
 #' @rdname point_interval
@@ -431,22 +393,10 @@ mean_hdci = function(.data, ..., .width = .95)
 
 #' @export
 #' @rdname point_interval
-mean_hdcih = flip_aes(mean_hdci)
-
-#' @export
-#' @rdname point_interval
 median_hdci = function(.data, ..., .width = .95)
   point_interval(.data, ..., .width = .width, .point = median, .interval = hdci)
 
 #' @export
 #' @rdname point_interval
-median_hdcih = flip_aes(median_hdci)
-
-#' @export
-#' @rdname point_interval
 mode_hdci = function(.data, ..., .width = .95)
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = hdci)
-
-#' @export
-#' @rdname point_interval
-mode_hdcih = flip_aes(mode_hdci)

@@ -4,29 +4,19 @@
 \alias{point_interval}
 \alias{point_interval.default}
 \alias{point_interval.numeric}
-\alias{point_intervalh}
 \alias{qi}
 \alias{hdi}
 \alias{Mode}
 \alias{hdci}
 \alias{mean_qi}
-\alias{mean_qih}
 \alias{median_qi}
-\alias{median_qih}
 \alias{mode_qi}
-\alias{mode_qih}
 \alias{mean_hdi}
-\alias{mean_hdih}
 \alias{median_hdi}
-\alias{median_hdih}
 \alias{mode_hdi}
-\alias{mode_hdih}
 \alias{mean_hdci}
-\alias{mean_hdcih}
 \alias{median_hdci}
-\alias{median_hdcih}
 \alias{mode_hdci}
-\alias{mode_hdcih}
 \title{Point and interval summaries for tidy data frames of draws from distributions}
 \usage{
 point_interval(
@@ -65,8 +55,6 @@ point_interval(
   .prob
 )
 
-point_intervalh(...)
-
 qi(x, .width = 0.95, .prob, na.rm = FALSE)
 
 hdi(x, .width = 0.95, .prob, na.rm = FALSE)
@@ -77,39 +65,21 @@ hdci(x, .width = 0.95, na.rm = FALSE)
 
 mean_qi(.data, ..., .width = 0.95)
 
-mean_qih(...)
-
 median_qi(.data, ..., .width = 0.95)
-
-median_qih(...)
 
 mode_qi(.data, ..., .width = 0.95)
 
-mode_qih(...)
-
 mean_hdi(.data, ..., .width = 0.95)
-
-mean_hdih(...)
 
 median_hdi(.data, ..., .width = 0.95)
 
-median_hdih(...)
-
 mode_hdi(.data, ..., .width = 0.95)
-
-mode_hdih(...)
 
 mean_hdci(.data, ..., .width = 0.95)
 
-mean_hdcih(...)
-
 median_hdci(.data, ..., .width = 0.95)
 
-median_hdcih(...)
-
 mode_hdci(.data, ..., .width = 0.95)
-
-mode_hdcih(...)
 }
 \arguments{
 \item{.data}{Data frame (or grouped data frame as returned by \code{\link[=group_by]{group_by()}})
@@ -184,16 +154,6 @@ corresponding to the interval. This behavior allows \code{point_interval}
 and its derived functions (like \code{median_qi}, \code{mean_qi}, \code{mode_hdi}, etc)
 to be easily used to plot intervals in ggplot stats using methods like
 \code{\link[=stat_eye]{stat_eye()}}, \code{\link[=stat_halfeye]{stat_halfeye()}}, or \code{\link[=stat_summary]{stat_summary()}}.
-
-The functions ending in \code{h} (e.g., \code{point_intervalh}, \code{median_qih})
-behave identically to the function without the h, except that when passed a vector,
-they return a data frame with \code{x}/\code{xmin}/\code{xmax} instead of
-\code{y}/\code{ymin}/\code{ymax}. This allows them to be used as values of the
-\verb{fun.data = } argument of \code{stat_summaryh}. \strong{Note:} these
-functions are not necessary if you use the \code{point_interval}
-argument of \code{stat}s and \code{geom}s in the \code{tidybayes} package (e.g.
-\code{\link[=stat_pointinterval]{stat_pointinterval()}}, \code{\link[=stat_halfeye]{stat_halfeye()}}, etc), as
-these automatically adjust the function output to match their required aesthetics.
 
 \code{median_qi}, \code{mode_hdi}, etc are short forms for
 \code{point_interval(..., .point = median, .interval = qi)}, etc.
