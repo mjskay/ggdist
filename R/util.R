@@ -1,4 +1,4 @@
-# Utility functions for tidybayes
+# Utility functions for ggdist
 #
 # Author: mjskay
 ###############################################################################
@@ -60,7 +60,7 @@ all_names = function(x) {
       "\nIn ", fun, "(): The `", old_name, "` argument is a deprecated alias for `",
       new_name, "`.\n",
       "Use the `", new_name, "` argument instead.\n",
-      "See help(\"tidybayes-deprecated\").\n",
+      "See help(\"tidybayes-deprecated\") or help(\"ggdist-deprecated\").\n",
 
       call. = FALSE
     )

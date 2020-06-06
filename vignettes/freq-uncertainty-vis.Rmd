@@ -67,7 +67,7 @@ options(width = 120)
 
 ## Point estimates
 
-We'll start with an ordinary least squares (OLS) linear regression analysis of the simple `ABC` dataset used in `vignette("tidybayes", package = "tidybayes")`:
+We'll start with an ordinary least squares (OLS) linear regression analysis of this simple dataset:
 
 ```{r}
 set.seed(5)

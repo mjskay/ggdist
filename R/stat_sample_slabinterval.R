@@ -249,6 +249,10 @@ stat_sample_slabinterval = function(
   )
 }
 
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
 StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
   extra_params = c(
     StatSlabinterval$extra_params,

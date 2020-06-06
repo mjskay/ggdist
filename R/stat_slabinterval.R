@@ -135,6 +135,10 @@ stat_slabinterval = function(
   )
 }
 
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
 StatSlabinterval = ggproto("StatSlabinterval", Stat,
   default_aes = aes(
     datatype = "slab",

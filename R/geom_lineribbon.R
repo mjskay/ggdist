@@ -107,7 +107,7 @@ draw_key_lineribbon = function(data, params, size) {
   }
 }
 
-#' @rdname tidybayes-ggproto
+#' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @importFrom plyr dlply ddply

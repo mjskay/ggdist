@@ -274,6 +274,10 @@ stat_dist_slabinterval = function(
   )
 }
 
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
 #' @importFrom plyr defaults
 StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_aes = defaults(aes(

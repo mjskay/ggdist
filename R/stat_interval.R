@@ -94,6 +94,10 @@ stat_interval = function(
   )
 }
 
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
 StatInterval = ggproto("StatInterval", StatPointinterval,
   default_aes = defaults(aes(
     color = stat(level)

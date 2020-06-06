@@ -68,7 +68,7 @@ reference:
   - from_ggmcmc_names
 
 - title: GGplot scales
-  desc:  Scales for custom aesthetics used by tidybayes geoms and stats
+  desc:  Scales for custom aesthetics used by ggdist geoms and stats
   contents:
   - scales
 

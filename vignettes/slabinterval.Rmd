@@ -367,7 +367,7 @@ priors %>%
   stat_dist_halfeye() +
   labs(
     title = "stat_dist_halfeye()",
-    subtitle = "with brms::prior() and tidybayes::parse_dist() to visualize priors",
+    subtitle = "with brms::prior() and ggdist::parse_dist() to visualize priors",
     x = NULL
   )
 ```

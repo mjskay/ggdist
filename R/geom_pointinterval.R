@@ -100,7 +100,7 @@ geom_pointinterval = function(
   )
 }
 
-#' @rdname tidybayes-ggproto
+#' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @import ggplot2

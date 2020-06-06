@@ -98,7 +98,7 @@ geom_interval = function(
   )
 }
 
-#' @rdname tidybayes-ggproto
+#' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @import ggplot2

@@ -96,6 +96,10 @@ stat_pointinterval = function(
   )
 }
 
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
 StatPointinterval = ggproto("StatPointinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     datatype = "interval"

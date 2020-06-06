@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-#' Simple, light ggplot2 theme for ggdist
+#' Simple, light ggplot2 theme for ggdist and tidybayes
 #'
 #' A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.
 #'
@@ -13,6 +13,8 @@
 #' It is currently based on [ggplot2::theme_light()].
 #'
 #' A word of warning: this theme may (and very likely will) change in the future as I tweak it to my taste.
+#'
+#' `theme_ggdist()` and `theme_tidybayes()` are aliases.
 #'
 #' @author Matthew Kay
 #' @seealso [ggplot2::theme()], [ggplot2::theme_set()]
@@ -37,6 +39,10 @@ theme_ggdist = function() {
     strip.background = element_rect(fill = "gray90")
   )
 }
+
+#' @rdname theme_ggdist
+#' @export
+theme_tidybayes = theme_ggdist
 
 #' @rdname theme_ggdist
 #' @export

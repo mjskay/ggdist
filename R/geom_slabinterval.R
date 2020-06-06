@@ -390,6 +390,10 @@ layer_geom_slabinterval = function(
   }
 }
 
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
 GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   default_aes = aes(
     # default datatype is slab (other valid value is "interval" for points/intervals)
@@ -774,6 +778,11 @@ geom_slab = function(
     )
   )
 }
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @import ggplot2
+#' @export
 GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
   default_key_aes = defaults(aes(
     size = 1,

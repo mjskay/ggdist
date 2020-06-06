@@ -367,6 +367,11 @@ geom_dotsinterval = function(
     )
   )
 }
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @import ggplot2
+#' @export
 GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   default_aes = defaults(aes(
     slab_shape = NULL
@@ -507,6 +512,11 @@ geom_dots = function(
     )
   )
 }
+#' @rdname ggdist-ggproto
+#' @format NULL
+#' @usage NULL
+#' @import ggplot2
+#' @export
 GeomDots = ggproto("GeomDots", GeomDotsinterval,
   # override these from GeomSlabinterval instead of GeomDotsinterval
   # because we want to directly change the base versions, which in geom_dots

@@ -2,12 +2,15 @@
 % Please edit documentation in R/theme_ggdist.R
 \name{theme_ggdist}
 \alias{theme_ggdist}
+\alias{theme_tidybayes}
 \alias{facet_title_left_horizontal}
 \alias{facet_title_right_horizontal}
 \alias{axis_titles_bottom_left}
-\title{Simple, light ggplot2 theme for ggdist}
+\title{Simple, light ggplot2 theme for ggdist and tidybayes}
 \usage{
 theme_ggdist()
+
+theme_tidybayes()
 
 facet_title_left_horizontal()
 
@@ -22,6 +25,8 @@ This is a relatively minimalist ggplot2 theme, intended to be used for making pu
 It is currently based on \code{\link[ggplot2:theme_light]{ggplot2::theme_light()}}.
 
 A word of warning: this theme may (and very likely will) change in the future as I tweak it to my taste.
+
+\code{theme_ggdist()} and \code{theme_tidybayes()} are aliases.
 }
 \description{
 A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.
