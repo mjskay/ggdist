@@ -61,7 +61,7 @@ theme_set(theme_ggdist())
 ```
 
 ```{r hidden_options, include=FALSE}
-options(width = 120)
+.old_options = options(width = 120)
 ```
 
 
@@ -227,4 +227,10 @@ mtcars %>%
     fill = "cyl",
     y = "mpg"
   )
+```
+
+
+
+```{r reset_options, include=FALSE}
+options(.old_options)
 ```
