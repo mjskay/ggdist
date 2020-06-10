@@ -1,15 +1,28 @@
+## Resubmission
+This is a resubmission. The following fixes were made based on initial
+feedback:
+
+- Spelling fixes in DESCRIPTION
+- References added to DESCRIPTION
+- `\value` field added to function documentation
+- `options(width = )` reset at end of vignettes
+
+Original submission comments are below.
+
 ## Submission comments
-This is a new submission as part of splitting tidybayes (already on CRAN) into two parts.
-The tidybayes package has grown into two related, large pieces of functionality: (1) functions
-for visualizing distributions and uncertainty, and (2) functions for manipulating posteriors
-from Bayesian models. Because the visualization functions (category 1) can also be applied to
-non-Bayesian models (and have become a large-ish API unto themselves), I created this new
+This is a new submission as part of splitting tidybayes (already on CRAN) into 
+two parts. The tidybayes package has grown into two related, large pieces of
+functionality: (1) functions for visualizing distributions and uncertainty, 
+and (2) functions for manipulating posteriors from Bayesian models. Because
+the visualization functions (category 1) can also be applied to non-Bayesian
+models (and have become a large-ish API unto themselves), I created this new
 package (ggdist) to contain all of those functions. 
 
-If/when ggdist hits CRAN, I will submit a new version of tidybayes (already prepared) that
-depends on ggdist for the visualization functions so there is only one implementation of those
-functions across the two packages. Tidybayes will re-export the visualization functions from
-ggdist so that existing code that depends on tidybayes is not affected.
+If/when ggdist hits CRAN, I will submit a new version of tidybayes (already
+prepared) that depends on ggdist for the visualization functions so there is
+only one implementation of those functions across the two packages. Tidybayes
+will re-export the visualization functions from ggdist so that existing code
+that depends on tidybayes is not affected.
 
 ## Test environments
 * Windows 10 (local), R-release 4.0.0
