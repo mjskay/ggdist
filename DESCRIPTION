@@ -6,12 +6,17 @@ Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu")
     )
 Maintainer: Matthew Kay <mjskay@umich.edu>
-Description: 'Geoms' and 'stats' for visualizing distributions using 'ggplot2', particularly tuned for
-    visualizing uncertainty in a frequentist mode (using confidence distributions or bootstrap samples) or
-    a Bayesian mode (using posterior samples). Provides a variety of visualization primitives, including
-    points with multiple uncertainty intervals, eye plots (intervals plus densities), gradient plots,
-    dot plots, complementary cumulative distribution function barplots, and fit curves with multiple,
-    arbitrary uncertainty bands.
+Description: Provides primitives for visualizing distributions using 'ggplot2' that are particularly tuned for
+    visualizing uncertainty in either a frequentist or Bayesian mode. Both analytical distributions (such as 
+    frequentist confidence distributions or Bayesian priors) and distributions represented as samples (such as 
+    bootstrap distributions or Bayesian posterior samples) are easily visualized. Visualization primitives include
+    but are not limited to: points with multiple uncertainty intervals, 
+    eye plots (Spiegelhalter D., 1999) <doi:10.1111/1467-985X.00120>,
+    density plots, gradient plots, dot plots (Wilkinson L., 1999) <doi:10.1080/00031305.1999.10474474>,
+    quantile dot plots (Kay M., Kola T., Hullman J., Munson S., 2016) <doi:10.1145/2858036.2858558>,
+    complementary cumulative distribution function 
+    barplots (Fernandes M., Walls L., Munson S., Hullman J., Kay M., 2018) <doi:10.1145/3173574.3173718>,
+    and fit curves with multiple uncertainty ribbons.
 Depends:
     R (>= 3.5.0)
 Imports:
