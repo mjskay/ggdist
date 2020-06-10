@@ -1,7 +1,7 @@
 Package: ggdist
 Title: Visualizations of Distributions and Uncertainty
-Version: 2.1.0
-Date: 2020-06-06
+Version: 2.1.1
+Date: 2020-06-09
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu")
     )
@@ -10,7 +10,8 @@ Description: 'Geoms' and 'stats' for visualizing distributions using 'ggplot2', 
     visualizing uncertainty in a frequentist mode (using confidence distributions or bootstrap samples) or
     a Bayesian mode (using posterior samples). Provides a variety of visualization primitives, including
     points with multiple uncertainty intervals, eye plots (intervals plus densities), gradient plots,
-    dotplots, CCDF barplots, and fit curves with multiple, arbitrary uncertainty bands.
+    dot plots, complementary cumulative distribution function barplots, and fit curves with multiple,
+    arbitrary uncertainty bands.
 Depends:
     R (>= 3.5.0)
 Imports:
