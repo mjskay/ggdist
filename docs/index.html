@@ -19,11 +19,17 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Visualizations of Distributions and Uncertainty">
-<meta property="og:description" content="Geoms and stats for visualizing distributions using ggplot2, particularly tuned for
-    visualizing uncertainty in a frequentist mode (using confidence distributions or bootstrap samples) or
-    a Bayesian mode (using posterior samples). Provides a variety of visualization primitives, including
-    points with multiple uncertainty intervals, eye plots (intervals plus densities), gradient plots,
-    dotplots, CCDF barplots, and fit curves with multiple, arbitrary uncertainty bands.">
+<meta property="og:description" content="Provides primitives for visualizing distributions using ggplot2 that are particularly tuned for
+    visualizing uncertainty in either a frequentist or Bayesian mode. Both analytical distributions (such as 
+    frequentist confidence distributions or Bayesian priors) and distributions represented as samples (such as 
+    bootstrap distributions or Bayesian posterior samples) are easily visualized. Visualization primitives include
+    but are not limited to: points with multiple uncertainty intervals, 
+    eye plots (Spiegelhalter D., 1999) &lt;doi:10.1111/1467-985X.00120&gt;,
+    density plots, gradient plots, dot plots (Wilkinson L., 1999) &lt;doi:10.1080/00031305.1999.10474474&gt;,
+    quantile dot plots (Kay M., Kola T., Hullman J., Munson S., 2016) &lt;doi:10.1145/2858036.2858558&gt;,
+    complementary cumulative distribution function 
+    barplots (Fernandes M., Walls L., Munson S., Hullman J., Kay M., 2018) &lt;doi:10.1145/3173574.3173718&gt;,
+    and fit curves with multiple uncertainty ribbons.">
 <meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -49,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
       </span>
     </div>
 
@@ -132,7 +138,7 @@
 <h2 class="hasAnchor">
 <a href="#citing-ggdist" class="anchor"></a>Citing <code>ggdist</code>
 </h2>
-<p>Matthew Kay (2020). <em>ggdist: Visualizations of Distributions and Uncertainty</em>. R package version 2.1.0, <a href="https://mjskay.github.io/ggdist/" class="uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620">10.5281/zenodo.3879620</a>.</p>
+<p>Matthew Kay (2020). <em>ggdist: Visualizations of Distributions and Uncertainty</em>. R package version 2.1.1, <a href="https://mjskay.github.io/ggdist/" class="uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620">10.5281/zenodo.3879620</a>.</p>
 </div>
 </div>
   </div>

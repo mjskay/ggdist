@@ -1,4 +1,4 @@
-# ggdist 2.1.0
+# ggdist 2.1.1
 
 * Initial split from tidybayes: ggdist now contains all stats/geoms from tidybayes (except deprecated ones),
   all support functions for stats/geoms (such as `point_interval()`), `vignette("slabinterval")`, and
