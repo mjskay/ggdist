@@ -147,7 +147,7 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' @return
 #' A data frame of the same size and column names as the input, with the `dist` and `args`
 #' columns modified on rows where `dist == "lkjcorr"` such that they represent a
-#' marginal LKJ correlation distribution with name `lkjcorr_marginal` and args having
+#' marginal LKJ correlation distribution with name `lkjcorr_marginal` and `args` having
 #' `K` equal to the input value of `K`.
 #' @seealso [parse_dist()], [lkjcorr_marginal()]
 #' @examples
