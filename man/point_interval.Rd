@@ -122,6 +122,11 @@ names used in tidybayes.}
 
 \item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
 }
+\value{
+A data frame containing point summaries and intervals, with at least one column corresponding
+to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
+width of the interval (\code{.width}), the type of point summary (\code{.point}), and the type of interval (\code{.interval}).
+}
 \description{
 Translates draws from distributions in a (possibly grouped) data frame into point and
 interval summaries (or set of point and interval summaries, if there are

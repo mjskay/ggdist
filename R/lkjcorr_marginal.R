@@ -26,6 +26,18 @@
 #' @inheritParams stats::dnorm
 #' @param eta Parameter controlling the shape of the distribution
 #' @param K Dimension of the correlation matrix. Must be greater than or equal to 2.
+#' @return
+#' - `dlkjcorr_marginal` gives the density
+#' - `plkjcorr_marginal` gives the cumulative distribution function (CDF)
+#' - `qlkjcorr_marginal` gives the quantile function (inverse CDF)
+#' - `rlkjcorr_marginal` generates random draws.
+#'
+#' The length of the result is determined by `n` for `rlkjcorr_marginal`, and is the maximum of the lengths of
+#' the numerical arguments for the other functions.
+#'
+#' The numerical arguments other than `n` are recycled to the length of the result. Only the first elements
+#' of the logical arguments are used.
+#'
 #' @references
 #'   Lewandowski, D., Kurowicka, D., & Joe, H. (2009). Generating random correlation matrices based on vines
 #'   and extended onion method. *Journal of Multivariate Analysis*, 100(9), 1989--2001.
@@ -132,6 +144,11 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' If `NULL` (the default), all `lkjcorr` distributions in `data` are modified.
 #' @param dist The name of the column containing distribution names. See [parse_dist()].
 #' @param args The name of the column containing distribution arguments. See [parse_dist()].
+#' @return
+#' A data frame of the same size and column names as the input, with the `dist` and `args`
+#' columns modified on rows where `dist == "lkjcorr"` such that they represent a
+#' marginal LKJ correlation distribution with name `lkjcorr_marginal` and args having
+#' `K` equal to the input value of `K`.
 #' @seealso [parse_dist()], [lkjcorr_marginal()]
 #' @examples
 #'

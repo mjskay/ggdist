@@ -2,7 +2,7 @@
 % Please edit documentation in R/stat_interval.R
 \name{stat_interval}
 \alias{stat_interval}
-\title{Multiple probability interval plots (ggplot stat)}
+\title{Multiple uncertainty interval plots (ggplot stat)}
 \usage{
 stat_interval(
   mapping = NULL,
@@ -108,6 +108,10 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \item{fun.data}{Deprecated. Use \code{point_interval} or \code{interval_function} instead.}
 
 \item{fun.args}{Deprecated. Use \code{interval_args} instead.}
+}
+\value{
+A \link[ggplot2:Stat]{ggplot2::Stat} representing a multiple interval geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 A combination of \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and

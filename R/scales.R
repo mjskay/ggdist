@@ -57,6 +57,9 @@
 #' after transformation.
 #' @param na.translate In discrete scales, should we show missing values?
 #' @param na.value When `na.translate` is true, what value should be shown?
+#' @return
+#' A [ggplot2::Scale] representing one of the aesthetics used to target the appearance of specific parts of composite
+#' `ggdist` geoms. Can be added to a [ggplot()] object.
 #' @name scales
 #' @author Matthew Kay
 #' @seealso [scale_color_discrete()], [scale_color_continuous()], etc.

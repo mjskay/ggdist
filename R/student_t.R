@@ -13,6 +13,18 @@
 #' @inheritParams stats::dt
 #' @param mu Location parameter (median)
 #' @param sigma Scale parameter
+#' @return
+#' - `dstudent_t` gives the density
+#' - `pstudent_t` gives the cumulative distribution function (CDF)
+#' - `qstudent_t` gives the quantile function (inverse CDF)
+#' - `rstudent_t` generates random draws.
+#'
+#' The length of the result is determined by `n` for `rstudent_t`, and is the maximum of the lengths of
+#' the numerical arguments for the other functions.
+#'
+#' The numerical arguments other than `n` are recycled to the length of the result. Only the first elements
+#' of the logical arguments are used.
+#'
 #' @seealso [parse_dist()] and parsing distribution specs and the [stat_dist_slabinterval()]
 #' family of stats for visualizing them.
 #' @examples

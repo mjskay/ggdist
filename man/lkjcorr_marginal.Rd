@@ -37,6 +37,20 @@ rlkjcorr_marginal(n, K, eta)
 \item{n}{number of observations. If \code{length(n) > 1}, the length
     is taken to be the number required.}
 }
+\value{
+\itemize{
+\item \code{dlkjcorr_marginal} gives the density
+\item \code{plkjcorr_marginal} gives the cumulative distribution function (CDF)
+\item \code{qlkjcorr_marginal} gives the quantile function (inverse CDF)
+\item \code{rlkjcorr_marginal} generates random draws.
+}
+
+The length of the result is determined by \code{n} for \code{rlkjcorr_marginal}, and is the maximum of the lengths of
+the numerical arguments for the other functions.
+
+The numerical arguments other than \code{n} are recycled to the length of the result. Only the first elements
+of the logical arguments are used.
+}
 \description{
 Marginal distribution for the correlation in a single cell from a correlation
 matrix distributed according to an LKJ distribution.

@@ -19,17 +19,18 @@ facet_title_right_horizontal()
 axis_titles_bottom_left()
 }
 \value{
-A ggplot2 theme
-
+A named list in the format of \code{\link[ggplot2:theme]{ggplot2::theme()}}
+}
+\description{
+A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.
+}
+\details{
 This is a relatively minimalist ggplot2 theme, intended to be used for making publication-ready plots.
 It is currently based on \code{\link[ggplot2:theme_light]{ggplot2::theme_light()}}.
 
 A word of warning: this theme may (and very likely will) change in the future as I tweak it to my taste.
 
 \code{theme_ggdist()} and \code{theme_tidybayes()} are aliases.
-}
-\description{
-A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.
 }
 \examples{
 

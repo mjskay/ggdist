@@ -40,6 +40,20 @@ rstudent_t(n, df, mu = 0, sigma = 1)
 \item{n}{number of observations. If \code{length(n) > 1}, the length
     is taken to be the number required.}
 }
+\value{
+\itemize{
+\item \code{dstudent_t} gives the density
+\item \code{pstudent_t} gives the cumulative distribution function (CDF)
+\item \code{qstudent_t} gives the quantile function (inverse CDF)
+\item \code{rstudent_t} generates random draws.
+}
+
+The length of the result is determined by \code{n} for \code{rstudent_t}, and is the maximum of the lengths of
+the numerical arguments for the other functions.
+
+The numerical arguments other than \code{n} are recycled to the length of the result. Only the first elements
+of the logical arguments are used.
+}
 \description{
 Density, distribution function, quantile function and random generation for the
 scaled and shifted Student's t distribution, parameterized by degrees of freedom (\code{df}),

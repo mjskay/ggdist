@@ -198,6 +198,10 @@ a vector with \code{.simple_names = TRUE} should return a data frame with variab
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 }
+\value{
+A \link[ggplot2:Geom]{ggplot2::Geom} or \link[ggplot2:Stat]{ggplot2::Stat} representing a dotplot or combined dotplot+interval geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
+}
 \description{
 Geoms and stats for creating dotplots that automatically determines a bin width that
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows

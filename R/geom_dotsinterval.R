@@ -284,6 +284,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
 #' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number
 #' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
+#' @return A [ggplot2::Geom] or [ggplot2::Stat] representing a dotplot or combined dotplot+interval geometry which can
+#' be added to a [ggplot()] object.
 #' @references
 #'   Kay, M., Kola, T., Hullman, J. R., & Munson, S. A. (2016). When (ish) is My Bus? User-centered Visualizations
 #'   of Uncertainty in Everyday, Mobile Predictive Systems. *Conference on Human Factors

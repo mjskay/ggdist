@@ -179,6 +179,8 @@ dist_interval_function = function(df, .width, trans, ...) {
 #' be determined by either `p_limits` or the scale settings.
 #' @param thickness Override for the `thickness` aesthetic in [geom_slabinterval()]: the thickness
 #' of the slab at each x / y value of the slab (depending on `orientation`).
+#' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
+#' be added to a [ggplot()] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats
 #' use by default and some of the options they have. See [stat_sample_slabinterval()]
 #' for the versions of these stats that can be used on samples.

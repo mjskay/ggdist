@@ -96,7 +96,7 @@ brms models." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
       </span>
     </div>
 
@@ -226,6 +226,18 @@ distribution names R recognizes. Unrecognized names are left as-is.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    
+<ul>
+<li><p><code>parse_dist</code> returns a data frame containing at least two columns named after the <code>dist</code> and <code>args</code>
+parameters. If the input is a data frame, the output is a data frame of the same length with those
+two columns added. If the input is a character vector or factor, the output is a two-column data frame
+with the same number of rows as the length of the input.</p></li>
+<li><p><code>r_dist_name</code> returns a character vector the same length as the input containing translations of the
+input names into distribution names R can recognize.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>parse_dist()</code> can be applied to character vectors or to a data frame + bare column name of the
@@ -247,11 +259,11 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 
 <span class='co'># parse dist can operate on strings directly...</span>
-<span class='fu'>parse_dist</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span>))</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 2</span><span>
+<span class='fu'>parse_dist</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span>))</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 2 x 2</span><span>
 #&gt;   .dist     .args     
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'>1</span><span> norm      </span><span style='color: #555555;'>&lt;list [2]&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>2</span><span> student_t </span><span style='color: #555555;'>&lt;list [3]&gt;</span><span></div><div class='input'>
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> norm      </span><span style='color: #949494;'>&lt;list [2]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> student_t </span><span style='color: #949494;'>&lt;list [3]&gt;</span><span></div><div class='input'>
 <span class='co'># ... or on columns of a data frame, where it adds the</span>
 <span class='co'># parsed specs back on as columns</span>
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>prior</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span>)) <span class='kw'>%&gt;%</span>

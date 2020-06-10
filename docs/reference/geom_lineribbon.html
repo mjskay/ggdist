@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Line + multiple probability ribbon plots (ggplot geom) — geom_lineribbon • ggdist</title>
+<title>Line + multiple uncertainty ribbon plots (ggplot geom) — geom_lineribbon • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,7 +48,7 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Line + multiple probability ribbon plots (ggplot geom) — geom_lineribbon" />
+<meta property="og:title" content="Line + multiple uncertainty ribbon plots (ggplot geom) — geom_lineribbon" />
 <meta property="og:description" content="A combination of geom_line() and geom_ribbon() with default aesthetics
 designed for use with output from point_interval()." />
 <meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
@@ -93,7 +93,7 @@ designed for use with output from point_interval()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@ designed for use with output from point_interval()." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Line + multiple probability ribbon plots (ggplot geom)</h1>
+    <h1>Line + multiple uncertainty ribbon plots (ggplot geom)</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/geom_lineribbon.R'><code>R/geom_lineribbon.R</code></a></small>
     <div class="hidden name"><code>geom_lineribbon.Rd</code></div>
     </div>
@@ -253,6 +253,10 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <a href='https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html'>ggplot2::Geom</a> representing a combined line+uncertainty ribbon geometry which can
+be added to a <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code> object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>geom_lineribbon</code> is a combination version of a <code><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line()</a></code>, and <code>geom_ribbon</code> designed for use

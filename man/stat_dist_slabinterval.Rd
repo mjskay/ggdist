@@ -191,6 +191,10 @@ of the slab at each x / y value of the slab (depending on \code{orientation}).}
 
 \item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
 }
+\value{
+A \link[ggplot2:Stat]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
+}
 \description{
 Stats for computing distribution functions (densities or CDFs) + intervals for use with
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}. Uses \code{dist} aesthetic to specify a distribution name

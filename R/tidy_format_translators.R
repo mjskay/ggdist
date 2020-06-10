@@ -36,7 +36,7 @@
 #' @param data A data frame to translate.
 #'
 #' @return A data frame with (possibly) new names in some columns, according to the
-#' translation scheme above.
+#' translation scheme described in *Details*.
 #'
 #' @author Matthew Kay
 #' @keywords manip

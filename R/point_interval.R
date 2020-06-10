@@ -91,6 +91,9 @@ globalVariables(c("y", "ymin", "ymax"))
 #' If `FALSE` (the default), any vectors to be summarized that contain `NA` will result in
 #' point and interval summaries equal to `NA`.
 #' @param x vector to summarize (for interval functions: `qi` and `hdi`)
+#' @return A data frame containing point summaries and intervals, with at least one column corresponding
+#' to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
+#' width of the interval (`.width`), the type of point summary (`.point`), and the type of interval (`.interval`).
 #' @author Matthew Kay
 #' @examples
 #'

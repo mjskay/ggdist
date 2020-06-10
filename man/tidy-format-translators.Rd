@@ -21,7 +21,7 @@ from_ggmcmc_names(data)
 }
 \value{
 A data frame with (possibly) new names in some columns, according to the
-translation scheme above.
+translation scheme described in \emph{Details}.
 }
 \description{
 These functions translate ggdist/tidybayes-style data frames to/from different data frame

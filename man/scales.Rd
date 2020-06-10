@@ -174,6 +174,10 @@ If the purpose is to zoom, use the limit argument in the coordinate system
 \item{solid}{Should the shapes be solid, \code{TRUE}, or hollow,
 \code{FALSE}?}
 }
+\value{
+A \link[ggplot2:Scale]{ggplot2::Scale} representing one of the aesthetics used to target the appearance of specific parts of composite
+\code{ggdist} geoms. Can be added to a \code{\link[=ggplot]{ggplot()}} object.
+}
 \description{
 These scales allow more specific aesthetic mappings to be made when using \code{\link[=geom_slabinterval]{geom_slabinterval()}}
 and stats/geoms based on it (like eye plots).

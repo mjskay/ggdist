@@ -4,7 +4,7 @@
 ###############################################################################
 
 
-#' Multiple probability interval plots (ggplot stat)
+#' Multiple uncertainty interval plots (ggplot stat)
 #'
 #' A combination of [stat_sample_slabinterval()] and
 #' [geom_slabinterval()] with sensible defaults.
@@ -16,6 +16,8 @@
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval", stat = StatInterval)
 #' @inheritParams stat_pointinterval
 #' @inheritParams geom_slabinterval
+#' @return A [ggplot2::Stat] representing a multiple interval geometry which can
+#' be added to a [ggplot()] object.
 #' @seealso See [geom_interval()] for the geom versions, intended
 #' for use on points and intervals that have already been summarized using a [point_interval()] function.
 #' See [stat_pointinterval()] for a similar stat intended for

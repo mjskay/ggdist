@@ -94,7 +94,7 @@ location (mu), and scale (sigma)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
       </span>
     </div>
 
@@ -215,6 +215,20 @@ location (<code>mu</code>), and scale (<code>sigma</code>).</p>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    
+<ul>
+<li><p><code>dstudent_t</code> gives the density</p></li>
+<li><p><code>pstudent_t</code> gives the cumulative distribution function (CDF)</p></li>
+<li><p><code>qstudent_t</code> gives the quantile function (inverse CDF)</p></li>
+<li><p><code>rstudent_t</code> generates random draws.</p></li>
+</ul>
+
+<p>The length of the result is determined by <code>n</code> for <code>rstudent_t</code>, and is the maximum of the lengths of
+the numerical arguments for the other functions.</p>
+<p>The numerical arguments other than <code>n</code> are recycled to the length of the result. Only the first elements
+of the logical arguments are used.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='parse_dist.html'>parse_dist()</a></code> and parsing distribution specs and the <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code>

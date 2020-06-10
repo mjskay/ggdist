@@ -4,7 +4,7 @@
 ###############################################################################
 
 
-#' Point summary + multiple probability interval plots (ggplot stat)
+#' Point summary + multiple uncertainty interval plots (ggplot stat)
 #'
 #' A combination of [stat_sample_slabinterval()] and
 #' [geom_slabinterval()] with sensible defaults.
@@ -19,6 +19,8 @@
 #' @param .prob Deprecated. Use `.width` instead.
 #' @param fun.data Deprecated. Use `point_interval` or `interval_function` instead.
 #' @param fun.args Deprecated. Use `interval_args` instead.
+#' @return A [ggplot2::Stat] representing a point+multiple uncertainty interval geometry which can
+#' be added to a [ggplot()] object.
 #' @seealso See [geom_pointinterval()] for the geom versions, intended
 #' for use on points and intervals that have already been summarized using a [point_interval()] function.
 #' See [stat_interval()] for a similar stat intended for intervals without

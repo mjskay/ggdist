@@ -9,7 +9,7 @@
 globalVariables(c(".lower", ".upper", ".width"))
 
 
-#' Multiple probability interval plots (ggplot geom)
+#' Multiple uncertainty interval plots (ggplot geom)
 #'
 #' Multiple interval geoms with default aesthetics
 #' designed for use with output from [point_interval()].
@@ -30,6 +30,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @inheritDotParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
 #' `"dodge"` can be useful if you have overlapping intervals.
+#' @return A [ggplot2::Geom] representing a multiple interval geometry which can
+#' be added to a [ggplot()] object.
 #' @author Matthew Kay
 #' @seealso See [stat_interval()] for the stat version, intended
 #' for use on samples from a distribution.

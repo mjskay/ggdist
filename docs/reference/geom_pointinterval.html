@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Point + multiple probability interval plots (ggplot geom) — geom_pointinterval • ggdist</title>
+<title>Point + multiple uncertainty interval plots (ggplot geom) — geom_pointinterval • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,7 +48,7 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Point + multiple probability interval plots (ggplot geom) — geom_pointinterval" />
+<meta property="og:title" content="Point + multiple uncertainty interval plots (ggplot geom) — geom_pointinterval" />
 <meta property="og:description" content="Combined point + multiple interval geoms with default aesthetics
 designed for use with output from point_interval().
 Wrapper around geom_slabinterval()." />
@@ -94,7 +94,7 @@ Wrapper around geom_slabinterval()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
       </span>
     </div>
 
@@ -148,7 +148,7 @@ Wrapper around geom_slabinterval()." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Point + multiple probability interval plots (ggplot geom)</h1>
+    <h1>Point + multiple uncertainty interval plots (ggplot geom)</h1>
     <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/geom_pointinterval.R'><code>R/geom_pointinterval.R</code></a></small>
     <div class="hidden name"><code>geom_pointinterval.Rd</code></div>
     </div>
@@ -282,6 +282,10 @@ those that are mapped (the default for most geoms).</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <a href='https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html'>ggplot2::Geom</a> representing a point+multiple uncertainty interval geometry which can
+be added to a <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code> object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>These geoms are wrappers around <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> with defaults designed to produce

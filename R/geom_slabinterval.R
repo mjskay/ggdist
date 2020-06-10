@@ -202,7 +202,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' point and `ymin`/`ymax` or `xmin`/`xmax` (depending on the value of `orientation`
 #' specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
 #' through the `interval_size_domain`, `interval_size_range`, and `fatten_point` parameters.
-#' These scaling factors are designed to give multiple probability intervals reasonable
+#' These scaling factors are designed to give multiple uncertainty intervals reasonable
 #' scaling at the default settings for [scale_size_continuous()].
 #'
 #' As a combination geom, this geom expects a `datatype` aesthetic specifying which part of the geom a given
@@ -275,6 +275,8 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @param show_interval Should the interval portion of the geom be drawn? Default `TRUE`.
 #' @param na.rm	If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
 #' values are silently removed.
+#' @return A [ggplot2::Geom] representing a slab or combined slab+interval geometry which can
+#' be added to a [ggplot()] object.
 #' @author Matthew Kay
 #' @seealso See [geom_lineribbon()] for a combination geom designed for fit curves plus probability bands.
 #' See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of stats

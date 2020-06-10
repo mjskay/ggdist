@@ -19,6 +19,8 @@
 #' `geom_lineribbon` and `stat_lineribbon`.
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics
 #' are mapped. `FALSE` never includes, and `TRUE` always includes.
+#' @return A [ggplot2::Stat] representing a combined line+uncertainty ribbon geometry which can
+#' be added to a [ggplot()] object.
 #' @seealso See [geom_lineribbon()] for the geom version, intended for use on points and intervals that have
 #' already been summarized using a [point_interval()] function. See [stat_pointinterval()]
 #' for a similar stat intended for point summaries and intervals.

@@ -37,6 +37,16 @@
 #'   `"normal"` is translated into `"norm"` and `"lognormal"` is translated into `"lnorm"`.
 #' @param dist_name For `r_dist_name`, a character vector of distribution names to be translated into
 #'   distribution names R recognizes. Unrecognized names are left as-is.
+#' @return
+#'
+#' - `parse_dist` returns a data frame containing at least two columns named after the `dist` and `args`
+#' parameters. If the input is a data frame, the output is a data frame of the same length with those
+#' two columns added. If the input is a character vector or factor, the output is a two-column data frame
+#' with the same number of rows as the length of the input.
+#'
+#' - `r_dist_name` returns a character vector the same length as the input containing translations of the
+#' input names into distribution names R can recognize.
+#'
 #' @seealso See [stat_dist_slabinterval()] and its shortcut stats, which can easily make use of
 #' the output of this function using the `dist` and `args` aesthetics.
 #' @examples

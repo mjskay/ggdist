@@ -96,7 +96,7 @@ corresponding intervals." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
       </span>
     </div>
 
@@ -338,6 +338,10 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <a href='https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html'>ggplot2::Geom</a> representing a slab or combined slab+interval geometry which can
+be added to a <code>ggplot()</code> object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>geom_slabinterval</code> is a flexible meta-geom that you can use directly or through a variety of "shortcut"
@@ -355,7 +359,7 @@ the distance between points on the y axis.</p>
 point and <code>ymin</code>/<code>ymax</code> or <code>xmin</code>/<code>xmax</code> (depending on the value of <code>orientation</code>
 specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
 through the <code>interval_size_domain</code>, <code>interval_size_range</code>, and <code>fatten_point</code> parameters.
-These scaling factors are designed to give multiple probability intervals reasonable
+These scaling factors are designed to give multiple uncertainty intervals reasonable
 scaling at the default settings for <code>scale_size_continuous()</code>.</p>
 <p>As a combination geom, this geom expects a <code>datatype</code> aesthetic specifying which part of the geom a given
 row in the input data corresponds to: <code>"slab"</code> or <code>"interval"</code>. However, specifying this aesthetic

@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_lineribbon.R
 \name{geom_lineribbon}
 \alias{geom_lineribbon}
-\title{Line + multiple probability ribbon plots (ggplot geom)}
+\title{Line + multiple uncertainty ribbon plots (ggplot geom)}
 \usage{
 geom_lineribbon(
   mapping = NULL,
@@ -78,6 +78,10 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+}
+\value{
+A \link[ggplot2:Geom]{ggplot2::Geom} representing a combined line+uncertainty ribbon geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 A combination of \code{\link[=geom_line]{geom_line()}} and \code{\link[=geom_ribbon]{geom_ribbon()}} with default aesthetics

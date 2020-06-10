@@ -93,7 +93,7 @@ matrix distributed according to an LKJ distribution." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
       </span>
     </div>
 
@@ -208,6 +208,20 @@ matrix distributed according to an LKJ distribution.</p>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    
+<ul>
+<li><p><code>dlkjcorr_marginal</code> gives the density</p></li>
+<li><p><code>plkjcorr_marginal</code> gives the cumulative distribution function (CDF)</p></li>
+<li><p><code>qlkjcorr_marginal</code> gives the quantile function (inverse CDF)</p></li>
+<li><p><code>rlkjcorr_marginal</code> generates random draws.</p></li>
+</ul>
+
+<p>The length of the result is determined by <code>n</code> for <code>rlkjcorr_marginal</code>, and is the maximum of the lengths of
+the numerical arguments for the other functions.</p>
+<p>The numerical arguments other than <code>n</code> are recycled to the length of the result. Only the first elements
+of the logical arguments are used.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The LKJ distribution is a distribution over correlation matrices with a single parameter, \(\eta\).

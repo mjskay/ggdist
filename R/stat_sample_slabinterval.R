@@ -143,6 +143,8 @@ sample_slab_function = function(
 #' @param outline_bars If `slab_type` is `"histogram"`, `outline_bars` determines if outlines in between
 #' the bars are drawn when the `slab_color` aesthetic is used. If `FALSE` (the default), the outline
 #' is drawn only along the tops of the bars; if `TRUE`, outlines in between bars are also drawn.
+#' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
+#' be added to a [ggplot()] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats
 #' use by default and some of the options they have. See [stat_dist_slabinterval()]
 #' for the versions of these stats that can be used on analytical distributions.

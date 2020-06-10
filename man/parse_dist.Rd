@@ -50,6 +50,16 @@ of distribution specifications.}
 \item{dist_name}{For \code{r_dist_name}, a character vector of distribution names to be translated into
 distribution names R recognizes. Unrecognized names are left as-is.}
 }
+\value{
+\itemize{
+\item \code{parse_dist} returns a data frame containing at least two columns named after the \code{dist} and \code{args}
+parameters. If the input is a data frame, the output is a data frame of the same length with those
+two columns added. If the input is a character vector or factor, the output is a two-column data frame
+with the same number of rows as the length of the input.
+\item \code{r_dist_name} returns a character vector the same length as the input containing translations of the
+input names into distribution names R can recognize.
+}
+}
 \description{
 Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
 a data frame, suitable for use with \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and its shortcut stats

@@ -7,8 +7,6 @@
 #'
 #' A simple, relatively minimalist ggplot2 theme, and some helper functions to go with it.
 #'
-#' @return A ggplot2 theme
-#'
 #' This is a relatively minimalist ggplot2 theme, intended to be used for making publication-ready plots.
 #' It is currently based on [ggplot2::theme_light()].
 #'
@@ -16,6 +14,7 @@
 #'
 #' `theme_ggdist()` and `theme_tidybayes()` are aliases.
 #'
+#' @return A named list in the format of [ggplot2::theme()]
 #' @author Matthew Kay
 #' @seealso [ggplot2::theme()], [ggplot2::theme_set()]
 #' @examples

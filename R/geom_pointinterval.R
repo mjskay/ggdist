@@ -9,7 +9,7 @@
 globalVariables(c(".lower", ".upper", ".width"))
 
 
-#' Point + multiple probability interval plots (ggplot geom)
+#' Point + multiple uncertainty interval plots (ggplot geom)
 #'
 #' Combined point + multiple interval geoms with default aesthetics
 #' designed for use with output from [point_interval()].
@@ -32,6 +32,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
 #' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
 #' those that are mapped (the default for most geoms).
+#' @return A [ggplot2::Geom] representing a point+multiple uncertainty interval geometry which can
+#' be added to a [ggplot()] object.
 #' @author Matthew Kay
 #' @seealso See [geom_slabinterval()] for the geom that these geoms wrap. All parameters of that geom are
 #' available to these geoms.

@@ -202,6 +202,10 @@ normalization (this should probably only be used with functions whose values are
 \item{thickness}{Override for the \code{thickness} aesthetic in \code{\link[=geom_slabinterval]{geom_slabinterval()}}: the thickness
 of the slab at each x / y value of the slab (depending on \code{orientation}).}
 }
+\value{
+A \link[ggplot2:Stat]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
+}
 \description{
 Stats for computing densities and CDFs + intervals from samples for use with
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}. Useful for creating eye plots, half-eye plots,

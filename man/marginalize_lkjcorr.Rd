@@ -23,6 +23,12 @@ If \code{NULL} (the default), all \code{lkjcorr} distributions in \code{data} ar
 
 \item{args}{The name of the column containing distribution arguments. See \code{\link[=parse_dist]{parse_dist()}}.}
 }
+\value{
+A data frame of the same size and column names as the input, with the \code{dist} and \code{args}
+columns modified on rows where \code{dist == "lkjcorr"} such that they represent a
+marginal LKJ correlation distribution with name \code{lkjcorr_marginal} and args having
+\code{K} equal to the input value of \code{K}.
+}
 \description{
 Turns specs for an LKJ correlation matrix distribution as returned by
 \code{\link[=parse_dist]{parse_dist()}} into specs for the marginal distribution of

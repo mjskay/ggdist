@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_interval.R
 \name{geom_interval}
 \alias{geom_interval}
-\title{Multiple probability interval plots (ggplot geom)}
+\title{Multiple uncertainty interval plots (ggplot geom)}
 \usage{
 geom_interval(
   mapping = NULL,
@@ -112,6 +112,10 @@ the actual sizes used to draw intervals).}
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+}
+\value{
+A \link[ggplot2:Geom]{ggplot2::Geom} representing a multiple interval geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 Multiple interval geoms with default aesthetics

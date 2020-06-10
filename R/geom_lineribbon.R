@@ -9,7 +9,7 @@
 globalVariables(c(".lower", ".upper", ".width"))
 
 
-#' Line + multiple probability ribbon plots (ggplot geom)
+#' Line + multiple uncertainty ribbon plots (ggplot geom)
 #'
 #' A combination of [geom_line()] and [geom_ribbon()] with default aesthetics
 #' designed for use with output from [point_interval()].
@@ -41,6 +41,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' `"horizontal"` (tidybayes had an `orientation` parameter before ggplot did, and I think the tidybayes naming
 #' scheme is more intuitive: `"x"` and `"y"` are not orientations and their mapping to orientations is, in my
 #' opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
+#' @return A [ggplot2::Geom] representing a combined line+uncertainty ribbon geometry which can
+#' be added to a [ggplot()] object.
 #' @author Matthew Kay
 #' @seealso See [stat_lineribbon()] for a version that does summarizing of samples into points and intervals
 #' within ggplot. See [geom_pointinterval()] for a similar geom intended

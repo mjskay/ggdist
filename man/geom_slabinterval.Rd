@@ -141,6 +141,10 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
+\value{
+A \link[ggplot2:Geom]{ggplot2::Geom} representing a slab or combined slab+interval geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
+}
 \description{
 This meta-geom supports drawing combinations of functions (as slabs, aka ridge plots or joy plots), points, and
 intervals. It acts as a meta-geom for many other tidybayes geoms that are wrappers around this geom, including
@@ -166,7 +170,7 @@ For the \emph{interval} portion of the geom, \code{x} and \code{y} aesthetics sp
 point and \code{ymin}/\code{ymax} or \code{xmin}/\code{xmax} (depending on the value of \code{orientation}
 specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
 through the \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point} parameters.
-These scaling factors are designed to give multiple probability intervals reasonable
+These scaling factors are designed to give multiple uncertainty intervals reasonable
 scaling at the default settings for \code{\link[=scale_size_continuous]{scale_size_continuous()}}.
 
 As a combination geom, this geom expects a \code{datatype} aesthetic specifying which part of the geom a given

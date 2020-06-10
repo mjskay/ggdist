@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_pointinterval.R
 \name{geom_pointinterval}
 \alias{geom_pointinterval}
-\title{Point + multiple probability interval plots (ggplot geom)}
+\title{Point + multiple uncertainty interval plots (ggplot geom)}
 \usage{
 geom_pointinterval(
   mapping = NULL,
@@ -108,6 +108,10 @@ opinion, backwards; but the base ggplot naming scheme is allowed for compatibili
 \item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
 to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
 those that are mapped (the default for most geoms).}
+}
+\value{
+A \link[ggplot2:Geom]{ggplot2::Geom} representing a point+multiple uncertainty interval geometry which can
+be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 Combined point + multiple interval geoms with default aesthetics
