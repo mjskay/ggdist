@@ -188,7 +188,7 @@ makeContent.dots_grob = function(x) {
 # panel drawing function -------------------------------------------------------
 
 draw_slabs_dots = function(self, s_data, panel_params, coord,
-  side, scale, orientation, justification, normalize,
+  side, scale, orientation, justification, normalize, na.rm,
   child_params
 ) {
   define_orientation_variables(orientation)
@@ -213,6 +213,9 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     define_orientation_variables(orientation)
   }
   s_data = coord$transform(s_data, panel_params)
+
+  # remove missing values
+  s_data = ggplot2::remove_missing(s_data, na.rm, x, name = "geom_dotsinterval", finite = TRUE)
 
   if (!is.na(child_params$binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space

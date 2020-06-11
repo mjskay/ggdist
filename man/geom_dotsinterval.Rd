@@ -242,6 +242,8 @@ These stats support the following aesthetics:
 }
 In addition, in their default configuration (paired with \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
+\item \code{x}
+\item \code{y}
 \item \code{slab_shape}
 \item \code{datatype}
 \item \code{alpha}
@@ -264,10 +266,8 @@ In addition, in their default configuration (paired with \code{\link[=geom_dotsi
 \item \code{slab_fill}
 \item \code{slab_alpha}
 \item \code{slab_linetype}
-\item \code{y}
 \item \code{ymin}
 \item \code{ymax}
-\item \code{x}
 \item \code{xmin}
 \item \code{xmax}
 \item \code{width}

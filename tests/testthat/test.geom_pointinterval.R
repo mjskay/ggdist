@@ -107,3 +107,24 @@ test_that("orientation detection on pointintervals works", {
   )
 
 })
+
+test_that("missing data is handled correctly", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(
+    x = c(1,NA,1),
+    xmin = c(NA,0,0),
+    xmax = c(NA,2,2),
+    y = c("a","b",NA)
+  ) %>% ggplot(aes(x=x,xmin=xmin,xmax=xmax, y=y))
+
+  expect_warning(vdiffr::expect_doppelganger("geom_pointinterval na.rm = FALSE",
+    p + geom_pointinterval(na.rm = FALSE)
+  ), "Removed 1 rows containing missing values")
+
+  vdiffr::expect_doppelganger("geom_pointinterval na.rm = TRUE",
+    p + geom_pointinterval(na.rm = TRUE)
+  )
+
+})

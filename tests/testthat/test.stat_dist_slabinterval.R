@@ -23,7 +23,7 @@ test_that("distribution eye plots work with the args aesthetic", {
     vdiffr::expect_doppelganger("vertical eye using args without na.rm",
       p + stat_dist_eye(aes(x = dist), n = 40)
     ),
-    "Removed 2 rows containing missing values"
+    "Removed 3 rows containing missing values"
   )
 
   vdiffr::expect_doppelganger("vertical eye using args",

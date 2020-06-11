@@ -30,7 +30,8 @@ Imports:
     grid,
     forcats,
     HDInterval,
-    tibble
+    tibble,
+    distributional
 Suggests:
     knitr,
     testthat,

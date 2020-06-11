@@ -60,7 +60,6 @@ test_that("stat_dist_dots[interval] works", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
-  set.seed(1234)
   p = tribble(
     ~dist,  ~args,
     "norm", list(0, 1),
@@ -82,6 +81,26 @@ test_that("stat_dist_dots[interval] works", {
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dotsintervalh",
     p + stat_dist_dotsinterval(aes(y = dist), n = 20)
+  )
+
+})
+
+test_that("stat_dist_dots works on NA data", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(
+    x = c("norm", NA, "norm"),
+    y = c("a","b", NA)
+  ) %>%
+    ggplot(aes(dist = x, y = y))
+
+  expect_warning(vdiffr::expect_doppelganger("stat_dist_dots with na.rm = FALSE",
+    p + stat_dist_dots(na.rm = FALSE)
+  ), "Removed 1 rows containing non-finite values")
+
+  vdiffr::expect_doppelganger("stat_dist_dots with na.rm = TRUE",
+    p + stat_dist_dots(na.rm = TRUE)
   )
 
 })

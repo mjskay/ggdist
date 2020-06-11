@@ -42,7 +42,7 @@ dots_dist_slab_function = function(
   df, input, quantiles = 100, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
+    if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.input = NA, .value = NA))
     }
 
@@ -50,7 +50,7 @@ dots_dist_slab_function = function(
       list(p = ppoints(quantiles, a = 1/2)),
       args_from_aes(...)
     )
-    quantile_fun = match.fun(paste0("q", dist))
+    quantile_fun = dist_quantile_fun(dist)
     input = do.call(quantile_fun, args)
 
     data.frame(

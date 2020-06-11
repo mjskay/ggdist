@@ -23,12 +23,12 @@ args_from_aes = function(args = list(), ...) {
 #' @importFrom purrr pmap_dfr
 dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
   pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
+    if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.lower = NA, .upper = NA))
     }
 
     args = args_from_aes(...)
-    quantile_fun = match.fun(paste0("q", dist))
+    quantile_fun = dist_quantile_fun(dist)
     limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
 
     data.frame(
@@ -59,14 +59,14 @@ dist_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
+    if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.input = NA, .value = NA))
     }
 
     args = args_from_aes(...)
     dist_fun = switch(slab_type,
       pdf = {
-        pdf = match.fun(paste0("d", dist))
+        pdf = dist_pdf(dist)
         if (trans$name == "identity") {
           pdf
         } else {
@@ -74,13 +74,13 @@ dist_slab_function = function(
           function(x, ...) transform_pdf(pdf, trans$transform(x), trans, g_inverse_at_y = x, ...)
         }
       },
-      cdf = match.fun(paste0("p", dist)),
+      cdf = dist_cdf(dist),
       ccdf = {
-        cdf = match.fun(paste0("p", dist));
+        cdf = dist_cdf(dist)
         function (...) 1 - cdf(...)
       }
     )
-    quantile_fun = match.fun(paste0("q", dist))
+    quantile_fun = dist_quantile_fun(dist)
 
     data.frame(
       .input = input,
@@ -92,12 +92,12 @@ dist_slab_function = function(
 #' @importFrom purrr pmap_dfr
 dist_interval_function = function(df, .width, trans, ...) {
   pmap_dfr(df, function(dist, ...) {
-    if (is.na(dist)) {
+    if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
     }
 
     args = args_from_aes(...)
-    quantile_fun = match.fun(paste0("q", dist))
+    quantile_fun = dist_quantile_fun(dist)
 
     intervals = map_dfr(.width, function(w) {
       quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
@@ -111,6 +111,19 @@ dist_interval_function = function(df, .width, trans, ...) {
     })
   })
 }
+
+
+dist_function = function(dist, prefix, fun) UseMethod("dist_function")
+dist_function.default = function(dist, prefix, fun) {
+  stop("stat_dist_slabinterval does not support objects of type ", deparse0(class(dist)))
+}
+dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
+dist_function.distribution = function(dist, prefix, fun) function(...) fun(dist, ...)
+dist_function.dist_default = dist_function.distribution
+
+dist_pdf = function(dist) dist_function(dist, "d", density)
+dist_cdf = function(dist) dist_function(dist, "p", distributional::cdf)
+dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 
 
 # stat_dist_slabinterval --------------------------------------------------
@@ -345,7 +358,9 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
 
     # ignore unknown distributions (with a warning)
-    data$dist = check_dist_name(data$dist)
+    if (is.character(data$dist) || is.factor(data$dist)) {
+      data$dist = check_dist_name(data$dist)
+    }
 
     if (self$group_by_dist) {
       # need to treat dist *and* args as grouping variables (else things will break)

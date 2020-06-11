@@ -41,7 +41,7 @@ rescale_slab_thickness = function(s_data, side, scale, orientation, justificatio
 }
 
 draw_slabs = function(self, s_data, panel_params, coord,
-  side, scale, orientation, justification, normalize,
+  side, scale, orientation, justification, normalize, na.rm,
   child_params
 ) {
   define_orientation_variables(orientation)
@@ -451,8 +451,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     slab_colour = NA
   ),
 
+  required_aes = c("x|y"),
+
   optional_aes = c(
-    "y", "ymin", "ymax", "x", "xmin", "xmax", "width", "height", "thickness"
+    "ymin", "ymax", "xmin", "xmax", "width", "height", "thickness"
   ),
 
   override_slab_aesthetics = override_slab_aesthetics,
@@ -612,7 +614,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       if (nrow(s_data) > 0) {
         self$draw_slabs(s_data, panel_params, coord,
           side, scale, orientation, justification, normalize,
-          child_params
+          na.rm, child_params
         )
       }
     }
