@@ -363,12 +363,13 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     }
 
     if (self$group_by_dist) {
-      # need to treat dist *and* args as grouping variables (else things will break)
-      group_cols = intersect(c("dist", "args", paste0("arg", 1:9), "group"), names(data))
-      # need to do as.character() here because list columns (as in args) won't work
-      # with interaction()
-      group_data = lapply(data[,group_cols], as.character)
-      data$group = as.numeric(interaction(group_data))
+      # Need to group by rows in the data frame to draw correctly, as
+      # each output slab will need to be in its own group.
+      # First check if we are grouped by rows already (in which case leave it)
+      if (length(unique(data$group)) != nrow(data)) {
+        # need to make new groups
+        data$group = seq_len(nrow(data))
+      }
     }
 
     data

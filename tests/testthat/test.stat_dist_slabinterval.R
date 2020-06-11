@@ -23,7 +23,7 @@ test_that("distribution eye plots work with the args aesthetic", {
     vdiffr::expect_doppelganger("vertical eye using args without na.rm",
       p + stat_dist_eye(aes(x = dist), n = 40)
     ),
-    "Removed 3 rows containing missing values"
+    "Removed 2 rows containing missing values"
   )
 
   vdiffr::expect_doppelganger("vertical eye using args",
@@ -175,6 +175,21 @@ test_that("orientation detection works properly on stat_dist", {
 
   vdiffr::expect_doppelganger("stat_dist with main axis of x",
     ggplot(data.frame(), aes(x = "a", dist = "norm")) + stat_dist_slabinterval(n = 10)
+  )
+
+})
+
+test_that("auto-grouping works on stat_dist", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(
+    dist = c("norm", "norm"),
+    x = c(1,2)
+  ) %>% ggplot(aes(dist = dist, arg1 = x, y = 0))
+
+  vdiffr::expect_doppelganger("stat_dist with no grouping",
+    p + stat_dist_slab(alpha = 0.5, n = 10)
   )
 
 })
