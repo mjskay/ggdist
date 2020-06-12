@@ -684,6 +684,9 @@ priors %>%
   # we'll use a nicer palette than the default for highlighting:
   scale_fill_manual(values = c("gray75", "skyblue"))
 ```
+
+### Mashups with Correll and Gleicher-style gradients
+
 We can also take advantage of the fact that the `stat_dist_...` stats also supply `cdf` and `pdf` aesthetics to create charts make use of both the CDF and the PDF in their aesthetic mappings. For example, we could mashup [Correll & Gleicher](http://doi.org/10.1109/TVCG.2014.2346298)-style gradient plots (which fade the tails outside of the 95% interval) with violin plots by starting with an eye plot and then using the generated `cdf` aesthetic to fade the tails:
 
 ```{r correll_gradient_eye, fig.width = med_width, fig.height = small_height}

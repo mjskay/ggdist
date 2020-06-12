@@ -102,7 +102,7 @@
       <h1 data-toc-skip>Slab + interval stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-06-10</h4>
+            <h4 class="date">2020-06-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
@@ -130,6 +130,7 @@ img {
 <p>The following libraries are required to run this vignette:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">distributional</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggdist</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cowplot</span>)
@@ -594,6 +595,16 @@ img {
   <span class="co"># we'll use a nicer palette than the default for highlighting:</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="kw">values</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"gray75"</span>, <span class="st">"skyblue"</span>))</pre></body></html></div>
 <p><img src="slabinterval_files/figure-html/norm_vs_t_gradient_eye-1.png" width="648"></p>
+</div>
+<div id="mashups-with-correll-and-gleicher-style-gradients" class="section level3">
+<h3 class="hasAnchor">
+<a href="#mashups-with-correll-and-gleicher-style-gradients" class="anchor"></a>Mashups with Correll and Gleicher-style gradients</h3>
+<p>We can also take advantage of the fact that the <code>stat_dist_...</code> stats also supply <code>cdf</code> and <code>pdf</code> aesthetics to create charts make use of both the CDF and the PDF in their aesthetic mappings. For example, we could mashup <a href="http://doi.org/10.1109/TVCG.2014.2346298">Correll &amp; Gleicher</a>-style gradient plots (which fade the tails outside of the 95% interval) with violin plots by starting with an eye plot and then using the generated <code>cdf</code> aesthetic to fade the tails:</p>
+<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">priors</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">dist</span> <span class="kw">=</span> <span class="no">dist</span>, <span class="kw">args</span> <span class="kw">=</span> <span class="no">args</span>)) +
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">slab_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span>(-<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="fl">1</span> - <span class="fl">2</span>*<span class="no">cdf</span>), <span class="fl">.95</span>)))) +
+  <span class="fu"><a href="../reference/scales.html">scale_slab_alpha_continuous</a></span>(<span class="kw">guide</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<p><img src="slabinterval_files/figure-html/correll_gradient_eye-1.png" width="648"></p>
 </div>
 </div>
   </div>
