@@ -193,3 +193,20 @@ test_that("auto-grouping works on stat_dist", {
   )
 
 })
+
+test_that("pdf and cdf aesthetics work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = tribble(
+    ~dist, ~args,
+    "norm", list(0, 1),
+    "t", list(3)
+  ) %>%
+    ggplot(aes(dist = dist, args = args, fill = dist, thickness = stat(pdf), slab_alpha = stat(cdf))) +
+    scale_slab_alpha_continuous(range = c(0,1))
+
+  vdiffr::expect_doppelganger("pdf and cdf on a slabinterval",
+    p + stat_dist_slabinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99))
+  )
+})

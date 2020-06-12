@@ -302,7 +302,10 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
 \item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
 \item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
-\item \code{f}: For slabs, the output values from the slab function.
+\item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by \code{slab_type}.
+\item \code{pdf}: For slabs, the probability density function.
+\item \code{cdf}: For slabs, the cumulative distribution function.
 }
 }
 

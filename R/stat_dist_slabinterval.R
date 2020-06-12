@@ -64,27 +64,31 @@ dist_slab_function = function(
     }
 
     args = args_from_aes(...)
-    dist_fun = switch(slab_type,
-      pdf = {
-        pdf = dist_pdf(dist)
-        if (trans$name == "identity") {
-          pdf
-        } else {
-          # must transform the density according to the scale transformation
-          function(x, ...) transform_pdf(pdf, trans$transform(x), trans, g_inverse_at_y = x, ...)
-        }
-      },
-      cdf = dist_cdf(dist),
-      ccdf = {
-        cdf = dist_cdf(dist)
-        function (...) 1 - cdf(...)
-      }
+
+    #get pdf and cdf functions
+    pdf_fun = if (trans$name == "identity") {
+      dist_pdf(dist)
+    } else {
+      # must transform the density according to the scale transformation
+      function(x, ...) transform_pdf(dist_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
+    }
+    cdf_fun = dist_cdf(dist)
+
+    # calculate pdf and cdf
+    pdf = do.call(pdf_fun, c(list(quote(input)), args))
+    cdf = do.call(cdf_fun, c(list(quote(input)), args))
+
+    value = switch(slab_type,
+      pdf = pdf,
+      cdf = cdf,
+      ccdf = 1 - cdf
     )
-    quantile_fun = dist_quantile_fun(dist)
 
     data.frame(
       .input = input,
-      .value = do.call(dist_fun, c(list(quote(input)), args))
+      .value = value,
+      pdf = pdf,
+      cdf = cdf
     )
   })
 }
@@ -174,7 +178,10 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #'     For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
 #'   \item `xmin` or `ymin`: For intervals, the lower end of the interval from the interval function.
 #'   \item `xmax` or `ymax`: For intervals, the upper end of the interval from the interval function.
-#'   \item `f`: For slabs, the output values from the slab function.
+#'   \item `f`: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+#'     determined by `slab_type`.
+#'   \item `pdf`: For slabs, the probability density function.
+#'   \item `cdf`: For slabs, the cumulative distribution function.
 #' }
 #'
 #' @inheritParams stat_slabinterval

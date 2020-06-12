@@ -1,3 +1,10 @@
+# ggdist 2.1.1.9000
+
+* `stat_dist_...` geoms should now work with gganimate (#15)
+* Support for {distributional} (#14)
+* `stat_dist_...` geoms now calculate `pdf` and `cdf` columns to allow mashup geoms that involve both 
+  functions, such as Correll-style gradient plots combined with violins (#11).
+
 # ggdist 2.1.1
 
 * Initial split from tidybayes: ggdist now contains all stats/geoms from tidybayes (except deprecated ones),
