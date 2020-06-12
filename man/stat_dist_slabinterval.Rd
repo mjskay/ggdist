@@ -197,9 +197,10 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 Stats for computing distribution functions (densities or CDFs) + intervals for use with
-\code{\link[=geom_slabinterval]{geom_slabinterval()}}. Uses \code{dist} aesthetic to specify a distribution name
-and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column) to specify distribution
-arguments.
+\code{\link[=geom_slabinterval]{geom_slabinterval()}}. Uses the \code{dist} aesthetic to specify a distribution using
+objects from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional} package,
+or using distribution names and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column)
+to specify distribution arguments. See \emph{Details}.
 }
 \details{
 A highly configurable stat for generating a variety of plots that combine a "slab"
@@ -222,17 +223,26 @@ Stats include:
 \item \code{stat_dist_interval}: Interval plots
 }
 
-These stats expect a \code{dist} aesthetic to specify a distribution name
-and \code{arg1}, ... \code{arg9} aesthetics (or \code{args} as a list column) to specify distribution
-arguments. Distribution names should correspond to R functions that have \code{"p"}, \code{"q"}, and
-\code{"d"} functions; e.g. \code{"norm"} is a valid distribution name because R defines the
-\code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, and \code{\link[=dnorm]{dnorm()}} functions for Normal distributions.
+These stats expect a \code{dist} aesthetic to specify a distribution. This aesthetic
+can be used in one of two ways:
+\itemize{
+\item \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
+package, such as \code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc. Since these functions are vectorized,
+other columns can be passed directly to them in an \code{\link[=aes]{aes()}} specification; e.g.
+\code{aes(dist = dist_normal(mu, sigma))} will work if \code{mu} and \code{sigma} are columns in the
+input data frame.
+\item \code{dist} can be a character vector giving the distribution name. Then the  \code{arg1}, ... \code{arg9}
+aesthetics (or \code{args} as a list column) specify distribution arguments. Distribution names
+should correspond to R functions that have \code{"p"}, \code{"q"}, and \code{"d"} functions; e.g. \code{"norm"}
+is a valid distribution name because R defines the \code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, and \code{\link[=dnorm]{dnorm()}}
+functions for Normal distributions.
 
 See the \code{\link[=parse_dist]{parse_dist()}} function for a useful way to generate \code{dist} and \code{args}
 values from human-readable distribution specs (like \code{"normal(0,1)"}). Such specs are also
 produced by other packages (like the \code{brms::get_prior} function in brms); thus,
 \code{\link[=parse_dist]{parse_dist()}} combined with the stats described here can help you visualize the output
 of those functions.
+}
 }
 \section{Aesthetics}{
 
