@@ -210,3 +210,24 @@ test_that("pdf and cdf aesthetics work", {
     p + stat_dist_slabinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99))
   )
 })
+
+test_that("distributional objects work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = tribble(
+    ~name, ~dist,
+    "norm", dist_normal(0, 1.5),
+    "t", dist_student_t(3)
+  ) %>%
+    ggplot(aes(x = name, dist = dist))
+
+  vdiffr::expect_doppelganger("distributional objects in stat_dist_halfeye",
+    p + stat_dist_halfeye(n = 20)
+  )
+
+  vdiffr::expect_doppelganger("distributional objects in stat_dist_ccdfinterval",
+    p + stat_dist_ccdfinterval(n = 20)
+  )
+
+})
