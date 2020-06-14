@@ -8,7 +8,7 @@ status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](http
 [![CRAN
 status](http://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879621.svg)](https://doi.org/10.5281/zenodo.3879621)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
 
 ![Preview of ggdist plots](man/figures/preview.png)
 
