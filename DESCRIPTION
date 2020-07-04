@@ -43,8 +43,6 @@ Suggests:
     covr,
     gdtools,
     rmarkdown,
-    ggrepel,
-    RColorBrewer,
     png,
     pkgdown
 License: GPL (>= 3)
