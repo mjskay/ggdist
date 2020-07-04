@@ -30,8 +30,7 @@ Imports:
     forcats,
     HDInterval,
     tibble,
-    distributional,
-    posterior
+    distributional
 Suggests:
     knitr,
     testthat,
