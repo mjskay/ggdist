@@ -203,7 +203,7 @@ normalization (this should probably only be used with functions whose values are
 of the slab at each x / y value of the slab (depending on \code{orientation}).}
 }
 \value{
-A \link[ggplot2:Stat]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{

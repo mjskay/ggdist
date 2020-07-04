@@ -142,7 +142,7 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
-A \link[ggplot2:Geom]{ggplot2::Geom} representing a slab or combined slab+interval geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a slab or combined slab+interval geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{

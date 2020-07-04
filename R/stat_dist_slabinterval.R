@@ -20,9 +20,8 @@ args_from_aes = function(args = list(), ...) {
   c(args_from_dots, args)
 }
 
-#' @importFrom purrr pmap_dfr
 dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
-  pmap_dfr(df, function(dist, ...) {
+  pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.lower = NA, .upper = NA))
     }
@@ -54,11 +53,10 @@ transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) 
   f_X(g_inverse_at_y, ...) * abs(g_inverse_deriv_at_y)
 }
 
-#' @importFrom purrr pmap_dfr
 dist_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, trans = scales::identity_trans(), ...
 ) {
-  pmap_dfr(df, function(dist, ...) {
+  pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.input = NA, .value = NA))
     }
@@ -93,9 +91,9 @@ dist_slab_function = function(
   })
 }
 
-#' @importFrom purrr pmap_dfr
+#' @importFrom purrr map_dfr
 dist_interval_function = function(df, .width, trans, ...) {
-  pmap_dfr(df, function(dist, ...) {
+  pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
     }
@@ -127,7 +125,8 @@ dist_function.dist_default = dist_function.distribution
 dist_function.rvar = dist_function.distribution
 
 dist_pdf = function(dist) dist_function(dist, "d", density)
-dist_cdf = function(dist) dist_function(dist, "p", distributional::cdf)
+#' @importFrom distributional cdf
+dist_cdf = function(dist) dist_function(dist, "p", cdf)
 dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 
 
@@ -311,7 +310,6 @@ stat_dist_slabinterval = function(
 #' @format NULL
 #' @usage NULL
 #' @export
-#' @importFrom plyr defaults
 StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_aes = defaults(aes(
     dist = NULL,

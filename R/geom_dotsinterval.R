@@ -151,7 +151,7 @@ makeContent.dots_grob = function(x) {
       convertY(unit(h$point_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
       0.5
     )
-    dlply(d, "bins", function (bin_df) {
+    dlply_(d, "bins", function (bin_df) {
       bin_df[[x]] = bin_df$midpoint
 
       y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
@@ -331,7 +331,6 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   ggplot(aes(x = u_tau, y = i, fill = stat(x > 6))) +
 #'   stat_dotsinterval(quantiles = 100)
 #'
-#' @importFrom plyr dlply
 #' @importFrom rlang %||%
 #' @import grid
 #' @export

@@ -52,7 +52,7 @@ draw_slabs = function(self, s_data, panel_params, coord,
 
   # build groups for the slabs
   # must group within both group and y for the polygon and path drawing functions to work
-  slab_grobs = dlply(s_data, c("group", y), function(d) {
+  slab_grobs = dlply_(s_data, c("group", y), function(d) {
     d = d[order(d[[x]]),]
 
     slab_grob = if (!is.null(d$fill) && !all(is.na(d$fill))) {
@@ -119,7 +119,7 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
 
 
 draw_path = function(data, panel_params, coord) {
-  do.call(gList, dlply(data, "group", function(outline_data) {
+  do.call(gList, dlply_(data, "group", function(outline_data) {
     munched_path = ggplot2::coord_munch(coord, outline_data, panel_params)
     grid::polylineGrob(
       munched_path$x,
@@ -290,7 +290,6 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' # geom_slabinterval() directly.
 #'
 #' @importFrom ggplot2 GeomSegment GeomPolygon
-#' @importFrom plyr dlply
 #' @importFrom rlang %||%
 #' @export
 geom_slabinterval = function(
@@ -537,7 +536,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
           xy = c("PANEL", y),
           groups = c("PANEL", y, "group")
         )
-        data = plyr::ddply(data, normalization_groups, function(d) {
+        data = ddply_(data, normalization_groups, function(d) {
           finite_thickness = d$thickness[d$datatype == "slab" & is.finite(d$thickness)]
           if (length(finite_thickness) > 0) {
             d$thickness = d$thickness / max(finite_thickness)

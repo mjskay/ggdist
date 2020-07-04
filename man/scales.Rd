@@ -175,7 +175,7 @@ If the purpose is to zoom, use the limit argument in the coordinate system
 \code{FALSE}?}
 }
 \value{
-A \link[ggplot2:Scale]{ggplot2::Scale} representing one of the aesthetics used to target the appearance of specific parts of composite
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing one of the aesthetics used to target the appearance of specific parts of composite
 \code{ggdist} geoms. Can be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{

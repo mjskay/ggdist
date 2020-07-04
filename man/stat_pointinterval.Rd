@@ -107,7 +107,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \item{fun.args}{Deprecated. Use \code{interval_args} instead.}
 }
 \value{
-A \link[ggplot2:Stat]{ggplot2::Stat} representing a point+multiple uncertainty interval geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a point+multiple uncertainty interval geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{

@@ -20,7 +20,6 @@ Description: Provides primitives for visualizing distributions using 'ggplot2' t
 Depends:
     R (>= 3.5.0)
 Imports:
-    plyr,
     dplyr (>= 0.8.0),
     tidyr (>= 1.0.0),
     ggplot2 (>= 3.3.0),
@@ -31,7 +30,8 @@ Imports:
     forcats,
     HDInterval,
     tibble,
-    distributional
+    distributional,
+    posterior
 Suggests:
     knitr,
     testthat,
@@ -52,11 +52,12 @@ Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
 URL: http://mjskay.github.io/ggdist, https://github.com/mjskay/ggdist
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 LazyData: true
 Encoding: UTF-8
 Collate:
     "ggdist-package.R"
+    "util.R"
     "binning_methods.R"
     "data.R"
     "draw_key_slabinterval.R"
@@ -81,5 +82,4 @@ Collate:
     "student_t.R"
     "theme_ggdist.R"
     "tidy_format_translators.R"
-    "util.R"
 Roxygen: list(markdown = TRUE)

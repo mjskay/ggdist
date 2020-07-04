@@ -6,8 +6,10 @@
 # Summarise a data frame using the given function within the specified
 # groups, but keep any columns in the groups that have only one value in them
 # (i.e. columns where every value in the column is the same)
+#' @importFrom purrr map_dfr
+#' @importFrom dplyr group_split across
 summarise_by = function(data, by = "group", fun) {
-  plyr::ddply(data, by, function(d) {
+  ddply_(data, by, function(d) {
     new_d = fun(d)
     missing_names = setdiff(names(d), names(new_d))
 

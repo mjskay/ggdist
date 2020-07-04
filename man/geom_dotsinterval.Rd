@@ -199,7 +199,7 @@ depending on the value of \code{orientation}. See the \code{\link[=point_interva
 more information.}
 }
 \value{
-A \link[ggplot2:Geom]{ggplot2::Geom} or \link[ggplot2:Stat]{ggplot2::Stat} representing a dotplot or combined dotplot+interval geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} or \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a dotplot or combined dotplot+interval geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{

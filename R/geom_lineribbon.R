@@ -112,7 +112,6 @@ draw_key_lineribbon = function(data, params, size) {
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom plyr dlply ddply
 #' @importFrom purrr map map_dbl reduce
 #' @import ggplot2
 #' @export
@@ -168,11 +167,11 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
     # draw as a step function if requested
     if (step == TRUE) step = "mid"
-    if (step != FALSE) data = ddply(data, grouping_columns, stepify, x = y, direction = step)
+    if (step != FALSE) data = ddply_(data, grouping_columns, stepify, x = y, direction = step)
 
     # draw all the ribbons
     ribbon_grobs = data %>%
-      dlply(grouping_columns, function(d) {
+      dlply_(grouping_columns, function(d) {
         group_grobs = list(GeomRibbon$draw_panel(transform(d, size = NA), panel_scales, coord, flipped_aes = flipped_aes))
         list(
           width = mean(abs(d[[xmax]] - d[[xmin]])),
@@ -189,7 +188,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
     # now draw all the lines
     line_grobs = data %>%
-      dlply(grouping_columns, function(d) {
+      dlply_(grouping_columns, function(d) {
         if (!is.null(d[[x]])) {
           list(GeomLine$draw_panel(d, panel_scales, coord))
         } else {

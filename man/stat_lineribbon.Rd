@@ -106,7 +106,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \item{n}{Number of points at which to evaluate \code{slab_function}}
 }
 \value{
-A \link[ggplot2:Stat]{ggplot2::Stat} representing a combined line+uncertainty ribbon geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a combined line+uncertainty ribbon geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{

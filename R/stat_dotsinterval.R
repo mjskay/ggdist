@@ -37,11 +37,10 @@ dots_sample_slab_function = function(
 # slab functions for distributions -------------------------
 
 #' @importFrom stats ppoints
-#' @importFrom purrr pmap_dfr
 dots_dist_slab_function = function(
   df, input, quantiles = 100, trans = scales::identity_trans(), ...
 ) {
-  pmap_dfr(df, function(dist, ...) {
+  pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.input = NA, .value = NA))
     }
@@ -210,7 +209,6 @@ stat_dist_dotsinterval = function(
     )
   )
 }
-#' @importFrom plyr defaults
 StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   extra_params = c(
     StatDistSlabinterval$extra_params,

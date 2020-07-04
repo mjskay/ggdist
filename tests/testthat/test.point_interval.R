@@ -15,7 +15,7 @@ get_draws = function() {
   #observations of tau grouped by the factor ff (with levels ff_labels)
   data(RankCorr, package = "ggdist")
   rank_corr = RankCorr[[1]]
-  plyr::ldply(1:3, function(i) {
+  purrr::map_dfr(1:3, function(i) {
     data.frame(
       .chain = as.integer(1),
       .iteration = seq_len(nrow(rank_corr)),
