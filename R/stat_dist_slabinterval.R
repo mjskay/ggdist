@@ -124,6 +124,7 @@ dist_function.default = function(dist, prefix, fun) {
 dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
 dist_function.distribution = function(dist, prefix, fun) function(...) fun(dist, ...)
 dist_function.dist_default = dist_function.distribution
+dist_function.rvar = dist_function.distribution
 
 dist_pdf = function(dist) dist_function(dist, "d", density)
 dist_cdf = function(dist) dist_function(dist, "p", distributional::cdf)
