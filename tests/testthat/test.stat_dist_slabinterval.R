@@ -4,6 +4,7 @@
 ###############################################################################
 
 library(dplyr)
+library(distributional)
 
 context("stat_dist_")
 

@@ -53,8 +53,14 @@ test_that("two-parameter eye plots work", {
   vdiffr::expect_doppelganger("two-parameter (factor) vertical eye (fill)", p + stat_eye(aes(fill = y), scale = 0.5, n = 20))
 
   p = ggplot(df, aes(x = x, y = y_int))
-  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal eye", p + stat_eye(fatten_point = 3, n = 20))
-  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal half-eye (fill)", p + stat_halfeye(aes(fill = y_int), fatten_point = 3, n = 20, show.legend = c(size = FALSE)))
+  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal eye",
+    p + stat_eye(fatten_point = 3, n = 20) +
+    scale_y_discrete()
+  )
+  vdiffr::expect_doppelganger("two-parameter (numeric) horizontal half-eye (fill)",
+    p + stat_halfeye(aes(fill = y_int), fatten_point = 3, n = 20, show.legend = c(size = FALSE)) +
+    scale_y_discrete()
+  )
 
   p = ggplot(df, aes(x = y_int, y = x))
   vdiffr::expect_doppelganger("two-parameter (numeric) vertical eye", p + stat_eye(fatten_point = 3, n = 20))
