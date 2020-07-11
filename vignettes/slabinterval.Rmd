@@ -259,10 +259,16 @@ Dodging works whether geoms are horizontal or vertical.
 
 ### On analytical distributions: `stat_dist_[half]eye`
 
-The same set of (half-)eye plot stats designed for sample data described above all have corresponding stats for analytical distributions: simply use `stat_dist_` instead of `stat_` in the name. These stats use the following aesthetics to produce plots of distributions:
+The same set of (half-)eye plot stats designed for sample data described above all have corresponding stats for analytical distributions: simply use `stat_dist_` instead of `stat_` in the name. These stats accept specifications for distributions using the `dist` and `args` aesthetics in one of two ways:
+
+**Using distribution names as character vectors**: this format uses aesthetics as follows:
 
 * `dist`: the name of the distribution, following R's naming scheme. This is a string which should have `"p"`, `"q"`, and `"d"` functions defined for it: e.g., "norm" is a valid distribution name because the `pnorm()`, `qnorm()`, and `dnorm()` functions define the CDF, quantile function, and density function of the Normal distribution.
 * `args` or `arg1`, ... `arg9`: arguments for the distribution. If you use `args`, it should be a list column where each element is a list containing arguments for the distribution functions; alternatively, you can pass the arguments directly using `arg1`, ... `arg9`.
+
+**Using distribution vectors from the [distributional](https://pkg.mitchelloharawild.com/distributional/) package**: this format uses aesthetics as follows:
+
+* `dist`: a distribution vector produced by functions such as `distributional::dist_normal()`, `distributional::dist_beta()`, etc.
 
 For example, here are a variety of normal distributions describing the same data from the previous example:
 
@@ -277,7 +283,7 @@ dist_df = tribble(
 )
 ```
 
-We can visualize these distributions directly using `stat_dist_eye()`:
+We can visualize these distributions directly using `stat_dist_eye()` and the character vector input style to the `dist`, `arg1`, and `arg2` aesthetics:
 
 ```{r dist_eye_dodge}
 dist_df %>%
@@ -286,11 +292,20 @@ dist_df %>%
   ggtitle("stat_dist_eye(position = 'dodge')")
 ```
 
+Or we can use the `distributional::dist_normal()` function to construct a vector of normal distributions. This syntax is often more compact and expressive than the character-vector format above:
+
+```{r dist_eye_dodge_distributional}
+dist_df %>%
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
+  stat_dist_eye(position = "dodge") +
+  ggtitle("stat_dist_eye(position = 'dodge')")
+```
+
 This makes it easy to visualize a variety of distributions. E.g., here are some Beta distributions:
 
 ```{r beta_stacked}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
-  ggplot(aes(y = alpha, dist = "beta", arg1 = alpha, arg2 = 10)) +
+  ggplot(aes(y = alpha, dist = dist_beta(alpha, 10))) +
   stat_dist_halfeye() +
   labs(
     title = "stat_dist_halfeye()",
@@ -302,7 +317,7 @@ If you want to plot all of these on top of each other (instead of stacked), you 
 
 ```{r beta_overplotted_slabh}
 data.frame(alpha = seq(5, 100, length.out = 10)) %>%
-  ggplot(aes(y = "", dist = "beta", arg1 = alpha, arg2 = 10, color = alpha)) +
+  ggplot(aes(y = "", dist = dist_beta(alpha, 10), color = alpha)) +
   stat_dist_slab(fill = NA) +
   coord_cartesian(expand = FALSE) +
   scale_color_viridis_c() +
@@ -376,7 +391,8 @@ priors %>%
 The `stat_dist_...` family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:
 
 ```{r dist_halfeyeh_log_scale, fig.width = small_height, fig.height = small_height}
-data.frame(dist = "lnorm") %>% ggplot(aes(y = 0, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+data.frame(dist = "lnorm") %>%
+  ggplot(aes(y = 0, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
   stat_dist_halfeye() +
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 ```
@@ -507,7 +523,7 @@ By default, `stat_dist_ccdfinterval()` uses the quantiles at `p = 0.001` and `p 
 
 ```{r dist_ccdf_dodge}
 dist_df %>%
-  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
   stat_dist_ccdfinterval(position = "dodge") +
   expand_limits(y = 0) +
   ggtitle("stat_dist_ccdfinterval(position = 'dodge')") +
@@ -544,7 +560,7 @@ As with other plot types, you can also use `stat_dist_gradientinterval()` instea
 
 ```{r dist_gradient_dodge}
 dist_df %>%
-  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
   stat_dist_gradientinterval(position = "dodge") +
   labs(title = "stat_dist_gradientinterval(position = 'dodge')")
 ```
@@ -600,7 +616,7 @@ As with other plot types, you can also use `stat_dist_dots()` instead if you wis
 
 ```{r dist_dots_shape_color, fig.width = med_width, fig.height = large_height}
 dist_df %>%
-  ggplot(aes(y = group, dist = "norm", arg1 = mean, arg2 = sd, fill = stat(x < 5), shape = subgroup)) +
+  ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5), shape = subgroup)) +
   stat_dist_dots(position = "dodge", color = NA) +
   labs(title = "stat_dist_dots(aes(fill = stat(y < 5), shape = subgroup))") +
   # we'll use these shapes since they retain outlines
@@ -611,7 +627,7 @@ As with other slabinterval geoms, the `side` argument can also be used to constr
 
 ```{r dist_dots_violin, fig.width = med_width, fig.height = small_height}
 dist_df %>%
-  ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
   stat_dist_dotsinterval(position = "dodge", side = "both", slab_color = NA) +
   labs(title = "stat_dist_dotsinterval(side = 'both', slab_color = NA)") 
 ```
@@ -687,9 +703,18 @@ priors %>%
 
 ### Mashups with Correll and Gleicher-style gradients
 
-We can also take advantage of the fact that the `stat_dist_...` stats also supply `cdf` and `pdf` aesthetics to create charts make use of both the CDF and the PDF in their aesthetic mappings. For example, we could mashup [Correll & Gleicher](http://doi.org/10.1109/TVCG.2014.2346298)-style gradient plots (which fade the tails outside of the 95% interval) with violin plots by starting with an eye plot and then using the generated `cdf` aesthetic to fade the tails:
+We can also take advantage of the fact that the `stat_dist_...` stats also supply `cdf` and `pdf` aesthetics to create charts make use of both the CDF and the PDF in their aesthetic mappings. For example, we could create [Correll & Gleicher](http://doi.org/10.1109/TVCG.2014.2346298)-style gradient plots by fading the tails outside of the 95% interval in proportion to $|1 - 2F(x)|$ (where $F(x)$ is the CDF):
 
-```{r correll_gradient_eye, fig.width = med_width, fig.height = small_height}
+```{r correll_gradient, fig.width = med_width, fig.height = small_height/2}
+priors %>%
+  ggplot(aes(y = dist, dist = dist, args = args)) +
+  stat_dist_gradientinterval(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))) +
+  scale_slab_alpha_continuous(guide = FALSE)
+```
+
+We could also do a mashup of faded-tail gradients with violin plots by starting with an eye plot and then using the generated `cdf` aesthetic to fade the tails, producing plots like those in [Helske *et al.*](https://arxiv.org/abs/2002.07671):
+
+```{r helske_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
   stat_dist_eye(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))) +
