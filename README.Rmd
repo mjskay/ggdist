@@ -51,7 +51,7 @@ m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 mtcars %>%
   group_by(cyl) %>%
   expand(hp = seq(min(hp), max(hp), length.out = 101)) %>%
-  augment(m_mpg, newdata = .) %>%
+  augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   stat_dist_lineribbon(
     aes(dist = "norm", arg1 = .fitted, arg2 = .se.fit), 

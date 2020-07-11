@@ -140,14 +140,14 @@ With:
 
 - $\nu$: *degrees of freedom*, equal to `df.residual(m_ABC)`
 - $\hat\mu_c$: *location*, equal to the point estimate of the mean in condition $c$ (`.fitted` column from `broom::augment()`)
-- $\sigma_{\hat\mu_c}$: *scale*, equal to the standard error of the mean in condition $c$ (`.se.fit` column from `broom::augment()`)
+- $\sigma_{\hat\mu_c}$: *scale*, equal to the standard error of the mean in condition $c$ (`.se.fit` column from `broom::augment(..., se_fit = TRUE)`)
 
 Putting everything together, we have:
 
 ```{r}
 ABC %>%
   data_grid(condition) %>%
-  augment(m_ABC, newdata = .) %>%
+  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_halfeye(
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
@@ -163,7 +163,7 @@ Of course, this works with the entire `stat_dist_...` family. Here are gradient 
 ```{r}
 ABC %>%
   data_grid(condition) %>%
-  augment(m_ABC, newdata = .) %>%
+  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_gradientinterval(
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
@@ -176,7 +176,7 @@ Or complementary cumulative distribution function (CCDF) bar plots:
 ```{r}
 ABC %>%
   data_grid(condition) %>%
-  augment(m_ABC, newdata = .) %>%
+  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_ccdfinterval(
     aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
@@ -188,7 +188,7 @@ We can also create quantile dotplots by using the `dots` family of geoms. Quanti
 ```{r}
 ABC %>%
   data_grid(condition) %>%
-  augment(m_ABC, newdata = .) %>%
+  augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_dots(
     quantiles = 100,
@@ -212,7 +212,7 @@ Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
-  augment(m_mpg, newdata = .) %>%
+  augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   stat_dist_lineribbon(
     aes(dist = "student_t", arg1 = df.residual(m_mpg), arg2 = .fitted, arg3 = .se.fit), 
