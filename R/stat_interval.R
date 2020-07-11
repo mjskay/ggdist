@@ -35,13 +35,13 @@
 #'
 #' RankCorr_u_tau %>%
 #'   group_by(i) %>%
-#'   ggplot(aes(y = i, x = u_tau)) +
+#'   ggplot(aes(y = factor(i), x = u_tau)) +
 #'   stat_interval() +
 #'   scale_color_brewer()
 #'
 #' RankCorr_u_tau %>%
 #'   group_by(i) %>%
-#'   ggplot(aes(x = i, y = u_tau)) +
+#'   ggplot(aes(x = factor(i), y = u_tau)) +
 #'   stat_interval() +
 #'   scale_color_brewer()
 #'

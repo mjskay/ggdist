@@ -323,16 +323,26 @@ determined by \code{slab_type}.
 
 library(dplyr)
 library(ggplot2)
+library(distributional)
 
-tribble(
+dist_df = tribble(
   ~group, ~subgroup, ~mean, ~sd,
   "a",          "h",     5,   1,
   "b",          "h",     7,   1.5,
   "c",          "h",     8,   1,
   "c",          "i",     9,   1,
   "c",          "j",     7,   1
-) \%>\%
+)
+
+dist_df \%>\%
   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+  stat_dist_eye(position = "dodge")
+
+# Using functions from the distributional package (like dist_normal()) with the
+# dist aesthetic can lead to more compact/expressive specifications
+
+dist_df \%>\%
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
   stat_dist_eye(position = "dodge")
 
 # the stat_dist_... family applies a Jacobian adjustment to densities

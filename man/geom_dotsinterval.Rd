@@ -301,14 +301,14 @@ RankCorr_u_tau \%>\%
 # stat_dots can summarize quantiles, creating quantile dotplots
 
 RankCorr_u_tau \%>\%
-  ggplot(aes(x = u_tau, y = i)) +
+  ggplot(aes(x = u_tau, y = factor(i))) +
   stat_dots(quantiles = 100)
 
 # color and fill aesthetics can be mapped within the geom
 # dotsinterval adds an interval
 
 RankCorr_u_tau \%>\%
-  ggplot(aes(x = u_tau, y = i, fill = stat(x > 6))) +
+  ggplot(aes(x = u_tau, y = factor(i), fill = stat(x > 6))) +
   stat_dotsinterval(quantiles = 100)
 
 }

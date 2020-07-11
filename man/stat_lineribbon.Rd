@@ -121,6 +121,7 @@ frames of draws, and will perform the summarization using a \code{\link[=point_i
 
 library(dplyr)
 library(ggplot2)
+library(distributional)
 
 tibble(x = 1:10) \%>\%
   group_by_all() \%>\%
@@ -133,7 +134,7 @@ tibble(
   x = 1:10,
   sd = seq(1, 3, length.out = 10)
 ) \%>\%
-  ggplot(aes(x = x, dist = "norm", arg1 = x, arg2 = sd)) +
+  ggplot(aes(x = x, dist = dist_normal(x, sd))) +
   stat_dist_lineribbon() +
   scale_fill_brewer()
 

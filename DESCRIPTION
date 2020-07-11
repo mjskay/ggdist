@@ -30,6 +30,7 @@ Imports:
     forcats,
     HDInterval,
     tibble,
+    vctrs,
     distributional
 Suggests:
     knitr,

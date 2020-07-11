@@ -42,11 +42,11 @@
 #' data(RankCorr_u_tau, package = "ggdist")
 #'
 #' RankCorr_u_tau %>%
-#'   ggplot(aes(y = i, x = u_tau)) +
+#'   ggplot(aes(y = factor(i), x = u_tau)) +
 #'   stat_pointinterval(.width = c(.66, .95))
 #'
 #' RankCorr_u_tau %>%
-#'   ggplot(aes(x = i, y = u_tau)) +
+#'   ggplot(aes(x = factor(i), y = u_tau)) +
 #'   stat_pointinterval(.width = c(.66, .95))
 #'
 #' @export
