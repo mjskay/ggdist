@@ -5,12 +5,10 @@ and bugfixes (see NEWS.md).
 
 ## Test environments
 * Windows 10 (local), R-release 4.0.2
-
-* MacOS (Github), R-release 4.0.0
-* MacOS (Github), R-devel 2020-06-04 r78644
-* Linux (Github), R-release 4.0.0
-* Solaris (rhub), R-release 4.0.0
-* Windows (win-builder), R-release 4.0.0
+* MacOS (Github), R-release 4.0.2
+* MacOS (Github), R-devel 2020-07-01 r78761
+* Linux (Github), R-release 4.0.2
+* Solaris (rhub), R-release 4.0.1
 
 ## R CMD check results
 0 errors | 0 warnings | 0 notes
