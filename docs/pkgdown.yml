@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   freq-uncertainty-vis: freq-uncertainty-vis.html
   slabinterval: slabinterval.html
-last_built: 2020-06-12T20:55Z
+last_built: 2020-07-11T19:31Z
 urls:
   reference: http://mjskay.github.io/ggdist/reference
   article: http://mjskay.github.io/ggdist/articles

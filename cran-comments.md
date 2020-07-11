@@ -1,31 +1,11 @@
-## Resubmission
-This is a resubmission. The following fixes were made based on initial
-feedback:
-
-- Spelling fixes in DESCRIPTION
-- References added to DESCRIPTION
-- `\value` field added to function documentation
-- `options(width = )` reset at end of vignettes
-
-Original submission comments are below.
-
 ## Submission comments
-This is a new submission as part of splitting tidybayes (already on CRAN) into 
-two parts. The tidybayes package has grown into two related, large pieces of
-functionality: (1) functions for visualizing distributions and uncertainty, 
-and (2) functions for manipulating posteriors from Bayesian models. Because
-the visualization functions (category 1) can also be applied to non-Bayesian
-models (and have become a large-ish API unto themselves), I created this new
-package (ggdist) to contain all of those functions. 
-
-If/when ggdist hits CRAN, I will submit a new version of tidybayes (already
-prepared) that depends on ggdist for the visualization functions so there is
-only one implementation of those functions across the two packages. Tidybayes
-will re-export the visualization functions from ggdist so that existing code
-that depends on tidybayes is not affected.
+This submission fixes a WARNING on CRAN tests due to recent 
+changes in broom. It also introduces a few minor new features
+and bugfixes (see NEWS.md).
 
 ## Test environments
-* Windows 10 (local), R-release 4.0.0
+* Windows 10 (local), R-release 4.0.2
+
 * MacOS (Github), R-release 4.0.0
 * MacOS (Github), R-devel 2020-06-04 r78644
 * Linux (Github), R-release 4.0.0
@@ -33,12 +13,16 @@ that depends on tidybayes is not affected.
 * Windows (win-builder), R-release 4.0.0
 
 ## R CMD check results
-0 errors | 0 warnings | 1 note
-
-> checking CRAN incoming feasibility ... NOTE
-  Maintainer: 'Matthew Kay <mjskay@umich.edu>'
-  
-  New submission
+0 errors | 0 warnings | 0 notes
 
 ## Downstream dependencies
-As it is a new package, there are no downstream dependencies for this package.
+There are two downstream dependencies for this package. Both 
+have as many or fewer errors with the new version of ggdist.
+
+* tidybayes:
+  CRAN:        0 errors | 0 warnings | 1 note
+  New version: 0 errors | 0 warnings | 1 note
+
+* multinma:
+  CRAN:        0 errors | 0 warnings | 1 note
+  New version: 0 errors | 0 warnings | 1 note

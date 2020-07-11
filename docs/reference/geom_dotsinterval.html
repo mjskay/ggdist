@@ -97,7 +97,7 @@ geoms and stats." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
       </span>
     </div>
 
@@ -490,13 +490,13 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 <span class='co'># stat_dots can summarize quantiles, creating quantile dotplots</span>
 
 <span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>i</span>))) +
   <span class='fu'>stat_dots</span>(<span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='img'><img src='geom_dotsinterval-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># color and fill aesthetics can be mapped within the geom</span>
 <span class='co'># dotsinterval adds an interval</span>
 
 <span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>stat</a></span>(<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>6</span>))) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>i</span>), <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>stat</a></span>(<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>6</span>))) +
   <span class='fu'>stat_dotsinterval</span>(<span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='img'><img src='geom_dotsinterval-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

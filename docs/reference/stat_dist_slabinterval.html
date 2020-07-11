@@ -96,7 +96,7 @@ to specify distribution arguments. See Details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
       </span>
     </div>
 
@@ -411,7 +411,7 @@ and <em>CCDF bar plots</em> (a complementary CDF plus interval).</p>
 <p>These stats expect a <code>dist</code> aesthetic to specify a distribution. This aesthetic
 can be used in one of two ways:</p><ul>
 <li><p><code>dist</code> can be any distribution object from the <a href='https://pkg.mitchelloharawild.com/distributional/'>distributional</a>
-package, such as <code>dist_normal()</code>, <code>dist_beta()</code>, etc. Since these functions are vectorized,
+package, such as <code><a href='https://rdrr.io/pkg/distributional/man/dist_normal.html'>dist_normal()</a></code>, <code><a href='https://rdrr.io/pkg/distributional/man/dist_beta.html'>dist_beta()</a></code>, etc. Since these functions are vectorized,
 other columns can be passed directly to them in an <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code> specification; e.g.
 <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(dist = dist_normal(mu, sigma))</a></code> will work if <code>mu</code> and <code>sigma</code> are columns in the
 input data frame.</p></li>
@@ -510,17 +510,26 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>distributional</span>)
 
-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
+<span class='no'>dist_df</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
   ~<span class='no'>group</span>, ~<span class='no'>subgroup</span>, ~<span class='no'>mean</span>, ~<span class='no'>sd</span>,
   <span class='st'>"a"</span>,          <span class='st'>"h"</span>,     <span class='fl'>5</span>,   <span class='fl'>1</span>,
   <span class='st'>"b"</span>,          <span class='st'>"h"</span>,     <span class='fl'>7</span>,   <span class='fl'>1.5</span>,
   <span class='st'>"c"</span>,          <span class='st'>"h"</span>,     <span class='fl'>8</span>,   <span class='fl'>1</span>,
   <span class='st'>"c"</span>,          <span class='st'>"i"</span>,     <span class='fl'>9</span>,   <span class='fl'>1</span>,
   <span class='st'>"c"</span>,          <span class='st'>"j"</span>,     <span class='fl'>7</span>,   <span class='fl'>1</span>
-) <span class='kw'>%&gt;%</span>
+)
+
+<span class='no'>dist_df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>group</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"norm"</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='no'>sd</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>subgroup</span>)) +
   <span class='fu'>stat_dist_eye</span>(<span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodge"</span>)</div><div class='img'><img src='stat_dist_slabinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># Using functions from the distributional package (like dist_normal()) with the</span>
+<span class='co'># dist aesthetic can lead to more compact/expressive specifications</span>
+
+<span class='no'>dist_df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>group</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/distributional/man/dist_normal.html'>dist_normal</a></span>(<span class='no'>mean</span>, <span class='no'>sd</span>), <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>subgroup</span>)) +
+  <span class='fu'>stat_dist_eye</span>(<span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"dodge"</span>)</div><div class='img'><img src='stat_dist_slabinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># the stat_dist_... family applies a Jacobian adjustment to densities</span>
 <span class='co'># when plotting on transformed scales in order to plot them correctly.</span>
 <span class='co'># For example, here is a log-Normal distribution plotted on the log</span>
@@ -528,7 +537,7 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"lnorm"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>dist</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>10</span>), <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='fl'>2</span>*<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>10</span>))) +
   <span class='fu'>stat_dist_halfeye</span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='fl'>10</span>^<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(-<span class='fl'>5</span>,<span class='fl'>7</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>2</span>))</div><div class='img'><img src='stat_dist_slabinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='fl'>10</span>^<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(-<span class='fl'>5</span>,<span class='fl'>7</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>2</span>))</div><div class='img'><img src='stat_dist_slabinterval-3.png' alt='' width='700' height='433' /></div><div class='input'>
 # see vignette("slabinterval") for many more examples.
 
 </div></pre>

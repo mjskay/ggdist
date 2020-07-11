@@ -20,8 +20,8 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
+          - {os: windows-latest, r: 'devel', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: macOS-latest, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL'}
-          - {os: macOS-latest, r: 'devel', suffix: '', not_cran: 'true', vignettes: 'NULL'}
           - {os: ubuntu-16.04, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
 
     env:
