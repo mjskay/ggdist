@@ -1,0 +1,161 @@
+---
+title: "Lineribbon stats and geoms"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    df_print: kable
+vignette: >
+  %\VignetteIndexEntry{Lineribbon stats and geoms}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+img {
+  border: none;
+}
+</style>
+
+```{r chunk_options, include=FALSE}
+tiny_width = small_width = med_width = 6.75
+tiny_height = small_height = med_height = 4.5
+large_width = 8; large_height = 5.25
+
+knitr::opts_chunk$set(
+  fig.width = small_width,
+  fig.height = small_height
+)
+if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
+  knitr::opts_chunk$set(
+    dev.args = list(png = list(type = "cairo"))
+  )
+}
+```
+
+## Introduction
+  
+The following vignette is a **DRAFT** for explaining the `geom_lineribbon()` family of stats and geoms in `ggdist`. Currently it just has an example of the experimental `curve_interval()` function for calculating curvewise (joint) intervals for lineribbon plots.
+
+## Setup
+  
+The following libraries are required to run this vignette:
+  
+```{r setup, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(ggdist)
+library(ggplot2)
+library(cowplot)
+
+theme_set(theme_ggdist())
+```
+
+```{r hidden_options, include=FALSE}
+.old_options = options(width = 120)
+```
+
+
+## Curve boxplots (aka lineribbons with joint intervals)
+
+The experimental `curve_interval()` function works similarly to `point_interval()`, but calculates intervals jointly across entire curves. **It is currently available only on the Github version of ggdist.**
+
+Where `point_interval()` calculates *pointwise* intervals, or intervals *conditional* on each group, `curve_interval()` calculates *joint* or *curvewise* intervals. In the literature these are also called *curve boxplots* ([Mirzargar *et al.* 2014](https://doi.org/10.1109/TVCG.2014.2346455), [Juul *et al.* 2020](https://arxiv.org/abs/2007.05035)).
+
+An example will help illustrate the difference between the two types of intervals. Consider the following set of curves, where each curve is assumed to be a "draw" from some distribution of curves, $\mathbf{y} = f(\mathbf{x})$, where $\mathbf{x}$ and $\mathbf{y}$ are vectors:
+
+```{r curve_draws, fig.width = med_width, fig.height = med_height}
+k = 11 # number of curves
+n = 501
+df = tibble(
+    .draw = 1:k,
+    mean = seq(-5,5, length.out = k),
+    x = list(seq(-15,15,length.out = n)),
+  ) %>%
+  unnest(x) %>%
+  mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3)))
+
+df %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(aes(group = .draw), alpha=0.2)
+```
+
+If one used one of the `point_interval()` functions to summarize this curve (such as `median_qi()`, `mean_qi()`, etc), it would calculate *pointwise* intervals:
+
+```{r pointwise_ribbon, fig.width = med_width, fig.height = med_height}
+df %>%
+  group_by(x) %>%
+  median_qi(y, .width = c(.5)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+  geom_line(aes(group = .draw), alpha=0.15, data = df) +
+  scale_fill_brewer() +
+  ggtitle("50% pointwise intervals with point_interval()")
+```
+
+The 50% *pointwise* interval calculated at (say) $x = 1$ would contain 50% of the draws from $y|x=1$. At a different value of $x$, say $x = 2$, the 50% pointwise interval would also contain 50% of the draws from $y|x = 2$. However, the specific draws contained in the interval for $y|x=2$ might be *different* draws from those contained in the interval for $x|y=1$: if you trace any of the underlying curves, you will notice that each curve is included in some intervals and not included in others. Thus, the set of intervals---the ribbon---may not fully contain 50% of curves. Indeed, inspecting the above plot, the 50% ribbon contains **none** of the curves!
+
+Depending on what type of inference we care about, this might be sufficient for our purposes: maybe we are interested just in what the outcome is likely to be at a given x value (a conditional inference), but we are not interested in joint inferences (e.g., what is the shape of the curve likely to look like?). However, if we *are* interested in such joint inferences, pointwise intervals can be misleading. The shape of the median curve, for example, looks nothing like any of the possible outcomes. The interval also does not include the maximum value of *any* of the underlying curves, which might cause us to conclude (incorrectly) that a value close to 1 is unlikely, when the exact opposite is the case (every curve touches 1).
+
+One solution I like for such situations is to show spaghetti plots: just plot the underlying curves. This is a so-called *frequency framing* uncertainty visualization, and it tends to work fairly well. However, in some cases you may want a visual summary using intervals, in which case curvewise intervals could help. Using `curve_interval()` instead of `point_interval()` or `median_qi()` calculates these:
+
+```{r curvewise_ribbon, fig.width = med_width, fig.height = med_height}
+df %>%
+  group_by(x) %>%
+  curve_interval(y, .width = c(.5)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+  geom_line(aes(group = .draw), alpha=0.15, data = df) +
+  scale_fill_brewer() +
+  ggtitle("50% curvewise intervals with curve_interval()")
+```
+
+Note how the 50% *curvewise* interval now contains half of the underlying curves, and the median curve *is* one of the underlying curves (so it is more representative of the curve shape we should expect). These intervals also cover the peaks of the curves, where the pointwise intervals did not.
+
+An X% *curvewise* interval is calculated across all the curves by taking the top X% closest curves to the central curve, for some definition of "close" and "central". The `curve_interval()` function currently orders curves by mean halfspace depth, which is basically how close each curve is to the pointwise median in percentiles, on average.
+
+Given the above, let's see what more realistic curvewise intervals of the above example might look like by using a larger number of draws:
+
+```{r pointwise_curvewise, fig.width = med_width, fig.height = med_width}
+k = 1000 # number of curves
+large_df = tibble(
+    .draw = 1:k,
+    mean = seq(-5,5, length.out = k),
+    x = list(seq(-15,15,length.out = n)),
+  ) %>%
+  unnest(x) %>%
+  mutate(y = dnorm(x, mean, 3)/max(dnorm(x, mean, 3)))
+
+pointwise_plot = large_df %>%
+  group_by(x) %>%
+  median_qi(y, .width = c(.5, .8, .95)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_hline(yintercept = 1, color = "gray75", linetype = "dashed") +
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+  scale_fill_brewer() +
+  ggtitle("point_interval()")
+
+curvewise_plot = large_df %>%
+  group_by(x) %>%
+  curve_interval(y, .width = c(.5, .8, .95)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_hline(yintercept = 1, color = "gray75", linetype = "dashed") +
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+  scale_fill_brewer() +
+  ggtitle("curve_interval()")
+
+plot_grid(nrow = 2,
+  pointwise_plot, curvewise_plot
+)
+```
+
+Notice how the pointwise intervals miss out on the peaks of this distribution of curves. Even the 95% ribbon, which appears to reach up to the peaks, in fact falls slightly short. While this is a bit of a pathological example, it does demonstrate the potential shortcomings of pointwise intervals.
+
+
+```{r reset_options, include=FALSE}
+options(.old_options)
+```
