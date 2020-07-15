@@ -22,15 +22,11 @@ reference:
   desc:  Calculate point summaries and intervals on (grouped) data frames of draws
   contents:
   - point_interval
-  - qi
-  - hdi
+  - curve_interval
   - Mode
   - ends_with("hdci")
   - ends_with("hdi")
   - ends_with("qi")
-  - ends_with("hdcih")
-  - ends_with("hdih")
-  - ends_with("qih")
 
 - title: Visualizing draws
   desc:  Stats and geoms for visualizing tidy data frames of draws (e.g. sample data,

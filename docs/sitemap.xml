@@ -4,6 +4,9 @@
     <loc>http://mjskay.github.io/ggdist/index.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/curve_interval.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_dotsinterval.html</loc>
   </url>
   <url>
@@ -71,6 +74,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/articles/freq-uncertainty-vis.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/articles/lineribbon.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/articles/slabinterval.html</loc>
