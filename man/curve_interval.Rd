@@ -51,8 +51,6 @@ point and interval summaries equal to \code{NA}.}
 \item{.exclude}{A character vector of names of columns to be excluded from summarization
 if no column names are specified to be summarized. Default ignores several meta-data column
 names used in tidybayes.}
-
-\item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
 }
 \value{
 A data frame containing point summaries and intervals, with at least one column corresponding
@@ -67,6 +65,8 @@ interval summaries using a curve boxplot-inspired approach.
 TODO: insert algorithm details
 }
 \examples{
+
+# TODO
 
 }
 \author{
