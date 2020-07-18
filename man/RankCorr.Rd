@@ -21,13 +21,15 @@ RankCorr_u_tau = tidybayes::spread_draws(RankCorr, u_tau[i]))
 }
 }
 \references{
-Kay, Matthew, and Jeffrey Heer.
+Kay, Matthew, and Jeffrey Heer. (2016).
 "Beyond Weber's law: A second look at ranking visualizations of correlation."
-\emph{IEEE transactions on visualization and computer graphics} 22.1 (2016): 469-478.
+\emph{IEEE transactions on visualization and computer graphics} 22(1): 469-478.
+\doi{10.1109/TVCG.2015.2467671}
 
-Harrison, Lane, Fumeng Yang, Steven Franconeri, and Remco Chang.
+Harrison, Lane, Fumeng Yang, Steven Franconeri, and Remco Chang. (2014).
 "Ranking visualizations of correlation using Weber's law."
-\emph{IEEE transactions on visualization and computer graphics} 20.12 (2014): 1943-1952.
+\emph{IEEE transactions on visualization and computer graphics} 20(12): 1943-1952.
+\doi{10.1109/TVCG.2014.2346979}
 }
 \keyword{datasets}
 \keyword{internal}

@@ -32,6 +32,7 @@ Imports:
     HDInterval,
     tibble,
     vctrs,
+    fda,
     distributional
 Suggests:
     knitr,
