@@ -21,7 +21,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
     tidyselect,
-    dplyr (>= 0.8.0),
+    dplyr (>= 1.0.0),
     tidyr (>= 1.0.0),
     ggplot2 (>= 3.3.0),
     purrr (>= 0.2.3),
