@@ -75,13 +75,12 @@ draw_slabs = function(self, s_data, panel_params, coord,
     }
   })
 
-  # when side = "top", need to invert draw order so that overlaps happen in a sensible way
-  # (only bother doing this when scale > 1 since that's the only time it will matter)
-  if (side == "top" && scale > 1) {
-    rev(slab_grobs)
-  } else {
-    slab_grobs
-  }
+  # when side = "top" or "right", need to invert draw order so that overlaps happen in a sensible way
+  switch_side(side, orientation,
+    topright = rev(slab_grobs),
+    bottomleft = slab_grobs,
+    both = slab_grobs
+  )
 }
 
 

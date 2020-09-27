@@ -95,10 +95,20 @@ test_that("dodged eye plots work", {
     p + stat_halfeye(aes(fill = g), position = "dodge", justification = 0.5, side = "top", scale = 0.5, n = 20))
 
   vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, just = 0, top, scale = 1.5)",
-    p + stat_halfeye(aes(fill = g), position = "dodge", side = "top", scale = 1.5, n = 20))
+    p + stat_halfeye(aes(fill = g), position = "dodge", side = "top", scale = 1.5, n = 20)
+  )
 
   vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, just = 0, both, scale = 1.5)",
-    p + stat_halfeye(aes(fill = g), position = "dodge", side = "both", scale = 1.5, n = 20))
+    p + stat_halfeye(aes(fill = g), position = "dodge", side = "both", scale = 1.5, n = 20)
+  )
+
+  vdiffr::expect_doppelganger("vertical slab with dodging (3 groups, just = 0, default, scale = 1.5)",
+    p + stat_slab(aes(fill = g), position = "dodge", scale = 1.5, n = 20)
+  )
+
+  vdiffr::expect_doppelganger("vertical slab with dodging (3 groups, just = 0, bottom, scale = 1.5)",
+    p + stat_slab(aes(fill = g), position = "dodge", scale = 1.5, n = 20, side = "bottom")
+  )
 
   vdiffr::expect_doppelganger("halfeyeh with dodge (3 groups, just = 0, both, scale = 4, rev y)",
     p + stat_halfeye(aes(x = y, y = forcats::fct_rev(x), fill = g), position = "dodge", side = "top", scale = 4, slab_color = "black", n = 20)
