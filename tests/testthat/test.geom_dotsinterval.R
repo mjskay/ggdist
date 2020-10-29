@@ -5,6 +5,7 @@
 
 library(dplyr)
 library(tidyr)
+library(distributional)
 
 context("geom_dotsinterval")
 
@@ -101,6 +102,22 @@ test_that("stat_dist_dots works on NA data", {
 
   vdiffr::expect_doppelganger("stat_dist_dots with na.rm = TRUE",
     p + stat_dist_dots(na.rm = TRUE)
+  )
+
+})
+
+test_that("stat_dist_dots works on distributional objects", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(
+    x = dist_normal(0:1, 1:2),
+    y = c("a","b")
+  ) %>%
+    ggplot(aes(dist = x, y = y))
+
+  vdiffr::expect_doppelganger("stat_dist_dots with dist_normal",
+    p + stat_dist_dots()
   )
 
 })

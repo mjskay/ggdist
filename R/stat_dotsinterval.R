@@ -46,7 +46,7 @@ dots_dist_slab_function = function(
     }
 
     args = c(
-      list(p = ppoints(quantiles, a = 1/2)),
+      list(ppoints(quantiles, a = 1/2)),
       args_from_aes(...)
     )
     quantile_fun = dist_quantile_fun(dist)
