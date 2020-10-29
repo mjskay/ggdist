@@ -39,7 +39,10 @@ if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
 
 ## Introduction
   
-The following vignette is a **DRAFT** for explaining the `geom_lineribbon()` family of stats and geoms in `ggdist`. Currently it just has an example of the experimental `curve_interval()` function for calculating curvewise (joint) intervals for lineribbon plots.
+The following vignette describes the `geom_lineribbon()` family of stats and geoms in `ggdist`, a family of stats and geoms
+for creating line+ribbon plots: for example, plots with a fit line and one or more uncertainty bands. This vignette also
+describes the `curve_interval()` function for calculating curvewise (joint) intervals for lineribbon plots.
+
 
 ## Setup
   
@@ -48,8 +51,10 @@ The following libraries are required to run this vignette:
 ```{r setup, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
+library(purrr)
 library(ggdist)
 library(ggplot2)
+library(distributional)
 library(cowplot)
 
 theme_set(theme_ggdist())
@@ -60,9 +65,145 @@ theme_set(theme_ggdist())
 ```
 
 
-## Curve boxplots (aka lineribbons with joint intervals)
+## The lineribbon family
 
-The experimental `curve_interval()` function works similarly to `point_interval()`, but calculates intervals jointly across entire curves. **It is currently available only on the Github version of ggdist.**
+The lineribbon family follows the same naming scheme as the larger family of slabinterval geoms (see `vignette("slabinterval")`).
+It has three members: `geom_lineribbon()`, `stat_lineribbon()`, and `stat_dist_lineribbon()`.
+
+* `geom_lineribbon()` is meant to be used on data already summarized into points and intervals.
+* `stat_lineribbon()` is meant to be used on sample data; e.g. draws from a posterior distribution of lines/curves, a bootstrap sampling distribution of lines/curves, an ensemble distribution, or any other distribution, really. This stat computes relevant summaries (points and intervals) before forwarding the summaries to `geom_lineribbon()`.
+* `stat_dist_lineribbon()` can be used to create lineribbon geoms for analytical distributions. It takes either [distributional](https://pkg.mitchelloharawild.com/distributional/) objects or distribution names (the `dist` aesthetic) and arguments (the `args` aesthetic or `arg1`, ... `arg9` aesthetics) and compute the relevant slabs and intervals.
+
+All lineribbon geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting `orientation = "horizontal"` or `orientation = "vertical"`.
+
+
+## Lineribbons on already-summarized data
+
+The base lineribbon geometry can only be applied to already-summarized data: data frames where
+each row contains a point and the upper and lower bounds of an interval. For the purposes of
+this example, we will first look at how to generate such a data frame from a data frame
+of sample data; such data could include Bayesian posterior 
+distributions (for examples of this usage, see vignettes in [tidybayes](http://mjskay.github.io/tidybayes/)) or
+bootstrap sampling distributions. For the simple example here, we'll just generate a distribution of lines
+manually:
+
+```{r df}
+n = 5000
+
+df = tibble(
+  .draw = 1:n,
+  intercept = rnorm(n, 3, 1),
+  slope = rnorm(n, 1, 0.25),
+  x = list(-4:5),
+  y = map2(intercept, slope, ~ .x + .y * -4:5)
+) %>%
+  unnest(c(x, y))
+```
+
+`df` is a 50,000-row data frame with a sample of 5000 y values for each x value. It represents a sample
+of 5000 lines. Here is a subsample of 100 of the lines:
+
+```{r spaghetti, fig.width = med_width, fig.height = med_height}
+df %>%
+  filter(.draw %in% 1:100) %>%
+  ggplot(aes(x = x, y = y, group = .draw)) +
+  geom_line(alpha = 0.25)
+```
+
+We can summarize the data frame at each x position using `median_qi()` (or any other function in the `point_interval()` family):
+
+```{r summarized_df}
+df %>%
+  group_by(x) %>%
+  median_qi(y)
+```
+
+Given data summarized like that above, we can then construct a line+ribbon chart using `geom_lineribbon()`:
+
+```{r one_ribbon}
+df %>%
+  group_by(x) %>%
+  median_qi(y) %>%
+  ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
+  geom_lineribbon()
+```
+
+`geom_lineribbon()` automatically pulls in the `.width` column and maps it onto the
+`fill` aesthetic so that intervals of different widths get different colors. However,
+the result with just one interval is not great, as the default color scheme is
+quite dark with just one color. Let's make two changes to improve the chart:
+
+1. We will use the `.width` argument of `median_qi()` to generate multiple uncertainty bands
+(a 50%, 80%, and 95% band).
+2. We will use `scale_fill_brewer()` to get a nicer color scheme.
+
+The result looks like this:
+
+```{r geom_lineribbon, fig.width = med_width, fig.height = med_height}
+df %>%
+  group_by(x) %>%
+  median_qi(y, .width = c(.50, .80, .95)) %>%
+  ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
+  geom_lineribbon() +
+  scale_fill_brewer()
+```
+
+## Lineribbons on sample data
+
+To apply lineribbons to sample data, we can also use `stat_lineribbon()` instead of summarizing the data
+first using `median_qi()` or `point_interval()`. This function does the summarization internally for you.
+
+Taking the previous example, we can simply removing the lines that summarize the data first, and omit
+the aesthetic mappings onto `ymin` and `ymax`, which are automatically set by `stat_lineribbon()`. This
+simplifies the previous example considerably:
+
+```{r stat_lineribbon, fig.width = med_width, fig.height = med_height}
+df %>%
+  ggplot(aes(x = x, y = y)) +
+  stat_lineribbon() +
+  scale_fill_brewer()
+```
+
+The default `.width` setting of `stat_lineribbon()` is `c(.50, .80, .95)`, as can be seen in the results above. We can
+change this as well; for example:
+
+```{r stat_lineribbon_width, fig.width = med_width, fig.height = med_height}
+df %>%
+  ggplot(aes(x = x, y = y)) +
+  stat_lineribbon(.width = c(.66, .95)) +
+  scale_fill_brewer()
+```
+
+## Lineribbons on analytical distributions
+
+Lineribbons can also be applied to analytical distributions. This use case often arises with confidence distributions
+describing uncertainty in a fit line; for an example, see the end of `vignette("freq-uncertainty-vis")`. Here,
+we will look at a simpler example where we construct the distributions manually; here we'll assume some
+variable `y` that is normally distributed conditional on `x` with mean `y_mean` and standard deviation `y_sd`:
+
+```{r analytical_df}
+analytical_df = tibble(
+  x = -4:5,
+  y_mean = 3 + x,
+  y_sd = sqrt(x^2/10 + 1),
+)
+analytical_df
+```
+
+We can visualize this conditional distribution with `stat_dist_lineribbon()` using `distributional::dist_normal()`:
+
+```{r stat_dist_lineribbon}
+analytical_df %>%
+  ggplot(aes(x = x, dist = dist_normal(y_mean, y_sd))) +
+  stat_dist_lineribbon() +
+  scale_fill_brewer()
+```
+
+
+## Curve boxplots (aka lineribbons with joint intervals or curvewise intervals)
+
+The above examples all calculate *conditional* intervals, either using `point_interval()` (directly or indirectly) or
+using quantiles of an analytical distribution. However, you may not always want conditional intervals.
 
 Where `point_interval()` calculates *pointwise* intervals, or intervals *conditional* on each group, `curve_interval()` calculates *joint* or *curvewise* intervals. In the literature these are also called *curve boxplots* ([Mirzargar *et al.* 2014](https://doi.org/10.1109/TVCG.2014.2346455), [Juul *et al.* 2020](https://arxiv.org/abs/2007.05035)).
 
