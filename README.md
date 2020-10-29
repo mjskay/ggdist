@@ -33,8 +33,8 @@ bar plots, gradient plots, dotplots, and histograms:
 stats](man/figures/slabinterval_family.png)
 
 The `geom_lineribbon()` / `stat_lineribbon()` / `stat_dist_lineribbon()`
-family makes it easy to visualize fit lines with an arbitrary number of
-uncertainty bands:
+family (see `vignette("lineribbon")`) makes it easy to visualize fit
+lines with an arbitrary number of uncertainty bands:
 
 ![](man/figures/README/lineribbon-1.png)<!-- -->
 
@@ -79,6 +79,6 @@ reproduce the issue. Pull requests should be filed against the
 ## Citing `ggdist`
 
 Matthew Kay (2020). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 2.2.0,
+Uncertainty*. R package version 2.3.0,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

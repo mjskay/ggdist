@@ -229,7 +229,7 @@ mtcars %>%
   )
 ```
 
-
+For more examples of using lineribbons, see `vignette("lineribbon")`.
 
 ```{r reset_options, include=FALSE}
 options(.old_options)

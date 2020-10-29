@@ -37,7 +37,7 @@ dotplots, and histograms:
 
 ![The slabinterval family of geoms and stats](man/figures/slabinterval_family.png)
   
-The `geom_lineribbon()` / `stat_lineribbon()` / `stat_dist_lineribbon()` family makes it easy to visualize fit lines with an arbitrary 
+The `geom_lineribbon()` / `stat_lineribbon()` / `stat_dist_lineribbon()` family (see `vignette("lineribbon")`) makes it easy to visualize fit lines with an arbitrary 
 number of uncertainty bands:
   
 ```{r lineribbon, echo=FALSE, message=FALSE, warning=FALSE}
