@@ -120,6 +120,7 @@ dist_function.default = function(dist, prefix, fun) {
   stop("stat_dist_slabinterval does not support objects of type ", deparse0(class(dist)))
 }
 dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
+dist_function.factor = function(dist, prefix, fun) dist_function(as.character(dist), prefix, fun)
 dist_function.distribution = function(dist, prefix, fun) function(...) fun(dist, ...)
 dist_function.dist_default = dist_function.distribution
 dist_function.rvar = dist_function.distribution
