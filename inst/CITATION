@@ -7,6 +7,6 @@ bibentry(
   author = c(person("Matthew", "Kay")),
   year = year,
   note = note,
-  url = "http://mjskay.github.io/ggdist/",
+  url = "https://mjskay.github.io/ggdist/",
   doi = "10.5281/zenodo.3879620"
 )

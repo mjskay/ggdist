@@ -83,7 +83,7 @@ The base lineribbon geometry can only be applied to already-summarized data: dat
 each row contains a point and the upper and lower bounds of an interval. For the purposes of
 this example, we will first look at how to generate such a data frame from a data frame
 of sample data; such data could include Bayesian posterior 
-distributions (for examples of this usage, see vignettes in [tidybayes](http://mjskay.github.io/tidybayes/)) or
+distributions (for examples of this usage, see vignettes in [tidybayes](https://mjskay.github.io/tidybayes/)) or
 bootstrap sampling distributions. For the simple example here, we'll just generate a distribution of lines
 manually:
 

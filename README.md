@@ -6,13 +6,13 @@ status](https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg)](https
 [![Coverage
 status](https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg)](https://codecov.io/github/mjskay/ggdist?branch=master)
 [![CRAN
-status](http://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
+status](https://www.r-pkg.org/badges/version/ggdist)](https://cran.r-project.org/package=ggdist)
 ![Download count](https://cranlogs.r-pkg.org/badges/last-month/ggdist)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg)](https://doi.org/10.5281/zenodo.3879620)
 
 ![Preview of ggdist plots](man/figures/preview.png)
 
-[ggdist](http://mjskay.github.io/ggdist/) is an R package that provides
+[ggdist](https://mjskay.github.io/ggdist/) is an R package that provides
 a flexible set of `ggplot2` geoms and stats designed especially for
 visualizing distributions and uncertainty. It is designed for both
 frequentist and Bayesian uncertainty visualization, taking the view that
@@ -21,8 +21,8 @@ distribution visualization: for frequentist models, one visualizes
 confidence distributions or bootstrap distributions (see
 `vignette("freq-uncertainty-vis")`); for Bayesian models, one visualizes
 probability distributions (see the
-[tidybayes](http://mjskay.github.io/tidybayes/) package, which builds on
-top of `ggdist`).
+[tidybayes](https://mjskay.github.io/tidybayes/) package, which builds
+on top of `ggdist`).
 
 The `geom_slabinterval()` / `stat_slabinterval()` /
 `stat_dist_slabinterval()` family (see `vignette("slabinterval")`)
@@ -45,7 +45,7 @@ visualizing uncertainty in frequentist models (see
 Bayesian analysis.
 
 The `ggdist` geoms and stats also form a core part of the
-[tidybayes](http://mjskay.github.io/tidybayes/) package (in fact, they
+[tidybayes](https://mjskay.github.io/tidybayes/) package (in fact, they
 originally were part of `tidybayes`). For examples of the use of
 `ggdist` geoms and stats for visualizing uncertainty in Bayesian models,
 see the vignettes in tidybayes, such as `vignette("tidybayes", package =
