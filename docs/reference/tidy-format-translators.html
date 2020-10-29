@@ -93,7 +93,7 @@ formats (each format using a different naming scheme for its columns)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -160,13 +160,13 @@ formats (each format using a different naming scheme for its columns)." />
 formats (each format using a different naming scheme for its columns).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>to_broom_names</span>(<span class='no'>data</span>)
+    <pre class="usage"><span class='fu'>to_broom_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
 
-<span class='fu'>from_broom_names</span>(<span class='no'>data</span>)
+<span class='fu'>from_broom_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
 
-<span class='fu'>to_ggmcmc_names</span>(<span class='no'>data</span>)
+<span class='fu'>to_ggmcmc_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
 
-<span class='fu'>from_ggmcmc_names</span>(<span class='no'>data</span>)</pre>
+<span class='fu'>from_ggmcmc_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -202,26 +202,31 @@ prefixed with <code>from_</code> translate from that format back to the ggdist/t
 <li><p><code>.value</code> &lt;-&gt; <code>value</code></p></li>
 </ul>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Matthew Kay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr_u_tau</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ggdist"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>RankCorr_u_tau</span>, package <span class='op'>=</span> <span class='st'>"ggdist"</span><span class='op'>)</span>
 
-<span class='no'>df</span> <span class='kw'>=</span> <span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span>(<span class='kw'>.variable</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>.value</span> <span class='kw'>=</span> <span class='no'>u_tau</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>.variable</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='no'>.value</span>)
+<span class='va'>df</span> <span class='op'>=</span> <span class='va'>RankCorr_u_tau</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>.variable <span class='op'>=</span> <span class='va'>i</span>, .value <span class='op'>=</span> <span class='va'>u_tau</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>.variable</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span><span class='va'>.value</span><span class='op'>)</span>
 
-<span class='no'>df</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 7</span><span>
+<span class='va'>df</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 7</span><span>
 #&gt;   .variable .value .lower .upper .width .point .interval
 #&gt;       </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
 #&gt; </span><span style='color: #555555;'>1</span><span>         1   5.62   3.86   8.03   0.95 median qi       
 #&gt; </span><span style='color: #555555;'>2</span><span>         2   5.48   3.46   9.07   0.95 median qi       
 #&gt; </span><span style='color: #555555;'>3</span><span>         3   4.96   3.10   7.86   0.95 median qi       </div><div class='input'>
-<span class='no'>df</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>to_broom_names</span>()</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 7</span><span>
+<span class='va'>df</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>to_broom_names</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 7</span><span>
 #&gt;    term estimate conf.low conf.high .width .point .interval
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
 #&gt; </span><span style='color: #555555;'>1</span><span>     1     5.62     3.86      8.03   0.95 median qi       
@@ -243,7 +248,7 @@ prefixed with <code>from_</code> translate from that format back to the ggdist/t
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

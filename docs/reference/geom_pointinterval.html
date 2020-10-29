@@ -94,7 +94,7 @@ Wrapper around geom_slabinterval()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -162,17 +162,17 @@ designed for use with output from <code><a href='point_interval.html'>point_inte
 Wrapper around <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>geom_pointinterval</span>(
-  <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='st'>"both"</span>,
-  <span class='kw'>orientation</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>show_slab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-)</pre>
+    <pre class="usage"><span class='fu'>geom_pointinterval</span><span class='op'>(</span>
+  mapping <span class='op'>=</span> <span class='cn'>NULL</span>,
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  stat <span class='op'>=</span> <span class='st'>"identity"</span>,
+  position <span class='op'>=</span> <span class='st'>"identity"</span>,
+  <span class='va'>...</span>,
+  side <span class='op'>=</span> <span class='st'>"both"</span>,
+  orientation <span class='op'>=</span> <span class='cn'>NA</span>,
+  show_slab <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  show.legend <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -210,7 +210,7 @@ layer, as a string.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p><dl'>
+      <td><p>Arguments passed on to <code><a href='geom_slabinterval.html'>geom_slabinterval</a></code></p><dl>
     <dt><code>scale</code></dt><dd><p>What proportion of the region allocated to this geom to use to draw the slab. If <code>scale = 1</code>,
 slabs that use the maximum range will just touch each other. Default is <code>0.9</code> to leave some space.</p></dd>
     <dt><code>justification</code></dt><dd><p>Justification of the interval relative to the slab, where <code>0</code> indicates bottom/left
@@ -229,9 +229,9 @@ normalization (this should probably only be used with functions whose values are
     <dt><code>interval_size_domain</code></dt><dd><p>The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to <code>interval_size_range</code> (see the documentation for that argument.)</p></dd>
     <dt><code>interval_size_range</code></dt><dd><p>This geom scales the raw size aesthetic values when drawing interval and point sizes, as
-they tend to be too thick when using the default settings of <code>scale_size_continuous()</code>, which give sizes
+they tend to be too thick when using the default settings of <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>, which give sizes
 with a range of <code><a href='https://rdrr.io/r/base/c.html'>c(1, 6)</a></code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
-(typically this should be equal to the value of the <code>range</code> argument of the <code>scale_size_continuous()</code>
+(typically this should be equal to the value of the <code>range</code> argument of the <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>
 function), and <code>interval_size_range</code> indicates the desired output range of the size values (the min and max of
 the actual sizes used to draw intervals).</p></dd>
     <dt><code>fatten_point</code></dt><dd><p>A multiplicative factor used to adjust the size of the point relative to the size of the
@@ -349,27 +349,32 @@ See <code><a href='stat_sample_slabinterval.html'>stat_sample_slabinterval()</a>
 stats that combine intervals with densities and CDFs.
 See <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code> for the geom that these geoms wrap. All parameters of that geom are
 available to these geoms.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Matthew Kay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>RankCorr_u_tau</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ggdist"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>RankCorr_u_tau</span>, package <span class='op'>=</span> <span class='st'>"ggdist"</span><span class='op'>)</span>
 
 <span class='co'># orientation is detected automatically based on</span>
 <span class='co'># use of xmin/xmax or ymin/ymax</span>
 
-<span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>i</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>.lower</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>.upper</span>)) +
-  <span class='fu'>geom_pointinterval</span>()</div><div class='img'><img src='geom_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>RankCorr_u_tau</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>i</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.8</span>, <span class='fl'>.95</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>i</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>u_tau</span>, <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>.lower</span>, <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>.upper</span>)) +
-  <span class='fu'>geom_pointinterval</span>()</div><div class='img'><img src='geom_pointinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>RankCorr_u_tau</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.8</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>i</span>, x <span class='op'>=</span> <span class='va'>u_tau</span>, xmin <span class='op'>=</span> <span class='va'>.lower</span>, xmax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_pointinterval</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='img'><img src='geom_pointinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>RankCorr_u_tau</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.8</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>i</span>, y <span class='op'>=</span> <span class='va'>u_tau</span>, ymin <span class='op'>=</span> <span class='va'>.lower</span>, ymax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_pointinterval</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='img'><img src='geom_pointinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -386,7 +391,7 @@ available to these geoms.</p></div>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

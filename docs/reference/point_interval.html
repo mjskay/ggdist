@@ -94,7 +94,7 @@ multiple groups in a grouped data frame)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -162,76 +162,76 @@ interval summaries (or set of point and interval summaries, if there are
 multiple groups in a grouped data frame).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>point_interval</span>(
-  <span class='no'>.data</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
-  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>,
-  <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>),
-  <span class='no'>.prob</span>
-)
+    <pre class="usage"><span class='fu'>point_interval</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>...</span>,
+  .width <span class='op'>=</span> <span class='fl'>0.95</span>,
+  .point <span class='op'>=</span> <span class='va'>median</span>,
+  .interval <span class='op'>=</span> <span class='va'>qi</span>,
+  .simple_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .exclude <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span><span class='op'>)</span>,
+  <span class='va'>.prob</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>point_interval</span>(
-  <span class='no'>.data</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
-  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>,
-  <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>),
-  <span class='no'>.prob</span>
-)
+<span class='fu'>point_interval</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>...</span>,
+  .width <span class='op'>=</span> <span class='fl'>0.95</span>,
+  .point <span class='op'>=</span> <span class='va'>median</span>,
+  .interval <span class='op'>=</span> <span class='va'>qi</span>,
+  .simple_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .exclude <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span><span class='op'>)</span>,
+  <span class='va'>.prob</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>point_interval</span>(
-  <span class='no'>.data</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>.point</span> <span class='kw'>=</span> <span class='no'>median</span>,
-  <span class='kw'>.interval</span> <span class='kw'>=</span> <span class='no'>qi</span>,
-  <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>),
-  <span class='no'>.prob</span>
-)
+<span class='fu'>point_interval</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>...</span>,
+  .width <span class='op'>=</span> <span class='fl'>0.95</span>,
+  .point <span class='op'>=</span> <span class='va'>median</span>,
+  .interval <span class='op'>=</span> <span class='va'>qi</span>,
+  .simple_names <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .exclude <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span><span class='op'>)</span>,
+  <span class='va'>.prob</span>
+<span class='op'>)</span>
 
-<span class='fu'>qi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>qi</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>.prob</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>.prob</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>hdi</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>.prob</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>Mode</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>Mode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>hdci</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>hdci</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>mean_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mean_qi</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>median_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>median_qi</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>mode_qi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mode_qi</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>mean_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mean_hdi</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>median_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>median_hdi</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>mode_hdi</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mode_hdi</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>mean_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>mean_hdci</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>median_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
+<span class='fu'>median_hdci</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
 
-<span class='fu'>mode_hdci</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</pre>
+<span class='fu'>mode_hdci</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>Data frame (or grouped data frame as returned by <code>group_by()</code>)
+      <td><p>Data frame (or grouped data frame as returned by <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by()</a></code>)
 that contains draws to summarize.</p></td>
     </tr>
     <tr>
@@ -337,40 +337,47 @@ is multimodal, this may not actually be the highest-density interval (there may 
 discontinuous interval). Internally <code>hdci</code> uses
 <code><a href='https://rdrr.io/pkg/HDInterval/man/hdi.html'>HDInterval::hdi()</a></code> with <code>allowSplit = FALSE</code>; see that function for more
 information on multimodality and continuous versus discontinuous intervals.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Matthew Kay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>123</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>123</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>()</div><div class='output co'>#&gt;             y      ymin     ymax .width .point .interval
+<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>median_qi</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;             y      ymin     ymax .width .point .interval
 #&gt; 1 0.009209639 -1.941554 2.037887   0.95 median        qi</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt;            x    .lower    .upper .width .point .interval
+<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>median_qi</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;            x    .lower    .upper .width .point .interval
 #&gt; 1 0.05485238 -0.653223 0.7534504   0.50 median        qi
 #&gt; 2 0.05485238 -1.241260 1.3417387   0.80 median        qi
 #&gt; 3 0.05485238 -1.991564 1.9059114   0.95 median        qi</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-    <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>),
-    <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  ) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>(<span class='no'>x</span>, <span class='no'>y</span>)</div><div class='output co'>#&gt;             x   x.lower  x.upper        y   y.lower  y.upper .width .point
+<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+    x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span>,
+    y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span>, mean <span class='op'>=</span> <span class='fl'>2</span>, sd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>median_qi</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;             x   x.lower  x.upper        y   y.lower  y.upper .width .point
 #&gt; 1 -0.05057431 -2.012529 1.934141 1.983618 -1.946229 5.947635   0.95 median
 #&gt;   .interval
 #&gt; 1        qi</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-    <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>),
-    <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"a"</span>
-  ) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-    <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>2</span>),
-    <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"b"</span>)
-  ) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>group</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>median_qi</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 7</span><span>
+<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+    x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span>,
+    group <span class='op'>=</span> <span class='st'>"a"</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+    x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span>, mean <span class='op'>=</span> <span class='fl'>2</span>, sd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
+    group <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>group</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>median_qi</span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 7</span><span>
 #&gt;   group       x .lower .upper .width .point .interval
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
 #&gt; </span><span style='color: #555555;'>1</span><span> a     -</span><span style='color: #BB0000;'>0.032</span><span style='color: #BB0000;text-decoration: underline;'>8</span><span> -</span><span style='color: #BB0000;'>0.707</span><span>  0.636   0.5  median qi       
@@ -379,18 +386,20 @@ information on multimodality and continuous versus discontinuous intervals.</p>
 #&gt; </span><span style='color: #555555;'>4</span><span> b      2.06   -</span><span style='color: #BB0000;'>0.559</span><span>  4.48    0.8  median qi       
 #&gt; </span><span style='color: #555555;'>5</span><span> a     -</span><span style='color: #BB0000;'>0.032</span><span style='color: #BB0000;text-decoration: underline;'>8</span><span> -</span><span style='color: #BB0000;'>2.00</span><span>   1.84    0.95 median qi       
 #&gt; </span><span style='color: #555555;'>6</span><span> b      2.06   -</span><span style='color: #BB0000;'>1.75</span><span>   5.91    0.95 median qi       </div><div class='input'>
-<span class='no'>multimodal_draws</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-    <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>5000</span>, <span class='fl'>0</span>, <span class='fl'>1</span>), <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>2500</span>, <span class='fl'>4</span>, <span class='fl'>1</span>))
-  )
+<span class='va'>multimodal_draws</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+    x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>5000</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>2500</span>, <span class='fl'>4</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>)</span>
 
-<span class='no'>multimodal_draws</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>mode_hdi</span>(<span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt;                x    .lower   .upper .width .point .interval
+<span class='va'>multimodal_draws</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>mode_hdi</span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.66</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                x    .lower   .upper .width .point .interval
 #&gt; 1    -0.06628626 -1.338450 1.358015   0.66   mode       hdi
 #&gt; 1.1  -0.06628626  3.485694 4.496869   0.66   mode       hdi
 #&gt; ...3 -0.06628626 -1.719262 5.500183   0.95   mode       hdi</div><div class='input'>
-<span class='no'>multimodal_draws</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>0</span>)) +
-  <span class='fu'><a href='stat_sample_slabinterval.html'>stat_halfeye</a></span>(<span class='kw'>point_interval</span> <span class='kw'>=</span> <span class='no'>mode_hdi</span>, <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.66</span>, <span class='fl'>.95</span>))</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>multimodal_draws</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='stat_sample_slabinterval.html'>stat_halfeye</a></span><span class='op'>(</span>point_interval <span class='op'>=</span> <span class='va'>mode_hdi</span>, .width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.66</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='point_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -407,7 +416,7 @@ information on multimodality and continuous versus discontinuous intervals.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

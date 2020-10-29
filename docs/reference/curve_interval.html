@@ -93,7 +93,7 @@ interval summaries using a curve boxplot-inspired approach." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -160,15 +160,16 @@ interval summaries using a curve boxplot-inspired approach." />
 interval summaries using a curve boxplot-inspired approach.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>curve_interval</span>(
-  <span class='no'>.data</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>.along</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>.width</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>.simple_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.exclude</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span>)
-)</pre>
+    <pre class="usage"><span class='fu'>curve_interval</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>...</span>,
+  .along <span class='op'>=</span> <span class='cn'>NULL</span>,
+  .width <span class='op'>=</span> <span class='fl'>0.95</span>,
+  .interval <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mhd"</span>, <span class='st'>"mbd"</span>, <span class='st'>"bd"</span>, <span class='st'>"bd-mbd"</span><span class='op'>)</span>,
+  .simple_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .exclude <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>".chain"</span>, <span class='st'>".iteration"</span>, <span class='st'>".draw"</span>, <span class='st'>".row"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,18 +190,30 @@ This can be list columns.</p></td>
     <tr>
       <th>.along</th>
       <td><p>Which columns are the input values to the function describing the curve (e.g., the "x"
-values). Intervals are calculated jointly with respect to these variables, conditional on all other
-grouping variables in the data frame. The default (<code>NULL</code>) causes <code>curve_interval()</code> to treat
-use all grouping variables in the input data frame, which will generate the most conservative
-intervals. However, if you want to calculate intervals for some function <code>y = f(x)</code> conditional
-on some other variable(s) (say, conditional on a factor <code>g</code>), you would group by <code>g</code>, then use
-<code>.along = x</code> to calculate intervals jointly over <code>x</code> conditional on <code>g</code>.</p></td>
+values). Supports tidyselect syntax, as in <code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. Intervals are calculated jointly with
+respect to these variables, conditional on all other grouping variables in the data frame. The default
+(<code>NULL</code>) causes <code>curve_interval()</code> to use all grouping variables in the input data frame, which will
+generate the most conservative intervals. However, if you want to calculate intervals for some function
+<code>y = f(x)</code> conditional on some other variable(s) (say, conditional on a factor <code>g</code>), you would group by
+<code>g</code>, then use <code>.along = x</code> to calculate intervals jointly over <code>x</code> conditional on <code>g</code>.</p></td>
     </tr>
     <tr>
       <th>.width</th>
       <td><p>vector of probabilities to use that determine the widths of the resulting intervals.
 If multiple probabilities are provided, multiple rows per group are generated, each with
 a different probability interval (and value of the corresponding <code>.width</code> column).</p></td>
+    </tr>
+    <tr>
+      <th>.interval</th>
+      <td><p>The method used to calculate the intervals. Currently, all methods rank the curves
+using some measure of <em>data depth</em>, then create envelopes containing the <code>.width</code>% "deepest" curves.
+Available methods are:</p><ul>
+<li><p><code>"mhd"</code>: mean halfspace depth (Fraiman and Muniz 2001).</p></li>
+<li><p><code>"mbd"</code>: modified band depth (Sun and Genton 2011): calls <code><a href='https://rdrr.io/pkg/fda/man/fbplot.html'>fda::fbplot()</a></code> with <code>method = "MBD"</code>.</p></li>
+<li><p><code>"bd"</code>: band depth (Sun and Genton 2011): calls <code><a href='https://rdrr.io/pkg/fda/man/fbplot.html'>fda::fbplot()</a></code> with <code>method = "BD2"</code>.</p></li>
+<li><p><code>"bd-mbd"</code>: band depth, breaking ties with modified band depth (Sun and Genton 2011): calls
+<code><a href='https://rdrr.io/pkg/fda/man/fbplot.html'>fda::fbplot()</a></code> with <code>method = "Both"</code>.</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>.simple_names</th>
@@ -224,10 +237,6 @@ point and interval summaries equal to <code>NA</code>.</p></td>
 if no column names are specified to be summarized. Default ignores several meta-data column
 names used in tidybayes.</p></td>
     </tr>
-    <tr>
-      <th>x</th>
-      <td><p>vector to summarize (for interval functions: <code>qi</code> and <code>hdi</code>)</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -237,10 +246,77 @@ to the point summary, one to the lower end of the interval, one to the upper end
 width of the interval (<code>.width</code>), the type of point summary (<code>.point</code>), and the type of interval (<code>.interval</code>).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>TODO: insert algorithm details</p>
+    <p>Intervals are calculated by ranking the curves using some measure of <em>data depth</em>, then creating
+envelopes containing the <code>.width</code>% "deepest" curves (for each value of <code>.width</code>). Thus, the intervals
+are guaranteed to contain <em>at least</em> <code>.width</code>% of the full curves, but may be conservative (i.e.
+they may contain more than <code>.width</code>% of the curves). See Mirzargar <em>et al.</em> (2014) or
+Juul <em>et al.</em> (2020) for an accessible introduction to the idea.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Fraiman, Ricardo and Graciela Muniz. (2001).
+"Trimmed means for functional data".
+<em>Test</em> 10: 419–440.
+doi: <a href='https://doi.org/10.1007/BF02595706'>10.1007/BF02595706</a>
+.</p>
+<p>Sun, Ying and Marc G. Genton. (2011).
+"Functional Boxplots".
+<em>Journal of Computational and Graphical Statistics</em>, 20(2): 316-334.
+doi: <a href='https://doi.org/10.1198/jcgs.2011.09224'>10.1198/jcgs.2011.09224</a></p>
+<p>Mirzargar, Mahsa, Ross T Whitaker, and Robert M Kirby. (2014).
+"Curve Boxplot: Generalization of Boxplot for Ensembles of Curves".
+<em>IEEE Transactions on Visualization and Computer Graphics</em>. 20(12): 2654-2663.
+doi: <a href='https://doi.org/10.1109/TVCG.2014.2346455'>10.1109/TVCG.2014.2346455</a></p>
+<p>Juul Jonas, Kaare Græsbøll, Lasse Engbo Christiansen, and Sune Lehmann. (2020).
+"Fixed-time descriptive statistics underestimate extremes of epidemic curve ensembles".
+<em>arXiv e-print</em>.
+<a href='https://arxiv.org/abs/2007.05035'>arXiv:2007.05035</a></p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='point_interval.html'>point_interval()</a></code> for pointwise intervals. See <code><a href='../articles/lineribbon.html'>vignette("lineribbon")</a></code> for more examples
+and discussion of the differences between pointwise and curvewise intervals.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Matthew Kay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+
+<span class='co'># generate a set of curves</span>
+<span class='va'>k</span> <span class='op'>=</span> <span class='fl'>11</span> <span class='co'># number of curves</span>
+<span class='va'>n</span> <span class='op'>=</span> <span class='fl'>201</span>
+<span class='va'>df</span> <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
+    .draw <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='va'>k</span>,
+    mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>,<span class='fl'>5</span>, length.out <span class='op'>=</span> <span class='va'>k</span><span class='op'>)</span>,
+    x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>15</span>,<span class='fl'>15</span>,length.out <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/nest.html'>unnest</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>dnorm</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mean</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># see pointwise intervals...</span>
+<span class='va'>df</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span><span class='va'>y</span>, .width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='geom_lineribbon.html'>geom_lineribbon</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>ymin <span class='op'>=</span> <span class='va'>.lower</span>, ymax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>.draw</span><span class='op'>)</span>, alpha<span class='op'>=</span><span class='fl'>0.15</span>, data <span class='op'>=</span> <span class='va'>df</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_fill_brewer</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"50% pointwise intervals with point_interval()"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='img'><img src='curve_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># ... compare them to curvewise intervals</span>
+<span class='va'>df</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>curve_interval</span><span class='op'>(</span><span class='va'>y</span>, .width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='geom_lineribbon.html'>geom_lineribbon</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>ymin <span class='op'>=</span> <span class='va'>.lower</span>, ymax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>.draw</span><span class='op'>)</span>, alpha<span class='op'>=</span><span class='fl'>0.15</span>, data <span class='op'>=</span> <span class='va'>df</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_fill_brewer</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"50% curvewise intervals with curve_interval()"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='img'><img src='curve_interval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -257,7 +333,7 @@ width of the interval (<code>.width</code>), the type of point summary (<code>.p
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

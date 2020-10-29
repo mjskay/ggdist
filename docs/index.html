@@ -55,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -116,21 +116,23 @@
 <a href="#ggdist-visualizations-of-distributions-and-uncertainty" class="anchor"></a>ggdist: Visualizations of distributions and uncertainty</h1></div>
 
 <p><img src="reference/figures/preview.png" alt="Preview of ggdist plots"></p>
-<p><a href="http://mjskay.github.io/ggdist/">ggdist</a> is an R package that provides a flexible set of <code>ggplot2</code> geoms and stats designed especially for visualizing distributions and uncertainty. It is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization: for frequentist models, one visualizes confidence distributions or bootstrap distributions (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>); for Bayesian models, one visualizes probability distributions (see the <a href="http://mjskay.github.io/tidybayes/">tidybayes</a> package, which builds on top of <code>ggdist</code>).</p>
+<p><a href="https://mjskay.github.io/ggdist/">ggdist</a> is an R package that provides a flexible set of <code>ggplot2</code> geoms and stats designed especially for visualizing distributions and uncertainty. It is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization: for frequentist models, one visualizes confidence distributions or bootstrap distributions (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>); for Bayesian models, one visualizes probability distributions (see the <a href="https://mjskay.github.io/tidybayes/">tidybayes</a> package, which builds on top of <code>ggdist</code>).</p>
 <p>The <code><a href="reference/geom_slabinterval.html">geom_slabinterval()</a></code> / <code><a href="reference/stat_slabinterval.html">stat_slabinterval()</a></code> / <code><a href="reference/stat_dist_slabinterval.html">stat_dist_slabinterval()</a></code> family (see <code><a href="articles/slabinterval.html">vignette("slabinterval")</a></code>) includes point summaries and intervals, eye plots, half-eye plots, CCDF bar plots, gradient plots, dotplots, and histograms:</p>
 <p><img src="reference/figures/slabinterval_family.png" alt="The slabinterval family of geoms and stats"></p>
-<p>The <code><a href="reference/geom_lineribbon.html">geom_lineribbon()</a></code> / <code><a href="reference/stat_lineribbon.html">stat_lineribbon()</a></code> / <code><a href="reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> family makes it easy to visualize fit lines with an arbitrary number of uncertainty bands:</p>
+<p>The <code><a href="reference/geom_lineribbon.html">geom_lineribbon()</a></code> / <code><a href="reference/stat_lineribbon.html">stat_lineribbon()</a></code> / <code><a href="reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> family (see <code><a href="articles/lineribbon.html">vignette("lineribbon")</a></code>) makes it easy to visualize fit lines with an arbitrary number of uncertainty bands:</p>
 <p><img src="reference/figures/README/lineribbon-1.png"><!-- --></p>
 <p>All geoms in <code>ggdist</code> also have <code>stat_dist_</code> counterparts designed for visualizing analytical distributions, which is particularly useful when visualizing uncertainty in frequentist models (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>) or when visualizing priors in a Bayesian analysis.</p>
-<p>The <code>ggdist</code> geoms and stats also form a core part of the <a href="http://mjskay.github.io/tidybayes/">tidybayes</a> package (in fact, they originally were part of <code>tidybayes</code>). For examples of the use of <code>ggdist</code> geoms and stats for visualizing uncertainty in Bayesian models, see the vignettes in tidybayes, such as <code>vignette("tidybayes", package = "tidybayes")</code> or <code>vignette("tidy-brms", package = "tidybayes")</code>.</p>
+<p>The <code>ggdist</code> geoms and stats also form a core part of the <a href="https://mjskay.github.io/tidybayes/">tidybayes</a> package (in fact, they originally were part of <code>tidybayes</code>). For examples of the use of <code>ggdist</code> geoms and stats for visualizing uncertainty in Bayesian models, see the vignettes in tidybayes, such as <code><a href="http://mjskay.github.io/tidybayes/articles/tidybayes.html">vignette("tidybayes", package = "tidybayes")</a></code> or <code><a href="http://mjskay.github.io/tidybayes/articles/tidy-brms.html">vignette("tidy-brms", package = "tidybayes")</a></code>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>Once on CRAN, you can install the currently-released version from CRAN with this R command:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"ggdist"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ggdist"</span><span class="op">)</span></pre></div>
 <p>Alternatively, you can install the latest development version from GitHub with these R commands:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"mjskay/ggdist"</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"mjskay/ggdist"</span><span class="op">)</span></pre></div>
 </div>
 <div id="feedback-issues-and-contributions" class="section level2">
 <h2 class="hasAnchor">
@@ -141,7 +143,7 @@
 <h2 class="hasAnchor">
 <a href="#citing-ggdist" class="anchor"></a>Citing <code>ggdist</code>
 </h2>
-<p>Matthew Kay (2020). <em>ggdist: Visualizations of Distributions and Uncertainty</em>. R package version 2.2.0, <a href="https://mjskay.github.io/ggdist/" class="uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620">10.5281/zenodo.3879620</a>.</p>
+<p>Matthew Kay (2020). <em>ggdist: Visualizations of Distributions and Uncertainty</em>. R package version 2.3.0, <a href="https://mjskay.github.io/ggdist/" class="uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620">10.5281/zenodo.3879620</a>.</p>
 </div>
 </div>
   </div>
@@ -183,7 +185,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/mjskay/ggdist/actions"><img src="https://github.com/mjskay/ggdist/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/github/mjskay/ggdist?branch=master"><img src="https://codecov.io/gh/mjskay/ggdist/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
-<li><a href="https://cran.r-project.org/package=ggdist"><img src="http://www.r-pkg.org/badges/version/ggdist" alt="CRAN status"></a></li>
+<li><a href="https://cran.r-project.org/package=ggdist"><img src="https://www.r-pkg.org/badges/version/ggdist" alt="CRAN status"></a></li>
 <li><a href="https://doi.org/10.5281/zenodo.3879620"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3879620.svg" alt="DOI"></a></li>
 </ul>
 </div>
@@ -196,7 +198,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

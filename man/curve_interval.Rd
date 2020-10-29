@@ -106,7 +106,8 @@ df \%>\%
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_line(aes(group = .draw), alpha=0.15, data = df) +
   scale_fill_brewer() +
-  ggtitle("50\% pointwise intervals with point_interval()")
+  ggtitle("50\% pointwise intervals with point_interval()") +
+  theme_ggdist()
 
 # ... compare them to curvewise intervals
 df \%>\%
@@ -116,7 +117,8 @@ df \%>\%
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_line(aes(group = .draw), alpha=0.15, data = df) +
   scale_fill_brewer() +
-  ggtitle("50\% curvewise intervals with curve_interval()")
+  ggtitle("50\% curvewise intervals with curve_interval()") +
+  theme_ggdist()
 
 }
 \references{

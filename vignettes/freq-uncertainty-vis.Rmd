@@ -69,7 +69,7 @@ theme_set(theme_ggdist())
 
 We'll start with an ordinary least squares (OLS) linear regression analysis of this simple dataset:
 
-```{r}
+```{r data_gen}
 set.seed(5)
 n = 10
 n_condition = 5
@@ -82,7 +82,7 @@ ABC =
 
 This is a typical tidy format data frame: one observation per row. Graphically:
 
-```{r}
+```{r data_plot}
 ABC %>%
   ggplot(aes(x = response, y = condition)) +
   geom_point(alpha = 0.5) +
@@ -91,13 +91,13 @@ ABC %>%
 
 And a simple linear regression of the data is fit as follows:
 
-```{r}
+```{r m_ABC}
 m_ABC = lm(response ~ condition, data = ABC)
 ```
 
 The default summary is not great from an uncertainty communication perspective:
 
-```{r}
+```{r m_ABC_summary}
 summary(m_ABC)
 ```
 
@@ -115,13 +115,13 @@ With:
 
 We can get the estimates and standard errors easily by using `broom::tidy()`:
 
-```{r}
+```{r m_ABC_coefs}
 tidy(m_ABC)
 ```
 
 Putting everything together, we have:
 
-```{r}
+```{r halfeye}
 m_ABC %>%
   tidy() %>%
   ggplot(aes(y = term)) +
@@ -144,7 +144,7 @@ With:
 
 Putting everything together, we have:
 
-```{r}
+```{r halfeye_with_data}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -160,7 +160,7 @@ ABC %>%
 
 Of course, this works with the entire `stat_dist_...` family. Here are gradient plots instead:
 
-```{r}
+```{r gradientinterval}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -173,7 +173,7 @@ ABC %>%
 
 Or complementary cumulative distribution function (CCDF) bar plots:
 
-```{r}
+```{r ccdfinterval}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -185,7 +185,7 @@ ABC %>%
 
 We can also create quantile dotplots by using the `dots` family of geoms. Quantile dotplots show quantiles from a distribution (in this case, the sampling distribution), employing a *frequency framing* approach to uncertainty communication that can be easier for people to interpret ([Kay et al. 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes et al. 2018](https://doi.org/10.1145/3173574.3173718)):
 
-```{r}
+```{r dotplot}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
@@ -202,13 +202,13 @@ See `vignette("slabinterval")` for more examples of uncertainty geoms and stats 
 
 The same principle of reconstructing the confidence distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms", package = "tidybayes")`, but using `lm()` instead:
 
-```{r}
+```{r m_mpg}
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 ```
 
 Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ `stat_dist_lineribbon()`:
 
-```{r}
+```{r lineribbon}
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%

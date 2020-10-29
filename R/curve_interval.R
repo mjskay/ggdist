@@ -106,7 +106,8 @@
 #'   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
 #'   geom_line(aes(group = .draw), alpha=0.15, data = df) +
 #'   scale_fill_brewer() +
-#'   ggtitle("50% pointwise intervals with point_interval()")
+#'   ggtitle("50% pointwise intervals with point_interval()") +
+#'   theme_ggdist()
 #'
 #' # ... compare them to curvewise intervals
 #' df %>%
@@ -116,7 +117,8 @@
 #'   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
 #'   geom_line(aes(group = .draw), alpha=0.15, data = df) +
 #'   scale_fill_brewer() +
-#'   ggtitle("50% curvewise intervals with curve_interval()")
+#'   ggtitle("50% curvewise intervals with curve_interval()") +
+#'   theme_ggdist()
 #'
 #' @importFrom purrr map_dfr map map2 map_dbl map_lgl iwalk
 #' @importFrom dplyr group_vars summarise_at %>% group_split

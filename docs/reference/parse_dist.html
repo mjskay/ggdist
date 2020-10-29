@@ -96,7 +96,7 @@ brms models." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -166,28 +166,28 @@ by <code><a href='https://rdrr.io/pkg/brms/man/get_prior.html'>brms::get_prior</
 brms models.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>parse_dist</span>(<span class='no'>object</span>, <span class='no'>...</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>".dist"</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='st'>".args"</span>, <span class='kw'>to_r_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>parse_dist</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span>, dist <span class='op'>=</span> <span class='st'>".dist"</span>, args <span class='op'>=</span> <span class='st'>".args"</span>, to_r_names <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>parse_dist</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+<span class='fu'>parse_dist</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>parse_dist</span>(
-  <span class='no'>object</span>,
-  <span class='no'>dist_col</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>".dist"</span>,
-  <span class='kw'>args</span> <span class='kw'>=</span> <span class='st'>".args"</span>,
-  <span class='kw'>to_r_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)
+<span class='fu'>parse_dist</span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  <span class='va'>dist_col</span>,
+  <span class='va'>...</span>,
+  dist <span class='op'>=</span> <span class='st'>".dist"</span>,
+  args <span class='op'>=</span> <span class='st'>".args"</span>,
+  to_r_names <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>parse_dist</span>(<span class='no'>object</span>, <span class='no'>...</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>".dist"</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='st'>".args"</span>, <span class='kw'>to_r_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>parse_dist</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span>, dist <span class='op'>=</span> <span class='st'>".dist"</span>, args <span class='op'>=</span> <span class='st'>".args"</span>, to_r_names <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for factor</span>
-<span class='fu'>parse_dist</span>(<span class='no'>object</span>, <span class='no'>...</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>".dist"</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='st'>".args"</span>, <span class='kw'>to_r_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>parse_dist</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span>, dist <span class='op'>=</span> <span class='st'>".dist"</span>, args <span class='op'>=</span> <span class='st'>".args"</span>, to_r_names <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='fu'>r_dist_name</span>(<span class='no'>dist_name</span>)</pre>
+<span class='fu'>r_dist_name</span><span class='op'>(</span><span class='va'>dist_name</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -259,22 +259,24 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 
 <span class='co'># parse dist can operate on strings directly...</span>
-<span class='fu'>parse_dist</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span>))</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 2</span><span>
+<span class='fu'>parse_dist</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 2</span><span>
 #&gt;   .dist     .args     
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span>    
 #&gt; </span><span style='color: #555555;'>1</span><span> norm      </span><span style='color: #555555;'>&lt;list [2]&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>2</span><span> student_t </span><span style='color: #555555;'>&lt;list [3]&gt;</span><span></div><div class='input'>
 <span class='co'># ... or on columns of a data frame, where it adds the</span>
 <span class='co'># parsed specs back on as columns</span>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>prior</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>parse_dist</span>(<span class='no'>prior</span>)</div><div class='output co'>#&gt;              prior     .dist   .args
+<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>parse_dist</span><span class='op'>(</span><span class='va'>prior</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;              prior     .dist   .args
 #&gt; 1      normal(0,1)      norm    0, 1
 #&gt; 2 student_t(3,0,1) student_t 3, 0, 1</div><div class='input'>
-# parse_dist is particularly useful with the output of brms::prior(),
-# which follow the same format as above
+<span class='co'># parse_dist is particularly useful with the output of brms::prior(),</span>
+<span class='co'># which follow the same format as above</span>
 
 </div></span></pre>
   </div>
@@ -292,7 +294,7 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

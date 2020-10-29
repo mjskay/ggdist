@@ -94,7 +94,7 @@ location (mu), and scale (sigma)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -162,13 +162,13 @@ scaled and shifted Student's t distribution, parameterized by degrees of freedom
 location (<code>mu</code>), and scale (<code>sigma</code>).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>dstudent_t</span>(<span class='no'>x</span>, <span class='no'>df</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>dstudent_t</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>df</span>, mu <span class='op'>=</span> <span class='fl'>0</span>, sigma <span class='op'>=</span> <span class='fl'>1</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>pstudent_t</span>(<span class='no'>q</span>, <span class='no'>df</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>lower.tail</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>log.p</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>pstudent_t</span><span class='op'>(</span><span class='va'>q</span>, <span class='va'>df</span>, mu <span class='op'>=</span> <span class='fl'>0</span>, sigma <span class='op'>=</span> <span class='fl'>1</span>, lower.tail <span class='op'>=</span> <span class='cn'>TRUE</span>, log.p <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>qstudent_t</span>(<span class='no'>p</span>, <span class='no'>df</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>lower.tail</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>log.p</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>qstudent_t</span><span class='op'>(</span><span class='va'>p</span>, <span class='va'>df</span>, mu <span class='op'>=</span> <span class='fl'>0</span>, sigma <span class='op'>=</span> <span class='fl'>1</span>, lower.tail <span class='op'>=</span> <span class='cn'>TRUE</span>, log.p <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>rstudent_t</span>(<span class='no'>n</span>, <span class='no'>df</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+<span class='fu'>rstudent_t</span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>df</span>, mu <span class='op'>=</span> <span class='fl'>0</span>, sigma <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -239,26 +239,27 @@ family of stats for visualizing them.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>forcats</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://forcats.tidyverse.org'>forcats</a></span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(
-  <span class='kw'>df</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>10</span>,<span class='fl'>30</span>),
-  <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1.5</span>)
-) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"student_t"</span>, <span class='kw'>arg1</span> <span class='kw'>=</span> <span class='no'>df</span>, <span class='kw'>arg2</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>arg3</span> <span class='kw'>=</span> <span class='no'>scale</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>ordered</a></span>(<span class='no'>df</span>))) +
-  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_slab</a></span>(<span class='kw'>p_limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.01</span>, <span class='fl'>.99</span>), <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fl'>NA</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>( ~ <span class='no'>scale</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span>(
-    <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"dstudent_t(x, df, 0, sigma)"</span>,
-    <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"Scale (sigma)"</span>,
-    <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-    <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-  ) +
-  <span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>axis.title</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>0</span>))</div><div class='img'><img src='student_t-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>
+  df <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>10</span>,<span class='fl'>30</span><span class='op'>)</span>,
+  scale <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1.5</span><span class='op'>)</span>
+<span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>0</span>, dist <span class='op'>=</span> <span class='st'>"student_t"</span>, arg1 <span class='op'>=</span> <span class='va'>df</span>, arg2 <span class='op'>=</span> <span class='fl'>0</span>, arg3 <span class='op'>=</span> <span class='va'>scale</span>, color <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>ordered</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_slab</a></span><span class='op'>(</span>p_limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.01</span>, <span class='fl'>.99</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>breaks <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span><span class='op'>(</span> <span class='op'>~</span> <span class='va'>scale</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>
+    title <span class='op'>=</span> <span class='st'>"dstudent_t(x, df, 0, sigma)"</span>,
+    subtitle <span class='op'>=</span> <span class='st'>"Scale (sigma)"</span>,
+    y <span class='op'>=</span> <span class='cn'>NULL</span>,
+    x <span class='op'>=</span> <span class='cn'>NULL</span>
+  <span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>hjust <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='student_t-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -275,7 +276,7 @@ family of stats for visualizing them.</p></div>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

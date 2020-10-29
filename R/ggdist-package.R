@@ -22,7 +22,7 @@
 #' The [geom_slabinterval()] / [stat_slabinterval()] / [stat_dist_slabinterval()] family (see `vignette("slabinterval")`) includes
 #' point summaries and intervals, eye plots, half-eye plots, CCDF bar plots, gradient plots, dotplots, and histograms.
 #'
-#' The [geom_lineribbon()] / [stat_lineribbon()] / [stat_dist_lineribbon()] family makes it easy to visualize fit lines with an arbitrary
-#' number of uncertainty bands.
+#' The [geom_lineribbon()] / [stat_lineribbon()] / [stat_dist_lineribbon()] family (see `vignette("lineribbon")`)
+#' makes it easy to visualize fit lines with an arbitrary number of uncertainty bands.
 #'
 NULL
