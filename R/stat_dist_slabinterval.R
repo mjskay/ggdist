@@ -121,7 +121,9 @@ dist_function.default = function(dist, prefix, fun) {
 }
 dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
 dist_function.factor = function(dist, prefix, fun) dist_function(as.character(dist), prefix, fun)
-dist_function.distribution = function(dist, prefix, fun) function(...) fun(dist, ...)
+# workaround for quantile.distribution not being vectorized currently
+# when #31 is fixed, replace with function(dist, prefix, fun) function(...) fun(dist, ...)
+dist_function.distribution = function(dist, prefix, fun) Vectorize(function(x, ...) fun(dist, x, ...), vectorize.args = "x")
 dist_function.dist_default = dist_function.distribution
 dist_function.rvar = dist_function.distribution
 
