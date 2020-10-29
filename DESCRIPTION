@@ -5,7 +5,7 @@ Date: 2020-10-28
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu")
     )
-Maintainer: Matthew Kay <mjskay@umich.edu>
+Maintainer: Matthew Kay <mjskay@northwestern.edu>
 Description: Provides primitives for visualizing distributions using 'ggplot2' that are particularly tuned for
     visualizing uncertainty in either a frequentist or Bayesian mode. Both analytical distributions (such as 
     frequentist confidence distributions or Bayesian priors) and distributions represented as samples (such as 
