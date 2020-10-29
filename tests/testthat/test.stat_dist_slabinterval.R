@@ -233,7 +233,7 @@ test_that("distributional objects work", {
 
 })
 
-test_that("stat_dist_dots works on factor dist names", {
+test_that("stat_dist_ works on factor dist names", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
@@ -243,7 +243,7 @@ test_that("stat_dist_dots works on factor dist names", {
   ) %>%
     ggplot(aes(dist = x, y = y))
 
-  vdiffr::expect_doppelganger("stat_dist_dots with factor dist name",
+  vdiffr::expect_doppelganger("stat_dist_ with factor dist name",
     p + stat_dist_slabinterval()
   )
 
