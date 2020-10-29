@@ -1,9 +1,9 @@
 Package: ggdist
 Title: Visualizations of Distributions and Uncertainty
 Version: 2.2.0.9000
-Date: 2020-07-11
+Date: 2020-10-28
 Authors@R: c(
-        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@umich.edu")
+        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu")
     )
 Maintainer: Matthew Kay <mjskay@umich.edu>
 Description: Provides primitives for visualizing distributions using 'ggplot2' that are particularly tuned for
