@@ -1,5 +1,6 @@
 al
 amongst
+arXiv
 behaviour
 brm
 brms
@@ -10,6 +11,7 @@ composable
 conf
 configurability
 Correll
+curvewise
 customizable
 cyl
 deprecation
@@ -23,17 +25,21 @@ emmeans
 equi
 et
 Fernandes
+Fraiman
 Franconeri
 Fumeng
 Gah
 ge
 geoms
+Genton
 ggplot
 ggproto
+ggridges
 github
 Github
 Gleicher
 Hadley
+halfspace
 hdci
 hdi
 Heer
@@ -47,6 +53,7 @@ instantiation
 io
 ish
 jagsUI
+Juul
 kable
 Kesar
 knitr
@@ -62,12 +69,15 @@ lineribbon
 lineribbons
 LKJ
 lsmeans
+Mahsa
 mathbf
 mcmc
 MCMCglmm
+Mirzargar
 mjskay
 multimodality
 munge
+Muniz
 Munson
 opacities
 overplot
@@ -95,6 +105,7 @@ summarization
 textrm
 tibble
 tidybayes
+tidyselect
 tidyverse
 toc
 unevaluated
@@ -104,4 +115,5 @@ VignetteEngine
 VignetteIndexEntry
 Wickham
 Xie
+Ying
 zenodo

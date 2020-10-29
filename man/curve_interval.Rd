@@ -132,7 +132,7 @@ Sun, Ying and Marc G. Genton. (2011).
 
 Mirzargar, Mahsa, Ross T Whitaker, and Robert M Kirby. (2014).
 "Curve Boxplot: Generalization of Boxplot for Ensembles of Curves".
-\emph{IEEE Trans Vis Comput Graph}. 20(12): 2654-2663.
+\emph{IEEE Transactions on Visualization and Computer Graphics}. 20(12): 2654-2663.
 \doi{10.1109/TVCG.2014.2346455}
 
 Juul Jonas, Kaare Græsbøll, Lasse Engbo Christiansen, and Sune Lehmann. (2020).
