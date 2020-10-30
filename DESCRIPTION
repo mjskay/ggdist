@@ -50,7 +50,7 @@ Suggests:
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
-URL: https://mjskay.github.io/ggdist, https://github.com/mjskay/ggdist
+URL: https://mjskay.github.io/ggdist/, https://github.com/mjskay/ggdist/
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 LazyData: true
