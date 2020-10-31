@@ -98,7 +98,7 @@ devtools::install_github("mjskay/ggdist")
 
 ## Feedback, issues, and contributions
 
-I welcome feedback, suggestions, issues, and contributions! Contact me at <mjskay@umich.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/ggdist/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [`dev`](https://github.com/mjskay/ggdist/tree/dev) branch.
+I welcome feedback, suggestions, issues, and contributions! Contact me at <mjskay@northwestern.edu>. If you have found a bug, please file it [here](https://github.com/mjskay/ggdist/issues/new) with minimal code to reproduce the issue. Pull requests should be filed against the [`dev`](https://github.com/mjskay/ggdist/tree/dev) branch.
 
 
 ## Citing `ggdist`
