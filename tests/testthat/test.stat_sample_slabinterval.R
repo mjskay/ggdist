@@ -99,3 +99,19 @@ test_that("scale transformation works", {
   )
 
 })
+
+test_that("pdf and cdf aesthetics work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(
+    x = c("a", "b"),
+    y = qnorm(ppoints(100), c(1, 2), 2)
+  ) %>%
+    ggplot(aes(x = x, y = y))
+
+  vdiffr::expect_doppelganger("pdf and cdf on a sample slabinterval",
+    p + stat_sample_slabinterval(aes(fill = x, thickness = stat(pdf), slab_alpha = stat(cdf)), n = 20) + geom_point()
+  )
+})
+
