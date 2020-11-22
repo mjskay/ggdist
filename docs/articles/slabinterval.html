@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1 data-toc-skip>Slab + interval stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-10-29</h4>
+            <h4 class="date">2020-11-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
@@ -136,7 +136,7 @@ img {
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.mitchelloharawild.com/distributional/">distributional</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist">ggdist</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist/">ggdist</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span>
 
@@ -667,6 +667,25 @@ img {
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_eye</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>slab_alpha <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">2</span><span class="op">*</span><span class="va">cdf</span><span class="op">)</span>, <span class="fl">.95</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/scales.html">scale_slab_alpha_continuous</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
 <p><img src="slabinterval_files/figure-html/helske_gradient_eye-1.png" width="648"></p>
+</div>
+<div id="independent-slabs-and-intervals-in-composite-plots" class="section level3">
+<h3 class="hasAnchor">
+<a href="#independent-slabs-and-intervals-in-composite-plots" class="anchor"></a>Independent slabs and intervals in composite plots</h3>
+<p>Sometimes when constructing composite plots it may be useful to position slab and interval parts of the geometry separately. While some relative positioning of these geometries is supported by manipulating the <code>justification</code> parameter, if you want complete, separate control over positioning of intervals versus slabs, the simplest approach can be to specify those geometries separately.</p>
+<p>For example, the following uses a separate specification of a <code><a href="../reference/stat_sample_slabinterval.html">stat_slab()</a></code> and a <code><a href="../reference/stat_pointinterval.html">stat_pointinterval()</a></code> instead of a combined <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> in order to use <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code> on the intervals but not the slabs:</p>
+<div class="sourceCode" id="cb42"><pre class="downlit">
+<span class="va">df</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">group</span>, color <span class="op">=</span> <span class="va">group</span>, x <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slab</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.4</span>, preserve <span class="op">=</span> <span class="st">"single"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>
+    title <span class="op">=</span> <span class="st">"stat_slab() and stat_pointinterval()"</span>, 
+    subtitle <span class="op">=</span> <span class="st">"with position_dodge() applied to the intervals"</span>,
+    y <span class="op">=</span> <span class="cn">NULL</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></pre></div>
+<p><img src="slabinterval_files/figure-html/slab_and_pointinterval-1.png" width="648"></p>
+<p>(Thanks to Brenton Wiernik for <a href="https://github.com/mjskay/ggdist/issues/27#issuecomment-725578437">this example</a>.)</p>
 </div>
 </div>
   </div>

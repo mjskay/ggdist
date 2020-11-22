@@ -721,6 +721,29 @@ priors %>%
   scale_slab_alpha_continuous(guide = FALSE)
 ```
 
+### Independent slabs and intervals in composite plots
+
+Sometimes when constructing composite plots it may be useful to position slab and interval parts of the geometry separately.
+While some relative positioning of these geometries is supported by manipulating the `justification` parameter, if you
+want complete, separate control over positioning of intervals versus slabs, the simplest approach can be to specify those
+geometries separately. 
+
+For example, the following uses a separate specification of a `stat_slab()` and a `stat_pointinterval()` instead of a combined `stat_slabinterval()` in order to use `position_dodge()` on the intervals but not the slabs:
+
+```{r slab_and_pointinterval, fig.width = med_width, fig.height = small_height}
+df %>%
+  ggplot(aes(fill = group, color = group, x = value)) +
+  stat_slab(alpha = .3) +
+  stat_pointinterval(position = position_dodge(width = .4, preserve = "single")) +
+  labs(
+    title = "stat_slab() and stat_pointinterval()", 
+    subtitle = "with position_dodge() applied to the intervals",
+    y = NULL
+  ) +
+  scale_y_continuous(breaks = NULL)
+```
+
+(Thanks to Brenton Wiernik for [this example](https://github.com/mjskay/ggdist/issues/27#issuecomment-725578437).)
 
 ```{r reset_options, include=FALSE}
 options(.old_options)
