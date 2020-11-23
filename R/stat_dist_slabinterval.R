@@ -51,18 +51,47 @@ dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identi
   })
 }
 
+# return the derivation of a transformation function from the scales package at
+# the given y values. First attempts to find that analytical derivative, which
+# works on most pre-defined transformation functions in scales; if that fails,
+# uses numerical derivative
+#' @importFrom stats numericDeriv D
+f_deriv_at_y = function(f, y) {
+  tryCatch({
+    # attempt to find analytical derivative by pulling out the expression
+    # for the transformation from the transformation function. Because all
+    # scales functions are defined (currently) as simple wrappers around
+    # single expressions (with no { ... }), we can be pretty naive here and
+    # just try to pull out that single expression
+    f_list = as.list(f)
+    y_name = names(f_list)[[1]]
+    f_expr = f_list[[length(f_list)]]
+    f_deriv_expr = D(f_expr, y_name)
+
+    # apply the analytical derivative to the y values
+    # must do this within the environment of the transformation function b/c
+    # some functions are defined as closures with other variables needed to
+    # fully define the transformation (e.g. log10_trans has a `base` variable
+    # equal to 10, which if left undefined this would not work)
+    args = list(y)
+    names(args) = y_name
+    eval(f_deriv_expr, args, environment(f))
+  }, error = function(e) {
+    # if analytical approach fails, use numerical approach
+    # need to convert y to numeric in case it's an integer (numericDeriv doesn't like ints)
+    y = as.numeric(y)
+    diag(attr(numericDeriv(quote(f(y)), "y"), "gradient"))
+  })
+}
+
 # return a version of the provided density function f_X(...)
 # transformed according to transformation trans
-#' @importFrom stats numericDeriv
 transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) {
   # based on the fact that for Y = g(X),
   # f_Y(y) = f_X(g^−1(y)) * | g^-1'(y) |
 
   g_inverse = trans$inverse
-
-  # need to convert y to numeric in case it's an integer (numericDeriv doesn't like ints)
-  y = as.numeric(y)
-  g_inverse_deriv_at_y = diag(attr(numericDeriv(quote(g_inverse(y)), "y"), "gradient"))
+  g_inverse_deriv_at_y = f_deriv_at_y(g_inverse, y)
 
   f_X(g_inverse_at_y, ...) * abs(g_inverse_deriv_at_y)
 }
