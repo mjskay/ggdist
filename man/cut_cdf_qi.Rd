@@ -40,21 +40,33 @@ library(dplyr)
 library(scales)
 library(distributional)
 
+# with a slab
+tibble(x = dist_normal(0, 1)) \%>\%
+  ggplot(aes(dist = x, y = "a")) +
+  stat_dist_slab(aes(
+    fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95)))
+  )) +
+  scale_fill_brewer(direction = -1)
+
+# With a halfeye (or other geom with slab and interval), NA values will
+# show up in the fill scale from the CDF function applied to the internal
+# interval geometry data and can be ignored, hence na.translate = FALSE
 tibble(x = dist_normal(0, 1)) \%>\%
   ggplot(aes(dist = x, y = "a")) +
   stat_dist_halfeye(aes(
     fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95)))
   )) +
-  scale_fill_brewer(direction = -1)
+  scale_fill_brewer(direction = -1, na.translate = FALSE)
 
-# we could use the labels parameter to apply nicer formatting
+# we could also use the labels parameter to apply nicer formatting
+# and provide a better name for the legend
 tibble(x = dist_normal(0, 1)) \%>\%
   ggplot(aes(dist = x, y = "a")) +
   stat_dist_halfeye(aes(
-    alpha = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95), labels = percent_format()))
+    fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95), labels = percent_format(accuracy = 1)))
   )) +
   labs(fill = "Interval") +
-  scale_fill_brewer(direction = -1)
+  scale_fill_brewer(direction = -1, na.translate = FALSE)
 
 }
 \seealso{
