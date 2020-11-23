@@ -248,3 +248,16 @@ test_that("stat_dist_ works on factor dist names", {
   )
 
 })
+
+test_that("automatic finite limits work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  # this setup should yield a 95% interval from a little above 1e-3 to a little below 1e+5
+  p = data.frame(dist = dist_beta(2,2)) %>%
+    ggplot(aes(y = 0, dist = dist))
+
+  vdiffr::expect_doppelganger("dist_slab beta(2,2)",
+    p + stat_dist_slab(n = 31)
+  )
+})

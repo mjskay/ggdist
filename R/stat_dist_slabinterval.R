@@ -20,7 +20,7 @@ args_from_aes = function(args = list(), ...) {
   c(args_from_dots, args)
 }
 
-dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
+dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identity_trans(), ...) {
   pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || any(is.na(dist))) {
       return(data.frame(.lower = NA, .upper = NA))
@@ -28,6 +28,20 @@ dist_limits_function = function(df, p_limits = c(.001, .999), ...) {
 
     args = args_from_aes(...)
     quantile_fun = dist_quantile_fun(dist)
+
+    # if the lower or upper p limit is NA, check to see if the dist has a
+    # finite limit on the transformed drawing scale, otherwise use .001 or
+    # .999 as p limit. This ensures that distributions with finite limits
+    # can be displayed right up to their limits by default.
+    if (is.na(p_limits[[1]])) {
+      lower_limit = trans$transform(do.call(quantile_fun, c(0, args)))
+      p_limits[[1]] = if (is.finite(lower_limit)) 0 else .001
+    }
+    if (is.na(p_limits[[2]])) {
+      upper_limit = trans$transform(do.call(quantile_fun, c(1, args)))
+      p_limits[[2]] = if (is.finite(upper_limit)) 1 else .999
+    }
+
     limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
 
     data.frame(
@@ -202,8 +216,13 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
 #' cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`).
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
-#' limits of the slab. E.g., if this is `c(.001, .999)` (the default), then a slab is drawn
-#' for the distribution from the quantile at `p = .001` to the quantile at `p = .999`.
+#' limits of the slab. E.g., if this is `c(.001, .999)`, then a slab is drawn
+#' for the distribution from the quantile at `p = .001` to the quantile at `p = .999`. If the lower
+#' (respectively upper) limit is `NA`, then the lower (upper) limit will be the minimum (maximum) of the
+#' distribution's support if it is finite, and `0.001` (`0.999`) if it is not finite. E.g., if
+#' `p_limits` is `c(NA, NA)` on a gamma distribution the effective value of `p_limits` would be
+#' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
+#' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
@@ -264,7 +283,7 @@ stat_dist_slabinterval = function(
   ...,
 
   slab_type = c("pdf", "cdf", "ccdf"),
-  p_limits = c(.001, .999),
+  p_limits = c(NA, NA),
 
   orientation = NA,
   limits = NULL,
@@ -353,7 +372,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
 
   default_params = defaults(list(
     slab_type = "pdf",
-    p_limits = c(.001, .999),
+    p_limits = c(NA, NA),
 
     limits_function = dist_limits_function,
     slab_function = dist_slab_function,

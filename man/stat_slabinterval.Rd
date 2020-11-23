@@ -71,7 +71,9 @@ scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and the
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
 \item{limits_function}{A function that takes a data frame of aesthetics and returns a data frame with
-columns \code{.lower} and \code{.upper} indicating the limits of the input for the slab function for that data frame.}
+columns \code{.lower} and \code{.upper} indicating the limits of the input for the slab function for that data frame.
+The function may additionally take a \code{trans} argument which will be passed the scale
+\link[scales:trans_new]{transformation} object applied to the coordinate space.}
 
 \item{limits_args}{Additional arguments passed to \code{limits_function}}
 

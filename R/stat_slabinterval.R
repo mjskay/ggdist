@@ -20,6 +20,8 @@
 #' (e.g., [geom_pointinterval()])
 #' @param limits_function A function that takes a data frame of aesthetics and returns a data frame with
 #' columns `.lower` and `.upper` indicating the limits of the input for the slab function for that data frame.
+#' The function may additionally take a `trans` argument which will be passed the scale
+#' [transformation][scales::trans_new] object applied to the coordinate space.
 #' @param limits_args Additional arguments passed to `limits_function`
 #' @param limits Limits for `slab_function`, as a vector of length two. These limits are combined with those
 #' computed by the `limits_function` as well as the limits defined by the scales of the plot to determine the
@@ -297,6 +299,7 @@ compute_slabs = function(data, scales, x_trans,
   # these will adjust min_limits
   if (!is.null(limits_function)) {
     limits_function = as_function(limits_function)
+    limits_args[["trans"]] = x_trans
     limits_fun = function(df) do.call(limits_function, c(list(quote(df)), limits_args))
     l_data = summarise_by(data, c("group", y), limits_fun)
     min_limits = c(

@@ -322,7 +322,8 @@ data.frame(alpha = seq(5, 100, length.out = 10)) %>%
   coord_cartesian(expand = FALSE) +
   scale_color_viridis_c() +
   labs(
-    title = "stat_dist_slab(fill = NA)",
+    title = "stat_dist_slab()",
+    subtitle = "aes(dist = dist_beta(alpha, 10), color = alpha)",
     x = "Beta(alpha,10) distribution",
     y = NULL
   )
@@ -519,7 +520,7 @@ plot_grid(ncol = 3, align = "hv",
 
 You can also use `stat_dist_ccdfinterval()` instead if you wish to visualize analytical distributions, just as you can use `stat_dist_eye()`.
 
-By default, `stat_dist_ccdfinterval()` uses the quantiles at `p = 0.001` and `p = 0.999` in the distributions are used to determine their extent. You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown, as before:
+By default, `stat_dist_ccdfinterval()` uses the quantiles at `p = 0.001` and `p = 0.999` of the distributions to determine their extent (unless the lower or upper limit of the distribution's support is finite, in which case that value is used). You can change this setting using the `p_limits` parameter, or use `expand_limits()` to ensure a particular value is shown, as before:
 
 ```{r dist_ccdf_dodge}
 dist_df %>%

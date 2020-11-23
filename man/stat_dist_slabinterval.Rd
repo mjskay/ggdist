@@ -19,7 +19,7 @@ stat_dist_slabinterval(
   position = "identity",
   ...,
   slab_type = c("pdf", "cdf", "ccdf"),
-  p_limits = c(0.001, 0.999),
+  p_limits = c(NA, NA),
   orientation = NA,
   limits = NULL,
   n = 501,
@@ -121,8 +121,13 @@ a call to a position adjustment function.}
 cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
 
 \item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of the slab. E.g., if this is \code{c(.001, .999)} (the default), then a slab is drawn
-for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}.}
+limits of the slab. E.g., if this is \code{c(.001, .999)}, then a slab is drawn
+for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}. If the lower
+(respectively upper) limit is \code{NA}, then the lower (upper) limit will be the minimum (maximum) of the
+distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is not finite. E.g., if
+\code{p_limits} is \code{c(NA, NA)} on a gamma distribution the effective value of \code{p_limits} would be
+\code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
+it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
