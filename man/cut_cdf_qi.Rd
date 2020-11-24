@@ -4,7 +4,7 @@
 \alias{cut_cdf_qi}
 \title{Categorize values from a CDF into quantile intervals}
 \usage{
-cut_cdf_qi(p, .width = c(0.66, 0.95), labels = NULL)
+cut_cdf_qi(p, .width = c(0.66, 0.95, 1), labels = NULL)
 }
 \arguments{
 \item{p}{A numeric vector of values from a cumulative distribution function,
@@ -44,9 +44,9 @@ library(distributional)
 tibble(x = dist_normal(0, 1)) \%>\%
   ggplot(aes(dist = x, y = "a")) +
   stat_dist_slab(aes(
-    fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95)))
+    fill = stat(cut_cdf_qi(cdf))
   )) +
-  scale_fill_brewer(direction = -1)
+  scale_fill_brewer(direction = -1, na.value = "gray90")
 
 # With a halfeye (or other geom with slab and interval), NA values will
 # show up in the fill scale from the CDF function applied to the internal
@@ -54,12 +54,13 @@ tibble(x = dist_normal(0, 1)) \%>\%
 tibble(x = dist_normal(0, 1)) \%>\%
   ggplot(aes(dist = x, y = "a")) +
   stat_dist_halfeye(aes(
-    fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95)))
+    fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95, 1)))
   )) +
   scale_fill_brewer(direction = -1, na.translate = FALSE)
 
 # we could also use the labels parameter to apply nicer formatting
-# and provide a better name for the legend
+# and provide a better name for the legend, and omit the 100\% interval
+# if desired
 tibble(x = dist_normal(0, 1)) \%>\%
   ggplot(aes(dist = x, y = "a")) +
   stat_dist_halfeye(aes(

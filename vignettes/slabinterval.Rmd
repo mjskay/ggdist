@@ -722,6 +722,53 @@ priors %>%
   scale_slab_alpha_continuous(guide = FALSE)
 ```
 
+### Densities filled according to intervals
+
+Another common chart type involves filling in the interior of a halfeye plot
+according to some intervals. We can again use the fact that slabinterval stats
+auto-calculate both the PDF and CDF of a distribution as statistics. We can then
+the `cut_cdf_qi()` function, which labels points in a CDF according to
+which quantile interval they fall into, to determine the fill color:
+
+```{r halfeye_filled_intervals, fig.width = med_width, fig.height = small_height}
+df %>%
+  ggplot(aes(y = group, x = value)) +
+  stat_halfeye(aes(fill = stat(cut_cdf_qi(cdf)))) +
+  scale_fill_brewer(direction = -1) +
+  labs(
+    title = "stat_halfeye()", 
+    subtitle = "aes(fill = stat(cut_cdf_qi(cdf)))",
+    fill = "Interval"
+  )
+```
+
+Like `point_interval()`, `cut_cdf_qi()` takes a `.width` parameter to define the intervals,
+with a default of `c(.66, .95, 1)`. The final `1` is necessary to show the full
+density, to cut off the tails of the density you can omit it.
+Like ggplot scales, `cut_cdf_qi()` also takes a `labels` parameter to define the labels of
+the intervals (or to provide a function to define the labels, such as a
+formatting function like `scales::percent_format()`). Let's modify the intervals to 
+show the 50%, 80%, and 95% intervals, omitting the tails of the density and
+reformatting the interval labels to use percentages. We can also use
+`na.translate = FALSE` to drop the unnecessary `NA` level from the fill scale:
+
+```{r halfeye_filled_intervals_2, fig.width = med_width, fig.height = small_height}
+df %>%
+  ggplot(aes(y = group, x = value)) +
+  stat_halfeye(aes(fill = stat(cut_cdf_qi(
+    cdf, 
+    .width = c(.5, .8, .95),
+    labels = scales::percent_format()
+  )))) +
+  scale_fill_brewer(direction = -1, na.translate = FALSE) +
+  labs(
+    title = "stat_halfeye()", 
+    subtitle = "aes(fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95))))",
+    fill = "Interval"
+  )
+```
+
+
 ### Independent slabs and intervals in composite plots
 
 Sometimes when constructing composite plots it may be useful to position slab and interval parts of the geometry separately.
