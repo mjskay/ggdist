@@ -56,6 +56,7 @@ library(ggdist)
 library(ggplot2)
 library(broom)
 library(modelr)
+library(distributional)
 
 theme_set(theme_ggdist())
 ```
@@ -119,6 +120,11 @@ We can get the estimates and standard errors easily by using `broom::tidy()`:
 tidy(m_ABC)
 ```
 
+Finally, we can construct vectors of probability distributions using functions 
+like `distributional::dist_student_t()` from 
+the [distributional](https://pkg.mitchelloharawild.com/distributional/) package.
+The `stat_dist_slabinterval()` family of functions supports these objects.
+
 Putting everything together, we have:
 
 ```{r halfeye}
@@ -126,7 +132,7 @@ m_ABC %>%
   tidy() %>%
   ggplot(aes(y = term)) +
   stat_dist_halfeye(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = estimate, arg3 = std.error)
+    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = estimate, sigma = std.error))
   )
 ```
 
@@ -150,7 +156,7 @@ ABC %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_halfeye(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
+    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
     scale = .5
   ) +
   # we'll add the data back in too (scale = .5 above adjusts the halfeye height so
@@ -166,7 +172,7 @@ ABC %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_gradientinterval(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit), 
+    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
     scale = .5
   )
 ```
@@ -179,7 +185,7 @@ ABC %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_ccdfinterval(
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
+    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit))
   )
 ```
 
@@ -191,8 +197,8 @@ ABC %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
   stat_dist_dots(
-    quantiles = 100,
-    aes(dist = "student_t", arg1 = df.residual(m_ABC), arg2 = .fitted, arg3 = .se.fit)
+    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
+    quantiles = 100
   )
 ```
 
@@ -215,7 +221,7 @@ mtcars %>%
   augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   stat_dist_lineribbon(
-    aes(dist = "student_t", arg1 = df.residual(m_mpg), arg2 = .fitted, arg3 = .se.fit), 
+    aes(dist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit)), 
     alpha = 1/4
   ) +
   geom_point(aes(y = mpg), data = mtcars) +

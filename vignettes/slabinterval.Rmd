@@ -704,7 +704,7 @@ priors %>%
 
 ### Mashups with Correll and Gleicher-style gradients
 
-We can also take advantage of the fact that the `stat_dist_...` stats also supply `cdf` and `pdf` aesthetics to create charts make use of both the CDF and the PDF in their aesthetic mappings. For example, we could create [Correll & Gleicher](https://doi.org/10.1109/TVCG.2014.2346298)-style gradient plots by fading the tails outside of the 95% interval in proportion to $|1 - 2F(x)|$ (where $F(x)$ is the CDF):
+We can also take advantage of the fact that all slabinterval stats also supply `cdf` and `pdf` aesthetics to create charts make use of both the CDF and the PDF in their aesthetic mappings. For example, we could create [Correll & Gleicher](https://doi.org/10.1109/TVCG.2014.2346298)-style gradient plots by fading the tails outside of the 95% interval in proportion to $|1 - 2F(x)|$ (where $F(x)$ is the CDF):
 
 ```{r correll_gradient, fig.width = med_width, fig.height = small_height/2}
 priors %>%
@@ -745,6 +745,7 @@ df %>%
 ```
 
 (Thanks to Brenton Wiernik for [this example](https://github.com/mjskay/ggdist/issues/27#issuecomment-725578437).)
+
 
 ```{r reset_options, include=FALSE}
 options(.old_options)

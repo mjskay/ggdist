@@ -33,7 +33,7 @@ Imports:
     tibble,
     vctrs,
     fda,
-    distributional
+    distributional (>= 0.2.0)
 Suggests:
     knitr,
     testthat,
