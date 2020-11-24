@@ -663,6 +663,9 @@ df %>%
   ggtitle("stat_ccdfinterval(aes(slab_alpha = stat(f)), thickness = 1)")
 ```
 
+If this approach were applied to bins in a histogram, where each bin had some uncertainty
+associated with its height, the result would be a so-called *fuzzygram* ([Wilkinson 1992](https://doi.org/10.1177/096228029200100102)).
+
 ### Highlighting and other combinations
 
 The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. Take the earlier example of visualizing priors:
