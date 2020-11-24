@@ -215,13 +215,17 @@ m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ `stat_dist_lineribbon()`:
 
 ```{r lineribbon}
+lighten2 = Vectorize(function(color, amount) {
+  rgb(colorRamp(c(color, "white"), space = "Lab")(amount), max = 255)
+})
+
 mtcars %>%
   group_by(cyl) %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   stat_dist_lineribbon(
-    aes(dist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit)), 
+    aes(dist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit)),
     alpha = 1/4
   ) +
   geom_point(aes(y = mpg), data = mtcars) +
@@ -235,7 +239,35 @@ mtcars %>%
   )
 ```
 
+Another alternative to using `alpha` to create gradations of lineribbon colors in different
+groups is to manually adjust the lightness of each ribbon using `ggplot2::stage()`,
+which allows you to transform color values after they have been computed. Here
+we'll combine it with `colorspace::lighten()` to lighten the fill color of
+each band according to its width:
+
+```{r lineribbon_lightened}
+mtcars %>%
+  group_by(cyl) %>%
+  data_grid(hp = seq_range(hp, n = 101)) %>%
+  augment(m_mpg, newdata = ., se_fit = TRUE) %>%
+  ggplot(aes(x = hp, color = ordered(cyl))) +
+  stat_dist_lineribbon(aes(
+    dist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit),
+    fill = stage(start = ordered(cyl), after_scale = colorspace::lighten(fill, .width * .9, space = "combined"))
+  ), show.legend = FALSE) +
+  geom_point(aes(y = mpg), data = mtcars) +
+  
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  labs(
+    color = "cyl",
+    fill = "cyl",
+    y = "mpg"
+  )
+```
+
 For more examples of using lineribbons, see `vignette("lineribbon")`.
+
 
 ```{r reset_options, include=FALSE}
 options(.old_options)

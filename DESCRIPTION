@@ -46,7 +46,8 @@ Suggests:
     gdtools,
     rmarkdown,
     png,
-    pkgdown
+    pkgdown,
+    colorspace
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new

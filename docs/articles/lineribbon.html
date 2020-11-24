@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1 data-toc-skip>Lineribbon stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-10-29</h4>
+            <h4 class="date">2020-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/lineribbon.Rmd"><code>vignettes/lineribbon.Rmd</code></a></small>
       <div class="hidden name"><code>lineribbon.Rmd</code></div>
@@ -136,7 +136,7 @@ img {
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist">ggdist</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist/">ggdist</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.mitchelloharawild.com/distributional/">distributional</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span>
@@ -187,16 +187,16 @@ img {
 <pre><code>## # A tibble: 10 x 7
 ##        x       y   .lower .upper .width .point .interval
 ##    &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-##  1    -4 -1.04   -3.75      1.76   0.95 median qi       
-##  2    -3 -0.0192 -2.41      2.45   0.95 median qi       
-##  3    -2  0.995  -1.17      3.19   0.95 median qi       
-##  4    -1  2.00   -0.00515   4.05   0.95 median qi       
-##  5     0  3.01    1.06      5.05   0.95 median qi       
-##  6     1  3.99    2.02      6.07   0.95 median qi       
-##  7     2  4.99    2.84      7.28   0.95 median qi       
-##  8     3  5.99    3.54      8.53   0.95 median qi       
-##  9     4  7.02    4.22      9.85   0.95 median qi       
-## 10     5  8.01    4.85     11.2    0.95 median qi</code></pre>
+##  1    -4 -1.03   -3.73      1.84   0.95 median qi       
+##  2    -3 -0.0212 -2.39      2.46   0.95 median qi       
+##  3    -2  0.986  -1.17      3.21   0.95 median qi       
+##  4    -1  1.99   -0.00265   4.01   0.95 median qi       
+##  5     0  2.99    1.01      4.97   0.95 median qi       
+##  6     1  4.00    1.94      6.04   0.95 median qi       
+##  7     2  5.01    2.79      7.17   0.95 median qi       
+##  8     3  6.02    3.52      8.45   0.95 median qi       
+##  9     4  7.02    4.21      9.74   0.95 median qi       
+## 10     5  8.04    4.83     11.1    0.95 median qi</code></pre>
 <p>Given data summarized like that above, we can then construct a line+ribbon chart using <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="va">df</span> <span class="op">%&gt;%</span>
@@ -270,6 +270,11 @@ img {
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <p><img src="lineribbon_files/figure-html/stat_dist_lineribbon-1.png" width="648"></p>
+</div>
+<div id="more-examples" class="section level2">
+<h2 class="hasAnchor">
+<a href="#more-examples" class="anchor"></a>More examples</h2>
+<p>For more examples of lineribbons, including multiple lineribbons in the same plot, see the examples at the end of <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>.</p>
 </div>
 <div id="curve-boxplots-aka-lineribbons-with-joint-intervals-or-curvewise-intervals" class="section level2">
 <h2 class="hasAnchor">

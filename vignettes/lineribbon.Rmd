@@ -199,6 +199,10 @@ analytical_df %>%
   scale_fill_brewer()
 ```
 
+## More examples
+
+For more examples of lineribbons, including multiple lineribbons in the same plot, 
+see the examples at the end of `vignette("freq-uncertainty-vis")`.
 
 ## Curve boxplots (aka lineribbons with joint intervals or curvewise intervals)
 
