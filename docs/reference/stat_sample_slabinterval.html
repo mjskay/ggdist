@@ -94,7 +94,7 @@ CCDF bar plots etc." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
       </span>
     </div>
 
@@ -482,7 +482,10 @@ Learn more about basic ggplot aesthetics in <code>vignette("ggplot2-specs")</cod
 For intervals, the point summary from the interval function. Whether it is <code>x</code> or <code>y</code> depends on <code>orientation</code></p></li>
 <li><p><code>xmin</code> or <code>ymin</code>: For intervals, the lower end of the interval from the interval function.</p></li>
 <li><p><code>xmax</code> or <code>ymax</code>: For intervals, the upper end of the interval from the interval function.</p></li>
-<li><p><code>f</code>: For slabs, the output values from the slab function.</p></li>
+<li><p><code>f</code>: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by <code>slab_type</code>.</p></li>
+<li><p><code>pdf</code>: For slabs, the probability density function.</p></li>
+<li><p><code>cdf</code>: For slabs, the cumulative distribution function.</p></li>
 <li><p><code>n</code>: For slabs, the number of data points summarized into that slab.</p></li>
 </ul>
 
