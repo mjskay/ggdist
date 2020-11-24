@@ -96,7 +96,7 @@ to specify distribution arguments. See Details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
       </span>
     </div>
 
@@ -173,7 +173,7 @@ to specify distribution arguments. See <em>Details</em>.</p>
   position <span class='op'>=</span> <span class='st'>"identity"</span>,
   <span class='va'>...</span>,
   slab_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pdf"</span>, <span class='st'>"cdf"</span>, <span class='st'>"ccdf"</span><span class='op'>)</span>,
-  p_limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.001</span>, <span class='fl'>0.999</span><span class='op'>)</span>,
+  p_limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span><span class='op'>)</span>,
   orientation <span class='op'>=</span> <span class='cn'>NA</span>,
   limits <span class='op'>=</span> <span class='cn'>NULL</span>,
   n <span class='op'>=</span> <span class='fl'>501</span>,
@@ -288,8 +288,13 @@ cumulative distribution function (<code>"cdf"</code>), or complementary CDF (<co
     <tr>
       <th>p_limits</th>
       <td><p>Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of the slab. E.g., if this is <code><a href='https://rdrr.io/r/base/c.html'>c(.001, .999)</a></code> (the default), then a slab is drawn
-for the distribution from the quantile at <code>p = .001</code> to the quantile at <code>p = .999</code>.</p></td>
+limits of the slab. E.g., if this is <code><a href='https://rdrr.io/r/base/c.html'>c(.001, .999)</a></code>, then a slab is drawn
+for the distribution from the quantile at <code>p = .001</code> to the quantile at <code>p = .999</code>. If the lower
+(respectively upper) limit is <code>NA</code>, then the lower (upper) limit will be the minimum (maximum) of the
+distribution's support if it is finite, and <code>0.001</code> (<code>0.999</code>) if it is not finite. E.g., if
+<code>p_limits</code> is <code><a href='https://rdrr.io/r/base/c.html'>c(NA, NA)</a></code> on a gamma distribution the effective value of <code>p_limits</code> would be
+<code><a href='https://rdrr.io/r/base/c.html'>c(0, .999)</a></code> since the gamma distribution is defined on <code>(0, Inf)</code>; whereas on a normal distribution
+it would be equivalent to <code><a href='https://rdrr.io/r/base/c.html'>c(.001, .999)</a></code> since the normal distribution is defined on <code>(-Inf, Inf)</code>.</p></td>
     </tr>
     <tr>
       <th>orientation</th>
@@ -514,7 +519,7 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://pkg.mitchelloharawild.com/distributional/'>distributional</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'distributional' was built under R version 4.0.3</span></div><div class='input'>
+
 <span class='va'>dist_df</span> <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tribble.html'>tribble</a></span><span class='op'>(</span>
   <span class='op'>~</span><span class='va'>group</span>, <span class='op'>~</span><span class='va'>subgroup</span>, <span class='op'>~</span><span class='va'>mean</span>, <span class='op'>~</span><span class='va'>sd</span>,
   <span class='st'>"a"</span>,          <span class='st'>"h"</span>,     <span class='fl'>5</span>,   <span class='fl'>1</span>,

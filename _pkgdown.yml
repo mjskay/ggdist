@@ -19,7 +19,7 @@ reference:
   - ggdist-package
 
 - title: Point summaries and intervals
-  desc:  Calculate point summaries and intervals on (grouped) data frames of draws
+  desc:  Calculate point summaries and intervals
   contents:
   - point_interval
   - curve_interval
@@ -27,6 +27,7 @@ reference:
   - ends_with("hdci")
   - ends_with("hdi")
   - ends_with("qi")
+  - cut_cdf_qi
 
 - title: Visualizing draws
   desc:  Stats and geoms for visualizing tidy data frames of draws (e.g. sample data,
