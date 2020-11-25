@@ -50,8 +50,11 @@
 #' if no column names are specified to be summarized. Default ignores several meta-data column
 #' names used in tidybayes.
 #' @param na.rm logical value indicating whether `NA` values should be stripped before the computation proceeds.
-#' If `FALSE` (the default), any vectors to be summarized that contain `NA` will result in
-#' point and interval summaries equal to `NA`.
+#' If `FALSE` (the default), the presence of `NA` values in the columns to be summarized will generally
+#' result in an error. If `TRUE`, `NA` values will be removed in the calculation of intervals so long
+#' as `.interval` is `"mhd"`; other methods do not currently support `na.rm`. Be cautious in applying
+#' this parameter: in general, it is unclear what a joint interval should be when any of the values
+#' are missing!
 #' @return A data frame containing point summaries and intervals, with at least one column corresponding
 #' to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
 #' width of the interval (`.width`), the type of point summary (`.point`), and the type of interval (`.interval`).
@@ -178,7 +181,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .95,
       data = summarise_at(data, col_name, list)
     }
 
-    .curve_interval(data, col_name, ".lower", ".upper", .width, .interval, .conditional_groups)
+    .curve_interval(data, col_name, ".lower", ".upper", .width, .interval, .conditional_groups, na.rm = na.rm)
   } else {
     iwalk(col_exprs, function(col_expr, col_name) {
       data[[col_name]] <<- eval_tidy(col_expr, data)
@@ -192,7 +195,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .95,
 
     for (col_name in names(col_exprs)) {
       data = .curve_interval(
-        data, col_name, paste0(col_name, ".lower"), paste0(col_name, ".upper"), .width, .interval, .conditional_groups
+        data, col_name, paste0(col_name, ".lower"), paste0(col_name, ".upper"), .width, .interval, .conditional_groups, na.rm = na.rm
       )
     }
 
@@ -206,12 +209,12 @@ curve_interval = function(.data, ..., .along = NULL, .width = .95,
 }
 
 halfspace_depth = function(x) {
-  rank_x = rank(x)
+  rank_x = rank(x, na.last = "keep")
   n = length(x)
   pmin(rank_x/n, (n + 1 - rank_x)/n)
 }
 
-.curve_interval = function(data, col_name, lower, upper, .width, .interval, .conditional_groups) {
+.curve_interval = function(data, col_name, lower, upper, .width, .interval, .conditional_groups, na.rm = FALSE) {
   if (length(unique(lengths(data[[col_name]]))) != 1) {
     stop("Must have the same number of values in each group.")
   }
@@ -234,7 +237,7 @@ halfspace_depth = function(x) {
       # draws x depth matrix
       pointwise_depths = apply(draws, 2, halfspace_depth)
       # mean depth of each draw
-      draw_depth = rowMeans(pointwise_depths)
+      draw_depth = rowMeans(pointwise_depths, na.rm = na.rm)
     } else { # band depth using fbplot
       # y x draws matrix
       draws = do.call(rbind, d[[col_name]])
@@ -247,7 +250,7 @@ halfspace_depth = function(x) {
     median_y = map_dbl(d[[col_name]], `[[`, median_draw)
 
     map_dfr(.width, function(w) {
-      depth_cutoff = quantile(draw_depth, 1 - w)
+      depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
       selected_draws = draw_depth >= depth_cutoff
 
       selected_y = lapply(d[[col_name]], `[`, selected_draws)

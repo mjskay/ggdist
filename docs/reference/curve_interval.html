@@ -228,8 +228,11 @@ and <code>ymax</code> (for use with ggplot).</p></td>
     <tr>
       <th>na.rm</th>
       <td><p>logical value indicating whether <code>NA</code> values should be stripped before the computation proceeds.
-If <code>FALSE</code> (the default), any vectors to be summarized that contain <code>NA</code> will result in
-point and interval summaries equal to <code>NA</code>.</p></td>
+If <code>FALSE</code> (the default), the presence of <code>NA</code> values in the columns to be summarized will generally
+result in an error. If <code>TRUE</code>, <code>NA</code> values will be removed in the calculation of intervals so long
+as <code>.interval</code> is <code>"mhd"</code>; other methods do not currently support <code>na.rm</code>. Be cautious in applying
+this parameter: in general, it is unclear what a joint interval should be when any of the values
+are missing!</p></td>
     </tr>
     <tr>
       <th>.exclude</th>

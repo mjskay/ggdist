@@ -58,8 +58,11 @@ When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y},
 and \code{ymax} (for use with ggplot).}
 
 \item{na.rm}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
-If \code{FALSE} (the default), any vectors to be summarized that contain \code{NA} will result in
-point and interval summaries equal to \code{NA}.}
+If \code{FALSE} (the default), the presence of \code{NA} values in the columns to be summarized will generally
+result in an error. If \code{TRUE}, \code{NA} values will be removed in the calculation of intervals so long
+as \code{.interval} is \code{"mhd"}; other methods do not currently support \code{na.rm}. Be cautious in applying
+this parameter: in general, it is unclear what a joint interval should be when any of the values
+are missing!}
 
 \item{.exclude}{A character vector of names of columns to be excluded from summarization
 if no column names are specified to be summarized. Default ignores several meta-data column
