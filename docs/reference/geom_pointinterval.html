@@ -94,7 +94,7 @@ Wrapper around geom_slabinterval()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
       </span>
     </div>
 
@@ -228,12 +228,16 @@ groups so that the maximum height in each group is <code>1</code>; if <code>"non
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).</p></dd>
     <dt><code>interval_size_domain</code></dt><dd><p>The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to <code>interval_size_range</code> (see the documentation for that argument.)</p></dd>
-    <dt><code>interval_size_range</code></dt><dd><p>This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+    <dt><code>interval_size_range</code></dt><dd><p>(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
 they tend to be too thick when using the default settings of <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>, which give sizes
 with a range of <code><a href='https://rdrr.io/r/base/c.html'>c(1, 6)</a></code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
 (typically this should be equal to the value of the <code>range</code> argument of the <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>
 function), and <code>interval_size_range</code> indicates the desired output range of the size values (the min and max of
-the actual sizes used to draw intervals).</p></dd>
+the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
+as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+size of the interval or points separately, you can instead use the <code>interval_size</code> or <code>point_size</code>
+aesthetics; see <a href='scales.html'>scales</a>.</p></dd>
     <dt><code>fatten_point</code></dt><dd><p>A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest interval line. If you wish to specify point sizes directly, you can also use the <code>point_size</code>
 aesthetic and <code><a href='scales.html'>scale_point_size_continuous()</a></code> or <code><a href='scales.html'>scale_point_size_discrete()</a></code>; sizes

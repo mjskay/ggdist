@@ -102,12 +102,16 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
-\item{interval_size_range}{This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+\item{interval_size_range}{(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
 they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give sizes
 with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
 (typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
 function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
-the actual sizes used to draw intervals).}
+the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
+as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
+aesthetics; see \link{scales}.}
 
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
 

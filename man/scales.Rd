@@ -238,7 +238,7 @@ data.frame(distribution = "Normal(1,2)") \%>\%
     stroke = 2,
     interval_color = "blue",
     # interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default
-    # see the interval_size_range option in help("geom_slabinterval")
+    # see the interval_size_range parameter in help("geom_slabinterval")
     interval_size = 8,
     interval_linetype = "dashed",
     interval_alpha = .25,

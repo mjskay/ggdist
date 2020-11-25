@@ -144,12 +144,16 @@ groups so that the maximum height in each group is \code{1}; if \code{"none"}, v
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
     \item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
-    \item{\code{interval_size_range}}{This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+    \item{\code{interval_size_range}}{(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
 they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give sizes
 with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
 (typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
 function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
-the actual sizes used to draw intervals).}
+the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
+as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
+aesthetics; see \link{scales}.}
     \item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
 aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes

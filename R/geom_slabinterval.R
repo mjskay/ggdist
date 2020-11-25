@@ -259,12 +259,16 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' normalization (this should probably only be used with functions whose values are in \[0,1\], such as CDFs).
 #' @param interval_size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
 #' sizes for intervals drawn according to `interval_size_range` (see the documentation for that argument.)
-#' @param interval_size_range This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+#' @param interval_size_range (Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
 #' they tend to be too thick when using the default settings of [scale_size_continuous()], which give sizes
 #' with a range of `c(1, 6)`. The `interval_size_domain` value indicates the input domain of raw size values
 #' (typically this should be equal to the value of the `range` argument of the [scale_size_continuous()]
 #' function), and `interval_size_range` indicates the desired output range of the size values (the min and max of
-#' the actual sizes used to draw intervals).
+#' the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
+#' as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+#' that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+#' size of the interval or points separately, you can instead use the `interval_size` or `point_size`
+#' aesthetics; see [scales].
 #' @param fatten_point A multiplicative factor used to adjust the size of the point relative to the size of the
 #' thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
 #' aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
