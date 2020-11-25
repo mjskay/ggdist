@@ -128,7 +128,7 @@
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
 #' @importFrom tidyselect eval_select
 #' @export
-curve_interval = function(.data, ..., .along = NULL, .width = .95,
+curve_interval = function(.data, ..., .along = NULL, .width = .5,
   .interval = c("mhd", "mbd", "bd", "bd-mbd"), .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {

@@ -88,6 +88,7 @@ bootstrap sampling distributions. For the simple example here, we'll just genera
 manually:
 
 ```{r df}
+set.seed(1234)
 n = 5000
 
 df = tibble(
@@ -234,7 +235,7 @@ If one used one of the `point_interval()` functions to summarize this curve (suc
 ```{r pointwise_ribbon, fig.width = med_width, fig.height = med_height}
 df %>%
   group_by(x) %>%
-  median_qi(y, .width = c(.5)) %>%
+  median_qi(y, .width = .5) %>%
   ggplot(aes(x = x, y = y)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_line(aes(group = .draw), alpha=0.15, data = df) +
@@ -251,7 +252,7 @@ One solution I like for such situations is to show spaghetti plots: just plot th
 ```{r curvewise_ribbon, fig.width = med_width, fig.height = med_height}
 df %>%
   group_by(x) %>%
-  curve_interval(y, .width = c(.5)) %>%
+  curve_interval(y, .width = .5) %>%
   ggplot(aes(x = x, y = y)) +
   geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
   geom_line(aes(group = .draw), alpha=0.15, data = df) +
@@ -299,6 +300,95 @@ plot_grid(nrow = 2,
 ```
 
 Notice how the pointwise intervals miss out on the peaks of this distribution of curves. Even the 95% ribbon, which appears to reach up to the peaks, in fact falls slightly short. While this is a bit of a pathological example, it does demonstrate the potential shortcomings of pointwise intervals.
+
+### Limitations of curvewise intervals
+
+One challenge with curvewise intervals is that they can tend to be very conservative, 
+especially at moderate-to-large intervals widths. Let's bootstrap some LOESS fits
+to horsepower versus MPG in the `mtcars` dataset: 
+
+```{r mtcars_boot}
+set.seed(1234)
+n = 4000
+mpg = seq(min(mtcars$mpg), max(mtcars$mpg), length.out = 100)
+
+mtcars_boot = tibble(
+  .draw = 1:n,
+  m = map(.draw, ~ loess(
+    hp ~ mpg, 
+    span = 0.9,
+    # this lets us predict outside the range of the data
+    control = loess.control(surface = "direct"), 
+    data = slice_sample(mtcars, prop = 1, replace = TRUE)
+  )),
+  hp = map(m, predict, newdata = tibble(mpg)),
+  mpg = list(mpg)
+) %>%
+  select(-m) %>%
+  unnest(c(hp, mpg))
+```
+
+This is a pretty naive approach,
+and definitely not a great way of analyzing this data, but it will illustrate the
+problems of some kinds of problems we might get with joint intervals. Let's
+look at a spaghetti plot of just 400 draws from this bootstrap distribution first:
+
+```{r mtcars_spaghetti, fig.width = med_width, fig.height = med_height}
+mtcars_boot %>%
+  filter(.draw < 400) %>%
+  ggplot(aes(x = mpg, y = hp)) +
+  geom_line(aes(group = .draw), alpha = 1/10) +
+  geom_point(data = mtcars) +
+  coord_cartesian(ylim = c(0, 400))
+```
+
+Now, pointwise intervals:
+
+```{r mtcars_point_interval, fig.width = med_width, fig.height = med_height}
+mtcars_boot %>%
+  ggplot(aes(x = mpg, y = hp)) +
+  stat_lineribbon(.width = c(.5, .7, .9)) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer() +
+  coord_cartesian(ylim = c(0, 400))
+```
+
+Finally, curvewise intervals:
+
+```{r mtcars_curve_interval, fig.width = med_width, fig.height = med_height}
+mtcars_boot %>%
+  group_by(mpg) %>%
+  curve_interval(hp, .width = c(.5, .7, .9)) %>%
+  ggplot(aes(x = mpg, y = hp)) +
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer() +
+  coord_cartesian(ylim = c(0, 400))
+```
+
+Notice how noisy the curvewise intervals are. In addition, because a number of
+curves tend to start low and end high (or vice versa), above 50%, the bands 
+rapidly expand to cover almost all of the curves in the sample, regardless of
+coverage level. You can try different methods to sometimes get improved 
+bands; e.g. using the `"bd-mbd"` method per Sun and Genton 
+([2011](https://doi.org/10.1198/jcgs.2011.09224)) works better on this dataset:
+
+```{r mtcars_curve_interval_bd, fig.width = med_width, fig.height = med_height}
+mtcars_boot %>%
+  group_by(mpg) %>%
+  curve_interval(hp, .width = c(.5, .7, .9), .interval = "bd-mbd") %>%
+  ggplot(aes(x = mpg, y = hp)) +
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+  geom_point(data = mtcars) +
+  scale_fill_brewer() +
+  coord_cartesian(ylim = c(0, 400))
+```
+
+In general I have found that there is no one method that consistently works 
+well on all datasets. No matter the method, intervals often become problematic
+above 50%, hence the default `.width` for `curve_interval()` is `0.5` (unlike
+the default for `point_interval()`, which is `0.95`). In any case, caution 
+when using these intervals is advised.
 
 
 ```{r reset_options, include=FALSE}

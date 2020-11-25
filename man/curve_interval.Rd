@@ -9,7 +9,7 @@ curve_interval(
   .data,
   ...,
   .along = NULL,
-  .width = 0.95,
+  .width = 0.5,
   .interval = c("mhd", "mbd", "bd", "bd-mbd"),
   .simple_names = TRUE,
   na.rm = FALSE,
