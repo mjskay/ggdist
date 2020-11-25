@@ -132,9 +132,14 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_
 #' @rdname parse_dist
 #' @export
 parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
-  parse_dist(as.character(object))
+  parse_dist(as.character(object), ..., dist = dist, args = args, to_r_names = to_r_names)
 }
 
+#' @rdname parse_dist
+#' @export
+parse_dist.brmsprior = function(object, dist_col = prior, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+  parse_dist.data.frame(as.data.frame(object), {{ dist_col }}, ..., dist = dist, args = args, to_r_names = to_r_names)
+}
 
 
 # r_dist_name -------------------------------------------------------------
