@@ -4,6 +4,11 @@
 ###############################################################################
 
 
+# Names that should be suppressed from global variable check by codetools
+# Names used broadly should be put in _global_variables.R
+globalVariables(c("prior"))
+
+
 #' Parse distribution specifications into columns of a data frame
 #'
 #' Parses simple string distribution specifications, like `"normal(0, 1)"`, into two columns of

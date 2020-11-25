@@ -30,7 +30,7 @@ test_that("curve_interval works with lineribbon", {
       curve_interval(y, .width = c(.5, .8), .interval = "bd-mbd") %>%
       ggplot(aes(x = x, y = y)) +
       geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
-      geom_line(aes(group = .draw), alpha = 0.15, data = df) +
+      geom_line(aes(group = .draw), alpha = 0.15, data = curve_df) +
       scale_fill_brewer()
   )
 
@@ -39,7 +39,7 @@ test_that("curve_interval works with lineribbon", {
       curve_interval(y, .width = c(.5, .8), .interval = "bd-mbd") %>%
       ggplot(aes(x = x, y = y)) +
       geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
-      geom_line(aes(group = .draw), alpha = 0.15, data = df) +
+      geom_line(aes(group = .draw), alpha = 0.15, data = curve_df) +
       scale_fill_brewer()
   )
 
