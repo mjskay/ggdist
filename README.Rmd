@@ -79,9 +79,13 @@ they originally were part of `tidybayes`). For examples of the use of `ggdist` g
 stats for visualizing uncertainty in Bayesian models, see the vignettes in tidybayes, such as
 `vignette("tidybayes", package = "tidybayes")` or `vignette("tidy-brms", package = "tidybayes")`.
 
+## Cheatsheets
+
+<a href="https://github.com/mjskay/ggdist/blob/master/figures-source/cheat_sheet-slabinterval.pdf"><img src="https://raw.githubusercontent.com/mjskay/ggdist/master/figures-source/cheat_sheet-slabinterval.png" width="630" /></a>  
+
 ## Installation
 
-Once on CRAN, you can install the currently-released version from CRAN with this R
+You can install the currently-released version from CRAN with this R
 command:
 
 ```{r install, eval=FALSE}

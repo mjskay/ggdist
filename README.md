@@ -51,6 +51,10 @@ originally were part of `tidybayes`). For examples of the use of
 see the vignettes in tidybayes, such as `vignette("tidybayes", package =
 "tidybayes")` or `vignette("tidy-brms", package = "tidybayes")`.
 
+## Cheatsheets
+
+<a href="https://github.com/mjskay/ggdist/blob/master/figures-source/cheat_sheet-slabinterval.pdf"><img src="https://raw.githubusercontent.com/mjskay/ggdist/master/figures-source/cheat_sheet-slabinterval.png" width="630" /></a>
+
 ## Installation
 
 Once on CRAN, you can install the currently-released version from CRAN
@@ -79,6 +83,6 @@ reproduce the issue. Pull requests should be filed against the
 ## Citing `ggdist`
 
 Matthew Kay (2020). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 2.3.0,
+Uncertainty*. R package version 2.3.0.9000,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
