@@ -143,6 +143,7 @@ draw_path = function(data, panel_params, coord) {
 override_slab_aesthetics = function(self, s_data) {
   s_data$colour = s_data$slab_colour
   s_data$fill = s_data$slab_fill %||% s_data$fill
+  s_data$fill = apply_color_ramp(s_data$fill, s_data$fill_ramp)
   s_data$alpha = s_data$slab_alpha %||% s_data$alpha
   s_data$size = s_data$slab_size
   s_data$linetype = s_data$slab_linetype %||% s_data$linetype
@@ -435,7 +436,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     slab_colour = NULL,       # no fallback
     slab_fill = NULL,         # falls back to fill
     slab_alpha = NULL,        # falls back to alpha
-    slab_linetype = NULL      # falls back to linetype
+    slab_linetype = NULL,     # falls back to linetype
+    fill_ramp = NULL
   ),
 
   # default aesthetics as they will actually be set (here or in the key)
@@ -799,6 +801,7 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
     # we define these differently from geom_slabinterval to make this easier to use on its own
     s_data$colour = s_data$slab_colour %||% s_data$colour
     s_data$fill = s_data$slab_fill %||% s_data$fill
+    s_data$fill = apply_color_ramp(s_data$fill, s_data$fill_ramp)
     s_data$alpha = s_data$slab_alpha %||% s_data$alpha
     s_data$size = s_data$slab_size %||% s_data$size
     s_data$linetype = s_data$slab_linetype %||% s_data$linetype

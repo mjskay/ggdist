@@ -296,6 +296,7 @@ In addition, in their default configuration (paired with \code{\link[=geom_slabi
 \item \code{slab_fill}
 \item \code{slab_alpha}
 \item \code{slab_linetype}
+\item \code{fill_ramp}
 \item \code{ymin}
 \item \code{ymax}
 \item \code{xmin}

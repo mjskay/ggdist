@@ -34,7 +34,7 @@ draw_key_slabinterval_ = function(self, data, params, size) {
 draw_key_slab_ = function(self, data, key_data, params, size) {
   # size is not in this list because if size it set but colour is not then there's nothing to draw,
   # so use size can only occur in cases where colour is alos set (so we can just check colour)
-  if (params$show_slab && any(!is.na(data[,c("fill","alpha","slab_fill","slab_colour","slab_size","slab_linetype","slab_alpha")]))) {
+  if (params$show_slab && any(!is.na(data[,c("fill","fill_ramp","alpha","slab_fill","slab_colour","slab_size","slab_linetype","slab_alpha")]))) {
     s_key_data = self$override_slab_aesthetics(key_data)
 
     if (any(!is.na(data[,c("slab_size","slab_linetype")])) && is.na(s_key_data$colour)) {
