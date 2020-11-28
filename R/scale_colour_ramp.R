@@ -16,8 +16,8 @@
 #' @inheritParams ggplot2::continuous_scale
 #' @param from The color to ramp from. Corresponds to `0` on the scale.
 #' @param ... Arguments passed to underlying scale or guide functions. E.g. `scale_colour_ramp_discrete()`,
-#' passes arguments to [discrete_scale()], `scale_colour_ramp_continous()` passes arguments
-#' to [continous_scale()]. See those functions for more details.
+#' passes arguments to [discrete_scale()], `scale_colour_ramp_continuous()` passes arguments
+#' to [continuous_scale()]. See those functions for more details.
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @param range a numeric vector of length 2 that specifies the minimum and maximum
 #' values after the scale transformation. These values should be between `0`
@@ -27,10 +27,21 @@
 #' aesthetics for `ggdist` geoms. Can be added to a [ggplot()] object.
 #' @name scale_colour_ramp
 #' @author Matthew Kay
-#' @seealso [discrete_scale()], [continous_scale()].
+#' @seealso [discrete_scale()], [continuous_scale()].
 #' @examples
 #'
-#' TODO
+#' library(dplyr)
+#' library(ggplot2)
+#' library(distributional)
+#'
+#' tibble(d = dist_uniform(0, 1)) %>%
+#'   ggplot(aes(y = 0, dist = d)) +
+#'   stat_dist_slab(aes(fill_ramp = stat(x)))
+#'
+#' tibble(d = dist_uniform(0, 1)) %>%
+#'   ggplot(aes(y = 0, dist = d)) +
+#'   stat_dist_slab(aes(fill_ramp = stat(x)), fill = "blue") +
+#'   scale_fill_ramp_continuous(from = "red")
 #'
 #' @importFrom scales rescale_pal
 #' @export
@@ -65,12 +76,12 @@ scale_color_ramp_discrete = scale_colour_ramp_discrete
 #' @rdname scale_colour_ramp
 #' @export
 scale_fill_ramp_continuous = function(..., aesthetics = "fill_ramp") {
-  scale_colour_ramp_continuous(aesthetics, ...)
+  scale_colour_ramp_continuous(..., aesthetics = aesthetics)
 }
 #' @rdname scale_colour_ramp
 #' @export
 scale_fill_ramp_discrete = function(..., aesthetics = "fill_ramp") {
-  scale_fill_ramp_continuous(aesthetics, ...)
+  scale_fill_ramp_discrete(..., aesthetics = aesthetics)
 }
 
 

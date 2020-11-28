@@ -48,8 +48,8 @@ scale_fill_ramp_discrete(..., aesthetics = "fill_ramp")
 \item{from}{The color to ramp from. Corresponds to \code{0} on the scale.}
 
 \item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{scale_colour_ramp_discrete()},
-passes arguments to \code{\link[=discrete_scale]{discrete_scale()}}, \code{scale_colour_ramp_continous()} passes arguments
-to \code{\link[=continous_scale]{continous_scale()}}. See those functions for more details.}
+passes arguments to \code{\link[=discrete_scale]{discrete_scale()}}, \code{scale_colour_ramp_continuous()} passes arguments
+to \code{\link[=continuous_scale]{continuous_scale()}}. See those functions for more details.}
 
 \item{limits}{One of:
 \itemize{
@@ -81,11 +81,22 @@ by the standard \code{color} or \code{fill} aesthetics).
 }
 \examples{
 
-TODO
+library(dplyr)
+library(ggplot2)
+library(distributional)
+
+tibble(d = dist_uniform(0, 1)) \%>\%
+  ggplot(aes(y = 0, dist = d)) +
+  stat_dist_slab(aes(fill_ramp = stat(x)))
+
+tibble(d = dist_uniform(0, 1)) \%>\%
+  ggplot(aes(y = 0, dist = d)) +
+  stat_dist_slab(aes(fill_ramp = stat(x)), fill = "blue") +
+  scale_fill_ramp_continuous(from = "red")
 
 }
 \seealso{
-\code{\link[=discrete_scale]{discrete_scale()}}, \code{\link[=continous_scale]{continous_scale()}}.
+\code{\link[=discrete_scale]{discrete_scale()}}, \code{\link[=continuous_scale]{continuous_scale()}}.
 }
 \author{
 Matthew Kay
