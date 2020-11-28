@@ -142,8 +142,9 @@ draw_path = function(data, panel_params, coord) {
 
 override_slab_aesthetics = function(self, s_data) {
   s_data$colour = s_data$slab_colour
+  s_data$colour = apply_colour_ramp(s_data$colour, s_data$colour_ramp)
   s_data$fill = s_data$slab_fill %||% s_data$fill
-  s_data$fill = apply_color_ramp(s_data$fill, s_data$fill_ramp)
+  s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
   s_data$alpha = s_data$slab_alpha %||% s_data$alpha
   s_data$size = s_data$slab_size
   s_data$linetype = s_data$slab_linetype %||% s_data$linetype
@@ -800,8 +801,9 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
   override_slab_aesthetics = function(self, s_data) {
     # we define these differently from geom_slabinterval to make this easier to use on its own
     s_data$colour = s_data$slab_colour %||% s_data$colour
+    s_data$colour = apply_colour_ramp(s_data$colour, s_data$colour_ramp)
     s_data$fill = s_data$slab_fill %||% s_data$fill
-    s_data$fill = apply_color_ramp(s_data$fill, s_data$fill_ramp)
+    s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
     s_data$alpha = s_data$slab_alpha %||% s_data$alpha
     s_data$size = s_data$slab_size %||% s_data$size
     s_data$linetype = s_data$slab_linetype %||% s_data$linetype
