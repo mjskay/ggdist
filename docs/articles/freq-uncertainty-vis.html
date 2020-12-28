@@ -99,14 +99,14 @@
 
       
 
-      </header><script src="freq-uncertainty-vis_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="freq-uncertainty-vis_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+      </header><script src="freq-uncertainty-vis_files/header-attrs-2.5/header-attrs.js"></script><link href="freq-uncertainty-vis_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="freq-uncertainty-vis_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Frequentist uncertainty visualization</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-11-24</h4>
+            <h4 class="date">2020-12-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/freq-uncertainty-vis.Rmd"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
       <div class="hidden name"><code>freq-uncertainty-vis.Rmd</code></div>
@@ -297,10 +297,6 @@ img {
 <span class="va">m_mpg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">cyl</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></pre></div>
 <p>Again we’ll use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="https://generics.r-lib.org/reference/tidy.html">broom::tidy()</a></code>, but now we’ll employ <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="va">lighten2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">color</span>, <span class="va">amount</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/grDevices/rgb.html">rgb</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRamp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">color</span>, <span class="st">"white"</span><span class="op">)</span>, space <span class="op">=</span> <span class="st">"Lab"</span><span class="op">)</span><span class="op">(</span><span class="va">amount</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">255</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span>
-
 <span class="va">mtcars</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span><span class="op">(</span><span class="va">hp</span>, n <span class="op">=</span> <span class="fl">101</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -320,7 +316,7 @@ img {
     y <span class="op">=</span> <span class="st">"mpg"</span>
   <span class="op">)</span></pre></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/lineribbon-1.png" width="648"></p>
-<p>Another alternative to using <code>alpha</code> to create gradations of lineribbon colors in different groups is to manually adjust the lightness of each ribbon using <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">ggplot2::stage()</a></code>, which allows you to transform color values after they have been computed. Here we’ll combine it with <code><a href="http://colorspace.R-Forge.R-project.org//reference/lighten.html">colorspace::lighten()</a></code> to lighten the fill color of each band according to its width:</p>
+<p>Another alternative to using <code>alpha</code> to create gradations of lineribbon colors in different groups is to use the <code>fill_ramp</code> aesthetic provided by <code>ggdist</code> to “ramp” the fill color of the ribbons from <code>"white"</code> to their full color (see <code><a href="../reference/scale_colour_ramp.html">help("scale_fill_ramp")</a></code>). Here we’ll “whiten” the fill color of each band according to its <code>level</code> (the <code>level</code> variable is computed by <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> and is an ordered factor version of <code>.width</code>):</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
 <span class="va">mtcars</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -329,11 +325,12 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>
     dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_mpg</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span>,
-    fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stage</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, after_scale <span class="op">=</span> <span class="fu">colorspace</span><span class="fu">::</span><span class="fu"><a href="http://colorspace.R-Forge.R-project.org//reference/lighten.html">lighten</a></span><span class="op">(</span><span class="va">fill</span>, <span class="va">.width</span> <span class="op">*</span> <span class="fl">.9</span>, space <span class="op">=</span> <span class="st">"combined"</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">)</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+    fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>,
+    fill_ramp <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span>
   
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>
     color <span class="op">=</span> <span class="st">"cyl"</span>,
