@@ -175,6 +175,46 @@ df %>%
   scale_fill_brewer()
 ```
 
+### Multiple lineribbons on one plot
+
+One may also want to plot multiple lineribbons on the same plot, perhaps corresponding
+to separate groups. This might require applying a different color or fill to
+differentiate the lineribbons. Consider these data:
+
+```{r df_2groups}
+df_2groups = rbind(
+  mutate(df, g = "a"),
+  mutate(df, g = "b", y = (y - 2) * 0.5)
+)
+```
+
+The naive approach to plotting will make the lines hard to distinguish:
+
+```{r stat_lineribbon_2groups_brewer, fig.width = med_width, fig.height = med_height}
+df_2groups %>%
+  ggplot(aes(x = x, y = y, color = g)) +
+  stat_lineribbon() +
+  scale_fill_brewer()
+```
+
+Instead, we could change the fill color and allow the lines the be semi-transparent:
+
+```{r stat_lineribbon_2groups_alpha, fig.width = med_width, fig.height = med_height}
+df_2groups %>%
+  ggplot(aes(x = x, y = y, fill = g)) +
+  stat_lineribbon(alpha = 1/4)
+```
+
+We could also use the `fill_ramp` aesthetic provided by `ggdist` to similar
+effect (see `help("scale_fill_ramp")`), though this tends to work best when
+the lines do not overlap:
+
+```{r stat_lineribbon_2groups_ramp, fig.width = med_width, fig.height = med_height}
+df_2groups %>%
+  ggplot(aes(x = x, y = y, fill = g)) +
+  stat_lineribbon(aes(fill_ramp = stat(level)))
+```
+
 ## Lineribbons on analytical distributions
 
 Lineribbons can also be applied to analytical distributions. This use case often arises with confidence distributions

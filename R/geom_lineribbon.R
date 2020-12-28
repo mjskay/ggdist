@@ -102,6 +102,11 @@ geom_lineribbon = function(
 }
 
 draw_key_lineribbon = function(data, params, size) {
+  if (!is.null(data$fill_ramp) && is.na(data$fill)) {
+    data$fill = "gray65"
+  }
+  data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
+
   if (is.na(data$fill)) {
     draw_key_path(data, params, size)
   } else {
@@ -116,14 +121,22 @@ draw_key_lineribbon = function(data, params, size) {
 #' @import ggplot2
 #' @export
 GeomLineribbon = ggproto("GeomLineribbon", Geom,
-  default_aes = aes(colour = "black", size = 1.25, linetype = 1, shape = 19,
-    fill = NA, alpha = NA, stroke = 1),
+  default_aes = aes(
+    colour = "black",
+    size = 1.25,
+    linetype = 1,
+    shape = 19,
+    fill = NA,
+    fill_ramp = NULL,
+    alpha = NA,
+    stroke = 1
+  ),
 
   draw_key = draw_key_lineribbon,
 
   required_aes = c("x", "y"),
 
-  optional_aes = c("ymin", "ymax", "xmin", "xmax"),
+  optional_aes = c("ymin", "ymax", "xmin", "xmax", "fill_ramp"),
 
   extra_params = c("step", "orientation", "na.rm"),
 
@@ -158,6 +171,8 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     flipped_aes = FALSE
   ) {
     define_orientation_variables(orientation)
+
+    data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
 
     # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
     # of the line or by setting fill, the ribbons might give an error. So we will do the

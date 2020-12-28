@@ -66,7 +66,7 @@ scale_color_ramp_continuous = scale_colour_ramp_continuous
 #' @rdname scale_colour_ramp
 #' @export
 scale_colour_ramp_discrete = function(
-  from = "white", ..., range = c(0.1, 1),
+  from = "white", ..., range = c(0.2, 1),
   aesthetics = "colour_ramp"
 ) {
   scale = discrete_scale(

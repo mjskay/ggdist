@@ -4,6 +4,8 @@
 ###############################################################################
 
 library(dplyr)
+library(tidyr)
+library(purrr)
 library(distributional)
 
 context("scale_colour_ramp")
@@ -124,5 +126,35 @@ test_that("fill_ramp works with stat_slab and NAs", {
       ) +
       scale_fill_ramp_discrete(range = c(1, 0.2), na.translate = FALSE) +
       labs(fill_ramp = "level")
+  )
+})
+
+
+test_that("fill_ramp works on lineribbons", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+
+  set.seed(1234)
+  n = 1000
+
+  df = tibble(
+    .draw = 1:n,
+    intercept = rnorm(n, 3, 1),
+    slope = rnorm(n, 1, 0.25),
+    x = list(-4:5),
+    y = map2(intercept, slope, ~ .x + .y * -4:5)
+  ) %>%
+    unnest(c(x, y))
+
+  df_2groups = rbind(
+    mutate(df, g = "a"),
+    mutate(df, g = "b", y = (y - 2) * 0.5)
+  )
+
+  vdiffr::expect_doppelganger("fill_ramp with lineribbon",
+    df_2groups %>%
+      ggplot(aes(x = x, y = y, fill = g)) +
+      stat_lineribbon(aes(fill_ramp = stat(level)))
   )
 })

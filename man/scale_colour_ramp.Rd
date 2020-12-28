@@ -31,14 +31,14 @@ scale_color_ramp_continuous(
 scale_colour_ramp_discrete(
   from = "white",
   ...,
-  range = c(0.1, 1),
+  range = c(0.2, 1),
   aesthetics = "colour_ramp"
 )
 
 scale_color_ramp_discrete(
   from = "white",
   ...,
-  range = c(0.1, 1),
+  range = c(0.2, 1),
   aesthetics = "colour_ramp"
 )
 

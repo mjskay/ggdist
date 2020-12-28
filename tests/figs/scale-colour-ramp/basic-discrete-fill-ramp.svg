@@ -19,8 +19,8 @@
   </clipPath>
 </defs>
 <rect x='40.10' y='22.77' width='527.61' height='522.36' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' clip-path='url(#cpNDAuMTB8NTY3LjcyfDU0NS4xM3wyMi43Nw==)' />
-<polygon points='64.09,94.00 89.33,94.00 114.58,94.00 139.82,94.00 165.07,94.00 177.69,94.00 177.69,521.39 165.07,521.39 139.82,521.39 114.58,521.39 89.33,521.39 64.09,521.39 ' style='stroke-width: 2.13; stroke: none; fill: #F6002A;' clip-path='url(#cpNDAuMTB8NTY3LjcyfDU0NS4xM3wyMi43Nw==)' />
-<polygon points='177.69,94.00 190.31,94.00 215.55,94.00 240.80,94.00 266.04,94.00 291.29,94.00 316.53,94.00 341.78,94.00 367.02,94.00 392.27,94.00 417.51,94.00 430.13,94.00 430.13,521.39 417.51,521.39 392.27,521.39 367.02,521.39 341.78,521.39 316.53,521.39 291.29,521.39 266.04,521.39 240.80,521.39 215.55,521.39 190.31,521.39 177.69,521.39 ' style='stroke-width: 2.13; stroke: none; fill: #C20094;' clip-path='url(#cpNDAuMTB8NTY3LjcyfDU0NS4xM3wyMi43Nw==)' />
+<polygon points='64.09,94.00 89.33,94.00 114.58,94.00 139.82,94.00 165.07,94.00 177.69,94.00 177.69,521.39 165.07,521.39 139.82,521.39 114.58,521.39 89.33,521.39 64.09,521.39 ' style='stroke-width: 2.13; stroke: none; fill: #ED0044;' clip-path='url(#cpNDAuMTB8NTY3LjcyfDU0NS4xM3wyMi43Nw==)' />
+<polygon points='177.69,94.00 190.31,94.00 215.55,94.00 240.80,94.00 266.04,94.00 291.29,94.00 316.53,94.00 341.78,94.00 367.02,94.00 392.27,94.00 417.51,94.00 430.13,94.00 430.13,521.39 417.51,521.39 392.27,521.39 367.02,521.39 341.78,521.39 316.53,521.39 291.29,521.39 266.04,521.39 240.80,521.39 215.55,521.39 190.31,521.39 177.69,521.39 ' style='stroke-width: 2.13; stroke: none; fill: #BA009F;' clip-path='url(#cpNDAuMTB8NTY3LjcyfDU0NS4xM3wyMi43Nw==)' />
 <polygon points='430.13,94.00 442.76,94.00 468.00,94.00 493.25,94.00 518.49,94.00 543.74,94.00 543.74,521.39 518.49,521.39 493.25,521.39 468.00,521.39 442.76,521.39 430.13,521.39 ' style='stroke-width: 2.13; stroke: none; fill: #0000FF;' clip-path='url(#cpNDAuMTB8NTY3LjcyfDU0NS4xM3wyMi43Nw==)' />
 <rect x='40.10' y='22.77' width='527.61' height='522.36' style='stroke-width: 1.07; stroke: #333333;' clip-path='url(#cpNDAuMTB8NTY3LjcyfDU0NS4xM3wyMi43Nw==)' />
 <defs>
@@ -53,9 +53,9 @@
 <rect x='578.68' y='250.37' width='135.84' height='67.16' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='578.68' y='259.07' style='font-size: 11.00px; font-family: Liberation Sans;' textLength='135.84px' lengthAdjust='spacingAndGlyphs'>cut(x, c(-Inf, 0.25, 0.75, Inf))</text></g>
 <rect x='578.68' y='265.69' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
-<rect x='580.09' y='267.11' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #F6002A;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
+<rect x='580.09' y='267.11' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #ED0044;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <rect x='578.68' y='282.97' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
-<rect x='580.09' y='284.39' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #C20094;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
+<rect x='580.09' y='284.39' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #BA009F;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <rect x='578.68' y='300.25' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <rect x='580.09' y='301.67' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #0000FF;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='601.44' y='277.36' style='font-size: 8.80px; font-family: Liberation Sans;' textLength='37.59px' lengthAdjust='spacingAndGlyphs'>(-Inf,0.25]</text></g>

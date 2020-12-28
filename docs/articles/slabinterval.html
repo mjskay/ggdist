@@ -106,7 +106,7 @@
       <h1 data-toc-skip>Slab + interval stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-12-27</h4>
+            <h4 class="date">2020-12-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
@@ -570,7 +570,7 @@ img {
 <span class="va">dist_df</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">group</span>, dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html">dist_normal</a></span><span class="op">(</span><span class="va">mean</span>, <span class="va">sd</span><span class="op">)</span>, fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">5</span><span class="op">)</span>, shape <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dots</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"stat_dist_dots(aes(fill = stat(y &lt; 5), shape = subgroup))"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"stat_dist_dots(aes(fill = stat(x &lt; 5), shape = subgroup))"</span><span class="op">)</span> <span class="op">+</span>
   <span class="co"># we'll use these shapes since they retain outlines</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_shape_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">21</span>,<span class="fl">22</span>,<span class="fl">23</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="slabinterval_files/figure-html/dist_dots_shape_color-1.png" width="648"></p>

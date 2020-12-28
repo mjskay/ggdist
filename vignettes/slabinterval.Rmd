@@ -619,7 +619,7 @@ As with other plot types, you can also use `stat_dist_dots()` instead if you wis
 dist_df %>%
   ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5), shape = subgroup)) +
   stat_dist_dots(position = "dodge", color = NA) +
-  labs(title = "stat_dist_dots(aes(fill = stat(y < 5), shape = subgroup))") +
+  labs(title = "stat_dist_dots(aes(fill = stat(x < 5), shape = subgroup))") +
   # we'll use these shapes since they retain outlines
   scale_shape_manual(values = c(21,22,23))
 ```
