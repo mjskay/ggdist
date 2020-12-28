@@ -3,6 +3,8 @@
 \name{scale_colour_ramp}
 \alias{scale_colour_ramp}
 \alias{scale_colour_ramp_continuous}
+\alias{scale_color_ramp}
+\alias{scale_fill_ramp}
 \alias{scale_color_ramp_continuous}
 \alias{scale_colour_ramp_discrete}
 \alias{scale_color_ramp_discrete}
@@ -94,10 +96,18 @@ tibble(d = dist_uniform(0, 1)) \%>\%
   stat_dist_slab(aes(fill_ramp = stat(x)), fill = "blue") +
   scale_fill_ramp_continuous(from = "red")
 
+# you can invert the order of `range` to change the order of the blend
+tibble(d = dist_normal(0, 1)) \%>\%
+  ggplot(aes(y = 0, dist = d)) +
+  stat_dist_slab(aes(fill_ramp = stat(cut_cdf_qi(cdf))), fill = "blue") +
+  scale_fill_ramp_discrete(from = "red", range = c(1, 0))
+
 }
 \seealso{
-\code{\link[=discrete_scale]{discrete_scale()}}, \code{\link[=continuous_scale]{continuous_scale()}}.
+Other ggdist scales: 
+\code{\link{scales}}
 }
 \author{
 Matthew Kay
 }
+\concept{ggdist scales}

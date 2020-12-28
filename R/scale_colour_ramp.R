@@ -26,8 +26,9 @@
 #' A [ggplot2::Scale] representing a scale for the `colour_ramp` and/or `fill_ramp`
 #' aesthetics for `ggdist` geoms. Can be added to a [ggplot()] object.
 #' @name scale_colour_ramp
+#' @aliases scale_color_ramp scale_fill_ramp
 #' @author Matthew Kay
-#' @seealso [discrete_scale()], [continuous_scale()].
+#' @family ggdist scales
 #' @examples
 #'
 #' library(dplyr)
@@ -42,6 +43,12 @@
 #'   ggplot(aes(y = 0, dist = d)) +
 #'   stat_dist_slab(aes(fill_ramp = stat(x)), fill = "blue") +
 #'   scale_fill_ramp_continuous(from = "red")
+#'
+#' # you can invert the order of `range` to change the order of the blend
+#' tibble(d = dist_normal(0, 1)) %>%
+#'   ggplot(aes(y = 0, dist = d)) +
+#'   stat_dist_slab(aes(fill_ramp = stat(cut_cdf_qi(cdf))), fill = "blue") +
+#'   scale_fill_ramp_discrete(from = "red", range = c(1, 0))
 #'
 #' @importFrom scales rescale_pal
 #' @export
@@ -81,7 +88,7 @@ scale_fill_ramp_continuous = function(..., aesthetics = "fill_ramp") {
 #' @rdname scale_colour_ramp
 #' @export
 scale_fill_ramp_discrete = function(..., aesthetics = "fill_ramp") {
-  scale_fill_ramp_discrete(..., aesthetics = aesthetics)
+  scale_colour_ramp_discrete(..., aesthetics = aesthetics)
 }
 
 
@@ -125,7 +132,9 @@ colour_ramp_pal_discrete = function(range, from) {
 apply_colour_ramp = function(colors, amounts) {
   if (is.null(colors) || is.null(amounts)) return(colors)
 
-  map2(colors, amounts, function(color, amount) {
+  map2_chr(colors, amounts, function(color, amount) {
+    # null amounts come from missing values
+    amount = amount %||% NA
     from = attr(amount, "from") %||% "white"
     seq_gradient_pal(from, color)(amount)
   })

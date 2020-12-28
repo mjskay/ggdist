@@ -146,6 +146,7 @@ These geoms support the following aesthetics:
 \item \code{datatype}
 \item \code{alpha}
 \item \code{colour}
+\item \code{colour_ramp}
 \item \code{linetype}
 \item \code{fill}
 \item \code{shape}

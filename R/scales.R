@@ -62,7 +62,8 @@
 #' `ggdist` geoms. Can be added to a [ggplot()] object.
 #' @name scales
 #' @author Matthew Kay
-#' @seealso [scale_color_discrete()], [scale_color_continuous()], etc.
+#' @family ggdist scales
+#' @seealso Other ggplot2 scales: [scale_color_discrete()], [scale_color_continuous()], etc.
 #' @examples
 #'
 #' library(dplyr)

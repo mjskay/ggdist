@@ -142,7 +142,6 @@ draw_path = function(data, panel_params, coord) {
 
 override_slab_aesthetics = function(self, s_data) {
   s_data$colour = s_data$slab_colour
-  s_data$colour = apply_colour_ramp(s_data$colour, s_data$colour_ramp)
   s_data$fill = s_data$slab_fill %||% s_data$fill
   s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
   s_data$alpha = s_data$slab_alpha %||% s_data$alpha
@@ -153,6 +152,7 @@ override_slab_aesthetics = function(self, s_data) {
 
 override_point_aesthetics = function(self, p_data, size_domain, size_range, fatten_point) {
   p_data$colour = p_data$point_colour %||% p_data$colour
+  p_data$colour = apply_colour_ramp(p_data$colour, p_data$colour_ramp)
   p_data$fill = p_data$point_fill %||% p_data$fill
   p_data$alpha = p_data$point_alpha %||% p_data$alpha
   p_data$size = p_data$point_size %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
@@ -161,6 +161,7 @@ override_point_aesthetics = function(self, p_data, size_domain, size_range, fatt
 
 override_interval_aesthetics = function(self, i_data, size_domain, size_range) {
   i_data$colour = i_data$interval_colour %||% i_data$colour
+  i_data$colour = apply_colour_ramp(i_data$colour, i_data$colour_ramp)
   i_data$alpha = i_data$interval_alpha %||% i_data$alpha
   i_data$size = get_line_size(i_data, size_domain, size_range)
   i_data$linetype = i_data$interval_linetype %||% i_data$linetype
@@ -410,6 +411,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     # shared point and interval aesthetics
     colour = NULL,
+    colour_ramp = NULL,
 
     # shared slab and interval aesthetics
     linetype = NULL,

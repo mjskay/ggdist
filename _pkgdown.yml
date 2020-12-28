@@ -68,7 +68,7 @@ reference:
   desc:  Scales for custom aesthetics used by ggdist geoms and stats
   contents:
   - scales
-  - scale_fill_ramp
+  - scale_colour_ramp
 
 - title: GGplot theme
   desc:  ggdist theme for ggplot2
