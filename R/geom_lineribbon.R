@@ -53,6 +53,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' library(dplyr)
 #' library(ggplot2)
 #'
+#' theme_set(theme_ggdist())
+#'
 #' tibble(x = 1:10) %>%
 #'   group_by_all() %>%
 #'   do(tibble(y = rnorm(100, .$x))) %>%

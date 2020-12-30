@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
       </span>
     </div>
 
@@ -99,7 +99,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -131,7 +131,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/ggdist/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -152,9 +152,37 @@
       <small>Source: <a href='https://github.com/mjskay/ggdist/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="ggdist-240" class="section level1">
+<h1 class="page-header" data-toc-text="2.4.0">
+<a href="#ggdist-240" class="anchor"></a>ggdist 2.4.0<small> Unreleased </small>
+</h1>
+<p>New features:</p>
+<ul>
+<li>add <code>pdf</code> and <code>cdf</code> computed variables for the <code><a href="../reference/stat_sample_slabinterval.html">stat_sample_slabinterval()</a></code> subfamily. See new examples of usage in the last section of <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>. (<a href='https://github.com/mjskay/ggdist/issues/11'>#11</a>)</li>
+<li>add <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> for creating (amongst other things) interval-filled halfeyes, in the style of <code><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html">bayesplot::mcmc_areas()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/11'>#11</a>)</li>
+<li>add <code>fill_ramp</code> and <code>color_ramp</code> scales to <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> families, making it easier to separate group colors from interval/density/CDF colors. See new examples in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code>, and <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. (<a href='https://github.com/mjskay/ggdist/issues/16'>#16</a>)</li>
+<li>auto-detect finite limits on analytical distributions, so (e.g.) distributions like the beta will not cut off tails close to 0 or 1. (<a href='https://github.com/mjskay/ggdist/issues/18'>#18</a>)</li>
+<li>add <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html">brms::brmsprior</a></code> implementation for <code><a href="../reference/parse_dist.html">parse_dist()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/34'>#34</a>)</li>
+</ul>
+<p>New documentation:</p>
+<ul>
+<li>
+<code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code> now uses <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">distributional::dist_student_t()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/14'>#14</a>)</li>
+<li>add references to <em>fuzzygrams</em> in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> (<a href='https://github.com/mjskay/ggdist/issues/23'>#23</a>)</li>
+<li>add examples with separate positioning of slab and interval (<a href='https://github.com/mjskay/ggdist/issues/27'>#27</a>)</li>
+<li>add discussion of limitations of curvewise intervals to <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code> (<a href='https://github.com/mjskay/ggdist/issues/22'>#22</a>)</li>
+<li>soft-deprecate usage of <code>interval_size_range</code> argument in docs (<a href='https://github.com/mjskay/ggdist/issues/35'>#35</a>)</li>
+<li>initial versions of some cheat sheets</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>add limited <code>na.rm</code> support to <code><a href="../reference/curve_interval.html">curve_interval()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/22'>#22</a>)</li>
+<li>use analytical instead of numerical derivatives on scale transformations where possible, improving reliability.</li>
+</ul>
+</div>
     <div id="ggdist-230" class="section level1">
 <h1 class="page-header" data-toc-text="2.3.0">
-<a href="#ggdist-230" class="anchor"></a>ggdist 2.3.0<small> Unreleased </small>
+<a href="#ggdist-230" class="anchor"></a>ggdist 2.3.0<small> 2020-10-30 </small>
 </h1>
 <p>New features and documentation:</p>
 <ul>
@@ -178,7 +206,7 @@
 <code>stat_dist_...</code> geoms now calculate <code>pdf</code> and <code>cdf</code> columns to allow mashup geoms that involve both functions, such as Correll-style gradient plots combined with violins, as in Helske <em>et al.</em> (<a href='https://github.com/mjskay/ggdist/issues/11'>#11</a>).</li>
 <li>
 <code>stat_dist_...</code> geoms should now work with <code>gganimate</code> (<a href='https://github.com/mjskay/ggdist/issues/15'>#15</a>).</li>
-<li>Examples updated to fix errors introduced by <code><a href="https://rdrr.io/pkg/generics/man/augment.html">broom::augment()</a></code> defaulting to <code>se_fit = FALSE</code>.</li>
+<li>Examples updated to fix errors introduced by <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code> defaulting to <code>se_fit = FALSE</code>.</li>
 </ul>
 </div>
     <div id="ggdist-211" class="section level1">
@@ -189,7 +217,7 @@
 <li>Initial split from tidybayes: ggdist now contains all stats/geoms from tidybayes (except deprecated ones), all support functions for stats/geoms (such as <code><a href="../reference/point_interval.html">point_interval()</a></code>), <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, and <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. Tidybayes will retain all other functions, and will re-export all <code>ggdist</code> functions for now.</li>
 <li>All stats and geoms now support automatic orientation determination. Thus, all <code>h</code>-suffix geoms are now deprecated. Those geoms have been left in <code>tidybayes</code> and give a deprecation warning when used; they cannot be used from <code>ggdist</code> directly.</li>
 <li>
-<code><a href="../reference/geom_interval.html">geom_interval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics if <code>.lower</code> or <code>.upper</code> are present in the data. This allows them to work better with automatic orientation detection (and was a bad feature to have existed in the first place anyway). The deprecated <code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html">tidybayes::geom_intervalh()</a></code> and <code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html">tidybayes::geom_pointintervalh()</a></code> still automatically set those aesthetics, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
+<code><a href="../reference/geom_interval.html">geom_interval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics if <code>.lower</code> or <code>.upper</code> are present in the data. This allows them to work better with automatic orientation detection (and was a bad feature to have existed in the first place anyway). The deprecated <code>tidybayes::geom_intervalh()</code> and <code>tidybayes::geom_pointintervalh()</code> still automatically set those aesthetics, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
 <li>
 <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code>/<code><a href="../reference/stat_lineribbon.html">stat_lineribbon()</a></code> now supports a <code>step</code> argument for creating stepped lineribbons. H/T to Solomon Kurz for the suggestion.</li>
 <li>

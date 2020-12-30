@@ -94,7 +94,7 @@ Wrapper around geom_slabinterval()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@ Wrapper around geom_slabinterval()." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -134,7 +134,7 @@ Wrapper around geom_slabinterval()." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/ggdist/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -319,6 +319,7 @@ when used with functions like <code><a href='point_interval.html'>median_qi()</a
 <li><p><code>datatype</code></p></li>
 <li><p><code>alpha</code></p></li>
 <li><p><code>colour</code></p></li>
+<li><p><code>colour_ramp</code></p></li>
 <li><p><code>linetype</code></p></li>
 <li><p><code>fill</code></p></li>
 <li><p><code>shape</code></p></li>
@@ -337,6 +338,7 @@ when used with functions like <code><a href='point_interval.html'>median_qi()</a
 <li><p><code>slab_fill</code></p></li>
 <li><p><code>slab_alpha</code></p></li>
 <li><p><code>slab_linetype</code></p></li>
+<li><p><code>fill_ramp</code></p></li>
 <li><p><code>ymin</code></p></li>
 <li><p><code>ymax</code></p></li>
 <li><p><code>xmin</code></p></li>
@@ -366,6 +368,8 @@ available to these geoms.</p></div>
     <pre class="examples"><div class='input'>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>RankCorr_u_tau</span>, package <span class='op'>=</span> <span class='st'>"ggdist"</span><span class='op'>)</span>
 

@@ -50,6 +50,8 @@
 #' library(ggplot2)
 #' library(forcats)
 #'
+#' theme_set(theme_ggdist())
+#'
 #' expand.grid(
 #'   eta = 1:6,
 #'   K = 2:6

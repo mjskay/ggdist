@@ -96,7 +96,7 @@ to specify distribution arguments. See Details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@ to specify distribution arguments. See Details." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -136,7 +136,7 @@ to specify distribution arguments. See Details." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mjskay/ggdist/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -463,6 +463,7 @@ of those functions.</p></li>
 <li><p><code>datatype</code></p></li>
 <li><p><code>alpha</code></p></li>
 <li><p><code>colour</code></p></li>
+<li><p><code>colour_ramp</code></p></li>
 <li><p><code>linetype</code></p></li>
 <li><p><code>fill</code></p></li>
 <li><p><code>shape</code></p></li>
@@ -481,6 +482,7 @@ of those functions.</p></li>
 <li><p><code>slab_fill</code></p></li>
 <li><p><code>slab_alpha</code></p></li>
 <li><p><code>slab_linetype</code></p></li>
+<li><p><code>fill_ramp</code></p></li>
 <li><p><code>ymin</code></p></li>
 <li><p><code>ymax</code></p></li>
 <li><p><code>xmin</code></p></li>
@@ -519,6 +521,8 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://pkg.mitchelloharawild.com/distributional/'>distributional</a></span><span class='op'>)</span>
+
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>dist_df</span> <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tribble.html'>tribble</a></span><span class='op'>(</span>
   <span class='op'>~</span><span class='va'>group</span>, <span class='op'>~</span><span class='va'>subgroup</span>, <span class='op'>~</span><span class='va'>mean</span>, <span class='op'>~</span><span class='va'>sd</span>,

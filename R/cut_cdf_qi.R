@@ -37,6 +37,8 @@
 #' library(scales)
 #' library(distributional)
 #'
+#' theme_set(theme_ggdist())
+#'
 #' # with a slab
 #' tibble(x = dist_normal(0, 1)) %>%
 #'   ggplot(aes(dist = x, y = "a")) +

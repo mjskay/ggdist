@@ -31,6 +31,8 @@
 #' library(dplyr)
 #' library(ggplot2)
 #'
+#' theme_set(theme_ggdist())
+#'
 #' data(RankCorr_u_tau, package = "ggdist")
 #'
 #' RankCorr_u_tau %>%

@@ -101,6 +101,8 @@ Specifically, \code{geom_lineribbon} acts as if its default aesthetics are
 library(dplyr)
 library(ggplot2)
 
+theme_set(theme_ggdist())
+
 tibble(x = 1:10) \%>\%
   group_by_all() \%>\%
   do(tibble(y = rnorm(100, .$x))) \%>\%

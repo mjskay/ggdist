@@ -332,6 +332,8 @@ library(dplyr)
 library(ggplot2)
 library(distributional)
 
+theme_set(theme_ggdist())
+
 dist_df = tribble(
   ~group, ~subgroup, ~mean, ~sd,
   "a",          "h",     5,   1,

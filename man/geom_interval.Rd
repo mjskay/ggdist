@@ -185,6 +185,8 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 library(dplyr)
 library(ggplot2)
 
+theme_set(theme_ggdist())
+
 data(RankCorr_u_tau, package = "ggdist")
 
 # orientation is detected automatically based on

@@ -46,6 +46,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' library(dplyr)
 #' library(ggplot2)
 #'
+#' theme_set(theme_ggdist())
+#'
 #' data(RankCorr_u_tau, package = "ggdist")
 #'
 #' # orientation is detected automatically based on

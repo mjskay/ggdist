@@ -48,8 +48,9 @@ The `ggdist` geoms and stats also form a core part of the
 [tidybayes](https://mjskay.github.io/tidybayes/) package (in fact, they
 originally were part of `tidybayes`). For examples of the use of
 `ggdist` geoms and stats for visualizing uncertainty in Bayesian models,
-see the vignettes in tidybayes, such as `vignette("tidybayes", package =
-"tidybayes")` or `vignette("tidy-brms", package = "tidybayes")`.
+see the vignettes in tidybayes, such as
+`vignette("tidybayes", package = "tidybayes")` or
+`vignette("tidy-brms", package = "tidybayes")`.
 
 ## Cheat sheets
 
@@ -57,8 +58,8 @@ see the vignettes in tidybayes, such as `vignette("tidybayes", package =
 
 ## Installation
 
-Once on CRAN, you can install the currently-released version from CRAN
-with this R command:
+You can install the currently-released version from CRAN with this R
+command:
 
 ``` r
 install.packages("ggdist")
@@ -74,7 +75,7 @@ devtools::install_github("mjskay/ggdist")
 
 ## Feedback, issues, and contributions
 
-I welcome feedback, suggestions, issues, and contributions\! Contact me
+I welcome feedback, suggestions, issues, and contributions! Contact me
 at <mjskay@northwestern.edu>. If you have found a bug, please file it
 [here](https://github.com/mjskay/ggdist/issues/new) with minimal code to
 reproduce the issue. Pull requests should be filed against the
@@ -83,6 +84,6 @@ reproduce the issue. Pull requests should be filed against the
 ## Citing `ggdist`
 
 Matthew Kay (2020). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 2.3.0.9000,
+Uncertainty*. R package version 2.4.0,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
