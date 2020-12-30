@@ -1,32 +1,19 @@
 ## Submission comments
-This submission is primarily to update the maintainer email address from
-mjskay@umich.edu to mjskay@northwestern.edu as I have moved institutions.
-Unfortunately this can't be verified by emailing mjskay@umich.edu because
-my umich email address has already been deactivated. However, the change is
-reflected on both my Github page (https://github.com/mjskay) and my personal 
-website (http://mjskay.com) and I am happy to provide other proof if needed.
-
+This version includes a variety of small improvements
+and bug fixes (see NEWS.md).
 
 ## Test environments
-* Windows 10 (local), R-release 4.0.2
-* Windows 10 (win-builder), R-devel 2020-10-28 r79382
-* Windows 10 (win-builder), R-release 4.0.3
+* Windows 10 (local), R-release 4.0.3
+* Windows 10 (Github), R-release 4.0.3
 * MacOS (Github), R-release 4.0.3
+* MacOS (Github), R-devel 2020-12-29 r79725
 * Linux (Github), R-release 4.0.3
+* Windows 10 (win-builder), R-release 4.0.3
+* Windows 10 (win-builder), R-devel 2020-12-19 r79650
+* Windows 10 (win-builder), R-oldrelease 3.6.3
 
 ## R CMD check results
-0 errors | 0 warnings | 1 note
-
-> checking CRAN incoming feasibility ... NOTE
-  Maintainer: 'Matthew Kay <mjskay@northwestern.edu>'
-  
-  New maintainer:
-    Matthew Kay <mjskay@northwestern.edu>
-  Old maintainer(s):
-    Matthew Kay <mjskay@umich.edu>
-
-See comment above: my email address has changed.
-
+0 errors | 0 warnings | 0 notes
 
 ## Downstream dependencies
 There are three downstream dependencies for this package. All 
