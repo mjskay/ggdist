@@ -1,3 +1,35 @@
+# ggdist 2.4.0
+
+New features:
+
+* add `pdf` and `cdf` computed variables for the `stat_sample_slabinterval()` subfamily. See
+  new examples of usage in the last section of `vignette("slabinterval")`. (#11)
+* add `cut_cdf_qi()` for creating (amongst other things) interval-filled halfeyes, in the 
+  style of `bayesplot::mcmc_areas()` (#11)
+* add `fill_ramp` and `color_ramp` scales to `geom_slabinterval()` and `geom_lineribbon()` families,
+  making it easier to separate group colors from interval/density/CDF colors. See new examples in
+  `vignette("slabinterval")`, `vignette("lineribbon")`, and `vignette("freq-uncertainty-vis")`. (#16)
+* auto-detect finite limits on analytical distributions, so (e.g.) distributions like
+  the beta will not cut off tails close to 0 or 1. (#18)
+* add `brms::brmsprior` implementation for `parse_dist()` (#34)
+
+
+New documentation:
+
+* `vignette("freq-uncertainty-vis")` now uses `distributional::dist_student_t()` (#14)
+* add references to *fuzzygrams* in `vignette("slabinterval")` (#23)
+* add examples with separate positioning of slab and interval (#27)
+* add discussion of limitations of curvewise intervals to `vignette("lineribbon")` (#22)
+* soft-deprecate usage of `interval_size_range` argument in docs (#35)
+* initial versions of some cheat sheets
+
+
+Bug fixes:
+
+* add limited `na.rm` support to `curve_interval()` (#22)
+* use analytical instead of numerical derivatives on scale transformations where possible, improving reliability.
+
+
 # ggdist 2.3.0
 
 New features and documentation:
