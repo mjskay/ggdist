@@ -51,7 +51,7 @@ originally were part of `tidybayes`). For examples of the use of
 see the vignettes in tidybayes, such as `vignette("tidybayes", package =
 "tidybayes")` or `vignette("tidy-brms", package = "tidybayes")`.
 
-## Cheatsheets
+## Cheat sheets
 
 <a href="https://github.com/mjskay/ggdist/blob/master/figures-source/cheat_sheet-slabinterval.pdf"><img src="https://raw.githubusercontent.com/mjskay/ggdist/master/figures-source/cheat_sheet-slabinterval.png" width="630" /></a>
 

@@ -13,7 +13,6 @@ New features:
   the beta will not cut off tails close to 0 or 1. (#18)
 * add `brms::brmsprior` implementation for `parse_dist()` (#34)
 
-
 New documentation:
 
 * `vignette("freq-uncertainty-vis")` now uses `distributional::dist_student_t()` (#14)
@@ -23,12 +22,10 @@ New documentation:
 * soft-deprecate usage of `interval_size_range` argument in docs (#35)
 * initial versions of some cheat sheets
 
-
 Bug fixes:
 
 * add limited `na.rm` support to `curve_interval()` (#22)
 * use analytical instead of numerical derivatives on scale transformations where possible, improving reliability.
-
 
 # ggdist 2.3.0
 
