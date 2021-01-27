@@ -170,7 +170,10 @@ wide as the bin width.}
 default, \code{1}, makes dots in the same stack just touch each other.}
 
 \item{binwidth}{The bin width to use for drawing the dotplots. The default value, \code{NA}, will dynamically select
-a bin width based on the size of the plot when drawn.}
+a bin width based on the size of the plot when drawn. If the value is numeric, it is assumed to be in units
+of data. The bin width can also be specified using \code{unit()}, which may be useful if it is desired that
+the dots be a certain percentage of the width/height of the viewport (e.g. \code{unit(0.1, "npc")} would
+make dots that are 10\% of the viewport size along whichever dimension the dotplot is drawn).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

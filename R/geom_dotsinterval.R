@@ -45,6 +45,11 @@ makeContent.dots_grob = function(x) {
   dotsize = grob_$dotsize
   bin_width = grob_$binwidth
 
+  # if bin width was specified as a grid::unit, convert it
+  if (is.unit(bin_width)) {
+    bin_width = convertUnit(bin_width, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
+  }
+
   # create a specification for a heap of dots, which includes things like
   # what the bins are, what the dot widths are, etc.
   heap_spec = function(d, nbins = NULL, bin_width = NULL) {
@@ -217,7 +222,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   # remove missing values
   s_data = ggplot2::remove_missing(s_data, na.rm, x, name = "geom_dotsinterval", finite = TRUE)
 
-  if (!is.na(child_params$binwidth)) {
+  if (!is.na(child_params$binwidth) && !is.unit(child_params$binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space
     child_params$binwidth = child_params$binwidth / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
   }
@@ -282,7 +287,10 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
 #' default, `1`, makes dots in the same stack just touch each other.
 #' @param binwidth The bin width to use for drawing the dotplots. The default value, `NA`, will dynamically select
-#' a bin width based on the size of the plot when drawn.
+#' a bin width based on the size of the plot when drawn. If the value is numeric, it is assumed to be in units
+#' of data. The bin width can also be specified using `unit()`, which may be useful if it is desired that
+#' the dots be a certain percentage of the width/height of the viewport (e.g. `unit(0.1, "npc")` would
+#' make dots that are 10% of the viewport size along whichever dimension the dotplot is drawn).
 #' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
 #' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number

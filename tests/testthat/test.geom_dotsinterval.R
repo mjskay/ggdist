@@ -121,3 +121,16 @@ test_that("stat_dist_dots works on distributional objects", {
   )
 
 })
+
+test_that("geom_dots bin_width can be specified in unit()s", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  # these dots should be the same size (10% of facet height)
+  vdiffr::expect_doppelganger("geom_dots with unit() binwidth",
+    mtcars %>%
+      ggplot(aes(y = mpg)) +
+      geom_dots(binwidth = unit(0.1, "native")) +
+      facet_grid(~ am, scales = "free")
+  )
+})
