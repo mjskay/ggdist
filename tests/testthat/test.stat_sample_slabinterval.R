@@ -115,3 +115,24 @@ test_that("pdf and cdf aesthetics work", {
   )
 })
 
+test_that("constant distributions work", {
+  skip_if_not_installed("vdiffr")
+  skip_if_not_installed("svglite")
+
+  p = data.frame(
+    x = c("constant = 1", "normal(2,1)"),
+    # sd of 0 will generate constant dist
+    y = qnorm(ppoints(100), mean = c(1, 2), sd = c(0, 1))
+  ) %>%
+    ggplot(aes(x = x, y = y))
+
+  vdiffr::expect_doppelganger("constant distributions on a sample halfeye",
+    p + stat_sample_slabinterval(n = 20)
+  )
+
+  vdiffr::expect_doppelganger("constant distributions on a sample ccdf",
+    p + stat_ccdfinterval()
+  )
+
+})
+

@@ -20,7 +20,25 @@ weighted_ecdf = function(x, weights = NULL) {
   weights = weights[sort_order]
   p = cumsum(weights) / sum(weights)
 
-  approxfun(x, p, yleft = 0, yright = 1, ties = list("ordered", max))
+  # need to manually do tie removal before passing to approxfun, otherwise it
+  # will fail when all x values are equal
+  unique_x = unique(x)
+  if (length(unique_x) < length(x)) {
+    # if x[i] ... x[i + k] are all equal ("tied"), collapse to a single x
+    # value and let corresponding value in p = max(p[i] ... p[i + k])
+    p = as.vector(tapply(p, match(x, x), max))
+    x = unique_x
+    stopifnot(length(p) == length(x))
+  }
+
+  method = if (length(x) == 1) {
+    # use a step function for constants ("linear" breaks on n < 2)
+    "constant"
+  } else {
+    "linear"
+  }
+
+  approxfun(x, p, yleft = 0, yright = 1, ties = "ordered", method = method)
 }
 
 #' @importFrom rlang missing_arg
