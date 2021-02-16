@@ -32,7 +32,6 @@ Imports:
     HDInterval,
     tibble,
     vctrs,
-    fda,
     distributional (>= 0.2.0)
 Suggests:
     knitr,
@@ -46,6 +45,7 @@ Suggests:
     gdtools,
     rmarkdown,
     png,
+    fda,
     pkgdown
 License: GPL (>= 3)
 Language: en-US

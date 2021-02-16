@@ -222,7 +222,7 @@ halfspace_depth = function(x) {
   dfs = group_split(group_by_at(data, .conditional_groups))
 
   # translate our names to names fda::fbplot understands
-  .interval = switch(.interval,
+  .interval_internal = switch(.interval,
     mbd = "MBD",
     bd = "BD2",
     `bd-mbd` = "Both",
@@ -231,7 +231,7 @@ halfspace_depth = function(x) {
 
   map_dfr(dfs, function(d) {
 
-    if (.interval == "mhd") { #mean halfspace depth
+    if (.interval_internal == "mhd") { #mean halfspace depth
       # draws x y matrix
       draws = do.call(cbind, d[[col_name]])
       # draws x depth matrix
@@ -239,10 +239,16 @@ halfspace_depth = function(x) {
       # mean depth of each draw
       draw_depth = rowMeans(pointwise_depths, na.rm = na.rm)
     } else { # band depth using fbplot
+      if (!requireNamespace("fda", quietly = TRUE)) {
+        stop(
+          'curve_interval(.interval = "', .interval, '") requires the `fda` package.\n',
+          'Please install the `fda` package or use .interval = "mhd".'
+        )
+      }
       # y x draws matrix
       draws = do.call(rbind, d[[col_name]])
       # depth of each draw
-      draw_depth = fda::fbplot(draws, plot = FALSE, method = .interval)$depth
+      draw_depth = fda::fbplot(draws, plot = FALSE, method = .interval_internal)$depth
     }
 
     # median draw = the one with the maximum depth

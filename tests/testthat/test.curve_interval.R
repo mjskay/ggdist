@@ -27,13 +27,14 @@ test_that("curve_interval works with lineribbon", {
 
   vdiffr::expect_doppelganger("curve_interval with mhd",
     curve_df %>%
-      curve_interval(y, .width = c(.5, .8), .interval = "bd-mbd") %>%
+      curve_interval(y, .width = c(.5, .8), .interval = "mhd") %>%
       ggplot(aes(x = x, y = y)) +
       geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
       geom_line(aes(group = .draw), alpha = 0.15, data = curve_df) +
       scale_fill_brewer()
   )
 
+  skip_if_not_installed("fda")
   vdiffr::expect_doppelganger("curve_interval with bd-mbd",
     curve_df %>%
       curve_interval(y, .width = c(.5, .8), .interval = "bd-mbd") %>%
