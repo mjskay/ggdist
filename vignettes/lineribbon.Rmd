@@ -413,7 +413,7 @@ coverage level. You can try different methods to sometimes get improved
 bands; e.g. using the `"bd-mbd"` method per Sun and Genton 
 ([2011](https://doi.org/10.1198/jcgs.2011.09224)) works better on this dataset:
 
-```{r mtcars_curve_interval_bd, fig.width = med_width, fig.height = med_height}
+```{r mtcars_curve_interval_bd, fig.width = med_width, fig.height = med_height, eval = requireNamespace("fda", quietly = TRUE)}
 mtcars_boot %>%
   group_by(mpg) %>%
   curve_interval(hp, .width = c(.5, .7, .9), .interval = "bd-mbd") %>%
