@@ -343,7 +343,7 @@ Mode = function(x, na.rm = FALSE) {
     ux[which.max(tabulate(match(x, ux)))]
   } else {
     # for the continuous case
-    d = density(x)
+    d = density(x, cut = 0)
     d$x[which.max(d$y)]
   }
 }
