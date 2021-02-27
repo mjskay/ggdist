@@ -826,9 +826,36 @@ dist_df %>%
 
 See `help("scale_color_ramp")` for more information on the color ramp aesthetics/scales.
 
-### Independent slabs and intervals in composite plots
+### Multiple slabs and intervals in composite plots
 
-Sometimes when constructing composite plots it may be useful to position slab and interval parts of the geometry separately.
+Sometimes you may want to include multiple different types of slabs in the same plot
+in order to take advantage of the features each slab type provides. For example,
+people often combine densities with dotplots to show the underlying datapoints that
+go into a density estimate. To use multiple slab geometries together, you can use the
+`side` parameter to change which side of the interval a slab is drawn on and set the
+`scale` parameter to something around `0.5` (by default it is `0.9`) so that the
+two slabs do not overlap:
+
+```{r halfeye_dotplot, fig.width = med_width, fig.height = small_height}
+df %>%
+  ggplot(aes(x = group, y = value)) +
+  stat_slab(side = "left", scale = 0.5) +
+  stat_dotsinterval(scale = 0.5) +
+  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval()')
+```
+
+In this example, depending on your use case you might prefer a quantile dotplot
+instead of a dotplot of all data points:
+
+```{r halfeye_quantile_dotplot, fig.width = med_width, fig.height = small_height}
+df %>%
+  ggplot(aes(x = group, y = value)) +
+  stat_slab(side = "left", scale = 0.5) +
+  stat_dotsinterval(scale = 0.5, quantiles = 100) +
+  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100)')
+```
+
+When constructing composite plots it may be useful to position slab and interval parts of the geometry separately.
 While some relative positioning of these geometries is supported by manipulating the `justification` parameter, if you
 want complete, separate control over positioning of intervals versus slabs, the simplest approach can be to specify those
 geometries separately. 

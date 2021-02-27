@@ -11,3 +11,4 @@ vignettes/*_cache/
 README_cache/
 benchmarks.md
 revdep/
+.Rproj.user
