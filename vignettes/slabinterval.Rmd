@@ -748,11 +748,12 @@ dist_df %>%
       "fill_ramp and thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)))"
     )
   ) +
-  guides(fill_ramp = FALSE)
+  guides(fill_ramp = FALSE) +
+  coord_cartesian(expand = FALSE)
 ```
 
 Thanks to a tweet from [Jessica Hullman](https://twitter.com/JessicaHullman/status/1366945872630714368?s=20) 
-for the idea.
+that inspired the idea.
 
 ### Densities filled according to intervals
 
