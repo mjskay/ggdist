@@ -194,6 +194,21 @@ df %>%
   scale_fill_distiller()
 ```
 
+To get a gradient that ramps down to the background color, you could also use
+the `fill_ramp` aesthetic provided by `ggdist` (see `help("scale_fill_ramp")`).
+It is necessary to invert the range (`range = c(1, 0)`) so that the gradient
+is dark in the middle (rather than the outside):
+
+```{r stat_lineribbon_gradient_ramp, fig.width = med_width, fig.height = med_height}
+df %>%
+  ggplot(aes(x = x, y = y)) +
+  stat_lineribbon(aes(fill_ramp = stat(.width)), .width = ppoints(50), fill = "#2171b5") +
+  scale_fill_ramp_continuous(range = c(1, 0))
+```
+
+If you are using a different background color than `"white"`, pass that color
+to the `from` argument of `scale_fill_ramp_continuous()`.
+
 ### Multiple lineribbons on one plot
 
 One may also want to plot multiple lineribbons on the same plot, perhaps corresponding
