@@ -726,6 +726,34 @@ priors %>%
   scale_slab_alpha_continuous(guide = FALSE)
 ```
 
+A related idea is one from [Tukey](https://doi.org/10.1080/00031305.1986.10475361): rather than
+visually emphasizing where a value is likely, emphasize where it is *unlikely*. While Tukey
+used a visual representation showing both pointwise and simultaneous intervals, for this
+example we will do something a bit different, inverting the faded-tails function from 
+Correll & Gleicher to create bars that "block out" the regions of low likelihood:
+
+```{r tukey_pencils, fig.width = small_height * 1.25, fig.height = small_height}
+dist_df %>%
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
+  stat_dist_slab(aes(
+      thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)), 
+      fill_ramp = stat(pmax(0, abs(1 - 2*cdf) - .95))
+    ),
+    side = "both", position = "dodge"
+  ) +
+  labs(
+    title = 'stat_dist_slab(side = "both")', 
+    subtitle = paste0(
+      "aes(fill = subgroup,\n       ",
+      "fill_ramp and thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)))"
+    )
+  ) +
+  guides(fill_ramp = FALSE)
+```
+
+Thanks to a tweet from [Jessica Hullman](https://twitter.com/JessicaHullman/status/1366945872630714368?s=20) 
+for the idea.
+
 ### Densities filled according to intervals
 
 Another common chart type involves filling in the interior of a halfeye plot
