@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0.9000</span>
       </span>
     </div>
 
@@ -99,13 +99,13 @@
 
       
 
-      </header><script src="lineribbon_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="lineribbon_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Lineribbon stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2020-12-29</h4>
+            <h4 class="date">2021-03-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/lineribbon.Rmd"><code>vignettes/lineribbon.Rmd</code></a></small>
       <div class="hidden name"><code>lineribbon.Rmd</code></div>
@@ -136,7 +136,7 @@ img {
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist/">ggdist</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.mitchelloharawild.com/distributional/">distributional</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span>
 
@@ -238,30 +238,41 @@ img {
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span>.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.66</span>, <span class="fl">.95</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="lineribbon_files/figure-html/stat_lineribbon_width-1.png" width="648"></p>
+<div id="lineribbon-gradients" class="section level3">
+<h3 class="hasAnchor">
+<a href="#lineribbon-gradients" class="anchor"></a>Lineribbon “gradients”</h3>
+<p>You can also create gradient-like plots with lineribbons by passing a large number of probability levels to the <code>.width</code> parameter. Calling <code><a href="https://rdrr.io/r/stats/ppoints.html">ppoints(n)</a></code> generates <code>n</code> values between <code>0</code> and <code>1</code> (exclusive), which can be used as interval widths. We must also override the default <code>fill</code> aesthetic to use the <code>.width</code> generated variable, which is continuous (by default lineribbons map <code>level</code> onto the <code>fill</code> aesthetic, which is a transformation of <code>.width</code> into a factor—and produces illegible legends when many values are used). This also requires us to use a continous fill scale (e.g. <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller()</a></code>) instead of a discrete one (e.g. <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer()</a></code>):</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span><span class="op">(</span><span class="va">.width</span><span class="op">)</span><span class="op">)</span>, .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ppoints.html">ppoints</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="lineribbon_files/figure-html/stat_lineribbon_gradient-1.png" width="648"></p>
+</div>
 <div id="multiple-lineribbons-on-one-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#multiple-lineribbons-on-one-plot" class="anchor"></a>Multiple lineribbons on one plot</h3>
 <p>One may also want to plot multiple lineribbons on the same plot, perhaps corresponding to separate groups. This might require applying a different color or fill to differentiate the lineribbons. Consider these data:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df_2groups</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">df</span>, g <span class="op">=</span> <span class="st">"a"</span><span class="op">)</span>,
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">df</span>, g <span class="op">=</span> <span class="st">"b"</span>, y <span class="op">=</span> <span class="op">(</span><span class="va">y</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <p>The naive approach to plotting will make the lines hard to distinguish:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df_2groups</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, color <span class="op">=</span> <span class="va">g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="lineribbon_files/figure-html/stat_lineribbon_2groups_brewer-1.png" width="648"></p>
 <p>Instead, we could change the fill color and allow the lines the be semi-transparent:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df_2groups</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, fill <span class="op">=</span> <span class="va">g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span></code></pre></div>
 <p><img src="lineribbon_files/figure-html/stat_lineribbon_2groups_alpha-1.png" width="648"></p>
 <p>We could also use the <code>fill_ramp</code> aesthetic provided by <code>ggdist</code> to similar effect (see <code><a href="../reference/scale_colour_ramp.html">help("scale_fill_ramp")</a></code>), though this tends to work best when the lines do not overlap:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df_2groups</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, fill <span class="op">=</span> <span class="va">g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill_ramp <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -272,7 +283,7 @@ img {
 <h2 class="hasAnchor">
 <a href="#lineribbons-on-analytical-distributions" class="anchor"></a>Lineribbons on analytical distributions</h2>
 <p>Lineribbons can also be applied to analytical distributions. This use case often arises with confidence distributions describing uncertainty in a fit line; for an example, see the end of <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. Here, we will look at a simpler example where we construct the distributions manually; here we’ll assume some variable <code>y</code> that is normally distributed conditional on <code>x</code> with mean <code>y_mean</code> and standard deviation <code>y_sd</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">analytical_df</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
   x <span class="op">=</span> <span class="op">-</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span>,
   y_mean <span class="op">=</span> <span class="fl">3</span> <span class="op">+</span> <span class="va">x</span>,
@@ -293,7 +304,7 @@ img {
 ##  9     4      7  1.61
 ## 10     5      8  1.87</code></pre>
 <p>We can visualize this conditional distribution with <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> using <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html">distributional::dist_normal()</a></code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">analytical_df</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html">dist_normal</a></span><span class="op">(</span><span class="va">y_mean</span>, <span class="va">y_sd</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -311,7 +322,7 @@ img {
 <p>The above examples all calculate <em>conditional</em> intervals, either using <code><a href="../reference/point_interval.html">point_interval()</a></code> (directly or indirectly) or using quantiles of an analytical distribution. However, you may not always want conditional intervals.</p>
 <p>Where <code><a href="../reference/point_interval.html">point_interval()</a></code> calculates <em>pointwise</em> intervals, or intervals <em>conditional</em> on each group, <code><a href="../reference/curve_interval.html">curve_interval()</a></code> calculates <em>joint</em> or <em>curvewise</em> intervals. In the literature these are also called <em>curve boxplots</em> (<a href="https://doi.org/10.1109/TVCG.2014.2346455">Mirzargar <em>et al.</em> 2014</a>, <a href="https://arxiv.org/abs/2007.05035">Juul <em>et al.</em> 2020</a>).</p>
 <p>An example will help illustrate the difference between the two types of intervals. Consider the following set of curves, where each curve is assumed to be a “draw” from some distribution of curves, <span class="math inline">\(\mathbf{y} = f(\mathbf{x})\)</span>, where <span class="math inline">\(\mathbf{x}\)</span> and <span class="math inline">\(\mathbf{y}\)</span> are vectors:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">k</span> <span class="op">=</span> <span class="fl">11</span> <span class="co"># number of curves</span>
 <span class="va">n</span> <span class="op">=</span> <span class="fl">501</span>
 <span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
@@ -327,7 +338,7 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">.draw</span><span class="op">)</span>, alpha<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></code></pre></div>
 <p><img src="lineribbon_files/figure-html/curve_draws-1.png" width="648"></p>
 <p>If one used one of the <code><a href="../reference/point_interval.html">point_interval()</a></code> functions to summarize this curve (such as <code><a href="../reference/point_interval.html">median_qi()</a></code>, <code><a href="../reference/point_interval.html">mean_qi()</a></code>, etc), it would calculate <em>pointwise</em> intervals:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/point_interval.html">median_qi</a></span><span class="op">(</span><span class="va">y</span>, .width <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -340,7 +351,7 @@ img {
 <p>The 50% <em>pointwise</em> interval calculated at (say) <span class="math inline">\(x = 1\)</span> would contain 50% of the draws from <span class="math inline">\(y|x=1\)</span>. At a different value of <span class="math inline">\(x\)</span>, say <span class="math inline">\(x = 2\)</span>, the 50% pointwise interval would also contain 50% of the draws from <span class="math inline">\(y|x = 2\)</span>. However, the specific draws contained in the interval for <span class="math inline">\(y|x=2\)</span> might be <em>different</em> draws from those contained in the interval for <span class="math inline">\(x|y=1\)</span>: if you trace any of the underlying curves, you will notice that each curve is included in some intervals and not included in others. Thus, the set of intervals—the ribbon—may not fully contain 50% of curves. Indeed, inspecting the above plot, the 50% ribbon contains <strong>none</strong> of the curves!</p>
 <p>Depending on what type of inference we care about, this might be sufficient for our purposes: maybe we are interested just in what the outcome is likely to be at a given x value (a conditional inference), but we are not interested in joint inferences (e.g., what is the shape of the curve likely to look like?). However, if we <em>are</em> interested in such joint inferences, pointwise intervals can be misleading. The shape of the median curve, for example, looks nothing like any of the possible outcomes. The interval also does not include the maximum value of <em>any</em> of the underlying curves, which might cause us to conclude (incorrectly) that a value close to 1 is unlikely, when the exact opposite is the case (every curve touches 1).</p>
 <p>One solution I like for such situations is to show spaghetti plots: just plot the underlying curves. This is a so-called <em>frequency framing</em> uncertainty visualization, and it tends to work fairly well. However, in some cases you may want a visual summary using intervals, in which case curvewise intervals could help. Using <code><a href="../reference/curve_interval.html">curve_interval()</a></code> instead of <code><a href="../reference/point_interval.html">point_interval()</a></code> or <code><a href="../reference/point_interval.html">median_qi()</a></code> calculates these:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/curve_interval.html">curve_interval</a></span><span class="op">(</span><span class="va">y</span>, .width <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -353,7 +364,7 @@ img {
 <p>Note how the 50% <em>curvewise</em> interval now contains half of the underlying curves, and the median curve <em>is</em> one of the underlying curves (so it is more representative of the curve shape we should expect). These intervals also cover the peaks of the curves, where the pointwise intervals did not.</p>
 <p>An X% <em>curvewise</em> interval is calculated across all the curves by taking the top X% closest curves to the central curve, for some definition of “close” and “central”. The <code><a href="../reference/curve_interval.html">curve_interval()</a></code> function currently orders curves by mean halfspace depth, which is basically how close each curve is to the pointwise median in percentiles, on average.</p>
 <p>Given the above, let’s see what more realistic curvewise intervals of the above example might look like by using a larger number of draws:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">k</span> <span class="op">=</span> <span class="fl">1000</span> <span class="co"># number of curves</span>
 <span class="va">large_df</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
     .draw <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">k</span>,
@@ -390,7 +401,7 @@ img {
 <h3 class="hasAnchor">
 <a href="#limitations-of-curvewise-intervals" class="anchor"></a>Limitations of curvewise intervals</h3>
 <p>One challenge with curvewise intervals is that they can tend to be very conservative, especially at moderate-to-large intervals widths. Let’s bootstrap some LOESS fits to horsepower versus MPG in the <code>mtcars</code> dataset:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span>
 <span class="va">n</span> <span class="op">=</span> <span class="fl">4000</span>
 <span class="va">mpg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
@@ -410,7 +421,7 @@ img {
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">m</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>This is a pretty naive approach, and definitely not a great way of analyzing this data, but it will illustrate the problems of some kinds of problems we might get with joint intervals. Let’s look at a spaghetti plot of just 400 draws from this bootstrap distribution first:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mtcars_boot</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.draw</span> <span class="op">&lt;</span> <span class="fl">400</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -419,7 +430,7 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">400</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="lineribbon_files/figure-html/mtcars_spaghetti-1.png" width="648"></p>
 <p>Now, pointwise intervals:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mtcars_boot</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span>.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.7</span>, <span class="fl">.9</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -428,7 +439,7 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">400</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="lineribbon_files/figure-html/mtcars_point_interval-1.png" width="648"></p>
 <p>Finally, curvewise intervals:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mtcars_boot</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/curve_interval.html">curve_interval</a></span><span class="op">(</span><span class="va">hp</span>, .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.7</span>, <span class="fl">.9</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -439,7 +450,7 @@ img {
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">400</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="lineribbon_files/figure-html/mtcars_curve_interval-1.png" width="648"></p>
 <p>Notice how noisy the curvewise intervals are. In addition, because a number of curves tend to start low and end high (or vice versa), above 50%, the bands rapidly expand to cover almost all of the curves in the sample, regardless of coverage level. You can try different methods to sometimes get improved bands; e.g. using the <code>"bd-mbd"</code> method per Sun and Genton (<a href="https://doi.org/10.1198/jcgs.2011.09224">2011</a>) works better on this dataset:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mtcars_boot</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/curve_interval.html">curve_interval</a></span><span class="op">(</span><span class="va">hp</span>, .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.7</span>, <span class="fl">.9</span><span class="op">)</span>, .interval <span class="op">=</span> <span class="st">"bd-mbd"</span><span class="op">)</span> <span class="op">%&gt;%</span>

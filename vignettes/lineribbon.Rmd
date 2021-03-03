@@ -175,6 +175,25 @@ df %>%
   scale_fill_brewer()
 ```
 
+### Lineribbon "gradients"
+
+You can also create gradient-like plots with lineribbons by passing a large number
+of probability levels to the `.width` parameter. Calling `ppoints(n)` generates
+`n` values between `0` and `1` (exclusive), which can be used as interval widths.
+We must also override the default `fill` aesthetic to use the `.width` generated
+variable, which is continuous (by default lineribbons map `level` onto the
+`fill` aesthetic, which is a transformation of `.width` into a factor---and produces
+illegible legends when many values are used). This also requires us to use
+a continous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete one
+(e.g. `scale_fill_brewer()`):
+
+```{r stat_lineribbon_gradient, fig.width = med_width, fig.height = med_height}
+df %>%
+  ggplot(aes(x = x, y = y)) +
+  stat_lineribbon(aes(fill = stat(.width)), .width = ppoints(50)) +
+  scale_fill_distiller()
+```
+
 ### Multiple lineribbons on one plot
 
 One may also want to plot multiple lineribbons on the same plot, perhaps corresponding
