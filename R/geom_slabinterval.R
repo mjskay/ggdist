@@ -125,8 +125,7 @@ draw_path = function(data, panel_params, coord) {
       munched_path$y,
       default.units = "native",
       gp = grid::gpar(
-        col = munched_path$colour,
-        alpha = munched_path$alpha,
+        col = alpha(munched_path$colour, munched_path$alpha),
         lwd = munched_path$size * .pt,
         lty = munched_path$linetype,
         lineend = "butt",
@@ -447,7 +446,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   # this is different from default_aes (above) so that we can identify what
   # aesthetics are *actually* being asked for when creating the key
   default_key_aes = aes(
-    alpha = 1,
+    alpha = NA_real_,
     colour = "black",
     linetype = "solid",
     fill = "gray65",
