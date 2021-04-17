@@ -95,3 +95,34 @@ ddply_ = function(data, groups, fun, ...) {
 dlply_ = function(data, groups, fun, ...) {
   lapply(dplyr::group_split(data, dplyr::across(groups)), fun, ...)
 }
+
+
+
+# sequences ---------------------------------------------------------------
+
+#' Create sequences of length n interleaved with its own reverse sequence.
+#' e.g.
+#' seq_interleaved(6) = c(1, 6, 2, 5, 3, 4)
+#' seq_interleaved(5) = c(1, 5, 2, 4, 3)
+#' @keywords internal
+seq_interleaved = function(n) {
+  if (n <= 2) {
+    i = seq_len(n)
+  } else {
+    i = numeric(n)
+    i[c(TRUE,FALSE)] = seq_len(ceiling(n/2))
+    i[c(FALSE,TRUE)] = seq(n, ceiling(n/2) + 1)
+  }
+
+  i
+}
+
+#' a variant of seq_interleaved that proceeds outwards from the middle,
+#' for use with side = "both" in dots geoms
+seq_interleaved_centered = function(n) {
+  is_odd = n %% 2
+  head = rev(seq_interleaved(floor(n/2))) * 2 - 1 + is_odd
+  center = if (is_odd) 1
+  tail = seq_interleaved(floor(n/2)) * 2 + is_odd
+  c(head, center, tail)
+}

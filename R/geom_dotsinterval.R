@@ -11,7 +11,7 @@
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
 dots_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL,
-  dotsize = 1, stackratio = 1, binwidth = NA,
+  dotsize = 1, stackratio = 1, binwidth = NA, layout = "bins",
   side = "topright", orientation = "vertical"
 ) {
   datas = data %>%
@@ -21,7 +21,7 @@ dots_grob = function(data, max_height, x, y,
 
   gTree(
     datas = datas, max_height = max_height, x_ = x, y_ = y,
-    dotsize = dotsize, stackratio = stackratio, binwidth = binwidth,
+    dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
     side = side, orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
@@ -44,6 +44,7 @@ makeContent.dots_grob = function(x) {
   stackratio = 1.07 * grob_$stackratio
   dotsize = grob_$dotsize
   bin_width = grob_$binwidth
+  layout = grob_$layout
 
   # if bin width was specified as a grid::unit, convert it
   if (is.unit(bin_width)) {
@@ -149,15 +150,43 @@ makeContent.dots_grob = function(x) {
   # now, draw all the heaps using the same bin width
   children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
     h = heap_spec(d, bin_width = bin_width)
-    h$binning = nudge_bins(h$binning, bin_width)
+    h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, bin_width)
     d$bins = h$binning$bins
     d$midpoint = h$binning$bin_midpoints[h$binning$bins]
     point_fontsize = max(
       convertY(unit(h$point_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
       0.5
     )
+
+    # determine x positions
+    switch(layout,
+      bins = {
+        d[[x]] = d$midpoint
+      },
+      weave = {
+        # keep original x positions, but re-order within bins so that overlaps
+        # across bins are less likely
+        d = ddply_(d, "bins", function(bin_df) {
+          seq_fun = if (side == "both") seq_interleaved_centered else seq_interleaved
+          bin_df = bin_df[seq_fun(nrow(bin_df)),]
+          bin_df$rows = seq_len(nrow(bin_df))
+          bin_df
+        })
+
+        # nudge values within each row to ensure there are no overlaps
+        # (rows are not well-defined in side = "both" for this to work,
+        # so we skip this step in that case)
+        if (side != "both") {
+          d = ddply_(d, "rows", function(row_df) {
+            row_df[[x]] = nudge_bins(row_df[[x]], bin_width)
+            row_df
+          })
+        }
+      }
+    )
+
+    # generate grobs
     dlply_(d, "bins", function (bin_df) {
-      bin_df[[x]] = bin_df$midpoint
 
       y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
       switch_side(side, orientation,
@@ -233,6 +262,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,
       binwidth = child_params$binwidth,
+      layout = child_params$layout,
       side = side,
       orientation = orientation
     ))
@@ -291,6 +321,9 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' of data. The bin width can also be specified using `unit()`, which may be useful if it is desired that
 #' the dots be a certain percentage of the width/height of the viewport (e.g. `unit(0.1, "npc")` would
 #' make dots that are 10% of the viewport size along whichever dimension the dotplot is drawn).
+#' @param layout The layout method used for the dots. The default (`"bins"`) places dots on the off-axis at the
+#' midpoint of their bins as in the classic Wilkinson dotplot. The `"weave"` layout will place dots in the off-axis
+#' closer to their actual positions (modulo overlaps, which are nudged out of the way).
 #' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
 #' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number
@@ -352,12 +385,15 @@ geom_dotsinterval = function(
   dotsize = 1,
   stackratio = 1,
   binwidth = NA,
+  layout = c("bins", "weave"),
 
   na.rm = FALSE,
 
   show.legend = NA,
   inherit.aes = TRUE
 ) {
+  layout = match.arg(layout)
+
   layer(
     mapping = mapping,
     data = data,
@@ -373,6 +409,7 @@ geom_dotsinterval = function(
       dotsize = dotsize,
       stackratio = stackratio,
       binwidth = binwidth,
+      layout = layout,
 
       na.rm = na.rm,
       ...
@@ -404,14 +441,16 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   extra_params = c(GeomSlabinterval$extra_params,
     "dotsize",
     "stackratio",
-    "binwidth"
+    "binwidth",
+    "layout"
   ),
 
   default_params = defaults(list(
     normalize = "none",
     dotsize = 1,
     stackratio = 1,
-    binwidth = NA
+    binwidth = NA,
+    layout = "bins"
   ), GeomSlabinterval$default_params),
 
   draw_panel = function(self, data, panel_params, coord,
@@ -431,6 +470,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     dotsize = self$default_params$dotsize,
     stackratio = self$default_params$stackratio,
     binwidth = self$default_params$binwidth,
+    layout = self$default_params$layout,
 
     child_params = list()
   ) {
@@ -451,7 +491,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       child_params = list(
         dotsize = dotsize,
         stackratio = stackratio,
-        binwidth = binwidth
+        binwidth = binwidth,
+        layout = layout
       )
     )
   },

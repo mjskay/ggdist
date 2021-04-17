@@ -83,39 +83,39 @@ test_that("bin nudging works", {
 
   # when no nudging required
   expect_equal(
-    nudge_bins(list(bins = integer(0), bin_midpoints = NULL), width = 1),
-    list(bins = integer(0), bin_midpoints = NULL)
+    nudge_bins(NULL, width = 1),
+    NULL
   )
   expect_equal(
-    nudge_bins(list(bins = c(1), bin_midpoints = c(1)), width = 1),
-    list(bins = c(1), bin_midpoints = c(1))
+    nudge_bins(c(1), width = 1),
+    c(1)
   )
   expect_equal(
-    nudge_bins(list(bins = c(1,2), bin_midpoints = c(1,2)), width = 1),
-    list(bins = c(1,2), bin_midpoints = c(1,2))
+    nudge_bins(c(1,2), width = 1),
+    c(1,2)
   )
   expect_equal(
-    nudge_bins(list(bins = c(1,2,3,4), bin_midpoints = c(1,2,3,4)), width = 1),
-    list(bins = c(1,2,3,4), bin_midpoints = c(1,2,3,4))
+    nudge_bins(c(1,2,3,4), width = 1),
+    c(1,2,3,4)
   )
   expect_equal(
-    nudge_bins(list(bins = c(1,2,3), bin_midpoints = c(1,2,3)), width = 1),
-    list(bins = c(1,2,3), bin_midpoints = c(1,2,3))
+    nudge_bins(bin_midpoints = c(1,2,3), width = 1),
+    c(1,2,3)
   )
 
   # on even number of bins
   expect_equal(
-    nudge_bins(list(bins = c(1,2), bin_midpoints = c(1,2)), width = 1.1),
-    list(bins = c(1,2), bin_midpoints = c(0.95,2.05))
+    nudge_bins(bin_midpoints = c(1,2), width = 1.1),
+    c(0.95,2.05)
   )
   expect_equal(
-    nudge_bins(list(bins = c(1,2,3,4), bin_midpoints = c(1,2,3,4)), width = 1.1),
-    list(bins = c(1,2,3,4), bin_midpoints = c(.85,1.95,3.05,4.15))
+    nudge_bins(c(1,2,3,4), width = 1.1),
+    c(.85,1.95,3.05,4.15)
   )
 
   # on odd number of bins
   expect_equal(
-    nudge_bins(list(bins = c(1,2,3), bin_midpoints = c(1,2,3)), width = 1.1),
-    list(bins = c(1,2,3), bin_midpoints = c(0.9,2,3.1))
+    nudge_bins(c(1,2,3), width = 1.1),
+    c(0.9,2,3.1)
   )
 })

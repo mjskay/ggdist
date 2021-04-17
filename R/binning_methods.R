@@ -170,9 +170,7 @@ automatic_bin = function(x, width) {
 
 # given a binning produced by one of the binning methods, nudge
 # bin midpoints to ensure they are at least `width` apart
-nudge_bins = function(binning, width) {
-  bin_midpoints = binning$bin_midpoints
-
+nudge_bins = function(bin_midpoints, width) {
   if (length(bin_midpoints) >= 2) {
     if (length(bin_midpoints) %% 2 == 0) {
       # even number of bins => ensure the two center bins are proper width apart
@@ -201,9 +199,7 @@ nudge_bins = function(binning, width) {
       bin_midpoints[[i]] = bin_midpoints[[i]] +
         max(width - abs(bin_midpoints[[i]] - bin_midpoints[[i - 1]]), 0)
     }
-
-    binning$bin_midpoints = bin_midpoints
   }
 
-  binning
+  bin_midpoints
 }
