@@ -31,12 +31,7 @@ weighted_ecdf = function(x, weights = NULL) {
     stopifnot(length(p) == length(x))
   }
 
-  method = if (length(x) == 1) {
-    # use a step function for constants ("linear" breaks on n < 2)
-    "constant"
-  } else {
-    "linear"
-  }
+  method = "constant"
 
   approxfun(x, p, yleft = 0, yright = 1, ties = "ordered", method = method)
 }

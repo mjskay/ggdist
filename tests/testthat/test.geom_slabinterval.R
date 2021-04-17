@@ -102,7 +102,9 @@ test_that("alpha channel in fill colors works", {
   skip_if_not_installed("vdiffr")
   skip_if_not_installed("svglite")
 
-  data.frame(x = c(0,1), y = "a", d = c(1,2)) %>%
-    ggplot(aes(x = x, y = y, thickness = d)) +
-    geom_slab(fill = scales::alpha("black", 0.2))
+  vdiffr::expect_doppelganger("alpha channel in slab fill",
+    data.frame(x = c(0,1), y = "a", d = c(1,2)) %>%
+      ggplot(aes(x = x, y = y, thickness = d)) +
+      geom_slab(fill = scales::alpha("black", 0.2))
+  )
 })
