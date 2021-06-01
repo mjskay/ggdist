@@ -231,9 +231,11 @@ halfspace_depth = function(x) {
 
   map_dfr(dfs, function(d) {
 
+    # draws x y matrix
+    draws = do.call(cbind, d[[col_name]])
+    y_rvar = rvar(draws)
+
     if (.interval_internal == "mhd") { #mean halfspace depth
-      # draws x y matrix
-      draws = do.call(cbind, d[[col_name]])
       # draws x depth matrix
       pointwise_depths = apply(draws, 2, halfspace_depth)
       # mean depth of each draw
@@ -245,26 +247,73 @@ halfspace_depth = function(x) {
           'Please install the `fda` package or use .interval = "mhd".'
         )
       }
-      # y x draws matrix
-      draws = do.call(rbind, d[[col_name]])
       # depth of each draw
-      draw_depth = fda::fbplot(draws, plot = FALSE, method = .interval_internal)$depth
+      draw_depth = fda::fbplot(t(draws), plot = FALSE, method = .interval_internal)$depth
     }
 
     # median draw = the one with the maximum depth
     median_draw = which.max(draw_depth)
     median_y = map_dbl(d[[col_name]], `[[`, median_draw)
 
-    map_dfr(.width, function(w) {
-      depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
+    # function for determining the intervals given a selected draw depth
+    calc_intervals_at_depth_cutoff = function(depth_cutoff) {
       selected_draws = draw_depth >= depth_cutoff
 
       selected_y = lapply(d[[col_name]], `[`, selected_draws)
       d[[lower]] = map_dbl(selected_y, min)
       d[[upper]] = map_dbl(selected_y, max)
+      d[[".actual_width"]] = Pr(rvar_all(d[[lower]] <= y_rvar & y_rvar <= d[[upper]]))
+
+      d
+    }
+
+    # for each requested width (as a probability), translate it into a
+    # draw depth cutoff where approximately width% draws are contained
+    # by the envelope around all draws deeper than the depth cutoff
+    sorted_draw_depths = sort(draw_depth)
+    map_dfr(.width, function(w) {
+      if (FALSE) {
+        # naive approach: just use quantiles of draw depths to determine cutoff
+        depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
+      } else {
+        # use binary search to find a cutoff
+        draw_depth_i = binary_search(
+          function(i) {
+            depth_cutoff = sorted_draw_depths[i]
+            actual_width = calc_intervals_at_depth_cutoff(depth_cutoff)[[".actual_width"]][[1]]
+            actual_width >= w
+          },
+          min_i = 1,
+          max_i = length(sorted_draw_depths)
+        )
+        depth_cutoff = sorted_draw_depths[draw_depth_i]
+      }
+
+      d = calc_intervals_at_depth_cutoff(depth_cutoff)
       d[[col_name]] = median_y
       d[[".width"]] = w
       d
     })
   })
+}
+
+
+# use binary search to find the largest i such that f(i) is TRUE
+# assumes there is some i such that for all j < i, f(i) is TRUE and
+# for all k > i, f(i) is FALSE
+binary_search = function(f, min_i, max_i) {
+  # pre-conditions: f(min_i) should be TRUE, f(max_i) should be FALSE
+  if (!f(min_i)) return(min_i)
+  if (f(max_i)) return(max_i)
+
+  repeat {
+    if (max_i - min_i == 1) return(min_i)
+
+    i = ceiling((min_i + max_i) / 2)
+    if (f(i)) {
+      min_i = i
+    } else {
+      max_i = i
+    }
+  }
 }
