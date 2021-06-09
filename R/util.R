@@ -104,7 +104,7 @@ dlply_ = function(data, groups, fun, ...) {
 #' e.g.
 #' seq_interleaved(6) = c(1, 6, 2, 5, 3, 4)
 #' seq_interleaved(5) = c(1, 5, 2, 4, 3)
-#' @keywords internal
+#' @noRd
 seq_interleaved = function(n) {
   if (n <= 2) {
     i = seq_len(n)
@@ -119,6 +119,7 @@ seq_interleaved = function(n) {
 
 #' a variant of seq_interleaved that proceeds outwards from the middle,
 #' for use with side = "both" in dots geoms
+#' @noRd
 seq_interleaved_centered = function(n) {
   is_odd = n %% 2
   head = rev(seq_interleaved(floor(n/2))) * 2 - 1 + is_odd
