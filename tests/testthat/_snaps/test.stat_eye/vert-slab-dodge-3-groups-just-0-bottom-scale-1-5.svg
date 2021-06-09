@@ -31,22 +31,6 @@
 <polygon points='482.24,521.37 482.24,501.50 482.24,481.62 482.24,461.75 482.24,441.87 482.24,422.00 482.24,402.12 482.24,382.25 482.24,362.37 482.24,342.50 482.24,322.62 482.24,302.75 482.24,282.87 482.24,263.00 482.24,243.12 482.24,223.25 482.24,203.37 482.24,183.50 482.24,163.62 482.24,143.75 476.36,143.75 470.58,163.62 466.19,183.50 461.15,203.37 455.60,223.25 444.53,243.12 420.64,263.00 391.80,282.87 369.27,302.75 359.13,322.62 360.63,342.50 377.76,362.37 397.07,382.25 418.01,402.12 438.66,422.00 451.22,441.87 457.97,461.75 467.49,481.62 475.30,501.50 479.01,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #F8766D;' />
 <polygon points='564.32,507.36 564.32,486.12 564.32,464.88 564.32,443.64 564.32,422.40 564.32,401.16 564.32,379.92 564.32,358.68 564.32,337.44 564.32,316.21 564.32,294.97 564.32,273.73 564.32,252.49 564.32,231.25 564.32,210.01 564.32,188.77 564.32,167.53 564.32,146.29 564.32,125.05 564.32,103.81 561.61,103.81 561.26,125.05 562.16,146.29 561.73,167.53 557.36,188.77 548.21,210.01 530.54,231.25 505.05,252.49 474.20,273.73 448.91,294.97 443.45,316.21 449.83,337.44 465.53,358.68 479.30,379.92 488.80,401.16 511.97,422.40 532.25,443.64 545.00,464.88 556.29,486.12 560.75,507.36 ' style='stroke-width: 2.13; stroke: none; fill: #00BA38;' />
 <polygon points='646.39,483.61 646.39,466.12 646.39,448.63 646.39,431.14 646.39,413.65 646.39,396.17 646.39,378.68 646.39,361.19 646.39,343.70 646.39,326.21 646.39,308.72 646.39,291.24 646.39,273.75 646.39,256.26 646.39,238.77 646.39,221.28 646.39,203.79 646.39,186.31 646.39,168.82 646.39,151.33 638.81,151.33 634.97,168.82 631.21,186.31 623.00,203.79 610.19,221.28 594.90,238.77 580.12,256.26 568.51,273.75 556.72,291.24 542.46,308.72 535.27,326.21 541.93,343.70 553.62,361.19 562.76,378.68 571.80,396.17 581.52,413.65 594.75,431.14 611.29,448.63 624.26,466.12 633.40,483.61 ' style='stroke-width: 2.13; stroke: none; fill: #619CFF;' />
-<line x1='482.24' y1='463.90' x2='482.24' y2='183.89' style='stroke-width: 1.28; stroke-linecap: butt;' />
-<line x1='646.39' y1='465.20' x2='646.39' y2='192.09' style='stroke-width: 1.28; stroke-linecap: butt;' />
-<line x1='277.05' y1='384.29' x2='277.05' y2='130.11' style='stroke-width: 1.28; stroke-linecap: butt;' />
-<line x1='564.32' y1='457.17' x2='564.32' y2='219.58' style='stroke-width: 1.28; stroke-linecap: butt;' />
-<line x1='646.39' y1='404.64' x2='646.39' y2='262.24' style='stroke-width: 2.99; stroke-linecap: butt;' />
-<line x1='564.32' y1='398.76' x2='564.32' y2='273.73' style='stroke-width: 2.99; stroke-linecap: butt;' />
-<line x1='277.05' y1='324.98' x2='277.05' y2='200.17' style='stroke-width: 2.99; stroke-linecap: butt;' />
-<line x1='482.24' y1='396.61' x2='482.24' y2='273.08' style='stroke-width: 2.99; stroke-linecap: butt;' />
-<circle cx='482.24' cy='334.14' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='646.39' cy='332.10' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='277.05' cy='263.40' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='564.32' cy='329.69' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='646.39' cy='332.10' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='564.32' cy='329.69' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='277.05' cy='263.40' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='482.24' cy='334.14' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
 <rect x='30.83' y='22.78' width='640.18' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
@@ -75,6 +59,6 @@
 <text x='704.73' y='277.36' style='font-size: 8.80px; font-family: sans;' textLength='9.79px' lengthAdjust='spacingAndGlyphs'>g1</text>
 <text x='704.73' y='294.64' style='font-size: 8.80px; font-family: sans;' textLength='9.79px' lengthAdjust='spacingAndGlyphs'>g2</text>
 <text x='704.73' y='311.92' style='font-size: 8.80px; font-family: sans;' textLength='9.79px' lengthAdjust='spacingAndGlyphs'>g3</text>
-<text x='30.83' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='399.20px' lengthAdjust='spacingAndGlyphs'>vertical halfeye with dodging (3 groups, just = 0, bottom, scale = 1.5)</text>
+<text x='30.83' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='322.17px' lengthAdjust='spacingAndGlyphs'>vert slab, dodge, 3 groups, just = 0, bottom, scale = 1.5</text>
 </g>
 </svg>

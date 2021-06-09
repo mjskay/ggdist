@@ -69,7 +69,7 @@ test_that("grouped pointintervals work", {
     ggplot(aes(x = i, y = u_tau, ymin = .lower, ymax = .upper, interval_size = forcats::fct_rev(ordered(.width))), point_size = 3) +
     geom_pointinterval()
 
-  vdiffr::expect_doppelganger("grouped pointintervals with interval_size and legend", forward_plot)
+  vdiffr::expect_doppelganger("grouped, with interval_size and legend", forward_plot)
 
   stat_forward_plot = RankCorr_u_tau %>%
     ggplot(aes(x = i, y = u_tau)) +
@@ -90,19 +90,19 @@ test_that("orientation detection on pointintervals works", {
     g = c("a", "b")
   ) %>% ggplot()
 
-  vdiffr::expect_doppelganger("vertical pointinterval orientation detection",
+  vdiffr::expect_doppelganger("vertical, orientation detection",
     p + geom_pointinterval(aes(x = g, y = v, ymin = l, ymax = u), orientation = NA)
   )
 
-  vdiffr::expect_doppelganger("horizontal pointinterval orientation detection",
+  vdiffr::expect_doppelganger("horizontal, orientation detection",
     p + geom_pointinterval(aes(y = g, x = v, xmin = l, xmax = u), orientation = NA)
   )
 
-  vdiffr::expect_doppelganger("vertical pointinterval orientation detection plus dodge",
+  vdiffr::expect_doppelganger("vertical, orientation detection plus dodge",
     p + geom_pointinterval(aes(color = g, y = v, ymin = l, ymax = u), orientation = NA, position = "dodge")
   )
 
-  vdiffr::expect_doppelganger("horizontal pointinterval orientation detection, dodge",
+  vdiffr::expect_doppelganger("horizontal, orientation detection, dodge",
     p + geom_pointinterval(aes(color = g, x = v, xmin = l, xmax = u), orientation = NA, position = "dodge")
   )
 

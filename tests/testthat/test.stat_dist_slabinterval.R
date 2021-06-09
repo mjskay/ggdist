@@ -157,7 +157,7 @@ test_that("scale transformation works", {
     p_rev + stat_dist_halfeye(n = 100)
   )
 
-  vdiffr::expect_doppelganger("dist_ccdfintervalh reverse scale transform",
+  vdiffr::expect_doppelganger("ccdfinterval reverse scale transform",
     p_rev + stat_dist_ccdfinterval(n = 100)
   )
 })
@@ -223,11 +223,11 @@ test_that("distributional objects work", {
   ) %>%
     ggplot(aes(x = name, dist = dist))
 
-  vdiffr::expect_doppelganger("distributional objects in stat_dist_halfeye",
+  vdiffr::expect_doppelganger("dist objects in stat_dist_halfeye",
     p + stat_dist_halfeye(n = 20)
   )
 
-  vdiffr::expect_doppelganger("distributional objects in stat_dist_ccdfinterval",
+  vdiffr::expect_doppelganger("dist objects in stat_dist_ccdfinterval",
     p + stat_dist_ccdfinterval(n = 20)
   )
 

@@ -70,6 +70,6 @@
 <line x1='569.70' y1='307.17' x2='569.70' y2='293.34' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <text x='583.82' y='286.00' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.95</text>
 <text x='583.82' y='303.28' style='font-size: 8.80px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.66</text>
-<text x='27.90' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='303.08px' lengthAdjust='spacingAndGlyphs'>grouped pointintervals with interval_size and legend</text>
+<text x='27.90' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='225.30px' lengthAdjust='spacingAndGlyphs'>grouped, with interval_size and legend</text>
 </g>
 </svg>
