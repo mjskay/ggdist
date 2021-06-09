@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("scales")
+context("scale_")
 
 
 test_that("direct scale setting works", {
