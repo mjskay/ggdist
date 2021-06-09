@@ -36,7 +36,7 @@ Imports:
 Suggests:
     knitr,
     testthat,
-    vdiffr (>= 0.3.0),
+    vdiffr (>= 1.0.0),
     svglite,
     broom (>= 0.5.6),
     modelr,
