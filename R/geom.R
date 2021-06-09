@@ -9,6 +9,9 @@ ggname = function(prefix, grob) {
   grob
 }
 
+
+# default computed aesthetics ---------------------------------------------
+
 # add default computed aesthetics to a layer --- useful for creating default aesthetics
 # that are computed from the input data rather than default non-data-mapped aesthetics
 add_default_computed_aesthetics = function(l, default_mapping) {
@@ -16,8 +19,9 @@ add_default_computed_aesthetics = function(l, default_mapping) {
     setup_layer = function(self, data, plot) {
       data = ggproto_parent(l, self)$setup_layer(data, plot)
 
-      if (is.null(self$mapping)) {
-        self$mapping = list()
+      mapping = computed_mapping(self)
+      if (is.null(mapping)) {
+        mapping = list()
       }
 
       for (aesthetic in names(default_mapping)) {
@@ -28,19 +32,43 @@ add_default_computed_aesthetics = function(l, default_mapping) {
         if (
           # only add the aesthetic if it isn't already set and if the variables it uses
           # are in the provided data and none of them are NA
-          is.null(self$mapping[[aesthetic, exact = FALSE]]) &&
-          (!isTRUE(self$inherit.aes) || is.null(plot$mapping[[aesthetic, exact = FALSE]])) &&
+          is.null(mapping[[aesthetic, exact = FALSE]]) &&
+          (!isTRUE(self$inherit.aes) || is.null(computed_mapping(plot)[[aesthetic, exact = FALSE]])) &&
           all(vars_in_mapping %in% names(data)) &&
           !(any(is.na(data[,vars_in_mapping])))
         ) {
-          self$mapping[[aesthetic]] = default_mapping[[aesthetic]]
+          mapping[[aesthetic]] = default_mapping[[aesthetic]]
         }
       }
+
+      computed_mapping(self) = mapping
 
       data
     }
   )
 }
+
+#' the mapping property of layers changed to computed_mapping in ggplot 3.3.4
+#' to avoid statefulness; this function encapsulates that change
+#' see https://github.com/tidyverse/ggplot2/pull/4475
+#' @noRd
+computed_mapping = function(x) {
+  if (packageVersion("ggplot2") >= "3.3.3.9000") {
+    x$computed_mapping
+  } else {
+    x$mapping
+  }
+}
+`computed_mapping<-` = function(x, value) {
+  if (packageVersion("ggplot2") >= "3.3.3.9000") {
+    x$computed_mapping = value
+  } else {
+    x$mapping = value
+  }
+  x
+}
+
+# orientation detection ---------------------------------------------------
 
 # detects the orientation of the geometry
 #' @importFrom ggplot2 has_flipped_aes
@@ -133,6 +161,8 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
   )
 }
 
+
+# ggproto -----------------------------------------------------------------
 
 #' Base ggproto classes for ggdist
 #'
