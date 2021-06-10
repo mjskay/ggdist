@@ -11,7 +11,7 @@
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
 dots_grob = function(data, max_height, x, y,
   name = NULL, gp = gpar(), vp = NULL,
-  dotsize = 1, stackratio = 1, binwidth = NA, layout = "bins",
+  dotsize = 1, stackratio = 1, binwidth = NA, layout = "bin",
   side = "topright", orientation = "vertical"
 ) {
   datas = data %>%
@@ -160,7 +160,7 @@ makeContent.dots_grob = function(x) {
 
     # determine x positions
     switch(layout,
-      bins = {
+      bin = {
         d[[x]] = d$midpoint
       },
       weave = {
@@ -182,7 +182,8 @@ makeContent.dots_grob = function(x) {
             row_df
           })
         }
-      }
+      },
+      stop("Unknown layout type for dots: ", deparse0(layout))
     )
 
     # generate grobs
@@ -321,9 +322,15 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' of data. The bin width can also be specified using `unit()`, which may be useful if it is desired that
 #' the dots be a certain percentage of the width/height of the viewport (e.g. `unit(0.1, "npc")` would
 #' make dots that are 10% of the viewport size along whichever dimension the dotplot is drawn).
-#' @param layout The layout method used for the dots. The default (`"bins"`) places dots on the off-axis at the
-#' midpoint of their bins as in the classic Wilkinson dotplot. The `"weave"` layout will place dots in the off-axis
-#' closer to their actual positions (modulo overlaps, which are nudged out of the way).
+#' @param layout The layout method used for the dots:
+#'  - `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
+#'    This maintains the alignment of rows and columns in the dotplot.
+#'  - `"weave"`: places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of
+#'    the way). Maintains the alignment of rows but does not align dots within columns. Does not work well when
+#'    `side = "both"`.
+#'  - `"swarm"`: uses the `"compactswarm"` layout from `beeswarm::beeswarm()`. Does not maintain alignment of rows or
+#'    columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
+#'    dotplots of theoretical distributions, which may look better with `"bin"` or `"weave"`).
 #' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
 #' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number
@@ -385,7 +392,7 @@ geom_dotsinterval = function(
   dotsize = 1,
   stackratio = 1,
   binwidth = NA,
-  layout = c("bins", "weave"),
+  layout = c("bin", "weave", "swarm"),
 
   na.rm = FALSE,
 
@@ -450,7 +457,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     dotsize = 1,
     stackratio = 1,
     binwidth = NA,
-    layout = "bins"
+    layout = "bin"
   ), GeomSlabinterval$default_params),
 
   draw_panel = function(self, data, panel_params, coord,

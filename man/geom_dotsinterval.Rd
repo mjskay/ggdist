@@ -18,7 +18,7 @@ geom_dotsinterval(
   dotsize = 1,
   stackratio = 1,
   binwidth = NA,
-  layout = c("bins", "weave"),
+  layout = c("bin", "weave", "swarm"),
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -176,9 +176,17 @@ of data. The bin width can also be specified using \code{unit()}, which may be u
 the dots be a certain percentage of the width/height of the viewport (e.g. \code{unit(0.1, "npc")} would
 make dots that are 10\% of the viewport size along whichever dimension the dotplot is drawn).}
 
-\item{layout}{The layout method used for the dots. The default (\code{"bins"}) places dots on the off-axis at the
-midpoint of their bins as in the classic Wilkinson dotplot. The \code{"weave"} layout will place dots in the off-axis
-closer to their actual positions (modulo overlaps, which are nudged out of the way).}
+\item{layout}{The layout method used for the dots:
+\itemize{
+\item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
+This maintains the alignment of rows and columns in the dotplot.
+\item \code{"weave"}: places dots in the off-axis closer to their actual positions (modulo overlaps, which are nudged out of
+the way). Maintains the alignment of rows but does not align dots within columns. Does not work well when
+\code{side = "both"}.
+\item \code{"swarm"}: uses the \code{"compactswarm"} layout from \pkg{beeswarm}. Does not maintain alignment of rows or
+columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
+dotplots of theoretical distributions).
+}}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

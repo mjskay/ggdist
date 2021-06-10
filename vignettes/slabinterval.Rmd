@@ -595,7 +595,7 @@ Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatica
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup, color = subgroup)) +
   stat_dots(position = "dodge") +
-  labs(title = "stat_dots(slab_color = NA)")
+  labs(title = "stat_dots(aes(fill = subgroup, color = subgroup))")
 ```
 
 ### Quantile dotplots
@@ -617,18 +617,38 @@ As with other plot types, you can also use `stat_dist_dots()` instead if you wis
 
 ```{r dist_dots_shape_color, fig.width = med_width, fig.height = large_height}
 dist_df %>%
-  ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5), shape = subgroup)) +
+  filter(group != "c") %>%
+  ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5), shape = stat(x < 5))) +
   stat_dist_dots(position = "dodge", color = NA) +
-  labs(title = "stat_dist_dots(aes(fill = stat(x < 5), shape = subgroup))") +
-  # we'll use these shapes since they retain outlines
-  scale_shape_manual(values = c(21,22,23))
+  labs(title = "stat_dist_dots(aes(fill and shape = stat(x < 5)))") +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:10) +
+  # we'll use these shapes since they have fill and outlines
+  scale_shape_manual(values = c(21,22))
 ```
+
+Notice the default dotplot layout, `"bin"`, can cause dots to be on the wrong
+side of a cutoff when coloring dots within dotplots. Thus it can be useful to use the
+`"weave"` layout, which positions dots at (or very close to) their true positions,
+rather than at bin centers:
+
+```{r dist_dots_weave, fig.width = med_width, fig.height = large_height}
+dist_df %>%
+  filter(group != "c") %>%
+  ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5))) +
+  stat_dist_dots(position = "dodge", color = NA, layout = "weave") +
+  labs(title = 'stat_dist_dots(aes(fill = stat(x < 5)), layout = "weave")') +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:10)
+```
+
 
 As with other slabinterval geoms, the `side` argument can also be used to construct violin-style dotplots. This example also shows the use of `dotsinterval` in place of `dots` to construct a combined quantile dotplot violin + interval plot. We also set `slab_color = NA` to turn off the outline on the dots:
 
 ```{r dist_dots_violin, fig.width = med_width, fig.height = small_height}
 dist_df %>%
-  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
+  filter(group != "c") %>%
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = group)) +
   stat_dist_dotsinterval(position = "dodge", side = "both", slab_color = NA) +
   labs(title = "stat_dist_dotsinterval(side = 'both', slab_color = NA)") 
 ```
