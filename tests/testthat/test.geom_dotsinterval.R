@@ -134,3 +134,14 @@ test_that("geom_dots bin_width can be specified in unit()s", {
       facet_grid(~ am, scales = "free")
   )
 })
+
+test_that("dotplot layouts work", {
+  skip_if_no_vdiffr()
+
+  vdiffr::expect_doppelganger("weave layout",
+    mtcars %>%
+      ggplot(aes(x = mpg)) +
+      geom_dots(layout = "weave")
+  )
+})
+
