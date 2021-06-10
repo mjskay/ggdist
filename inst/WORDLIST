@@ -1,6 +1,7 @@
 al
 amongst
 arXiv
+beeswarm
 behaviour
 brm
 brms
@@ -21,9 +22,11 @@ doi
 dotplot
 dotplots
 dplyr
+ECDFs
 emmeans
 equi
 et
+fda
 Fernandes
 Fraiman
 Franconeri
@@ -92,6 +95,7 @@ Remco
 resid
 rfloor
 rjags
+rlang
 rmarkdown
 roadmap
 robustify
@@ -111,7 +115,9 @@ tidybayes
 tidyselect
 tidyverse
 toc
+Trimble
 unevaluated
+vdiffr
 vectorized
 VignetteEncoding
 VignetteEngine

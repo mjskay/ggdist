@@ -674,9 +674,9 @@ Thus there are three layout options with `dots` and `dotsinterval` stats and
 geoms:
 
 - `layout = "bin"`, which maintains neat rows and columns and works well on
-  quantile doplots.
+  quantile dotplots.
 - `layout = "weave"`, which maintains neat rows (but not columns) and works well
-  on quantile doplots when you need to map other aesthetics based on positional 
+  on quantile dotplots when you need to map other aesthetics based on positional 
   cutoffs.
 - `layout = "swarm"`, which does not maintain rows or columns, and works well
   when you need a compact layout for sample data (not quantiles).
