@@ -10,8 +10,8 @@ library(distributional)
 context("geom_dotsinterval")
 
 test_that("vanilla dots geoms and stats work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   set.seed(1234)
   p = tribble(
@@ -58,8 +58,8 @@ test_that("vanilla dots geoms and stats work", {
 })
 
 test_that("stat_dist_dots[interval] works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = tribble(
     ~dist,  ~args,
@@ -87,8 +87,8 @@ test_that("stat_dist_dots[interval] works", {
 })
 
 test_that("stat_dist_dots works on NA data", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = data.frame(
     x = c("norm", NA, "norm"),
@@ -107,8 +107,8 @@ test_that("stat_dist_dots works on NA data", {
 })
 
 test_that("stat_dist_dots works on distributional objects", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = data.frame(
     x = dist_normal(0:1, 1:2),
@@ -123,8 +123,8 @@ test_that("stat_dist_dots works on distributional objects", {
 })
 
 test_that("geom_dots bin_width can be specified in unit()s", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   # these dots should be the same size (10% of facet height)
   vdiffr::expect_doppelganger("geom_dots with unit() binwidth",

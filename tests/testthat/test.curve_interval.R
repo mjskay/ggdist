@@ -10,8 +10,8 @@ context("curve_interval")
 
 
 test_that("curve_interval works with lineribbon", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   k = 11 # number of curves
   n = 101

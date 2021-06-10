@@ -21,8 +21,8 @@ make_line_data = function(offset = 0, seed = 123, g = "a") {
 }
 
 test_that("one-group stat_lineribbons work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   df = make_line_data()
 
@@ -40,8 +40,8 @@ test_that("one-group stat_lineribbons work", {
 })
 
 test_that("one-group geom_lineribbons work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   df = make_line_data()
 
@@ -77,8 +77,8 @@ test_that("one-group geom_lineribbons work", {
 })
 
 test_that("two-group stat_lineribbons work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   df = bind_rows(
     make_line_data(),
@@ -100,8 +100,8 @@ test_that("two-group stat_lineribbons work", {
 })
 
 test_that("stat_dist_lineribbon works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = tibble(
     x = 1:10,
@@ -120,8 +120,8 @@ test_that("stat_dist_lineribbon works", {
 })
 
 test_that("the stepped lineribbons work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = data.frame(x = 1:10) %>%
     ggplot(aes(x = x, dist = "norm", arg1 = x))

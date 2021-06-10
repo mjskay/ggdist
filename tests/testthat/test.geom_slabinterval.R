@@ -40,8 +40,8 @@ test_that("group_slab_data_by works", {
 
 
 test_that("group_slab works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = tibble(
     x = seq(-4,4, length.out = 20),
@@ -64,8 +64,8 @@ test_that("group_slab works", {
 # normalization -----------------------------------------------------------
 
 test_that("normalize works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = tribble(
     ~y, ~id, ~p, ~ dist, ~ mu, ~ sigma,
@@ -99,8 +99,8 @@ test_that("normalize works", {
 # alpha in fill colors works ----------------------------------------------
 
 test_that("alpha channel in fill colors works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   vdiffr::expect_doppelganger("alpha channel in slab fill",
     data.frame(x = c(0,1), y = "a", d = c(1,2)) %>%

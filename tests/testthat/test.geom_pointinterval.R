@@ -16,8 +16,8 @@ RankCorr_u_tau = RankCorr_u_tau %>%
   group_by(i)
 
 test_that("horizontal grouped pointintervals work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   vdiffr::expect_doppelganger("grouped pointintervals (h)",
     RankCorr_u_tau %>%
@@ -54,8 +54,8 @@ test_that("horizontal grouped pointintervals work", {
 })
 
 test_that("grouped pointintervals work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.66, .95)) %>%
@@ -80,8 +80,8 @@ test_that("grouped pointintervals work", {
 })
 
 test_that("orientation detection on pointintervals works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = data.frame(
     v = c(1,2),
@@ -109,8 +109,8 @@ test_that("orientation detection on pointintervals works", {
 })
 
 test_that("missing data is handled correctly", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = data.frame(
     x = c(1,NA,1),

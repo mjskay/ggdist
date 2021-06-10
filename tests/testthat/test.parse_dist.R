@@ -27,8 +27,8 @@ test_that("parse_dist works on data frames", {
 })
 
 test_that("parse_dist + marginalize_lkjcorr produces correct results", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   vdiffr::expect_doppelganger("LKJ marginalization works",
     data.frame(prior = "lkjcorr(3)") %>%

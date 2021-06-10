@@ -16,8 +16,8 @@ RankCorr_u_tau = RankCorr_u_tau %>%
   group_by(i)
 
 test_that("horizontal grouped intervals work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   vdiffr::expect_doppelganger("grouped intervals (h)",
     RankCorr_u_tau %>%
@@ -58,8 +58,8 @@ test_that("horizontal grouped intervals work", {
 })
 
 test_that("grouped intervals work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   forward_plot = RankCorr_u_tau %>%
     mean_qi(.width = c(.5, .75, .90)) %>%
@@ -79,8 +79,8 @@ test_that("grouped intervals work", {
 })
 
 test_that("multimodal intervals work with stat_interval", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   set.seed(1234)
   df = data.frame(x = c(rnorm(300), rnorm(300, 5)) + c(0,.5), g = c("a","b"))

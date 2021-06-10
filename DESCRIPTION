@@ -83,6 +83,7 @@ Collate:
     "stat_interval.R"
     "stat_lineribbon.R"
     "student_t.R"
+    "testthat.R"
     "theme_ggdist.R"
     "tidy_format_translators.R"
 Roxygen: list(markdown = TRUE)

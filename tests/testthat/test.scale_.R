@@ -9,8 +9,8 @@ context("scale_")
 
 
 test_that("direct scale setting works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
 
   vdiffr::expect_doppelganger("direct scale setting",
@@ -41,8 +41,8 @@ test_that("direct scale setting works", {
 })
 
 test_that("mapping custom aesthetics works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
 
   df = tibble(
