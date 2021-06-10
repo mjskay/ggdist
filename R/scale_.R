@@ -97,7 +97,7 @@
 #'
 #' @export
 scale_point_colour_discrete =
-  function(..., aesthetics = "point_colour") scale_colour_discrete(..., aesthetics = aesthetics)
+  function(..., aesthetics = "point_colour") scale_colour_hue(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
 scale_point_color_discrete = scale_point_colour_discrete
@@ -114,7 +114,7 @@ scale_point_color_continuous = scale_point_colour_continuous
 #' @rdname scales
 #' @export
 scale_point_fill_discrete =
-  function(..., aesthetics = "point_fill") scale_colour_discrete(..., aesthetics = aesthetics)
+  function(..., aesthetics = "point_fill") scale_colour_hue(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
 scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = "colourbar2") {
@@ -154,7 +154,7 @@ scale_point_size_discrete = function(..., range = c(1, 6), na.translate = FALSE)
 #' @export
 #' @rdname scales
 scale_interval_colour_discrete =
-  function(..., aesthetics = "interval_colour") scale_colour_discrete(..., aesthetics = aesthetics)
+  function(..., aesthetics = "interval_colour") scale_colour_hue(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
 scale_interval_color_discrete = scale_interval_colour_discrete
@@ -213,7 +213,7 @@ scale_interval_linetype_continuous = function(...) {
 #' @export
 #' @rdname scales
 scale_slab_colour_discrete =
-  function(..., aesthetics = "slab_colour") scale_colour_discrete(..., aesthetics = aesthetics)
+  function(..., aesthetics = "slab_colour") scale_colour_hue(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
 scale_slab_color_discrete = scale_slab_colour_discrete
@@ -230,7 +230,7 @@ scale_slab_color_continuous = scale_slab_colour_continuous
 #' @rdname scales
 #' @export
 scale_slab_fill_discrete =
-  function(..., aesthetics = "slab_fill") scale_colour_discrete(..., aesthetics = aesthetics)
+  function(..., aesthetics = "slab_fill") scale_colour_hue(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
 scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = "colourbar2") {
