@@ -231,6 +231,14 @@ test_that("distributional objects work", {
     p + stat_dist_ccdfinterval(n = 20)
   )
 
+  vdiffr::expect_doppelganger("dist_sample",
+    tibble(
+      x = dist_sample(list(qnorm(ppoints(100)), qnorm(ppoints(100), mean = 1)))
+    ) %>%
+      ggplot(aes(dist = x, y = "a")) +
+      stat_dist_slab(fill = NA, color = "black", n = 20)
+  )
+
 })
 
 test_that("stat_dist_ works on factor dist names", {

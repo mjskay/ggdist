@@ -164,10 +164,14 @@ dist_function.default = function(dist, prefix, fun) {
 }
 dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
 dist_function.factor = function(dist, prefix, fun) dist_function(as.character(dist), prefix, fun)
-# workaround for quantile.distribution not being vectorized currently
-# when #31 is fixed, replace with function(dist, prefix, fun) function(...) fun(dist, ...)
-dist_function.distribution = function(dist, prefix, fun) Vectorize(function(x, ...) fun(dist, x, ...), vectorize.args = "x")
-dist_function.dist_default = dist_function.distribution
+dist_function.distribution = function(dist, prefix, fun) {
+  if (length(dist) > 1) stop(
+    "distributional objects should never have length > 1 here.\n",
+    "Please report this bug at https://github.com/mjskay/ggdist/issues"
+  )
+  dist_function.dist_default(dist[[1]], prefix, fun)
+}
+dist_function.dist_default = function(dist, prefix, fun) function(x, ...) fun(dist, x, ...)
 dist_function.rvar = dist_function.distribution
 
 dist_pdf = function(dist) dist_function(dist, "d", density)
