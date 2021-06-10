@@ -51,6 +51,7 @@ add_default_computed_aesthetics = function(l, default_mapping) {
 #' the mapping property of layers changed to computed_mapping in ggplot 3.3.4
 #' to avoid statefulness; this function encapsulates that change
 #' see https://github.com/tidyverse/ggplot2/pull/4475
+#' @importFrom utils packageVersion
 #' @noRd
 computed_mapping = function(x) {
   if (packageVersion("ggplot2") >= "3.3.3.9000") {
