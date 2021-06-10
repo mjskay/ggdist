@@ -642,7 +642,6 @@ dist_df %>%
   scale_x_continuous(breaks = 2:10)
 ```
 
-
 As with other slabinterval geoms, the `side` argument can also be used to construct violin-style dotplots. This example also shows the use of `dotsinterval` in place of `dots` to construct a combined quantile dotplot violin + interval plot. We also set `slab_color = NA` to turn off the outline on the dots:
 
 ```{r dist_dots_violin, fig.width = med_width, fig.height = small_height}
@@ -653,13 +652,41 @@ dist_df %>%
   labs(title = "stat_dist_dotsinterval(side = 'both', slab_color = NA)") 
 ```
 
+### Using beeswarm layouts
+
+Finally, while the `"bin"` and `"weave"` layout methods shown above work especially 
+well for quantile dotplots, it can be useful when visualizing sample data
+(especially in large amounts) to employ so-called "beeswarm" plots. Setting
+`layout = "swarm"` will use the `"compactswarm"` layout type from `beeswarm::beeswarm()`,
+which tends to work well on sample data (but not on quantiles):
+
+```{r dots_swarm, fig.width = med_width, fig.height = large_height}
+df %>%
+  filter(group == "a") %>%
+  ggplot(aes(y = group, x = value, fill = stat(x < 5))) +
+  stat_dots(color = NA, layout = "swarm") +
+  labs(title = 'stat_dots(aes(fill = stat(x < 5)), layout = "swarm")') +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:8)
+```
+
+Thus there are three layout options with `dots` and `dotsinterval` stats and
+geoms:
+
+- `layout = "bin"`, which maintains neat rows and columns and works well on
+  quantile doplots.
+- `layout = "weave"`, which maintains neat rows (but not columns) and works well
+  on quantile doplots when you need to map other aesthetics based on positional 
+  cutoffs.
+- `layout = "swarm"`, which does not maintain rows or columns, and works well
+  when you need a compact layout for sample data (not quantiles).
+
 ### Summing up dotplots: `stat_[dist_]dots[interval]`
 
 All of the above geoms follow the naming scheme `stat_[dist_]dots[interval]`.
 
 * Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
 * Add `interval` to the name to get the version with a point+interval geom overlaid.
-
 
 ## Custom plots
 

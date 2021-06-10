@@ -158,7 +158,12 @@ makeContent.dots_grob = function(x) {
       0.5
     )
 
-    # determine x positions
+    # determine x positions (for bin/weave) / x and y positions (for swarm)
+    y_start = switch_side(side, orientation,
+      topright = h$y_spacing / 2,
+      bottomleft = - h$y_spacing / 2,
+      both = 0
+    )
     switch(layout,
       bin = {
         d[[x]] = d$midpoint
@@ -183,28 +188,45 @@ makeContent.dots_grob = function(x) {
           })
         }
       },
+      swarm = {
+        if (!requireNamespace("beeswarm", quietly = TRUE)) {
+          stop('Using layout = "swarm" with the dots geom requires the `beeswarm` package to be installed.')
+        }
+
+        swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
+          xsize = h$bin_width, ysize = h$y_spacing,
+          log = "", cex = 1,
+          side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0),
+          # priority = "density",
+          compact = TRUE
+        )
+
+        d[[x]] = swarm_xy[["x"]]
+        d[[y]] = swarm_xy[["y"]] + y_start
+      },
       stop("Unknown layout type for dots: ", deparse0(layout))
     )
 
+    # determine y positions (for bin/weave)
+    if (layout %in% c("bin", "weave")) {
+      d = ddply_(d, "bins", function(bin_df) {
+        y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+        switch_side(side, orientation,
+          topright = {},
+          bottomleft = {
+            y_offset = - y_offset
+          },
+          both = {
+            y_offset = y_offset - h$y_spacing * (nrow(bin_df) - 1) / 2
+          }
+        )
+        bin_df[[y]] = bin_df[[y]] + y_start + y_offset
+        bin_df
+      })
+    }
+
     # generate grobs
-    dlply_(d, "bins", function (bin_df) {
-
-      y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
-      switch_side(side, orientation,
-        topright = {
-          y_start = h$y_spacing / 2
-        },
-        bottomleft = {
-          y_offset = - y_offset
-          y_start = - h$y_spacing / 2
-        },
-        both = {
-          y_offset = y_offset - h$y_spacing * (nrow(bin_df) - 1) / 2
-          y_start = 0
-        }
-      )
-      bin_df[[y]] = bin_df[[y]] + y_start + y_offset
-
+    dlply_(d, "bins", function(bin_df) {
       pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
         gp = gpar(
           col = alpha(bin_df$colour, bin_df$alpha),

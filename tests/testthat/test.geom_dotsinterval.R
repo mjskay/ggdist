@@ -138,10 +138,47 @@ test_that("geom_dots bin_width can be specified in unit()s", {
 test_that("dotplot layouts work", {
   skip_if_no_vdiffr()
 
-  vdiffr::expect_doppelganger("weave layout",
+  vdiffr::expect_doppelganger("weave top",
     mtcars %>%
       ggplot(aes(x = mpg)) +
-      geom_dots(layout = "weave")
+      geom_dots(layout = "weave", side = "top")
   )
+
+  vdiffr::expect_doppelganger("weave bottom",
+    mtcars %>%
+      ggplot(aes(x = mpg)) +
+      geom_dots(layout = "weave", side = "bottom")
+  )
+
+  vdiffr::expect_doppelganger("weave both",
+    mtcars %>%
+      ggplot(aes(x = mpg)) +
+      geom_dots(layout = "weave", side = "both")
+  )
+
+  vdiffr::expect_doppelganger("swarm top",
+    mtcars %>%
+      ggplot(aes(x = mpg)) +
+      geom_dots(layout = "swarm")
+  )
+
+  vdiffr::expect_doppelganger("swarm bottom",
+    mtcars %>%
+      ggplot(aes(x = mpg)) +
+      geom_dots(layout = "swarm", side = "bottom")
+  )
+
+  vdiffr::expect_doppelganger("swarm both",
+    mtcars %>%
+      ggplot(aes(x = mpg)) +
+      geom_dots(layout = "swarm", side = "both")
+  )
+
+  vdiffr::expect_doppelganger("swarm vertical",
+    mtcars %>%
+      ggplot(aes(y = mpg)) +
+      geom_dots(layout = "swarm")
+  )
+
 })
 

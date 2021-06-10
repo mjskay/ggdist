@@ -46,6 +46,7 @@ Suggests:
     rmarkdown,
     png,
     fda,
+    beeswarm,
     pkgdown
 License: GPL (>= 3)
 Language: en-US

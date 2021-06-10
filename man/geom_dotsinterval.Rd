@@ -180,12 +180,12 @@ make dots that are 10\% of the viewport size along whichever dimension the dotpl
 \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot.
-\item \code{"weave"}: places dots in the off-axis closer to their actual positions (modulo overlaps, which are nudged out of
+\item \code{"weave"}: places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of
 the way). Maintains the alignment of rows but does not align dots within columns. Does not work well when
 \code{side = "both"}.
-\item \code{"swarm"}: uses the \code{"compactswarm"} layout from \pkg{beeswarm}. Does not maintain alignment of rows or
+\item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{beeswarm::beeswarm()}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
-dotplots of theoretical distributions).
+dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).
 }}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
