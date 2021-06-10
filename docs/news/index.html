@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1</span>
       </span>
     </div>
 
@@ -152,9 +152,33 @@
       <small>Source: <a href='https://github.com/mjskay/ggdist/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="ggdist-241" class="section level1">
+<h1 class="page-header" data-toc-text="2.4.1">
+<a href="#ggdist-241" class="anchor"></a>ggdist 2.4.1<small> Unreleased </small>
+</h1>
+<p>New features:</p>
+<ul>
+<li>Added <code>"weave"</code> and <code>"swarm"</code> layouts for dots geoms (<a href='https://github.com/mjskay/ggdist/issues/64'>#64</a>). These provide alternative layouts that keep datapoints in their actual positions on the data axis. The <code>"weave"</code> layout maintains rows but not columns and works well for quantile dotplots; the <code>"swarm"</code> layout uses the <code>"compactswarm"</code> method from <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html">beeswarm::beeswarm()</a></code> (courtesy James Trimble) and works well on sample data. See the dotplot section of <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for comparisons.</li>
+<li>Allow the use of <code><a href="https://rdrr.io/r/grid/unit.html">unit()</a></code> to specify bin widths manually for dots geoms and stats, which can be helpful when you need dotplots across facets to have the same bin width (<a href='https://github.com/mjskay/ggdist/issues/53'>#53</a>).</li>
+</ul>
+<p>New documentation:</p>
+<ul>
+<li>Add example of lineribbon gradients using <code>fill_ramp</code> in <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code>.</li>
+<li>Add example of Tukey-like pencils in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.</li>
+<li>Add example of two slab used together (densities and dotplots to make “rain clouds”) in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Fix issues with <em>ggplot2</em> 3.3.4 (<a href='https://github.com/mjskay/ggdist/issues/72'>#72</a>) and <em>vdiffr</em> 1.0.</li>
+<li>Handle interactions between alpha and fill/color properly when not set by user (<a href='https://github.com/mjskay/ggdist/issues/62'>#62</a>).</li>
+<li>Use step function for all ECDFs, which should also fix constant CDFs (<a href='https://github.com/mjskay/ggdist/issues/55'>#55</a>).</li>
+<li>Move <em>fda</em> to suggests as it brings in a large number of dependencies and is rarely used.</li>
+<li>Use trimmed density for mode estimation (<a href='https://github.com/mjskay/ggdist/issues/57'>#57</a>).</li>
+</ul>
+</div>
     <div id="ggdist-240" class="section level1">
 <h1 class="page-header" data-toc-text="2.4.0">
-<a href="#ggdist-240" class="anchor"></a>ggdist 2.4.0<small> Unreleased </small>
+<a href="#ggdist-240" class="anchor"></a>ggdist 2.4.0<small> 2021-01-04 </small>
 </h1>
 <p>New features:</p>
 <ul>

@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1</span>
       </span>
     </div>
 
@@ -99,13 +99,13 @@
 
       
 
-      </header><script src="lineribbon_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="lineribbon_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Lineribbon stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2021-03-03</h4>
+            <h4 class="date">2021-06-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/lineribbon.Rmd"><code>vignettes/lineribbon.Rmd</code></a></small>
       <div class="hidden name"><code>lineribbon.Rmd</code></div>
@@ -241,7 +241,7 @@ img {
 <div id="lineribbon-gradients" class="section level3">
 <h3 class="hasAnchor">
 <a href="#lineribbon-gradients" class="anchor"></a>Lineribbon “gradients”</h3>
-<p>You can also create gradient-like plots with lineribbons by passing a large number of probability levels to the <code>.width</code> parameter. Calling <code><a href="https://rdrr.io/r/stats/ppoints.html">ppoints(n)</a></code> generates <code>n</code> values between <code>0</code> and <code>1</code> (exclusive), which can be used as interval widths. We must also override the default <code>fill</code> aesthetic to use the <code>.width</code> generated variable, which is continuous (by default lineribbons map <code>level</code> onto the <code>fill</code> aesthetic, which is a transformation of <code>.width</code> into a factor—and produces illegible legends when many values are used). This also requires us to use a continous fill scale (e.g. <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller()</a></code>) instead of a discrete one (e.g. <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer()</a></code>):</p>
+<p>You can also create gradient-like plots with lineribbons by passing a large number of probability levels to the <code>.width</code> parameter. Calling <code><a href="https://rdrr.io/r/stats/ppoints.html">ppoints(n)</a></code> generates <code>n</code> values between <code>0</code> and <code>1</code> (exclusive), which can be used as interval widths. We must also override the default <code>fill</code> aesthetic to use the <code>.width</code> generated variable, which is continuous (by default lineribbons map <code>level</code> onto the <code>fill</code> aesthetic, which is a transformation of <code>.width</code> into a factor—and produces illegible legends when many values are used). This also requires us to use a continuous fill scale (e.g. <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller()</a></code>) instead of a discrete one (e.g. <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer()</a></code>):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>

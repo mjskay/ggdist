@@ -97,7 +97,7 @@ geoms and stats." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1</span>
       </span>
     </div>
 
@@ -177,6 +177,7 @@ geoms and stats.</p>
   dotsize <span class='op'>=</span> <span class='fl'>1</span>,
   stackratio <span class='op'>=</span> <span class='fl'>1</span>,
   binwidth <span class='op'>=</span> <span class='cn'>NA</span>,
+  layout <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bin"</span>, <span class='st'>"weave"</span>, <span class='st'>"swarm"</span><span class='op'>)</span>,
   na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>,
   show.legend <span class='op'>=</span> <span class='cn'>NA</span>,
   inherit.aes <span class='op'>=</span> <span class='cn'>TRUE</span>
@@ -343,7 +344,23 @@ default, <code>1</code>, makes dots in the same stack just touch each other.</p>
     <tr>
       <th>binwidth</th>
       <td><p>The bin width to use for drawing the dotplots. The default value, <code>NA</code>, will dynamically select
-a bin width based on the size of the plot when drawn.</p></td>
+a bin width based on the size of the plot when drawn. If the value is numeric, it is assumed to be in units
+of data. The bin width can also be specified using <code><a href='https://rdrr.io/r/grid/unit.html'>unit()</a></code>, which may be useful if it is desired that
+the dots be a certain percentage of the width/height of the viewport (e.g. <code><a href='https://rdrr.io/r/grid/unit.html'>unit(0.1, "npc")</a></code> would
+make dots that are 10% of the viewport size along whichever dimension the dotplot is drawn).</p></td>
+    </tr>
+    <tr>
+      <th>layout</th>
+      <td><p>The layout method used for the dots:</p><ul>
+<li><p><code>"bin"</code> (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
+This maintains the alignment of rows and columns in the dotplot.</p></li>
+<li><p><code>"weave"</code>: places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of
+the way). Maintains the alignment of rows but does not align dots within columns. Does not work well when
+<code>side = "both"</code>.</p></li>
+<li><p><code>"swarm"</code>: uses the <code>"compactswarm"</code> layout from <code><a href='https://rdrr.io/pkg/beeswarm/man/beeswarm.html'>beeswarm::beeswarm()</a></code>. Does not maintain alignment of rows or
+columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
+dotplots of theoretical distributions, which may look better with <code>"bin"</code> or <code>"weave"</code>).</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -482,7 +499,7 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>RankCorr_u_tau</span>, package <span class='op'>=</span> <span class='st'>"ggdist"</span><span class='op'>)</span>
 
