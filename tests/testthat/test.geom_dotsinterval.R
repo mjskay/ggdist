@@ -182,3 +182,11 @@ test_that("dotplot layouts work", {
 
 })
 
+test_that("na.rm is propagated to quantile dotplot", {
+  vdiffr::expect_doppelganger("na.rm with quantile arg",
+    data.frame(x = qnorm(ppoints(100), 1)) %>%
+      ggplot(aes(x, y = 0)) +
+      stat_dots(na.rm = TRUE, quantiles = 20) +
+      scale_x_continuous(limits = c(0,4))
+  )
+})
