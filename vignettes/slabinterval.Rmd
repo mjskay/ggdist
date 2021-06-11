@@ -658,14 +658,15 @@ Finally, while the `"bin"` and `"weave"` layout methods shown above work especia
 well for quantile dotplots, it can be useful when visualizing sample data
 (especially in large amounts) to employ so-called "beeswarm" plots. Setting
 `layout = "swarm"` will use the `"compactswarm"` layout type from `beeswarm::beeswarm()`,
-which tends to work well on sample data (but not on quantiles):
+which tends to work well on sample data (but not on quantiles), and especially when
+`side = "both"`:
 
 ```{r dots_swarm, fig.width = med_width, fig.height = large_height}
 df %>%
   filter(group == "a") %>%
   ggplot(aes(y = group, x = value, fill = stat(x < 5))) +
-  stat_dots(color = NA, layout = "swarm") +
-  labs(title = 'stat_dots(aes(fill = stat(x < 5)), layout = "swarm")') +
+  stat_dots(color = NA, layout = "swarm", side = "both") +
+  labs(title = 'stat_dots(aes(fill = stat(x < 5)), layout = "swarm", side = "both")') +
   geom_vline(xintercept = 5, alpha = 0.25) +
   scale_x_continuous(breaks = 2:8)
 ```
