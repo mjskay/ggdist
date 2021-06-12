@@ -183,10 +183,41 @@ test_that("dotplot layouts work", {
 })
 
 test_that("na.rm is propagated to quantile dotplot", {
+  skip_if_no_vdiffr()
+
   vdiffr::expect_doppelganger("na.rm with quantile arg",
     data.frame(x = qnorm(ppoints(100), 1)) %>%
       ggplot(aes(x, y = 0)) +
       stat_dots(na.rm = TRUE, quantiles = 20) +
       scale_x_continuous(limits = c(0,4))
   )
+})
+
+test_that("geom_dots works on discrete distributions", {
+  skip_if_no_vdiffr()
+
+  vdiffr::expect_doppelganger("one integer bin",
+    data.frame(x = rep(1L, 10)) %>%
+      ggplot(aes(x = x, y = 0)) +
+      stat_dots(orientation = "horizontal")
+  )
+
+  vdiffr::expect_doppelganger("three integer bins",
+    data.frame(x = c(rep(1L, 10), rep(2L, 12), rep(3L, 5))) %>%
+      ggplot(aes(x = x, y = 0)) +
+      stat_dots(orientation = "horizontal")
+  )
+
+  vdiffr::expect_doppelganger("one character bin",
+    data.frame(x = rep("a", 10)) %>%
+      ggplot(aes(x = x, y = 0)) +
+      stat_dots(orientation = "horizontal")
+  )
+
+  vdiffr::expect_doppelganger("three character bins",
+    data.frame(x = c(rep("a", 10), rep("b", 12), rep("c", 5))) %>%
+      ggplot(aes(x = x, y = 0)) +
+      stat_dots(orientation = "horizontal")
+  )
+
 })

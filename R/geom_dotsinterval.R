@@ -56,6 +56,7 @@ makeContent.dots_grob = function(x) {
   heap_spec = function(d, nbins = NULL, bin_width = NULL) {
     xrange = range(d[[x]])
     xspread = xrange[[2]] - xrange[[1]]
+    if (xspread == 0) xspread = 1
     if (is.null(bin_width)) {
       nbins = floor(nbins)
       bin_width = xspread / nbins
@@ -95,9 +96,6 @@ makeContent.dots_grob = function(x) {
   if (is.na(bin_width)) {
     # find the best bin widths across all the heaps we are going to draw
     max_bin_widths = map_dbl(datas, function(d) {
-      xrange = range(d[[x]])
-      xspread = xrange[[2]] - xrange[[1]]
-
       # figure out a reasonable minimum number of bins based on histogram binning
       if (nrow(d) <= 1) {
         min_h = heap_spec(d, nbins = 1)
@@ -141,7 +139,20 @@ makeContent.dots_grob = function(x) {
         h = min_h
       }
 
-      h$max_bin_width
+      # check if the selected heap spec is valid....
+      if (!is_valid_heap_spec(h)) {
+        # ... if it isn't, this means we've ended up with some bin that's too
+        # tall, probably because we have discrete data --- we'll just
+        # conservatively shrink things down so they fit by backing out a bin
+        # width that works with the tallest bin
+        y_spacing = max_height / h$max_bin_count
+        point_size = convertUnit(unit(y_spacing * sizeratio / stackratio, "native"),
+          "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
+        convertUnit(unit(point_size / dotsize / sizeratio, "native"), "native",
+          axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
+      } else {
+        h$max_bin_width
+      }
     })
 
     bin_width = min(max_bin_widths)
