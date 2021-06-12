@@ -356,10 +356,18 @@ dist_df \%>\%
 
 # the stat_dist_... family applies a Jacobian adjustment to densities
 # when plotting on transformed scales in order to plot them correctly.
+# It determines the Jacobian using symbolic differentiation if possible,
+# using either Deriv::Deriv() (if the Deriv package is installed) or
+# stats::D() (if not). If symbolic differentation fails, it falls back
+# to numericDeriv(), which is less reliable; therefore, it is
+# advisable to use scale transformation functions that are defined in
+# terms of basic math functions so that their derivatives can be
+# determined analytically (most of the transformation functions in the
+# scales package currently have this property).
 # For example, here is a log-Normal distribution plotted on the log
 # scale, where it will appear Normal:
-data.frame(dist = "lnorm") \%>\%
-  ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+data.frame(dist = "lnorm", logmean = log(10), logsd = 2*log(10)) \%>\%
+  ggplot(aes(y = 1, dist = dist, arg1 = logmean, arg2 = logsd)) +
   stat_dist_halfeye() +
   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 

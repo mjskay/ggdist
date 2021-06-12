@@ -51,31 +51,37 @@ dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identi
   })
 }
 
-# return the derivation of a transformation function from the scales package at
+# return the derivative of a transformation function from the scales package at
 # the given y values. First attempts to find that analytical derivative, which
 # works on most pre-defined transformation functions in scales; if that fails,
 # uses numerical derivative
 #' @importFrom stats numericDeriv D
 f_deriv_at_y = function(f, y) {
   tryCatch({
-    # attempt to find analytical derivative by pulling out the expression
-    # for the transformation from the transformation function. Because all
-    # scales functions are defined (currently) as simple wrappers around
-    # single expressions (with no { ... }), we can be pretty naive here and
-    # just try to pull out that single expression
-    f_list = as.list(f)
-    y_name = names(f_list)[[1]]
-    f_expr = f_list[[length(f_list)]]
-    f_deriv_expr = D(f_expr, y_name)
+    if (requireNamespace("Deriv", quietly = TRUE)) {
+      # symbolic differentiation in the Deriv package handles more types
+      # of expressions and functions, try it first if it's installed.
+      Deriv::Deriv(f)(y)
+    } else {
+      # attempt to find analytical derivative by pulling out the expression
+      # for the transformation from the transformation function. Because all
+      # scales functions are defined (currently) as simple wrappers around
+      # single expressions (with no { ... }), we can be pretty naive here and
+      # just try to pull out that single expression
+      f_list = as.list(f)
+      y_name = names(f_list)[[1]]
+      f_expr = f_list[[length(f_list)]]
+      f_deriv_expr = D(f_expr, y_name)
 
-    # apply the analytical derivative to the y values
-    # must do this within the environment of the transformation function b/c
-    # some functions are defined as closures with other variables needed to
-    # fully define the transformation (e.g. log10_trans has a `base` variable
-    # equal to 10, which if left undefined this would not work)
-    args = list(y)
-    names(args) = y_name
-    eval(f_deriv_expr, args, environment(f))
+      # apply the analytical derivative to the y values
+      # must do this within the environment of the transformation function b/c
+      # some functions are defined as closures with other variables needed to
+      # fully define the transformation (e.g. log10_trans has a `base` variable
+      # equal to 10, which if left undefined this would not work)
+      args = list(y)
+      names(args) = y_name
+      eval(f_deriv_expr, args, environment(f))
+    }
   }, error = function(e) {
     # if analytical approach fails, use numerical approach
     # need to convert y to numeric in case it's an integer (numericDeriv doesn't like ints)
@@ -300,10 +306,18 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #'
 #' # the stat_dist_... family applies a Jacobian adjustment to densities
 #' # when plotting on transformed scales in order to plot them correctly.
+#' # It determines the Jacobian using symbolic differentiation if possible,
+#' # using either Deriv::Deriv() (if the Deriv package is installed) or
+#' # stats::D() (if not). If symbolic differentation fails, it falls back
+#' # to numericDeriv(), which is less reliable; therefore, it is
+#' # advisable to use scale transformation functions that are defined in
+#' # terms of basic math functions so that their derivatives can be
+#' # determined analytically (most of the transformation functions in the
+#' # scales package currently have this property).
 #' # For example, here is a log-Normal distribution plotted on the log
 #' # scale, where it will appear Normal:
-#' data.frame(dist = "lnorm") %>%
-#'   ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+#' data.frame(dist = "lnorm", logmean = log(10), logsd = 2*log(10)) %>%
+#'   ggplot(aes(y = 1, dist = dist, arg1 = logmean, arg2 = logsd)) +
 #'   stat_dist_halfeye() +
 #'   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 #'
