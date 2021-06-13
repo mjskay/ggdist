@@ -12,6 +12,11 @@ authors:
     href: http://www.mjskay.com
 
 
+figures:
+  dev: grDevices::png
+  dev.args: [{cairo: true}]
+
+
 reference:
 - title: Package overview
   desc:  Overview of ggdist.

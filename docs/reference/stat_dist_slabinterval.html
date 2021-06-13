@@ -96,7 +96,7 @@ to specify distribution arguments. See Details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9000</span>
       </span>
     </div>
 
@@ -546,10 +546,18 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
 </div><div class='img'><img src='stat_dist_slabinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># the stat_dist_... family applies a Jacobian adjustment to densities</span>
 <span class='co'># when plotting on transformed scales in order to plot them correctly.</span>
+<span class='co'># It determines the Jacobian using symbolic differentiation if possible,</span>
+<span class='co'># using either Deriv::Deriv() (if the Deriv package is installed) or</span>
+<span class='co'># stats::D() (if not). If symbolic differentation fails, it falls back</span>
+<span class='co'># to numericDeriv(), which is less reliable; therefore, it is</span>
+<span class='co'># advisable to use scale transformation functions that are defined in</span>
+<span class='co'># terms of basic math functions so that their derivatives can be</span>
+<span class='co'># determined analytically (most of the transformation functions in the</span>
+<span class='co'># scales package currently have this property).</span>
 <span class='co'># For example, here is a log-Normal distribution plotted on the log</span>
 <span class='co'># scale, where it will appear Normal:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>dist <span class='op'>=</span> <span class='st'>"lnorm"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>1</span>, dist <span class='op'>=</span> <span class='va'>dist</span>, arg1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>, arg2 <span class='op'>=</span> <span class='fl'>2</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>dist <span class='op'>=</span> <span class='st'>"lnorm"</span>, logmean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>, logsd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>1</span>, dist <span class='op'>=</span> <span class='va'>dist</span>, arg1 <span class='op'>=</span> <span class='va'>logmean</span>, arg2 <span class='op'>=</span> <span class='va'>logsd</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>stat_dist_halfeye</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span><span class='op'>(</span>breaks <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>,<span class='fl'>7</span>, by <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='stat_dist_slabinterval-3.png' alt='' width='700' height='433' /></div><div class='input'>

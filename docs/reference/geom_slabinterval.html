@@ -96,7 +96,7 @@ corresponding intervals." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9000</span>
       </span>
     </div>
 
@@ -178,6 +178,7 @@ corresponding intervals.</p>
   orientation <span class='op'>=</span> <span class='cn'>NA</span>,
   justification <span class='op'>=</span> <span class='cn'>NULL</span>,
   normalize <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"all"</span>, <span class='st'>"panels"</span>, <span class='st'>"xy"</span>, <span class='st'>"groups"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
+  fill_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"segments"</span>, <span class='st'>"gradient"</span><span class='op'>)</span>,
   interval_size_domain <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>6</span><span class='op'>)</span>,
   interval_size_range <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.6</span>, <span class='fl'>1.4</span><span class='op'>)</span>,
   fatten_point <span class='op'>=</span> <span class='fl'>1.8</span>,
@@ -285,6 +286,16 @@ the x/y axis opposite the <code>orientation</code> of this geom so that the maxi
 opposite axis is <code>1</code>; if <code>"groups"</code>, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is <code>1</code>; if <code>"none"</code>, values are taken as is with no
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).</p></td>
+    </tr>
+    <tr>
+      <th>fill_type</th>
+      <td><p>What type of fill to use when the fill color or alpha varies within a slab. The default,
+<code>"segments"</code>, breaks up the slab geometry into segments for each unique combination of fill color and
+alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
+but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
+like in <code><a href='stat_sample_slabinterval.html'>stat_gradientinterval()</a></code>). When <code>fill_type == "gradient"</code>, a <code>linearGradient()</code> is used to
+create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
+R &gt; 4.1 and is not yet supported on all graphics devices.</p></td>
     </tr>
     <tr>
       <th>interval_size_domain</th>
