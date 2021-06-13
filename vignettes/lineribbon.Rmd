@@ -32,7 +32,8 @@ knitr::opts_chunk$set(
 )
 if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
   knitr::opts_chunk$set(
-    dev.args = list(png = list(type = "cairo"))
+    dev = "png",
+    dev.args = list(type = "cairo")
   )
 }
 ```

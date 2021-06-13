@@ -256,7 +256,7 @@ makeContent.dots_grob = function(x) {
 # panel drawing function -------------------------------------------------------
 
 draw_slabs_dots = function(self, s_data, panel_params, coord,
-  side, scale, orientation, justification, normalize, na.rm,
+  side, scale, orientation, justification, normalize, fill_type, na.rm,
   child_params
 ) {
   define_orientation_variables(orientation)

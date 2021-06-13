@@ -85,10 +85,20 @@ test_that("stat_dist_gradientinterval works", {
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("dist_gradientinterval with two groups",
-    p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99))
+    p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "segments")
   )
   vdiffr::expect_doppelganger("dist_gradientintervalh with two groups",
-    p + stat_dist_gradientinterval(aes(y = dist), n = 20, p_limits = c(0.01, 0.99))
+    p + stat_dist_gradientinterval(aes(y = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "segments")
+  )
+
+  # N.B. the following two tests are currently a bit useless as vdiffr doesn't
+  # support linearGradient yet, but leaving them here so that once it does we
+  # have tests for this.
+  vdiffr::expect_doppelganger("fill_type = gradient with two groups",
+    p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "gradient")
+  )
+  vdiffr::expect_doppelganger("fill_type = gradient with two groups, h",
+    p + stat_dist_gradientinterval(aes(y = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "gradient")
   )
 })
 

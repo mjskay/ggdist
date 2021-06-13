@@ -41,11 +41,22 @@ test_that("gradientinterval works", {
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("gradientinterval with two groups",
-    p + stat_gradientinterval(aes(x = dist, y = x), n = 20)
+    p + stat_gradientinterval(aes(x = dist, y = x), n = 20, fill_type = "segments")
   )
   vdiffr::expect_doppelganger("gradientintervalh with two groups",
-    p + stat_gradientinterval(aes(y = dist, x = x), n = 20)
+    p + stat_gradientinterval(aes(y = dist, x = x), n = 20, fill_type = "segments")
   )
+
+  # N.B. the following two tests are currently a bit useless as vdiffr doesn't
+  # support linearGradient yet, but leaving them here so that once it does we
+  # have tests for this.
+  vdiffr::expect_doppelganger("fill_type = gradient with two groups",
+    p + stat_gradientinterval(aes(x = dist, y = x), n = 20, fill_type = "gradient")
+  )
+  vdiffr::expect_doppelganger("fill_type = gradient with two groups, h",
+    p + stat_gradientinterval(aes(y = dist, x = x), n = 20, fill_type = "gradient")
+  )
+
 })
 
 test_that("histinterval and slab work", {

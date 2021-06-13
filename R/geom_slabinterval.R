@@ -41,7 +41,7 @@ rescale_slab_thickness = function(s_data, side, scale, orientation, justificatio
 }
 
 draw_slabs = function(self, s_data, panel_params, coord,
-  side, scale, orientation, justification, normalize, na.rm,
+  side, scale, orientation, justification, normalize, fill_type, na.rm,
   child_params
 ) {
   define_orientation_variables(orientation)
@@ -58,11 +58,21 @@ draw_slabs = function(self, s_data, panel_params, coord,
     slab_grob = if (!is.null(d$fill) && !all(is.na(d$fill))) {
       # only bother drawing the slab if it has some fill colour to it
 
-      #split out slab data according to aesthetics that we want to be able to
-      # vary along the length of the slab, then assemble the top and bottom lines
-      # into a single entity
-      slab_data = group_slab_data_by(d, c("fill", "alpha"), orientation, side = "both")
-      GeomPolygon$draw_panel(transform(slab_data, colour = NA), panel_params, coord)
+      switch_fill_type(fill_type,
+        segments = {
+          # split out slab data according to aesthetics that we want to be able to
+          # vary along the length of the slab, then assemble the top and bottom lines
+          # into a single entity
+          slab_data = group_slab_data_by(d, c("fill", "alpha"), orientation, side = "both")
+          draw_polygon(transform(slab_data, colour = NA), panel_params, coord)
+        },
+        gradient = {
+          # build a linearGradient() representing the varying fill
+          gradient = make_gradient_fill(coord$transform(d, panel_params), orientation)
+          slab_data = group_slab_data_by(d, NULL, orientation, side = "both")
+          draw_polygon(transform(slab_data, colour = NA), panel_params, coord, fill = gradient)
+        }
+      )
     }
 
     if (!is.null(d$colour) && !all(is.na(d$colour))) {
@@ -259,6 +269,13 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' opposite axis is `1`; if `"groups"`, normalize within values of the opposite axis and within
 #' groups so that the maximum height in each group is `1`; if `"none"`, values are taken as is with no
 #' normalization (this should probably only be used with functions whose values are in \[0,1\], such as CDFs).
+#' @param fill_type What type of fill to use when the fill color or alpha varies within a slab. The default,
+#' `"segments"`, breaks up the slab geometry into segments for each unique combination of fill color and
+#' alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
+#' but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
+#' like in [`stat_gradientinterval()`]). When `fill_type == "gradient"`, a `linearGradient()` is used to
+#' create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
+#' R > 4.1 and is not yet supported on all graphics devices.
 #' @param interval_size_domain The minimum and maximum of the values of the size aesthetic that will be translated into actual
 #' sizes for intervals drawn according to `interval_size_range` (see the documentation for that argument.)
 #' @param interval_size_range (Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
@@ -317,6 +334,7 @@ geom_slabinterval = function(
   orientation = NA,
   justification = NULL,
   normalize = c("all", "panels", "xy", "groups", "none"),
+  fill_type = c("segments", "gradient"),
   interval_size_domain = c(1, 6),
   interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8,
@@ -330,6 +348,7 @@ geom_slabinterval = function(
 ) {
   side = match.arg(side)
   normalize = match.arg(normalize)
+  fill_type = match.arg(fill_type)
 
   layer_geom_slabinterval(
     mapping = mapping,
@@ -344,6 +363,7 @@ geom_slabinterval = function(
     orientation = orientation,
     justification = justification,
     normalize = normalize,
+    fill_type = fill_type,
     interval_size_domain = interval_size_domain,
     interval_size_range = interval_size_range,
     fatten_point = fatten_point,
@@ -475,6 +495,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     "orientation",
     "justification",
     "normalize",
+    "fill_type",
     "interval_size_domain",
     "interval_size_range",
     "fatten_point",
@@ -490,6 +511,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     orientation = NA,
     justification = NULL,
     normalize = "all",
+    fill_type = "segments",
     interval_size_domain = c(1, 6),
     interval_size_range = c(0.6, 1.4),
     fatten_point = 1.8,
@@ -585,6 +607,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       orientation = self$default_params$orientation,
       justification = self$default_params$justification,
       normalize = self$default_params$normalize,
+      fill_type = self$default_params$fill_type,
       interval_size_domain = self$default_params$interval_size_domain,
       interval_size_range = self$default_params$interval_size_range,
       fatten_point = self$default_params$fatten_point,
@@ -619,7 +642,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       s_data = data[data$datatype == "slab",]
       if (nrow(s_data) > 0) {
         self$draw_slabs(s_data, panel_params, coord,
-          side, scale, orientation, justification, normalize,
+          side, scale, orientation, justification, normalize, fill_type,
           na.rm, child_params
         )
       }
@@ -750,6 +773,85 @@ group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha
     topright = topright(),
     bottomleft = bottomleft(),
     both = bind_rows(topright(), bottomleft())
+  )
+}
+
+#' construct a linearGradient() that can be used as a fill based on the fill
+#' and alpha aesthetics of the provided data
+#' @noRd
+make_gradient_fill = function(slab_data, orientation = "horizontal") {
+  define_orientation_variables(orientation)
+
+  x1 = paste0(x, "1")
+  y1 = paste0(y, "1")
+  x2 = paste0(x, "2")
+  y2 = paste0(y, "2")
+
+  x_min = min(slab_data[[x]])
+  x_max = max(slab_data[[x]])
+  x_spread = x_max - x_min
+  if (x_spread == 0) x_spread = 1
+
+  gradient_args = list(
+    colours = alpha(slab_data$fill, slab_data$alpha),
+    stops = (slab_data[[x]] - x_min) / (x_max - x_min)
+  )
+  # x1 / x2 are relative to the bounds of the grob, hence 0 / 1
+  gradient_args[[x1]] = 0
+  gradient_args[[x2]] = 1
+  gradient_args[[y1]] = 0.5
+  gradient_args[[y2]] = 0.5
+
+  do.call(linearGradient, gradient_args)
+}
+
+#' draw a polygon grob --- based on ggplot2::GeomPolygon$draw_panel(), but
+#' allows for linearGradient fills
+#' @noRd
+draw_polygon = function(data, panel_params, coord, fill = NULL) {
+  n = nrow(data)
+
+  if (n == 1) return(grob(cl = "zeroGrob", name = "NULL"))
+
+  munched = coord_munch(coord, data, panel_params)
+
+  # Sort by group to make sure that colors, fill, etc. come in same order
+  munched = munched[order(munched$group), ]
+
+  # For gpar(), there is one entry per polygon (not one entry per point).
+  # We'll pull the first value from each group, and assume all these values
+  # are the same within each group.
+  first_idx = !duplicated(munched$group)
+  first_rows = munched[first_idx, ]
+
+  ggname(
+    "geom_polygon",
+    polygonGrob(
+      munched$x, munched$y, default.units = "native",
+      id = munched$group,
+      gp = gpar(
+        col = first_rows$colour,
+        fill = fill %||% alpha(first_rows$fill, first_rows$alpha),
+        lwd = first_rows$size * .pt,
+        lty = first_rows$linetype
+      )
+    )
+  )
+}
+
+switch_fill_type = function(fill_type, segments, gradient) {
+  if (getRversion() < "4.1.0" && fill_type == "gradient") {
+    message(
+      'fill_type = "gradient" is not supported in R < 4.1.0.\n',
+      'Falling back to fill_type = "segments"'
+    )
+    fill_type = "segments"
+  }
+
+  switch(fill_type,
+    segments = segments,
+    gradient = gradient,
+    stop("Unknown fill_type: ", deparse0(fill_type), '\nShould be "segments" or "gradient"')
   )
 }
 

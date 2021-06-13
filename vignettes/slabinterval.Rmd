@@ -32,7 +32,8 @@ knitr::opts_chunk$set(
 )
 if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
   knitr::opts_chunk$set(
-    dev.args = list(png = list(type = "cairo"))
+    dev = "png",
+    dev.args = list(type = "cairo")
   )
 }
 ```
@@ -96,7 +97,7 @@ dists_plot = dists_df %>%
   geom_blank() + # ensures order
   stat_dist_eye(data = . %>% filter(geom == "eye")) +
   stat_dist_halfeye(data = . %>% filter(geom == "halfeye"), position = position_nudge(y = - 0.2)) +
-  stat_dist_gradientinterval(data = . %>% filter(geom == "gradientinterval"), scale = .5) +
+  stat_dist_gradientinterval(data = . %>% filter(geom == "gradientinterval"), scale = .5, fill_type = "gradient") +
   stat_dist_ccdfinterval(data = . %>% filter(geom == "ccdfinterval"), scale = .5) +
   stat_dist_cdfinterval(data = . %>% filter(geom == "cdfinterval"), scale = .5) +
   stat_interval(aes(x = x, y = "interval"), data = hist_df, color = "gray65", alpha = 1/3, size = 10,
@@ -106,7 +107,7 @@ dists_plot = dists_df %>%
   stat_dist_dotsinterval(data = . %>% filter(geom == "dotsinterval"), position = position_nudge(y = - 0.3)) +
   stat_dist_dots(data = . %>% filter(geom == "dots"), position = position_nudge(y = - 0.3)) +
   stat_histinterval(aes(x = x), data = hist_df, position = position_nudge(y = - 0.4)) +
-  scale_slab_alpha_continuous(guide = FALSE) +
+  scale_slab_alpha_continuous(guide = "none") +
   scale_x_continuous(limits = c(0,8), expand = c(0,0)) +
   labs(
     subtitle = "The stat_slabinterval / geom_slabinterval family",
@@ -553,6 +554,20 @@ df %>%
   labs(title = "stat_gradientinterval(position = 'dodge')")
 ```
 
+**Note on "choppy" gradients:** Depending on your graphics device, gradients may be "choppy" looking. 
+You can fix this choppiness by setting `fill_type = "gradient"`, which uses an **experimental**
+gradient feature introduced in R 4.1 (in some future version of *ggdist* this is likely
+to become the default). This works so long as you have R version 4.1 or greater and you
+are using one of the graphics devices supported by the new `grid::linearGradient()`
+function (such as `pdf()`, `svg()`, or `png(type = "cairo")`; see [here](https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/)):
+
+```{r gradient_dodge_nice}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_gradientinterval(position = "dodge", fill_type = "gradient") +
+  labs(title = "stat_gradientinterval(position = 'dodge')")
+```
+
 `stat_gradientinterval()` maps density onto the `slab_alpha` aesthetic, which is a variant of the ggplot `alpha` scale that specifically targets alpha (opacity) values of the slab portion of `geom_slabinterval()`. This aesthetic has default ranges and limits that are a little different from the base ggplot `alpha` scale and which ensure that densities of 0 are mapped onto opacities of 0. You can use `scale_slab_alpha_continuous()` to adjust this scale's settings.
 
 ### On analytical distributions: `stat_dist_[c]cdfinterval`
@@ -698,6 +713,12 @@ The `slabinterval` family of stats and geoms is designed to be very flexible. Mo
 Two aesthetics of particular use for creating custom geoms are `slab_alpha`, which changes the alpha transparency of the slab portion of the geom, `slab_color`, which changes its outline color, and `fill`, which changes its fill color. All of these aesthetics can be mapped to variables along the length of the geom (that is, the color does not have to be constant over the entire geom), which allows you to create gradients or to highlight meaningful regions of the data (amongst other things). You can also employ the ggdist-specific `color_ramp` and `fill_ramp`
 aesthetics to create custom gradients with outline and fill colors, as demonstrated later in this section.
 
+**Note:** The examples of gradients in this section use the (optional) experimental
+setting `fill_type = "gradient"`. If you do not have R greater than 4.1.0 or
+are not using a supported graphics device, the output may be blank; in this case,
+omit this option. Gradients can be produced without this option but they may
+not look as nice.
+
 ### CCDF Gradients
 
 For example, `stat_ccdfinterval()` maps the output of the evaluated function (in its case, the CCDF) onto the `thickness` aesthetic of the `slabinterval` geom, which determines how thick the slab is. This is the equivalent of setting `aes(thickness = stat(f))`. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping `stat(f)` onto the `slab_alpha` aesthetic instead, and setting `thickness` to a constant (1):
@@ -705,7 +726,9 @@ For example, `stat_ccdfinterval()` maps the output of the evaluated function (in
 ```{r ccdf_gradient, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfinterval(aes(slab_alpha = stat(f)), thickness = 1, position = "dodge") +
+  stat_ccdfinterval(aes(slab_alpha = stat(f)), 
+    thickness = 1, position = "dodge", fill_type = "gradient"
+  ) +
   expand_limits(y = 0) +
   # plus coord_cartesian so there is no space between bars and axis
   coord_cartesian(expand = FALSE) +
@@ -748,7 +771,7 @@ We could also combine these aesthetics arbitrarily. Here is a (probably not very
 ```{r norm_vs_t_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_eye(aes(slab_alpha = stat(f), fill = stat(x > 1))) +
+  stat_dist_eye(aes(slab_alpha = stat(f), fill = stat(x > 1)), fill_type = "gradient") +
   ggtitle("stat_dist_eye(aes(slab_alpha = stat(f), fill = stat(x > 1)))") +
   # we'll use a nicer palette than the default for highlighting:
   scale_fill_manual(values = c("gray75", "skyblue"))
@@ -761,8 +784,10 @@ We can also take advantage of the fact that all slabinterval stats also supply `
 ```{r correll_gradient, fig.width = med_width, fig.height = small_height/2}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_gradientinterval(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))) +
-  scale_slab_alpha_continuous(guide = FALSE)
+  stat_dist_gradientinterval(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95))),
+    fill_type = "gradient"
+  ) +
+  scale_slab_alpha_continuous(guide = "none")
 ```
 
 We could also do a mashup of faded-tail gradients with violin plots by starting with an eye plot and then using the generated `cdf` aesthetic to fade the tails, producing plots like those in [Helske *et al.*](https://arxiv.org/abs/2002.07671):
@@ -770,8 +795,8 @@ We could also do a mashup of faded-tail gradients with violin plots by starting 
 ```{r helske_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_eye(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))) +
-  scale_slab_alpha_continuous(guide = FALSE)
+  stat_dist_eye(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95))), fill_type = "gradient") +
+  scale_slab_alpha_continuous(guide = "none")
 ```
 
 A related idea is one from [Tukey](https://doi.org/10.1080/00031305.1986.10475361): rather than
@@ -787,7 +812,7 @@ dist_df %>%
       thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)), 
       fill_ramp = stat(pmax(0, abs(1 - 2*cdf) - .95))
     ),
-    side = "both", position = "dodge"
+    side = "both", position = "dodge", fill_type = "gradient"
   ) +
   labs(
     title = 'stat_dist_slab(side = "both")', 
@@ -796,7 +821,7 @@ dist_df %>%
       "fill_ramp and thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)))"
     )
   ) +
-  guides(fill_ramp = FALSE) +
+  guides(fill_ramp = "none") +
   coord_cartesian(expand = FALSE)
 ```
 

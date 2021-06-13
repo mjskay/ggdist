@@ -32,7 +32,8 @@ knitr::opts_chunk$set(
 )
 if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
   knitr::opts_chunk$set(
-    dev.args = list(png = list(type = "cairo"))
+    dev = "png",
+    dev.args = list(type = "cairo")
   )
 }
 ```
@@ -173,9 +174,13 @@ ABC %>%
   ggplot(aes(y = condition)) +
   stat_dist_gradientinterval(
     aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
-    scale = .5
+    scale = .5, fill_type = "gradient"
   )
 ```
+
+**Note:** The example above uses the **experimental** `fill_type = "gradient"`
+option. This can be omitted if your system does not support it; see further 
+discussion in the section on gradient plots in `vignette("slabinterval")`.
 
 Or complementary cumulative distribution function (CCDF) bar plots:
 
