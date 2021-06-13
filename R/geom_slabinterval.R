@@ -789,13 +789,12 @@ make_gradient_fill = function(slab_data, orientation = "horizontal") {
 
   x_min = min(slab_data[[x]])
   x_max = max(slab_data[[x]])
-  x_spread = x_max - x_min
-  if (x_spread == 0) x_spread = 1
 
   gradient_args = list(
     colours = alpha(slab_data$fill, slab_data$alpha),
     stops = (slab_data[[x]] - x_min) / (x_max - x_min)
   )
+
   # x1 / x2 are relative to the bounds of the grob, hence 0 / 1
   gradient_args[[x1]] = 0
   gradient_args[[x2]] = 1
