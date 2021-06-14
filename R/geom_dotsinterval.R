@@ -298,7 +298,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
   s_data = coord$transform(s_data, panel_params)
 
-  if (!is.na(child_params$binwidth) && !is.unit(child_params$binwidth)) {
+  if (!isTRUE(is.na(child_params$binwidth)) && !is.unit(child_params$binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space
     child_params$binwidth = child_params$binwidth / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
   }
