@@ -313,14 +313,6 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
       side = side,
       orientation = orientation
     ))
-
-  # when side = "top", need to invert draw order so that overlaps happen in a sensible way
-  # (only bother doing this when scale > 1 since that's the only time it will matter)
-  if (side == "top" && scale > 1) {
-    rev(slab_grobs)
-  } else {
-    slab_grobs
-  }
 }
 
 
