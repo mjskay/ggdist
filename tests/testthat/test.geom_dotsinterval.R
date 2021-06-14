@@ -239,3 +239,23 @@ test_that("geom_dots works with NA in non-data axis", {
     p + geom_dots(na.rm = TRUE)
   )
 })
+
+test_that("geom_dots allows constraints on binwidth", {
+  skip_if_no_vdiffr()
+
+  p = data.frame(x = ppoints(20)) %>%
+    ggplot(aes(x = x, y = 0L))
+
+  # max width of 1/40th of the viewport should approx space
+  # this data with about 1 dot of space in between each dot
+  vdiffr::expect_doppelganger("max binwidth",
+    p + geom_dots(binwidth = unit(c(0, 1/40), "npc"))
+  )
+
+  # min width of 1/4th of the viewport should give us four giant bins
+  vdiffr::expect_doppelganger("min binwidth",
+    p + geom_dots(binwidth = unit(c(1/4, Inf), "npc"))
+  )
+
+})
+

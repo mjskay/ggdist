@@ -51,6 +51,18 @@ makeContent.dots_grob = function(x) {
     bin_width = convertUnit(bin_width, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
   }
 
+  # if bin width has length 2, it specifies a desired bin width range
+  if (length(bin_width) == 2) {
+    user_min_bin_width = min(bin_width)
+    user_max_bin_width = max(bin_width)
+    # set to NA so that a prospective bin width is found dynamically first
+    # before user-specified constraints are applied
+    bin_width = NA
+  } else {
+    user_min_bin_width = 0
+    user_max_bin_width = Inf
+  }
+
   # create a specification for a heap of dots, which includes things like
   # what the bins are, what the dot widths are, etc.
   heap_spec = function(d, nbins = NULL, bin_width = NULL) {
@@ -155,7 +167,7 @@ makeContent.dots_grob = function(x) {
       }
     })
 
-    bin_width = min(max_bin_widths)
+    bin_width = max(min(max_bin_widths, user_max_bin_width), user_min_bin_width)
   }
 
   # now, draw all the heaps using the same bin width
@@ -351,11 +363,21 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' wide as the bin width.
 #' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
 #' default, `1`, makes dots in the same stack just touch each other.
-#' @param binwidth The bin width to use for drawing the dotplots. The default value, `NA`, will dynamically select
-#' a bin width based on the size of the plot when drawn. If the value is numeric, it is assumed to be in units
-#' of data. The bin width can also be specified using `unit()`, which may be useful if it is desired that
-#' the dots be a certain percentage of the width/height of the viewport (e.g. `unit(0.1, "npc")` would
-#' make dots that are 10% of the viewport size along whichever dimension the dotplot is drawn).
+#' @param binwidth The bin width to use for drawing the dotplots. One of:
+#'   - `NA` (the default): Dynamically select the bin width based on the
+#'     size of the plot when drawn.
+#'   - A length-1 (scalar) numeric or [unit] object giving the exact bin width.
+#'   - A length-2 (vector) numeric or [unit] object giving the minimum and maximum
+#'     desired bin width. The bin width will be dynamically selected within
+#'     these bounds.
+#'
+#' If the value is numeric, it is assumed to be in units of data. The bin width
+#' (or its bounds) can also be specified using `unit()`, which may be useful if
+#' it is desired that the dots be a certain point size or a certain percentage of
+#' the width/height of the viewport. For example, `unit(0.1, "npc")` would make
+#' dots that are *exactly* 10% of the viewport size along whichever dimension the
+#' dotplot is drawn; `unit(c(0, 0.1), "npc")` would make dots that are *at most*
+#' 10% of the viewport size.
 #' @param layout The layout method used for the dots:
 #'  - `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 #'    This maintains the alignment of rows and columns in the dotplot.

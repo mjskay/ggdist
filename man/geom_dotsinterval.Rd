@@ -177,11 +177,23 @@ wide as the bin width.}
 \item{stackratio}{The distance between the center of the dots in the same stack relative to the bin height. The
 default, \code{1}, makes dots in the same stack just touch each other.}
 
-\item{binwidth}{The bin width to use for drawing the dotplots. The default value, \code{NA}, will dynamically select
-a bin width based on the size of the plot when drawn. If the value is numeric, it is assumed to be in units
-of data. The bin width can also be specified using \code{unit()}, which may be useful if it is desired that
-the dots be a certain percentage of the width/height of the viewport (e.g. \code{unit(0.1, "npc")} would
-make dots that are 10\% of the viewport size along whichever dimension the dotplot is drawn).}
+\item{binwidth}{The bin width to use for drawing the dotplots. One of:
+\itemize{
+\item \code{NA} (the default): Dynamically select the bin width based on the
+size of the plot when drawn.
+\item A length-1 (scalar) numeric or \link{unit} object giving the exact bin width.
+\item A length-2 (vector) numeric or \link{unit} object giving the minimum and maximum
+desired bin width. The bin width will be dynamically selected within
+these bounds.
+}
+
+If the value is numeric, it is assumed to be in units of data. The bin width
+(or its bounds) can also be specified using \code{unit()}, which may be useful if
+it is desired that the dots be a certain point size or a certain percentage of
+the width/height of the viewport. For example, \code{unit(0.1, "npc")} would make
+dots that are \emph{exactly} 10\% of the viewport size along whichever dimension the
+dotplot is drawn; \code{unit(c(0, 0.1), "npc")} would make dots that are \emph{at most}
+10\% of the viewport size.}
 
 \item{layout}{The layout method used for the dots:
 \itemize{
