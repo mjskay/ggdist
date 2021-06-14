@@ -221,3 +221,21 @@ test_that("geom_dots works on discrete distributions", {
   )
 
 })
+
+test_that("geom_dots works with NA in non-data axis", {
+  skip_if_no_vdiffr()
+
+  p = mtcars %>%
+    ggplot(aes(x = mpg, y = factor(cyl))) +
+    scale_y_discrete(limits = c("4", "6"))
+
+  # without na.rm this should work but also throw a warning
+  expect_warning(vdiffr::expect_doppelganger("NA on y axis",
+    p + geom_dots(na.rm = FALSE)
+  ))
+
+  # with na.rm this should not throw a warning
+  vdiffr::expect_doppelganger("removed NA on y axis",
+    p + geom_dots(na.rm = TRUE)
+  )
+})

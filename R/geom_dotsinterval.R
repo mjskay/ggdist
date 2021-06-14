@@ -90,7 +90,7 @@ makeContent.dots_grob = function(x) {
     as.list(environment())
   }
   is_valid_heap_spec = function(h) {
-    h$max_bin_count * h$max_y_spacing <= max_height
+    isTRUE(h$max_bin_count * h$max_y_spacing <= max_height)
   }
 
   if (is.na(bin_width)) {
@@ -261,6 +261,10 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 ) {
   define_orientation_variables(orientation)
 
+  # remove missing values
+  s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y), name = "geom_dotsinterval", finite = TRUE)
+  if (nrow(s_data) == 0) return(gList())
+
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
@@ -281,9 +285,6 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     define_orientation_variables(orientation)
   }
   s_data = coord$transform(s_data, panel_params)
-
-  # remove missing values
-  s_data = ggplot2::remove_missing(s_data, na.rm, x, name = "geom_dotsinterval", finite = TRUE)
 
   if (!is.na(child_params$binwidth) && !is.unit(child_params$binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space
