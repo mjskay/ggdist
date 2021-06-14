@@ -40,7 +40,7 @@ makeContent.dots_grob = function(x) {
   side = grob_$side
   orientation = grob_$orientation
 
-  sizeratio = 1.43
+  point_size_ratio = 1.43  # manual fudge factor for point size in ggplot
   stackratio = 1.07 * grob_$stackratio
   dotsize = grob_$dotsize
   bin_width = grob_$binwidth
@@ -80,18 +80,18 @@ makeContent.dots_grob = function(x) {
 
     point_size = convertUnit(unit(bin_width, "native"),
       "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
-      sizeratio * dotsize
+      dotsize
     y_spacing = convertUnit(unit(point_size, "native"),
       "native", axisFrom = "y", axisTo = y, typeFrom = "dimension", valueOnly = TRUE) *
-      stackratio / sizeratio
+      stackratio
 
     if (nbins == 1) {
       # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
       # let's back out a max bin size based on that...
       max_y_spacing = max_height / max_bin_count
-      max_point_size = convertUnit(unit(max_y_spacing * sizeratio / stackratio, "native"),
+      max_point_size = convertUnit(unit(max_y_spacing / stackratio, "native"),
         "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
-      max_bin_width = convertUnit(unit(max_point_size / dotsize / sizeratio, "native"), "native",
+      max_bin_width = convertUnit(unit(max_point_size / dotsize, "native"), "native",
         axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
     } else {
       # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
@@ -158,9 +158,9 @@ makeContent.dots_grob = function(x) {
         # conservatively shrink things down so they fit by backing out a bin
         # width that works with the tallest bin
         y_spacing = max_height / h$max_bin_count
-        point_size = convertUnit(unit(y_spacing * sizeratio / stackratio, "native"),
+        point_size = convertUnit(unit(y_spacing / stackratio, "native"),
           "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
-        convertUnit(unit(point_size / dotsize / sizeratio, "native"), "native",
+        convertUnit(unit(point_size / dotsize, "native"), "native",
           axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
       } else {
         h$max_bin_width
@@ -177,7 +177,8 @@ makeContent.dots_grob = function(x) {
     d$bins = h$binning$bins
     d$midpoint = h$binning$bin_midpoints[h$binning$bins]
     point_fontsize = max(
-      convertY(unit(h$point_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
+      convertY(unit(h$point_size * point_size_ratio, "native"), "points", valueOnly = TRUE) -
+        max(d$size, 0, na.rm = TRUE) * .stroke/2,
       0.5
     )
 

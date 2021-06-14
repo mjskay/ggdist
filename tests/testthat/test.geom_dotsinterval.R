@@ -259,3 +259,16 @@ test_that("geom_dots allows constraints on binwidth", {
 
 })
 
+test_that("geom_dots correctly adjusts dot size for stroke size", {
+  skip_if_no_vdiffr()
+
+  p = data.frame(x = ppoints(40)) %>%
+    ggplot(aes(x = x))
+
+  vdiffr::expect_doppelganger("size = 1 and 3",
+    p +
+      geom_dots(aes(y = "a"), binwidth = 1/20, size = 1, color = "black") +
+      geom_dots(aes(y = "b"), binwidth = 1/20, size = 3, color = "black")
+  )
+
+})
