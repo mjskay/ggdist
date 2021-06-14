@@ -357,8 +357,7 @@ dist_df \%>\%
 # the stat_dist_... family applies a Jacobian adjustment to densities
 # when plotting on transformed scales in order to plot them correctly.
 # It determines the Jacobian using symbolic differentiation if possible,
-# using either Deriv::Deriv() (if the Deriv package is installed) or
-# stats::D() (if not). If symbolic differentation fails, it falls back
+# using stats::D(). If symbolic differentation fails, it falls back
 # to numericDeriv(), which is less reliable; therefore, it is
 # advisable to use scale transformation functions that are defined in
 # terms of basic math functions so that their derivatives can be

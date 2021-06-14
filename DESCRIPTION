@@ -47,7 +47,6 @@ Suggests:
     png,
     fda,
     beeswarm (>= 0.4.0),
-    Deriv,
     pkgdown
 License: GPL (>= 3)
 Language: en-US
