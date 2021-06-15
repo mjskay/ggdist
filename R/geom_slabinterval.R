@@ -6,7 +6,7 @@
 
 # drawing functions -------------------------------------------------------
 
-rescale_slab_thickness = function(s_data, orientation, justification, normalize, height, y, ymin, ymax) {
+rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymin, ymax) {
   # rescale the slab data to be within the confines of the bounding box
   # we do this *again* here (rather than in setup_data) because
   # position_dodge doesn't work if we only do it up there:
@@ -36,19 +36,19 @@ rescale_slab_thickness = function(s_data, orientation, justification, normalize,
 
     switch_side(d$side[[1]], orientation,
       topright = {
-        # the slight nudge of justification * d[[height]] * (1 - y_scale) ensures that
+        # the slight nudge of d$justification * d[[height]] * (1 - y_scale) ensures that
         # justifications work properly when scale != 1 (and similarly for other values of `side`)
-        d[[y]] = d[[ymin]] + justification * d[[height]] * (1 - y_scale)
+        d[[y]] = d[[ymin]] + d$justification * d[[height]] * (1 - y_scale)
         d[[ymin]] = d[[y]]
         d[[ymax]] = d[[y]] + d$thickness * thickness_scale
       },
       bottomleft = {
-        d[[y]] = d[[ymax]] - (1 - justification) * d[[height]] * (1 - y_scale)
+        d[[y]] = d[[ymax]] - (1 - d$justification) * d[[height]] * (1 - y_scale)
         d[[ymin]] = d[[y]] - d$thickness * thickness_scale
         d[[ymax]] = d[[y]]
       },
       both = {
-        d[[y]] = (d[[ymin]] + d[[ymax]]) / 2 - (0.5 - justification) * d[[height]] * (1 - y_scale)
+        d[[y]] = (d[[ymin]] + d[[ymax]]) / 2 - (0.5 - d$justification) * d[[height]] * (1 - y_scale)
         d[[ymin]] = d[[y]] - d$thickness * thickness_scale / 2
         d[[ymax]] = d[[y]] + d$thickness * thickness_scale / 2
       }
@@ -59,17 +59,13 @@ rescale_slab_thickness = function(s_data, orientation, justification, normalize,
 }
 
 draw_slabs = function(self, s_data, panel_params, coord,
-  side, scale, orientation, justification, normalize, fill_type, na.rm,
+  orientation, normalize, fill_type, na.rm,
   child_params
 ) {
   define_orientation_variables(orientation)
 
-  # TODO: aes-side: temporary hack, remove
-  s_data$side = side
-  s_data$scale = scale
-
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, orientation, justification, normalize, height, y, ymin, ymax
+    s_data, orientation, normalize, height, y, ymin, ymax
   ))
 
   # build groups for the slabs
@@ -108,7 +104,7 @@ draw_slabs = function(self, s_data, panel_params, coord,
   })
 
   # when side = "top" or "right", need to invert draw order so that overlaps happen in a sensible way
-  # TODO: aes-side: drop / fix to check first slab
+  # unfortunately we can only do this by checking the first value of `side`
   switch_side(s_data$side[[1]], orientation,
     topright = rev(slab_grobs),
     bottomleft = slab_grobs,
@@ -118,7 +114,7 @@ draw_slabs = function(self, s_data, panel_params, coord,
 
 
 draw_pointintervals = function(self, i_data, panel_params, coord,
-  orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm,
+  orientation, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm,
   child_params
 ) {
   if (nrow(i_data) == 0) return(list())
@@ -128,7 +124,7 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
   point_grobs = list()
 
   # adjust y position based on justification
-  i_data[[y]] = i_data[[ymin]] + justification * i_data[[height]]
+  i_data[[y]] = i_data[[ymin]] + i_data$justification * i_data[[height]]
 
   if (nrow(i_data) > 0) {
     # reorder by interval width so largest intervals are drawn first
@@ -603,6 +599,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # determine bounding boxes based on justification: position
     # the min/max bounds around y such that y is at the correct
     # justification relative to the bounds
+    # TODO: aes-side: fix
     justification = get_justification(params$justification, params$side, params$orientation)
     data[[ymin]] = data[[y]] - justification * data[[height]]
     data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
@@ -652,14 +649,20 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # recover height: position_dodge adjusts ymax/ymin but not height
     data[[height]] = data[[ymax]] - data[[ymin]]
 
-    justification = get_justification(justification, side, orientation)
+    # TODO: aes-side: temporary hack, remove
+    data$side = side
+    data$scale = scale
+    data$justification = justification
+
+    # TODO: aes-side: fix
+    data$justification = get_justification(data$justification, data$side, orientation)
 
     slab_grobs = if (show_slab && !is.null(data$thickness)) {
       # thickness values were provided, draw the slabs
       s_data = data[data$datatype == "slab",]
       if (nrow(s_data) > 0) {
         self$draw_slabs(s_data, panel_params, coord,
-          side, scale, orientation, justification, normalize, fill_type,
+          orientation, normalize, fill_type,
           na.rm, child_params
         )
       }
@@ -667,7 +670,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     point_interval_grobs = if (show_interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       self$draw_pointintervals(data[data$datatype == "interval",], panel_params, coord,
-        orientation, justification, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm,
+        orientation, interval_size_domain, interval_size_range, fatten_point, show_point, na.rm,
         child_params
       )
     }
@@ -719,9 +722,27 @@ switch_side = function(side, orientation, topright, bottomleft, both) {
   )
 }
 
+# vectorized version of switch_side
+case_when_side = function(side, orientation, topright, bottomleft, both) {
+  ifelse(
+    orientation %in% c("y", "horizontal"),
+    ifelse(
+      side %in% c("top", "topright", "topleft", "right"), topright, ifelse(
+      side %in% c("bottom", "bottomleft", "bottomright", "left"), bottomleft,
+      both
+    )),
+    # orientation is "vertical" or "x"
+    ifelse(
+      side %in% c("right", "topright", "bottomright", "top"), topright, ifelse(
+      side %in% c("left", "topleft", "bottomleft", "bottom"), bottomleft,
+      both
+    ))
+  )
+}
+
 get_justification = function(justification, side, orientation) {
   if (is.null(justification)) {
-    switch_side(side, orientation,
+    case_when_side(side, orientation,
       topright = 0,
       bottomleft = 1,
       both = 0.5
