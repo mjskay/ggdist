@@ -6,7 +6,7 @@
 
 # drawing functions -------------------------------------------------------
 
-rescale_slab_thickness = function(s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax) {
+rescale_slab_thickness = function(s_data, orientation, justification, normalize, height, y, ymin, ymax) {
   # rescale the slab data to be within the confines of the bounding box
   # we do this *again* here (rather than in setup_data) because
   # position_dodge doesn't work if we only do it up there:
@@ -18,10 +18,23 @@ rescale_slab_thickness = function(s_data, side, scale, orientation, justificatio
 
   # must do this within groups so that `side` can vary by slab
   ddply_(s_data, c("group", y), function(d) {
-    thickness_scale = scale * min_height
+    if (!all(d$side == d$side[[1]])) {
+      stop(
+        "Slab `side` cannot vary within groups:\n",
+        "all rows within the same slab must have the same `side`."
+      )
+    }
+    if (!all(d$scale == d$scale[[1]])) {
+      stop(
+        "Slab `side` cannot vary within groups:\n",
+        "all rows within the same slab must have the same `scale`."
+      )
+    }
+
+    thickness_scale = d$scale * min_height
     y_scale = thickness_scale / d[[height]]
 
-    switch_side(side, orientation,
+    switch_side(d$side[[1]], orientation,
       topright = {
         # the slight nudge of justification * d[[height]] * (1 - y_scale) ensures that
         # justifications work properly when scale != 1 (and similarly for other values of `side`)
@@ -51,8 +64,12 @@ draw_slabs = function(self, s_data, panel_params, coord,
 ) {
   define_orientation_variables(orientation)
 
+  # TODO: aes-side: temporary hack, remove
+  s_data$side = side
+  s_data$scale = scale
+
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax
+    s_data, orientation, justification, normalize, height, y, ymin, ymax
   ))
 
   # build groups for the slabs
@@ -83,7 +100,7 @@ draw_slabs = function(self, s_data, panel_params, coord,
     if (!is.null(d$colour) && !all(is.na(d$colour))) {
       # we have an outline to draw around the outside of the slab:
       # the definition of "outside" depends on the value of `side`:
-      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), orientation, side)
+      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), orientation, d$side[[1]])
       gList(slab_grob, draw_path(outline_data, panel_params, coord))
     } else {
       slab_grob
@@ -91,7 +108,8 @@ draw_slabs = function(self, s_data, panel_params, coord,
   })
 
   # when side = "top" or "right", need to invert draw order so that overlaps happen in a sensible way
-  switch_side(side, orientation,
+  # TODO: aes-side: drop / fix to check first slab
+  switch_side(s_data$side[[1]], orientation,
     topright = rev(slab_grobs),
     bottomleft = slab_grobs,
     both = slab_grobs

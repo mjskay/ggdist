@@ -121,6 +121,10 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 ) {
   define_orientation_variables(orientation)
 
+  # TODO: aes-side: temporary hack, remove
+  s_data$side = side
+  s_data$scale = scale
+
   # remove missing values
   s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y), name = "geom_dotsinterval", finite = TRUE)
   if (nrow(s_data) == 0) return(gList())
@@ -128,7 +132,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax
+    s_data, orientation, justification, normalize, height, y, ymin, ymax
   ))
 
   if (!coord$is_linear()) {
@@ -161,7 +165,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
       stackratio = child_params$stackratio,
       binwidth = child_params$binwidth,
       layout = child_params$layout,
-      side = side,
+      # TODO: aes-side: fix
+      side = s_data$side[[1]],
       orientation = orientation
     ))
 }
