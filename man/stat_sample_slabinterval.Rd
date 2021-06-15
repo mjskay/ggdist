@@ -176,7 +176,7 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+\item{side}{Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
 to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or

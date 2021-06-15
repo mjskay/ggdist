@@ -119,3 +119,28 @@ test_that("bin nudging works", {
     c(0.9,2,3.1)
   )
 })
+
+
+test_that("bin layouts work", {
+  ref = data.frame(
+    x = c(1, 1, 3, 5, 5),
+    y = c(1, 3, 1, 1, 3),
+    bin = c(1L,  1L, 2L, 3L, 3L)
+  )
+  expect_equal(as.data.frame(bin_dots(1:5, 0, binwidth = 2, layout = "bin")), ref)
+
+  ref = data.frame(
+    x = c(1, 2, 3, 4, 5),
+    y = c(1, 3, 1, 3, 1),
+    bin = c(1L,  1L, 2L, 2L, 3L)
+  )
+  expect_equal(as.data.frame(bin_dots(1:5, 0, binwidth = 2, layout = "weave")), ref)
+
+  ref = data.frame(
+    x = 1:5,
+    y = c(1, 2.73205080756888, 1, 2.73205080756888,  1),
+    bin = c(1, 1, 2, 2, 3)
+  )
+  expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
+
+})

@@ -110,7 +110,7 @@ a call to a position adjustment function.}
 \item{...}{
   Arguments passed on to \code{\link[=geom_slabinterval]{geom_slabinterval}}
   \describe{
-    \item{\code{side}}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+    \item{\code{side}}{Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
 to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
@@ -198,10 +198,12 @@ dotplot is drawn; \code{unit(c(0, 0.1), "npc")} would make dots that are \emph{a
 \item{layout}{The layout method used for the dots:
 \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
-This maintains the alignment of rows and columns in the dotplot.
-\item \code{"weave"}: places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of
-the way). Maintains the alignment of rows but does not align dots within columns. Does not work well when
-\code{side = "both"}.
+This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
+classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
+the input data are symmetricaly it will return a symmetrical layout.
+\item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
+positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
+align dots within columns. Does not work well when \code{side = "both"}.
 \item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{beeswarm::beeswarm()}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).

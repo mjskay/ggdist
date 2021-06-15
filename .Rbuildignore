@@ -27,4 +27,5 @@
 ^vignettes/.*_cache$
 ^revdep$
 ^man/figures/README$
+^man-roxygen$
 ^\.github$

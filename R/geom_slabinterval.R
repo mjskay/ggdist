@@ -236,13 +236,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to [layer()].
-#' @param side Which side to draw the slab on. `"topright"`, `"top"`, and `"right"` are synonyms
-#' which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`
-#' or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab
-#' to be drawn on the bottom or the left depending on if `orientation` is `"horizontal"` or
-#' `"vertical"`. `"topleft"` causes the slab to be drawn on the top or the left, and `"bottomright"`
-#' causes the slab to be drawn on the bottom or the right. `"both"` draws the slab mirrored on both
-#' sides (as in a violin plot).
+#' @template param-slab-side
 #' @param scale What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
 #' slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.
 #' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or

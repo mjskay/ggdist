@@ -69,7 +69,7 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
 
-\item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+\item{side}{Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
 to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or

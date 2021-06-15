@@ -37,19 +37,21 @@ makeContent.dots_grob = function(x) {
   y = grob_$y_
   side = grob_$side
   orientation = grob_$orientation
-
-  point_size_ratio = 1.43  # manual fudge factor for point size in ggplot
-  stackratio = 1.07 * grob_$stackratio
   dotsize = grob_$dotsize
   binwidth = grob_$binwidth
   layout = grob_$layout
 
+  font_size_ratio = 1.43  # manual fudge factor for point size in ggplot
+  stackratio = 1.07 * grob_$stackratio
+
   # ratio between width of the bins (binwidth)
   # and the vertical spacing of dots (y_spacing)
+  # this is a bit different from a raw stackratio since we want to account
+  # for the dotsize
   heightratio = convertUnit(unit(dotsize * stackratio, "native"),
     "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
 
-  # if bin width was specified as a grid::unit, convert it
+  # if bin width was specified as a grid::unit, convert it to native units
   if (is.unit(binwidth)) {
     binwidth = convertUnit(binwidth, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
   }
@@ -66,110 +68,46 @@ makeContent.dots_grob = function(x) {
     user_max_binwidth = Inf
   }
 
-  if (is.na(binwidth)) {
-    # find the best bin widths across all the heaps we are going to draw
+  if (isTRUE(is.na(binwidth))) {
+    # find the best bin widths across all the dotplots we are going to draw
     binwidths = vapply_dbl(datas, function(d) find_dotplot_binwidth(d[[x]], maxheight, heightratio))
 
     binwidth = max(min(binwidths, user_max_binwidth), user_min_binwidth)
   }
 
-  # now, draw all the heaps using the same bin width
-  children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
-    h = dot_heap(d[[x]], binwidth = binwidth, maxheight = maxheight, heightratio = heightratio)
-    h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, binwidth)
-    d$bins = h$binning$bins
-    d$midpoint = h$binning$bin_midpoints[h$binning$bins]
-    point_size = convertUnit(unit(h$binwidth * dotsize, "native"),
-      "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
-    # the dot size in native units (point_size) doesn't translate directly into
-    # font size (point_fontsize); need a fudge factor based on how big the circle
-    # glyph is as a ratio of font size (point_size_ratio) plus need to account
-    # for stroke width)
-    point_fontsize = max(
-      convertHeight(unit(point_size * point_size_ratio, "native"), "points", valueOnly = TRUE) -
-        max(d$size, 0, na.rm = TRUE) * .stroke/2,
+  # now, draw all the dotplots using the same bin width
+  children = do.call(gList, lapply(datas, function(d) {
+    # bin the dots
+    dot_positions = bin_dots(
+      d$x, d$y,
+      binwidth, heightratio, layout,
+      side, orientation
+    )
+
+    # determine size of the dots as a font size
+    # the dot size in points (dot_pointsize) doesn't translate directly into
+    # the font size in points needed to draw that dot (dot_fontsize); need a fudge
+    # factor based on how big the circle glyph is as a ratio of font size
+    # (font_size_ratio) plus need to account for stroke width
+    dot_pointsize = convertUnit(unit(binwidth * dotsize, "native"),
+      "points", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
+    dot_fontsize = max(
+      dot_pointsize * font_size_ratio - max(d$size, 0, na.rm = TRUE) * .stroke/2,
       0.5
     )
 
-    # determine x positions (for bin/weave) / x and y positions (for swarm)
-    y_start = switch_side(side, orientation,
-      topright = h$y_spacing / 2,
-      bottomleft = - h$y_spacing / 2,
-      both = 0
+    # generate grob for this dotplot
+    pointsGrob(
+      dot_positions$x, dot_positions$y, pch = d$shape,
+      gp = gpar(
+        col = alpha(d$colour, d$alpha),
+        fill = alpha(d$fill, d$alpha),
+        fontsize = dot_fontsize,
+        lwd = d$size * .stroke/2,
+        lty = d$linetype
+      )
     )
-    switch(layout,
-      bin = {
-        d[[x]] = d$midpoint
-      },
-      weave = {
-        # keep original x positions, but re-order within bins so that overlaps
-        # across bins are less likely
-        d = ddply_(d, "bins", function(bin_df) {
-          seq_fun = if (side == "both") seq_interleaved_centered else seq_interleaved
-          bin_df = bin_df[seq_fun(nrow(bin_df)),]
-          bin_df$rows = seq_len(nrow(bin_df))
-          bin_df
-        })
-
-        # nudge values within each row to ensure there are no overlaps
-        # (rows are not well-defined in side = "both" for this to work,
-        # so we skip this step in that case)
-        if (side != "both") {
-          d = ddply_(d, "rows", function(row_df) {
-            row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
-            row_df
-          })
-        }
-      },
-      swarm = {
-        if (!requireNamespace("beeswarm", quietly = TRUE)) {
-          stop('Using layout = "swarm" with the dots geom requires the `beeswarm` package to be installed.')
-        }
-
-        swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
-          xsize = h$binwidth, ysize = h$y_spacing,
-          log = "", cex = 1,
-          side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0),
-          # priority = "density",
-          compact = TRUE
-        )
-
-        d[[x]] = swarm_xy[["x"]]
-        d[[y]] = swarm_xy[["y"]] + y_start
-      },
-      stop("Unknown layout type for dots: ", deparse0(layout))
-    )
-
-    # determine y positions (for bin/weave)
-    if (layout %in% c("bin", "weave")) {
-      d = ddply_(d, "bins", function(bin_df) {
-        y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
-        switch_side(side, orientation,
-          topright = {},
-          bottomleft = {
-            y_offset = - y_offset
-          },
-          both = {
-            y_offset = y_offset - h$y_spacing * (nrow(bin_df) - 1) / 2
-          }
-        )
-        bin_df[[y]] = bin_df[[y]] + y_start + y_offset
-        bin_df
-      })
-    }
-
-    # generate grobs
-    dlply_(d, "bins", function(bin_df) {
-      pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
-        gp = gpar(
-          col = alpha(bin_df$colour, bin_df$alpha),
-          fill = alpha(bin_df$fill, bin_df$alpha),
-          fontsize = point_fontsize,
-          lwd = bin_df$size * .stroke/2,
-          lty = bin_df$linetype
-        ))
-    })
-  })))
+  }))
 
   setChildren(grob_, children)
 }
@@ -283,15 +221,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' dots that are *exactly* 10% of the viewport size along whichever dimension the
 #' dotplot is drawn; `unit(c(0, 0.1), "npc")` would make dots that are *at most*
 #' 10% of the viewport size.
-#' @param layout The layout method used for the dots:
-#'  - `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
-#'    This maintains the alignment of rows and columns in the dotplot.
-#'  - `"weave"`: places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of
-#'    the way). Maintains the alignment of rows but does not align dots within columns. Does not work well when
-#'    `side = "both"`.
-#'  - `"swarm"`: uses the `"compactswarm"` layout from `beeswarm::beeswarm()`. Does not maintain alignment of rows or
-#'    columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
-#'    dotplots of theoretical distributions, which may look better with `"bin"` or `"weave"`).
+#' @template param-dots-layout
 #' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
 #' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number
