@@ -67,53 +67,23 @@ makeContent.dots_grob = function(x) {
   yratio = convertUnit(unit(dotsize * stackratio, "native"),
     "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
 
-  # create a specification for a heap of dots, which includes things like
-  # what the bins are, what the dot widths are, etc.
-  heap_spec = function(d, nbins = NULL, binwidth = NULL) {
-    xrange = range(d[[x]])
-    xspread = xrange[[2]] - xrange[[1]]
-    if (xspread == 0) xspread = 1
-    if (is.null(binwidth)) {
-      nbins = floor(nbins)
-      binwidth = xspread / nbins
-    } else {
-      nbins = max(floor(xspread / binwidth), 1)
-    }
-    binning = automatic_bin(d[[x]], binwidth)
-    max_bin_count = max(tabulate(binning$bins))
-
-    y_spacing = binwidth * yratio
-
-    if (nbins == 1) {
-      # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
-      # let's back out a max bin size based on that...
-      max_y_spacing = max_height / max_bin_count
-      max_binwidth = max_y_spacing / yratio
-    } else {
-      # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
-      max_y_spacing = y_spacing
-      max_binwidth = binwidth
-    }
-
-    as.list(environment())
-  }
-  is_valid_heap_spec = function(h) {
-    isTRUE(h$max_bin_count * h$max_y_spacing <= max_height)
-  }
 
   if (is.na(binwidth)) {
     # find the best bin widths across all the heaps we are going to draw
-    max_binwidths = map_dbl(datas, function(d) {
-      # figure out a reasonable minimum number of bins based on histogram binning
-      if (nrow(d) <= 1) {
-        min_h = heap_spec(d, nbins = 1)
-      } else {
-        min_h = heap_spec(d, nbins = min(nclass.scott(d[[x]]), nclass.FD(d[[x]]), nclass.Sturges(d[[x]])))
-      }
+    max_binwidths = vapply_dbl(datas, function(d) {
+      d_x = d[[x]]
 
-      if (!is_valid_heap_spec(min_h)) {
+      # figure out a reasonable minimum number of bins based on histogram binning
+      min_nbins = if (nrow(d) <= 1) {
+        1
+      } else{
+        min(nclass.scott(d_x), nclass.FD(d_x), nclass.Sturges(d_x))
+      }
+      min_h = dot_heap(d_x, nbins = min_nbins, max_height = max_height, yratio = yratio)
+
+      if (!min_h$is_valid) {
         # figure out a maximum number of bins based on data resolution
-        max_h = heap_spec(d, binwidth = resolution(d[[x]]))
+        max_h = dot_heap(d_x, binwidth = resolution(d_x), max_height = max_height, yratio = yratio)
 
         if (max_h$nbins <= min_h$nbins) {
           # even at data resolution there aren't enough bins, not much we can do...
@@ -124,8 +94,8 @@ makeContent.dots_grob = function(x) {
         } else {
           # use binary search to find a reasonable number of bins
           repeat {
-            h = heap_spec(d, (min_h$nbins + max_h$nbins) / 2)
-            if (is_valid_heap_spec(h)) {
+            h = dot_heap(d_x, (min_h$nbins + max_h$nbins) / 2, max_height = max_height, yratio = yratio)
+            if (h$is_valid) {
               # heap spec is valid, search downwards
               if (h$nbins - 1 <= min_h$nbins) {
                 # found it, we're done
@@ -148,7 +118,7 @@ makeContent.dots_grob = function(x) {
       }
 
       # check if the selected heap spec is valid....
-      if (!is_valid_heap_spec(h)) {
+      if (!h$is_valid) {
         # ... if it isn't, this means we've ended up with some bin that's too
         # tall, probably because we have discrete data --- we'll just
         # conservatively shrink things down so they fit by backing out a bin
@@ -165,7 +135,7 @@ makeContent.dots_grob = function(x) {
 
   # now, draw all the heaps using the same bin width
   children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
-    h = heap_spec(d, binwidth = binwidth)
+    h = dot_heap(d[[x]], binwidth = binwidth, max_height = max_height, yratio = yratio)
     h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, binwidth)
     d$bins = h$binning$bins
     d$midpoint = h$binning$bin_midpoints[h$binning$bins]

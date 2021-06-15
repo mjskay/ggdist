@@ -96,6 +96,9 @@ dlply_ = function(data, groups, fun, ...) {
   lapply(dplyr::group_split(data, dplyr::across(groups)), fun, ...)
 }
 
+vapply_dbl = function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = numeric(1), ...)
+}
 
 
 # sequences ---------------------------------------------------------------

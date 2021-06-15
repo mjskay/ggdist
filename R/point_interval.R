@@ -136,7 +136,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
+#' @importFrom purrr map_dfr map map2 discard map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at %>%
 #' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
@@ -196,13 +196,13 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     }
 
     result = map_dfr(.width, function(p) {
-      data[[col_name]] = map_dbl(draws, .point, na.rm = na.rm)
+      data[[col_name]] = vapply_dbl(draws, .point, na.rm = na.rm)
 
       intervals = map(draws, .interval, .width = p, na.rm = na.rm)
-      # can't use map_dbl here because sometimes (e.g. with hdi) these can
-      # return multiple intervals, hence map() here and unnest() below
-      data[[".lower"]] = map(intervals, ~ .[, 1])
-      data[[".upper"]] = map(intervals, ~ .[, 2])
+      # can't use vapply_dbl here because sometimes (e.g. with hdi) these can
+      # return multiple intervals, hence lapply() here and unnest() below
+      data[[".lower"]] = lapply(intervals, function(x) x[, 1])
+      data[[".upper"]] = lapply(intervals, function(x) x[, 2])
       data = unnest_legacy(data, .lower, .upper)
 
       data[[".width"]] = p
@@ -225,16 +225,16 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
 
-        data[[col_name]] = map_dbl(draws, .point, na.rm = na.rm)
+        data[[col_name]] = vapply_dbl(draws, .point, na.rm = na.rm)
 
         intervals = map(draws, .interval, .width = p, na.rm = na.rm)
 
-        # can't use map_dbl here because sometimes (e.g. with hdi) these can
+        # can't use vapply_dbl here because sometimes (e.g. with hdi) these can
         # return multiple intervals, which we need to check for (since it is
         # not possible to support in this format).
-        lower = map(intervals, ~ .[, 1])
-        upper = map(intervals, ~ .[, 2])
-        if (any(map_dbl(lower, length) > 1) || any(map_dbl(upper, length) > 1)) {
+        lower = lapply(intervals, function(x) x[, 1])
+        upper = lapply(intervals, function(x) x[, 2])
+        if (any(lengths(lower) > 1) || any(lengths(upper) > 1)) {
           stop(
             "You are summarizing a multimodal distribution using a method that returns multiple intervals ",
             "(such as `hdi`), but you are attempting to generate intervals for multiple columns in wide format. ",

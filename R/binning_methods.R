@@ -5,6 +5,51 @@
 
 
 
+
+# dot "heaps": collections of bins of dots -----------------------------------
+
+#' create a dot "heap", which includes a binning of dots and properties of that
+#' binning, such as what the bins are, what the dot widths are, what the
+#' y spacing between dots should be, etc.
+#' @param x a vector values
+#' @param nbins,binwidth must provide either the desired number of bins (`nbins`)
+#' or the desired bin width (`binwidth`); given one the other will be calculated.
+#' @param max_height maximum height of a single bin
+#' @param yratio ratio between the bin width and the y spacing
+#' @return  a list of properties of this dot "heap"
+#' @noRd
+dot_heap = function(x, nbins = NULL, binwidth = NULL, max_height = NULL, yratio = NULL) {
+  xrange = range(x)
+  xspread = xrange[[2]] - xrange[[1]]
+  if (xspread == 0) xspread = 1
+  if (is.null(binwidth)) {
+    nbins = floor(nbins)
+    binwidth = xspread / nbins
+  } else {
+    nbins = max(floor(xspread / binwidth), 1)
+  }
+  binning = automatic_bin(x, binwidth)
+  max_bin_count = max(tabulate(binning$bins))
+
+  y_spacing = binwidth * yratio
+
+  if (nbins == 1) {
+    # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
+    # let's back out a max bin size based on that...
+    max_y_spacing = max_height / max_bin_count
+    max_binwidth = max_y_spacing / yratio
+  } else {
+    # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
+    max_y_spacing = y_spacing
+    max_binwidth = binwidth
+  }
+
+  # is this a "valid" heap of dots; i.e. is its tallest bin less than max height?
+  is_valid = isTRUE(max_bin_count * max_y_spacing <= max_height)
+
+  as.list(environment())
+}
+
 # modified wilkinson methods ----------------------------------------------
 
 # this implements a variant of the basic wilkinson binning method, a single

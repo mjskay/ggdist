@@ -119,7 +119,7 @@ draw_key_lineribbon = function(data, params, size) {
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom purrr map map_dbl reduce
+#' @importFrom purrr map reduce
 #' @import ggplot2
 #' @export
 GeomLineribbon = ggproto("GeomLineribbon", Geom,
@@ -199,7 +199,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     # this is a slightly hackish approach to getting the draw order correct for the common
     # use case of fit lines / curves: draw the ribbons in order from largest mean width to
     # smallest mean width, so that the widest intervals are on the bottom.
-    ribbon_grobs = ribbon_grobs[order(-map_dbl(ribbon_grobs, "width"))] %>%
+    ribbon_grobs = ribbon_grobs[order(-vapply_dbl(ribbon_grobs, `[[`, "width"))] %>%
       map("grobs") %>%
       reduce(c)
 
