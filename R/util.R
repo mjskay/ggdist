@@ -108,6 +108,13 @@ vapply_dbl = function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = numeric(1), ...)
 }
 
+iwalk_ = function(vec, fun, ...) {
+  # drop in replacement for purrr::iwalk()
+  nms <- names(vec) %||% seq_along(x)
+  mapply(fun, vec, nms, ...)
+  invisible(vec)
+}
+
 
 # sequences ---------------------------------------------------------------
 
