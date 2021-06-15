@@ -123,7 +123,6 @@
 #'   ggtitle("50% curvewise intervals with curve_interval()") +
 #'   theme_ggdist()
 #'
-#' @importFrom purrr map iwalk
 #' @importFrom dplyr group_vars summarise_at %>% group_split
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
 #' @importFrom tidyselect eval_select
@@ -157,7 +156,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
       setdiff(.exclude) %>%
       # have to use quos here because lists of symbols don't work correctly with iwalk() for some reason
       # (the simpler version of this line would be `syms() %>%`)
-      map(~ quo(!!sym(.))) %>%
+      lapply(function(x) quo(!!sym(x))) %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
