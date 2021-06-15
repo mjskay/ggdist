@@ -123,7 +123,7 @@
 #'   ggtitle("50% curvewise intervals with curve_interval()") +
 #'   theme_ggdist()
 #'
-#' @importFrom purrr map map2 map_lgl iwalk
+#' @importFrom purrr map map_lgl iwalk
 #' @importFrom dplyr group_vars summarise_at %>% group_split
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
 #' @importFrom tidyselect eval_select
