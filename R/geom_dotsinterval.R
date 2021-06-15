@@ -332,7 +332,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
   override_slab_aesthetics = function(self, s_data) {
     s_data = ggproto_parent(GeomSlabinterval, self)$override_slab_aesthetics(s_data)
-    s_data$shape = s_data$slab_shape
+    s_data$shape = s_data[["slab_shape"]]
     s_data
   },
 
@@ -481,13 +481,13 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
 
   override_slab_aesthetics = function(self, s_data) {
     # we define these differently from geom_dotsinterval to make this easier to use on its own
-    s_data$colour = s_data$slab_colour %||% s_data$colour
-    s_data$colour = apply_colour_ramp(s_data$colour, s_data$colour_ramp)
-    s_data$fill = s_data$slab_fill %||% s_data$fill
-    s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
-    s_data$alpha = s_data$slab_alpha %||% s_data$alpha
-    s_data$size = s_data$slab_size %||% s_data$size
-    s_data$shape = s_data$slab_shape %||% s_data$shape
+    s_data$colour = s_data[["slab_colour"]] %||% s_data[["colour"]]
+    s_data$colour = apply_colour_ramp(s_data[["colour"]], s_data[["colour_ramp"]])
+    s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
+    s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
+    s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
+    s_data$size = s_data[["slab_size"]] %||% s_data[["size"]]
+    s_data$shape = s_data[["slab_shape"]] %||% s_data[["shape"]]
     s_data
   },
 

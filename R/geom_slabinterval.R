@@ -14,30 +14,35 @@ rescale_slab_thickness = function(s_data, side, scale, orientation, justificatio
   # all the same, and we want to preserve our normalization settings.
   # so we scale things based on the min height to ensure everything
   # is the same height
-  thickness_scale = scale * min(s_data[[height]])
-  y_scale = thickness_scale / s_data[[height]]
+  min_height = min(s_data[[height]])
 
-  switch_side(side, orientation,
-    topright = {
-      # the slight nudge of justification * s_data[[height]] * (1 - y_scale) ensures that
-      # justifications work properly when scale != 1 (and similarly for other values of `side`)
-      s_data[[y]] = s_data[[ymin]] + justification * s_data[[height]] * (1 - y_scale)
-      s_data[[ymin]] = s_data[[y]]
-      s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale
-    },
-    bottomleft = {
-      s_data[[y]] = s_data[[ymax]] - (1 - justification) * s_data[[height]] * (1 - y_scale)
-      s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale
-      s_data[[ymax]] = s_data[[y]]
-    },
-    both = {
-      s_data[[y]] = (s_data[[ymin]] + s_data[[ymax]]) / 2 - (0.5 - justification) * s_data[[height]] * (1 - y_scale)
-      s_data[[ymin]] = s_data[[y]] - s_data$thickness * thickness_scale / 2
-      s_data[[ymax]] = s_data[[y]] + s_data$thickness * thickness_scale / 2
-    }
-  )
+  # must do this within groups so that `side` can vary by slab
+  ddply_(s_data, c("group", y), function(d) {
+    thickness_scale = scale * min_height
+    y_scale = thickness_scale / d[[height]]
 
-  s_data
+    switch_side(side, orientation,
+      topright = {
+        # the slight nudge of justification * d[[height]] * (1 - y_scale) ensures that
+        # justifications work properly when scale != 1 (and similarly for other values of `side`)
+        d[[y]] = d[[ymin]] + justification * d[[height]] * (1 - y_scale)
+        d[[ymin]] = d[[y]]
+        d[[ymax]] = d[[y]] + d$thickness * thickness_scale
+      },
+      bottomleft = {
+        d[[y]] = d[[ymax]] - (1 - justification) * d[[height]] * (1 - y_scale)
+        d[[ymin]] = d[[y]] - d$thickness * thickness_scale
+        d[[ymax]] = d[[y]]
+      },
+      both = {
+        d[[y]] = (d[[ymin]] + d[[ymax]]) / 2 - (0.5 - justification) * d[[height]] * (1 - y_scale)
+        d[[ymin]] = d[[y]] - d$thickness * thickness_scale / 2
+        d[[ymax]] = d[[y]] + d$thickness * thickness_scale / 2
+      }
+    )
+
+    d
+  })
 }
 
 draw_slabs = function(self, s_data, panel_params, coord,
@@ -150,35 +155,35 @@ draw_path = function(data, panel_params, coord) {
 # aesthetic overrides -----------------------------------------------------
 
 override_slab_aesthetics = function(self, s_data) {
-  s_data$colour = s_data$slab_colour
-  s_data$fill = s_data$slab_fill %||% s_data$fill
-  s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
-  s_data$alpha = s_data$slab_alpha %||% s_data$alpha
-  s_data$size = s_data$slab_size
-  s_data$linetype = s_data$slab_linetype %||% s_data$linetype
+  s_data$colour = s_data[["slab_colour"]]
+  s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
+  s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
+  s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
+  s_data$size = s_data[["slab_size"]]
+  s_data$linetype = s_data[["slab_linetype"]] %||% s_data[["linetype"]]
   s_data
 }
 
 override_point_aesthetics = function(self, p_data, size_domain, size_range, fatten_point) {
-  p_data$colour = p_data$point_colour %||% p_data$colour
-  p_data$colour = apply_colour_ramp(p_data$colour, p_data$colour_ramp)
-  p_data$fill = p_data$point_fill %||% p_data$fill
-  p_data$alpha = p_data$point_alpha %||% p_data$alpha
-  p_data$size = p_data$point_size %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
+  p_data$colour = p_data[["point_colour"]] %||% p_data[["colour"]]
+  p_data$colour = apply_colour_ramp(p_data[["colour"]], p_data[["colour_ramp"]])
+  p_data$fill = p_data[["point_fill"]] %||% p_data[["fill"]]
+  p_data$alpha = p_data[["point_alpha"]] %||% p_data[["alpha"]]
+  p_data$size = p_data[["point_size"]] %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
   p_data
 }
 
 override_interval_aesthetics = function(self, i_data, size_domain, size_range) {
-  i_data$colour = i_data$interval_colour %||% i_data$colour
-  i_data$colour = apply_colour_ramp(i_data$colour, i_data$colour_ramp)
-  i_data$alpha = i_data$interval_alpha %||% i_data$alpha
+  i_data$colour = i_data[["interval_colour"]] %||% i_data[["colour"]]
+  i_data$colour = apply_colour_ramp(i_data[["colour"]], i_data[["colour_ramp"]])
+  i_data$alpha = i_data[["interval_alpha"]] %||% i_data[["alpha"]]
   i_data$size = get_line_size(i_data, size_domain, size_range)
-  i_data$linetype = i_data$interval_linetype %||% i_data$linetype
+  i_data$linetype = i_data[["interval_linetype"]] %||% i_data[["linetype"]]
   i_data
 }
 
 get_line_size = function(i_data, size_domain, size_range) {
-  size = i_data$interval_size %||% i_data$size
+  size = i_data[["interval_size"]] %||% i_data[["size"]]
   pmax(
     (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
       (size_range[[2]] - size_range[[1]]) + size_range[[1]],
@@ -538,7 +543,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # fill it in with 0 so that we can still draw stuff
     data[[y]] = data[[y]] %||% 0
 
-    data$datatype = data$datatype %||% self$default_datatype
+    data$datatype = data[["datatype"]] %||% self[["default_datatype"]]
 
     # normalize functions according to how we want to scale them
     switch(params$normalize,
@@ -824,7 +829,7 @@ draw_polygon = function(data, panel_params, coord, fill = NULL) {
       id = munched$group,
       gp = gpar(
         col = first_rows$colour,
-        fill = fill %||% alpha(first_rows$fill, first_rows$alpha),
+        fill = fill %||% alpha(first_rows[["fill"]], first_rows[["alpha"]]),
         lwd = first_rows$size * .pt,
         lty = first_rows$linetype
       )
@@ -896,13 +901,13 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
 
   override_slab_aesthetics = function(self, s_data) {
     # we define these differently from geom_slabinterval to make this easier to use on its own
-    s_data$colour = s_data$slab_colour %||% s_data$colour
-    s_data$colour = apply_colour_ramp(s_data$colour, s_data$colour_ramp)
-    s_data$fill = s_data$slab_fill %||% s_data$fill
-    s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
-    s_data$alpha = s_data$slab_alpha %||% s_data$alpha
-    s_data$size = s_data$slab_size %||% s_data$size
-    s_data$linetype = s_data$slab_linetype %||% s_data$linetype
+    s_data$colour = s_data[["slab_colour"]] %||% s_data[["colour"]]
+    s_data$colour = apply_colour_ramp(s_data[["colour"]], s_data[["colour_ramp"]])
+    s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
+    s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
+    s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
+    s_data$size = s_data[["slab_size"]] %||% s_data[["size"]]
+    s_data$linetype = s_data[["slab_linetype"]] %||% s_data[["linetype"]]
     s_data
   },
 
