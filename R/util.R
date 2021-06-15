@@ -81,11 +81,19 @@ defaults = function(x, defaults) {
 # workaround replacements for other patterns that don't quite do what we need them to
 # (especially when it comes to rvars...)
 
+map_dfr_ = function(data, fun, ...) {
+  # drop-in replacement for purrr::map_dfr
+  do.call(
+    rbind,
+    lapply(data, fun, ...)
+  )
+}
+
 pmap_dfr_ = function(data, fun) {
   # this is roughly equivalent to
   # pmap_dfr(df, function(...) { ... })
   # but works properly with vctrs (pmap_dfr seems broken on rvars?)
-  purrr::map_dfr(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
+  map_dfr_(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
 }
 
 ddply_ = function(data, groups, fun, ...) {

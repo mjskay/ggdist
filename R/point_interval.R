@@ -136,7 +136,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom purrr map_dfr map map2 discard map_lgl iwalk
+#' @importFrom purrr map map2 discard map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at %>%
 #' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
@@ -195,7 +195,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       draws = data[[col_name]]
     }
 
-    result = map_dfr(.width, function(p) {
+    result = map_dfr_(.width, function(p) {
       data[[col_name]] = vapply_dbl(draws, .point, na.rm = na.rm)
 
       intervals = map(draws, .interval, .width = p, na.rm = na.rm)
@@ -220,7 +220,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       data = summarise_at(data, names(col_exprs), list)
     }
 
-    result = map_dfr(.width, function(p) {
+    result = map_dfr_(.width, function(p) {
       for (col_name in names(col_exprs)) {
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
@@ -271,7 +271,7 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   point_name = tolower(quo_name(enquo(.point)))
   interval_name = tolower(quo_name(enquo(.interval)))
 
-  result = map_dfr(.width, function(p) {
+  result = map_dfr_(.width, function(p) {
     interval = .interval(data, .width = p, na.rm = na.rm)
     data.frame(
       y = .point(data, na.rm = na.rm),

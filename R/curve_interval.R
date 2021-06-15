@@ -123,7 +123,7 @@
 #'   ggtitle("50% curvewise intervals with curve_interval()") +
 #'   theme_ggdist()
 #'
-#' @importFrom purrr map_dfr map map2 map_lgl iwalk
+#' @importFrom purrr map map2 map_lgl iwalk
 #' @importFrom dplyr group_vars summarise_at %>% group_split
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
 #' @importFrom tidyselect eval_select
@@ -229,7 +229,7 @@ halfspace_depth = function(x) {
     "mhd"
   )
 
-  map_dfr(dfs, function(d) {
+  map_dfr_(dfs, function(d) {
 
     if (.interval_internal == "mhd") { #mean halfspace depth
       # draws x y matrix
@@ -255,7 +255,7 @@ halfspace_depth = function(x) {
     median_draw = which.max(draw_depth)
     median_y = vapply_dbl(d[[col_name]], `[[`, median_draw)
 
-    map_dfr(.width, function(w) {
+    map_dfr_(.width, function(w) {
       depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
       selected_draws = draw_depth >= depth_cutoff
 

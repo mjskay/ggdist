@@ -70,7 +70,6 @@ globalVariables(c("prior"))
 #' # which follow the same format as above
 #'
 #' @importFrom tibble tibble
-#' @importFrom purrr map_dfr
 #' @export
 parse_dist = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
   UseMethod("parse_dist")
@@ -104,7 +103,7 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_
     args = list(NA)
   )
 
-  result = map_dfr(object, function(dist_spec) {
+  result = map_dfr_(object, function(dist_spec) {
     # split into name and arg list components
     # e.g. "Normal(0,1)" => "Normal", "0,1)"
     parsed_dist = strsplit(dist_spec, "(", fixed = TRUE)[[1]]
