@@ -136,7 +136,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom purrr map discard map_lgl iwalk
+#' @importFrom purrr map iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at %>%
 #' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
@@ -216,7 +216,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
-    if (!all(map_lgl(data[,names(col_exprs)], is.list))) {
+    if (!all(as.logical(unlist(lapply(data[,names(col_exprs)], is.list))))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 

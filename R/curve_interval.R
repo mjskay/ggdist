@@ -123,7 +123,7 @@
 #'   ggtitle("50% curvewise intervals with curve_interval()") +
 #'   theme_ggdist()
 #'
-#' @importFrom purrr map map_lgl iwalk
+#' @importFrom purrr map iwalk
 #' @importFrom dplyr group_vars summarise_at %>% group_split
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
 #' @importFrom tidyselect eval_select
@@ -189,7 +189,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
-    if (!all(map_lgl(data[,names(col_exprs)], is.list))) {
+    if (!all(as.logical(unlist(lapply(data[,names(col_exprs)], is.list))))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 
