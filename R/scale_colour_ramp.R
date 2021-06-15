@@ -127,15 +127,19 @@ colour_ramp_pal_discrete = function(range, from) {
 # inside a draw_group() or draw_panel() method of a geom, usage might be:
 # data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
 # to apply the effects of the fill_ramp aesthetic to the fill aesthetic.
-#' @importFrom scales seq_gradient_pal
-#' @importFrom purrr map2_chr
 apply_colour_ramp = function(colors, amounts) {
   if (is.null(colors) || is.null(amounts)) return(colors)
 
-  map2_chr(colors, amounts, function(color, amount) {
-    # null amounts come from missing values
-    amount = amount %||% NA
-    from = attr(amount, "from") %||% "white"
-    seq_gradient_pal(from, color)(amount)
-  })
+  as.character(
+    unname(
+      mapply(function(color, amount) {
+        # null amounts come from missing values
+        amount = amount %||% NA
+        from = attr(amount, "from") %||% "white"
+        scales::seq_gradient_pal(from, color)(amount)
+      },
+      colors, amounts
+      )
+    )
+  )
 }
