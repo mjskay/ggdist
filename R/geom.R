@@ -150,6 +150,14 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
 
   geom_aesthetics = c(
     "\\itemize{",
+    '  \\item \\code{side}: Which side to place the slab on. `"topright"`, `"top"`, and `"right"` are synonyms',
+    '    which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`',
+    '    or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab',
+    '    to be drawn on the bottom or the left depending on if `orientation` is `"horizontal"` or',
+    '    `"vertical"`. `"topleft"` causes the slab to be drawn on the top or the left, and `"bottomright"`',
+    '    causes the slab to be drawn on the bottom or the right. `"both"` draws the slab mirrored on both',
+    '    sides (as in a violin plot).',
+    "\\itemize{",
       '  \\item \\code{justification}: Justification of the interval relative to the slab, where `0` indicates bottom/left',
       '    justification and `1` indicates top/right justification (depending on `orientation`). If `justification`',
       '    is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is',

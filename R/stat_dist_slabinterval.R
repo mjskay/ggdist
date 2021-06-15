@@ -476,6 +476,7 @@ stat_dist_halfeye = function(...) stat_dist_slabinterval(...)
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_eye = function(..., side = "both") stat_dist_slabinterval(..., side = side)
+# TODO: aes-side
 
 #' @export
 #' @rdname stat_dist_slabinterval
@@ -487,7 +488,6 @@ stat_dist_ccdfinterval = function(
   ...,
 
   slab_type = "ccdf",
-  side = "topleft",
   normalize = "none",
 
   show.legend = c(size = FALSE),
@@ -505,7 +505,6 @@ stat_dist_ccdfinterval = function(
 
     params = list(
       slab_type = slab_type,
-      side = side,
       normalize = normalize,
       ...
     )
@@ -513,12 +512,12 @@ stat_dist_ccdfinterval = function(
 }
 StatDistCcdfInterval = ggproto("StatDistCcdfInterval", StatDistSlabinterval,
   default_aes = defaults(aes(
-    justification = stat(0.5)
+    justification = stat(0.5),
+    side = stat("topleft"),
   ), StatDistSlabinterval$default_aes),
 
   default_params = defaults(list(
     slab_type = "ccdf",
-    side = "topleft",
     normalize = "none"
   ), StatDistSlabinterval$default_params)
 )
@@ -526,9 +525,9 @@ StatDistCcdfInterval = ggproto("StatDistCcdfInterval", StatDistSlabinterval,
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_cdfinterval = function(...,
-  slab_type = "cdf", side = "topleft", normalize = "none"
+  slab_type = "cdf", normalize = "none"
 ) {
-  stat_dist_ccdfinterval(..., slab_type = slab_type, side = side, normalize = normalize)
+  stat_dist_ccdfinterval(..., slab_type = slab_type, normalize = normalize)
 }
 
 #' @export

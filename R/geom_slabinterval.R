@@ -251,7 +251,6 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to [layer()].
-#' @template param-slab-side
 #' @param scale What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
 #' slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.
 #' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
@@ -332,7 +331,6 @@ geom_slabinterval = function(
   # 4. The argument definitions of GeomSlabinterval$draw_panel
   # This is needed to support how defaults work with child geoms,
   # amongst other things
-  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   scale = 0.9,
   orientation = NA,
   normalize = c("all", "panels", "xy", "groups", "none"),
@@ -348,7 +346,6 @@ geom_slabinterval = function(
   show.legend = NA,
   inherit.aes = TRUE
 ) {
-  side = match.arg(side)
   normalize = match.arg(normalize)
   fill_type = match.arg(fill_type)
 
@@ -360,7 +357,6 @@ geom_slabinterval = function(
     geom = GeomSlabinterval,
     ...,
 
-    side = side,
     scale = scale,
     orientation = orientation,
     normalize = normalize,
@@ -463,6 +459,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     fill_ramp = NULL,
 
     # scale and positioning aesthetics
+    side = "topright",
     justification = NULL
   ),
 
@@ -494,7 +491,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   override_interval_aesthetics = override_interval_aesthetics,
 
   extra_params = c(
-    "side",
     "scale",
     "orientation",
     "normalize",
@@ -509,7 +505,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   ),
 
   default_params = list(
-    side = "topright",
     scale = 0.9,
     orientation = NA,
     normalize = "all",
@@ -522,8 +517,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     show_interval = TRUE,
     na.rm = FALSE
   ),
-
-  default_datatype = "slab",
 
   setup_params = function(self, data, params) {
     params = defaults(params, self$default_params)
@@ -546,7 +539,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # fill it in with 0 so that we can still draw stuff
     data[[y]] = data[[y]] %||% 0
 
-    data$datatype = data[["datatype"]] %||% self[["default_datatype"]]
+    data$datatype = data[["datatype"]] %||% self$default_aes[["datatype"]]
 
     # normalize functions according to how we want to scale them
     switch(params$normalize,
@@ -590,7 +583,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # justification relative to the bounds
     justification = get_justification(
       data[["justification"]] %||% params$justification,
-      params$side, params$orientation
+      data[["side"]] %||% params$side %||% self$default_aes$side,
+      params$orientation
     )
     data[[ymin]] = data[[y]] - justification * data[[height]]
     data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
@@ -607,7 +601,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   draw_pointintervals = draw_pointintervals,
 
   draw_panel = function(self, data, panel_params, coord,
-      side = self$default_params$side,
       scale = self$default_params$scale,
       orientation = self$default_params$orientation,
       normalize = self$default_params$normalize,
@@ -640,10 +633,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     data[[height]] = data[[ymax]] - data[[ymin]]
 
     # TODO: aes-side: temporary hack, remove
-    data$side = side
     data$scale = scale
 
-    data$justification = get_justification(data[["justification"]], data$side, orientation)
+    data$justification = get_justification(data[["justification"]], data[["side"]], orientation)
 
     slab_grobs = if (show_slab && !is.null(data$thickness)) {
       # thickness values were provided, draw the slabs

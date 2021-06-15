@@ -342,6 +342,7 @@ stat_halfeye = function(...) stat_sample_slabinterval(...)
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_eye = function(..., side = "both") stat_sample_slabinterval(..., side = side)
+# TODO: aes-side
 
 #' @export
 #' @rdname stat_sample_slabinterval
@@ -353,7 +354,6 @@ stat_ccdfinterval = function(
   ...,
 
   slab_type = "ccdf",
-  side = "topleft",
   normalize = "none",
 
   show.legend = c(size = FALSE),
@@ -371,7 +371,6 @@ stat_ccdfinterval = function(
 
     params = list(
       slab_type = slab_type,
-      side = side,
       normalize = normalize,
       ...
     )
@@ -379,12 +378,12 @@ stat_ccdfinterval = function(
 }
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
-    justification = stat(0.5)
+    justification = stat(0.5),
+    side = stat("topleft"),
   ), StatSampleSlabinterval$default_aes),
 
   default_params = defaults(list(
     slab_type = "ccdf",
-    side = "topleft",
     normalize = "none"
   ), StatSampleSlabinterval$default_params)
 )
@@ -392,9 +391,9 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_cdfinterval = function(...,
-  slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
+  slab_type = "cdf", normalize = "none"
 ) {
-  stat_ccdfinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  stat_ccdfinterval(..., slab_type = slab_type, normalize = normalize)
 }
 
 #' @export
