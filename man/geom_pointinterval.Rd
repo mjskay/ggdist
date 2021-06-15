@@ -48,12 +48,6 @@ layer, as a string.}
   \describe{
     \item{\code{scale}}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
 slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
-    \item{\code{justification}}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-\code{0.5}.}
     \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
 (the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
 panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
@@ -143,6 +137,12 @@ Specifically, \code{geom_pointinterval} acts as if its default aesthetics are
 
 These geoms support the following aesthetics:
 \itemize{
+\item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
+\code{0.5}.
 \item \code{x}
 \item \code{y}
 \item \code{datatype}

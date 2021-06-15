@@ -18,17 +18,13 @@ rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymi
 
   # must do this within groups so that `side` can vary by slab
   ddply_(s_data, c("group", y), function(d) {
-    if (!all(d$side == d$side[[1]])) {
-      stop(
-        "Slab `side` cannot vary within groups:\n",
-        "all rows within the same slab must have the same `side`."
-      )
-    }
-    if (!all(d$scale == d$scale[[1]])) {
-      stop(
-        "Slab `side` cannot vary within groups:\n",
-        "all rows within the same slab must have the same `scale`."
-      )
+    for (a in c("side", "justification", "scale")) {
+      if (!all(d[[a]] == d[[a]][[1]])) {
+        stop(
+          "Slab `", a, "` cannot vary within groups:\n",
+          "all rows within the same slab must have the same `", a, "`."
+        )
+      }
     }
 
     thickness_scale = d$scale * min_height
@@ -269,12 +265,6 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' `"horizontal"` (tidybayes had an `orientation` parameter before ggplot did, and I think the tidybayes naming
 #' scheme is more intuitive: `"x"` and `"y"` are not orientations and their mapping to orientations is, in my
 #' opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
-#' @param justification Justification of the interval relative to the slab, where `0` indicates bottom/left
-#' justification and `1` indicates top/right justification (depending on `orientation`). If `justification`
-#' is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is
-#' `"top"`/`"right"` `justification` is set to `0`, when `side` is `"bottom"`/`"left"`
-#' `justification` is set to `1`, and when `side` is `"both"` `justification` is set to
-#' `0.5`.
 #' @param normalize How to normalize heights of functions input to the `thickness` aesthetic. If `"all"`
 #' (the default), normalize so that the maximum height across all data is `1`; if `"panels"`, normalize within
 #' panels so that the maximum height in each panel is `1`; if `"xy"`, normalize within
@@ -345,7 +335,6 @@ geom_slabinterval = function(
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   scale = 0.9,
   orientation = NA,
-  justification = NULL,
   normalize = c("all", "panels", "xy", "groups", "none"),
   fill_type = c("segments", "gradient"),
   interval_size_domain = c(1, 6),
@@ -374,7 +363,6 @@ geom_slabinterval = function(
     side = side,
     scale = scale,
     orientation = orientation,
-    justification = justification,
     normalize = normalize,
     fill_type = fill_type,
     interval_size_domain = interval_size_domain,
@@ -472,7 +460,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     slab_fill = NULL,         # falls back to fill
     slab_alpha = NULL,        # falls back to alpha
     slab_linetype = NULL,     # falls back to linetype
-    fill_ramp = NULL
+    fill_ramp = NULL,
+
+    # scale and positioning aesthetics
+    justification = NULL
   ),
 
   # default aesthetics as they will actually be set (here or in the key)
@@ -506,7 +497,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     "side",
     "scale",
     "orientation",
-    "justification",
     "normalize",
     "fill_type",
     "interval_size_domain",
@@ -522,7 +512,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     side = "topright",
     scale = 0.9,
     orientation = NA,
-    justification = NULL,
     normalize = "all",
     fill_type = "segments",
     interval_size_domain = c(1, 6),
@@ -599,8 +588,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # determine bounding boxes based on justification: position
     # the min/max bounds around y such that y is at the correct
     # justification relative to the bounds
-    # TODO: aes-side: fix
-    justification = get_justification(params$justification, params$side, params$orientation)
+    justification = get_justification(
+      data[["justification"]] %||% params$justification,
+      params$side, params$orientation
+    )
     data[[ymin]] = data[[y]] - justification * data[[height]]
     data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
 
@@ -619,7 +610,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       side = self$default_params$side,
       scale = self$default_params$scale,
       orientation = self$default_params$orientation,
-      justification = self$default_params$justification,
       normalize = self$default_params$normalize,
       fill_type = self$default_params$fill_type,
       interval_size_domain = self$default_params$interval_size_domain,
@@ -652,10 +642,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # TODO: aes-side: temporary hack, remove
     data$side = side
     data$scale = scale
-    data$justification = justification
 
-    # TODO: aes-side: fix
-    data$justification = get_justification(data$justification, data$side, orientation)
+    data$justification = get_justification(data[["justification"]], data$side, orientation)
 
     slab_grobs = if (show_slab && !is.null(data$thickness)) {
       # thickness values were provided, draw the slabs

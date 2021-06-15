@@ -152,6 +152,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
+  # TODO: aes-side: propagate scale into maxheight here
   maxheight = max(s_data[[ymax]] - s_data[[ymin]])
   slab_grobs = list(dots_grob(
       s_data,
@@ -356,7 +357,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     side = self$default_params$side,
     scale = self$default_params$scale,
     orientation = self$default_params$orientation,
-    justification = self$default_params$justification,
     normalize = self$default_params$normalize,
     interval_size_domain = self$default_params$interval_size_domain,
     interval_size_range = self$default_params$interval_size_range,
@@ -377,7 +377,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       side = side,
       scale = scale,
       orientation = orientation,
-      justification = justification,
       normalize = normalize,
       interval_size_domain = interval_size_domain,
       interval_size_range = interval_size_range,

@@ -130,12 +130,6 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 \code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
-    \item{\code{justification}}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-\code{0.5}.}
     \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
 (the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
 panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
@@ -283,6 +277,12 @@ These stats support the following aesthetics:
 }
 In addition, in their default configuration (paired with \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
+\item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
+\code{0.5}.
 \item \code{x}
 \item \code{y}
 \item \code{slab_shape}

@@ -146,9 +146,17 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     )
   }
 
+  non_documented_aesthetics = setdiff(geom$aesthetics(), "justification")
+
   geom_aesthetics = c(
     "\\itemize{",
-      paste0("  \\item \\code{", geom$aesthetics(), "}"),
+      '  \\item \\code{justification}: Justification of the interval relative to the slab, where `0` indicates bottom/left',
+      '    justification and `1` indicates top/right justification (depending on `orientation`). If `justification`',
+      '    is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is',
+      '    `"top"`/`"right"` `justification` is set to `0`, when `side` is `"bottom"`/`"left"`',
+      '    `justification` is set to `1`, and when `side` is `"both"` `justification` is set to',
+      '    `0.5`.',
+      paste0("  \\item \\code{", non_documented_aesthetics, "}"),
     "}"
   )
 

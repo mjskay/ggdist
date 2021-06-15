@@ -345,18 +345,58 @@ stat_eye = function(..., side = "both") stat_sample_slabinterval(..., side = sid
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_ccdfinterval = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "topleft", normalize = "none"
+stat_ccdfinterval = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  slab_type = "ccdf",
+  justification = 0.5,
+  side = "topleft",
+  normalize = "none",
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
 ) {
-  stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatCcdfinterval,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      slab_type = slab_type,
+      justification = justification,
+      side = side,
+      normalize = normalize,
+      ...
+    )
+  )
 }
+StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
+  default_aes = defaults(aes(
+    justification = 0.5
+  ), StatSampleSlabinterval$default_aes),
+
+  default_params = defaults(list(
+    slab_type = "ccdf",
+    side = "topleft",
+    normalize = "none"
+  ), StatSampleSlabinterval$default_params)
+)
 
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_cdfinterval = function(...,
   slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
 ) {
-  stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  stat_ccdfinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
 }
 
 #' @export
@@ -393,13 +433,10 @@ stat_gradientinterval = function(
 }
 StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
+    justification = 0.5,
     thickness = 1,
     slab_alpha = stat(f)
-  ), StatSampleSlabinterval$default_aes),
-
-  default_params = defaults(list(
-    justification = 0.5
-  ), StatSampleSlabinterval$default_params)
+  ), StatSampleSlabinterval$default_aes)
 )
 
 #' @export
