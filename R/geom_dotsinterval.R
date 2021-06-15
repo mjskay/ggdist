@@ -36,7 +36,6 @@ makeContent.dots_grob = function(x) {
   max_height = grob_$max_height
   x = grob_$x_
   y = grob_$y_
-  bin_method = automatic_bin
   side = grob_$side
   orientation = grob_$orientation
 
@@ -63,6 +62,11 @@ makeContent.dots_grob = function(x) {
     user_max_bin_width = Inf
   }
 
+  # ratio between width of the bins (bin_width)
+  # and the vertical spacing of dots (y_spacing)
+  yratio = convertUnit(unit(dotsize * stackratio, "native"),
+    "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
+
   # create a specification for a heap of dots, which includes things like
   # what the bins are, what the dot widths are, etc.
   heap_spec = function(d, nbins = NULL, bin_width = NULL) {
@@ -75,24 +79,16 @@ makeContent.dots_grob = function(x) {
     } else {
       nbins = max(floor(xspread / bin_width), 1)
     }
-    binning = bin_method(d[[x]], bin_width)
+    binning = automatic_bin(d[[x]], bin_width)
     max_bin_count = max(tabulate(binning$bins))
 
-    point_size = convertUnit(unit(bin_width, "native"),
-      "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
-      dotsize
-    y_spacing = convertUnit(unit(point_size, "native"),
-      "native", axisFrom = "y", axisTo = y, typeFrom = "dimension", valueOnly = TRUE) *
-      stackratio
+    y_spacing = bin_width * yratio
 
     if (nbins == 1) {
       # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
       # let's back out a max bin size based on that...
       max_y_spacing = max_height / max_bin_count
-      max_point_size = convertUnit(unit(max_y_spacing / stackratio, "native"),
-        "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
-      max_bin_width = convertUnit(unit(max_point_size / dotsize, "native"), "native",
-        axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
+      max_bin_width = max_y_spacing / yratio
     } else {
       # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
       max_y_spacing = y_spacing
@@ -158,10 +154,7 @@ makeContent.dots_grob = function(x) {
         # conservatively shrink things down so they fit by backing out a bin
         # width that works with the tallest bin
         y_spacing = max_height / h$max_bin_count
-        point_size = convertUnit(unit(y_spacing / stackratio, "native"),
-          "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
-        convertUnit(unit(point_size / dotsize, "native"), "native",
-          axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
+        y_spacing / yratio
       } else {
         h$max_bin_width
       }
@@ -176,8 +169,14 @@ makeContent.dots_grob = function(x) {
     h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, bin_width)
     d$bins = h$binning$bins
     d$midpoint = h$binning$bin_midpoints[h$binning$bins]
+    point_size = convertUnit(unit(h$bin_width * dotsize, "native"),
+      "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
+    # the dot size in native units (point_size) doesn't translate directly into
+    # font size (point_fontsize); need a fudge factor based on how big the circle
+    # glyph is as a ratio of font size (point_size_ratio) plus need to account
+    # for stroke width)
     point_fontsize = max(
-      convertY(unit(h$point_size * point_size_ratio, "native"), "points", valueOnly = TRUE) -
+      convertHeight(unit(point_size * point_size_ratio, "native"), "points", valueOnly = TRUE) -
         max(d$size, 0, na.rm = TRUE) * .stroke/2,
       0.5
     )
