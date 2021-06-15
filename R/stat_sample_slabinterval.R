@@ -353,7 +353,6 @@ stat_ccdfinterval = function(
   ...,
 
   slab_type = "ccdf",
-  justification = 0.5,
   side = "topleft",
   normalize = "none",
 
@@ -372,7 +371,6 @@ stat_ccdfinterval = function(
 
     params = list(
       slab_type = slab_type,
-      justification = justification,
       side = side,
       normalize = normalize,
       ...
@@ -381,7 +379,7 @@ stat_ccdfinterval = function(
 }
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
-    justification = 0.5
+    justification = stat(0.5)
   ), StatSampleSlabinterval$default_aes),
 
   default_params = defaults(list(
@@ -408,9 +406,6 @@ stat_gradientinterval = function(
   position = "identity",
   ...,
 
-  justification = 0.5,
-  thickness = 1,
-
   show.legend = c(size = FALSE, slab_alpha = FALSE),
   inherit.aes = TRUE
 ) {
@@ -425,16 +420,14 @@ stat_gradientinterval = function(
     inherit.aes = inherit.aes,
 
     params = list(
-      justification = justification,
-      thickness = thickness,
       ...
     )
   )
 }
 StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
-    justification = 0.5,
-    thickness = 1,
+    justification = stat(0.5),
+    thickness = stat(1),
     slab_alpha = stat(f)
   ), StatSampleSlabinterval$default_aes)
 )
