@@ -115,6 +115,15 @@ iwalk_ = function(vec, fun, ...) {
   invisible(vec)
 }
 
+fct_rev_ <- function(x) {
+  if (is.character(x)) {
+    x <- factor(x)
+  } else if (!is.factor(x)) {
+    stop("`f` must be a factor (or character vector).",
+         call. = FALSE)
+  }
+  factor(x, levels = rev(levels(x)))
+}
 
 # sequences ---------------------------------------------------------------
 

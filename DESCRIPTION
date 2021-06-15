@@ -28,7 +28,6 @@ Imports:
     rlang (>= 0.3.0),
     scales,
     grid,
-    forcats,
     HDInterval,
     tibble,
     vctrs,
@@ -46,6 +45,7 @@ Suggests:
     rmarkdown,
     png,
     fda,
+    forcats,
     beeswarm (>= 0.4.0),
     pkgdown
 License: GPL (>= 3)

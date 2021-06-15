@@ -60,11 +60,10 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'   do(tibble(y = rnorm(100, .$x))) %>%
 #'   median_qi(.width = c(.5, .8, .95)) %>%
 #'   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
-#'   # automatically uses aes(fill = fct_rev(ordered(.width)))
+#'   # automatically uses aes(fill = forcats::fct_rev(ordered(.width)))
 #'   geom_lineribbon() +
 #'   scale_fill_brewer()
 #'
-#' @importFrom forcats fct_rev
 #' @import ggplot2
 #' @export
 geom_lineribbon = function(
@@ -99,7 +98,7 @@ geom_lineribbon = function(
   )
 
   add_default_computed_aesthetics(l,
-    aes(fill = forcats::fct_rev(ordered(.width)))
+    aes(fill = fct_rev_(ordered(.width)))
   )
 }
 
