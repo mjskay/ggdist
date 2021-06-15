@@ -122,7 +122,7 @@ test_that("stat_dist_dots works on distributional objects", {
 
 })
 
-test_that("geom_dots bin_width can be specified in unit()s", {
+test_that("geom_dots binwidth can be specified in unit()s", {
   skip_if_no_vdiffr()
 
 

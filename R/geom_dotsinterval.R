@@ -42,57 +42,57 @@ makeContent.dots_grob = function(x) {
   point_size_ratio = 1.43  # manual fudge factor for point size in ggplot
   stackratio = 1.07 * grob_$stackratio
   dotsize = grob_$dotsize
-  bin_width = grob_$binwidth
+  binwidth = grob_$binwidth
   layout = grob_$layout
 
   # if bin width was specified as a grid::unit, convert it
-  if (is.unit(bin_width)) {
-    bin_width = convertUnit(bin_width, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
+  if (is.unit(binwidth)) {
+    binwidth = convertUnit(binwidth, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
   }
 
   # if bin width has length 2, it specifies a desired bin width range
-  if (length(bin_width) == 2) {
-    user_min_bin_width = min(bin_width)
-    user_max_bin_width = max(bin_width)
+  if (length(binwidth) == 2) {
+    user_min_binwidth = min(binwidth)
+    user_max_binwidth = max(binwidth)
     # set to NA so that a prospective bin width is found dynamically first
     # before user-specified constraints are applied
-    bin_width = NA
+    binwidth = NA
   } else {
-    user_min_bin_width = 0
-    user_max_bin_width = Inf
+    user_min_binwidth = 0
+    user_max_binwidth = Inf
   }
 
-  # ratio between width of the bins (bin_width)
+  # ratio between width of the bins (binwidth)
   # and the vertical spacing of dots (y_spacing)
   yratio = convertUnit(unit(dotsize * stackratio, "native"),
     "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
 
   # create a specification for a heap of dots, which includes things like
   # what the bins are, what the dot widths are, etc.
-  heap_spec = function(d, nbins = NULL, bin_width = NULL) {
+  heap_spec = function(d, nbins = NULL, binwidth = NULL) {
     xrange = range(d[[x]])
     xspread = xrange[[2]] - xrange[[1]]
     if (xspread == 0) xspread = 1
-    if (is.null(bin_width)) {
+    if (is.null(binwidth)) {
       nbins = floor(nbins)
-      bin_width = xspread / nbins
+      binwidth = xspread / nbins
     } else {
-      nbins = max(floor(xspread / bin_width), 1)
+      nbins = max(floor(xspread / binwidth), 1)
     }
-    binning = automatic_bin(d[[x]], bin_width)
+    binning = automatic_bin(d[[x]], binwidth)
     max_bin_count = max(tabulate(binning$bins))
 
-    y_spacing = bin_width * yratio
+    y_spacing = binwidth * yratio
 
     if (nbins == 1) {
       # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
       # let's back out a max bin size based on that...
       max_y_spacing = max_height / max_bin_count
-      max_bin_width = max_y_spacing / yratio
+      max_binwidth = max_y_spacing / yratio
     } else {
       # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
       max_y_spacing = y_spacing
-      max_bin_width = bin_width
+      max_binwidth = binwidth
     }
 
     as.list(environment())
@@ -101,9 +101,9 @@ makeContent.dots_grob = function(x) {
     isTRUE(h$max_bin_count * h$max_y_spacing <= max_height)
   }
 
-  if (is.na(bin_width)) {
+  if (is.na(binwidth)) {
     # find the best bin widths across all the heaps we are going to draw
-    max_bin_widths = map_dbl(datas, function(d) {
+    max_binwidths = map_dbl(datas, function(d) {
       # figure out a reasonable minimum number of bins based on histogram binning
       if (nrow(d) <= 1) {
         min_h = heap_spec(d, nbins = 1)
@@ -113,7 +113,7 @@ makeContent.dots_grob = function(x) {
 
       if (!is_valid_heap_spec(min_h)) {
         # figure out a maximum number of bins based on data resolution
-        max_h = heap_spec(d, bin_width = resolution(d[[x]]))
+        max_h = heap_spec(d, binwidth = resolution(d[[x]]))
 
         if (max_h$nbins <= min_h$nbins) {
           # even at data resolution there aren't enough bins, not much we can do...
@@ -156,20 +156,20 @@ makeContent.dots_grob = function(x) {
         y_spacing = max_height / h$max_bin_count
         y_spacing / yratio
       } else {
-        h$max_bin_width
+        h$max_binwidth
       }
     })
 
-    bin_width = max(min(max_bin_widths, user_max_bin_width), user_min_bin_width)
+    binwidth = max(min(max_binwidths, user_max_binwidth), user_min_binwidth)
   }
 
   # now, draw all the heaps using the same bin width
   children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
-    h = heap_spec(d, bin_width = bin_width)
-    h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, bin_width)
+    h = heap_spec(d, binwidth = binwidth)
+    h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, binwidth)
     d$bins = h$binning$bins
     d$midpoint = h$binning$bin_midpoints[h$binning$bins]
-    point_size = convertUnit(unit(h$bin_width * dotsize, "native"),
+    point_size = convertUnit(unit(h$binwidth * dotsize, "native"),
       "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
     # the dot size in native units (point_size) doesn't translate directly into
     # font size (point_fontsize); need a fudge factor based on how big the circle
@@ -206,7 +206,7 @@ makeContent.dots_grob = function(x) {
         # so we skip this step in that case)
         if (side != "both") {
           d = ddply_(d, "rows", function(row_df) {
-            row_df[[x]] = nudge_bins(row_df[[x]], bin_width)
+            row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
             row_df
           })
         }
@@ -217,7 +217,7 @@ makeContent.dots_grob = function(x) {
         }
 
         swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
-          xsize = h$bin_width, ysize = h$y_spacing,
+          xsize = h$binwidth, ysize = h$y_spacing,
           log = "", cex = 1,
           side = switch_side(side, orientation, topright = 1, bottomleft = -1, both = 0),
           # priority = "density",
