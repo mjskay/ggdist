@@ -9,7 +9,7 @@
 
 #' @importFrom ggplot2 .stroke .pt
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
-dots_grob = function(data, max_height, x, y,
+dots_grob = function(data, maxheight, x, y,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1, stackratio = 1, binwidth = NA, layout = "bin",
   side = "topright", orientation = "vertical"
@@ -20,7 +20,7 @@ dots_grob = function(data, max_height, x, y,
     group_split()
 
   gTree(
-    datas = datas, max_height = max_height, x_ = x, y_ = y,
+    datas = datas, maxheight = maxheight, x_ = x, y_ = y,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
     side = side, orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
@@ -28,12 +28,11 @@ dots_grob = function(data, max_height, x, y,
 }
 
 
-#' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
 #' @export
 makeContent.dots_grob = function(x) {
   grob_ = x
   datas = grob_$datas
-  max_height = grob_$max_height
+  maxheight = grob_$maxheight
   x = grob_$x_
   y = grob_$y_
   side = grob_$side
@@ -44,6 +43,11 @@ makeContent.dots_grob = function(x) {
   dotsize = grob_$dotsize
   binwidth = grob_$binwidth
   layout = grob_$layout
+
+  # ratio between width of the bins (binwidth)
+  # and the vertical spacing of dots (y_spacing)
+  heightratio = convertUnit(unit(dotsize * stackratio, "native"),
+    "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
 
   # if bin width was specified as a grid::unit, convert it
   if (is.unit(binwidth)) {
@@ -62,80 +66,16 @@ makeContent.dots_grob = function(x) {
     user_max_binwidth = Inf
   }
 
-  # ratio between width of the bins (binwidth)
-  # and the vertical spacing of dots (y_spacing)
-  yratio = convertUnit(unit(dotsize * stackratio, "native"),
-    "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
-
-
   if (is.na(binwidth)) {
     # find the best bin widths across all the heaps we are going to draw
-    max_binwidths = vapply_dbl(datas, function(d) {
-      d_x = d[[x]]
+    binwidths = vapply_dbl(datas, function(d) find_dotplot_binwidth(d[[x]], maxheight, heightratio))
 
-      # figure out a reasonable minimum number of bins based on histogram binning
-      min_nbins = if (nrow(d) <= 1) {
-        1
-      } else{
-        min(nclass.scott(d_x), nclass.FD(d_x), nclass.Sturges(d_x))
-      }
-      min_h = dot_heap(d_x, nbins = min_nbins, max_height = max_height, yratio = yratio)
-
-      if (!min_h$is_valid) {
-        # figure out a maximum number of bins based on data resolution
-        max_h = dot_heap(d_x, binwidth = resolution(d_x), max_height = max_height, yratio = yratio)
-
-        if (max_h$nbins <= min_h$nbins) {
-          # even at data resolution there aren't enough bins, not much we can do...
-          h = min_h
-        } else if (max_h$nbins == min_h$nbins + 1) {
-          # nowhere to search, use maximum number of bins
-          h = max_h
-        } else {
-          # use binary search to find a reasonable number of bins
-          repeat {
-            h = dot_heap(d_x, (min_h$nbins + max_h$nbins) / 2, max_height = max_height, yratio = yratio)
-            if (h$is_valid) {
-              # heap spec is valid, search downwards
-              if (h$nbins - 1 <= min_h$nbins) {
-                # found it, we're done
-                break
-              }
-              max_h = h
-            } else {
-              # heap spec is not valid, search upwards
-              if (h$nbins + 1 >= max_h$nbins) {
-                # found it, we're done
-                h = max_h
-                break
-              }
-              min_h = h
-            }
-          }
-        }
-      } else {
-        h = min_h
-      }
-
-      # check if the selected heap spec is valid....
-      if (!h$is_valid) {
-        # ... if it isn't, this means we've ended up with some bin that's too
-        # tall, probably because we have discrete data --- we'll just
-        # conservatively shrink things down so they fit by backing out a bin
-        # width that works with the tallest bin
-        y_spacing = max_height / h$max_bin_count
-        y_spacing / yratio
-      } else {
-        h$max_binwidth
-      }
-    })
-
-    binwidth = max(min(max_binwidths, user_max_binwidth), user_min_binwidth)
+    binwidth = max(min(binwidths, user_max_binwidth), user_min_binwidth)
   }
 
   # now, draw all the heaps using the same bin width
   children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
-    h = dot_heap(d[[x]], binwidth = binwidth, max_height = max_height, yratio = yratio)
+    h = dot_heap(d[[x]], binwidth = binwidth, maxheight = maxheight, heightratio = heightratio)
     h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, binwidth)
     d$bins = h$binning$bins
     d$midpoint = h$binning$bin_midpoints[h$binning$bins]
@@ -274,8 +214,11 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
-  max_height = max(s_data[[ymax]] - s_data[[ymin]])
-  slab_grobs = list(dots_grob(s_data, max_height, x, y,
+  maxheight = max(s_data[[ymax]] - s_data[[ymin]])
+  slab_grobs = list(dots_grob(
+      s_data,
+      maxheight,
+      x, y,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,
       binwidth = child_params$binwidth,

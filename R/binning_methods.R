@@ -6,6 +6,93 @@
 
 
 
+# dynamic binwidth selection ----------------------------------------------
+
+#' Dynamically select a good bin width for a dotplot
+#'
+#' Searches for a nice-looking bin width to use to draw a dotplot such that
+#' the height of the dotplot fits within a given space (`maxheight`).
+#'
+#' @param x numeric vector of values
+#' @param maxheight maximum height of the dotplot
+#' @param heightratio ratio of bin width to dot height
+#'
+#' @details
+#' This dynamic bin selection algorithm uses a binary search over the number of
+#' bins to find a bin width such that if the input data (`x`) is binned
+#' using a Wilkinson-style dotplot algorithm the height of the tallest bin
+#' will be less than `maxheight`.
+#'
+#' This algorithm is used by `geom_dotsinterval()` (and its variants) to automatically
+#' select bin widths. Unless you are manually implementing you own dotplot [`grob`]
+#' or `geom`, you probably do not need to use this function directly
+#'
+#' @return A suitable bin width such that a dotplot created with this bin width
+#' and `heightratio` should have its tallest bin be less than or equal to `maxheight`.
+#'
+#' @seealso `geom_dotsinterval()`
+#'
+#' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
+#' @export
+find_dotplot_binwidth = function(x, maxheight, heightratio = 1) {
+  # figure out a reasonable minimum number of bins based on histogram binning
+  min_nbins = if (length(x) <= 1) {
+    1
+  } else{
+    min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
+  }
+  min_h = dot_heap(x, nbins = min_nbins, maxheight = maxheight, heightratio = heightratio)
+
+  if (!min_h$is_valid) {
+    # figure out a maximum number of bins based on data resolution
+    max_h = dot_heap(x, binwidth = resolution(x), maxheight = maxheight, heightratio = heightratio)
+
+    if (max_h$nbins <= min_h$nbins) {
+      # even at data resolution there aren't enough bins, not much we can do...
+      h = min_h
+    } else if (max_h$nbins == min_h$nbins + 1) {
+      # nowhere to search, use maximum number of bins
+      h = max_h
+    } else {
+      # use binary search to find a reasonable number of bins
+      repeat {
+        h = dot_heap(x, (min_h$nbins + max_h$nbins) / 2, maxheight = maxheight, heightratio = heightratio)
+        if (h$is_valid) {
+          # heap spec is valid, search downwards
+          if (h$nbins - 1 <= min_h$nbins) {
+            # found it, we're done
+            break
+          }
+          max_h = h
+        } else {
+          # heap spec is not valid, search upwards
+          if (h$nbins + 1 >= max_h$nbins) {
+            # found it, we're done
+            h = max_h
+            break
+          }
+          min_h = h
+        }
+      }
+    }
+  } else {
+    h = min_h
+  }
+
+  # check if the selected heap spec is valid....
+  if (!h$is_valid) {
+    # ... if it isn't, this means we've ended up with some bin that's too
+    # tall, probably because we have discrete data --- we'll just
+    # conservatively shrink things down so they fit by backing out a bin
+    # width that works with the tallest bin
+    y_spacing = maxheight / h$max_bin_count
+    y_spacing / heightratio
+  } else {
+    h$max_binwidth
+  }
+}
+
+
 # dot "heaps": collections of bins of dots -----------------------------------
 
 #' create a dot "heap", which includes a binning of dots and properties of that
@@ -14,11 +101,11 @@
 #' @param x a vector values
 #' @param nbins,binwidth must provide either the desired number of bins (`nbins`)
 #' or the desired bin width (`binwidth`); given one the other will be calculated.
-#' @param max_height maximum height of a single bin
-#' @param yratio ratio between the bin width and the y spacing
+#' @param maxheight maximum height of a single bin
+#' @param heightratio ratio between the bin width and the y spacing
 #' @return  a list of properties of this dot "heap"
 #' @noRd
-dot_heap = function(x, nbins = NULL, binwidth = NULL, max_height = NULL, yratio = NULL) {
+dot_heap = function(x, nbins = NULL, binwidth = NULL, maxheight = NULL, heightratio = NULL) {
   xrange = range(x)
   xspread = xrange[[2]] - xrange[[1]]
   if (xspread == 0) xspread = 1
@@ -31,13 +118,13 @@ dot_heap = function(x, nbins = NULL, binwidth = NULL, max_height = NULL, yratio 
   binning = automatic_bin(x, binwidth)
   max_bin_count = max(tabulate(binning$bins))
 
-  y_spacing = binwidth * yratio
+  y_spacing = binwidth * heightratio
 
   if (nbins == 1) {
     # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
     # let's back out a max bin size based on that...
-    max_y_spacing = max_height / max_bin_count
-    max_binwidth = max_y_spacing / yratio
+    max_y_spacing = maxheight / max_bin_count
+    max_binwidth = max_y_spacing / heightratio
   } else {
     # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
     max_y_spacing = y_spacing
@@ -45,7 +132,7 @@ dot_heap = function(x, nbins = NULL, binwidth = NULL, max_height = NULL, yratio 
   }
 
   # is this a "valid" heap of dots; i.e. is its tallest bin less than max height?
-  is_valid = isTRUE(max_bin_count * max_y_spacing <= max_height)
+  is_valid = isTRUE(max_bin_count * max_y_spacing <= maxheight)
 
   as.list(environment())
 }
