@@ -262,8 +262,6 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #' will not be wider than these (but may be narrower).Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
-#' @param thickness Override for the `thickness` aesthetic in [geom_slabinterval()]: the thickness
-#' of the slab at each x / y value of the slab (depending on `orientation`).
 #' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats

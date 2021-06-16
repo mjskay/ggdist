@@ -181,9 +181,6 @@ groups so that the maximum height in each group is \code{1}; if \code{"none"}, v
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
 
 \item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
-
-\item{thickness}{Override for the \code{thickness} aesthetic in \code{\link[=geom_slabinterval]{geom_slabinterval()}}: the thickness
-of the slab at each x / y value of the slab (depending on \code{orientation}).}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can
@@ -242,26 +239,16 @@ of those functions.
 
 These stats support the following aesthetics:
 \itemize{
-\item \code{dist}
-\item \code{args}
-\item \code{arg1}
-\item \code{arg2}
-\item \code{arg3}
-\item \code{arg4}
-\item \code{arg5}
-\item \code{arg6}
-\item \code{arg7}
-\item \code{arg8}
-\item \code{arg9}
-\item \code{x}
-\item \code{y}
-\item \code{datatype}
-\item \code{thickness}
-\item \code{size}
-\item \code{group}
+\item \code{x}: x position
+\item \code{y}: y position
+\item \code{dist}: A name of a distribution (e.g. \code{"norm"}) or a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}).
+See \strong{Details}.
+\item \code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_slabinterval]{geom_slabinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
+\item \code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
+\code{y} value (if \code{orientation = "vertical"}) of the slab.
 \item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
@@ -275,8 +262,7 @@ slabs that use the maximum range will just touch each other. Default is \code{0.
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
 is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
 \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-\code{0.5}.
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
 \item \code{x}
 \item \code{y}
 \item \code{datatype}
@@ -308,7 +294,6 @@ is \code{NULL} (the default), then it is set automatically based on the value of
 \item \code{xmax}
 \item \code{width}
 \item \code{height}
-\item \code{thickness}
 \item \code{group}
 }
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.

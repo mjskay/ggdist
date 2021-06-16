@@ -186,6 +186,8 @@ Typically, the \verb{geom_*} versions are meant for use with already-summarized 
 
 These geoms support the following aesthetics:
 \itemize{
+\item \code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
+\code{y} value (if \code{orientation = "vertical"}) of the slab.
 \item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
@@ -199,8 +201,7 @@ slabs that use the maximum range will just touch each other. Default is \code{0.
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
 is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
 \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-\code{0.5}.
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
 \item \code{x}
 \item \code{y}
 \item \code{datatype}
@@ -232,7 +233,6 @@ is \code{NULL} (the default), then it is set automatically based on the value of
 \item \code{xmax}
 \item \code{width}
 \item \code{height}
-\item \code{thickness}
 \item \code{group}
 }
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
