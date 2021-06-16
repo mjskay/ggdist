@@ -125,7 +125,7 @@ when used with functions like \code{\link[=median_qi]{median_qi()}}, \code{\link
 \code{\link[=mode_hdi]{mode_hdi()}}, etc.
 
 Specifically, \code{geom_interval} acts as if its default aesthetics are
-\code{aes(color = fct_rev(ordered(.width)))}.
+\code{aes(color = forcats::fct_rev(ordered(.width)))}.
 }
 \section{Aesthetics}{
 

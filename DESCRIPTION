@@ -24,7 +24,6 @@ Imports:
     dplyr (>= 1.0.0),
     tidyr (>= 1.0.0),
     ggplot2 (>= 3.3.0),
-    purrr (>= 0.2.3),
     rlang (>= 0.3.0),
     scales,
     grid,
@@ -46,6 +45,7 @@ Suggests:
     png,
     fda,
     forcats,
+    purrr (>= 0.2.3),
     beeswarm (>= 0.4.0),
     pkgdown
 License: GPL (>= 3)

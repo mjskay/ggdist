@@ -98,7 +98,7 @@ pmap_dfr_ = function(data, fun) {
 
 #' @importFrom dplyr bind_rows group_split across
 ddply_ = function(data, groups, fun, ...) {
-  bind_rows(lapply(group_split(data, across(groups)), fun, ...))
+  map_dfr_(group_split(data, across(groups)), fun, ...)
 }
 
 #' @importFrom dplyr group_split across

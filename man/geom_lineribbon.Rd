@@ -108,7 +108,7 @@ tibble(x = 1:10) \%>\%
   do(tibble(y = rnorm(100, .$x))) \%>\%
   median_qi(.width = c(.5, .8, .95)) \%>\%
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
-  # automatically uses aes(fill = fct_rev(ordered(.width)))
+  # automatically uses aes(fill = forcats::fct_rev(ordered(.width)))
   geom_lineribbon() +
   scale_fill_brewer()
 

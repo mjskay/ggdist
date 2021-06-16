@@ -182,7 +182,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
 
     .curve_interval(data, col_name, ".lower", ".upper", .width, .interval, .conditional_groups, na.rm = na.rm)
   } else {
-    iwalk(col_exprs, function(col_expr, col_name) {
+    iwalk_(col_exprs, function(col_expr, col_name) {
       data[[col_name]] <<- eval_tidy(col_expr, data)
     })
 
