@@ -198,7 +198,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
       intervals = lapply(draws, .interval, .width = p, na.rm = na.rm)
-      # can't use vapply_dbl here because sometimes (e.g. with hdi) these can
+      # can't use map_dbl_ here because sometimes (e.g. with hdi) these can
       # return multiple intervals, hence lapply() here and unnest() below
       data[[".lower"]] = lapply(intervals, function(x) x[, 1])
       data[[".upper"]] = lapply(intervals, function(x) x[, 2])
