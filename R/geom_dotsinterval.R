@@ -351,7 +351,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   ), GeomSlabinterval$default_params),
 
   draw_panel = function(self, data, panel_params, coord,
-    scale = self$default_params$scale,
     orientation = self$default_params$orientation,
     normalize = self$default_params$normalize,
     interval_size_domain = self$default_params$interval_size_domain,
@@ -370,7 +369,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     child_params = list()
   ) {
     ggproto_parent(GeomSlabinterval, self)$draw_panel(data, panel_params, coord,
-      scale = scale,
       orientation = orientation,
       normalize = normalize,
       interval_size_domain = interval_size_domain,

@@ -11,11 +11,7 @@ geom_slabinterval(
   stat = "identity",
   position = "identity",
   ...,
-  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
-    "bottomright", "both"),
-  scale = 0.9,
   orientation = NA,
-  justification = NULL,
   normalize = c("all", "panels", "xy", "groups", "none"),
   fill_type = c("segments", "gradient"),
   interval_size_domain = c(1, 6),
@@ -68,17 +64,6 @@ layer, as a string.}
 a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
-
-\item{side}{Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
-causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
-sides (as in a violin plot).}
-
-\item{scale}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
-slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
@@ -201,6 +186,15 @@ Typically, the \verb{geom_*} versions are meant for use with already-summarized 
 
 These geoms support the following aesthetics:
 \itemize{
+\item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).
+\item \code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
 \item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
 is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is

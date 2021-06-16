@@ -251,8 +251,6 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to [layer()].
-#' @param scale What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
-#' slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.
 #' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
 #' vertically (`"vertical"`). The default, `NA`, automatically detects the orientation based on how the
 #' aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
@@ -331,7 +329,6 @@ geom_slabinterval = function(
   # 4. The argument definitions of GeomSlabinterval$draw_panel
   # This is needed to support how defaults work with child geoms,
   # amongst other things
-  scale = 0.9,
   orientation = NA,
   normalize = c("all", "panels", "xy", "groups", "none"),
   fill_type = c("segments", "gradient"),
@@ -357,7 +354,6 @@ geom_slabinterval = function(
     geom = GeomSlabinterval,
     ...,
 
-    scale = scale,
     orientation = orientation,
     normalize = normalize,
     fill_type = fill_type,
@@ -460,6 +456,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     # scale and positioning aesthetics
     side = "topright",
+    scale = 0.9,
     justification = NULL
   ),
 
@@ -491,7 +488,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   override_interval_aesthetics = override_interval_aesthetics,
 
   extra_params = c(
-    "scale",
     "orientation",
     "normalize",
     "fill_type",
@@ -505,7 +501,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   ),
 
   default_params = list(
-    scale = 0.9,
     orientation = NA,
     normalize = "all",
     fill_type = "segments",
@@ -601,7 +596,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   draw_pointintervals = draw_pointintervals,
 
   draw_panel = function(self, data, panel_params, coord,
-      scale = self$default_params$scale,
       orientation = self$default_params$orientation,
       normalize = self$default_params$normalize,
       fill_type = self$default_params$fill_type,
@@ -631,9 +625,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     # recover height: position_dodge adjusts ymax/ymin but not height
     data[[height]] = data[[ymax]] - data[[ymin]]
-
-    # TODO: aes-side: temporary hack, remove
-    data$scale = scale
 
     data$justification = get_justification(data[["justification"]], data[["side"]], orientation)
 

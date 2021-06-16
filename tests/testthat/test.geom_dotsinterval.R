@@ -280,7 +280,7 @@ test_that("side and justification can vary", {
     mtcars %>%
       ggplot(aes(x = mpg, y = cyl,
         side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom"),
-        justification = case_when(cyl == 4 ~ 0, cyl == 6 ~ 0.5, cyl == 8 ~ 1),
+        justification = case_when(cyl == 4 ~ 0, cyl == 6 ~ 0.5, cyl == 8 ~ 1)
         )) +
       stat_dotsinterval(orientation = "horizontal")
   )

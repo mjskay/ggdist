@@ -131,6 +131,15 @@ These stats support the following aesthetics:
 }
 In addition, in their default configuration (paired with \code{\link[=geom_pointinterval]{geom_pointinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
+\item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).
+\item \code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
 \item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
 justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
 is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
