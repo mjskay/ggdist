@@ -199,7 +199,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     # smallest mean width, so that the widest intervals are on the bottom.
     ribbon_grobs = ribbon_grobs[order(-map_dbl_(ribbon_grobs, `[[`, "width"))] %>%
       lapply(function(x) x[["grobs"]]) %>%
-      Reduce(c, .)
+      unlist(recursive = FALSE)
 
     # now draw all the lines
     line_grobs = data %>%
@@ -211,7 +211,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
         }
       })
 
-    line_grobs = Reduce(c, line_grobs)
+    line_grobs = unlist(line_grobs, recursive = FALSE)
 
     grobs = c(ribbon_grobs, line_grobs)
 
