@@ -9,10 +9,10 @@
 
 #' @importFrom ggplot2 .stroke .pt
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
-dots_grob = function(data, maxheight, x, y,
+dots_grob = function(data, x, y,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1, stackratio = 1, binwidth = NA, layout = "bin",
-  side = "topright", orientation = "vertical"
+  orientation = "vertical"
 ) {
   datas = data %>%
     arrange_at(x) %>%
@@ -20,9 +20,9 @@ dots_grob = function(data, maxheight, x, y,
     group_split()
 
   gTree(
-    datas = datas, maxheight = maxheight, x_ = x, y_ = y,
+    datas = datas,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    side = side, orientation = orientation,
+    orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
 }
@@ -32,14 +32,12 @@ dots_grob = function(data, maxheight, x, y,
 makeContent.dots_grob = function(x) {
   grob_ = x
   datas = grob_$datas
-  maxheight = grob_$maxheight
-  x = grob_$x_
-  y = grob_$y_
-  side = grob_$side
   orientation = grob_$orientation
   dotsize = grob_$dotsize
   binwidth = grob_$binwidth
   layout = grob_$layout
+
+  define_orientation_variables(orientation)
 
   font_size_ratio = 1.43  # manual fudge factor for point size in ggplot
   stackratio = 1.07 * grob_$stackratio
@@ -70,7 +68,10 @@ makeContent.dots_grob = function(x) {
 
   if (isTRUE(is.na(binwidth))) {
     # find the best bin widths across all the dotplots we are going to draw
-    binwidths = vapply_dbl(datas, function(d) find_dotplot_binwidth(d[[x]], maxheight, heightratio))
+    binwidths = map_dbl_(datas, function(d) {
+      maxheight = max(d[[ymax]] - d[[ymin]])
+      find_dotplot_binwidth(d[[x]], maxheight, heightratio)
+    })
 
     binwidth = max(min(binwidths, user_max_binwidth), user_min_binwidth)
   }
@@ -81,7 +82,7 @@ makeContent.dots_grob = function(x) {
     dot_positions = bin_dots(
       d$x, d$y,
       binwidth, heightratio, layout,
-      side, orientation
+      d$side[[1]], orientation
     )
 
     # determine size of the dots as a font size
@@ -116,19 +117,21 @@ makeContent.dots_grob = function(x) {
 # panel drawing function -------------------------------------------------------
 
 draw_slabs_dots = function(self, s_data, panel_params, coord,
-  side, scale, orientation, justification, normalize, fill_type, na.rm,
+  orientation, normalize, fill_type, na.rm,
   child_params
 ) {
   define_orientation_variables(orientation)
 
   # remove missing values
-  s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y), name = "geom_dotsinterval", finite = TRUE)
+  s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "justification", "scale"), name = "geom_dotsinterval", finite = TRUE)
+  # side is a character vector, thus need finite = FALSE for it
+  s_data = ggplot2::remove_missing(s_data, na.rm, "side", name = "geom_dotsinterval", finite = FALSE)
   if (nrow(s_data) == 0) return(gList())
 
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax
+    s_data, orientation, normalize, height, y, ymin, ymax
   ))
 
   if (!coord$is_linear()) {
@@ -152,16 +155,13 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
-  maxheight = max(s_data[[ymax]] - s_data[[ymin]])
   slab_grobs = list(dots_grob(
       s_data,
-      maxheight,
       x, y,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,
       binwidth = child_params$binwidth,
       layout = child_params$layout,
-      side = side,
       orientation = orientation
     ))
 }
@@ -332,7 +332,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
   override_slab_aesthetics = function(self, s_data) {
     s_data = ggproto_parent(GeomSlabinterval, self)$override_slab_aesthetics(s_data)
-    s_data$shape = s_data$slab_shape
+    s_data$shape = s_data[["slab_shape"]]
     s_data
   },
 
@@ -352,10 +352,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   ), GeomSlabinterval$default_params),
 
   draw_panel = function(self, data, panel_params, coord,
-    side = self$default_params$side,
-    scale = self$default_params$scale,
     orientation = self$default_params$orientation,
-    justification = self$default_params$justification,
     normalize = self$default_params$normalize,
     interval_size_domain = self$default_params$interval_size_domain,
     interval_size_range = self$default_params$interval_size_range,
@@ -373,10 +370,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     child_params = list()
   ) {
     ggproto_parent(GeomSlabinterval, self)$draw_panel(data, panel_params, coord,
-      side = side,
-      scale = scale,
       orientation = orientation,
-      justification = justification,
       normalize = normalize,
       interval_size_domain = interval_size_domain,
       interval_size_range = interval_size_range,
@@ -481,13 +475,13 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
 
   override_slab_aesthetics = function(self, s_data) {
     # we define these differently from geom_dotsinterval to make this easier to use on its own
-    s_data$colour = s_data$slab_colour %||% s_data$colour
-    s_data$colour = apply_colour_ramp(s_data$colour, s_data$colour_ramp)
-    s_data$fill = s_data$slab_fill %||% s_data$fill
-    s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
-    s_data$alpha = s_data$slab_alpha %||% s_data$alpha
-    s_data$size = s_data$slab_size %||% s_data$size
-    s_data$shape = s_data$slab_shape %||% s_data$shape
+    s_data$colour = s_data[["slab_colour"]] %||% s_data[["colour"]]
+    s_data$colour = apply_colour_ramp(s_data[["colour"]], s_data[["colour_ramp"]])
+    s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
+    s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
+    s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
+    s_data$size = s_data[["slab_size"]] %||% s_data[["size"]]
+    s_data$shape = s_data[["slab_shape"]] %||% s_data[["shape"]]
     s_data
   },
 

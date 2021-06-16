@@ -252,15 +252,15 @@ halfspace_depth = function(x) {
 
     # median draw = the one with the maximum depth
     median_draw = which.max(draw_depth)
-    median_y = vapply_dbl(d[[col_name]], `[[`, median_draw)
+    median_y = map_dbl_(d[[col_name]], `[[`, median_draw)
 
     map_dfr_(.width, function(w) {
       depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
       selected_draws = draw_depth >= depth_cutoff
 
       selected_y = lapply(d[[col_name]], `[`, selected_draws)
-      d[[lower]] = vapply_dbl(selected_y, min)
-      d[[upper]] = vapply_dbl(selected_y, max)
+      d[[lower]] = map_dbl_(selected_y, min)
+      d[[upper]] = map_dbl_(selected_y, max)
       d[[col_name]] = median_y
       d[[".width"]] = w
       d

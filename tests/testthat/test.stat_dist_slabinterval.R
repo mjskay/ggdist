@@ -279,3 +279,19 @@ test_that("automatic finite limits work", {
     p + stat_dist_slab(n = 31)
   )
 })
+
+test_that("justification can vary", {
+  skip_if_no_vdiffr()
+
+  p = tribble(
+    ~id, ~name, ~dist,                ~just,
+    1, "norm", dist_normal(0, 1.5),  1,
+    2, "norm", dist_normal(0, 1),  0.5,
+    3, "t",    dist_student_t(3),    0
+  ) %>%
+    ggplot(aes(x = id, dist = dist, justification = just))
+
+  vdiffr::expect_doppelganger("ccdf with varying just",
+    p + stat_dist_ccdfinterval(n = 20)
+  )
+})

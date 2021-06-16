@@ -84,7 +84,7 @@ defaults = function(x, defaults) {
 map_dfr_ = function(data, fun, ...) {
   # drop-in replacement for purrr::map_dfr
   do.call(
-    rbind,
+    dplyr::bind_rows,
     lapply(data, fun, ...)
   )
 }
@@ -96,15 +96,17 @@ pmap_dfr_ = function(data, fun) {
   map_dfr_(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
 }
 
+#' @importFrom dplyr bind_rows group_split across
 ddply_ = function(data, groups, fun, ...) {
-  purrr::map_dfr(dplyr::group_split(data, dplyr::across(groups)), fun, ...)
+  bind_rows(lapply(group_split(data, across(groups)), fun, ...))
 }
 
+#' @importFrom dplyr group_split across
 dlply_ = function(data, groups, fun, ...) {
-  lapply(dplyr::group_split(data, dplyr::across(groups)), fun, ...)
+  lapply(group_split(data, across(groups)), fun, ...)
 }
 
-vapply_dbl = function(X, FUN, ...) {
+map_dbl_ = function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = numeric(1), ...)
 }
 

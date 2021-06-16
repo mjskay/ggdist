@@ -133,22 +133,61 @@ define_orientation_variables = function(orientation) {
 
 # provides aesthetic documentation for slabintervals
 rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom_slabinterval", stat = NULL) {
+
+  stat_aes_docs = list(
+    x = 'x position',
+    y = 'y position',
+    dist =
+      'A name of a distribution (e.g. `"norm"`) or a \\pkg{distributional} object (e.g. [dist_normal()]).
+       See **Details**.',
+    args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
+  )
+
+  aes_docs = list(
+    thickness =
+      'The thickness of the slab at each `x` value (if `orientation = "horizontal"`) or
+       `y` value (if `orientation = "vertical"`) of the slab.',
+    side =
+      'Which side to place the slab on. `"topright"`, `"top"`, and `"right"` are synonyms
+       which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`
+       or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab
+       to be drawn on the bottom or the left depending on if `orientation` is `"horizontal"` or
+       `"vertical"`. `"topleft"` causes the slab to be drawn on the top or the left, and `"bottomright"`
+       causes the slab to be drawn on the bottom or the right. `"both"` draws the slab mirrored on both
+       sides (as in a violin plot).',
+    scale =
+      'What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
+       slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.',
+    justification =
+      'Justification of the interval relative to the slab, where `0` indicates bottom/left
+       justification and `1` indicates top/right justification (depending on `orientation`). If `justification`
+       is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is
+       `"top"`/`"right"` `justification` is set to `0`, when `side` is `"bottom"`/`"left"`
+       `justification` is set to `1`, and when `side` is `"both"` `justification` is set to 0.5.'
+  )
+
   stat_aesthetics = if (is.null(stat)) {
     "These geoms support the following aesthetics:"
   } else {
+    documented_aes = stat_aes_docs[intersect(names(stat_aes_docs), stat$aesthetics())]
+
     c(
       "These stats support the following aesthetics:",
       "\\itemize{",
-      paste0("  \\item \\code{", stat$aesthetics(), "}"),
+      paste0("  \\item \\code{", names(documented_aes), "}: ", documented_aes),
       "}",
       paste0("In addition, in their default configuration (paired with [", geom_name, "()]) ",
         "the following aesthetics are supported by the underlying geom:")
     )
   }
 
+  documented_aes = aes_docs[intersect(names(aes_docs), geom$aesthetics())]
+  undocumented_aes = setdiff(geom$aesthetics(), names(aes_docs))
+
   geom_aesthetics = c(
     "\\itemize{",
-      paste0("  \\item \\code{", geom$aesthetics(), "}"),
+      paste0("  \\item \\code{", names(documented_aes), "}: ", documented_aes),
+      paste0("  \\item \\code{", undocumented_aes, "}"),
     "}"
   )
 

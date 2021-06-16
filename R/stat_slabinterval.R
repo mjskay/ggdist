@@ -243,8 +243,8 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     results = bind_rows(s_data, i_data)
     # must ensure there's an f and a .width aesthetic produced even if we don't draw
     # the slab or the interval, otherwise the default aesthetic mappings can break.
-    results$f = results$f %||% NA
-    results$.width = results$.width %||% NA
+    results$f = results[["f"]] %||% NA
+    results$.width = results[[".width"]] %||% NA
     results
   }
 )

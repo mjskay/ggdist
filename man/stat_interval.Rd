@@ -125,15 +125,27 @@ will perform the summarization using a \code{\link[=point_interval]{point_interv
 
 These stats support the following aesthetics:
 \itemize{
-\item \code{colour}
-\item \code{datatype}
-\item \code{x}
-\item \code{y}
-\item \code{thickness}
-\item \code{group}
+\item \code{x}: x position
+\item \code{y}: y position
 }
 In addition, in their default configuration (paired with \code{\link[=geom_interval]{geom_interval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
+\item \code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
+\code{y} value (if \code{orientation = "vertical"}) of the slab.
+\item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).
+\item \code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
+\item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
 \item \code{x}
 \item \code{y}
 \item \code{datatype}
@@ -165,7 +177,6 @@ In addition, in their default configuration (paired with \code{\link[=geom_inter
 \item \code{xmax}
 \item \code{width}
 \item \code{height}
-\item \code{thickness}
 \item \code{group}
 }
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.

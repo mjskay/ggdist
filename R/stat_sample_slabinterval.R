@@ -341,22 +341,88 @@ stat_halfeye = function(...) stat_sample_slabinterval(...)
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_eye = function(..., side = "both") stat_sample_slabinterval(..., side = side)
+stat_eye = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatEye,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      ...
+    )
+  )
+}
+StatEye = ggproto("StatEye", StatSampleSlabinterval,
+  default_aes = defaults(aes(
+    side = stat("both"),
+  ), StatSampleSlabinterval$default_aes)
+)
+
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_ccdfinterval = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "topleft", normalize = "none"
+stat_ccdfinterval = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  slab_type = "ccdf",
+  normalize = "none",
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
 ) {
-  stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatCcdfinterval,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      slab_type = slab_type,
+      normalize = normalize,
+      ...
+    )
+  )
 }
+StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
+  default_aes = defaults(aes(
+    justification = stat(0.5),
+    side = stat("topleft"),
+  ), StatSampleSlabinterval$default_aes),
+
+  default_params = defaults(list(
+    slab_type = "ccdf",
+    normalize = "none"
+  ), StatSampleSlabinterval$default_params)
+)
 
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_cdfinterval = function(...,
-  slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
+  slab_type = "cdf", normalize = "none"
 ) {
-  stat_sample_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  stat_ccdfinterval(..., slab_type = slab_type, normalize = normalize)
 }
 
 #' @export
@@ -367,9 +433,6 @@ stat_gradientinterval = function(
   geom = "slabinterval",
   position = "identity",
   ...,
-
-  justification = 0.5,
-  thickness = 1,
 
   show.legend = c(size = FALSE, slab_alpha = FALSE),
   inherit.aes = TRUE
@@ -385,21 +448,16 @@ stat_gradientinterval = function(
     inherit.aes = inherit.aes,
 
     params = list(
-      justification = justification,
-      thickness = thickness,
       ...
     )
   )
 }
 StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
-    thickness = 1,
+    justification = stat(0.5),
+    thickness = stat(1),
     slab_alpha = stat(f)
-  ), StatSampleSlabinterval$default_aes),
-
-  default_params = defaults(list(
-    justification = 0.5
-  ), StatSampleSlabinterval$default_params)
+  ), StatSampleSlabinterval$default_aes)
 )
 
 #' @export

@@ -196,7 +196,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     }
 
     result = map_dfr_(.width, function(p) {
-      data[[col_name]] = vapply_dbl(draws, .point, na.rm = na.rm)
+      data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
       intervals = lapply(draws, .interval, .width = p, na.rm = na.rm)
       # can't use vapply_dbl here because sometimes (e.g. with hdi) these can
@@ -225,11 +225,11 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
 
-        data[[col_name]] = vapply_dbl(draws, .point, na.rm = na.rm)
+        data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
         intervals = lapply(draws, .interval, .width = p, na.rm = na.rm)
 
-        # can't use vapply_dbl here because sometimes (e.g. with hdi) these can
+        # can't use map_dbl_ here because sometimes (e.g. with hdi) these can
         # return multiple intervals, which we need to check for (since it is
         # not possible to support in this format).
         lower = lapply(intervals, function(x) x[, 1])

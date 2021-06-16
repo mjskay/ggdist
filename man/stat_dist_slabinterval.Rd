@@ -33,23 +33,29 @@ stat_dist_slabinterval(
 
 stat_dist_halfeye(...)
 
-stat_dist_eye(..., side = "both")
+stat_dist_eye(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_dist_ccdfinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
   ...,
   slab_type = "ccdf",
-  justification = 0.5,
-  side = "topleft",
-  normalize = "none"
+  normalize = "none",
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
 )
 
-stat_dist_cdfinterval(
-  ...,
-  slab_type = "cdf",
-  justification = 0.5,
-  side = "topleft",
-  normalize = "none"
-)
+stat_dist_cdfinterval(..., slab_type = "cdf", normalize = "none")
 
 stat_dist_gradientinterval(
   mapping = NULL,
@@ -57,8 +63,6 @@ stat_dist_gradientinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
-  justification = 0.5,
-  thickness = 1,
   show.legend = c(size = FALSE, slab_alpha = FALSE),
   inherit.aes = TRUE
 )
@@ -168,21 +172,6 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{side}{Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
-causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
-sides (as in a violin plot).}
-
-\item{justification}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-\code{0.5}.}
-
 \item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
 (the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
 panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
@@ -190,9 +179,6 @@ the x/y axis opposite the \code{orientation} of this geom so that the maximum he
 opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
-
-\item{thickness}{Override for the \code{thickness} aesthetic in \code{\link[=geom_slabinterval]{geom_slabinterval()}}: the thickness
-of the slab at each x / y value of the slab (depending on \code{orientation}).}
 
 \item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
 }
@@ -253,26 +239,30 @@ of those functions.
 
 These stats support the following aesthetics:
 \itemize{
-\item \code{dist}
-\item \code{args}
-\item \code{arg1}
-\item \code{arg2}
-\item \code{arg3}
-\item \code{arg4}
-\item \code{arg5}
-\item \code{arg6}
-\item \code{arg7}
-\item \code{arg8}
-\item \code{arg9}
-\item \code{x}
-\item \code{y}
-\item \code{datatype}
-\item \code{thickness}
-\item \code{size}
-\item \code{group}
+\item \code{x}: x position
+\item \code{y}: y position
+\item \code{dist}: A name of a distribution (e.g. \code{"norm"}) or a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}).
+See \strong{Details}.
+\item \code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_slabinterval]{geom_slabinterval()}}) the following aesthetics are supported by the underlying geom:
 \itemize{
+\item \code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
+\code{y} value (if \code{orientation = "vertical"}) of the slab.
+\item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).
+\item \code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
+\item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
 \item \code{x}
 \item \code{y}
 \item \code{datatype}
@@ -304,7 +294,6 @@ In addition, in their default configuration (paired with \code{\link[=geom_slabi
 \item \code{xmax}
 \item \code{width}
 \item \code{height}
-\item \code{thickness}
 \item \code{group}
 }
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.

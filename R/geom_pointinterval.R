@@ -76,7 +76,6 @@ geom_pointinterval = function(
   position = "identity",
   ...,
 
-  side = "both",
   orientation = NA,
   show_slab = FALSE,
 
@@ -92,7 +91,6 @@ geom_pointinterval = function(
     position = position,
     ...,
 
-    side = side,
     orientation = orientation,
     show_slab = show_slab,
 
@@ -109,7 +107,8 @@ geom_pointinterval = function(
 #' @export
 GeomPointinterval = ggproto("GeomPointinterval", GeomSlabinterval,
   default_aes = defaults(aes(
-    datatype = "interval"
+    datatype = "interval",
+    side = "both"
   ), GeomSlabinterval$default_aes),
 
   default_key_aes = defaults(aes(
@@ -117,10 +116,7 @@ GeomPointinterval = ggproto("GeomPointinterval", GeomSlabinterval,
   ), GeomSlabinterval$default_key_aes),
 
   default_params = defaults(list(
-    side = "both",
     orientation = NA,
     show_slab = FALSE
-  ), GeomSlabinterval$default_params),
-
-  default_datatype = "interval"
+  ), GeomSlabinterval$default_params)
 )
