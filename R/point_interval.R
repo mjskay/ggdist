@@ -136,7 +136,6 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom purrr map
 #' @importFrom dplyr do bind_cols group_vars summarise_at %>%
 #' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
