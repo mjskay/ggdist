@@ -215,7 +215,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
-    if (!all(as.logical(unlist(lapply(data[,names(col_exprs)], is.list))))) {
+    if (!all(map_lgl_(data[,names(col_exprs)], is.list))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 

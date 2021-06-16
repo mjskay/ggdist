@@ -110,6 +110,10 @@ map_dbl_ = function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = numeric(1), ...)
 }
 
+map_lgl_ = function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = logical(1), ...)
+}
+
 iwalk_ = function(vec, fun, ...) {
   # drop in replacement for purrr::iwalk()
   nms <- names(vec) %||% seq_along(x)
