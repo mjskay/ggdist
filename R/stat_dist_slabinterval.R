@@ -475,8 +475,36 @@ stat_dist_halfeye = function(...) stat_dist_slabinterval(...)
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_eye = function(..., side = "both") stat_dist_slabinterval(..., side = side)
-# TODO: aes-side
+stat_dist_eye = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatDistEye,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      ...
+    )
+  )
+}
+StatDistEye = ggproto("StatDistEye", StatDistSlabinterval,
+  default_aes = defaults(aes(
+    side = stat("both"),
+  ), StatDistSlabinterval$default_aes)
+)
 
 #' @export
 #' @rdname stat_dist_slabinterval

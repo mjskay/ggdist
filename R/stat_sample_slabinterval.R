@@ -341,8 +341,37 @@ stat_halfeye = function(...) stat_sample_slabinterval(...)
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_eye = function(..., side = "both") stat_sample_slabinterval(..., side = side)
-# TODO: aes-side
+stat_eye = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatEye,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      ...
+    )
+  )
+}
+StatEye = ggproto("StatEye", StatSampleSlabinterval,
+  default_aes = defaults(aes(
+    side = stat("both"),
+  ), StatSampleSlabinterval$default_aes)
+)
+
 
 #' @export
 #' @rdname stat_sample_slabinterval
