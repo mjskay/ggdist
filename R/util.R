@@ -114,6 +114,10 @@ map_lgl_ = function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = logical(1), ...)
 }
 
+map2_chr_ = function(X, Y, FUN, ...) {
+  as.character(mapply(FUN, X, Y, USE.NAMES = FALSE))
+}
+
 iwalk_ = function(vec, fun, ...) {
   # drop in replacement for purrr::iwalk()
   nms <- names(vec) %||% seq_along(x)

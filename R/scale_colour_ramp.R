@@ -130,16 +130,10 @@ colour_ramp_pal_discrete = function(range, from) {
 apply_colour_ramp = function(colors, amounts) {
   if (is.null(colors) || is.null(amounts)) return(colors)
 
-  as.character(
-    unname(
-      mapply(function(color, amount) {
-        # null amounts come from missing values
-        amount = amount %||% NA
-        from = attr(amount, "from") %||% "white"
-        scales::seq_gradient_pal(from, color)(amount)
-      },
-      colors, amounts
-      )
-    )
-  )
+  map2_chr_(colors, amounts, function(color, amount) {
+    # null amounts come from missing values
+    amount = amount %||% NA
+    from = attr(amount, "from") %||% "white"
+    scales::seq_gradient_pal(from, color)(amount)
+  })
 }
