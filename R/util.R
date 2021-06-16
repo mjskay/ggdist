@@ -100,7 +100,7 @@ dlply_ = function(data, groups, fun, ...) {
   lapply(group_split(data, across(groups)), fun, ...)
 }
 
-vapply_dbl = function(X, FUN, ...) {
+map_dbl_ = function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = numeric(1), ...)
 }
 
