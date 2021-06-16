@@ -198,7 +198,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     # use case of fit lines / curves: draw the ribbons in order from largest mean width to
     # smallest mean width, so that the widest intervals are on the bottom.
     ribbon_grobs = ribbon_grobs[order(-map_dbl_(ribbon_grobs, `[[`, "width"))] %>%
-      lapply(function(x) x[["grobs"]]) %>%
+      lapply(`[[`, i = "grobs") %>%
       unlist(recursive = FALSE)
 
     # now draw all the lines
