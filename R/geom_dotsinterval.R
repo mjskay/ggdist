@@ -9,7 +9,7 @@
 
 #' @importFrom ggplot2 .stroke .pt
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
-dots_grob = function(data, maxheight, x, y,
+dots_grob = function(data, x, y,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1, stackratio = 1, binwidth = NA, layout = "bin",
   orientation = "vertical"
@@ -20,7 +20,7 @@ dots_grob = function(data, maxheight, x, y,
     group_split()
 
   gTree(
-    datas = datas, maxheight = maxheight, x_ = x, y_ = y,
+    datas = datas,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
     orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
@@ -32,13 +32,12 @@ dots_grob = function(data, maxheight, x, y,
 makeContent.dots_grob = function(x) {
   grob_ = x
   datas = grob_$datas
-  maxheight = grob_$maxheight
-  x = grob_$x_
-  y = grob_$y_
   orientation = grob_$orientation
   dotsize = grob_$dotsize
   binwidth = grob_$binwidth
   layout = grob_$layout
+
+  define_orientation_variables(orientation)
 
   font_size_ratio = 1.43  # manual fudge factor for point size in ggplot
   stackratio = 1.07 * grob_$stackratio
@@ -69,7 +68,10 @@ makeContent.dots_grob = function(x) {
 
   if (isTRUE(is.na(binwidth))) {
     # find the best bin widths across all the dotplots we are going to draw
-    binwidths = vapply_dbl(datas, function(d) find_dotplot_binwidth(d[[x]], maxheight, heightratio))
+    binwidths = vapply_dbl(datas, function(d) {
+      maxheight = max(d[[ymax]] - d[[ymin]])
+      find_dotplot_binwidth(d[[x]], maxheight, heightratio)
+    })
 
     binwidth = max(min(binwidths, user_max_binwidth), user_min_binwidth)
   }
@@ -151,11 +153,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
-  # TODO: aes-side: propagate scale into maxheight here
-  maxheight = max(s_data[[ymax]] - s_data[[ymin]])
   slab_grobs = list(dots_grob(
       s_data,
-      maxheight,
       x, y,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,

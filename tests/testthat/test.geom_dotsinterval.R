@@ -273,7 +273,7 @@ test_that("geom_dots correctly adjusts dot size for stroke size", {
 
 })
 
-test_that("side and justification can vary", {
+test_that("side, justification, and scale can vary", {
   skip_if_no_vdiffr()
 
   vdiffr::expect_doppelganger("varying side and just",
@@ -283,5 +283,17 @@ test_that("side and justification can vary", {
         justification = case_when(cyl == 4 ~ 0, cyl == 6 ~ 0.5, cyl == 8 ~ 1)
         )) +
       stat_dotsinterval(orientation = "horizontal")
+  )
+
+  vdiffr::expect_doppelganger("varying scale, side, just",
+    tibble(
+      x = c(0, rep(1, 9), 0),
+      group = c(rep("a", 4), rep("b", 7)),
+      scale = c(rep(1/3, 4), rep(2/3, 7)),
+      side = c(rep("top", 4), rep("bottom", 7)),
+      justification = c(rep(0, 4), rep(1, 7))
+    ) %>%
+      ggplot(aes(x = x, y = group, scale = scale, side = side, justification = justification, color = group)) +
+      stat_dots()
   )
 })
