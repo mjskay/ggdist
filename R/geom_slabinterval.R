@@ -18,8 +18,10 @@ rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymi
 
   # must do this within groups so that `side` can vary by slab
   ddply_(s_data, c("group", y), function(d) {
-    for (a in c("side", "justification", "scale")) {
-      if (!all(d[[a]] == d[[a]][[1]])) {
+    scaling_aes = c("side", "justification", "scale")
+    for (a in scaling_aes) {
+      # use %in% here so that `NA`s are treated as equal
+      if (!isTRUE(all(d[[a]] %in% d[[a]][[1]]))) {
         stop(
           "Slab `", a, "` cannot vary within groups:\n",
           "all rows within the same slab must have the same `", a, "`."
