@@ -12,7 +12,7 @@
 dots_grob = function(data, maxheight, x, y,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1, stackratio = 1, binwidth = NA, layout = "bin",
-  side = "topright", orientation = "vertical"
+  orientation = "vertical"
 ) {
   datas = data %>%
     arrange_at(x) %>%
@@ -22,7 +22,7 @@ dots_grob = function(data, maxheight, x, y,
   gTree(
     datas = datas, maxheight = maxheight, x_ = x, y_ = y,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    side = side, orientation = orientation,
+    orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
 }
@@ -35,7 +35,6 @@ makeContent.dots_grob = function(x) {
   maxheight = grob_$maxheight
   x = grob_$x_
   y = grob_$y_
-  side = grob_$side
   orientation = grob_$orientation
   dotsize = grob_$dotsize
   binwidth = grob_$binwidth
@@ -81,7 +80,7 @@ makeContent.dots_grob = function(x) {
     dot_positions = bin_dots(
       d$x, d$y,
       binwidth, heightratio, layout,
-      side, orientation
+      d$side[[1]], orientation
     )
 
     # determine size of the dots as a font size
@@ -152,7 +151,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
-  # TODO: aes-side: propagate side, scale into maxheight here
+  # TODO: aes-side: propagate scale into maxheight here
   maxheight = max(s_data[[ymax]] - s_data[[ymin]])
   slab_grobs = list(dots_grob(
       s_data,
@@ -162,8 +161,6 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
       stackratio = child_params$stackratio,
       binwidth = child_params$binwidth,
       layout = child_params$layout,
-      # TODO: aes-side: fix
-      side = s_data$side[[1]],
       orientation = orientation
     ))
 }
