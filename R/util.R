@@ -114,7 +114,7 @@ map_lgl_ = function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = logical(1), ...)
 }
 
-map2_chr_ = function(X, Y, FUN, ...) {
+map2_chr_ = function(X, Y, FUN) {
   as.character(mapply(FUN, X, Y, USE.NAMES = FALSE))
 }
 
