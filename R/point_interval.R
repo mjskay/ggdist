@@ -214,20 +214,6 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
           )
         )
 
-      # alternative:
-      # data = dplyr::full_join(
-      #   data,
-      #   map2_dfr_(
-      #     X = map_dbl_(draws, .point, na.rm = na.rm),
-      #     Y = draws,
-      #     FUN = function(.x, .y) tibble(
-      #       "{col_name}" := .x,
-      #       .interval(.y, .width = p, na.rm = na.rm),
-      #       .width = p)
-      #   ),
-      #   by = col_name
-      # )
-
       data
     })
   } else {
