@@ -257,12 +257,15 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         upper = lapply(intervals, function(x) x[, 2])
         if (any(lengths(lower) > 1) || any(lengths(upper) > 1)) {
           stop(
-            "You are summarizing a multimodal distribution using a method that returns multiple intervals ",
-            "(such as `hdi`), but you are attempting to generate intervals for multiple columns in wide format. ",
-            "To use a multiple-interval method like `hdi` on distributions that are multi-modal, you can ",
-            "only summarize one column at a time. You might try using `gather_variables` to put all your draws ",
-            "into a single column before summarizing them, or use an interval type (such as `hdci` or `qi`) that ",
-            "always returns exactly one interval per probability level."
+            "You are summarizing a multimodal distribution using a method that returns\n",
+            "multiple intervals (such as `hdi()`), but you are attempting to generate intervals\n",
+            "intervals for multiple columns in wide format.\n\n",
+            "To use a multiple-interval method like `hdi()` on distributions that are\n",
+            "multi-modal, you can only summarize one column at a time.\n\n",
+            "You might try using `tidybayes::gather_variables()` to put all your draws into\n",
+            "a single column before summarizing them, or use an interval type that always\n",
+            "returns exactly one interval per probability level (such as `hdci()` or `qi()`).",
+            call. = FALSE
           )
         }
         data[[paste0(col_name, ".lower")]] = unlist(lower)
