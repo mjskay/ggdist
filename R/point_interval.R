@@ -137,7 +137,6 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
 #' @importFrom dplyr do bind_cols group_vars summarise_at %>%
-#' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @importFrom stats median
 #' @export
@@ -195,16 +194,39 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     }
 
     result = map_dfr_(.width, function(p) {
+      # compute intervals; this is robust to grouped data frames and
+      # to intervals that can return multiple intervals (e.g., hdi())
+
+      # reduce `data` to just point estimate column and grouping factors (if any)
       data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
-      intervals = lapply(draws, .interval, .width = p, na.rm = na.rm)
-      # can't use map_dbl_ here because sometimes (e.g. with hdi) these can
-      # return multiple intervals, hence lapply() here and unnest() below
-      data[[".lower"]] = lapply(intervals, function(x) x[, 1])
-      data[[".upper"]] = lapply(intervals, function(x) x[, 2])
-      data = unnest_legacy(data, .lower, .upper)
+      # for each row of `data`, compute the intervals (may be more than one),
+      # and construct a tibble with grouping factors (if any), point estimate,
+      # lower and upper values, and width
+      # - equivalent to unnest_legacy()
+      data = map2_dfr_(
+          X = seq_len(nrow(data)),
+          Y = draws,
+          FUN = function(.x, .y) tibble(
+            data[.x, , drop = FALSE], # each row of `data`; grouping factors and point estimate
+            .interval(.y, .width = p, na.rm = na.rm), # intervals (one or more rows)
+            .width = p # width
+          )
+        )
 
-      data[[".width"]] = p
+      # alternative:
+      # data = dplyr::full_join(
+      #   data,
+      #   map2_dfr_(
+      #     X = map_dbl_(draws, .point, na.rm = na.rm),
+      #     Y = draws,
+      #     FUN = function(.x, .y) tibble(
+      #       "{col_name}" := .x,
+      #       .interval(.y, .width = p, na.rm = na.rm),
+      #       .width = p)
+      #   ),
+      #   by = col_name
+      # )
 
       data
     })
@@ -298,12 +320,12 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
 qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
   if (!na.rm && any(is.na(x))) {
-    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+    return(as.data.frame(matrix(c(NA_real_, NA_real_), ncol = 2, dimnames = list(NULL, c(".lower", ".upper")))))
   }
 
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
-  matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
+  as.data.frame(matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2, dimnames = list(NULL, c(".lower", ".upper"))))
 }
 
 #' @export
@@ -312,7 +334,7 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
   if (!na.rm && any(is.na(x))) {
-    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+    return(as.data.frame(matrix(c(NA_real_, NA_real_), ncol = 2, dimnames = list(NULL, c(".lower", ".upper")))))
   }
 
   intervals = HDInterval::hdi(density(x, cut = 0, na.rm = na.rm), credMass = .width, allowSplit = TRUE)
@@ -321,7 +343,7 @@ hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
     # result is unimodal, switch to the method below (which will be slightly narrower)
     intervals = HDInterval::hdi(x, credMass = .width)
   }
-  matrix(intervals, ncol = 2)
+  as.data.frame(matrix(intervals, ncol = 2, dimnames = list(NULL, c(".lower", ".upper"))))
 }
 
 #' @export
@@ -351,11 +373,11 @@ Mode = function(x, na.rm = FALSE) {
 #' @rdname point_interval
 hdci = function(x, .width = .95, na.rm = FALSE) {
   if (!na.rm && any(is.na(x))) {
-    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+    return(as.data.frame(matrix(c(NA_real_, NA_real_), ncol = 2, dimnames = list(NULL, c(".lower", ".upper")))))
   }
 
   intervals = HDInterval::hdi(x, credMass = .width)
-  matrix(intervals, ncol = 2)
+  as.data.frame(matrix(intervals, ncol = 2, dimnames = list(NULL, c(".lower", ".upper"))))
 }
 
 #' @export
