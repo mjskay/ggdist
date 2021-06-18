@@ -3,7 +3,8 @@ Title: Visualizations of Distributions and Uncertainty
 Version: 2.4.1.9001
 Date: 2021-06-10
 Authors@R: c(
-        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu")
+        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu"),
+        person("Brenton M.", "Wiernik", role = "ctb", email = "brenton@wiernik.org")
     )
 Maintainer: Matthew Kay <mjskay@northwestern.edu>
 Description: Provides primitives for visualizing distributions using 'ggplot2' that are particularly tuned for
