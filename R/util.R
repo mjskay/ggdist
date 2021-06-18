@@ -84,9 +84,7 @@ defaults = function(x, defaults) {
 #' @importFrom dplyr bind_rows
 map_dfr_ = function(data, fun, ...) {
   # drop-in replacement for purrr::map_dfr
-  bind_rows(
-    lapply(data, fun, ...)
-  )
+  bind_rows(lapply(data, fun, ...))
 }
 
 pmap_dfr_ = function(data, fun) {
@@ -124,17 +122,19 @@ map2_dfr_ = function(X, Y, FUN) {
 
 iwalk_ = function(vec, fun, ...) {
   # drop in replacement for purrr::iwalk()
-  nms <- names(vec) %||% seq_along(x)
+  nms = names(vec) %||% seq_along(x)
   mapply(fun, vec, nms, ...)
   invisible(vec)
 }
 
-fct_rev_ <- function(x) {
+fct_rev_ = function(x) {
   if (is.character(x)) {
-    x <- factor(x)
+    x = factor(x)
   } else if (!is.factor(x)) {
-    stop("`f` must be a factor (or character vector).",
-         call. = FALSE)
+    stop(
+      "`x` must be a factor (or character vector).",
+      call. = FALSE
+    )
   }
   factor(x, levels = rev(levels(x)))
 }
