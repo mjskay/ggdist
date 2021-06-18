@@ -278,7 +278,7 @@ test_that("various point summaries and intervals give correct numbers", {
 test_that("attempting to use hdi with multiple multimodal columns simultaneously fails", {
   expect_error(
     mode_hdi(data.frame(x = c(1:5, 1, 5), y = c(1:5, 1, 5)), .width = .2),
-    "You are summarizing a multimodal distribution using a method that returns multiple intervals"
+    "You are summarizing a multimodal distribution using a method that returns\nmultiple intervals"
   )
 })
 

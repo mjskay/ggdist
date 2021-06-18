@@ -134,7 +134,6 @@ dist_slab_function = function(
   })
 }
 
-#' @importFrom purrr map_dfr
 dist_interval_function = function(df, .width, trans, ...) {
   pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || any(is.na(dist))) {
@@ -144,7 +143,7 @@ dist_interval_function = function(df, .width, trans, ...) {
     args = args_from_aes(...)
     quantile_fun = dist_quantile_fun(dist)
 
-    intervals = map_dfr(.width, function(w) {
+    intervals = map_dfr_(.width, function(w) {
       quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
       quantiles = do.call(quantile_fun, quantile_args)
       data.frame(

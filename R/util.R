@@ -82,17 +82,21 @@ defaults = function(x, defaults) {
 # (especially when it comes to rvars...)
 
 #' @importFrom dplyr bind_rows
-#' @importFrom vctrs vec_chop
+map_dfr_ = function(data, fun, ...) {
+  # drop-in replacement for purrr::map_dfr
+  bind_rows(lapply(data, fun, ...))
+}
+
 pmap_dfr_ = function(data, fun) {
   # this is roughly equivalent to
   # pmap_dfr(df, function(...) { ... })
   # but works properly with vctrs (pmap_dfr seems broken on rvars?)
-  bind_rows(lapply(vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1))))
+  map_dfr_(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
 }
 
-#' @importFrom dplyr bind_rows group_split across
+#' @importFrom dplyr group_split across
 ddply_ = function(data, groups, fun, ...) {
-  bind_rows(lapply(group_split(data, across(groups)), fun, ...))
+  map_dfr_(group_split(data, across(groups)), fun, ...)
 }
 
 #' @importFrom dplyr group_split across
@@ -104,6 +108,36 @@ map_dbl_ = function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = numeric(1), ...)
 }
 
+map_lgl_ = function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = logical(1), ...)
+}
+
+map2_chr_ = function(X, Y, FUN) {
+  as.character(mapply(FUN, X, Y, USE.NAMES = FALSE))
+}
+
+map2_dfr_ = function(X, Y, FUN) {
+  bind_rows(mapply(FUN, X, Y, SIMPLIFY = FALSE, USE.NAMES = FALSE))
+}
+
+iwalk_ = function(vec, fun, ...) {
+  # drop in replacement for purrr::iwalk()
+  nms = names(vec) %||% seq_along(x)
+  mapply(fun, vec, nms, ...)
+  invisible(vec)
+}
+
+fct_rev_ = function(x) {
+  if (is.character(x)) {
+    x = factor(x)
+  } else if (!is.factor(x)) {
+    stop(
+      "`x` must be a factor (or character vector).",
+      call. = FALSE
+    )
+  }
+  factor(x, levels = rev(levels(x)))
+}
 
 # sequences ---------------------------------------------------------------
 

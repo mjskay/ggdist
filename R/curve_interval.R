@@ -123,7 +123,6 @@
 #'   ggtitle("50% curvewise intervals with curve_interval()") +
 #'   theme_ggdist()
 #'
-#' @importFrom purrr map_dfr map map2 map_lgl iwalk
 #' @importFrom dplyr group_vars summarise_at %>% group_split
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
 #' @importFrom tidyselect eval_select
@@ -157,7 +156,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
       setdiff(.exclude) %>%
       # have to use quos here because lists of symbols don't work correctly with iwalk() for some reason
       # (the simpler version of this line would be `syms() %>%`)
-      map(~ quo(!!sym(.))) %>%
+      lapply(function(x) quo(!!sym(x))) %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
@@ -183,13 +182,13 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
 
     .curve_interval(data, col_name, ".lower", ".upper", .width, .interval, .conditional_groups, na.rm = na.rm)
   } else {
-    iwalk(col_exprs, function(col_expr, col_name) {
+    iwalk_(col_exprs, function(col_expr, col_name) {
       data[[col_name]] <<- eval_tidy(col_expr, data)
     })
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
-    if (!all(map_lgl(data[,names(col_exprs)], is.list))) {
+    if (!all(map_lgl_(data[,names(col_exprs)], is.list))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 
@@ -229,7 +228,7 @@ halfspace_depth = function(x) {
     "mhd"
   )
 
-  map_dfr(dfs, function(d) {
+  map_dfr_(dfs, function(d) {
 
     if (.interval_internal == "mhd") { #mean halfspace depth
       # draws x y matrix
@@ -255,7 +254,7 @@ halfspace_depth = function(x) {
     median_draw = which.max(draw_depth)
     median_y = map_dbl_(d[[col_name]], `[[`, median_draw)
 
-    map_dfr(.width, function(w) {
+    map_dfr_(.width, function(w) {
       depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
       selected_draws = draw_depth >= depth_cutoff
 

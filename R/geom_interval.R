@@ -23,7 +23,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' [mode_hdi()], etc.
 #'
 #' Specifically, `geom_interval` acts as if its default aesthetics are
-#' `aes(color = fct_rev(ordered(.width)))`.
+#' `aes(color = forcats::fct_rev(ordered(.width)))`.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval")
 #' @inheritParams geom_slabinterval
@@ -85,7 +85,7 @@ geom_interval = function(
   layer_geom_slabinterval(
     data = data,
     mapping = mapping,
-    default_mapping = aes(color = forcats::fct_rev(ordered(.width))),
+    default_mapping = aes(color = fct_rev_(ordered(.width))),
     stat = stat,
     geom = GeomInterval,
     position = position,

@@ -379,7 +379,7 @@ compute_intervals = function(data, scales, x_trans, na.rm,
   i_data[[xmax]] = i_data$.upper
   i_data$.upper = NULL
 
-  i_data$level = forcats::fct_rev(ordered(i_data$.width))
+  i_data$level = fct_rev_(ordered(i_data$.width))
   i_data$datatype = "interval"
   i_data
 }
