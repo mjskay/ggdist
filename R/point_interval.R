@@ -204,17 +204,17 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       # and construct a tibble with grouping factors (if any), point estimate,
       # lower and upper values, and width
       # - equivalent to unnest_legacy()
-      data = map2_dfr_(
-          X = seq_len(nrow(data)),
-          Y = draws,
-          FUN = function(.x, .y) tibble(
-            data[.x, , drop = FALSE], # each row of `data`; grouping factors and point estimate
-            .interval(.y, .width = p, na.rm = na.rm), # intervals (one or more rows)
-            .width = p # width
-          )
+      data = map2_dfr_(seq_len(nrow(data)), draws, function(row_i, draws_i) {
+        interval = .interval(draws_i, .width = p, na.rm = na.rm) # intervals (one or more rows)
+        dimnames(interval)[[2]] = c(".lower", ".upper")
+        cbind(
+          data[row_i, , drop = FALSE], # each row of `data`; grouping factors and point estimate
+          interval,
+          .width = p # width
         )
+      })
 
-      data
+      as_tibble(data)
     })
   } else {
     iwalk_(col_exprs, function(col_expr, col_name) {
@@ -309,12 +309,12 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
 qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
   if (!na.rm && any(is.na(x))) {
-    return(as.data.frame(matrix(c(NA_real_, NA_real_), ncol = 2, dimnames = list(NULL, c(".lower", ".upper")))))
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
-  as.data.frame(matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2, dimnames = list(NULL, c(".lower", ".upper"))))
+  matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
 }
 
 #' @export
@@ -323,7 +323,7 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
   if (!na.rm && any(is.na(x))) {
-    return(as.data.frame(matrix(c(NA_real_, NA_real_), ncol = 2, dimnames = list(NULL, c(".lower", ".upper")))))
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
   intervals = HDInterval::hdi(density(x, cut = 0, na.rm = na.rm), credMass = .width, allowSplit = TRUE)
@@ -332,7 +332,7 @@ hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
     # result is unimodal, switch to the method below (which will be slightly narrower)
     intervals = HDInterval::hdi(x, credMass = .width)
   }
-  as.data.frame(matrix(intervals, ncol = 2, dimnames = list(NULL, c(".lower", ".upper"))))
+  matrix(intervals, ncol = 2)
 }
 
 #' @export
@@ -362,11 +362,11 @@ Mode = function(x, na.rm = FALSE) {
 #' @rdname point_interval
 hdci = function(x, .width = .95, na.rm = FALSE) {
   if (!na.rm && any(is.na(x))) {
-    return(as.data.frame(matrix(c(NA_real_, NA_real_), ncol = 2, dimnames = list(NULL, c(".lower", ".upper")))))
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
   intervals = HDInterval::hdi(x, credMass = .width)
-  as.data.frame(matrix(intervals, ncol = 2, dimnames = list(NULL, c(".lower", ".upper"))))
+  matrix(intervals, ncol = 2)
 }
 
 #' @export
