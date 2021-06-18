@@ -244,7 +244,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         if (any(lengths(lower) > 1) || any(lengths(upper) > 1)) {
           stop(
             "You are summarizing a multimodal distribution using a method that returns\n",
-            "multiple intervals (such as `hdi()`), but you are attempting to generate intervals\n",
+            "multiple intervals (such as `hdi()`), but you are attempting to generate\n",
             "intervals for multiple columns in wide format.\n\n",
             "To use a multiple-interval method like `hdi()` on distributions that are\n",
             "multi-modal, you can only summarize one column at a time.\n\n",
