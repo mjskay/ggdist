@@ -102,7 +102,8 @@ draw_slabs = function(self, s_data, panel_params, coord,
   })
 
   # when side = "top" or "right", need to invert draw order so that overlaps happen in a sensible way
-  # unfortunately we can only do this by checking the first value of `side`
+  # unfortunately we can only do this by checking the first value of `side`, which
+  # means this may be incorrect if `side` varies across slabs
   switch_side(s_data$side[[1]], orientation,
     topright = rev(slab_grobs),
     bottomleft = slab_grobs,
@@ -821,7 +822,7 @@ make_gradient_fill = function(slab_data, orientation = "horizontal") {
 draw_polygon = function(data, panel_params, coord, fill = NULL) {
   n = nrow(data)
 
-  if (n == 1) return(grob(cl = "zeroGrob", name = "NULL"))
+  if (n == 1) return(zeroGrob())
 
   munched = coord_munch(coord, data, panel_params)
 

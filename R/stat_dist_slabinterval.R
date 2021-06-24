@@ -232,6 +232,9 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #'
 #' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
 #' @section Computed Variables:
+#' The following variables are computed by this stat and made available for
+#' use in aesthetic specifications (`aes()`) using the `stat()` or `after_stat()`
+#' functions:
 #' \itemize{
 #'   \item `x` or `y`: For slabs, the input values to the slab function.
 #'     For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
