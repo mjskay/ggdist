@@ -172,7 +172,7 @@ justification and \code{1} indicates top/right justification (depending on \code
 is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
 \code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
 \code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
-\item \code{datatype}: When using composite geoms directly without a \code{stat} (e.g. \code{\link[=geom_halfeye]{geom_halfeye()}}), \code{datatype} is used to
+\item \code{datatype}: When using composite geoms directly without a \code{stat} (e.g. \code{\link[=geom_slabinterval]{geom_slabinterval()}}), \code{datatype} is used to
 indicate which part of the geom a row in the data targets: rows with \code{datatype = "slab"} target the
 slab portion of the geometry and rows with \code{datatype = "interval"} target the interval portion of
 the geometry. This is set automatically when using ggdist \code{stat}s.

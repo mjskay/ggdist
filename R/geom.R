@@ -210,7 +210,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
        `"top"`/`"right"` `justification` is set to `0`, when `side` is `"bottom"`/`"left"`
        `justification` is set to `1`, and when `side` is `"both"` `justification` is set to 0.5.',
     datatype =
-      'When using composite geoms directly without a `stat` (e.g. [geom_halfeye()]), `datatype` is used to
+      'When using composite geoms directly without a `stat` (e.g. [geom_slabinterval()]), `datatype` is used to
        indicate which part of the geom a row in the data targets: rows with `datatype = "slab"` target the
        slab portion of the geometry and rows with `datatype = "interval"` target the interval portion of
        the geometry. This is set automatically when using ggdist `stat`s.'
