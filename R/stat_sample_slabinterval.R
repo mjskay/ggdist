@@ -121,7 +121,7 @@ sample_slab_function = function(
     ccdf = 1 - slab_df$cdf
   )
 
-  slab_df$n = nrow(slab_df)
+  slab_df$n = nrow(df)
   slab_df
 }
 
@@ -224,7 +224,7 @@ sample_slab_function = function(
 #' # you can use stat(f*n):
 #' df %>%
 #'   ggplot(aes(x = group, y = value)) +
-#'   stat_eye(aes(thickness = stat(f*n)))
+#'   stat_eye(aes(thickness = stat(pdf*n)))
 #'
 #' # see vignette("slabinterval") for many more examples.
 #'

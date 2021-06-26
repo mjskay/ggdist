@@ -160,3 +160,19 @@ test_that("side and justification can vary", {
       stat_sample_slabinterval(orientation = "horizontal", normalize = "groups")
   )
 })
+
+test_that("n is calculated correctly", {
+  skip_if_no_vdiffr()
+
+  set.seed(1234)
+  df = data.frame(
+    g = c("a","a","a","b","c"),
+    x = rnorm(120, c(1,1,1,2,3))
+  )
+
+  vdiffr::expect_doppelganger("pdf*n for different-sized groups",
+    df %>%
+      ggplot(aes(x = x, y = g, thickness = stat(pdf*n), fill = stat(n))) +
+      stat_sample_slabinterval()
+  )
+})
