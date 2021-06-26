@@ -35,7 +35,7 @@ add_default_computed_aesthetics = function(l, default_mapping) {
           is.null(mapping[[aesthetic, exact = FALSE]]) &&
           (!isTRUE(self$inherit.aes) || is.null(computed_mapping(plot)[[aesthetic, exact = FALSE]])) &&
           all(vars_in_mapping %in% names(data)) &&
-          !(any(is.na(data[,vars_in_mapping])))
+          !anyNA(data[,vars_in_mapping])
         ) {
           mapping[[aesthetic]] = default_mapping[[aesthetic]]
         }

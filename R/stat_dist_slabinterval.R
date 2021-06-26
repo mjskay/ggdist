@@ -22,7 +22,7 @@ args_from_aes = function(args = list(), ...) {
 
 dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identity_trans(), ...) {
   pmap_dfr_(df, function(dist, ...) {
-    if (is.null(dist) || any(is.na(dist))) {
+    if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.lower = NA, .upper = NA))
     }
 
@@ -100,7 +100,7 @@ dist_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr_(df, function(dist, ...) {
-    if (is.null(dist) || any(is.na(dist))) {
+    if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
     }
 
@@ -136,7 +136,7 @@ dist_slab_function = function(
 
 dist_interval_function = function(df, .width, trans, ...) {
   pmap_dfr_(df, function(dist, ...) {
-    if (is.null(dist) || any(is.na(dist))) {
+    if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
     }
 

@@ -309,7 +309,7 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
 #' @rdname point_interval
 qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  if (!na.rm && any(is.na(x))) {
+  if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
@@ -323,7 +323,7 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 #' @importFrom stats density
 hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  if (!na.rm && any(is.na(x))) {
+  if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
@@ -344,7 +344,7 @@ Mode = function(x, na.rm = FALSE) {
   if (na.rm) {
     x = x[!is.na(x)]
   }
-  else if (any(is.na(x))) {
+  else if (anyNA(x)) {
     return(NA_real_)
   }
 
@@ -362,7 +362,7 @@ Mode = function(x, na.rm = FALSE) {
 #' @export
 #' @rdname point_interval
 hdci = function(x, .width = .95, na.rm = FALSE) {
-  if (!na.rm && any(is.na(x))) {
+  if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 

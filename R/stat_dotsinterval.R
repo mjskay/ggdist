@@ -41,7 +41,7 @@ dots_dist_slab_function = function(
   df, input, quantiles = 100, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr_(df, function(dist, ...) {
-    if (is.null(dist) || any(is.na(dist))) {
+    if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
     }
 
