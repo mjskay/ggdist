@@ -595,8 +595,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   draw_key_point = draw_key_point_,
   draw_key_interval = draw_key_interval_,
 
-  draw_slabs = draw_slabs,
-  draw_pointintervals = draw_pointintervals,
+  # workaround (#84)
+  draw_slabs = function(self, ...) draw_slabs(self, ...),
+  draw_pointintervals = function(self, ...) draw_pointintervals(self, ...),
 
   draw_panel = function(self, data, panel_params, coord,
       orientation = self$default_params$orientation,
