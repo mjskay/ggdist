@@ -102,7 +102,7 @@ geom_lineribbon = function(
   )
 }
 
-draw_key_lineribbon = function(data, params, size) {
+draw_key_lineribbon = function(self, data, params, size) {
   if (!is.null(data$fill_ramp) && is.na(data$fill)) {
     data$fill = "gray65"
   }
@@ -132,7 +132,8 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     stroke = 1
   ),
 
-  draw_key = draw_key_lineribbon,
+  # workaround (#84)
+  draw_key = function(self, ...) draw_key_lineribbon(self, ...),
 
   required_aes = c("x", "y"),
 
