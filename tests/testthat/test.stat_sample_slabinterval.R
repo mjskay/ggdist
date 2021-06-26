@@ -78,7 +78,7 @@ test_that("histinterval and slab work", {
   vdiffr::expect_doppelganger("histintervalh with outline",
     p + stat_histinterval(aes(y = dist, x = x), slab_color = "black")
   )
-  vdiffr::expect_doppelganger("histinterval with outlines between bars",
+  vdiffr::expect_doppelganger("histinterval with outlines bw bars",
     p + stat_histinterval(aes(x = dist, y = x), slab_color = "black", outline_bars = TRUE)
   )
 
