@@ -126,7 +126,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "justification", "scale"), name = "geom_dotsinterval", finite = TRUE)
   # side is a character vector, thus need finite = FALSE for it
   s_data = ggplot2::remove_missing(s_data, na.rm, "side", name = "geom_dotsinterval", finite = FALSE)
-  if (nrow(s_data) == 0) return(zeroGrob())
+  if (nrow(s_data) == 0) return(list())
 
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
