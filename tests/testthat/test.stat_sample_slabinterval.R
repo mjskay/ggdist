@@ -22,7 +22,7 @@ test_that("vanilla stat_slabinterval works", {
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("vanilla stat_slabinterval",
-    p + stat_slabinterval(aes(x = dist, y = x), n = 20, slab_function = sample_slab_function)
+    p + stat_slabinterval(aes(x = dist, y = x), n = 10, slab_function = sample_slab_function)
   )
 })
 
@@ -41,20 +41,20 @@ test_that("gradientinterval works", {
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("gradientinterval with two groups",
-    p + stat_gradientinterval(aes(x = dist, y = x), n = 20, fill_type = "segments")
+    p + stat_gradientinterval(aes(x = dist, y = x), n = 15, fill_type = "segments")
   )
   vdiffr::expect_doppelganger("gradientintervalh with two groups",
-    p + stat_gradientinterval(aes(y = dist, x = x), n = 20, fill_type = "segments")
+    p + stat_gradientinterval(aes(y = dist, x = x), n = 15, fill_type = "segments")
   )
 
   # N.B. the following two tests are currently a bit useless as vdiffr doesn't
   # support linearGradient yet, but leaving them here so that once it does we
   # have tests for this.
   vdiffr::expect_doppelganger("fill_type = gradient with two groups",
-    p + stat_gradientinterval(aes(x = dist, y = x), n = 20, fill_type = "gradient")
+    p + stat_gradientinterval(aes(x = dist, y = x), n = 15, fill_type = "gradient")
   )
   vdiffr::expect_doppelganger("fill_type = gradient with two groups, h",
-    p + stat_gradientinterval(aes(y = dist, x = x), n = 20, fill_type = "gradient")
+    p + stat_gradientinterval(aes(y = dist, x = x), n = 15, fill_type = "gradient")
   )
 
 })
@@ -85,9 +85,6 @@ test_that("histinterval and slab work", {
   vdiffr::expect_doppelganger("slab with outline",
     p + stat_slab(aes(x = dist, y = x), n = 20, slab_color = "black")
   )
-  vdiffr::expect_doppelganger("slabh with outline",
-    p + stat_slab(aes(y = dist, x = x), n = 20, slab_color = "black")
-  )
 
 })
 
@@ -101,19 +98,19 @@ test_that("scale transformation works", {
     scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 
   vdiffr::expect_doppelganger("halfeyeh log scale transform",
-    p_log + stat_halfeye(point_interval = mode_hdci, n = 50)
+    p_log + stat_halfeye(point_interval = mode_hdci, n = 20)
   )
 
   vdiffr::expect_doppelganger("ccdfintervalh log scale transform",
-    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 50)
+    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 20)
   )
 
   vdiffr::expect_doppelganger("cdfintervalh log scale transform",
-    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 50)
+    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 20)
   )
 
   vdiffr::expect_doppelganger("histintervalh log scale transform",
-    p_log + stat_histinterval(point_interval = median_qi, n = 50)
+    p_log + stat_histinterval(point_interval = median_qi, n = 20)
   )
 
 })
@@ -129,7 +126,7 @@ test_that("pdf and cdf aesthetics work", {
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("pdf and cdf on a sample slabinterval",
-    p + stat_sample_slabinterval(aes(fill = x, thickness = stat(pdf), slab_alpha = stat(cdf)), n = 20) + geom_point()
+    p + stat_sample_slabinterval(aes(fill = x, thickness = stat(pdf), slab_alpha = stat(cdf)), n = 15)
   )
 
   expect_error(weighted_ecdf(NULL), "Need at least 1 or more values")
@@ -147,7 +144,7 @@ test_that("constant distributions work", {
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("constant dist on halfeye",
-    p + stat_sample_slabinterval(n = 20)
+    p + stat_sample_slabinterval(n = 15)
   )
 
   vdiffr::expect_doppelganger("constant dist on ccdf",
@@ -166,7 +163,7 @@ test_that("side and justification can vary", {
         justification = case_when(cyl == 4 ~ 0, cyl == 6 ~ 0.5, cyl == 8 ~ 1),
         scale = case_when(cyl == 4 ~ 0.5, cyl == 6 ~ 1, cyl == 8 ~ 0.5)
       )) +
-      stat_sample_slabinterval(orientation = "horizontal", normalize = "groups")
+      stat_sample_slabinterval(orientation = "horizontal", normalize = "groups", n = 15)
   )
 })
 
@@ -182,6 +179,6 @@ test_that("n is calculated correctly", {
   vdiffr::expect_doppelganger("pdf*n for different-sized groups",
     df %>%
       ggplot(aes(x = x, y = g, thickness = stat(pdf*n), fill = stat(n))) +
-      stat_sample_slabinterval()
+      stat_sample_slabinterval(n = 15)
   )
 })

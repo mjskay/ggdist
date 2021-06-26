@@ -22,41 +22,41 @@ test_that("distribution eye plots work with the args aesthetic", {
 
   expect_warning(
     vdiffr::expect_doppelganger("vertical eye using args without na.rm",
-      p + stat_dist_eye(aes(x = dist), n = 40)
+      p + stat_dist_eye(aes(x = dist), n = 20)
     ),
     "Removed 2 rows containing missing values"
   )
 
   vdiffr::expect_doppelganger("vertical eye using args",
-    p + stat_dist_eye(aes(x = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_eye(aes(x = dist), na.rm = TRUE, n = 20)
   )
 
   vdiffr::expect_doppelganger("horizontal eye using args",
-    p + stat_dist_eye(aes(y = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_eye(aes(y = dist), na.rm = TRUE, n = 20)
   )
 
   vdiffr::expect_doppelganger("vertical half-eye using args",
-    p + stat_dist_halfeye(aes(x = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_halfeye(aes(x = dist), na.rm = TRUE, n = 20)
   )
 
   vdiffr::expect_doppelganger("horizontal half-eye using args",
-    p + stat_dist_halfeye(aes(y = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_halfeye(aes(y = dist), na.rm = TRUE, n = 20)
   )
 
   vdiffr::expect_doppelganger("ccdfinterval using args",
-    p + stat_dist_ccdfinterval(aes(x = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_ccdfinterval(aes(x = dist), na.rm = TRUE, n = 25)
   )
 
   vdiffr::expect_doppelganger("ccdfintervalh using args",
-    p + stat_dist_ccdfinterval(aes(y = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_ccdfinterval(aes(y = dist), na.rm = TRUE, n = 25)
   )
 
   vdiffr::expect_doppelganger("cdfinterval using args",
-    p + stat_dist_cdfinterval(aes(x = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_cdfinterval(aes(x = dist), na.rm = TRUE, n = 25)
   )
 
   vdiffr::expect_doppelganger("cdfintervalh using args",
-    p + stat_dist_cdfinterval(aes(y = dist), na.rm = TRUE, n = 40)
+    p + stat_dist_cdfinterval(aes(y = dist), na.rm = TRUE, n = 25)
   )
 
 })
@@ -85,20 +85,20 @@ test_that("stat_dist_gradientinterval works", {
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("dist_gradientinterval with two groups",
-    p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "segments")
+    p + stat_dist_gradientinterval(aes(x = dist), n = 15, p_limits = c(0.01, 0.99), fill_type = "segments")
   )
   vdiffr::expect_doppelganger("dist_gradientintervalh with two groups",
-    p + stat_dist_gradientinterval(aes(y = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "segments")
+    p + stat_dist_gradientinterval(aes(y = dist), n = 15, p_limits = c(0.01, 0.99), fill_type = "segments")
   )
 
   # N.B. the following two tests are currently a bit useless as vdiffr doesn't
   # support linearGradient yet, but leaving them here so that once it does we
   # have tests for this.
   vdiffr::expect_doppelganger("fill_type = gradient with two groups",
-    p + stat_dist_gradientinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "gradient")
+    p + stat_dist_gradientinterval(aes(x = dist), n = 15, p_limits = c(0.01, 0.99), fill_type = "gradient")
   )
   vdiffr::expect_doppelganger("fill_type = gradient with two groups, h",
-    p + stat_dist_gradientinterval(aes(y = dist), n = 20, p_limits = c(0.01, 0.99), fill_type = "gradient")
+    p + stat_dist_gradientinterval(aes(y = dist), n = 15, p_limits = c(0.01, 0.99), fill_type = "gradient")
   )
 })
 
@@ -129,10 +129,10 @@ test_that("stat_dist_pointinterval, interval, and slab work", {
   )
 
   vdiffr::expect_doppelganger("dist_slab with two groups",
-    p + stat_dist_slab(aes(x = dist), n = 20)
+    p + stat_dist_slab(aes(x = dist), n = 15)
   )
   vdiffr::expect_doppelganger("dist_slabh with two groups",
-    p + stat_dist_slab(aes(y = dist), n = 20)
+    p + stat_dist_slab(aes(y = dist), n = 15)
   )
 })
 
@@ -151,11 +151,11 @@ test_that("scale transformation works", {
     scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 
   vdiffr::expect_doppelganger("dist_halfeyeh log scale transform",
-    p_log + stat_dist_halfeye(n = 100)
+    p_log + stat_dist_halfeye(n = 20)
   )
 
   vdiffr::expect_doppelganger("dist_ccdfintervalh log scale transform",
-    p_log + stat_dist_ccdfinterval(n = 100)
+    p_log + stat_dist_ccdfinterval(n = 20)
   )
 
 
@@ -164,11 +164,11 @@ test_that("scale transformation works", {
     scale_x_reverse()
 
   vdiffr::expect_doppelganger("dist_halfeyeh reverse scale transform",
-    p_rev + stat_dist_halfeye(n = 100)
+    p_rev + stat_dist_halfeye(n = 40)
   )
 
   vdiffr::expect_doppelganger("ccdfinterval reverse scale transform",
-    p_rev + stat_dist_ccdfinterval(n = 100)
+    p_rev + stat_dist_ccdfinterval(n = 40)
   )
 })
 
@@ -218,7 +218,7 @@ test_that("pdf and cdf aesthetics work", {
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("pdf and cdf on a slabinterval",
-    p + stat_dist_slabinterval(aes(x = dist), n = 20, p_limits = c(0.01, 0.99))
+    p + stat_dist_slabinterval(aes(x = dist), n = 15, p_limits = c(0.01, 0.99))
   )
 })
 
@@ -234,11 +234,11 @@ test_that("distributional objects work", {
     ggplot(aes(x = name, dist = dist))
 
   vdiffr::expect_doppelganger("dist objects in stat_dist_halfeye",
-    p + stat_dist_halfeye(n = 20)
+    p + stat_dist_halfeye(n = 15)
   )
 
   vdiffr::expect_doppelganger("dist objects in stat_dist_ccdfinterval",
-    p + stat_dist_ccdfinterval(n = 20)
+    p + stat_dist_ccdfinterval(n = 15)
   )
 
   vdiffr::expect_doppelganger("dist_sample",
@@ -246,7 +246,7 @@ test_that("distributional objects work", {
       x = dist_sample(list(qnorm(ppoints(100)), qnorm(ppoints(100), mean = 1)))
     ) %>%
       ggplot(aes(dist = x, y = "a")) +
-      stat_dist_slab(fill = NA, color = "black", n = 20)
+      stat_dist_slab(fill = NA, color = "black", n = 15)
   )
 
 })
@@ -262,7 +262,7 @@ test_that("stat_dist_ works on factor dist names", {
     ggplot(aes(dist = x, y = y))
 
   vdiffr::expect_doppelganger("stat_dist_ with factor dist name",
-    p + stat_dist_slabinterval()
+    p + stat_dist_slabinterval(n = 15)
   )
 
 })
@@ -292,7 +292,7 @@ test_that("justification can vary", {
     ggplot(aes(x = id, dist = dist, justification = just))
 
   vdiffr::expect_doppelganger("ccdf with varying just",
-    p + stat_dist_ccdfinterval(n = 20)
+    p + stat_dist_ccdfinterval(n = 15)
   )
 })
 
@@ -308,11 +308,11 @@ test_that("NA distributional objects work", {
     ggplot(aes(x = name, dist = dist))
 
   vdiffr::expect_doppelganger("NA dists in stat_dist_slabinterval",
-    p + stat_dist_halfeye(n = 20, na.rm = TRUE)
+    p + stat_dist_halfeye(n = 15, na.rm = TRUE)
   )
 
   vdiffr::expect_doppelganger("NA dists in stat_dist_dotsinterval",
-    p + stat_dist_dotsinterval(n = 20, na.rm = TRUE)
+    p + stat_dist_dotsinterval(n = 15, na.rm = TRUE)
   )
 
 })

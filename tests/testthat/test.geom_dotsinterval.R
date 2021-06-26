@@ -117,19 +117,15 @@ test_that("stat_dist_dots[interval] works", {
     ggplot(aes(dist = dist, args = args))
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dots",
-    p + stat_dist_dots(aes(x = dist), n = 20)
-  )
-
-  vdiffr::expect_doppelganger("vanilla stat_dist_dotsh",
-    p + stat_dist_dots(aes(y = dist), n = 20)
+    p + stat_dist_dots(aes(x = dist), n = 20, quantiles = 20)
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dotsinterval",
-    p + stat_dist_dotsinterval(aes(x = dist), n = 20)
+    p + stat_dist_dotsinterval(aes(x = dist), n = 20, quantiles = 20)
   )
 
   vdiffr::expect_doppelganger("vanilla stat_dist_dotsintervalh",
-    p + stat_dist_dotsinterval(aes(y = dist), n = 20)
+    p + stat_dist_dotsinterval(aes(y = dist), n = 20, quantiles = 20)
   )
 
 })
@@ -145,11 +141,11 @@ test_that("stat_dist_dots works on NA data", {
     ggplot(aes(dist = x, y = y))
 
   expect_warning(vdiffr::expect_doppelganger("stat_dist_dots with na.rm = FALSE",
-    p + stat_dist_dots(na.rm = FALSE)
+    p + stat_dist_dots(na.rm = FALSE, quantiles = 20)
   ), "Removed 1 rows containing non-finite values")
 
   vdiffr::expect_doppelganger("stat_dist_dots with na.rm = TRUE",
-    p + stat_dist_dots(na.rm = TRUE)
+    p + stat_dist_dots(na.rm = TRUE, quantiles = 20)
   )
 
 })
@@ -165,7 +161,7 @@ test_that("stat_dist_dots works on distributional objects", {
     ggplot(aes(dist = x, y = y))
 
   vdiffr::expect_doppelganger("stat_dist_dots with dist_normal",
-    p + stat_dist_dots()
+    p + stat_dist_dots(quantiles = 20)
   )
 
 })
