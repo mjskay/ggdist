@@ -22,7 +22,7 @@ rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymi
     for (a in scaling_aes) {
       # use %in% here so that `NA`s are treated as equal
       if (!isTRUE(all(d[[a]] %in% d[[a]][[1]]))) {
-        stop(
+        stop0(
           "Slab `", a, "` cannot vary within groups:\n",
           "all rows within the same slab must have the same `", a, "`."
         )
@@ -852,11 +852,11 @@ draw_polygon = function(data, panel_params, coord, fill = NULL) {
 
 switch_fill_type = function(fill_type, segments, gradient) {
   if (getRversion() < "4.1.0" && fill_type == "gradient") {
-    message(
-      'fill_type = "gradient" is not supported in R < 4.1.0.\n',
-      'Falling back to fill_type = "segments"'
-    )
-    fill_type = "segments"
+    message(                                                      # nocov
+      'fill_type = "gradient" is not supported in R < 4.1.0.\n',  # nocov
+      'Falling back to fill_type = "segments"'                    # nocov
+    )                                                             # nocov
+    fill_type = "segments"                                        # nocov
   }
 
   switch(fill_type,

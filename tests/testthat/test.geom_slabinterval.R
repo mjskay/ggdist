@@ -108,3 +108,59 @@ test_that("alpha channel in fill colors works", {
       geom_slab(fill = scales::alpha("black", 0.2))
   )
 })
+
+
+
+# side, justification, and scale can vary ---------------------------------
+
+test_that("side and justification can vary", {
+  skip_if_no_vdiffr()
+
+  df = tibble(
+    x = rep(1:10, each = 2),
+    y = dnorm(x, c(4.5, 5.5), 2),
+    g = rep(c("a","b"), 10)
+  )
+
+  vdiffr::expect_doppelganger("varying side and just",
+    df %>%
+      ggplot(aes(x = x, y = g, thickness = y,
+        side = ifelse(g == "a", "top", "bottom"),
+        justification = ifelse(g == "a", 0, 1),
+        scale = ifelse(g == "a", 0.5, 0.25)
+      )) +
+      geom_slab()
+  )
+
+  expect_error(
+    print(
+      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
+        side = ifelse(x < 5, "top", "bottom")
+      )) +
+      geom_slab(orientation = "horizontal")
+    ),
+    "Slab `side` cannot vary within groups"
+  )
+
+  expect_error(
+    print(
+      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
+        justification = ifelse(x < 5, 0, 1)
+      )) +
+      geom_slab(orientation = "horizontal")
+    ),
+    "Slab `justification` cannot vary within groups"
+  )
+
+  expect_error(
+    print(
+      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
+        scale = ifelse(x < 5, 0.5, 0.25)
+      )) +
+      geom_slab(orientation = "horizontal")
+    ),
+    "Slab `scale` cannot vary within groups"
+  )
+
+})
+

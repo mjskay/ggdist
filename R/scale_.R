@@ -204,7 +204,7 @@ scale_interval_linetype_discrete = function(..., na.value = "blank") {
 #' @rdname scales
 #' @export
 scale_interval_linetype_continuous = function(...) {
-  stop("A continuous variable cannot be mapped to linetype", call. = FALSE)
+  stop0("A continuous variable cannot be mapped to linetype")
 }
 
 
@@ -274,7 +274,7 @@ scale_slab_linetype_discrete = function(..., na.value = "blank") {
 #' @rdname scales
 #' @export
 scale_slab_linetype_continuous = function(...) {
-  stop("A continuous variable cannot be mapped to linetype", call. = FALSE)
+  stop0("A continuous variable cannot be mapped to linetype")
 }
 
 
@@ -287,7 +287,7 @@ scale_slab_shape_discrete = function(..., solid = TRUE) {
 #' @rdname scales
 #' @export
 scale_slab_shape_continuous = function (...) {
-  stop("A continuous variable cannot be mapped to shape", call. = FALSE)
+  stop0("A continuous variable cannot be mapped to shape")
 }
 
 

@@ -10,25 +10,26 @@ deparse0 = function(expr, width.cutoff = 500, ...) {
   paste0(deparse(expr, width.cutoff = width.cutoff, ...), collapse = "")
 }
 
+stop0 = function(...) {
+  stop(..., call. = FALSE)
+}
+
+warning0 = function(...) {
+  warning(..., call. = FALSE)
+}
+
 # get all variable names from an expression
 # based on http://adv-r.had.co.nz/dsl.html
 all_names = function(x) {
   if (is.atomic(x)) {
     NULL
   } else if (is.name(x)) {
-    name = as.character(x)
-    if (name == "") {
-      NULL
-    }
-    else {
-      name
-    }
+    as.character(x)
   } else if (is.call(x) || is.pairlist(x)) {
     children = lapply(x[-1], all_names)
     unique(unlist(children))
   } else {
-    stop("Don't know how to handle type `", typeof(x), "`",
-      call. = FALSE)
+    stop0("Don't know how to handle type ", deparse0(typeof(x)))
   }
 }
 
@@ -45,11 +46,9 @@ defaults = function(x, defaults) {
   deprecated_args = intersect(old_names, names(enexprs(...)))
 
   if (length(deprecated_args) > 0) {
-    stop(
+    stop0(
       "\nIn ", fun, "(): The `", deprecated_args[[1]], "` argument is deprecated.\n",
-      message,
-
-      call. = FALSE
+      message
     )
   }
 }
@@ -61,13 +60,11 @@ defaults = function(x, defaults) {
     new_name = quo_name(enquo(new_arg))
     old_name = quo_name(enquo(old_arg))
 
-    warning(
+    warning0(
       "\nIn ", fun, "(): The `", old_name, "` argument is a deprecated alias for `",
       new_name, "`.\n",
       "Use the `", new_name, "` argument instead.\n",
-      "See help(\"tidybayes-deprecated\") or help(\"ggdist-deprecated\").\n",
-
-      call. = FALSE
+      "See help(\"tidybayes-deprecated\") or help(\"ggdist-deprecated\").\n"
     )
 
     old_arg
@@ -131,10 +128,7 @@ fct_rev_ = function(x) {
   if (is.character(x)) {
     x = factor(x)
   } else if (!is.factor(x)) {
-    stop(
-      "`x` must be a factor (or character vector).",
-      call. = FALSE
-    )
+    stop0("`x` must be a factor (or character vector).")
   }
   factor(x, levels = rev(levels(x)))
 }
