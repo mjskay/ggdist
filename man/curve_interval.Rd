@@ -87,19 +87,17 @@ Juul \emph{et al.} (2020) for an accessible introduction to the idea.
 \examples{
 
 library(dplyr)
-library(tidyr)
 library(ggplot2)
 
 # generate a set of curves
 k = 11 # number of curves
 n = 201
 df = tibble(
-    .draw = 1:k,
-    mean = seq(-5,5, length.out = k),
-    x = list(seq(-15,15,length.out = n))
-  ) \%>\%
-  unnest(x) \%>\%
-  mutate(y = dnorm(x, mean, 3))
+    .draw = rep(1:k, n),
+    mean = rep(seq(-5,5, length.out = k), n),
+    x = rep(seq(-15,15,length.out = n), each = k),
+    y = dnorm(x, mean, 3)
+  )
 
 # see pointwise intervals...
 df \%>\%

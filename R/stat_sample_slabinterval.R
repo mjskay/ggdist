@@ -196,20 +196,14 @@ sample_slab_function = function(
 #' @examples
 #'
 #' library(dplyr)
-#' library(tidyr)
 #' library(ggplot2)
 #'
 #' # consider the following example data:
 #' set.seed(1234)
-#' df = tribble(
-#'   ~group, ~subgroup, ~value,
-#'   "a",          "h", rnorm(500, mean = 5),
-#'   "b",          "h", rnorm(500, mean = 7, sd = 1.5),
-#'   "c",          "h", rnorm(500, mean = 8),
-#'   "c",          "i", rnorm(500, mean = 9),
-#'   "c",          "j", rnorm(500, mean = 7)
-#' ) %>%
-#'   unnest(value)
+#' df = data.frame(
+#'   group = c("a", "b", "c", "c", "c"),
+#'   value = rnorm(2500, mean = c(5, 7, 9, 9, 9), sd = c(1, 1.5, 1, 1, 1))
+#' )
 #'
 #' # here are vertical eyes:
 #' df %>%
