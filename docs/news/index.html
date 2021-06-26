@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
       </span>
     </div>
 
@@ -159,7 +159,7 @@
 <p>New features:</p>
 <ul>
 <li>Added <code>"weave"</code> and <code>"swarm"</code> layouts for dots geoms (<a href='https://github.com/mjskay/ggdist/issues/64'>#64</a>). These provide alternative layouts that keep datapoints in their actual positions on the data axis. The <code>"weave"</code> layout maintains rows but not columns and works well for quantile dotplots; the <code>"swarm"</code> layout uses the <code>"compactswarm"</code> method from <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html">beeswarm::beeswarm()</a></code> (courtesy James Trimble) and works well on sample data. See the dotplot section of <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for comparisons.</li>
-<li>Allow the use of <code>unit()</code> to specify bin widths manually for dots geoms and stats, which can be helpful when you need dotplots across facets to have the same bin width (<a href='https://github.com/mjskay/ggdist/issues/53'>#53</a>).</li>
+<li>Allow the use of <code><a href="https://rdrr.io/r/grid/unit.html">unit()</a></code> to specify bin widths manually for dots geoms and stats, which can be helpful when you need dotplots across facets to have the same bin width (<a href='https://github.com/mjskay/ggdist/issues/53'>#53</a>).</li>
 </ul>
 <p>New documentation:</p>
 <ul>

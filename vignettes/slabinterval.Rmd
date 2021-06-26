@@ -595,16 +595,7 @@ The encodings thus far are *continuous* probability encodings: they map probabil
 
 ### On sample data: `stat_dots`
 
-For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots:
-
-```{r dots_dodge, fig.width = med_width, fig.height = small_height}
-df %>%
-  ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_dots(position = "dodge") +
-  labs(title = "stat_dots(position = 'dodge')")
-```
-
-Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:
+For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:
 
 ```{r dots_dodge_nocolor, fig.width = med_width, fig.height = small_height}
 df %>%
@@ -612,6 +603,9 @@ df %>%
   stat_dots(position = "dodge") +
   labs(title = "stat_dots(aes(fill = subgroup, color = subgroup))")
 ```
+
+Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. 
+
 
 ### Quantile dotplots
 
@@ -740,24 +734,16 @@ associated with its height, the result would be a so-called *fuzzygram* ([Wilkin
 
 ### Highlighting and other combinations
 
-The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. Take the earlier example of visualizing priors:
+The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. 
+Taking the earlier example of visualizing priors, we can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
 
-```{r norm_vs_t_2, fig.width = small_width, fig.height = small_height}
+```{r norm_vs_t_highlight, fig.width = med_width, fig.height = small_height}
 priors = tribble(
   ~ dist,      ~ args,
   "norm",      list(0, 1),
   "student_t", list(3, 0, 1)
 ) 
 
-priors %>%
-  ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_halfeye() +
-  ggtitle("stat_dist_halfeye()")
-```
-
-We can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
-
-```{r norm_vs_t_highlight, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
   stat_dist_halfeye(aes(fill = stat(abs(x) < 1.5))) +

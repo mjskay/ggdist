@@ -60,15 +60,6 @@ reference:
   - lkjcorr_marginal
   - marginalize_lkjcorr
 
-- title: Compatibility with other packages
-  desc:  Functions to convert the ggdist naming scheme (for `point_interval()`) to
-    and from other packages' naming schemes.
-  contents:
-  - to_broom_names
-  - from_broom_names
-  - to_ggmcmc_names
-  - from_ggmcmc_names
-
 - title: GGplot scales
   desc:  Scales for custom aesthetics used by ggdist geoms and stats
   contents:
@@ -82,6 +73,22 @@ reference:
   - facet_title_left_horizontal
   - facet_title_right_horizontal
   - axis_titles_bottom_left
+
+- title: Dotplot layout algorithms
+  desc: Algorithms used by `geom_dotsinterval()` for automatically determining
+    nice-looking dotplot binwidths and laying out dots.
+  contents:
+  - find_dotplot_binwidth
+  - bin_dots
+
+- title: Compatibility with other packages
+  desc:  Functions to convert the ggdist naming scheme (for `point_interval()`) to
+    and from other packages' naming schemes.
+  contents:
+  - to_broom_names
+  - from_broom_names
+  - to_ggmcmc_names
+  - from_ggmcmc_names
 
 - title: Datasets
   desc:  Datasets used for examples and testing

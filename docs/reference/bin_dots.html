@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Translate between different tidy data frame formats for draws from distributions — tidy-format-translators • ggdist</title>
+<title>Bin data values using a dotplot algorithm — bin_dots • ggdist</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,9 +48,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Translate between different tidy data frame formats for draws from distributions — tidy-format-translators" />
-<meta property="og:description" content="These functions translate ggdist/tidybayes-style data frames to/from different data frame
-formats (each format using a different naming scheme for its columns)." />
+<meta property="og:title" content="Bin data values using a dotplot algorithm — bin_dots" />
+<meta property="og:description" content="Bins the provided data values using one of several dotplot algorithms." />
 <meta property="og:image" content="http://mjskay.github.io/ggdist/logo.svg" />
 
 
@@ -150,89 +149,96 @@ formats (each format using a different naming scheme for its columns)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Translate between different tidy data frame formats for draws from distributions</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/tidy_format_translators.R'><code>R/tidy_format_translators.R</code></a></small>
-    <div class="hidden name"><code>tidy-format-translators.Rd</code></div>
+    <h1>Bin data values using a dotplot algorithm</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mjskay/ggdist/blob/master/R/binning_methods.R'><code>R/binning_methods.R</code></a></small>
+    <div class="hidden name"><code>bin_dots.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These functions translate ggdist/tidybayes-style data frames to/from different data frame
-formats (each format using a different naming scheme for its columns).</p>
+    <p>Bins the provided data values using one of several dotplot algorithms.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>to_broom_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
-
-<span class='fu'>from_broom_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
-
-<span class='fu'>to_ggmcmc_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
-
-<span class='fu'>from_ggmcmc_names</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>bin_dots</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>y</span>,
+  <span class='va'>binwidth</span>,
+  heightratio <span class='op'>=</span> <span class='fl'>1</span>,
+  layout <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bin"</span>, <span class='st'>"weave"</span>, <span class='st'>"swarm"</span><span class='op'>)</span>,
+  side <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"topright"</span>, <span class='st'>"top"</span>, <span class='st'>"right"</span>, <span class='st'>"bottomleft"</span>, <span class='st'>"bottom"</span>, <span class='st'>"left"</span>, <span class='st'>"topleft"</span>,
+    <span class='st'>"bottomright"</span>, <span class='st'>"both"</span><span class='op'>)</span>,
+  orientation <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"horizontal"</span>, <span class='st'>"vertical"</span>, <span class='st'>"y"</span>, <span class='st'>"x"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>A data frame to translate.</p></td>
+      <th>x</th>
+      <td><p>numeric vector of x values</p></td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td><p>numeric vector of y values</p></td>
+    </tr>
+    <tr>
+      <th>binwidth</th>
+      <td><p>bin width</p></td>
+    </tr>
+    <tr>
+      <th>heightratio</th>
+      <td><p>ratio of bin width to dot height</p></td>
+    </tr>
+    <tr>
+      <th>layout</th>
+      <td><p>The layout method used for the dots:</p><ul>
+<li><p><code>"bin"</code> (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
+This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
+classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
+the input data are symmetricaly it will return a symmetrical layout.</p></li>
+<li><p><code>"weave"</code>: uses the same basic binning approach of <code>"bin"</code>, but places dots in the off-axis at their actual
+positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
+align dots within columns. Does not work well when <code>side = "both"</code>.</p></li>
+<li><p><code>"swarm"</code>: uses the <code>"compactswarm"</code> layout from <code><a href='https://rdrr.io/pkg/beeswarm/man/beeswarm.html'>beeswarm::beeswarm()</a></code>. Does not maintain alignment of rows or
+columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
+dotplots of theoretical distributions, which may look better with <code>"bin"</code> or <code>"weave"</code>).</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>side</th>
+      <td><p>Which side to place the slab on. <code>"topright"</code>, <code>"top"</code>, and <code>"right"</code> are synonyms
+which cause the slab to be drawn on the top or the right depending on if <code>orientation</code> is <code>"horizontal"</code>
+or <code>"vertical"</code>. <code>"bottomleft"</code>, <code>"bottom"</code>, and <code>"left"</code> are synonyms which cause the slab
+to be drawn on the bottom or the left depending on if <code>orientation</code> is <code>"horizontal"</code> or
+<code>"vertical"</code>. <code>"topleft"</code> causes the slab to be drawn on the top or the left, and <code>"bottomright"</code>
+causes the slab to be drawn on the bottom or the right. <code>"both"</code> draws the slab mirrored on both
+sides (as in a violin plot).</p></td>
+    </tr>
+    <tr>
+      <th>orientation</th>
+      <td><p>Whether the dots are laid out horizontally or vertically.
+Follows the naming scheme of <code><a href='geom_slabinterval.html'>geom_slabinterval()</a></code>:</p><ul>
+<li><p><code>"horizontal"</code> assumes the data values for the dotplot are in the <code>x</code>
+variable and that dots will be stacked up in the <code>y</code> direction.</p></li>
+<li><p><code>"vertical"</code> assumes the data values for the dotplot are in the <code>y</code>
+variable and that dots will be stacked up in the <code>x</code> direction.</p></li>
+</ul>
+
+<p>For compatibility with the base ggplot naming scheme for <code>orientation</code>,
+<code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
+<code>"horizontal"</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with (possibly) new names in some columns, according to the
-translation scheme described in <em>Details</em>.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Function prefixed with <code>to_</code> translate from the ggdist/tidybayes format to another format, functions
-prefixed with <code>from_</code> translate from that format back to the ggdist/tidybayes format. Formats include:</p>
-<p><code>to_broom_names()</code> / <code>from_broom_names()</code>:</p>
-<ul>
-<li><p><code>.variable</code> &lt;-&gt; <code>term</code></p></li>
-<li><p><code>.value</code> &lt;-&gt; <code>estimate</code></p></li>
-<li><p><code>.prediction</code> &lt;-&gt; <code>.fitted</code></p></li>
-<li><p><code>.lower</code> &lt;-&gt; <code>conf.low</code></p></li>
-<li><p><code>.upper</code> &lt;-&gt; <code>conf.high</code></p></li>
+    <p>A <code>data.frame</code> with three columns:</p><ul>
+<li><p><code>x</code>: the x position of each dot</p></li>
+<li><p><code>y</code>: the y position of each dot</p></li>
+<li><p><code>bin</code>: a unique number associated with each bin
+(supplied but not used when <code>layout = "swarm"</code>)</p></li>
 </ul>
 
-<p><code>to_ggmcmc_names()</code> / <code>from_ggmcmc_names()</code>:</p>
-<ul>
-<li><p><code>.chain</code> &lt;-&gt; <code>Chain</code></p></li>
-<li><p><code>.iteration</code> &lt;-&gt; <code>Iteration</code></p></li>
-<li><p><code>.variable</code> &lt;-&gt; <code>Parameter</code></p></li>
-<li><p><code>.value</code> &lt;-&gt; <code>value</code></p></li>
-</ul>
 
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Matthew Kay</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>RankCorr_u_tau</span>, package <span class='op'>=</span> <span class='st'>"ggdist"</span><span class='op'>)</span>
-
-<span class='va'>df</span> <span class='op'>=</span> <span class='va'>RankCorr_u_tau</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>.variable <span class='op'>=</span> <span class='va'>i</span>, .value <span class='op'>=</span> <span class='va'>u_tau</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>.variable</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span><span class='va'>.value</span><span class='op'>)</span>
-
-<span class='va'>df</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 7</span>
-#&gt;   .variable .value .lower .upper .width .point .interval
-#&gt;       <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    
-#&gt; <span style='color: #BCBCBC;'>1</span>         1   5.62   3.86   8.03   0.95 median qi       
-#&gt; <span style='color: #BCBCBC;'>2</span>         2   5.48   3.46   9.07   0.95 median qi       
-#&gt; <span style='color: #BCBCBC;'>3</span>         3   4.96   3.10   7.86   0.95 median qi       </div><div class='input'>
-<span class='va'>df</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>to_broom_names</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 7</span>
-#&gt;    term estimate conf.low conf.high .width .point .interval
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    
-#&gt; <span style='color: #BCBCBC;'>1</span>     1     5.62     3.86      8.03   0.95 median qi       
-#&gt; <span style='color: #BCBCBC;'>2</span>     2     5.48     3.46      9.07   0.95 median qi       
-#&gt; <span style='color: #BCBCBC;'>3</span>     3     4.96     3.10      7.86   0.95 median qi       </div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

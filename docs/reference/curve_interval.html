@@ -93,7 +93,7 @@ interval summaries using a curve boxplot-inspired approach." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
       </span>
     </div>
 
@@ -192,10 +192,11 @@ This can be list columns.</p></td>
       <td><p>Which columns are the input values to the function describing the curve (e.g., the "x"
 values). Supports tidyselect syntax, as in <code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. Intervals are calculated jointly with
 respect to these variables, conditional on all other grouping variables in the data frame. The default
-(<code>NULL</code>) causes <code>curve_interval()</code> to use all grouping variables in the input data frame, which will
-generate the most conservative intervals. However, if you want to calculate intervals for some function
-<code>y = f(x)</code> conditional on some other variable(s) (say, conditional on a factor <code>g</code>), you would group by
-<code>g</code>, then use <code>.along = x</code> to calculate intervals jointly over <code>x</code> conditional on <code>g</code>.</p></td>
+(<code>NULL</code>) causes <code>curve_interval()</code> to use all grouping variables in the input data frame as the value
+for <code>.along</code>, which will generate the most conservative intervals. However, if you want to calculate
+intervals for some function <code>y = f(x)</code> conditional on some other variable(s) (say, conditional on a
+factor <code>g</code>), you would group by <code>g</code>, then use <code>.along = x</code> to calculate intervals jointly over <code>x</code>
+conditional on <code>g</code>.</p></td>
     </tr>
     <tr>
       <th>.width</th>
@@ -289,19 +290,17 @@ and discussion of the differences between pointwise and curvewise intervals.</p>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:base':</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 
 <span class='co'># generate a set of curves</span>
 <span class='va'>k</span> <span class='op'>=</span> <span class='fl'>11</span> <span class='co'># number of curves</span>
 <span class='va'>n</span> <span class='op'>=</span> <span class='fl'>201</span>
 <span class='va'>df</span> <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
-    .draw <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='va'>k</span>,
-    mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>,<span class='fl'>5</span>, length.out <span class='op'>=</span> <span class='va'>k</span><span class='op'>)</span>,
-    x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>15</span>,<span class='fl'>15</span>,length.out <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/nest.html'>unnest</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>dnorm</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mean</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+    .draw <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>k</span>, <span class='va'>n</span><span class='op'>)</span>,
+    mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>,<span class='fl'>5</span>, length.out <span class='op'>=</span> <span class='va'>k</span><span class='op'>)</span>, <span class='va'>n</span><span class='op'>)</span>,
+    x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>15</span>,<span class='fl'>15</span>,length.out <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span>, each <span class='op'>=</span> <span class='va'>k</span><span class='op'>)</span>,
+    y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>dnorm</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mean</span>, <span class='fl'>3</span><span class='op'>)</span>
+  <span class='op'>)</span>
 
 <span class='co'># see pointwise intervals...</span>
 <span class='va'>df</span> <span class='op'>%&gt;%</span>
