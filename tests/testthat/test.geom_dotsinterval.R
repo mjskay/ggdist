@@ -75,6 +75,36 @@ test_that("vanilla dots geoms and stats work", {
 
 })
 
+test_that("coordinate transformations work", {
+  skip_if_no_vdiffr()
+
+
+  set.seed(1234)
+  p = tribble(
+    ~dist,  ~x, ~datatype,
+    "norm", rnorm(20), "slab",
+    "t",    rt(20, 3), "slab"
+  ) %>%
+    unnest(x) %>%
+    bind_rows(tribble(
+      ~ dist,  ~x, ~datatype, ~lower, ~upper,
+      "norm", 0, "interval", -1, 1,
+      "t", 0, "interval", -2, 2
+    )) %>%
+    ggplot() +
+    geom_dotsinterval(aes(y = dist, x = x, xmin = lower, xmax = upper, datatype = datatype))
+
+  vdiffr::expect_doppelganger("coord_flip with dotsinterval",
+    p + coord_flip()
+  )
+
+  expect_error(
+    print(p + coord_polar()),
+    "geom_dotsinterval does not work properly with non-linear coordinates"
+  )
+
+})
+
 test_that("stat_dist_dots[interval] works", {
   skip_if_no_vdiffr()
 

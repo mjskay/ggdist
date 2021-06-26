@@ -484,11 +484,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     "ymin", "ymax", "xmin", "xmax", "width", "height", "thickness"
   ),
 
-  override_slab_aesthetics = override_slab_aesthetics,
-
-  override_point_aesthetics = override_point_aesthetics,
-
-  override_interval_aesthetics = override_interval_aesthetics,
+  # workaround (#84)
+  override_slab_aesthetics = function(self, ...) override_slab_aesthetics(self, ...),
+  override_point_aesthetics = function(self, ...) override_point_aesthetics(self, ...),
+  override_interval_aesthetics = function(self, ...) override_interval_aesthetics(self, ...),
 
   extra_params = c(
     "orientation",
