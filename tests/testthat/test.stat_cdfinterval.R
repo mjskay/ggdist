@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("stat_cdfinterval")
+
 
 test_that("dodged ccdf barplots work", {
   skip_if_no_vdiffr()

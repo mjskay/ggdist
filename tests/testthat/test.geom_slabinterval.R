@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("geom_slabinterval")
+
 
 
 # group_slab_data_by_colour -------------------------------------------------

@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("parse_dist")
+
 
 test_that("parse_dist works on vectors", {
   # using as.data.frame here because comparison of tibbles with

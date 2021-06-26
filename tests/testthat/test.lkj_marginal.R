@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("lkj_marginal")
+
 
 
 test_that("log of dlkjcorr_marginal is correct", {

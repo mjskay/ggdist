@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-context("util")
+
 
 test_that("all_names works", {
   expect_equal(all_names(1), NULL)

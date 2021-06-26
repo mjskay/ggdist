@@ -24,10 +24,11 @@
 #' @param .along Which columns are the input values to the function describing the curve (e.g., the "x"
 #' values). Supports tidyselect syntax, as in `dplyr::select()`. Intervals are calculated jointly with
 #' respect to these variables, conditional on all other grouping variables in the data frame. The default
-#' (`NULL`) causes `curve_interval()` to use all grouping variables in the input data frame, which will
-#' generate the most conservative intervals. However, if you want to calculate intervals for some function
-#' `y = f(x)` conditional on some other variable(s) (say, conditional on a factor `g`), you would group by
-#' `g`, then use `.along = x` to calculate intervals jointly over `x` conditional on `g`.
+#' (`NULL`) causes `curve_interval()` to use all grouping variables in the input data frame as the value
+#' for `.along`, which will generate the most conservative intervals. However, if you want to calculate
+#' intervals for some function `y = f(x)` conditional on some other variable(s) (say, conditional on a
+#' factor `g`), you would group by `g`, then use `.along = x` to calculate intervals jointly over `x`
+#' conditional on `g`.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
 #' a different probability interval (and value of the corresponding `.width` column).
@@ -133,7 +134,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
 
-    # get the grouping variables we will jointly calculate intervals on
+  # get the grouping variables we will jointly calculate intervals on
   .along = enquo(.along)
   if (is.null(quo_get_expr(.along))) {
     .along = group_vars(data)
@@ -227,7 +228,6 @@ halfspace_depth = function(x) {
   )
 
   map_dfr_(dfs, function(d) {
-
     if (.interval_internal == "mhd") { #mean halfspace depth
       # draws x y matrix
       draws = do.call(cbind, d[[col_name]])
@@ -237,10 +237,10 @@ halfspace_depth = function(x) {
       draw_depth = rowMeans(pointwise_depths, na.rm = na.rm)
     } else { # band depth using fbplot
       if (!requireNamespace("fda", quietly = TRUE)) {
-        stop(
-          'curve_interval(.interval = "', .interval, '") requires the `fda` package.\n',
-          'Please install the `fda` package or use .interval = "mhd".'
-        )
+        stop0(                                                                           # nocov
+          'curve_interval(.interval = "', .interval, '") requires the `fda` package.\n', # nocov
+          'Please install the `fda` package or use .interval = "mhd".'                   # nocov
+        )                                                                                # nocov
       }
       # y x draws matrix
       draws = do.call(rbind, d[[col_name]])

@@ -399,7 +399,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     data
   },
 
-  draw_slabs = draw_slabs_dots,
+  # workaround (#84)
+  draw_slabs = function(self, ...) draw_slabs_dots(self, ...),
 
   draw_key_slab = function(self, data, key_data, params, size) {
     # slab key is different from usual - it's actually a point!

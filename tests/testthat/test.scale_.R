@@ -6,7 +6,7 @@
 library(dplyr)
 library(tidyr)
 
-context("scale_")
+
 
 
 test_that("direct scale setting works", {

@@ -6,7 +6,7 @@
 library(dplyr)
 library(distributional)
 
-context("stat_dist_")
+
 
 test_that("distribution eye plots work with the args aesthetic", {
   skip_if_no_vdiffr()

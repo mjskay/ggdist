@@ -29,10 +29,11 @@ This can be list columns.}
 \item{.along}{Which columns are the input values to the function describing the curve (e.g., the "x"
 values). Supports tidyselect syntax, as in \code{dplyr::select()}. Intervals are calculated jointly with
 respect to these variables, conditional on all other grouping variables in the data frame. The default
-(\code{NULL}) causes \code{curve_interval()} to use all grouping variables in the input data frame, which will
-generate the most conservative intervals. However, if you want to calculate intervals for some function
-\code{y = f(x)} conditional on some other variable(s) (say, conditional on a factor \code{g}), you would group by
-\code{g}, then use \code{.along = x} to calculate intervals jointly over \code{x} conditional on \code{g}.}
+(\code{NULL}) causes \code{curve_interval()} to use all grouping variables in the input data frame as the value
+for \code{.along}, which will generate the most conservative intervals. However, if you want to calculate
+intervals for some function \code{y = f(x)} conditional on some other variable(s) (say, conditional on a
+factor \code{g}), you would group by \code{g}, then use \code{.along = x} to calculate intervals jointly over \code{x}
+conditional on \code{g}.}
 
 \item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.
 If multiple probabilities are provided, multiple rows per group are generated, each with

@@ -6,7 +6,7 @@
 library(dplyr)
 library(tidyr)
 
-context("geom_lineribbon")
+
 
 make_line_data = function(offset = 0, seed = 123, g = "a") {
   set.seed(seed)

@@ -7,7 +7,7 @@ library(dplyr)
 library(tidyr)
 library(distributional)
 
-context("geom_dotsinterval")
+
 
 test_that("vanilla dots geoms and stats work", {
   skip_if_no_vdiffr()
@@ -36,6 +36,24 @@ test_that("vanilla dots geoms and stats work", {
 
   vdiffr::expect_doppelganger("stat_dotsh with a group with 2 dots",
     p + stat_dots(aes(y = dist, x = x, color = x > 1))
+  )
+
+  set.seed(1234)
+  p = tribble(
+    ~dist,  ~x, ~datatype,
+    "norm", rnorm(20), "slab",
+    "t",    rt(20, 3), "slab"
+  ) %>%
+    unnest(x) %>%
+    bind_rows(tribble(
+      ~ dist,  ~x, ~datatype, ~lower, ~upper,
+      "norm", 0, "interval", -1, 1,
+      "t", 0, "interval", -2, 2
+    )) %>%
+    ggplot()
+
+  vdiffr::expect_doppelganger("vanilla geom_dotsinterval",
+    p + geom_dotsinterval(aes(y = dist, x = x, xmin = lower, xmax = upper, datatype = datatype))
   )
 
   set.seed(1234)

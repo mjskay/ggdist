@@ -6,7 +6,7 @@
 library(dplyr)
 library(tidyr)
 
-context("curve_interval")
+
 
 
 test_that("curve_interval works with lineribbon", {

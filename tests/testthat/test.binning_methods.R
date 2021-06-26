@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("binning_methods")
+
 
 
 test_that("binning works on symmetric distributions", {

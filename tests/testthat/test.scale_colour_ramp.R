@@ -8,7 +8,7 @@ library(tidyr)
 library(purrr)
 library(distributional)
 
-context("scale_colour_ramp")
+
 
 
 test_that("basic fill_ramp works", {

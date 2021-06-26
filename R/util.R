@@ -72,11 +72,9 @@ defaults = function(x, defaults) {
 }
 
 
-
 # workarounds -------------------------------------------------------------
 
-# workaround replacements for other patterns that don't quite do what we need them to
-# (especially when it comes to rvars...)
+# workarounds / replacements for common patterns
 
 #' @importFrom dplyr bind_rows
 map_dfr_ = function(data, fun, ...) {
@@ -132,6 +130,7 @@ fct_rev_ = function(x) {
   }
   factor(x, levels = rev(levels(x)))
 }
+
 
 # sequences ---------------------------------------------------------------
 

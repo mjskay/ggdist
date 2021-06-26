@@ -3,7 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
-context("geom")
+
 
 test_that("geom aesthetic documention generator works", {
 

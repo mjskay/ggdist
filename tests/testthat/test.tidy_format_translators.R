@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("tidy format translators")
+
 
 
 test_that("ggmcmc translators work", {

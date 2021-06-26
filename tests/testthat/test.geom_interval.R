@@ -7,7 +7,7 @@ library(dplyr)
 library(purrr)
 library(tidyr)
 
-context("geom_interval")
+
 
 # use a subset of RankCorr so tests are faster
 data(RankCorr_u_tau, package = "ggdist")

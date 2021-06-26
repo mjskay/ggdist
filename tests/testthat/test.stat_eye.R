@@ -6,7 +6,7 @@
 library(dplyr)
 library(tidyr)
 
-context("stat_eye")
+
 
 test_that("one-parameter eye plots work", {
   skip_if_no_vdiffr()

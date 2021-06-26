@@ -45,17 +45,10 @@ theme_tidybayes = theme_ggdist
 
 #' @rdname theme_ggdist
 #' @export
-facet_title_left_horizontal = function() {
+facet_title_horizontal = function() {
   theme(
-    strip.text.y = element_text(angle = 180)
-  )
-}
-
-#' @rdname theme_ggdist
-#' @export
-facet_title_right_horizontal = function() {
-  theme(
-    strip.text.y = element_text(angle = 0)
+    strip.text.y.right = element_text(angle = 0),
+    strip.text.y.left = element_text(angle = 0)
   )
 }
 
@@ -66,4 +59,18 @@ axis_titles_bottom_left = function() {
     axis.title.y = element_text(angle = 0, vjust = 0),
     axis.title.x = element_text(hjust = 0)
   )
+}
+
+#' @rdname theme_ggdist
+#' @export
+facet_title_left_horizontal = function() {
+  .Deprecated("facet_title_horizontal")  # nocov
+  facet_title_horizontal()               # nocov
+}
+
+#' @rdname theme_ggdist
+#' @export
+facet_title_right_horizontal = function() {
+  .Deprecated("facet_title_horizontal")  # nocov
+  facet_title_horizontal()               # nocov
 }

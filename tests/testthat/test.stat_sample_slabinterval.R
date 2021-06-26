@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("stat_sample_")
+
 
 test_that("vanilla stat_slabinterval works", {
   skip_if_no_vdiffr()
