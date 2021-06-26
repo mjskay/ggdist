@@ -20,9 +20,6 @@ add_default_computed_aesthetics = function(l, default_mapping) {
       data = ggproto_parent(l, self)$setup_layer(data, plot)
 
       mapping = computed_mapping(self)
-      if (is.null(mapping)) {
-        mapping = list()
-      }
 
       for (aesthetic in names(default_mapping)) {
         # we don't use exact matching here because if someone is using ggnewscale
@@ -54,17 +51,18 @@ add_default_computed_aesthetics = function(l, default_mapping) {
 #' @importFrom utils packageVersion
 #' @noRd
 computed_mapping = function(x) {
-  if (packageVersion("ggplot2") >= "3.3.3.9000") {
+  mapping = if (packageVersion("ggplot2") >= "3.3.3.9000") {
     x$computed_mapping
   } else {
-    x$mapping
+    x$mapping     # nocov
   }
+  mapping %||% list()
 }
 `computed_mapping<-` = function(x, value) {
   if (packageVersion("ggplot2") >= "3.3.3.9000") {
     x$computed_mapping = value
   } else {
-    x$mapping = value
+    x$mapping = value     # nocov
   }
   x
 }

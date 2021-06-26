@@ -78,6 +78,9 @@ test_that("histinterval and slab work", {
   vdiffr::expect_doppelganger("histintervalh with outline",
     p + stat_histinterval(aes(y = dist, x = x), slab_color = "black")
   )
+  vdiffr::expect_doppelganger("histinterval with outlines between bars",
+    p + stat_histinterval(aes(x = dist, y = x), slab_color = "black", outline_bars = TRUE)
+  )
 
   vdiffr::expect_doppelganger("slab with outline",
     p + stat_slab(aes(x = dist, y = x), n = 20, slab_color = "black")
@@ -105,6 +108,10 @@ test_that("scale transformation works", {
     p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 50)
   )
 
+  vdiffr::expect_doppelganger("cdfintervalh log scale transform",
+    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 50)
+  )
+
   vdiffr::expect_doppelganger("histintervalh log scale transform",
     p_log + stat_histinterval(point_interval = median_qi, n = 50)
   )
@@ -124,6 +131,8 @@ test_that("pdf and cdf aesthetics work", {
   vdiffr::expect_doppelganger("pdf and cdf on a sample slabinterval",
     p + stat_sample_slabinterval(aes(fill = x, thickness = stat(pdf), slab_alpha = stat(cdf)), n = 20) + geom_point()
   )
+
+  expect_error(weighted_ecdf(NULL), "Need at least 1 or more values")
 })
 
 test_that("constant distributions work", {

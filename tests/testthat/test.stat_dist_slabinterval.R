@@ -295,3 +295,39 @@ test_that("justification can vary", {
     p + stat_dist_ccdfinterval(n = 20)
   )
 })
+
+test_that("NA distributional objects work", {
+  skip_if_no_vdiffr()
+
+
+  p = tribble(
+    ~name, ~dist,
+    "norm", dist_normal(0, 1.5),
+    "missing", NULL
+  ) %>%
+    ggplot(aes(x = name, dist = dist))
+
+  vdiffr::expect_doppelganger("NA dists in stat_dist_slabinterval",
+    p + stat_dist_halfeye(n = 20, na.rm = TRUE)
+  )
+
+  vdiffr::expect_doppelganger("NA dists in stat_dist_dotsinterval",
+    p + stat_dist_dotsinterval(n = 20, na.rm = TRUE)
+  )
+
+})
+
+test_that("stat_dist_ throws appropriate errors on ill-formed dists", {
+  expect_warning(
+    print(
+      tibble(y = c("a","b","c"), x = list(1,2,3)) %>%
+        ggplot(aes(y = y, dist = x)) + stat_dist_slabinterval()
+    ),
+    'The `dist` aesthetic does not support objects of type "numeric"'
+  )
+
+  expect_error(
+    dist_cdf(dist_normal(c(0,1))),
+    "distributional objects should never have length > 1 here"
+  )
+})

@@ -159,7 +159,7 @@ dist_interval_function = function(df, .width, trans, ...) {
 
 dist_function = function(dist, prefix, fun) UseMethod("dist_function")
 dist_function.default = function(dist, prefix, fun) {
-  stop("stat_dist_slabinterval does not support objects of type ", deparse0(class(dist)))
+  stop("The `dist` aesthetic does not support objects of type ", deparse0(class(dist)))
 }
 dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
 dist_function.factor = function(dist, prefix, fun) dist_function(as.character(dist), prefix, fun)

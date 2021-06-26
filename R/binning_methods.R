@@ -97,7 +97,7 @@ bin_dots = function(x, y, binwidth,
     },
     swarm = {
       if (!requireNamespace("beeswarm", quietly = TRUE)) {
-        stop('Using layout = "swarm" with the dots geom requires the `beeswarm` package to be installed.')
+        stop('Using layout = "swarm" with the dots geom requires the `beeswarm` package to be installed.') #nocov
       }
 
       swarm_xy = beeswarm::swarmy(d[[x]], d[[y]],
@@ -109,8 +109,7 @@ bin_dots = function(x, y, binwidth,
 
       d[[x]] = swarm_xy[["x"]]
       d[[y]] = swarm_xy[["y"]] + y_start
-    },
-    stop("Unknown layout type for dots: ", deparse0(layout))
+    }
   )
 
   # determine y positions (for bin/weave)
@@ -390,27 +389,6 @@ wilkinson_bin_from_center = function(x, width) {
 }
 
 
-
-# histogram binning -------------------------------------------------------
-
-hist_bin = function(x, width) {
-  xrange = range(x)
-  breaks = seq(xrange[[1]], xrange[[2]], by = width)
-  bins = as.numeric(cut(x, breaks, include.lowest = TRUE))
-
-  binned_xs = split(x, bins)
-  bin_midpoints = sapply(binned_xs, function(x) {
-    (x[[1]] + x[[length(x)]])/2
-  })
-
-  list(
-    bins = bins,
-    bin_midpoints = bin_midpoints
-  )
-}
-
-
-
 # dynamic binning method selection ----------------------------------------
 
 # examines a vector x and determines an appropriate binning method based on its properties
@@ -423,7 +401,6 @@ automatic_bin = function(x, width) {
     wilkinson_bin_to_right(x, width)
   }
 }
-
 
 
 # bin nudging for overlaps ------------------------------------------------
