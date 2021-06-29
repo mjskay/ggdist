@@ -71,3 +71,28 @@ A \code{data.frame} with three columns:
 \description{
 Bins the provided data values using one of several dotplot algorithms.
 }
+\examples{
+
+library(dplyr)
+library(ggplot2)
+
+x = qnorm(ppoints(20))
+bin_df = bin_dots(x = x, y = 0, binwidth = 0.5, heightratio = 1)
+bin_df
+
+# we can manually plot the binning above, though this is only recommended
+# if you are using find_dotplot_binwidth() and bin_dots() to build your own
+# grob. For practical use it is much easier to use geom_dots(), which will
+# automatically select good bin widths for you (and which uses
+# find_dotplot_binwidth() and bin_dots() internally)
+bin_df \%>\%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 4) +
+  coord_fixed()
+
+}
+\seealso{
+\code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}} for an algorithm that finds good binwidths
+to use with this function; \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for geometries that use
+these algorithms to create dotplots.
+}

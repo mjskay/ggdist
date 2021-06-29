@@ -31,6 +31,31 @@ This algorithm is used by \code{geom_dotsinterval()} (and its variants) to autom
 select bin widths. Unless you are manually implementing you own dotplot \code{\link{grob}}
 or \code{geom}, you probably do not need to use this function directly
 }
+\examples{
+
+library(dplyr)
+library(ggplot2)
+
+x = qnorm(ppoints(20))
+binwidth = find_dotplot_binwidth(x, maxheight = 4, heightratio = 1)
+binwidth
+
+bin_df = bin_dots(x = x, y = 0, binwidth = binwidth, heightratio = 1)
+bin_df
+
+# we can manually plot the binning above, though this is only recommended
+# if you are using find_dotplot_binwidth() and bin_dots() to build your own
+# grob. For practical use it is much easier to use geom_dots(), which will
+# automatically select good bin widths for you (and which uses
+# find_dotplot_binwidth() and bin_dots() internally)
+bin_df \%>\%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 4) +
+  coord_fixed()
+
+}
 \seealso{
-\code{geom_dotsinterval()}
+\code{\link[=bin_dots]{bin_dots()}} for an algorithm can bin dots using binwidths selected
+by this function; \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for geometries that use
+these algorithms to create dotplots.
 }

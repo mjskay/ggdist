@@ -37,6 +37,28 @@
 #' - `bin`: a unique number associated with each bin
 #'   (supplied but not used when `layout = "swarm"`)
 #'
+#' @seealso [find_dotplot_binwidth()] for an algorithm that finds good binwidths
+#' to use with this function; [geom_dotsinterval()] for geometries that use
+#' these algorithms to create dotplots.
+#' @examples
+#'
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' x = qnorm(ppoints(20))
+#' bin_df = bin_dots(x = x, y = 0, binwidth = 0.5, heightratio = 1)
+#' bin_df
+#'
+#' # we can manually plot the binning above, though this is only recommended
+#' # if you are using find_dotplot_binwidth() and bin_dots() to build your own
+#' # grob. For practical use it is much easier to use geom_dots(), which will
+#' # automatically select good bin widths for you (and which uses
+#' # find_dotplot_binwidth() and bin_dots() internally)
+#' bin_df %>%
+#'   ggplot(aes(x = x, y = y)) +
+#'   geom_point(size = 4) +
+#'   coord_fixed()
+#'
 #' @export
 bin_dots = function(x, y, binwidth,
   heightratio = 1,
@@ -157,7 +179,30 @@ bin_dots = function(x, y, binwidth,
 #' @return A suitable bin width such that a dotplot created with this bin width
 #' and `heightratio` should have its tallest bin be less than or equal to `maxheight`.
 #'
-#' @seealso `geom_dotsinterval()`
+#' @seealso [bin_dots()] for an algorithm can bin dots using binwidths selected
+#' by this function; [geom_dotsinterval()] for geometries that use
+#' these algorithms to create dotplots.
+#' @examples
+#'
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' x = qnorm(ppoints(20))
+#' binwidth = find_dotplot_binwidth(x, maxheight = 4, heightratio = 1)
+#' binwidth
+#'
+#' bin_df = bin_dots(x = x, y = 0, binwidth = binwidth, heightratio = 1)
+#' bin_df
+#'
+#' # we can manually plot the binning above, though this is only recommended
+#' # if you are using find_dotplot_binwidth() and bin_dots() to build your own
+#' # grob. For practical use it is much easier to use geom_dots(), which will
+#' # automatically select good bin widths for you (and which uses
+#' # find_dotplot_binwidth() and bin_dots() internally)
+#' bin_df %>%
+#'   ggplot(aes(x = x, y = y)) +
+#'   geom_point(size = 4) +
+#'   coord_fixed()
 #'
 #' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
 #' @export
