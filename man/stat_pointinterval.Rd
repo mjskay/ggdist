@@ -128,7 +128,7 @@ functions:
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
 \item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
 \item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
-\item \code{.width}: For intervals, the interval width as a numeric value in \link{0, 1}.
+\item \code{.width}: For intervals, the interval width as a numeric value in \verb{[0, 1]}.
 \item \code{level}: For intervals, the interval width as an ordered factor.
 \item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
 determined by \code{slab_type}.
