@@ -97,7 +97,7 @@ transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) 
 }
 
 dist_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 501, trans = scales::identity_trans(), ...
+  df, input, slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
@@ -106,17 +106,39 @@ dist_slab_function = function(
 
     args = args_from_aes(...)
 
-    #get pdf and cdf functions
-    pdf_fun = if (trans$name == "identity") {
-      distr_pdf(dist)
+    # calculate pdf
+    if (trans$name == "identity") {
+      pdf_fun = distr_pdf(dist)
+      if (distr_is_discrete(dist, args)) {
+        # for discrete distributions, we have to adjust the positions of the x
+        # values to create bin-like things
+        unique_input = unique(round(input))
+        input_1 = unique_input - 0.5  # first edge of bin
+        input_2 = unique_input + 0.5                 # second edge of bin
+        pdf = do.call(pdf_fun, c(list(quote(unique_input)), args))
+
+        if (!outline_bars) {
+          # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
+          # us the bin endpoints --- then just need to repeat the same value of density
+          # for both endpoints of the same bin
+          input = as.vector(rbind(input_1, input_2))
+          pdf = rep(pdf, each = 2)
+        } else {
+          # have to return to 0 in between each bar so that bar outlines are drawn
+          input = as.vector(rbind(input_1, input_1, input_2, input_2))
+          pdf = as.vector(rbind(0, pdf, pdf, 0))
+        }
+      } else {
+        pdf = do.call(pdf_fun, c(list(quote(input)), args))
+      }
     } else {
       # must transform the density according to the scale transformation
-      function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
+      pdf_fun = function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
+      pdf = do.call(pdf_fun, c(list(quote(input)), args))
     }
-    cdf_fun = dist_cdf(dist)
 
-    # calculate pdf and cdf
-    pdf = do.call(pdf_fun, c(list(quote(input)), args))
+    # calculate cdf
+    cdf_fun = dist_cdf(dist)
     cdf = do.call(cdf_fun, c(list(quote(input)), args))
 
     value = switch(slab_type,
@@ -245,6 +267,10 @@ distr_quantile = function(dist) distr_function(dist, "q", quantile)
 #' `p_limits` is `c(NA, NA)` on a gamma distribution the effective value of `p_limits` would be
 #' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
 #' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
+#' @param outline_bars For discrete distributions (whose slabs are drawn as histograms), determines
+#' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
+#' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
+#' bars are also drawn.
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
@@ -313,6 +339,7 @@ stat_dist_slabinterval = function(
 
   slab_type = c("pdf", "cdf", "ccdf"),
   p_limits = c(NA, NA),
+  outline_bars = FALSE,
 
   orientation = NA,
   limits = NULL,
@@ -342,6 +369,7 @@ stat_dist_slabinterval = function(
     params = list(
       slab_type = slab_type,
       p_limits = p_limits,
+      outline_bars = outline_bars,
 
       orientation = orientation,
 
@@ -389,7 +417,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   extra_params = c(
     StatSlabinterval$extra_params,
     "slab_type",
-    "p_limits"
+    "p_limits",
+    "outline_bars"
   ),
 
   # interval parameter used to determine if the stat re-groups
@@ -402,6 +431,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(NA, NA),
+    outline_bars = FALSE,
 
     limits_function = dist_limits_function,
     slab_function = dist_slab_function,
@@ -425,7 +455,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     )
 
     params$slab_args = list(
-      slab_type = params$slab_type %||% self$default_params$slab_type
+      slab_type = params$slab_type %||% self$default_params$slab_type,
+      outline_bars = params$outline_bars %||% self$default_params$outline_bars
     )
 
     params

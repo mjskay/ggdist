@@ -57,6 +57,22 @@ distr_random = function(dist) {
 }
 
 
+# other distribution helpers ----------------------------------------------
+
+#' Is a distribution discrete?
+#' @noRd
+distr_is_discrete = function(dist, args = list()) {
+  if (inherits(dist, "rvar")) {
+    is.integer(posterior::draws_of(dist))
+  } else {
+    withr::with_seed(1, {
+      random_fun = distr_random(dist)
+      one_value_from_dist = do.call(random_fun, c(list(1), args))
+      is.integer(one_value_from_dist)
+    })
+  }
+}
+
 
 # transforming density functions ------------------------------------------
 

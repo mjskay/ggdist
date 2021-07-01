@@ -331,3 +331,21 @@ test_that("stat_dist_ throws appropriate errors on ill-formed dists", {
     "distributional objects should never have length > 1 here"
   )
 })
+
+
+# discrete distributions --------------------------------------------------
+
+test_that("stat_dist_ detects discrete distributions", {
+  p = tibble(lambda = c(13,7,2)) %>%
+    ggplot(aes(x = lambda))
+
+  vdiffr::expect_doppelganger("dist_poisson", {
+    p + stat_dist_halfeye(aes(dist = dist_poisson(lambda)), slab_color = "gray50")
+  })
+
+  vdiffr::expect_doppelganger("dpois", {
+    p + stat_dist_halfeye(aes(dist = "pois", arg1 = lambda), slab_color = "gray50", outline_bars = TRUE)
+  })
+
+})
+

@@ -30,6 +30,7 @@ Imports:
     HDInterval,
     tibble,
     vctrs,
+    withr,
     distributional (>= 0.2.0)
 Suggests:
     knitr,
@@ -48,7 +49,10 @@ Suggests:
     purrr (>= 0.2.3),
     tidyr (>= 1.0.0),
     beeswarm (>= 0.4.0),
+    posterior,
     pkgdown
+Remotes:
+    stan-dev/posterior
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
