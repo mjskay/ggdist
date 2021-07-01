@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("parse_dist")
+
 
 test_that("parse_dist works on vectors", {
   # using as.data.frame here because comparison of tibbles with
@@ -26,9 +26,21 @@ test_that("parse_dist works on data frames", {
   )
 })
 
+test_that("parse_dist works on brmsprior objects", {
+  # using as.data.frame here because comparison of tibbles with
+  # list columns directly doesn't seem to work...
+  dists = factor(c("Normal(0,1)", "log-normal(2,3)", "Student's t(3,0,1)"))
+  brmsprior = data.frame(prior = dists)
+  class(brmsprior) = c("brmsprior", "data.frame")
+  expect_equal(
+    parse_dist(brmsprior),
+    as.data.frame(tibble(prior = dists, .dist = c("norm", "lnorm", "student_t"), .args = list(list(0,1), list(2,3), list(3,0,1))))
+  )
+})
+
 test_that("parse_dist + marginalize_lkjcorr produces correct results", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   vdiffr::expect_doppelganger("LKJ marginalization works",
     data.frame(prior = "lkjcorr(3)") %>%

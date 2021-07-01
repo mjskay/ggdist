@@ -136,11 +136,10 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom purrr map_dfr map map2 discard map_dbl map_lgl iwalk
 #' @importFrom dplyr do bind_cols group_vars summarise_at %>%
-#' @importFrom tidyr unnest_legacy
 #' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
 #' @importFrom stats median
+#' @importFrom tibble as_tibble
 #' @export
 point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
@@ -168,7 +167,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       setdiff(.exclude) %>%
       # have to use quos here because lists of symbols don't work correctly with iwalk() for some reason
       # (the simpler version of this line would be `syms() %>%`)
-      map(~ quo(!!sym(.))) %>%
+      lapply(function(x) quo(!!sym(x))) %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
@@ -195,53 +194,65 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       draws = data[[col_name]]
     }
 
-    result = map_dfr(.width, function(p) {
-      data[[col_name]] = map_dbl(draws, .point, na.rm = na.rm)
+    result = map_dfr_(.width, function(p) {
+      # compute intervals; this is robust to grouped data frames and
+      # to intervals that can return multiple intervals (e.g., hdi())
 
-      intervals = map(draws, .interval, .width = p, na.rm = na.rm)
-      # can't use map_dbl here because sometimes (e.g. with hdi) these can
-      # return multiple intervals, hence map() here and unnest() below
-      data[[".lower"]] = map(intervals, ~ .[, 1])
-      data[[".upper"]] = map(intervals, ~ .[, 2])
-      data = unnest_legacy(data, .lower, .upper)
+      # reduce `data` to just point estimate column and grouping factors (if any)
+      data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
-      data[[".width"]] = p
+      # for each row of `data`, compute the intervals (may be more than one),
+      # and construct a tibble with grouping factors (if any), point estimate,
+      # lower and upper values, and width
+      # - equivalent to unnest_legacy()
+      data = map2_dfr_(seq_len(nrow(data)), draws, function(row_i, draws_i) {
+        interval = .interval(draws_i, .width = p, na.rm = na.rm) # intervals (one or more rows)
+        dimnames(interval)[[2]] = c(".lower", ".upper")
+        cbind(
+          data[row_i, , drop = FALSE], # each row of `data`; grouping factors and point estimate
+          interval,
+          .width = p # width
+        )
+      })
 
-      data
+      as_tibble(data)
     })
   } else {
-    iwalk(col_exprs, function(col_expr, col_name) {
+    iwalk_(col_exprs, function(col_expr, col_name) {
       data[[col_name]] <<- eval_tidy(col_expr, data)
     })
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
-    if (!all(map_lgl(data[,names(col_exprs)], is.list))) {
+    if (!all(map_lgl_(data[,names(col_exprs)], is.list))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 
-    result = map_dfr(.width, function(p) {
+    result = map_dfr_(.width, function(p) {
       for (col_name in names(col_exprs)) {
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
 
-        data[[col_name]] = map_dbl(draws, .point, na.rm = na.rm)
+        data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
-        intervals = map(draws, .interval, .width = p, na.rm = na.rm)
+        intervals = lapply(draws, .interval, .width = p, na.rm = na.rm)
 
-        # can't use map_dbl here because sometimes (e.g. with hdi) these can
+        # can't use map_dbl_ here because sometimes (e.g. with hdi) these can
         # return multiple intervals, which we need to check for (since it is
         # not possible to support in this format).
-        lower = map(intervals, ~ .[, 1])
-        upper = map(intervals, ~ .[, 2])
-        if (any(map_dbl(lower, length) > 1) || any(map_dbl(upper, length) > 1)) {
+        lower = lapply(intervals, function(x) x[, 1])
+        upper = lapply(intervals, function(x) x[, 2])
+        if (any(lengths(lower) > 1) || any(lengths(upper) > 1)) {
           stop(
-            "You are summarizing a multimodal distribution using a method that returns multiple intervals ",
-            "(such as `hdi`), but you are attempting to generate intervals for multiple columns in wide format. ",
-            "To use a multiple-interval method like `hdi` on distributions that are multi-modal, you can ",
-            "only summarize one column at a time. You might try using `gather_variables` to put all your draws ",
-            "into a single column before summarizing them, or use an interval type (such as `hdci` or `qi`) that ",
-            "always returns exactly one interval per probability level."
+            "You are summarizing a multimodal distribution using a method that returns\n",
+            "multiple intervals (such as `hdi()`), but you are attempting to generate\n",
+            "intervals for multiple columns in wide format.\n\n",
+            "To use a multiple-interval method like `hdi()` on distributions that are\n",
+            "multi-modal, you can only summarize one column at a time.\n\n",
+            "You might try using `tidybayes::gather_variables()` to put all your draws into\n",
+            "a single column before summarizing them, or use an interval type that always\n",
+            "returns exactly one interval per probability level (such as `hdci()` or `qi()`).",
+            call. = FALSE
           )
         }
         data[[paste0(col_name, ".lower")]] = unlist(lower)
@@ -271,7 +282,7 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   point_name = tolower(quo_name(enquo(.point)))
   interval_name = tolower(quo_name(enquo(.interval)))
 
-  result = map_dfr(.width, function(p) {
+  result = map_dfr_(.width, function(p) {
     interval = .interval(data, .width = p, na.rm = na.rm)
     data.frame(
       y = .point(data, na.rm = na.rm),
@@ -298,7 +309,7 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
 #' @rdname point_interval
 qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  if (!na.rm && any(is.na(x))) {
+  if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
@@ -312,7 +323,7 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 #' @importFrom stats density
 hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  if (!na.rm && any(is.na(x))) {
+  if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
@@ -333,7 +344,7 @@ Mode = function(x, na.rm = FALSE) {
   if (na.rm) {
     x = x[!is.na(x)]
   }
-  else if (any(is.na(x))) {
+  else if (anyNA(x)) {
     return(NA_real_)
   }
 
@@ -351,7 +362,7 @@ Mode = function(x, na.rm = FALSE) {
 #' @export
 #' @rdname point_interval
 hdci = function(x, .width = .95, na.rm = FALSE) {
-  if (!na.rm && any(is.na(x))) {
+  if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 

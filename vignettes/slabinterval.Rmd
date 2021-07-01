@@ -32,7 +32,8 @@ knitr::opts_chunk$set(
 )
 if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
   knitr::opts_chunk$set(
-    dev.args = list(png = list(type = "cairo"))
+    dev = "png",
+    dev.args = list(type = "cairo")
   )
 }
 ```
@@ -96,7 +97,7 @@ dists_plot = dists_df %>%
   geom_blank() + # ensures order
   stat_dist_eye(data = . %>% filter(geom == "eye")) +
   stat_dist_halfeye(data = . %>% filter(geom == "halfeye"), position = position_nudge(y = - 0.2)) +
-  stat_dist_gradientinterval(data = . %>% filter(geom == "gradientinterval"), scale = .5) +
+  stat_dist_gradientinterval(data = . %>% filter(geom == "gradientinterval"), scale = .5, fill_type = "gradient") +
   stat_dist_ccdfinterval(data = . %>% filter(geom == "ccdfinterval"), scale = .5) +
   stat_dist_cdfinterval(data = . %>% filter(geom == "cdfinterval"), scale = .5) +
   stat_interval(aes(x = x, y = "interval"), data = hist_df, color = "gray65", alpha = 1/3, size = 10,
@@ -106,7 +107,7 @@ dists_plot = dists_df %>%
   stat_dist_dotsinterval(data = . %>% filter(geom == "dotsinterval"), position = position_nudge(y = - 0.3)) +
   stat_dist_dots(data = . %>% filter(geom == "dots"), position = position_nudge(y = - 0.3)) +
   stat_histinterval(aes(x = x), data = hist_df, position = position_nudge(y = - 0.4)) +
-  scale_slab_alpha_continuous(guide = FALSE) +
+  scale_slab_alpha_continuous(guide = "none") +
   scale_x_continuous(limits = c(0,8), expand = c(0,0)) +
   labs(
     subtitle = "The stat_slabinterval / geom_slabinterval family",
@@ -553,6 +554,20 @@ df %>%
   labs(title = "stat_gradientinterval(position = 'dodge')")
 ```
 
+**Note on "choppy" gradients:** Depending on your graphics device, gradients may be "choppy" looking. 
+You can fix this choppiness by setting `fill_type = "gradient"`, which uses an **experimental**
+gradient feature introduced in R 4.1 (in some future version of *ggdist* this is likely
+to become the default). This works so long as you have R version 4.1 or greater and you
+are using one of the graphics devices supported by the new `grid::linearGradient()`
+function (such as `pdf()`, `svg()`, or `png(type = "cairo")`; see [here](https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/)):
+
+```{r gradient_dodge_nice}
+df %>%
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_gradientinterval(position = "dodge", fill_type = "gradient") +
+  labs(title = "stat_gradientinterval(position = 'dodge')")
+```
+
 `stat_gradientinterval()` maps density onto the `slab_alpha` aesthetic, which is a variant of the ggplot `alpha` scale that specifically targets alpha (opacity) values of the slab portion of `geom_slabinterval()`. This aesthetic has default ranges and limits that are a little different from the base ggplot `alpha` scale and which ensure that densities of 0 are mapped onto opacities of 0. You can use `scale_slab_alpha_continuous()` to adjust this scale's settings.
 
 ### On analytical distributions: `stat_dist_[c]cdfinterval`
@@ -580,23 +595,17 @@ The encodings thus far are *continuous* probability encodings: they map probabil
 
 ### On sample data: `stat_dots`
 
-For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots:
-
-```{r dots_dodge, fig.width = med_width, fig.height = small_height}
-df %>%
-  ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_dots(position = "dodge") +
-  labs(title = "stat_dots(position = 'dodge')")
-```
-
-Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:
+For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots. With so few dots here, the outlines mask the fill, so it makes sense to map the outline color of the dots as well:
 
 ```{r dots_dodge_nocolor, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup, color = subgroup)) +
   stat_dots(position = "dodge") +
-  labs(title = "stat_dots(slab_color = NA)")
+  labs(title = "stat_dots(aes(fill = subgroup, color = subgroup))")
 ```
+
+Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. 
+
 
 ### Quantile dotplots
 
@@ -617,21 +626,70 @@ As with other plot types, you can also use `stat_dist_dots()` instead if you wis
 
 ```{r dist_dots_shape_color, fig.width = med_width, fig.height = large_height}
 dist_df %>%
-  ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5), shape = subgroup)) +
+  filter(group != "c") %>%
+  ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5), shape = stat(x < 5))) +
   stat_dist_dots(position = "dodge", color = NA) +
-  labs(title = "stat_dist_dots(aes(fill = stat(x < 5), shape = subgroup))") +
-  # we'll use these shapes since they retain outlines
-  scale_shape_manual(values = c(21,22,23))
+  labs(title = "stat_dist_dots(aes(fill and shape = stat(x < 5)))") +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:10) +
+  # we'll use these shapes since they have fill and outlines
+  scale_shape_manual(values = c(21,22))
+```
+
+Notice the default dotplot layout, `"bin"`, can cause dots to be on the wrong
+side of a cutoff when coloring dots within dotplots. Thus it can be useful to use the
+`"weave"` layout, which positions dots at (or very close to) their true positions,
+rather than at bin centers:
+
+```{r dist_dots_weave, fig.width = med_width, fig.height = large_height}
+dist_df %>%
+  filter(group != "c") %>%
+  ggplot(aes(y = group, dist = dist_normal(mean, sd), fill = stat(x < 5))) +
+  stat_dist_dots(position = "dodge", color = NA, layout = "weave") +
+  labs(title = 'stat_dist_dots(aes(fill = stat(x < 5)), layout = "weave")') +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:10)
 ```
 
 As with other slabinterval geoms, the `side` argument can also be used to construct violin-style dotplots. This example also shows the use of `dotsinterval` in place of `dots` to construct a combined quantile dotplot violin + interval plot. We also set `slab_color = NA` to turn off the outline on the dots:
 
 ```{r dist_dots_violin, fig.width = med_width, fig.height = small_height}
 dist_df %>%
-  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
+  filter(group != "c") %>%
+  ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = group)) +
   stat_dist_dotsinterval(position = "dodge", side = "both", slab_color = NA) +
   labs(title = "stat_dist_dotsinterval(side = 'both', slab_color = NA)") 
 ```
+
+### Using beeswarm layouts
+
+Finally, while the `"bin"` and `"weave"` layout methods shown above work especially 
+well for quantile dotplots, it can be useful when visualizing sample data
+(especially in large amounts) to employ so-called "beeswarm" plots. Setting
+`layout = "swarm"` will use the `"compactswarm"` layout type from `beeswarm::beeswarm()`,
+which tends to work well on sample data (but not on quantiles), and especially when
+`side = "both"`:
+
+```{r dots_swarm, fig.width = med_width, fig.height = large_height}
+df %>%
+  filter(group == "a") %>%
+  ggplot(aes(y = group, x = value, fill = stat(x < 5))) +
+  stat_dots(color = NA, layout = "swarm", side = "both") +
+  labs(title = 'stat_dots(aes(fill = stat(x < 5)), layout = "swarm", side = "both")') +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:8)
+```
+
+Thus there are three layout options with `dots` and `dotsinterval` stats and
+geoms:
+
+- `layout = "bin"`, which maintains neat rows and columns and works well on
+  quantile dotplots.
+- `layout = "weave"`, which maintains neat rows (but not columns) and works well
+  on quantile dotplots when you need to map other aesthetics based on positional 
+  cutoffs.
+- `layout = "swarm"`, which does not maintain rows or columns, and works well
+  when you need a compact layout for sample data (not quantiles).
 
 ### Summing up dotplots: `stat_[dist_]dots[interval]`
 
@@ -639,7 +697,6 @@ All of the above geoms follow the naming scheme `stat_[dist_]dots[interval]`.
 
 * Add `dist_` to the name to get stats for analytical distributions (otherwise it is for sample data).
 * Add `interval` to the name to get the version with a point+interval geom overlaid.
-
 
 ## Custom plots
 
@@ -650,6 +707,12 @@ The `slabinterval` family of stats and geoms is designed to be very flexible. Mo
 Two aesthetics of particular use for creating custom geoms are `slab_alpha`, which changes the alpha transparency of the slab portion of the geom, `slab_color`, which changes its outline color, and `fill`, which changes its fill color. All of these aesthetics can be mapped to variables along the length of the geom (that is, the color does not have to be constant over the entire geom), which allows you to create gradients or to highlight meaningful regions of the data (amongst other things). You can also employ the ggdist-specific `color_ramp` and `fill_ramp`
 aesthetics to create custom gradients with outline and fill colors, as demonstrated later in this section.
 
+**Note:** The examples of gradients in this section use the (optional) experimental
+setting `fill_type = "gradient"`. If you do not have R greater than 4.1.0 or
+are not using a supported graphics device, the output may be blank; in this case,
+omit this option. Gradients can be produced without this option but they may
+not look as nice.
+
 ### CCDF Gradients
 
 For example, `stat_ccdfinterval()` maps the output of the evaluated function (in its case, the CCDF) onto the `thickness` aesthetic of the `slabinterval` geom, which determines how thick the slab is. This is the equivalent of setting `aes(thickness = stat(f))`. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping `stat(f)` onto the `slab_alpha` aesthetic instead, and setting `thickness` to a constant (1):
@@ -657,7 +720,9 @@ For example, `stat_ccdfinterval()` maps the output of the evaluated function (in
 ```{r ccdf_gradient, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfinterval(aes(slab_alpha = stat(f)), thickness = 1, position = "dodge") +
+  stat_ccdfinterval(aes(slab_alpha = stat(f)), 
+    thickness = 1, position = "dodge", fill_type = "gradient"
+  ) +
   expand_limits(y = 0) +
   # plus coord_cartesian so there is no space between bars and axis
   coord_cartesian(expand = FALSE) +
@@ -669,24 +734,16 @@ associated with its height, the result would be a so-called *fuzzygram* ([Wilkin
 
 ### Highlighting and other combinations
 
-The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. Take the earlier example of visualizing priors:
+The ability to map arbitrary variables onto fill or outline colors within a slab allows you to easily highlight sub-regions of a plot. 
+Taking the earlier example of visualizing priors, we can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
 
-```{r norm_vs_t_2, fig.width = small_width, fig.height = small_height}
+```{r norm_vs_t_highlight, fig.width = med_width, fig.height = small_height}
 priors = tribble(
   ~ dist,      ~ args,
   "norm",      list(0, 1),
   "student_t", list(3, 0, 1)
 ) 
 
-priors %>%
-  ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_halfeye() +
-  ggtitle("stat_dist_halfeye()")
-```
-
-We can add a mapping to the `fill` aesthetic to highlight a region of interest, say ±1.5:
-
-```{r norm_vs_t_highlight, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
   stat_dist_halfeye(aes(fill = stat(abs(x) < 1.5))) +
@@ -700,7 +757,7 @@ We could also combine these aesthetics arbitrarily. Here is a (probably not very
 ```{r norm_vs_t_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_eye(aes(slab_alpha = stat(f), fill = stat(x > 1))) +
+  stat_dist_eye(aes(slab_alpha = stat(f), fill = stat(x > 1)), fill_type = "gradient") +
   ggtitle("stat_dist_eye(aes(slab_alpha = stat(f), fill = stat(x > 1)))") +
   # we'll use a nicer palette than the default for highlighting:
   scale_fill_manual(values = c("gray75", "skyblue"))
@@ -713,8 +770,10 @@ We can also take advantage of the fact that all slabinterval stats also supply `
 ```{r correll_gradient, fig.width = med_width, fig.height = small_height/2}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_gradientinterval(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))) +
-  scale_slab_alpha_continuous(guide = FALSE)
+  stat_dist_gradientinterval(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95))),
+    fill_type = "gradient"
+  ) +
+  scale_slab_alpha_continuous(guide = "none")
 ```
 
 We could also do a mashup of faded-tail gradients with violin plots by starting with an eye plot and then using the generated `cdf` aesthetic to fade the tails, producing plots like those in [Helske *et al.*](https://arxiv.org/abs/2002.07671):
@@ -722,8 +781,8 @@ We could also do a mashup of faded-tail gradients with violin plots by starting 
 ```{r helske_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, dist = dist, args = args)) +
-  stat_dist_eye(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))) +
-  scale_slab_alpha_continuous(guide = FALSE)
+  stat_dist_eye(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95))), fill_type = "gradient") +
+  scale_slab_alpha_continuous(guide = "none")
 ```
 
 A related idea is one from [Tukey](https://doi.org/10.1080/00031305.1986.10475361): rather than
@@ -739,7 +798,7 @@ dist_df %>%
       thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)), 
       fill_ramp = stat(pmax(0, abs(1 - 2*cdf) - .95))
     ),
-    side = "both", position = "dodge"
+    side = "both", position = "dodge", fill_type = "gradient"
   ) +
   labs(
     title = 'stat_dist_slab(side = "both")', 
@@ -748,7 +807,7 @@ dist_df %>%
       "fill_ramp and thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)))"
     )
   ) +
-  guides(fill_ramp = FALSE) +
+  guides(fill_ramp = "none") +
   coord_cartesian(expand = FALSE)
 ```
 

@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("geom_slabinterval")
+
 
 
 # group_slab_data_by_colour -------------------------------------------------
@@ -40,8 +40,8 @@ test_that("group_slab_data_by works", {
 
 
 test_that("group_slab works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = tibble(
     x = seq(-4,4, length.out = 20),
@@ -64,8 +64,8 @@ test_that("group_slab works", {
 # normalization -----------------------------------------------------------
 
 test_that("normalize works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   p = tribble(
     ~y, ~id, ~p, ~ dist, ~ mu, ~ sigma,
@@ -99,8 +99,8 @@ test_that("normalize works", {
 # alpha in fill colors works ----------------------------------------------
 
 test_that("alpha channel in fill colors works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   vdiffr::expect_doppelganger("alpha channel in slab fill",
     data.frame(x = c(0,1), y = "a", d = c(1,2)) %>%
@@ -108,3 +108,59 @@ test_that("alpha channel in fill colors works", {
       geom_slab(fill = scales::alpha("black", 0.2))
   )
 })
+
+
+
+# side, justification, and scale can vary ---------------------------------
+
+test_that("side and justification can vary", {
+  skip_if_no_vdiffr()
+
+  df = tibble(
+    x = rep(1:10, each = 2),
+    y = dnorm(x, c(4.5, 5.5), 2),
+    g = rep(c("a","b"), 10)
+  )
+
+  vdiffr::expect_doppelganger("varying side and just",
+    df %>%
+      ggplot(aes(x = x, y = g, thickness = y,
+        side = ifelse(g == "a", "top", "bottom"),
+        justification = ifelse(g == "a", 0, 1),
+        scale = ifelse(g == "a", 0.5, 0.25)
+      )) +
+      geom_slab()
+  )
+
+  expect_error(
+    print(
+      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
+        side = ifelse(x < 5, "top", "bottom")
+      )) +
+      geom_slab(orientation = "horizontal")
+    ),
+    "Slab `side` cannot vary within groups"
+  )
+
+  expect_error(
+    print(
+      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
+        justification = ifelse(x < 5, 0, 1)
+      )) +
+      geom_slab(orientation = "horizontal")
+    ),
+    "Slab `justification` cannot vary within groups"
+  )
+
+  expect_error(
+    print(
+      ggplot(df, aes(x = x, y = g, thickness = y, group = g,
+        scale = ifelse(x < 5, 0.5, 0.25)
+      )) +
+      geom_slab(orientation = "horizontal")
+    ),
+    "Slab `scale` cannot vary within groups"
+  )
+
+})
+

@@ -22,7 +22,7 @@ args_from_aes = function(args = list(), ...) {
 
 dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identity_trans(), ...) {
   pmap_dfr_(df, function(dist, ...) {
-    if (is.null(dist) || any(is.na(dist))) {
+    if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.lower = NA, .upper = NA))
     }
 
@@ -51,7 +51,7 @@ dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identi
   })
 }
 
-# return the derivation of a transformation function from the scales package at
+# return the derivative of a transformation function from the scales package at
 # the given y values. First attempts to find that analytical derivative, which
 # works on most pre-defined transformation functions in scales; if that fails,
 # uses numerical derivative
@@ -100,7 +100,7 @@ dist_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr_(df, function(dist, ...) {
-    if (is.null(dist) || any(is.na(dist))) {
+    if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
     }
 
@@ -134,17 +134,16 @@ dist_slab_function = function(
   })
 }
 
-#' @importFrom purrr map_dfr
 dist_interval_function = function(df, .width, trans, ...) {
   pmap_dfr_(df, function(dist, ...) {
-    if (is.null(dist) || any(is.na(dist))) {
+    if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
     }
 
     args = args_from_aes(...)
     quantile_fun = dist_quantile_fun(dist)
 
-    intervals = map_dfr(.width, function(w) {
+    intervals = map_dfr_(.width, function(w) {
       quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
       quantiles = do.call(quantile_fun, quantile_args)
       data.frame(
@@ -160,14 +159,18 @@ dist_interval_function = function(df, .width, trans, ...) {
 
 dist_function = function(dist, prefix, fun) UseMethod("dist_function")
 dist_function.default = function(dist, prefix, fun) {
-  stop("stat_dist_slabinterval does not support objects of type ", deparse0(class(dist)))
+  stop("The `dist` aesthetic does not support objects of type ", deparse0(class(dist)))
 }
 dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
 dist_function.factor = function(dist, prefix, fun) dist_function(as.character(dist), prefix, fun)
-# workaround for quantile.distribution not being vectorized currently
-# when #31 is fixed, replace with function(dist, prefix, fun) function(...) fun(dist, ...)
-dist_function.distribution = function(dist, prefix, fun) Vectorize(function(x, ...) fun(dist, x, ...), vectorize.args = "x")
-dist_function.dist_default = dist_function.distribution
+dist_function.distribution = function(dist, prefix, fun) {
+  if (length(dist) > 1) stop(
+    "distributional objects should never have length > 1 here.\n",
+    "Please report this bug at https://github.com/mjskay/ggdist/issues"
+  )
+  dist_function.dist_default(dist[[1]], prefix, fun)
+}
+dist_function.dist_default = function(dist, prefix, fun) function(x, ...) fun(dist, x, ...)
 dist_function.rvar = dist_function.distribution
 
 dist_pdf = function(dist) dist_function(dist, "d", density)
@@ -229,6 +232,9 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #'
 #' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
 #' @section Computed Variables:
+#' The following variables are computed by this stat and made available for
+#' use in aesthetic specifications (`aes()`) using the `stat()` or `after_stat()`
+#' functions:
 #' \itemize{
 #'   \item `x` or `y`: For slabs, the input values to the slab function.
 #'     For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
@@ -258,8 +264,6 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #' will not be wider than these (but may be narrower).Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
-#' @param thickness Override for the `thickness` aesthetic in [geom_slabinterval()]: the thickness
-#' of the slab at each x / y value of the slab (depending on `orientation`).
 #' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats
@@ -296,10 +300,17 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #'
 #' # the stat_dist_... family applies a Jacobian adjustment to densities
 #' # when plotting on transformed scales in order to plot them correctly.
+#' # It determines the Jacobian using symbolic differentiation if possible,
+#' # using stats::D(). If symbolic differentation fails, it falls back
+#' # to numericDeriv(), which is less reliable; therefore, it is
+#' # advisable to use scale transformation functions that are defined in
+#' # terms of basic math functions so that their derivatives can be
+#' # determined analytically (most of the transformation functions in the
+#' # scales package currently have this property).
 #' # For example, here is a log-Normal distribution plotted on the log
 #' # scale, where it will appear Normal:
-#' data.frame(dist = "lnorm") %>%
-#'   ggplot(aes(y = 1, dist = dist, arg1 = log(10), arg2 = 2*log(10))) +
+#' data.frame(dist = "lnorm", logmean = log(10), logsd = 2*log(10)) %>%
+#'   ggplot(aes(y = 1, dist = dist, arg1 = logmean, arg2 = logsd)) +
 #'   stat_dist_halfeye() +
 #'   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 #'
@@ -464,22 +475,87 @@ stat_dist_halfeye = function(...) stat_dist_slabinterval(...)
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_eye = function(..., side = "both") stat_dist_slabinterval(..., side = side)
+stat_dist_eye = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatDistEye,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      ...
+    )
+  )
+}
+StatDistEye = ggproto("StatDistEye", StatDistSlabinterval,
+  default_aes = defaults(aes(
+    side = stat("both"),
+  ), StatDistSlabinterval$default_aes)
+)
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_ccdfinterval = function(...,
-  slab_type = "ccdf", justification = 0.5, side = "topleft", normalize = "none"
+stat_dist_ccdfinterval = function(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+
+  slab_type = "ccdf",
+  normalize = "none",
+
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
 ) {
-  stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatDistCcdfInterval,
+    geom = geom,
+    position = position,
+
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+
+    params = list(
+      slab_type = slab_type,
+      normalize = normalize,
+      ...
+    )
+  )
 }
+StatDistCcdfInterval = ggproto("StatDistCcdfInterval", StatDistSlabinterval,
+  default_aes = defaults(aes(
+    justification = stat(0.5),
+    side = stat("topleft"),
+  ), StatDistSlabinterval$default_aes),
+
+  default_params = defaults(list(
+    slab_type = "ccdf",
+    normalize = "none"
+  ), StatDistSlabinterval$default_params)
+)
 
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_cdfinterval = function(...,
-  slab_type = "cdf", justification = 0.5, side = "topleft", normalize = "none"
+  slab_type = "cdf", normalize = "none"
 ) {
-  stat_dist_slabinterval(..., slab_type = slab_type, justification = justification, side = side, normalize = normalize)
+  stat_dist_ccdfinterval(..., slab_type = slab_type, normalize = normalize)
 }
 
 #' @export
@@ -490,9 +566,6 @@ stat_dist_gradientinterval = function(
   geom = "slabinterval",
   position = "identity",
   ...,
-
-  justification = 0.5,
-  thickness = 1,
 
   show.legend = c(size = FALSE, slab_alpha = FALSE),
   inherit.aes = TRUE
@@ -508,21 +581,16 @@ stat_dist_gradientinterval = function(
     inherit.aes = inherit.aes,
 
     params = list(
-      justification = justification,
-      thickness = thickness,
       ...
     )
   )
 }
 StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
-    thickness = 1,
+    justification = stat(0.5),
+    thickness = stat(1),
     slab_alpha = stat(f)
-  ), StatDistSlabinterval$default_aes),
-
-  default_params = defaults(list(
-    justification = 0.5
-  ), StatDistSlabinterval$default_params)
+  ), StatDistSlabinterval$default_aes)
 )
 
 #' @export

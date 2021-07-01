@@ -1,3 +1,32 @@
+# ggdist 2.4.1
+
+New features:
+
+* Added `"weave"` and `"swarm"` layouts for dots geoms (#64). These provide 
+  alternative layouts that keep datapoints in their actual positions on the
+  data axis. The `"weave"` layout maintains rows but not columns and works well 
+  for quantile dotplots; the `"swarm"` layout uses the `"compactswarm"` method from 
+  `beeswarm::beeswarm()` (courtesy James Trimble) and works well on sample data.
+  See the dotplot section of `vignette("slabinterval")` for comparisons.
+* Allow the use of `unit()` to specify bin widths manually for dots geoms and stats,
+  which can be helpful when you need dotplots across facets to have the same bin width
+  (#53).
+
+New documentation:
+
+* Add example of lineribbon gradients using `fill_ramp` in `vignette("lineribbon")`.
+* Add example of Tukey-like pencils in `vignette("slabinterval")`.
+* Add example of two slab used together (densities and dotplots to make "rain clouds")
+  in `vignette("slabinterval")`.
+
+Bug fixes:
+
+* Fix issues with *ggplot2* 3.3.4 (#72) and *vdiffr* 1.0.
+* Handle interactions between alpha and fill/color properly when not set by user (#62).
+* Use step function for all ECDFs, which should also fix constant CDFs (#55).
+* Move *fda* to suggests as it brings in a large number of dependencies and is rarely used.
+* Use trimmed density for mode estimation (#57).
+
 # ggdist 2.4.0
 
 New features:

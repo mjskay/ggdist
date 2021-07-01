@@ -24,10 +24,11 @@
 #' @param .along Which columns are the input values to the function describing the curve (e.g., the "x"
 #' values). Supports tidyselect syntax, as in `dplyr::select()`. Intervals are calculated jointly with
 #' respect to these variables, conditional on all other grouping variables in the data frame. The default
-#' (`NULL`) causes `curve_interval()` to use all grouping variables in the input data frame, which will
-#' generate the most conservative intervals. However, if you want to calculate intervals for some function
-#' `y = f(x)` conditional on some other variable(s) (say, conditional on a factor `g`), you would group by
-#' `g`, then use `.along = x` to calculate intervals jointly over `x` conditional on `g`.
+#' (`NULL`) causes `curve_interval()` to use all grouping variables in the input data frame as the value
+#' for `.along`, which will generate the most conservative intervals. However, if you want to calculate
+#' intervals for some function `y = f(x)` conditional on some other variable(s) (say, conditional on a
+#' factor `g`), you would group by `g`, then use `.along = x` to calculate intervals jointly over `x`
+#' conditional on `g`.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
 #' a different probability interval (and value of the corresponding `.width` column).
@@ -87,19 +88,17 @@
 #' @examples
 #'
 #' library(dplyr)
-#' library(tidyr)
 #' library(ggplot2)
 #'
 #' # generate a set of curves
 #' k = 11 # number of curves
 #' n = 201
 #' df = tibble(
-#'     .draw = 1:k,
-#'     mean = seq(-5,5, length.out = k),
-#'     x = list(seq(-15,15,length.out = n))
-#'   ) %>%
-#'   unnest(x) %>%
-#'   mutate(y = dnorm(x, mean, 3))
+#'     .draw = rep(1:k, n),
+#'     mean = rep(seq(-5,5, length.out = k), n),
+#'     x = rep(seq(-15,15,length.out = n), each = k),
+#'     y = dnorm(x, mean, 3)
+#'   )
 #'
 #' # see pointwise intervals...
 #' df %>%
@@ -123,7 +122,6 @@
 #'   ggtitle("50% curvewise intervals with curve_interval()") +
 #'   theme_ggdist()
 #'
-#' @importFrom purrr map_dfr map map2 map_dbl map_lgl iwalk
 #' @importFrom dplyr group_vars summarise_at %>% group_split
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
 #' @importFrom tidyselect eval_select
@@ -136,7 +134,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
 
-    # get the grouping variables we will jointly calculate intervals on
+  # get the grouping variables we will jointly calculate intervals on
   .along = enquo(.along)
   if (is.null(quo_get_expr(.along))) {
     .along = group_vars(data)
@@ -157,7 +155,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
       setdiff(.exclude) %>%
       # have to use quos here because lists of symbols don't work correctly with iwalk() for some reason
       # (the simpler version of this line would be `syms() %>%`)
-      map(~ quo(!!sym(.))) %>%
+      lapply(function(x) quo(!!sym(x))) %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
@@ -183,13 +181,13 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
 
     .curve_interval(data, col_name, ".lower", ".upper", .width, .interval, .conditional_groups, na.rm = na.rm)
   } else {
-    iwalk(col_exprs, function(col_expr, col_name) {
+    iwalk_(col_exprs, function(col_expr, col_name) {
       data[[col_name]] <<- eval_tidy(col_expr, data)
     })
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
-    if (!all(map_lgl(data[,names(col_exprs)], is.list))) {
+    if (!all(map_lgl_(data[,names(col_exprs)], is.list))) {
       data = summarise_at(data, names(col_exprs), list)
     }
 
@@ -229,7 +227,7 @@ halfspace_depth = function(x) {
     "mhd"
   )
 
-  map_dfr(dfs, function(d) {
+  map_dfr_(dfs, function(d) {
 
     # draws x y matrix
     draws = do.call(cbind, d[[col_name]])
@@ -242,10 +240,10 @@ halfspace_depth = function(x) {
       draw_depth = rowMeans(pointwise_depths, na.rm = na.rm)
     } else { # band depth using fbplot
       if (!requireNamespace("fda", quietly = TRUE)) {
-        stop(
-          'curve_interval(.interval = "', .interval, '") requires the `fda` package.\n',
-          'Please install the `fda` package or use .interval = "mhd".'
-        )
+        stop0(                                                                           # nocov
+          'curve_interval(.interval = "', .interval, '") requires the `fda` package.\n', # nocov
+          'Please install the `fda` package or use .interval = "mhd".'                   # nocov
+        )                                                                                # nocov
       }
       # depth of each draw
       draw_depth = fda::fbplot(t(draws), plot = FALSE, method = .interval_internal)$depth
@@ -253,7 +251,7 @@ halfspace_depth = function(x) {
 
     # median draw = the one with the maximum depth
     median_draw = which.max(draw_depth)
-    median_y = map_dbl(d[[col_name]], `[[`, median_draw)
+    median_y = map_dbl_(d[[col_name]], `[[`, median_draw)
 
     # function for determining the intervals given a selected draw depth
     calc_intervals_at_depth_cutoff = function(depth_cutoff) {
@@ -271,7 +269,7 @@ halfspace_depth = function(x) {
     # draw depth cutoff where approximately width% draws are contained
     # by the envelope around all draws deeper than the depth cutoff
     sorted_draw_depths = sort(draw_depth)
-    map_dfr(.width, function(w) {
+    map_dfr_(.width, function(w) {
       if (FALSE) {
         # naive approach: just use quantiles of draw depths to determine cutoff
         depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)

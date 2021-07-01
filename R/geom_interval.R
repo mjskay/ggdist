@@ -23,7 +23,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' [mode_hdi()], etc.
 #'
 #' Specifically, `geom_interval` acts as if its default aesthetics are
-#' `aes(color = fct_rev(ordered(.width)))`.
+#' `aes(color = forcats::fct_rev(ordered(.width)))`.
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval")
 #' @inheritParams geom_slabinterval
@@ -76,7 +76,6 @@ geom_interval = function(
   position = "identity",
   ...,
 
-  side = "both",
   orientation = NA,
   interval_size_range = c(1, 6),
   show_slab = FALSE,
@@ -86,13 +85,12 @@ geom_interval = function(
   layer_geom_slabinterval(
     data = data,
     mapping = mapping,
-    default_mapping = aes(color = forcats::fct_rev(ordered(.width))),
+    default_mapping = aes(color = fct_rev_(ordered(.width))),
     stat = stat,
     geom = GeomInterval,
     position = position,
     ...,
 
-    side = side,
     orientation = orientation,
     interval_size_range = interval_size_range,
     show_slab = show_slab,
@@ -108,8 +106,9 @@ geom_interval = function(
 #' @import ggplot2
 #' @export
 GeomInterval = ggproto("GeomInterval", GeomSlabinterval,
-  default_key_aes = defaults(aes(
-    datatype = "interval"
+  default_aes = defaults(aes(
+    datatype = "interval",
+    side = "both"
   ), GeomSlabinterval$default_aes),
 
   default_key_aes = defaults(aes(
@@ -118,12 +117,9 @@ GeomInterval = ggproto("GeomInterval", GeomSlabinterval,
   ), GeomSlabinterval$default_key_aes),
 
   default_params = defaults(list(
-    side = "both",
     orientation = NA,
     interval_size_range = c(1, 6),
     show_slab = FALSE,
     show_point = FALSE
-  ), GeomSlabinterval$default_params),
-
-  default_datatype = "interval"
+  ), GeomSlabinterval$default_params)
 )

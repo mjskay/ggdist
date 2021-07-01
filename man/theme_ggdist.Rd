@@ -3,20 +3,23 @@
 \name{theme_ggdist}
 \alias{theme_ggdist}
 \alias{theme_tidybayes}
+\alias{facet_title_horizontal}
+\alias{axis_titles_bottom_left}
 \alias{facet_title_left_horizontal}
 \alias{facet_title_right_horizontal}
-\alias{axis_titles_bottom_left}
 \title{Simple, light ggplot2 theme for ggdist and tidybayes}
 \usage{
 theme_ggdist()
 
 theme_tidybayes()
 
+facet_title_horizontal()
+
+axis_titles_bottom_left()
+
 facet_title_left_horizontal()
 
 facet_title_right_horizontal()
-
-axis_titles_bottom_left()
 }
 \value{
 A named list in the format of \code{\link[ggplot2:theme]{ggplot2::theme()}}

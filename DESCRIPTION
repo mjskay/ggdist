@@ -1,9 +1,10 @@
 Package: ggdist
 Title: Visualizations of Distributions and Uncertainty
-Version: 2.4.0.9000
-Date: 2021-01-04
+Version: 2.4.1.9001
+Date: 2021-06-10
 Authors@R: c(
-        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu")
+        person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu"),
+        person("Brenton M.", "Wiernik", role = "ctb", email = "brenton@wiernik.org")
     )
 Maintainer: Matthew Kay <mjskay@northwestern.edu>
 Description: Provides primitives for visualizing distributions using 'ggplot2' that are particularly tuned for
@@ -22,13 +23,10 @@ Depends:
 Imports:
     tidyselect,
     dplyr (>= 1.0.0),
-    tidyr (>= 1.0.0),
     ggplot2 (>= 3.3.0),
-    purrr (>= 0.2.3),
     rlang (>= 0.3.0),
     scales,
     grid,
-    forcats,
     HDInterval,
     tibble,
     vctrs,
@@ -36,7 +34,7 @@ Imports:
 Suggests:
     knitr,
     testthat,
-    vdiffr (>= 0.3.0),
+    vdiffr (>= 1.0.0),
     svglite,
     broom (>= 0.5.6),
     modelr,
@@ -46,6 +44,10 @@ Suggests:
     rmarkdown,
     png,
     fda,
+    forcats,
+    purrr (>= 0.2.3),
+    tidyr (>= 1.0.0),
+    beeswarm (>= 0.4.0),
     pkgdown
 License: GPL (>= 3)
 Language: en-US
@@ -73,7 +75,7 @@ Collate:
     "parse_dist.R"
     "point_interval.R"
     "scale_colour_ramp.R"
-    "scales.R"
+    "scale_.R"
     "stat.R"
     "stat_slabinterval.R"
     "stat_dist_slabinterval.R"
@@ -83,6 +85,7 @@ Collate:
     "stat_interval.R"
     "stat_lineribbon.R"
     "student_t.R"
+    "testthat.R"
     "theme_ggdist.R"
     "tidy_format_translators.R"
 Roxygen: list(markdown = TRUE)

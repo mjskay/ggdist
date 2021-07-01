@@ -9,10 +9,10 @@
 
 #' @importFrom ggplot2 .stroke .pt
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
-dots_grob = function(data, max_height, x, y,
+dots_grob = function(data, x, y,
   name = NULL, gp = gpar(), vp = NULL,
-  dotsize = 1, stackratio = 1, binwidth = NA, layout = "bins",
-  side = "topright", orientation = "vertical"
+  dotsize = 1, stackratio = 1, binwidth = NA, layout = "bin",
+  orientation = "vertical"
 ) {
   datas = data %>%
     arrange_at(x) %>%
@@ -20,200 +20,95 @@ dots_grob = function(data, max_height, x, y,
     group_split()
 
   gTree(
-    datas = datas, max_height = max_height, x_ = x, y_ = y,
+    datas = datas,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    side = side, orientation = orientation,
+    orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
 }
 
 
-#' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
 #' @export
 makeContent.dots_grob = function(x) {
   grob_ = x
   datas = grob_$datas
-  max_height = grob_$max_height
-  x = grob_$x_
-  y = grob_$y_
-  bin_method = automatic_bin
-  side = grob_$side
   orientation = grob_$orientation
-
-  sizeratio = 1.43
-  stackratio = 1.07 * grob_$stackratio
   dotsize = grob_$dotsize
-  bin_width = grob_$binwidth
+  binwidth = grob_$binwidth
   layout = grob_$layout
 
-  # if bin width was specified as a grid::unit, convert it
-  if (is.unit(bin_width)) {
-    bin_width = convertUnit(bin_width, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
+  define_orientation_variables(orientation)
+
+  font_size_ratio = 1.43  # manual fudge factor for point size in ggplot
+  stackratio = 1.07 * grob_$stackratio
+
+  # ratio between width of the bins (binwidth)
+  # and the vertical spacing of dots (y_spacing)
+  # this is a bit different from a raw stackratio since we want to account
+  # for the dotsize
+  heightratio = convertUnit(unit(dotsize * stackratio, "native"),
+    "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
+
+  # if bin width was specified as a grid::unit, convert it to native units
+  if (is.unit(binwidth)) {
+    binwidth = convertUnit(binwidth, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
   }
 
-  # create a specification for a heap of dots, which includes things like
-  # what the bins are, what the dot widths are, etc.
-  heap_spec = function(d, nbins = NULL, bin_width = NULL) {
-    xrange = range(d[[x]])
-    xspread = xrange[[2]] - xrange[[1]]
-    if (is.null(bin_width)) {
-      nbins = floor(nbins)
-      bin_width = xspread / nbins
-    } else {
-      nbins = max(floor(xspread / bin_width), 1)
-    }
-    binning = bin_method(d[[x]], bin_width)
-    max_bin_count = max(tabulate(binning$bins))
-
-    point_size = convertUnit(unit(bin_width, "native"),
-      "native", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE) *
-      sizeratio * dotsize
-    y_spacing = convertUnit(unit(point_size, "native"),
-      "native", axisFrom = "y", axisTo = y, typeFrom = "dimension", valueOnly = TRUE) *
-      stackratio / sizeratio
-
-    if (nbins == 1) {
-      # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
-      # let's back out a max bin size based on that...
-      max_y_spacing = max_height / max_bin_count
-      max_point_size = convertUnit(unit(max_y_spacing * sizeratio / stackratio, "native"),
-        "native", axisFrom = y, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
-      max_bin_width = convertUnit(unit(max_point_size / dotsize / sizeratio, "native"), "native",
-        axisFrom = "y", axisTo = x, typeFrom = "dimension", valueOnly = TRUE)
-    } else {
-      # if there's more than 1 bin, the provided nbins or bin width determines the max bin width
-      max_y_spacing = y_spacing
-      max_bin_width = bin_width
-    }
-
-    as.list(environment())
-  }
-  is_valid_heap_spec = function(h) {
-    h$max_bin_count * h$max_y_spacing <= max_height
+  # if bin width has length 2, it specifies a desired bin width range
+  if (length(binwidth) == 2) {
+    user_min_binwidth = min(binwidth)
+    user_max_binwidth = max(binwidth)
+    # set to NA so that a prospective bin width is found dynamically first
+    # before user-specified constraints are applied
+    binwidth = NA
+  } else {
+    user_min_binwidth = 0
+    user_max_binwidth = Inf
   }
 
-  if (is.na(bin_width)) {
-    # find the best bin widths across all the heaps we are going to draw
-    max_bin_widths = map_dbl(datas, function(d) {
-      xrange = range(d[[x]])
-      xspread = xrange[[2]] - xrange[[1]]
-
-      # figure out a reasonable minimum number of bins based on histogram binning
-      if (nrow(d) <= 1) {
-        min_h = heap_spec(d, nbins = 1)
-      } else {
-        min_h = heap_spec(d, nbins = min(nclass.scott(d[[x]]), nclass.FD(d[[x]]), nclass.Sturges(d[[x]])))
-      }
-
-      if (!is_valid_heap_spec(min_h)) {
-        # figure out a maximum number of bins based on data resolution
-        max_h = heap_spec(d, bin_width = resolution(d[[x]]))
-
-        if (max_h$nbins <= min_h$nbins) {
-          # even at data resolution there aren't enough bins, not much we can do...
-          h = min_h
-        } else if (max_h$nbins == min_h$nbins + 1) {
-          # nowhere to search, use maximum number of bins
-          h = max_h
-        } else {
-          # use binary search to find a reasonable number of bins
-          repeat {
-            h = heap_spec(d, (min_h$nbins + max_h$nbins) / 2)
-            if (is_valid_heap_spec(h)) {
-              # heap spec is valid, search downwards
-              if (h$nbins - 1 <= min_h$nbins) {
-                # found it, we're done
-                break
-              }
-              max_h = h
-            } else {
-              # heap spec is not valid, search upwards
-              if (h$nbins + 1 >= max_h$nbins) {
-                # found it, we're done
-                h = max_h
-                break
-              }
-              min_h = h
-            }
-          }
-        }
-      } else {
-        h = min_h
-      }
-
-      h$max_bin_width
+  if (isTRUE(is.na(binwidth))) {
+    # find the best bin widths across all the dotplots we are going to draw
+    binwidths = map_dbl_(datas, function(d) {
+      maxheight = max(d[[ymax]] - d[[ymin]])
+      find_dotplot_binwidth(d[[x]], maxheight, heightratio)
     })
 
-    bin_width = min(max_bin_widths)
+    binwidth = max(min(binwidths, user_max_binwidth), user_min_binwidth)
   }
 
-  # now, draw all the heaps using the same bin width
-  children = do.call(gList, unlist(recursive = FALSE, lapply(datas, function(d) {
-    h = heap_spec(d, bin_width = bin_width)
-    h$binning$bin_midpoints = nudge_bins(h$binning$bin_midpoints, bin_width)
-    d$bins = h$binning$bins
-    d$midpoint = h$binning$bin_midpoints[h$binning$bins]
-    point_fontsize = max(
-      convertY(unit(h$point_size, "native"), "points", valueOnly = TRUE) - max(d$stroke) * .stroke/2,
+  # now, draw all the dotplots using the same bin width
+  children = do.call(gList, lapply(datas, function(d) {
+    # bin the dots
+    dot_positions = bin_dots(
+      d$x, d$y,
+      binwidth, heightratio, layout,
+      d$side[[1]], orientation
+    )
+
+    # determine size of the dots as a font size
+    # the dot size in points (dot_pointsize) doesn't translate directly into
+    # the font size in points needed to draw that dot (dot_fontsize); need a fudge
+    # factor based on how big the circle glyph is as a ratio of font size
+    # (font_size_ratio) plus need to account for stroke width
+    dot_pointsize = convertUnit(unit(binwidth * dotsize, "native"),
+      "points", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
+    dot_fontsize = max(
+      dot_pointsize * font_size_ratio - max(d$size, 0, na.rm = TRUE) * .stroke/2,
       0.5
     )
 
-    # determine x positions
-    switch(layout,
-      bins = {
-        d[[x]] = d$midpoint
-      },
-      weave = {
-        # keep original x positions, but re-order within bins so that overlaps
-        # across bins are less likely
-        d = ddply_(d, "bins", function(bin_df) {
-          seq_fun = if (side == "both") seq_interleaved_centered else seq_interleaved
-          bin_df = bin_df[seq_fun(nrow(bin_df)),]
-          bin_df$rows = seq_len(nrow(bin_df))
-          bin_df
-        })
-
-        # nudge values within each row to ensure there are no overlaps
-        # (rows are not well-defined in side = "both" for this to work,
-        # so we skip this step in that case)
-        if (side != "both") {
-          d = ddply_(d, "rows", function(row_df) {
-            row_df[[x]] = nudge_bins(row_df[[x]], bin_width)
-            row_df
-          })
-        }
-      }
-    )
-
-    # generate grobs
-    dlply_(d, "bins", function (bin_df) {
-
-      y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
-      switch_side(side, orientation,
-        topright = {
-          y_start = h$y_spacing / 2
-        },
-        bottomleft = {
-          y_offset = - y_offset
-          y_start = - h$y_spacing / 2
-        },
-        both = {
-          y_offset = y_offset - h$y_spacing * (nrow(bin_df) - 1) / 2
-          y_start = 0
-        }
+    # generate grob for this dotplot
+    pointsGrob(
+      dot_positions$x, dot_positions$y, pch = d$shape,
+      gp = gpar(
+        col = alpha(d$colour, d$alpha),
+        fill = alpha(d$fill, d$alpha),
+        fontsize = dot_fontsize,
+        lwd = d$size * .stroke/2,
+        lty = d$linetype
       )
-      bin_df[[y]] = bin_df[[y]] + y_start + y_offset
-
-      pointsGrob(bin_df$x, bin_df$y, pch = bin_df$shape,
-        gp = gpar(
-          col = alpha(bin_df$colour, bin_df$alpha),
-          fill = alpha(bin_df$fill, bin_df$alpha),
-          fontsize = point_fontsize,
-          lwd = bin_df$size * .stroke/2,
-          lty = bin_df$linetype
-        ))
-    })
-  })))
+    )
+  }))
 
   setChildren(grob_, children)
 }
@@ -222,15 +117,21 @@ makeContent.dots_grob = function(x) {
 # panel drawing function -------------------------------------------------------
 
 draw_slabs_dots = function(self, s_data, panel_params, coord,
-  side, scale, orientation, justification, normalize, na.rm,
+  orientation, normalize, fill_type, na.rm,
   child_params
 ) {
   define_orientation_variables(orientation)
 
+  # remove missing values
+  s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "justification", "scale"), name = "geom_dotsinterval", finite = TRUE)
+  # side is a character vector, thus need finite = FALSE for it
+  s_data = ggplot2::remove_missing(s_data, na.rm, "side", name = "geom_dotsinterval", finite = FALSE)
+  if (nrow(s_data) == 0) return(list())
+
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, side, scale, orientation, justification, normalize, height, y, ymin, ymax
+    s_data, orientation, normalize, height, y, ymin, ymax
   ))
 
   if (!coord$is_linear()) {
@@ -248,32 +149,21 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
   s_data = coord$transform(s_data, panel_params)
 
-  # remove missing values
-  s_data = ggplot2::remove_missing(s_data, na.rm, x, name = "geom_dotsinterval", finite = TRUE)
-
-  if (!is.na(child_params$binwidth) && !is.unit(child_params$binwidth)) {
+  if (!isTRUE(is.na(child_params$binwidth)) && !is.unit(child_params$binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space
     child_params$binwidth = child_params$binwidth / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
-  max_height = max(s_data[[ymax]] - s_data[[ymin]])
-  slab_grobs = list(dots_grob(s_data, max_height, x, y,
+  slab_grobs = list(dots_grob(
+      s_data,
+      x, y,
       dotsize = child_params$dotsize,
       stackratio = child_params$stackratio,
       binwidth = child_params$binwidth,
       layout = child_params$layout,
-      side = side,
       orientation = orientation
     ))
-
-  # when side = "top", need to invert draw order so that overlaps happen in a sensible way
-  # (only bother doing this when scale > 1 since that's the only time it will matter)
-  if (side == "top" && scale > 1) {
-    rev(slab_grobs)
-  } else {
-    slab_grobs
-  }
 }
 
 
@@ -316,14 +206,22 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' wide as the bin width.
 #' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
 #' default, `1`, makes dots in the same stack just touch each other.
-#' @param binwidth The bin width to use for drawing the dotplots. The default value, `NA`, will dynamically select
-#' a bin width based on the size of the plot when drawn. If the value is numeric, it is assumed to be in units
-#' of data. The bin width can also be specified using `unit()`, which may be useful if it is desired that
-#' the dots be a certain percentage of the width/height of the viewport (e.g. `unit(0.1, "npc")` would
-#' make dots that are 10% of the viewport size along whichever dimension the dotplot is drawn).
-#' @param layout The layout method used for the dots. The default (`"bins"`) places dots on the off-axis at the
-#' midpoint of their bins as in the classic Wilkinson dotplot. The `"weave"` layout will place dots in the off-axis
-#' closer to their actual positions (modulo overlaps, which are nudged out of the way).
+#' @param binwidth The bin width to use for drawing the dotplots. One of:
+#'   - `NA` (the default): Dynamically select the bin width based on the
+#'     size of the plot when drawn.
+#'   - A length-1 (scalar) numeric or [unit] object giving the exact bin width.
+#'   - A length-2 (vector) numeric or [unit] object giving the minimum and maximum
+#'     desired bin width. The bin width will be dynamically selected within
+#'     these bounds.
+#'
+#' If the value is numeric, it is assumed to be in units of data. The bin width
+#' (or its bounds) can also be specified using `unit()`, which may be useful if
+#' it is desired that the dots be a certain point size or a certain percentage of
+#' the width/height of the viewport. For example, `unit(0.1, "npc")` would make
+#' dots that are *exactly* 10% of the viewport size along whichever dimension the
+#' dotplot is drawn; `unit(c(0, 0.1), "npc")` would make dots that are *at most*
+#' 10% of the viewport size.
+#' @template param-dots-layout
 #' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
 #' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number
@@ -385,7 +283,7 @@ geom_dotsinterval = function(
   dotsize = 1,
   stackratio = 1,
   binwidth = NA,
-  layout = c("bins", "weave"),
+  layout = c("bin", "weave", "swarm"),
 
   na.rm = FALSE,
 
@@ -434,7 +332,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
   override_slab_aesthetics = function(self, s_data) {
     s_data = ggproto_parent(GeomSlabinterval, self)$override_slab_aesthetics(s_data)
-    s_data$shape = s_data$slab_shape
+    s_data$shape = s_data[["slab_shape"]]
     s_data
   },
 
@@ -450,14 +348,11 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     dotsize = 1,
     stackratio = 1,
     binwidth = NA,
-    layout = "bins"
+    layout = "bin"
   ), GeomSlabinterval$default_params),
 
   draw_panel = function(self, data, panel_params, coord,
-    side = self$default_params$side,
-    scale = self$default_params$scale,
     orientation = self$default_params$orientation,
-    justification = self$default_params$justification,
     normalize = self$default_params$normalize,
     interval_size_domain = self$default_params$interval_size_domain,
     interval_size_range = self$default_params$interval_size_range,
@@ -475,10 +370,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     child_params = list()
   ) {
     ggproto_parent(GeomSlabinterval, self)$draw_panel(data, panel_params, coord,
-      side = side,
-      scale = scale,
       orientation = orientation,
-      justification = justification,
       normalize = normalize,
       interval_size_domain = interval_size_domain,
       interval_size_range = interval_size_range,
@@ -507,7 +399,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     data
   },
 
-  draw_slabs = draw_slabs_dots,
+  # workaround (#84)
+  draw_slabs = function(self, ...) draw_slabs_dots(self, ...),
 
   draw_key_slab = function(self, data, key_data, params, size) {
     # slab key is different from usual - it's actually a point!
@@ -583,13 +476,13 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
 
   override_slab_aesthetics = function(self, s_data) {
     # we define these differently from geom_dotsinterval to make this easier to use on its own
-    s_data$colour = s_data$slab_colour %||% s_data$colour
-    s_data$colour = apply_colour_ramp(s_data$colour, s_data$colour_ramp)
-    s_data$fill = s_data$slab_fill %||% s_data$fill
-    s_data$fill = apply_colour_ramp(s_data$fill, s_data$fill_ramp)
-    s_data$alpha = s_data$slab_alpha %||% s_data$alpha
-    s_data$size = s_data$slab_size %||% s_data$size
-    s_data$shape = s_data$slab_shape %||% s_data$shape
+    s_data$colour = s_data[["slab_colour"]] %||% s_data[["colour"]]
+    s_data$colour = apply_colour_ramp(s_data[["colour"]], s_data[["colour_ramp"]])
+    s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
+    s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
+    s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
+    s_data$size = s_data[["slab_size"]] %||% s_data[["size"]]
+    s_data$shape = s_data[["slab_shape"]] %||% s_data[["shape"]]
     s_data
   },
 

@@ -60,11 +60,10 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'   do(tibble(y = rnorm(100, .$x))) %>%
 #'   median_qi(.width = c(.5, .8, .95)) %>%
 #'   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
-#'   # automatically uses aes(fill = fct_rev(ordered(.width)))
+#'   # automatically uses aes(fill = forcats::fct_rev(ordered(.width)))
 #'   geom_lineribbon() +
 #'   scale_fill_brewer()
 #'
-#' @importFrom forcats fct_rev
 #' @import ggplot2
 #' @export
 geom_lineribbon = function(
@@ -99,11 +98,11 @@ geom_lineribbon = function(
   )
 
   add_default_computed_aesthetics(l,
-    aes(fill = forcats::fct_rev(ordered(.width)))
+    aes(fill = fct_rev_(ordered(.width)))
   )
 }
 
-draw_key_lineribbon = function(data, params, size) {
+draw_key_lineribbon = function(self, data, params, size) {
   if (!is.null(data$fill_ramp) && is.na(data$fill)) {
     data$fill = "gray65"
   }
@@ -119,7 +118,6 @@ draw_key_lineribbon = function(data, params, size) {
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
-#' @importFrom purrr map map_dbl reduce
 #' @import ggplot2
 #' @export
 GeomLineribbon = ggproto("GeomLineribbon", Geom,
@@ -134,7 +132,8 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     stroke = 1
   ),
 
-  draw_key = draw_key_lineribbon,
+  # workaround (#84)
+  draw_key = function(self, ...) draw_key_lineribbon(self, ...),
 
   required_aes = c("x", "y"),
 
@@ -199,9 +198,9 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     # this is a slightly hackish approach to getting the draw order correct for the common
     # use case of fit lines / curves: draw the ribbons in order from largest mean width to
     # smallest mean width, so that the widest intervals are on the bottom.
-    ribbon_grobs = ribbon_grobs[order(-map_dbl(ribbon_grobs, "width"))] %>%
-      map("grobs") %>%
-      reduce(c)
+    ribbon_grobs = ribbon_grobs[order(-map_dbl_(ribbon_grobs, `[[`, "width"))] %>%
+      lapply(`[[`, i = "grobs") %>%
+      unlist(recursive = FALSE)
 
     # now draw all the lines
     line_grobs = data %>%
@@ -213,7 +212,7 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
         }
       })
 
-    line_grobs = reduce(line_grobs, c)
+    line_grobs = unlist(line_grobs, recursive = FALSE)
 
     grobs = c(ribbon_grobs, line_grobs)
 

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' data-engine-version='2.0' width='720.00pt' height='576.00pt' viewBox='0 0 720.00 576.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA='>
+    <rect x='0.00' y='0.00' width='720.00' height='576.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<rect x='0.00' y='0.00' width='720.00' height='576.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNTcuMjN8NzE0LjUyfDIyLjc4fDU0NS4xMQ=='>
+    <rect x='57.23' y='22.78' width='657.29' height='522.33' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTcuMjN8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
+<rect x='57.23' y='22.78' width='657.29' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<polygon points='87.11,349.24 118.56,337.49 150.00,307.31 181.45,265.67 212.90,218.66 244.35,171.50 275.80,128.56 307.25,93.30 338.70,68.34 370.15,55.43 401.60,55.43 433.05,68.34 464.50,93.30 495.95,128.56 527.40,171.50 558.85,218.66 590.30,265.67 621.75,307.31 653.19,337.49 684.64,349.24 684.64,349.24 653.19,349.24 621.75,349.24 590.30,349.24 558.85,349.24 527.40,349.24 495.95,349.24 464.50,349.24 433.05,349.24 401.60,349.24 370.15,349.24 338.70,349.24 307.25,349.24 275.80,349.24 244.35,349.24 212.90,349.24 181.45,349.24 150.00,349.24 118.56,349.24 87.11,349.24 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<line x1='174.72' y1='349.24' x2='597.03' y2='349.24' style='stroke-width: 1.28; stroke-linecap: butt;' />
+<line x1='269.46' y1='349.24' x2='502.29' y2='349.24' style='stroke-width: 2.99; stroke-linecap: butt;' />
+<circle cx='385.87' cy='349.24' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='385.87' cy='349.24' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
+<rect x='57.23' y='22.78' width='657.29' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<text x='52.30' y='352.27' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='34.22px' lengthAdjust='spacingAndGlyphs'>lkjcorr(3)</text>
+<polyline points='54.49,349.24 57.23,349.24 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='87.11,547.85 87.11,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='236.49,547.85 236.49,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='385.87,547.85 385.87,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='535.26,547.85 535.26,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='684.64,547.85 684.64,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='87.11' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.16px' lengthAdjust='spacingAndGlyphs'>-1.0</text>
+<text x='236.49' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.16px' lengthAdjust='spacingAndGlyphs'>-0.5</text>
+<text x='385.87' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='535.26' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.5</text>
+<text x='684.64' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='385.87' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='296.53px' lengthAdjust='spacingAndGlyphs'>Marginal correlation for LKJ(3) prior on 2x2 correlation matrix</text>
+<text transform='translate(13.05,283.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='22.00px' lengthAdjust='spacingAndGlyphs'>prior</text>
+<text x='57.23' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='153.35px' lengthAdjust='spacingAndGlyphs'>LKJ marginalization works</text>
+</g>
+</svg>

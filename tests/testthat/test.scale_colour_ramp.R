@@ -8,12 +8,12 @@ library(tidyr)
 library(purrr)
 library(distributional)
 
-context("scale_colour_ramp")
+
 
 
 test_that("basic fill_ramp works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
 
   vdiffr::expect_doppelganger("basic fill_ramp",
@@ -39,8 +39,8 @@ test_that("basic fill_ramp works", {
 
 
 test_that("basic color_ramp works", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
 
   vdiffr::expect_doppelganger("basic colour_ramp",
@@ -74,8 +74,8 @@ test_that("basic color_ramp works", {
 
 
 test_that("color_ramp works with stat_interval", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
 
   dist_df = tribble(
@@ -96,8 +96,8 @@ test_that("color_ramp works with stat_interval", {
 
 
 test_that("fill_ramp works with stat_slab and NAs", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
 
   dist_df = tribble(
@@ -131,8 +131,8 @@ test_that("fill_ramp works with stat_slab and NAs", {
 
 
 test_that("fill_ramp works on lineribbons", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
 
   set.seed(1234)

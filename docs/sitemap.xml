@@ -4,10 +4,16 @@
     <loc>http://mjskay.github.io/ggdist/index.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/bin_dots.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/curve_interval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/cut_cdf_qi.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/find_dotplot_binwidth.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_dotsinterval.html</loc>

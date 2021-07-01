@@ -5,7 +5,7 @@
 
 library(dplyr)
 
-context("lkj_marginal")
+
 
 
 test_that("log of dlkjcorr_marginal is correct", {
@@ -38,4 +38,21 @@ test_that("lkjcorr_marginal throws an error for invalid K", {
 
   expect_error(lkjcorr_marginal_alpha(2.01, 4), error_regex)
   expect_error(lkjcorr_marginal_alpha(1, 4), error_regex)
+})
+
+test_that("marginalize_lkjcorr works", {
+  ref = data.frame(
+    coef = c("a", "b"),
+    prior = c("lkjcorr(3)", "lkjcorr(3)" ),
+    .dist = c("lkjcorr_marginal", "lkjcorr_marginal")
+  )
+  ref$.args = list(list(2, 3), list(4, 3))
+
+  expect_equal(
+    data.frame(coef = c("a", "b"), prior = "lkjcorr(3)") %>%
+      parse_dist(prior) %>%
+      marginalize_lkjcorr(K = 2, coef == "a") %>%
+      marginalize_lkjcorr(K = 4, coef == "b"),
+    ref
+  )
 })

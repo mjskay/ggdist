@@ -48,12 +48,11 @@ draw_key_slab_ = function(self, data, key_data, params, size) {
 draw_key_interval_ = function(self, data, key_data, params, size) {
   if(params$show_interval && any(!is.na(data[c("colour","colour_ramp","alpha","size","linetype","interval_colour","interval_alpha","interval_size","interval_linetype")]))) {
     i_key_data = self$override_interval_aesthetics(key_data, params$interval_size_domain, params$interval_size_range)
-    line_key = switch(params$orientation,
-      y = ,
-      horizontal = draw_key_path,
-      x = ,
-      vertical = draw_key_vpath
-    )
+    line_key = if(params$orientation %in% c("y", "horizontal")) {
+      draw_key_path
+    } else {
+      draw_key_vpath
+    }
     line_key(i_key_data, params, size)
   }
 }

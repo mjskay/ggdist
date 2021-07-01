@@ -5,11 +5,11 @@
 
 library(dplyr)
 
-context("stat_cdfinterval")
+
 
 test_that("dodged ccdf barplots work", {
-  skip_if_not_installed("vdiffr")
-  skip_if_not_installed("svglite")
+  skip_if_no_vdiffr()
+
 
   set.seed(123)
   df = data.frame(y = rnorm(500, 1), x = "a", g = c("g1")) %>%

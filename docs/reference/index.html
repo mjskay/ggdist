@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
       </span>
     </div>
 
@@ -328,25 +328,6 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-compatibility-with-other-packages" class="hasAnchor"><a href="#section-compatibility-with-other-packages" class="anchor"></a>Compatibility with other packages</h2>
-          <p class="section-desc"><p>Functions to convert the ggdist naming scheme (for <code><a href="../reference/point_interval.html">point_interval()</a></code>) to and from other packages’ naming schemes.</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="tidy-format-translators.html">to_broom_names()</a></code> <code><a href="tidy-format-translators.html">from_broom_names()</a></code> <code><a href="tidy-format-translators.html">to_ggmcmc_names()</a></code> <code><a href="tidy-format-translators.html">from_ggmcmc_names()</a></code> </p>
-        </td>
-        <td><p>Translate between different tidy data frame formats for draws from distributions</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
           <h2 id="section-ggplot-scales" class="hasAnchor"><a href="#section-ggplot-scales" class="anchor"></a>GGplot scales</h2>
           <p class="section-desc"><p>Scales for custom aesthetics used by ggdist geoms and stats</p></p>
         </th>
@@ -384,9 +365,53 @@
       <tr>
         
         <td>
-          <p><code><a href="theme_ggdist.html">theme_ggdist()</a></code> <code><a href="theme_ggdist.html">theme_tidybayes()</a></code> <code><a href="theme_ggdist.html">facet_title_left_horizontal()</a></code> <code><a href="theme_ggdist.html">facet_title_right_horizontal()</a></code> <code><a href="theme_ggdist.html">axis_titles_bottom_left()</a></code> </p>
+          <p><code><a href="theme_ggdist.html">theme_ggdist()</a></code> <code><a href="theme_ggdist.html">theme_tidybayes()</a></code> <code><a href="theme_ggdist.html">facet_title_horizontal()</a></code> <code><a href="theme_ggdist.html">axis_titles_bottom_left()</a></code> <code><a href="theme_ggdist.html">facet_title_left_horizontal()</a></code> <code><a href="theme_ggdist.html">facet_title_right_horizontal()</a></code> </p>
         </td>
         <td><p>Simple, light ggplot2 theme for ggdist and tidybayes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-dotplot-layout-algorithms" class="hasAnchor"><a href="#section-dotplot-layout-algorithms" class="anchor"></a>Dotplot layout algorithms</h2>
+          <p class="section-desc"><p>Algorithms used by <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> for automatically determining nice-looking dotplot binwidths and laying out dots.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="find_dotplot_binwidth.html">find_dotplot_binwidth()</a></code> </p>
+        </td>
+        <td><p>Dynamically select a good bin width for a dotplot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="bin_dots.html">bin_dots()</a></code> </p>
+        </td>
+        <td><p>Bin data values using a dotplot algorithm</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-compatibility-with-other-packages" class="hasAnchor"><a href="#section-compatibility-with-other-packages" class="anchor"></a>Compatibility with other packages</h2>
+          <p class="section-desc"><p>Functions to convert the ggdist naming scheme (for <code><a href="../reference/point_interval.html">point_interval()</a></code>) to and from other packages’ naming schemes.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="tidy-format-translators.html">to_broom_names()</a></code> <code><a href="tidy-format-translators.html">from_broom_names()</a></code> <code><a href="tidy-format-translators.html">to_ggmcmc_names()</a></code> <code><a href="tidy-format-translators.html">from_ggmcmc_names()</a></code> </p>
+        </td>
+        <td><p>Translate between different tidy data frame formats for draws from distributions</p></td>
       </tr>
     </tbody><tbody>
       <tr>

@@ -32,7 +32,8 @@ knitr::opts_chunk$set(
 )
 if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
   knitr::opts_chunk$set(
-    dev.args = list(png = list(type = "cairo"))
+    dev = "png",
+    dev.args = list(type = "cairo")
   )
 }
 ```
@@ -184,7 +185,7 @@ We must also override the default `fill` aesthetic to use the `.width` generated
 variable, which is continuous (by default lineribbons map `level` onto the
 `fill` aesthetic, which is a transformation of `.width` into a factor---and produces
 illegible legends when many values are used). This also requires us to use
-a continous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete one
+a continuous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete one
 (e.g. `scale_fill_brewer()`):
 
 ```{r stat_lineribbon_gradient, fig.width = med_width, fig.height = med_height}

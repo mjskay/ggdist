@@ -11,12 +11,9 @@ geom_slabinterval(
   stat = "identity",
   position = "identity",
   ...,
-  side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
-    "bottomright", "both"),
-  scale = 0.9,
   orientation = NA,
-  justification = NULL,
   normalize = c("all", "panels", "xy", "groups", "none"),
+  fill_type = c("segments", "gradient"),
   interval_size_domain = c(1, 6),
   interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8,
@@ -68,17 +65,6 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
 
-\item{side}{Which side to draw the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
-causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
-sides (as in a violin plot).}
-
-\item{scale}{What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
-slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
-
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
 aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
@@ -91,13 +77,6 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
-\item{justification}{Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to
-\code{0.5}.}
-
 \item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
 (the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
 panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
@@ -105,6 +84,14 @@ the x/y axis opposite the \code{orientation} of this geom so that the maximum he
 opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
+
+\item{fill_type}{What type of fill to use when the fill color or alpha varies within a slab. The default,
+\code{"segments"}, breaks up the slab geometry into segments for each unique combination of fill color and
+alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
+but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
+like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{linearGradient()} is used to
+create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
+R > 4.1 and is not yet supported on all graphics devices.}
 
 \item{interval_size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
@@ -197,44 +184,107 @@ Typically, the \verb{geom_*} versions are meant for use with already-summarized 
 }
 \section{Aesthetics}{
 
-These geoms support the following aesthetics:
+The slab+interval \code{stat}s and \code{geom}s have a wide variety of aesthetics that control
+the appearance of their three sub-geometries: the \strong{slab}, the \strong{point}, and
+the \strong{interval}.
+
+\strong{Positional aesthetics}
 \itemize{
-\item \code{x}
-\item \code{y}
-\item \code{datatype}
-\item \code{alpha}
-\item \code{colour}
-\item \code{colour_ramp}
-\item \code{linetype}
-\item \code{fill}
-\item \code{shape}
-\item \code{stroke}
-\item \code{point_colour}
-\item \code{point_fill}
-\item \code{point_alpha}
-\item \code{point_size}
-\item \code{size}
-\item \code{interval_colour}
-\item \code{interval_alpha}
-\item \code{interval_size}
-\item \code{interval_linetype}
-\item \code{slab_size}
-\item \code{slab_colour}
-\item \code{slab_fill}
-\item \code{slab_alpha}
-\item \code{slab_linetype}
-\item \code{fill_ramp}
-\item \code{ymin}
-\item \code{ymax}
-\item \code{xmin}
-\item \code{xmax}
+\item \code{x}: x position of the geometry
+\item \code{y}: y position of the geometry
+}
+\strong{Slab-specific aesthetics}
+\itemize{
+\item \code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
+\code{y} value (if \code{orientation = "vertical"}) of the slab.
+\item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).
+\item \code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
+\item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
+justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
+is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
+\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
+\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
+\item \code{datatype}: When using composite geoms directly without a \code{stat} (e.g. \code{\link[=geom_slabinterval]{geom_slabinterval()}}), \code{datatype} is used to
+indicate which part of the geom a row in the data targets: rows with \code{datatype = "slab"} target the
+slab portion of the geometry and rows with \code{datatype = "interval"} target the interval portion of
+the geometry. This is set automatically when using ggdist \code{stat}s.
+}
+\strong{Interval-specific aesthetics}
+\itemize{
+\item \code{xmin}: Left end of the interval sub-geometry (if \code{orientation = "horizontal"}).
+\item \code{xmax}: Right end of the interval sub-geometry (if \code{orientation = "horizontal"}).
+\item \code{ymin}: Lower end of the interval sub-geometry (if \code{orientation = "vertical"}).
+\item \code{ymax}: Upper end of the interval sub-geometry (if \code{orientation = "vertical"}).
+}
+\strong{Point-specific aesthetics}
+\itemize{
+\item \code{shape}: Shape type used to draw the \strong{point} sub-geometry.
+}
+\strong{Color aesthetics}
+\itemize{
+\item \code{colour}: (or \code{color}) The color of the \strong{interval} and \strong{point} sub-geometries.
+Use the \code{slab_color}, \code{interval_color}, or \code{point_color} aesthetics (below) to
+set sub-geometry colors separately.
+\item \code{fill}: The fill color of the \strong{slab} and \strong{point} sub-geometries. Use the \code{slab_fill}
+or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.
+\item \code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
+\code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.
+\item \code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
+scale to "ramp" to another color. See \code{scale_colour_ramp()} for examples.
+\item \code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
+scale to "ramp" to another color. See \code{scale_fill_ramp()} for examples.
+}
+\strong{Line aesthetics}
+\itemize{
+\item \code{size}: Width of the outline around the \strong{slab} (if visible). Also determines the width of
+the line used to draw the \strong{interval} and the size of the \strong{point}, but raw
+\code{size} values are transformed according to the \code{interval_size_domain}, \code{interval_size_range},
+and \code{fatten_point} parameters of the \code{geom} (see above). Use the \code{slab_size},
+\code{interval_size}, or \code{point_size} aesthetics (below) to set sub-geometry line widths separately
+(note that when size is set directly using the override aesthetics, interval and point
+sizes are not affected by \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point}).
+\item \code{stroke}: Width of the outline around the \strong{point} sub-geometry.
+\item \code{linetype}: Type of line (e.g., \code{"solid"}, \code{"dashed"}, etc) used to draw the \strong{interval}
+and the outline of the \strong{slab} (if it is visible). Use the \code{slab_linetype} or
+\code{interval_linetype} aesthetics (below) to set sub-geometry line types separately.
+}
+\strong{Slab-specific color/line override aesthetics}
+\itemize{
+\item \code{slab_fill}: Override for \code{fill}: the fill color of the slab.
+\item \code{slab_colour}: (or \code{slab_color}) Override for \code{colour}/\code{color}: the outline color of the slab.
+\item \code{slab_alpha}: Override for \code{alpha}: the opacity of the slab.
+\item \code{slab_size}: Override for \code{size}: the width of the outline of the slab.
+\item \code{slab_linetype}: Override for \code{linetype}: the line type of the outline of the slab.
+}
+\strong{Interval-specific color/line override aesthetics}
+\itemize{
+\item \code{interval_colour}: (or \code{interval_color}) Override for \code{colour}/\code{color}: the color of the interval.
+\item \code{interval_alpha}: Override for \code{alpha}: the opacity of the interval.
+\item \code{interval_size}: Override for \code{size}: the line width of the interval.
+\item \code{interval_linetype}: Override for \code{linetype}: the line type of the interval.
+}
+\strong{Point-specific color/line override aesthetics}
+\itemize{
+\item \code{point_fill}: Override for \code{fill}: the fill color of the point.
+\item \code{point_colour}: (or \code{point_color}) Override for \code{colour}/\code{color}: the outline color of the point.
+\item \code{point_alpha}: Override for \code{alpha}: the opacity of the point.
+\item \code{point_size}: Override for \code{size}: the size of the point.
+}
+\strong{Other aesthetics} (these work as in standard \code{geom}s)
+\itemize{
 \item \code{width}
 \item \code{height}
-\item \code{thickness}
 \item \code{group}
 }
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
-Learn more about the sub-geom aesthetics (like \code{interval_color}) in the \link[ggdist]{scales} documentation.
+Learn more about the sub-geom override aesthetics (like \code{interval_color}) in the \link[ggdist]{scales} documentation.
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 

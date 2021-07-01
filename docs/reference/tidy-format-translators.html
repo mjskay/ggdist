@@ -93,7 +93,7 @@ formats (each format using a different naming scheme for its columns)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
       </span>
     </div>
 
@@ -218,21 +218,21 @@ prefixed with <code>from_</code> translate from that format back to the ggdist/t
   <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span><span class='va'>.value</span><span class='op'>)</span>
 
 <span class='va'>df</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 7</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 7</span>
 #&gt;   .variable .value .lower .upper .width .point .interval
-#&gt;       </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'>1</span><span>         1   5.62   3.86   8.03   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>2</span><span>         2   5.48   3.46   9.07   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>3</span><span>         3   4.96   3.10   7.86   0.95 median qi       </div><div class='input'>
+#&gt;       <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    
+#&gt; <span style='color: #BCBCBC;'>1</span>         1   5.62   3.86   8.03   0.95 median qi       
+#&gt; <span style='color: #BCBCBC;'>2</span>         2   5.48   3.46   9.07   0.95 median qi       
+#&gt; <span style='color: #BCBCBC;'>3</span>         3   4.96   3.10   7.86   0.95 median qi       </div><div class='input'>
 <span class='va'>df</span> <span class='op'>%&gt;%</span>
   <span class='fu'>to_broom_names</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 7</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 7</span>
 #&gt;    term estimate conf.low conf.high .width .point .interval
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'>1</span><span>     1     5.62     3.86      8.03   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>2</span><span>     2     5.48     3.46      9.07   0.95 median qi       
-#&gt; </span><span style='color: #555555;'>3</span><span>     3     4.96     3.10      7.86   0.95 median qi       </div><div class='input'>
-</div></span></pre>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    
+#&gt; <span style='color: #BCBCBC;'>1</span>     1     5.62     3.86      8.03   0.95 median qi       
+#&gt; <span style='color: #BCBCBC;'>2</span>     2     5.48     3.46      9.07   0.95 median qi       
+#&gt; <span style='color: #BCBCBC;'>3</span>     3     4.96     3.10      7.86   0.95 median qi       </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
