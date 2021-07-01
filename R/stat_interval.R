@@ -13,6 +13,7 @@
 #' function, these `stat`s are intended for use directly on data frames of draws, and
 #' will perform the summarization using a [point_interval()] function.
 #'
+#' @eval rd_slabinterval_computed_variables()
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval", stat = StatInterval)
 #' @inheritParams stat_pointinterval
 #' @inheritParams geom_slabinterval

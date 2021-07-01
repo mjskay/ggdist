@@ -27,7 +27,7 @@ dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identi
     }
 
     args = args_from_aes(...)
-    quantile_fun = dist_quantile_fun(dist)
+    quantile_fun = distr_quantile(dist)
 
     # if the lower or upper p limit is NA, check to see if the dist has a
     # finite limit on the transformed drawing scale, otherwise use .001 or
@@ -108,10 +108,10 @@ dist_slab_function = function(
 
     #get pdf and cdf functions
     pdf_fun = if (trans$name == "identity") {
-      dist_pdf(dist)
+      distr_pdf(dist)
     } else {
       # must transform the density according to the scale transformation
-      function(x, ...) transform_pdf(dist_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
+      function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
     }
     cdf_fun = dist_cdf(dist)
 
@@ -141,7 +141,7 @@ dist_interval_function = function(df, .width, trans, ...) {
     }
 
     args = args_from_aes(...)
-    quantile_fun = dist_quantile_fun(dist)
+    quantile_fun = distr_quantile(dist)
 
     intervals = map_dfr_(.width, function(w) {
       quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
@@ -157,26 +157,26 @@ dist_interval_function = function(df, .width, trans, ...) {
 }
 
 
-dist_function = function(dist, prefix, fun) UseMethod("dist_function")
-dist_function.default = function(dist, prefix, fun) {
+distr_function = function(dist, prefix, fun) UseMethod("distr_function")
+distr_function.default = function(dist, prefix, fun) {
   stop("The `dist` aesthetic does not support objects of type ", deparse0(class(dist)))
 }
-dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
-dist_function.factor = function(dist, prefix, fun) dist_function(as.character(dist), prefix, fun)
-dist_function.distribution = function(dist, prefix, fun) {
+distr_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
+distr_function.factor = function(dist, prefix, fun) distr_function(as.character(dist), prefix, fun)
+distr_function.distribution = function(dist, prefix, fun) {
   if (length(dist) > 1) stop(
     "distributional objects should never have length > 1 here.\n",
     "Please report this bug at https://github.com/mjskay/ggdist/issues"
   )
-  dist_function.dist_default(dist[[1]], prefix, fun)
+  distr_function.dist_default(dist[[1]], prefix, fun)
 }
-dist_function.dist_default = function(dist, prefix, fun) function(x, ...) fun(dist, x, ...)
-dist_function.rvar = dist_function.distribution
+distr_function.dist_default = function(dist, prefix, fun) function(x, ...) fun(dist, x, ...)
+distr_function.rvar = distr_function.distribution
 
-dist_pdf = function(dist) dist_function(dist, "d", density)
+distr_pdf = function(dist) distr_function(dist, "d", density)
 #' @importFrom distributional cdf
-dist_cdf = function(dist) dist_function(dist, "p", cdf)
-dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
+dist_cdf = function(dist) distr_function(dist, "p", cdf)
+distr_quantile = function(dist) distr_function(dist, "q", quantile)
 
 
 # stat_dist_slabinterval --------------------------------------------------
@@ -230,21 +230,8 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #'    [parse_dist()] combined with the stats described here can help you visualize the output
 #'    of those functions.
 #'
+#' @eval rd_slabinterval_computed_variables(stat_sample = FALSE)
 #' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
-#' @section Computed Variables:
-#' The following variables are computed by this stat and made available for
-#' use in aesthetic specifications (`aes()`) using the `stat()` or `after_stat()`
-#' functions:
-#' \itemize{
-#'   \item `x` or `y`: For slabs, the input values to the slab function.
-#'     For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
-#'   \item `xmin` or `ymin`: For intervals, the lower end of the interval from the interval function.
-#'   \item `xmax` or `ymax`: For intervals, the upper end of the interval from the interval function.
-#'   \item `f`: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-#'     determined by `slab_type`.
-#'   \item `pdf`: For slabs, the probability density function.
-#'   \item `cdf`: For slabs, the cumulative distribution function.
-#' }
 #'
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval

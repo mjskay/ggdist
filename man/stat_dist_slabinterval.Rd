@@ -235,6 +235,25 @@ produced by other packages (like the \code{brms::get_prior} function in brms); t
 of those functions.
 }
 }
+\section{Computed Variables}{
+
+The following variables are computed by this stat and made available for
+use in aesthetic specifications (\code{aes()}) using the \code{stat()} or \code{after_stat()}
+functions:
+\itemize{
+\item \code{x} or \code{y}: For slabs, the input values to the slab function.
+For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
+\item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
+\item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
+\item \code{.width}: For intervals, the interval width as a numeric value in \link{0, 1}.
+\item \code{level}: For intervals, the interval width as an ordered factor.
+\item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by \code{slab_type}.
+\item \code{pdf}: For slabs, the probability density function.
+\item \code{cdf}: For slabs, the cumulative distribution function.
+}
+}
+
 \section{Aesthetics}{
 
 The slab+interval \code{stat}s and \code{geom}s have a wide variety of aesthetics that control
@@ -348,23 +367,6 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
 Learn more about the sub-geom override aesthetics (like \code{interval_color}) in the \link[ggdist]{scales} documentation.
 Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
-}
-
-\section{Computed Variables}{
-
-The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{aes()}) using the \code{stat()} or \code{after_stat()}
-functions:
-\itemize{
-\item \code{x} or \code{y}: For slabs, the input values to the slab function.
-For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
-\item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
-\item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
-\item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-determined by \code{slab_type}.
-\item \code{pdf}: For slabs, the probability density function.
-\item \code{cdf}: For slabs, the cumulative distribution function.
-}
 }
 
 \examples{
