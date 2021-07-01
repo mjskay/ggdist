@@ -20,6 +20,7 @@ stat_dist_slabinterval(
   ...,
   slab_type = c("pdf", "cdf", "ccdf"),
   p_limits = c(NA, NA),
+  outline_bars = FALSE,
   orientation = NA,
   limits = NULL,
   n = 501,
@@ -132,6 +133,11 @@ distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is
 \code{p_limits} is \code{c(NA, NA)} on a gamma distribution the effective value of \code{p_limits} would be
 \code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
 it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
+
+\item{outline_bars}{For discrete distributions (whose slabs are drawn as histograms), determines
+if outlines in between the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE}
+(the default), the outline is drawn only along the tops of the bars; if \code{TRUE}, outlines in between
+bars are also drawn.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
