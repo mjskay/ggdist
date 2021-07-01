@@ -343,8 +343,16 @@ test_that("stat_dist_ detects discrete distributions", {
     p + stat_dist_halfeye(aes(dist = dist_poisson(lambda)), slab_color = "gray50")
   })
 
+  vdiffr::expect_doppelganger("dist_poisson ccdf", {
+    p + stat_dist_ccdfinterval(aes(dist = dist_poisson(lambda)), slab_color = "gray50")
+  })
+
   vdiffr::expect_doppelganger("dpois", {
     p + stat_dist_halfeye(aes(dist = "pois", arg1 = lambda), slab_color = "gray50", outline_bars = TRUE)
+  })
+
+  vdiffr::expect_doppelganger("dpois ccdf", {
+    p + stat_dist_ccdfinterval(aes(dist = "pois", arg1 = lambda), slab_color = "gray50", outline_bars = TRUE)
   })
 
 })

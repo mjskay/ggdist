@@ -96,6 +96,7 @@ transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) 
   f_X(g_inverse_at_y, ...) * abs(g_inverse_deriv_at_y)
 }
 
+#' @importFrom dplyr lag
 dist_slab_function = function(
   df, input, slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE, trans = scales::identity_trans(), ...
 ) {
@@ -106,40 +107,47 @@ dist_slab_function = function(
 
     args = args_from_aes(...)
 
-    # calculate pdf
+    # calculate pdf and cdf
+    cdf_fun = dist_cdf(dist)
     if (trans$name == "identity") {
       pdf_fun = distr_pdf(dist)
       if (distr_is_discrete(dist, args)) {
         # for discrete distributions, we have to adjust the positions of the x
         # values to create bin-like things
-        unique_input = unique(round(input))
-        input_1 = unique_input - 0.5  # first edge of bin
-        input_2 = unique_input + 0.5                 # second edge of bin
-        pdf = do.call(pdf_fun, c(list(quote(unique_input)), args))
+        input_ = unique(round(input))   # center of bin
+        input_1 = input_ - 0.5          # first edge of bin
+        input_2 = input_ + 0.5          # second edge of bin
+        pdf = do.call(pdf_fun, c(list(quote(input_)), args))
+        cdf = do.call(cdf_fun, c(list(quote(input_)), args))
+        # we also need the lag of the cdf so we can make it a step function
+        # at the midpoint of each bin
+        lag_cdf_input = c(input_[[1]] - 1, input_[-length(input_)])
+        lag_cdf = do.call(cdf_fun, c(list(quote(lag_cdf_input)), args))
 
         if (!outline_bars) {
-          # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
-          # us the bin endpoints --- then just need to repeat the same value of density
-          # for both endpoints of the same bin
-          input = as.vector(rbind(input_1, input_2))
-          pdf = rep(pdf, each = 2)
+          # as.vector(rbind(x, y, z, ...)) interleaves vectors x, y, z, ..., giving
+          # us the bin endpoints and midpoints --- then just need to repeat the same
+          # value of density for both endpoints of the same bin and to make sure the
+          # cdf is a step function that steps at the midpoint of the bin
+          input = as.vector(rbind(input_1, input_, input_, input_2))
+          pdf = rep(pdf, each = 4)
+          cdf = as.vector(rbind(lag_cdf, lag_cdf, cdf, cdf))
         } else {
           # have to return to 0 in between each bar so that bar outlines are drawn
-          input = as.vector(rbind(input_1, input_1, input_2, input_2))
-          pdf = as.vector(rbind(0, pdf, pdf, 0))
+          input = as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))
+          pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, 0))
+          cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
         }
       } else {
         pdf = do.call(pdf_fun, c(list(quote(input)), args))
+        cdf = do.call(cdf_fun, c(list(quote(input)), args))
       }
     } else {
       # must transform the density according to the scale transformation
       pdf_fun = function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
       pdf = do.call(pdf_fun, c(list(quote(input)), args))
+      cdf = do.call(cdf_fun, c(list(quote(input)), args))
     }
-
-    # calculate cdf
-    cdf_fun = dist_cdf(dist)
-    cdf = do.call(cdf_fun, c(list(quote(input)), args))
 
     value = switch(slab_type,
       pdf = pdf,
