@@ -37,12 +37,12 @@ rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymi
         d[[ymax]] = d[[y]] + (d$thickness - d$justification) * thickness_scale
       },
       bottomleft = {
-        d[[ymin]] = d[[y]] - (d$thickness - d$justification) * thickness_scale
-        d[[ymax]] = d[[y]] + d$justification * thickness_scale
+        d[[ymin]] = d[[y]] - (d$thickness - 1 + d$justification) * thickness_scale
+        d[[ymax]] = d[[y]] + (1 - d$justification) * thickness_scale
       },
       both = {
-        d[[ymin]] = d[[y]] - d$thickness * thickness_scale/2 + (d$justification - 0.5) * thickness_scale
-        d[[ymax]] = d[[y]] + d$thickness * thickness_scale/2 + (d$justification - 0.5) * thickness_scale
+        d[[ymin]] = d[[y]] - d$thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
+        d[[ymax]] = d[[y]] + d$thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
       }
     )
 
@@ -575,7 +575,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
       params$orientation
     )
     data[[ymin]] = data[[y]] - justification * data[[height]]
-    data[[ymax]] = data[[y]] + data[[height]] * (1 - justification)
+    data[[ymax]] = data[[y]] + (1 - justification) * data[[height]]
 
     data
   },
