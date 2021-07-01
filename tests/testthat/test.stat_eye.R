@@ -77,7 +77,7 @@ test_that("dodged eye plots work", {
   p = ggplot(df, aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, right)",
-    p + stat_halfeye(aes(fill = g), position = "dodge", n = 15)
+    p + stat_halfeye(aes(fill = g), position = "dodge", n = 15, justification = 0)
   )
   vdiffr::expect_doppelganger("vertical halfeye with dodging (3 groups, left)",
     p + stat_halfeye(aes(fill = g), position = "dodge", side = "bottom", n = 15)
