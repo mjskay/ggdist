@@ -220,7 +220,7 @@ pos_dodge <- function(df, width, n = NULL) {
 collide_setup = function(
   data, width = NULL, name, strategy,
   justification = NULL,
-  check.width = TRUE, reverse = FALSE
+  check.width = TRUE
 ) {
   # Determine width
   if (!is.null(width)) {
@@ -249,19 +249,15 @@ collide_setup = function(
 collide = function(
   data, width = NULL, name, strategy,
   preserve = "total", justification = NULL,
-  check.width = TRUE, reverse = FALSE
+  check.width = TRUE
 ) {
-  dlist <- collide_setup(data, width, name, strategy, justification, check.width, reverse)
+  dlist <- collide_setup(data, width, name, strategy, justification, check.width)
   data <- dlist$data
   width <- dlist$width
 
   # Reorder by x position, then on group. The default stacking order reverses
   # the group in order to match the legend order.
-  if (reverse) {
-    ord <- order(data$xmin, data$group)
-  } else {
-    ord <- order(data$xmin, -data$group)
-  }
+  ord <- order(data$xmin, -data$group)
   data <- data[ord, ]
 
   # determine n
