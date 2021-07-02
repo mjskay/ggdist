@@ -289,7 +289,7 @@ collide = function(
     data <- ddply_(data, "xmin", strategy, n = n, width = width)
     data$y <- data$ymax
   } else {
-    abort("Neither y nor ymax defined")
+    stop0("Neither y nor ymax defined")
   }
   data[match(seq_along(ord), ord), ]
 }
