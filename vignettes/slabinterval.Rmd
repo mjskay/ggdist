@@ -919,28 +919,46 @@ See `help("scale_color_ramp")` for more information on the color ramp aesthetics
 Sometimes you may want to include multiple different types of slabs in the same plot
 in order to take advantage of the features each slab type provides. For example,
 people often combine densities with dotplots to show the underlying datapoints that
-go into a density estimate. To use multiple slab geometries together, you can use the
-`side` parameter to change which side of the interval a slab is drawn on and set the
-`scale` parameter to something around `0.5` (by default it is `0.9`) so that the
-two slabs do not overlap:
+go into a density estimate, creating so-called "raincloud" plots. To use multiple
+slab geometries together, you can use the `side` parameter to change which side
+of the interval a slab is drawn on and set the `scale` parameter to something around
+`0.5` (by default it is `0.9`) so that the two slabs do not overlap. We'll also
+scale the halfeye slab thickness by `n` (the number of observations in each group)
+so that the area of each slab represents sample size (and looks similar to
+the total area of its corresponding dotplot).
 
-```{r halfeye_dotplot, fig.width = med_width, fig.height = small_height}
+We'll use a subsample of of the data to show how it might look on a reasonably-sized
+dataset.
+
+```{r halfeye_dotplot, fig.width = small_height, fig.height = med_width}
+set.seed(12345) # for reproducibility
 df %>%
-  ggplot(aes(x = group, y = value)) +
-  stat_slab(side = "left", scale = 0.5) +
-  stat_dotsinterval(scale = 0.5) +
-  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval()')
+  filter(subgroup == "h") %>%
+  group_by(group, subgroup) %>%
+  sample_n(50) %>%
+  ggplot(aes(y = group, x = value)) +
+  stat_slab(scale = 0.5, position = "dodge") +
+  stat_dotsinterval(side = "bottom", scale = 0.5, position = "dodge") +
+  labs(title = 'stat_slab(scale = 0.5) + \nstat_dotsinterval(scale = 0.5, side = "bottom")')
 ```
 
-In this example, depending on your use case you might prefer a quantile dotplot
-instead of a dotplot of all data points:
+Geoms can also be dodged together, as in this example using densities with
+quantile dotplots in subgroups. This example also shows how `stat_pointinterval()`
+can be repurposed to be used with other geoms; here to replace points with labels.
 
 ```{r halfeye_quantile_dotplot, fig.width = med_width, fig.height = small_height}
 df %>%
-  ggplot(aes(x = group, y = value)) +
-  stat_slab(side = "left", scale = 0.5) +
-  stat_dotsinterval(scale = 0.5, quantiles = 100) +
-  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100)')
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_slab(side = "left", scale = 0.5, position = "dodge") +
+  stat_dotsinterval(scale = 0.5, quantiles = 100, position = "dodge") +
+  stat_pointinterval(
+    geom = "label", 
+    aes(label = paste0(group, subgroup)), 
+    .width = .5,  # set to a scalar to draw only one label instead of two
+    position = position_dodge(width = 1),
+    size = 3.5
+  ) +
+  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100) +\nstat_pointinterval(geom = "label")')
 ```
 
 When constructing composite plots it may be useful to position slab and interval parts of the geometry separately.

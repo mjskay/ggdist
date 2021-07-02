@@ -79,6 +79,7 @@ Collate:
     "lkjcorr_marginal.R"
     "parse_dist.R"
     "point_interval.R"
+    "position_dodgejust.R"
     "scale_colour_ramp.R"
     "scale_.R"
     "stat.R"
