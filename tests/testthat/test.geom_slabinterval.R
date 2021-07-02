@@ -126,7 +126,7 @@ test_that("side and justification can vary", {
     df %>%
       ggplot(aes(x = x, y = g, thickness = y,
         side = ifelse(g == "a", "top", "bottom"),
-        justification = ifelse(g == "a", 0, 0.5),
+        justification = ifelse(g == "a", 0, 1),
         scale = ifelse(g == "a", 0.5, 0.25)
       )) +
       geom_slab()
