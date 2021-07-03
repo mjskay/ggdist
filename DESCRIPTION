@@ -23,7 +23,7 @@ Depends:
 Imports:
     tidyselect,
     dplyr (>= 1.0.0),
-    ggplot2 (>= 3.3.0),
+    ggplot2 (>= 3.3.5),
     rlang (>= 0.3.0),
     scales,
     grid,

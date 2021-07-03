@@ -118,7 +118,7 @@ map2_dfr_ = function(X, Y, FUN) {
 iwalk_ = function(vec, fun, ...) {
   # drop in replacement for purrr::iwalk()
   nms = names(vec) %||% seq_along(x)
-  mapply(fun, vec, nms, ...)
+  mapply(fun, vec, nms, MoreArgs = list(...))
   invisible(vec)
 }
 
@@ -128,7 +128,7 @@ fct_rev_ = function(x) {
   } else if (!is.factor(x)) {
     stop0("`x` must be a factor (or character vector).")
   }
-  factor(x, levels = rev(levels(x)))
+  factor(x, levels = rev(levels(x)), ordered = is.ordered(x))
 }
 
 
