@@ -89,14 +89,19 @@ pmap_dfr_ = function(data, fun) {
   map_dfr_(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
 }
 
-#' @importFrom dplyr group_split across
 ddply_ = function(data, groups, fun, ...) {
-  map_dfr_(group_split(data, across(groups)), fun, ...)
+  bind_rows(dlply_(data, groups, fun, ...))
 }
 
-#' @importFrom dplyr group_split across
 dlply_ = function(data, groups, fun, ...) {
-  lapply(group_split(data, across(groups)), fun, ...)
+  # group_is = a list where each element is a numeric vector of indices
+  # corresponding to one group
+  group_is = unname(split(seq_len(nrow(data)), data[, groups], drop = TRUE, lex.order = TRUE))
+  lapply(group_is, function(group_i) {
+    # faster version of row_df = data[group_i, ]
+    row_df = tibble::new_tibble(lapply(data, `[`, group_i), nrow = length(group_i))
+    fun(row_df, ...)
+  })
 }
 
 map_dbl_ = function(X, FUN, ...) {
