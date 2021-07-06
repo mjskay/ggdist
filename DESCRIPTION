@@ -53,6 +53,7 @@ Suggests:
     pkgdown
 Remotes:
     stan-dev/posterior
+    mitchelloharawild/distributional
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new

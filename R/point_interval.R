@@ -421,6 +421,7 @@ Mode.rvar = function(x, na.rm = FALSE) {
 Mode.dist_sample = function(x, na.rm = FALSE) {
   Mode(x[[1]], na.rm = na.rm)
 }
+#' @importFrom stats optim
 #' @export
 #' @rdname point_interval
 Mode.dist_default = function(x, na.rm = FALSE) {
