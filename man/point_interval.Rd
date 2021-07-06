@@ -4,9 +4,17 @@
 \alias{point_interval}
 \alias{point_interval.default}
 \alias{point_interval.numeric}
+\alias{point_interval.rvar}
+\alias{point_interval.distribution}
+\alias{point_interval.dist_default}
 \alias{qi}
 \alias{hdi}
 \alias{Mode}
+\alias{Mode.default}
+\alias{Mode.rvar}
+\alias{Mode.dist_sample}
+\alias{Mode.dist_default}
+\alias{Mode.distribution}
 \alias{hdci}
 \alias{mean_qi}
 \alias{median_qi}
@@ -55,11 +63,51 @@ point_interval(
   .prob
 )
 
+\method{point_interval}{rvar}(
+  .data,
+  ...,
+  .width = 0.95,
+  .point = median,
+  .interval = qi,
+  .simple_names = TRUE,
+  na.rm = FALSE
+)
+
+\method{point_interval}{distribution}(
+  .data,
+  ...,
+  .width = 0.95,
+  .point = median,
+  .interval = qi,
+  .simple_names = TRUE,
+  na.rm = FALSE
+)
+
+\method{point_interval}{dist_default}(
+  .data,
+  ...,
+  .width = 0.95,
+  .point = median,
+  .interval = qi,
+  .simple_names = TRUE,
+  na.rm = FALSE
+)
+
 qi(x, .width = 0.95, .prob, na.rm = FALSE)
 
-hdi(x, .width = 0.95, .prob, na.rm = FALSE)
+hdi(x, .width = 0.95, .prob, na.rm = FALSE, ...)
 
 Mode(x, na.rm = FALSE)
+
+\method{Mode}{default}(x, na.rm = FALSE)
+
+\method{Mode}{rvar}(x, na.rm = FALSE)
+
+\method{Mode}{dist_sample}(x, na.rm = FALSE)
+
+\method{Mode}{dist_default}(x, na.rm = FALSE)
+
+\method{Mode}{distribution}(x, na.rm = FALSE)
 
 hdci(x, .width = 0.95, na.rm = FALSE)
 

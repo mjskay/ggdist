@@ -224,6 +224,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
+    # this also ensures that rvars and distributional objects are supported (as those act as lists)
     if (!all(map_lgl_(data[,names(col_exprs)], is.list))) {
       data = summarise_at(data, names(col_exprs), list)
     }
@@ -304,6 +305,28 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   }
 }
 
+#' @rdname point_interval
+#' @export
+point_interval.rvar = function(
+  .data, ...,
+  .width = .95, .point = median, .interval = qi, .simple_names = TRUE, na.rm = FALSE
+) {
+  x = .data
+  # using substitute here so that names of .point / .interval are passed down correctly
+  eval(substitute(point_interval(
+    tibble(.value = x), ...,
+    .width = .width, .point = .point, .interval = .interval, .simple_names = .simple_names, na.rm = na.rm
+  )))
+}
+
+#' @rdname point_interval
+#' @export
+point_interval.distribution = point_interval.rvar
+
+#' @rdname point_interval
+#' @export
+point_interval.dist_default = point_interval.rvar
+
 #' @importFrom stats quantile
 #' @export
 #' @rdname point_interval
@@ -320,9 +343,15 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 
 #' @export
 #' @rdname point_interval
-#' @importFrom stats density
-hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
+hdi = function(x, .width = .95, .prob, na.rm = FALSE, ...) {
   .width = .Deprecated_argument_alias(.width, .prob)
+  hdi_(x, .width = .width, na.rm = na.rm)
+}
+hdi_ = function(x, ...) {
+  UseMethod("hdi_")
+}
+#' @importFrom stats density
+hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
@@ -335,12 +364,34 @@ hdi = function(x, .width = .95, .prob, na.rm = FALSE) {
   }
   matrix(intervals, ncol = 2)
 }
+hdi_.rvar = function(x, ...) {
+  if (length(x) > 1) {
+    stop0("HDI for non-scalar rvars is not implemented")
+  }
+  hdi_.numeric(draws_of(x), ...)
+}
+#' @importFrom distributional hdr
+hdi_.dist_default = function(x, .width = .95, ...) {
+  hilos = hdr(x, .width * 100, ...)
+  matrix(c(hilos[[1]]$lower, hilos[[1]]$upper), ncol = 2)
+}
+hdi_.distribution = function(x, .width = .95, ...) {
+  if (length(x) > 1) {
+    stop0("HDI for non-scalar distributions is not implemented")
+  }
+  hdi_(x[[1]])
+}
 
 #' @export
 #' @rdname point_interval
 #' @importFrom rlang is_integerish
 #' @importFrom stats density
 Mode = function(x, na.rm = FALSE) {
+  UseMethod("Mode")
+}
+#' @export
+#' @rdname point_interval
+Mode.default = function(x, na.rm = FALSE) {
   if (na.rm) {
     x = x[!is.na(x)]
   }
@@ -358,10 +409,46 @@ Mode = function(x, na.rm = FALSE) {
     d$x[which.max(d$y)]
   }
 }
+#' @export
+#' @rdname point_interval
+Mode.rvar = function(x, na.rm = FALSE) {
+  draws <- posterior::draws_of(x)
+  dim <- dim(draws)
+  apply(draws, seq_along(dim)[-1], Mode, na.rm = na.rm)
+}
+#' @export
+#' @rdname point_interval
+Mode.dist_sample = function(x, na.rm = FALSE) {
+  Mode(x[[1]], na.rm = na.rm)
+}
+#' @export
+#' @rdname point_interval
+Mode.dist_default = function(x, na.rm = FALSE) {
+  optim(
+    quantile(x, 0.5),
+    function(q) -density(x, at = q),
+    lower = quantile(x, 0),
+    upper = quantile(x, 1),
+    method = "L-BFGS-B"
+  )$par
+}
+#' @export
+#' @rdname point_interval
+Mode.distribution = function(x, na.rm = FALSE) {
+  map_dbl_(x, Mode, na.rm)
+}
+
 
 #' @export
 #' @rdname point_interval
 hdci = function(x, .width = .95, na.rm = FALSE) {
+  hdci_(x, .width = .width, na.rm = na.rm)
+}
+hdci_ = function(x, ...) {
+  UseMethod("hdci_")
+}
+#' @importFrom stats density
+hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
@@ -369,6 +456,17 @@ hdci = function(x, .width = .95, na.rm = FALSE) {
   intervals = HDInterval::hdi(x, credMass = .width)
   matrix(intervals, ncol = 2)
 }
+hdci_.rvar = function(x, ...) {
+  if (length(x) > 1) {
+    stop0("HDCI for non-scalar rvars is not implemented")
+  }
+  hdci_.numeric(draws_of(x), ...)
+}
+#' @importFrom distributional hdr
+hdci_.dist_default = function(x, .width = .95, ...) {
+  stop0("HDCI for distributional objects is not implemented")
+}
+hdci_.distribution = hdci_.dist_default
 
 #' @export
 #' @rdname point_interval
