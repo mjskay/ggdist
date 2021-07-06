@@ -368,7 +368,7 @@ hdi_.rvar = function(x, ...) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar rvars is not implemented")
   }
-  hdi_.numeric(draws_of(x), ...)
+  hdi_.numeric(posterior::draws_of(x), ...)
 }
 #' @importFrom distributional hdr
 hdi_.dist_default = function(x, .width = .95, ...) {
@@ -460,7 +460,7 @@ hdci_.rvar = function(x, ...) {
   if (length(x) > 1) {
     stop0("HDCI for non-scalar rvars is not implemented")
   }
-  hdci_.numeric(draws_of(x), ...)
+  hdci_.numeric(posterior::draws_of(x), ...)
 }
 #' @importFrom distributional hdr
 hdci_.dist_default = function(x, .width = .95, ...) {

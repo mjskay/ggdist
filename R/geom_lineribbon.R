@@ -103,16 +103,20 @@ geom_lineribbon = function(
 }
 
 draw_key_lineribbon = function(self, data, params, size) {
-  if (!is.null(data$fill_ramp) && is.na(data$fill)) {
+  if (is.null(data[["fill"]]) &&
+    (!is.null(data[["fill_ramp"]]) || !all(is.na(data[["alpha"]])))
+  ) {
     data$fill = "gray65"
   }
   data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
 
-  if (is.na(data$fill)) {
-    draw_key_path(data, params, size)
-  } else {
+  fill_grob = if (!is.null(data$fill)) {
     draw_key_rect(data, params, size)
   }
+  line_grob = if (!is.null(data$colour)) {
+    draw_key_path(data, params, size)
+  }
+  grobTree(fill_grob, line_grob)
 }
 
 #' @rdname ggdist-ggproto
@@ -122,14 +126,19 @@ draw_key_lineribbon = function(self, data, params, size) {
 #' @export
 GeomLineribbon = ggproto("GeomLineribbon", Geom,
   default_aes = aes(
-    colour = "black",
+    colour = NULL,
     size = 1.25,
     linetype = 1,
     shape = 19,
-    fill = NA,
+    fill = NULL,
     fill_ramp = NULL,
     alpha = NA,
     stroke = 1
+  ),
+
+  default_key_aes = aes(
+    colour = "black",
+    fill = "gray65"
   ),
 
   # workaround (#84)
@@ -173,6 +182,15 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
   ) {
     define_orientation_variables(orientation)
 
+    # provide defaults for color aesthetics --- we do this here because
+    # doing it with default_aes makes the scales very busy (as all of
+    # these elements get drawn even if they aren't mapped). By
+    # setting the defaults here we can then check if these are present
+    # in draw_key and not draw them if they aren't mapped.
+    for (aesthetic in names(self$default_key_aes)) {
+      data[[aesthetic]] = data[[aesthetic]] %||% self$default_key_aes[[aesthetic]]
+    }
+
     data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
 
     # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
@@ -200,7 +218,8 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     # smallest mean width, so that the widest intervals are on the bottom.
     ribbon_grobs = ribbon_grobs[order(-map_dbl_(ribbon_grobs, `[[`, "width"))] %>%
       lapply(`[[`, i = "grobs") %>%
-      unlist(recursive = FALSE)
+      unlist(recursive = FALSE) %||%
+      list()
 
     # now draw all the lines
     line_grobs = data %>%
@@ -210,9 +229,9 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
         } else {
           list()
         }
-      })
-
-    line_grobs = unlist(line_grobs, recursive = FALSE)
+      }) %>%
+      unlist(recursive = FALSE) %||%
+      list()
 
     grobs = c(ribbon_grobs, line_grobs)
 

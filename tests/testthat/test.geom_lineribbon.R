@@ -82,6 +82,26 @@ test_that("one-group geom_lineribbons work", {
   )
 })
 
+test_that("geom_lineribbons unspecified fill and color work", {
+  skip_if_no_vdiffr()
+
+  p = tibble(x = 1:3, lower = 0:2, upper = 2:4) %>%
+    ggplot(aes(x = x, y = x, ymin = lower, ymax = upper))
+
+  vdiffr::expect_doppelganger("lineribbon without .width",
+    p + geom_lineribbon()
+  )
+
+  vdiffr::expect_doppelganger("lineribbon fill = NA",
+    p + geom_lineribbon(fill = NA)
+  )
+
+  vdiffr::expect_doppelganger("lineribbon color = NA",
+    p + geom_lineribbon(color = NA)
+  )
+
+})
+
 test_that("two-group stat_lineribbons work", {
   skip_if_no_vdiffr()
 

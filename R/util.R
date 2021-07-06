@@ -93,10 +93,30 @@ ddply_ = function(data, groups, fun, ...) {
   bind_rows(dlply_(data, groups, fun, ...))
 }
 
+fct_explicit_na_ = function(x) {
+  x = as.factor(x)
+  if (anyNA(x)) {
+    na_name = "(Missing)"
+    levels_x = levels(x)
+    while (na_name %in% levels_x) {
+      na_name = paste0(na_name, "+")
+    }
+    levels(x) = c(levels_x, na_name)
+    x[is.na(x)] = na_name
+  }
+  x
+}
+
 dlply_ = function(data, groups, fun, ...) {
+  # must make NAs explicit or they will be dropped by split()
+  group_vars = lapply(data[, groups, drop = FALSE], fct_explicit_na_)
   # group_is = a list where each element is a numeric vector of indices
   # corresponding to one group
-  group_is = unname(split(seq_len(nrow(data)), data[, groups], drop = TRUE, lex.order = TRUE))
+  group_is = if (length(group_vars) >= 1) {
+    unname(split(seq_len(nrow(data)), group_vars, drop = TRUE, lex.order = TRUE))
+  } else {
+    list(seq_len(nrow(data)))
+  }
   lapply(group_is, function(group_i) {
     # faster version of row_df = data[group_i, ]
     row_df = tibble::new_tibble(lapply(data, `[`, group_i), nrow = length(group_i))
