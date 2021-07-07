@@ -121,7 +121,7 @@ test_that("fill_ramp works with stat_slab and NAs", {
             labels = scales::percent_format()
           ))
         ),
-        position = "dodge",
+        position = "dodgejust",
         n = 50
       ) +
       scale_fill_ramp_discrete(range = c(1, 0.2), na.translate = FALSE) +

@@ -22,9 +22,12 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
-tiny_width = small_width = med_width = 6.75
-tiny_height = small_height = med_height = 4.5
-large_width = 8; large_height = 5.25
+tiny_width = 5.5
+tiny_height = 3 + 2/3
+small_width = med_width = 6.75
+small_height = med_height = 4.5
+large_width = 8
+large_height = 5.25
 
 knitr::opts_chunk$set(
   fig.width = small_width,
@@ -450,7 +453,7 @@ For all of the examples above, both on sample data and analytical distributions,
 
 `stat_[c]cdfinterval` has the following basic combinations:
 
-```{r cdfinterval_family, fig.width = small_width, fig.height = small_width}
+```{r cdfinterval_family, fig.width = med_width, fig.height = med_width}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -502,7 +505,7 @@ df %>%
 
 The `side` parameter also works in the same way it does with `stat_eye()`. Here we'll demonstrate it horizontally:
 
-```{r ccdf_side, fig.width = med_width, fig.height = tiny_height}
+```{r ccdf_side, fig.width = med_width, fig.height = med_height}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
   expand_limits(x = 0) +
@@ -884,7 +887,11 @@ df %>%
         labels = scales::percent_format()
       ))
     ),
-    position = "dodge",
+    # NOTE: we use position = "dodgejust" (a dodge that respects the 
+    # justification of intervals relative to slabs) instead of 
+    # position = "dodge" here because it ensures the topmost slab does
+    # not extend beyond the plot limits
+    position = "dodgejust",
   ) +
   # a range from 1 down to 0.2 ensures the fill goes dark to light inside-out
   # and doesn't get all the way down to white (0) on the lightest color
@@ -914,33 +921,67 @@ dist_df %>%
 
 See `help("scale_color_ramp")` for more information on the color ramp aesthetics/scales.
 
+### Varying side, scale, and justification within geoms
+
+The `side`, `scale`, and `justification` parameters can also be varied within
+a geom, allowing (for example) different groups to hang above or below the interval:
+
+```{r varying_side_dotplot, fig.width = small_height, fig.height = med_width}
+dist_df %>%
+  filter(subgroup == "h") %>%
+  mutate(side = c("top", "both", "bottom")) %>%
+  ggplot(aes(y = group, dist = dist_normal(mean, sd), side = side)) +
+  stat_dist_dotsinterval(scale = 2/3) +
+  labs(title = 'stat_dist_dotsinterval(aes(side = c("top","both","bottom")))') +
+  coord_cartesian()
+```
+
 ### Multiple slabs and intervals in composite plots
 
 Sometimes you may want to include multiple different types of slabs in the same plot
 in order to take advantage of the features each slab type provides. For example,
 people often combine densities with dotplots to show the underlying datapoints that
-go into a density estimate. To use multiple slab geometries together, you can use the
-`side` parameter to change which side of the interval a slab is drawn on and set the
-`scale` parameter to something around `0.5` (by default it is `0.9`) so that the
-two slabs do not overlap:
+go into a density estimate, creating so-called "raincloud" plots. To use multiple
+slab geometries together, you can use the `side` parameter to change which side
+of the interval a slab is drawn on and set the `scale` parameter to something around
+`0.5` (by default it is `0.9`) so that the two slabs do not overlap. We'll also
+scale the halfeye slab thickness by `n` (the number of observations in each group)
+so that the area of each slab represents sample size (and looks similar to
+the total area of its corresponding dotplot).
 
-```{r halfeye_dotplot, fig.width = med_width, fig.height = small_height}
+We'll use a subsample of of the data to show how it might look on a reasonably-sized
+dataset.
+
+```{r halfeye_dotplot, fig.width = small_height, fig.height = med_width}
+set.seed(12345) # for reproducibility
 df %>%
-  ggplot(aes(x = group, y = value)) +
-  stat_slab(side = "left", scale = 0.5) +
-  stat_dotsinterval(scale = 0.5) +
-  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval()')
+  filter(subgroup == "h") %>%
+  group_by(group, subgroup) %>%
+  sample_n(100) %>%
+  ggplot(aes(y = group, x = value)) +
+  stat_slab(scale = 0.6, position = "dodge") +
+  stat_dotsinterval(side = "bottom", scale = 0.6, position = "dodge") +
+  labs(title = 'stat_slab(scale = 0.6) + \nstat_dotsinterval(scale = 0.6, side = "bottom")')
 ```
 
-In this example, depending on your use case you might prefer a quantile dotplot
-instead of a dotplot of all data points:
+Geoms can also be dodged together, as in this example using densities with
+quantile dotplots in subgroups. This example also shows how `stat_pointinterval()`
+can be repurposed to be used with other geoms; here to replace points with labels
+(the idea of replacing points with labels comes from Brenton Wiernik).
 
 ```{r halfeye_quantile_dotplot, fig.width = med_width, fig.height = small_height}
 df %>%
-  ggplot(aes(x = group, y = value)) +
-  stat_slab(side = "left", scale = 0.5) +
-  stat_dotsinterval(scale = 0.5, quantiles = 100) +
-  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100)')
+  ggplot(aes(x = group, y = value, fill = subgroup)) +
+  stat_slab(side = "left", scale = 0.5, position = "dodge") +
+  stat_dotsinterval(scale = 0.5, quantiles = 100, position = "dodge") +
+  stat_pointinterval(
+    geom = "label", 
+    aes(label = paste0(group, subgroup)), 
+    .width = .5,  # set to a scalar to draw only one label instead of two
+    position = position_dodge(width = 1),
+    size = 3.5
+  ) +
+  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100) +\nstat_pointinterval(geom = "label")')
 ```
 
 When constructing composite plots it may be useful to position slab and interval parts of the geometry separately.

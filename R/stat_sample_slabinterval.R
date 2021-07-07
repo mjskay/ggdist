@@ -156,22 +156,8 @@ sample_slab_function = function(
 #'   \item `stat_interval`: Interval plots
 #' }
 #'
+#' @eval rd_slabinterval_computed_variables(stat_sample = TRUE)
 #' @eval rd_slabinterval_aesthetics(stat = StatSampleSlabinterval)
-#' @section Computed Variables:
-#' The following variables are computed by this stat and made available for
-#' use in aesthetic specifications (`aes()`) using the `stat()` or `after_stat()`
-#' functions:
-#' \itemize{
-#'   \item `x` or `y`: For slabs, the input values to the slab function.
-#'     For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
-#'   \item `xmin` or `ymin`: For intervals, the lower end of the interval from the interval function.
-#'   \item `xmax` or `ymax`: For intervals, the upper end of the interval from the interval function.
-#'   \item `f`: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-#'     determined by `slab_type`.
-#'   \item `pdf`: For slabs, the probability density function.
-#'   \item `cdf`: For slabs, the cumulative distribution function.
-#'   \item `n`: For slabs, the number of data points summarized into that slab.
-#' }
 #'
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval

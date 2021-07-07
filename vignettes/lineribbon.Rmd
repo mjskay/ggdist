@@ -22,9 +22,12 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
-tiny_width = small_width = med_width = 6.75
-tiny_height = small_height = med_height = 4.5
-large_width = 8; large_height = 5.25
+tiny_width = 5.5
+tiny_height = 3 + 2/3
+small_width = med_width = 6.75
+small_height = med_height = 4.5
+large_width = 8
+large_height = 5.25
 
 knitr::opts_chunk$set(
   fig.width = small_width,
@@ -105,7 +108,7 @@ df = tibble(
 `df` is a 50,000-row data frame with a sample of 5000 y values for each x value. It represents a sample
 of 5000 lines. Here is a subsample of 100 of the lines:
 
-```{r spaghetti, fig.width = med_width, fig.height = med_height}
+```{r spaghetti, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   filter(.draw %in% 1:100) %>%
   ggplot(aes(x = x, y = y, group = .draw)) +
@@ -122,12 +125,12 @@ df %>%
 
 Given data summarized like that above, we can then construct a line+ribbon chart using `geom_lineribbon()`:
 
-```{r one_ribbon}
+```{r one_ribbon, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   group_by(x) %>%
   median_qi(y) %>%
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
-  geom_lineribbon()
+  geom_lineribbon(fill = "gray65")
 ```
 
 `geom_lineribbon()` automatically pulls in the `.width` column and maps it onto the
@@ -141,7 +144,7 @@ quite dark with just one color. Let's make two changes to improve the chart:
 
 The result looks like this:
 
-```{r geom_lineribbon, fig.width = med_width, fig.height = med_height}
+```{r geom_lineribbon, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   group_by(x) %>%
   median_qi(y, .width = c(.50, .80, .95)) %>%
@@ -159,7 +162,7 @@ Taking the previous example, we can simply removing the lines that summarize the
 the aesthetic mappings onto `ymin` and `ymax`, which are automatically set by `stat_lineribbon()`. This
 simplifies the previous example considerably:
 
-```{r stat_lineribbon, fig.width = med_width, fig.height = med_height}
+```{r stat_lineribbon, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   ggplot(aes(x = x, y = y)) +
   stat_lineribbon() +
@@ -169,7 +172,7 @@ df %>%
 The default `.width` setting of `stat_lineribbon()` is `c(.50, .80, .95)`, as can be seen in the results above. We can
 change this as well; for example:
 
-```{r stat_lineribbon_width, fig.width = med_width, fig.height = med_height}
+```{r stat_lineribbon_width, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   ggplot(aes(x = x, y = y)) +
   stat_lineribbon(.width = c(.66, .95)) +
@@ -188,7 +191,7 @@ illegible legends when many values are used). This also requires us to use
 a continuous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete one
 (e.g. `scale_fill_brewer()`):
 
-```{r stat_lineribbon_gradient, fig.width = med_width, fig.height = med_height}
+```{r stat_lineribbon_gradient, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   ggplot(aes(x = x, y = y)) +
   stat_lineribbon(aes(fill = stat(.width)), .width = ppoints(50)) +
@@ -200,7 +203,7 @@ the `fill_ramp` aesthetic provided by `ggdist` (see `help("scale_fill_ramp")`).
 It is necessary to invert the range (`range = c(1, 0)`) so that the gradient
 is dark in the middle (rather than the outside):
 
-```{r stat_lineribbon_gradient_ramp, fig.width = med_width, fig.height = med_height}
+```{r stat_lineribbon_gradient_ramp, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   ggplot(aes(x = x, y = y)) +
   stat_lineribbon(aes(fill_ramp = stat(.width)), .width = ppoints(50), fill = "#2171b5") +
@@ -225,7 +228,7 @@ df_2groups = rbind(
 
 The naive approach to plotting will make the lines hard to distinguish:
 
-```{r stat_lineribbon_2groups_brewer, fig.width = med_width, fig.height = med_height}
+```{r stat_lineribbon_2groups_brewer, fig.width = tiny_width, fig.height = tiny_height}
 df_2groups %>%
   ggplot(aes(x = x, y = y, color = g)) +
   stat_lineribbon() +
@@ -234,7 +237,7 @@ df_2groups %>%
 
 Instead, we could change the fill color and allow the lines the be semi-transparent:
 
-```{r stat_lineribbon_2groups_alpha, fig.width = med_width, fig.height = med_height}
+```{r stat_lineribbon_2groups_alpha, fig.width = tiny_width, fig.height = tiny_height}
 df_2groups %>%
   ggplot(aes(x = x, y = y, fill = g)) +
   stat_lineribbon(alpha = 1/4)
@@ -244,7 +247,7 @@ We could also use the `fill_ramp` aesthetic provided by `ggdist` to similar
 effect (see `help("scale_fill_ramp")`), though this tends to work best when
 the lines do not overlap:
 
-```{r stat_lineribbon_2groups_ramp, fig.width = med_width, fig.height = med_height}
+```{r stat_lineribbon_2groups_ramp, fig.width = tiny_width, fig.height = tiny_height}
 df_2groups %>%
   ggplot(aes(x = x, y = y, fill = g)) +
   stat_lineribbon(aes(fill_ramp = stat(level)))
@@ -268,7 +271,7 @@ analytical_df
 
 We can visualize this conditional distribution with `stat_dist_lineribbon()` using `distributional::dist_normal()`:
 
-```{r stat_dist_lineribbon}
+```{r stat_dist_lineribbon, fig.width = tiny_width, fig.height = tiny_height}
 analytical_df %>%
   ggplot(aes(x = x, dist = dist_normal(y_mean, y_sd))) +
   stat_dist_lineribbon() +
@@ -289,7 +292,7 @@ Where `point_interval()` calculates *pointwise* intervals, or intervals *conditi
 
 An example will help illustrate the difference between the two types of intervals. Consider the following set of curves, where each curve is assumed to be a "draw" from some distribution of curves, $\mathbf{y} = f(\mathbf{x})$, where $\mathbf{x}$ and $\mathbf{y}$ are vectors:
 
-```{r curve_draws, fig.width = med_width, fig.height = med_height}
+```{r curve_draws, fig.width = tiny_width, fig.height = tiny_height}
 k = 11 # number of curves
 n = 501
 df = tibble(
@@ -307,7 +310,7 @@ df %>%
 
 If one used one of the `point_interval()` functions to summarize this curve (such as `median_qi()`, `mean_qi()`, etc), it would calculate *pointwise* intervals:
 
-```{r pointwise_ribbon, fig.width = med_width, fig.height = med_height}
+```{r pointwise_ribbon, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   group_by(x) %>%
   median_qi(y, .width = .5) %>%
@@ -324,7 +327,7 @@ Depending on what type of inference we care about, this might be sufficient for 
 
 One solution I like for such situations is to show spaghetti plots: just plot the underlying curves. This is a so-called *frequency framing* uncertainty visualization, and it tends to work fairly well. However, in some cases you may want a visual summary using intervals, in which case curvewise intervals could help. Using `curve_interval()` instead of `point_interval()` or `median_qi()` calculates these:
 
-```{r curvewise_ribbon, fig.width = med_width, fig.height = med_height}
+```{r curvewise_ribbon, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
   group_by(x) %>%
   curve_interval(y, .width = .5) %>%
@@ -341,7 +344,7 @@ An X% *curvewise* interval is calculated across all the curves by taking the top
 
 Given the above, let's see what more realistic curvewise intervals of the above example might look like by using a larger number of draws:
 
-```{r pointwise_curvewise, fig.width = med_width, fig.height = med_width}
+```{r pointwise_curvewise, fig.width = tiny_width, fig.height = tiny_width}
 k = 1000 # number of curves
 large_df = tibble(
     .draw = 1:k,
@@ -408,7 +411,7 @@ and definitely not a great way of analyzing this data, but it will illustrate th
 problems of some kinds of problems we might get with joint intervals. Let's
 look at a spaghetti plot of just 400 draws from this bootstrap distribution first:
 
-```{r mtcars_spaghetti, fig.width = med_width, fig.height = med_height}
+```{r mtcars_spaghetti, fig.width = tiny_width, fig.height = tiny_height}
 mtcars_boot %>%
   filter(.draw < 400) %>%
   ggplot(aes(x = mpg, y = hp)) +
@@ -419,7 +422,7 @@ mtcars_boot %>%
 
 Now, pointwise intervals:
 
-```{r mtcars_point_interval, fig.width = med_width, fig.height = med_height}
+```{r mtcars_point_interval, fig.width = tiny_width, fig.height = tiny_height}
 mtcars_boot %>%
   ggplot(aes(x = mpg, y = hp)) +
   stat_lineribbon(.width = c(.5, .7, .9)) +
@@ -430,7 +433,7 @@ mtcars_boot %>%
 
 Finally, curvewise intervals:
 
-```{r mtcars_curve_interval, fig.width = med_width, fig.height = med_height}
+```{r mtcars_curve_interval, fig.width = tiny_width, fig.height = tiny_height}
 mtcars_boot %>%
   group_by(mpg) %>%
   curve_interval(hp, .width = c(.5, .7, .9)) %>%
@@ -448,7 +451,7 @@ coverage level. You can try different methods to sometimes get improved
 bands; e.g. using the `"bd-mbd"` method per Sun and Genton 
 ([2011](https://doi.org/10.1198/jcgs.2011.09224)) works better on this dataset:
 
-```{r mtcars_curve_interval_bd, fig.width = med_width, fig.height = med_height, eval = requireNamespace("fda", quietly = TRUE)}
+```{r mtcars_curve_interval_bd, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("fda", quietly = TRUE)}
 mtcars_boot %>%
   group_by(mpg) %>%
   curve_interval(hp, .width = c(.5, .7, .9), .interval = "bd-mbd") %>%

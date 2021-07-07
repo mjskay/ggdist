@@ -49,7 +49,7 @@ dots_dist_slab_function = function(
       list(ppoints(quantiles, a = 1/2)),
       args_from_aes(...)
     )
-    quantile_fun = dist_quantile_fun(dist)
+    quantile_fun = distr_quantile(dist)
     input = do.call(quantile_fun, args)
 
     data.frame(

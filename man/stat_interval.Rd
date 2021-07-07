@@ -121,6 +121,26 @@ data frames that have already been summarized using a \code{\link[=point_interva
 function, these \code{stat}s are intended for use directly on data frames of draws, and
 will perform the summarization using a \code{\link[=point_interval]{point_interval()}} function.
 }
+\section{Computed Variables}{
+
+The following variables are computed by this stat and made available for
+use in aesthetic specifications (\code{aes()}) using the \code{stat()} or \code{after_stat()}
+functions:
+\itemize{
+\item \code{x} or \code{y}: For slabs, the input values to the slab function.
+For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
+\item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
+\item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
+\item \code{.width}: For intervals, the interval width as a numeric value in \verb{[0, 1]}.
+\item \code{level}: For intervals, the interval width as an ordered factor.
+\item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by \code{slab_type}.
+\item \code{pdf}: For slabs, the probability density function.
+\item \code{cdf}: For slabs, the cumulative distribution function.
+\item \code{n}: For slabs, the number of data points summarized into that slab.
+}
+}
+
 \section{Aesthetics}{
 
 The slab+interval \code{stat}s and \code{geom}s have a wide variety of aesthetics that control

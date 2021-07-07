@@ -5,7 +5,7 @@
 
 library(dplyr)
 library(tidyr)
-
+library(distributional)
 
 
 
@@ -331,5 +331,48 @@ test_that("NAs are handled correctly in point_interval", {
   expect_equal(
     mean_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
     data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
+  )
+})
+
+
+# rvars -------------------------------------------------
+
+test_that("pointintervals work on rvars", {
+  skip_if_not_installed("posterior")
+
+  x = c(posterior::rvar(c(0:6, 1:5, 2:4, 2)), posterior::rvar(c(0:6, 1:5, 2:4, 2) + 2))
+
+  expect_equal(
+    median_qi(x, .width = 0.6),
+    tibble(.value = c(3,5), .lower = c(2,4), .upper = c(4,6), .width = 0.6, .point = "median", .interval = "qi")
+  )
+  expect_equal(
+    mean_hdi(tibble(x), .width = 0.6),
+    tibble(x = c(2.9375,4.9375), .lower = c(2,4), .upper = c(4,6), .width = 0.6, .point = "mean", .interval = "hdi")
+  )
+  expect_equal(
+    mode_hdci(tibble(x), .width = 0.6),
+    tibble(x = c(2,4), .lower = c(2,4), .upper = c(4,6), .width = 0.6, .point = "mode", .interval = "hdci")
+  )
+})
+
+
+# distributional objects --------------------------------------------------
+
+test_that("pointintervals work on distributional objects", {
+  x = dist_gamma(1:2,2:3)
+
+  expect_equal(
+    median_qi(x, .width = 0.6),
+    tibble(.value = qgamma(0.5, 1:2, 2:3), .lower = qgamma(0.2, 1:2, 2:3), .upper = qgamma(0.8, 1:2, 2:3), .width = 0.6, .point = "median", .interval = "qi")
+  )
+  expect_equal(
+    mean_qi(tibble(x), .width = 0.6),
+    tibble(x = 1:2 / 2:3, .lower = qgamma(0.2, 1:2, 2:3), .upper = qgamma(0.8, 1:2, 2:3), .width = 0.6, .point = "mean", .interval = "qi")
+  )
+  expect_equal(
+    mode_qi(tibble(x), .width = 0.6),
+    tibble(x = 0:1 / 2:3, .lower = qgamma(0.2, 1:2, 2:3), .upper = qgamma(0.8, 1:2, 2:3), .width = 0.6, .point = "mode", .interval = "qi"),
+    tolerance = 1e-05
   )
 })

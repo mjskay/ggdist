@@ -23,13 +23,14 @@ Depends:
 Imports:
     tidyselect,
     dplyr (>= 1.0.0),
-    ggplot2 (>= 3.3.0),
+    ggplot2 (>= 3.3.5),
     rlang (>= 0.3.0),
     scales,
     grid,
     HDInterval,
     tibble,
     vctrs,
+    withr,
     distributional (>= 0.2.0)
 Suggests:
     knitr,
@@ -48,7 +49,11 @@ Suggests:
     purrr (>= 0.2.3),
     tidyr (>= 1.0.0),
     beeswarm (>= 0.4.0),
+    posterior,
     pkgdown
+Remotes:
+    stan-dev/posterior,
+    mitchelloharawild/distributional
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
@@ -64,6 +69,7 @@ Collate:
     "curve_interval.R"
     "cut_cdf_qi.R"
     "data.R"
+    "distributions.R"
     "draw_key_slabinterval.R"
     "geom.R"
     "geom_slabinterval.R"
@@ -74,6 +80,7 @@ Collate:
     "lkjcorr_marginal.R"
     "parse_dist.R"
     "point_interval.R"
+    "position_dodgejust.R"
     "scale_colour_ramp.R"
     "scale_.R"
     "stat.R"

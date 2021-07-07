@@ -30,25 +30,19 @@ rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymi
     }
 
     thickness_scale = d$scale * min_height
-    y_scale = thickness_scale / d[[height]]
 
     switch_side(d$side[[1]], orientation,
       topright = {
-        # the slight nudge of d$justification * d[[height]] * (1 - y_scale) ensures that
-        # justifications work properly when scale != 1 (and similarly for other values of `side`)
-        d[[y]] = d[[ymin]] + d$justification * d[[height]] * (1 - y_scale)
-        d[[ymin]] = d[[y]]
-        d[[ymax]] = d[[y]] + d$thickness * thickness_scale
+        d[[ymin]] = d[[y]] - d$justification * thickness_scale
+        d[[ymax]] = d[[y]] + (d$thickness - d$justification) * thickness_scale
       },
       bottomleft = {
-        d[[y]] = d[[ymax]] - (1 - d$justification) * d[[height]] * (1 - y_scale)
-        d[[ymin]] = d[[y]] - d$thickness * thickness_scale
-        d[[ymax]] = d[[y]]
+        d[[ymin]] = d[[y]] - (d$thickness - 1 + d$justification) * thickness_scale
+        d[[ymax]] = d[[y]] + (1 - d$justification) * thickness_scale
       },
       both = {
-        d[[y]] = (d[[ymin]] + d[[ymax]]) / 2 - (0.5 - d$justification) * d[[height]] * (1 - y_scale)
-        d[[ymin]] = d[[y]] - d$thickness * thickness_scale / 2
-        d[[ymax]] = d[[y]] + d$thickness * thickness_scale / 2
+        d[[ymin]] = d[[y]] - d$thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
+        d[[ymax]] = d[[y]] + d$thickness * thickness_scale/2 + (0.5 - d$justification) * thickness_scale
       }
     )
 
@@ -121,9 +115,6 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
 
   interval_grobs = list()
   point_grobs = list()
-
-  # adjust y position based on justification
-  i_data[[y]] = i_data[[ymin]] + i_data$justification * i_data[[height]]
 
   if (nrow(i_data) > 0) {
     # reorder by interval width so largest intervals are drawn first
@@ -572,15 +563,15 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # figure out the bounding rectangles for each group
     # this is necessary so that the bounding box is correct for
     # positions to work (e.g. position_dodge, etc)
-    data[[height]] = data[[height]] %||% params[[height]] %||%
+    data[[height]] = params[[height]] %||% data[[height]] %||%
       resolution(data[[y]], FALSE)
 
     # determine bounding boxes based on justification: position
     # the min/max bounds around y such that y is at the correct
     # justification relative to the bounds
     justification = get_justification(
-      data[["justification"]] %||% params$justification,
-      data[["side"]] %||% params$side %||% self$default_aes$side,
+      params$justification %||% data[["justification"]],
+      params$side %||% data[["side"]] %||% self$default_aes$side,
       params$orientation
     )
     data[[ymin]] = data[[y]] - justification * data[[height]]

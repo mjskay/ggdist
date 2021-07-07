@@ -22,9 +22,12 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
-tiny_width = small_width = med_width = 6.75
-tiny_height = small_height = med_height = 4.5
-large_width = 8; large_height = 5.25
+tiny_width = 5.5
+tiny_height = 3 + 2/3
+small_width = med_width = 6.75
+small_height = med_height = 4.5
+large_width = 8
+large_height = 5.25
 
 knitr::opts_chunk$set(
   fig.width = small_width,

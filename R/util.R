@@ -89,14 +89,39 @@ pmap_dfr_ = function(data, fun) {
   map_dfr_(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
 }
 
-#' @importFrom dplyr group_split across
 ddply_ = function(data, groups, fun, ...) {
-  map_dfr_(group_split(data, across(groups)), fun, ...)
+  bind_rows(dlply_(data, groups, fun, ...))
 }
 
-#' @importFrom dplyr group_split across
+fct_explicit_na_ = function(x) {
+  x = as.factor(x)
+  if (anyNA(x)) {
+    na_name = "(Missing)"
+    levels_x = levels(x)
+    while (na_name %in% levels_x) {
+      na_name = paste0(na_name, "+")
+    }
+    levels(x) = c(levels_x, na_name)
+    x[is.na(x)] = na_name
+  }
+  x
+}
+
 dlply_ = function(data, groups, fun, ...) {
-  lapply(group_split(data, across(groups)), fun, ...)
+  # must make NAs explicit or they will be dropped by split()
+  group_vars = lapply(data[, groups, drop = FALSE], fct_explicit_na_)
+  # group_is = a list where each element is a numeric vector of indices
+  # corresponding to one group
+  group_is = if (length(group_vars) >= 1) {
+    unname(split(seq_len(nrow(data)), group_vars, drop = TRUE, lex.order = TRUE))
+  } else {
+    list(seq_len(nrow(data)))
+  }
+  lapply(group_is, function(group_i) {
+    # faster version of row_df = data[group_i, ]
+    row_df = tibble::new_tibble(lapply(data, `[`, group_i), nrow = length(group_i))
+    fun(row_df, ...)
+  })
 }
 
 map_dbl_ = function(X, FUN, ...) {
@@ -118,7 +143,7 @@ map2_dfr_ = function(X, Y, FUN) {
 iwalk_ = function(vec, fun, ...) {
   # drop in replacement for purrr::iwalk()
   nms = names(vec) %||% seq_along(x)
-  mapply(fun, vec, nms, ...)
+  mapply(fun, vec, nms, MoreArgs = list(...))
   invisible(vec)
 }
 
@@ -128,7 +153,7 @@ fct_rev_ = function(x) {
   } else if (!is.factor(x)) {
     stop0("`x` must be a factor (or character vector).")
   }
-  factor(x, levels = rev(levels(x)))
+  factor(x, levels = rev(levels(x)), ordered = is.ordered(x))
 }
 
 

@@ -27,7 +27,7 @@ dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identi
     }
 
     args = args_from_aes(...)
-    quantile_fun = dist_quantile_fun(dist)
+    quantile_fun = distr_quantile(dist)
 
     # if the lower or upper p limit is NA, check to see if the dist has a
     # finite limit on the transformed drawing scale, otherwise use .001 or
@@ -51,53 +51,9 @@ dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identi
   })
 }
 
-# return the derivative of a transformation function from the scales package at
-# the given y values. First attempts to find that analytical derivative, which
-# works on most pre-defined transformation functions in scales; if that fails,
-# uses numerical derivative
-#' @importFrom stats numericDeriv D
-f_deriv_at_y = function(f, y) {
-  tryCatch({
-    # attempt to find analytical derivative by pulling out the expression
-    # for the transformation from the transformation function. Because all
-    # scales functions are defined (currently) as simple wrappers around
-    # single expressions (with no { ... }), we can be pretty naive here and
-    # just try to pull out that single expression
-    f_list = as.list(f)
-    y_name = names(f_list)[[1]]
-    f_expr = f_list[[length(f_list)]]
-    f_deriv_expr = D(f_expr, y_name)
-
-    # apply the analytical derivative to the y values
-    # must do this within the environment of the transformation function b/c
-    # some functions are defined as closures with other variables needed to
-    # fully define the transformation (e.g. log10_trans has a `base` variable
-    # equal to 10, which if left undefined this would not work)
-    args = list(y)
-    names(args) = y_name
-    eval(f_deriv_expr, args, environment(f))
-  }, error = function(e) {
-    # if analytical approach fails, use numerical approach
-    # need to convert y to numeric in case it's an integer (numericDeriv doesn't like ints)
-    y = as.numeric(y)
-    diag(attr(numericDeriv(quote(f(y)), "y"), "gradient"))
-  })
-}
-
-# return a version of the provided density function f_X(...)
-# transformed according to transformation trans
-transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) {
-  # based on the fact that for Y = g(X),
-  # f_Y(y) = f_X(g^−1(y)) * | g^-1'(y) |
-
-  g_inverse = trans$inverse
-  g_inverse_deriv_at_y = f_deriv_at_y(g_inverse, y)
-
-  f_X(g_inverse_at_y, ...) * abs(g_inverse_deriv_at_y)
-}
-
+#' @importFrom dplyr lag
 dist_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 501, trans = scales::identity_trans(), ...
+  df, input, slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE, trans = scales::identity_trans(), ...
 ) {
   pmap_dfr_(df, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
@@ -106,18 +62,47 @@ dist_slab_function = function(
 
     args = args_from_aes(...)
 
-    #get pdf and cdf functions
-    pdf_fun = if (trans$name == "identity") {
-      dist_pdf(dist)
+    # calculate pdf and cdf
+    cdf_fun = distr_cdf(dist)
+    if (trans$name == "identity") {
+      pdf_fun = distr_pdf(dist)
+      if (distr_is_discrete(dist, args)) {
+        # for discrete distributions, we have to adjust the positions of the x
+        # values to create bin-like things
+        input_ = unique(round(input))   # center of bin
+        input_1 = input_ - 0.5          # first edge of bin
+        input_2 = input_ + 0.5          # second edge of bin
+        pdf = do.call(pdf_fun, c(list(quote(input_)), args))
+        cdf = do.call(cdf_fun, c(list(quote(input_)), args))
+        # we also need the lag of the cdf so we can make it a step function
+        # at the midpoint of each bin
+        lag_cdf_input = c(input_[[1]] - 1, input_[-length(input_)])
+        lag_cdf = do.call(cdf_fun, c(list(quote(lag_cdf_input)), args))
+
+        if (!outline_bars) {
+          # as.vector(rbind(x, y, z, ...)) interleaves vectors x, y, z, ..., giving
+          # us the bin endpoints and midpoints --- then just need to repeat the same
+          # value of density for both endpoints of the same bin and to make sure the
+          # cdf is a step function that steps at the midpoint of the bin
+          input = as.vector(rbind(input_1, input_, input_, input_2))
+          pdf = rep(pdf, each = 4)
+          cdf = as.vector(rbind(lag_cdf, lag_cdf, cdf, cdf))
+        } else {
+          # have to return to 0 in between each bar so that bar outlines are drawn
+          input = as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))
+          pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, 0))
+          cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
+        }
+      } else {
+        pdf = do.call(pdf_fun, c(list(quote(input)), args))
+        cdf = do.call(cdf_fun, c(list(quote(input)), args))
+      }
     } else {
       # must transform the density according to the scale transformation
-      function(x, ...) transform_pdf(dist_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
+      pdf_fun = function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
+      pdf = do.call(pdf_fun, c(list(quote(input)), args))
+      cdf = do.call(cdf_fun, c(list(quote(input)), args))
     }
-    cdf_fun = dist_cdf(dist)
-
-    # calculate pdf and cdf
-    pdf = do.call(pdf_fun, c(list(quote(input)), args))
-    cdf = do.call(cdf_fun, c(list(quote(input)), args))
 
     value = switch(slab_type,
       pdf = pdf,
@@ -141,7 +126,7 @@ dist_interval_function = function(df, .width, trans, ...) {
     }
 
     args = args_from_aes(...)
-    quantile_fun = dist_quantile_fun(dist)
+    quantile_fun = distr_quantile(dist)
 
     intervals = map_dfr_(.width, function(w) {
       quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
@@ -155,28 +140,6 @@ dist_interval_function = function(df, .width, trans, ...) {
     })
   })
 }
-
-
-dist_function = function(dist, prefix, fun) UseMethod("dist_function")
-dist_function.default = function(dist, prefix, fun) {
-  stop("The `dist` aesthetic does not support objects of type ", deparse0(class(dist)))
-}
-dist_function.character = function(dist, prefix, fun) match.fun(paste0(prefix, dist))
-dist_function.factor = function(dist, prefix, fun) dist_function(as.character(dist), prefix, fun)
-dist_function.distribution = function(dist, prefix, fun) {
-  if (length(dist) > 1) stop(
-    "distributional objects should never have length > 1 here.\n",
-    "Please report this bug at https://github.com/mjskay/ggdist/issues"
-  )
-  dist_function.dist_default(dist[[1]], prefix, fun)
-}
-dist_function.dist_default = function(dist, prefix, fun) function(x, ...) fun(dist, x, ...)
-dist_function.rvar = dist_function.distribution
-
-dist_pdf = function(dist) dist_function(dist, "d", density)
-#' @importFrom distributional cdf
-dist_cdf = function(dist) dist_function(dist, "p", cdf)
-dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 
 
 # stat_dist_slabinterval --------------------------------------------------
@@ -230,21 +193,8 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #'    [parse_dist()] combined with the stats described here can help you visualize the output
 #'    of those functions.
 #'
+#' @eval rd_slabinterval_computed_variables(stat_sample = FALSE)
 #' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
-#' @section Computed Variables:
-#' The following variables are computed by this stat and made available for
-#' use in aesthetic specifications (`aes()`) using the `stat()` or `after_stat()`
-#' functions:
-#' \itemize{
-#'   \item `x` or `y`: For slabs, the input values to the slab function.
-#'     For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
-#'   \item `xmin` or `ymin`: For intervals, the lower end of the interval from the interval function.
-#'   \item `xmax` or `ymax`: For intervals, the upper end of the interval from the interval function.
-#'   \item `f`: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-#'     determined by `slab_type`.
-#'   \item `pdf`: For slabs, the probability density function.
-#'   \item `cdf`: For slabs, the cumulative distribution function.
-#' }
 #'
 #' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval
@@ -258,6 +208,10 @@ dist_quantile_fun = function(dist) dist_function(dist, "q", quantile)
 #' `p_limits` is `c(NA, NA)` on a gamma distribution the effective value of `p_limits` would be
 #' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
 #' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
+#' @param outline_bars For discrete distributions (whose slabs are drawn as histograms), determines
+#' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
+#' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
+#' bars are also drawn.
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
@@ -326,6 +280,7 @@ stat_dist_slabinterval = function(
 
   slab_type = c("pdf", "cdf", "ccdf"),
   p_limits = c(NA, NA),
+  outline_bars = FALSE,
 
   orientation = NA,
   limits = NULL,
@@ -355,6 +310,7 @@ stat_dist_slabinterval = function(
     params = list(
       slab_type = slab_type,
       p_limits = p_limits,
+      outline_bars = outline_bars,
 
       orientation = orientation,
 
@@ -402,7 +358,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   extra_params = c(
     StatSlabinterval$extra_params,
     "slab_type",
-    "p_limits"
+    "p_limits",
+    "outline_bars"
   ),
 
   # interval parameter used to determine if the stat re-groups
@@ -415,6 +372,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(NA, NA),
+    outline_bars = FALSE,
 
     limits_function = dist_limits_function,
     slab_function = dist_slab_function,
@@ -438,7 +396,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     )
 
     params$slab_args = list(
-      slab_type = params$slab_type %||% self$default_params$slab_type
+      slab_type = params$slab_type %||% self$default_params$slab_type,
+      outline_bars = params$outline_bars %||% self$default_params$outline_bars
     )
 
     params
