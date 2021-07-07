@@ -921,6 +921,21 @@ dist_df %>%
 
 See `help("scale_color_ramp")` for more information on the color ramp aesthetics/scales.
 
+### Varying side, scale, and justification within geoms
+
+The `side`, `scale`, and `justification` parameters can also be varied within
+a geom, allowing (for example) different groups to hang above or below the interval:
+
+```{r varying_side_dotplot, fig.width = small_height, fig.height = med_width}
+dist_df %>%
+  filter(subgroup == "h") %>%
+  mutate(side = c("top", "both", "bottom")) %>%
+  ggplot(aes(y = group, dist = dist_normal(mean, sd), side = side)) +
+  stat_dist_dotsinterval(scale = 2/3) +
+  labs(title = 'stat_dist_dotsinterval(aes(side = c("top","both","bottom")))') +
+  coord_cartesian()
+```
+
 ### Multiple slabs and intervals in composite plots
 
 Sometimes you may want to include multiple different types of slabs in the same plot
