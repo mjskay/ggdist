@@ -79,11 +79,15 @@ Translates draws from distributions in a grouped data frame into a set of point 
 interval summaries using a curve boxplot-inspired approach.
 }
 \details{
-Intervals are calculated by ranking the curves using some measure of \emph{data depth}, then creating
-envelopes containing the \code{.width}\% "deepest" curves (for each value of \code{.width}). Thus, the intervals
-are guaranteed to contain \emph{at least} \code{.width}\% of the full curves, but may be conservative (i.e.
-they may contain more than \code{.width}\% of the curves). See Mirzargar \emph{et al.} (2014) or
-Juul \emph{et al.} (2020) for an accessible introduction to the idea.
+Intervals are calculated by ranking the curves using some measure of \emph{data depth}, then
+using binary search to find a cutoff \code{k} such that an envelope containing the \code{k}\% "deepest"
+curves also contains \code{.width}\% of the curves, for each value of \code{.width} (note that \code{k}
+and \code{.width} are not necessarily the same). This is in contrast to most functional boxplot
+or curve boxplot approaches, which tend to simply take the \code{.width}\% deepest curves, and
+are generally quite conservative (i.e. they may contain more than \code{.width}\% of the curves).
+
+See Mirzargar \emph{et al.} (2014) or Juul \emph{et al.} (2020) for an accessible introduction
+to data depth and curve boxplots / functional boxplots.
 }
 \examples{
 

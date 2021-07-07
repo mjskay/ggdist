@@ -8,11 +8,15 @@
 #' Translates draws from distributions in a grouped data frame into a set of point and
 #' interval summaries using a curve boxplot-inspired approach.
 #'
-#' Intervals are calculated by ranking the curves using some measure of *data depth*, then creating
-#' envelopes containing the `.width`% "deepest" curves (for each value of `.width`). Thus, the intervals
-#' are guaranteed to contain *at least* `.width`% of the full curves, but may be conservative (i.e.
-#' they may contain more than `.width`% of the curves). See Mirzargar *et al.* (2014) or
-#' Juul *et al.* (2020) for an accessible introduction to the idea.
+#' Intervals are calculated by ranking the curves using some measure of *data depth*, then
+#' using binary search to find a cutoff `k` such that an envelope containing the `k`% "deepest"
+#' curves also contains `.width`% of the curves, for each value of `.width` (note that `k`
+#' and `.width` are not necessarily the same). This is in contrast to most functional boxplot
+#' or curve boxplot approaches, which tend to simply take the `.width`% deepest curves, and
+#' are generally quite conservative (i.e. they may contain more than `.width`% of the curves).
+#'
+#' See Mirzargar *et al.* (2014) or Juul *et al.* (2020) for an accessible introduction
+#' to data depth and curve boxplots / functional boxplots.
 #'
 #' @param .data Data frame (or grouped data frame as returned by [group_by()])
 #' that contains draws to summarize.
@@ -130,6 +134,10 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
   .interval = c("mhd", "mbd", "bd", "bd-mbd"), .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
+  if (!requireNamespace("posterior", quietly = TRUE)) {
+    stop('curve_interval() requires the `posterior` package to be installed.') #nocov
+  }
+
   .interval = match.arg(.interval)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
@@ -231,7 +239,7 @@ halfspace_depth = function(x) {
 
     # draws x y matrix
     draws = do.call(cbind, d[[col_name]])
-    y_rvar = rvar(draws)
+    y_rvar = posterior::rvar(draws)
 
     if (.interval_internal == "mhd") { #mean halfspace depth
       # draws x depth matrix
@@ -260,7 +268,7 @@ halfspace_depth = function(x) {
       selected_y = lapply(d[[col_name]], `[`, selected_draws)
       d[[lower]] = map_dbl(selected_y, min)
       d[[upper]] = map_dbl(selected_y, max)
-      d[[".actual_width"]] = Pr(rvar_all(d[[lower]] <= y_rvar & y_rvar <= d[[upper]]))
+      d[[".actual_width"]] = posterior::Pr(posterior::rvar_all(d[[lower]] <= y_rvar & y_rvar <= d[[upper]]))
 
       d
     }
