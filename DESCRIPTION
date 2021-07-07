@@ -52,7 +52,7 @@ Suggests:
     posterior,
     pkgdown
 Remotes:
-    stan-dev/posterior
+    stan-dev/posterior,
     mitchelloharawild/distributional
 License: GPL (>= 3)
 Language: en-US
