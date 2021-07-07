@@ -67,7 +67,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #' `.data`, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in `.exclude` (by default
 #' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.
-#' This can be list columns.
+#' These columns can be numeric, \pkg{distributional} objects, `posterior::rvar`s,
+#' or list columns of numeric values to summarise.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
 #' a different probability interval (and value of the corresponding `.width` column).

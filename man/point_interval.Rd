@@ -137,7 +137,8 @@ that contains draws to summarize.}
 \code{.data}, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in \code{.exclude} (by default
 \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarized.
-This can be list columns.}
+These columns can be numeric, \pkg{distributional} objects, \code{posterior::rvar}s,
+or list columns of numeric values to summarise.}
 
 \item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.
 If multiple probabilities are provided, multiple rows per group are generated, each with
