@@ -266,8 +266,8 @@ halfspace_depth = function(x) {
       selected_draws = draw_depth >= depth_cutoff
 
       selected_y = lapply(d[[col_name]], `[`, selected_draws)
-      d[[lower]] = map_dbl(selected_y, min)
-      d[[upper]] = map_dbl(selected_y, max)
+      d[[lower]] = map_dbl_(selected_y, min)
+      d[[upper]] = map_dbl_(selected_y, max)
       d[[".actual_width"]] = posterior::Pr(posterior::rvar_all(d[[lower]] <= y_rvar & y_rvar <= d[[upper]]))
 
       d
