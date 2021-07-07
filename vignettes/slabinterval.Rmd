@@ -22,9 +22,12 @@ img {
 </style>
 
 ```{r chunk_options, include=FALSE}
-tiny_width = small_width = med_width = 6.75
-tiny_height = small_height = med_height = 4.5
-large_width = 8; large_height = 5.25
+tiny_width = 5.5
+tiny_height = 3 + 2/3
+small_width = med_width = 6.75
+small_height = med_height = 4.5
+large_width = 8
+large_height = 5.25
 
 knitr::opts_chunk$set(
   fig.width = small_width,
@@ -450,7 +453,7 @@ For all of the examples above, both on sample data and analytical distributions,
 
 `stat_[c]cdfinterval` has the following basic combinations:
 
-```{r cdfinterval_family, fig.width = small_width, fig.height = small_width}
+```{r cdfinterval_family, fig.width = med_width, fig.height = med_width}
 p = df %>%
   ggplot(aes(x = group, y = value)) +
   panel_border()
@@ -502,7 +505,7 @@ df %>%
 
 The `side` parameter also works in the same way it does with `stat_eye()`. Here we'll demonstrate it horizontally:
 
-```{r ccdf_side, fig.width = med_width, fig.height = tiny_height}
+```{r ccdf_side, fig.width = med_width, fig.height = med_height}
 p = df %>%
   ggplot(aes(x = value, y = group)) +
   expand_limits(x = 0) +
@@ -884,7 +887,11 @@ df %>%
         labels = scales::percent_format()
       ))
     ),
-    position = "dodge",
+    # NOTE: we use position = "dodgejust" (a dodge that respects the 
+    # justification of intervals relative to slabs) instead of 
+    # position = "dodge" here because it ensures the topmost slab does
+    # not extend beyond the plot limits
+    position = "dodgejust",
   ) +
   # a range from 1 down to 0.2 ensures the fill goes dark to light inside-out
   # and doesn't get all the way down to white (0) on the lightest color
@@ -935,16 +942,17 @@ set.seed(12345) # for reproducibility
 df %>%
   filter(subgroup == "h") %>%
   group_by(group, subgroup) %>%
-  sample_n(50) %>%
+  sample_n(100) %>%
   ggplot(aes(y = group, x = value)) +
-  stat_slab(scale = 0.5, position = "dodge") +
-  stat_dotsinterval(side = "bottom", scale = 0.5, position = "dodge") +
-  labs(title = 'stat_slab(scale = 0.5) + \nstat_dotsinterval(scale = 0.5, side = "bottom")')
+  stat_slab(scale = 0.6, position = "dodge") +
+  stat_dotsinterval(side = "bottom", scale = 0.6, position = "dodge") +
+  labs(title = 'stat_slab(scale = 0.6) + \nstat_dotsinterval(scale = 0.6, side = "bottom")')
 ```
 
 Geoms can also be dodged together, as in this example using densities with
 quantile dotplots in subgroups. This example also shows how `stat_pointinterval()`
-can be repurposed to be used with other geoms; here to replace points with labels.
+can be repurposed to be used with other geoms; here to replace points with labels
+(the idea of replacing points with labels comes from Brenton Wiernik).
 
 ```{r halfeye_quantile_dotplot, fig.width = med_width, fig.height = small_height}
 df %>%

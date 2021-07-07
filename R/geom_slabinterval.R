@@ -563,15 +563,15 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     # figure out the bounding rectangles for each group
     # this is necessary so that the bounding box is correct for
     # positions to work (e.g. position_dodge, etc)
-    data[[height]] = data[[height]] %||% params[[height]] %||%
+    data[[height]] = params[[height]] %||% data[[height]] %||%
       resolution(data[[y]], FALSE)
 
     # determine bounding boxes based on justification: position
     # the min/max bounds around y such that y is at the correct
     # justification relative to the bounds
     justification = get_justification(
-      data[["justification"]] %||% params$justification,
-      data[["side"]] %||% params$side %||% self$default_aes$side,
+      params$justification %||% data[["justification"]],
+      params$side %||% data[["side"]] %||% self$default_aes$side,
       params$orientation
     )
     data[[ymin]] = data[[y]] - justification * data[[height]]
