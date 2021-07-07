@@ -39,11 +39,23 @@ distr_function.dist_default = function(dist, prefix, fun) {
 distr_function.rvar = distr_function.distribution
 
 distr_pdf = function(dist) {
+  # handle constant distributions
+  if (inherits(dist, "rvar")) {
+    draws = posterior::draws_of(dist)
+    if (length(unique(draws)) == 1) {
+      return(function(x, ...) ifelse(x == draws[[1]], 1, 0))
+    }
+  } else if (inherits(dist, "dist_sample")) {
+    if (length(unique(dist[[1]])) == 1) {
+      return(function(x, ...) ifelse(x == dist[[1]], 1, 0))
+    }
+  }
+
   distr_function(dist, "d", density)
 }
 
 #' @importFrom distributional cdf
-dist_cdf = function(dist) {
+distr_cdf = function(dist) {
   distr_function(dist, "p", cdf)
 }
 

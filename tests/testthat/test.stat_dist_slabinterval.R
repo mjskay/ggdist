@@ -327,7 +327,7 @@ test_that("stat_dist_ throws appropriate errors on ill-formed dists", {
   )
 
   expect_error(
-    dist_cdf(dist_normal(c(0,1))),
+    distr_cdf(dist_normal(c(0,1))),
     "distributional objects should never have length > 1 here"
   )
 })
