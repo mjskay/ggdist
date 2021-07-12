@@ -416,8 +416,11 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
       # each output slab will need to be in its own group.
       # First check if we are grouped by rows already (in which case leave it)
       if (length(unique(data$group)) != nrow(data)) {
-        # need to make new groups
-        data$group = seq_len(nrow(data))
+        # need to make new groups that ensure every row is unique but which
+        # preserve old group order at the top level
+        data$group = as.numeric(interaction(
+          data$group, seq_len(nrow(data)), drop = TRUE, lex.order = TRUE
+        ))
       }
     }
 

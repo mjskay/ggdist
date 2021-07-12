@@ -357,3 +357,29 @@ test_that("stat_dist_ detects discrete distributions", {
 
 })
 
+
+# grouping order ----------------------------------------------------------
+
+test_that("stat_dist_ preserves existing grouping order", {
+  df = tribble(
+    ~Model, ~Parameter, ~Coefficient,  ~SE, ~linetype,
+    "C",       "MZ",         0.34, 0.07,    "dashed",
+    "C",     "Ereg",         0.28, 0.06,    "twodash",
+    "C",     "AE-Beta",      0.25, 0.06,    "solid",
+    "D",       "MZ",         0.31, 0.08,    "dashed"
+  )
+
+  # the labels should overlap the points exactly if grouping order is preserved
+  vdiffr::expect_doppelganger("grouped labels with pointintervals",
+    df %>%
+      ggplot() +
+      aes(x = Model, y = Coefficient,
+        label = Parameter, color = Parameter,
+        group = linetype,
+        dist = dist_normal(mu = Coefficient, sigma = SE)
+      ) +
+      stat_dist_pointinterval(position = "dodge") +
+      geom_label(position = position_dodge(width = 1))
+  )
+
+})
