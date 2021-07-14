@@ -1,3 +1,64 @@
+# ggdist 3.0.0
+
+Breaking changes:
+
+* The positioning of `geom_slabinterval()` family geoms when using `position_dodge()`
+  is now slightly different in order to match up with how other geoms are positioned (#85).
+  This may slightly change existing charts that use `position = "dodge"`, and in
+  some cases may cause slabs to be drawn slightly outside plot boundaries, but makes
+  it much easier to combine `geom_slabinterval()` with other geoms in the expected
+  way. If dodging more similar to the old approach is needed, use the new
+  "justification-preserving dodge", `position_dodgejust()`, in place of `position_dodge()`.
+
+New features:
+
+* For `geom_slabinterval()`, `side`, `justification`, and `scale` can now be
+  used as aesthetics instead of parameters, allowing them to vary across slabs
+  within the same geom.
+* Varying `fill`s within a slab  in `geom_slabinterval()` can now be drawn as
+  true gradients rather than segmented polygons in R >= 4.1 by setting
+  `fill_type = "gradient"`. This substantially improves the appearance of 
+  gradient fills in graphics engines that support it (#44).
+* Improved support for discrete distributions:
+  * `stat_dist_slabinterval()` and company now detect discrete distributions and
+    display them as histograms (#19).
+  * `geom_dotsinterval()` now adjusts bin widths on discrete distributions when
+    they would result in bins that are taller than the allocated space to ensure
+    that they fit within the required space (#42).
+* Allow user-specified lower and/or upper bounds on dynamic `geom_dotsinterval()`
+  bin width by passing a vector of two values to the `binwidth` parameter.
+* The automatic bin selection algorithm used by `geom_dotsinterval()` has been
+  factored out and exported as `find_dotplot_binwidth()` and `bin_dots()` for
+  others to use (#77).
+* Previously, `curve_interval()` used a common (but naive) approach to finding
+  a cutoff on data depth to identify the X% "deepest" curves, simply taking the
+  envelope around the X% quantile of curves ranked by depth. This is quite
+  conservative and tends to create intervals that are too wide; `curve_interval()`
+  now searches for a cutoff in data depth such that X% of curves are contained
+  within its envelope (#67).
+* `point_interval()` and company now accept `distributional` objects and 
+  `posterior::rvar()`s (full support for `distributional` objects requires
+  `distributional` > 0.2.2).
+* Reduce dependencies substantially, making the geoms more suitable for use by
+  other packages (thanks to Brenton Wiernik for the help).
+
+New documentation:
+
+* Substantial improvements to the documentation of aesthetics and computed
+  variables in `geom_slabinterval()`, `stat_slabinterval()`, and company, listing
+  all custom aesthetics, computed variables, and their usage.
+
+* Several new examples in `vignette("slabinterval")`, including "rain cloud" 
+  plots and an example of histograms for discrete analytical distributions.
+
+Bug fixes:
+
+* Ensure `stat_dist_slabinterval()` preserves group order (#88).
+* Improve test coverage up to ~96%.
+* Restore computed variable `n` for `stat_sample_slabinterval()`.
+* Various improvements in correct `NA` handling across the geoms (#74, #51).
+
+
 # ggdist 2.4.1
 
 New features:
