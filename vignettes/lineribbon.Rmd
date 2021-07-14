@@ -327,7 +327,7 @@ Depending on what type of inference we care about, this might be sufficient for 
 
 One solution I like for such situations is to show spaghetti plots: just plot the underlying curves. This is a so-called *frequency framing* uncertainty visualization, and it tends to work fairly well. However, in some cases you may want a visual summary using intervals, in which case curvewise intervals could help. Using `curve_interval()` instead of `point_interval()` or `median_qi()` calculates these:
 
-```{r curvewise_ribbon, fig.width = tiny_width, fig.height = tiny_height}
+```{r curvewise_ribbon, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("posterior", quietly = TRUE)}
 df %>%
   group_by(x) %>%
   curve_interval(y, .width = .5) %>%
@@ -344,7 +344,7 @@ An X% *curvewise* interval is calculated across all the curves by taking the top
 
 Given the above, let's see what more realistic curvewise intervals of the above example might look like by using a larger number of draws:
 
-```{r pointwise_curvewise, fig.width = tiny_width, fig.height = tiny_width}
+```{r pointwise_curvewise, fig.width = tiny_width, fig.height = tiny_width, eval = requireNamespace("posterior", quietly = TRUE)}
 k = 1000 # number of curves
 large_df = tibble(
     .draw = 1:k,
@@ -433,7 +433,7 @@ mtcars_boot %>%
 
 Finally, curvewise intervals:
 
-```{r mtcars_curve_interval, fig.width = tiny_width, fig.height = tiny_height}
+```{r mtcars_curve_interval, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("posterior", quietly = TRUE)}
 mtcars_boot %>%
   group_by(mpg) %>%
   curve_interval(hp, .width = c(.5, .7, .9)) %>%
@@ -451,7 +451,7 @@ coverage level. You can try different methods to sometimes get improved
 bands; e.g. using the `"bd-mbd"` method per Sun and Genton 
 ([2011](https://doi.org/10.1198/jcgs.2011.09224)) works better on this dataset:
 
-```{r mtcars_curve_interval_bd, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("fda", quietly = TRUE)}
+```{r mtcars_curve_interval_bd, fig.width = tiny_width, fig.height = tiny_height, eval = requireNamespace("fda", quietly = TRUE) && requireNamespace("posterior", quietly = TRUE)}
 mtcars_boot %>%
   group_by(mpg) %>%
   curve_interval(hp, .width = c(.5, .7, .9), .interval = "bd-mbd") %>%

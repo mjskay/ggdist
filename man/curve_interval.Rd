@@ -116,15 +116,17 @@ df \%>\%
   theme_ggdist()
 
 # ... compare them to curvewise intervals
-df \%>\%
-  group_by(x) \%>\%
-  curve_interval(y, .width = c(.5)) \%>\%
-  ggplot(aes(x = x, y = y)) +
-  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
-  geom_line(aes(group = .draw), alpha=0.15, data = df) +
-  scale_fill_brewer() +
-  ggtitle("50\% curvewise intervals with curve_interval()") +
-  theme_ggdist()
+if (requireNamespace("posterior", quietly = TRUE)) {
+  df \%>\%
+    group_by(x) \%>\%
+    curve_interval(y, .width = c(.5)) \%>\%
+    ggplot(aes(x = x, y = y)) +
+    geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+    geom_line(aes(group = .draw), alpha=0.15, data = df) +
+    scale_fill_brewer() +
+    ggtitle("50\% curvewise intervals with curve_interval()") +
+    theme_ggdist()
+}
 
 }
 \references{

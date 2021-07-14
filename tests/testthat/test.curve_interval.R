@@ -11,6 +11,7 @@ library(tidyr)
 
 test_that("curve_interval works with lineribbon", {
   skip_if_no_vdiffr()
+  skip_if_not_installed("posterior")
 
 
   k = 11 # number of curves
