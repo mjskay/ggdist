@@ -51,9 +51,6 @@ Suggests:
     beeswarm (>= 0.4.0),
     posterior,
     pkgdown
-Remotes:
-    stan-dev/posterior,
-    mitchelloharawild/distributional
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
