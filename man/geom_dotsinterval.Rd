@@ -185,7 +185,7 @@ dotplot is drawn; \code{unit(c(0, 0.1), "npc")} would make dots that are \emph{a
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
-the input data are symmetricaly it will return a symmetrical layout.
+the input data are symmetrical it will return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
 positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 align dots within columns. Does not work well when \code{side = "both"}.
@@ -265,10 +265,10 @@ These \code{stat}s support the following aesthetics:
 \itemize{
 \item \code{x}: x position of the geometry (when orientation = \code{"vertical"}); or sample data to be summarized
 (when \code{orientation = "horizontal"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time alond with the \code{dist} aesthetic).
+at a time along with the \code{dist} aesthetic).
 \item \code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
 (when \code{orientation = "vertical"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time alond with the \code{dist} aesthetic).
+at a time along with the \code{dist} aesthetic).
 }
 In addition, in their default configuration (paired with \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}) the following aesthetics are supported by the underlying geom:
 

@@ -37,7 +37,7 @@
 #' - `bin`: a unique number associated with each bin
 #'   (supplied but not used when `layout = "swarm"`)
 #'
-#' @seealso [find_dotplot_binwidth()] for an algorithm that finds good binwidths
+#' @seealso [find_dotplot_binwidth()] for an algorithm that finds good bin widths
 #' to use with this function; [geom_dotsinterval()] for geometries that use
 #' these algorithms to create dotplots.
 #' @examples
@@ -179,7 +179,7 @@ bin_dots = function(x, y, binwidth,
 #' @return A suitable bin width such that a dotplot created with this bin width
 #' and `heightratio` should have its tallest bin be less than or equal to `maxheight`.
 #'
-#' @seealso [bin_dots()] for an algorithm can bin dots using binwidths selected
+#' @seealso [bin_dots()] for an algorithm can bin dots using bin widths selected
 #' by this function; [geom_dotsinterval()] for geometries that use
 #' these algorithms to create dotplots.
 #' @examples

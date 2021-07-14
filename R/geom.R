@@ -189,10 +189,10 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     stat_aes = list(
       x = 'x position of the geometry (when orientation = `"vertical"`); or sample data to be summarized
        (when `orientation = "horizontal"`) except for `stat_dist_` geometries (which use only one of `x` or `y`
-       at a time alond with the `dist` aesthetic).',
+       at a time along with the `dist` aesthetic).',
       y = 'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
        (when `orientation = "vertical"`) except for `stat_dist_` geometries (which use only one of `x` or `y`
-       at a time alond with the `dist` aesthetic).',
+       at a time along with the `dist` aesthetic).',
       dist =
         'A name of a distribution (e.g. `"norm"`) or a \\pkg{distributional} object (e.g. [dist_normal()]).
        See **Details**.',

@@ -147,10 +147,10 @@ These \code{stat}s support the following aesthetics:
 \itemize{
 \item \code{x}: x position of the geometry (when orientation = \code{"vertical"}); or sample data to be summarized
 (when \code{orientation = "horizontal"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time alond with the \code{dist} aesthetic).
+at a time along with the \code{dist} aesthetic).
 \item \code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
 (when \code{orientation = "vertical"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time alond with the \code{dist} aesthetic).
+at a time along with the \code{dist} aesthetic).
 }
 In addition, in their default configuration (paired with \code{\link[=geom_slabinterval]{geom_slabinterval()}}) the following aesthetics are supported by the underlying geom:
 

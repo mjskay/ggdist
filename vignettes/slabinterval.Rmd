@@ -963,7 +963,7 @@ tibble(
 Sometimes you may want to include multiple different types of slabs in the same plot
 in order to take advantage of the features each slab type provides. For example,
 people often combine densities with dotplots to show the underlying datapoints that
-go into a density estimate, creating so-called "raincloud" plots. To use multiple
+go into a density estimate, creating so-called "rain cloud" plots. To use multiple
 slab geometries together, you can use the `side` parameter to change which side
 of the interval a slab is drawn on and set the `scale` parameter to something around
 `0.5` (by default it is `0.9`) so that the two slabs do not overlap. We'll also

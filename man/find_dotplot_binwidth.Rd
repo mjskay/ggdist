@@ -55,7 +55,7 @@ bin_df \%>\%
 
 }
 \seealso{
-\code{\link[=bin_dots]{bin_dots()}} for an algorithm can bin dots using binwidths selected
+\code{\link[=bin_dots]{bin_dots()}} for an algorithm can bin dots using bin widths selected
 by this function; \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for geometries that use
 these algorithms to create dotplots.
 }

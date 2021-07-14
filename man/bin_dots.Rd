@@ -29,7 +29,7 @@ bin_dots(
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
-the input data are symmetricaly it will return a symmetrical layout.
+the input data are symmetrical it will return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
 positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 align dots within columns. Does not work well when \code{side = "both"}.
@@ -92,7 +92,7 @@ bin_df \%>\%
 
 }
 \seealso{
-\code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}} for an algorithm that finds good binwidths
+\code{\link[=find_dotplot_binwidth]{find_dotplot_binwidth()}} for an algorithm that finds good bin widths
 to use with this function; \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for geometries that use
 these algorithms to create dotplots.
 }
