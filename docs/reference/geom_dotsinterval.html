@@ -97,7 +97,7 @@ geoms and stats." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
@@ -358,7 +358,7 @@ dotplot is drawn; <code><a href='https://rdrr.io/r/grid/unit.html'>unit(c(0, 0.1
 <li><p><code>"bin"</code> (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
-the input data are symmetricaly it will return a symmetrical layout.</p></li>
+the input data are symmetrical it will return a symmetrical layout.</p></li>
 <li><p><code>"weave"</code>: uses the same basic binning approach of <code>"bin"</code>, but places dots in the off-axis at their actual
 positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 align dots within columns. Does not work well when <code>side = "both"</code>.</p></li>
@@ -443,10 +443,10 @@ the <strong>interval</strong>.</p>
 <p>These <code>stat</code>s support the following aesthetics:</p><ul>
 <li><p><code>x</code>: x position of the geometry (when orientation = <code>"vertical"</code>); or sample data to be summarized
 (when <code>orientation = "horizontal"</code>) except for <code>stat_dist_</code> geometries (which use only one of <code>x</code> or <code>y</code>
-at a time alond with the <code>dist</code> aesthetic).</p></li>
+at a time along with the <code>dist</code> aesthetic).</p></li>
 <li><p><code>y</code>: y position of the geometry (when orientation = <code>"horizontal"</code>); or sample data to be summarized
 (when <code>orientation = "vertical"</code>) except for <code>stat_dist_</code> geometries (which use only one of <code>x</code> or <code>y</code>
-at a time alond with the <code>dist</code> aesthetic).</p></li>
+at a time along with the <code>dist</code> aesthetic).</p></li>
 </ul><p>In addition, in their default configuration (paired with <code>geom_dotsinterval()</code>) the following aesthetics are supported by the underlying geom:</p>
 <p><strong>Slab-specific aesthetics</strong></p><ul>
 <li><p><code>thickness</code>: The thickness of the slab at each <code>x</code> value (if <code>orientation = "horizontal"</code>) or

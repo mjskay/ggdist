@@ -66,6 +66,11 @@ reference:
   - scales
   - scale_colour_ramp
 
+- title: GGplot positions
+  desc:  Positions for dodging geoms and stats
+  contents:
+  - position_dodgejust
+
 - title: GGplot theme
   desc:  ggdist theme for ggplot2
   contents:

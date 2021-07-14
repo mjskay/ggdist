@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
       <h1 data-toc-skip>Slab + interval stats and geoms</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2021-06-26</h4>
+            <h4 class="date">2021-07-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/slabinterval.Rmd"><code>vignettes/slabinterval.Rmd</code></a></small>
       <div class="hidden name"><code>slabinterval.Rmd</code></div>
@@ -775,7 +775,11 @@ img {
         labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_percent.html">percent_format</a></span><span class="op">(</span><span class="op">)</span>
       <span class="op">)</span><span class="op">)</span>
     <span class="op">)</span>,
-    position <span class="op">=</span> <span class="st">"dodge"</span>,
+    <span class="co"># NOTE: we use position = "dodgejust" (a dodge that respects the </span>
+    <span class="co"># justification of intervals relative to slabs) instead of </span>
+    <span class="co"># position = "dodge" here because it ensures the topmost slab does</span>
+    <span class="co"># not extend beyond the plot limits</span>
+    position <span class="op">=</span> <span class="st">"dodgejust"</span>,
   <span class="op">)</span> <span class="op">+</span>
   <span class="co"># a range from 1 down to 0.2 ensures the fill goes dark to light inside-out</span>
   <span class="co"># and doesn't get all the way down to white (0) on the lightest color</span>
@@ -798,28 +802,71 @@ img {
 <p><img src="slabinterval_files/figure-html/dist_interval_color_ramp-1.png" width="648"></p>
 <p>See <code><a href="../reference/scale_colour_ramp.html">help("scale_color_ramp")</a></code> for more information on the color ramp aesthetics/scales.</p>
 </div>
+<div id="varying-side-scale-and-justification-within-geoms" class="section level3">
+<h3 class="hasAnchor">
+<a href="#varying-side-scale-and-justification-within-geoms" class="anchor"></a>Varying side, scale, and justification within geoms</h3>
+<p>The <code>side</code>, <code>scale</code>, and <code>justification</code> parameters can also be varied within a geom, allowing (for example) different groups to hang above or below the interval:</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dist_df</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">subgroup</span> <span class="op">==</span> <span class="st">"h"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>side <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"both"</span>, <span class="st">"bottom"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">group</span>, dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html">dist_normal</a></span><span class="op">(</span><span class="va">mean</span>, <span class="va">sd</span><span class="op">)</span>, side <span class="op">=</span> <span class="va">side</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dotsinterval</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">2</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'stat_dist_dotsinterval(aes(side = c("top","both","bottom")))'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="slabinterval_files/figure-html/varying_side_dotplot-1.png" width="648"></p>
+</div>
+<div id="discrete-distributions-with-redundant-encodings" class="section level3">
+<h3 class="hasAnchor">
+<a href="#discrete-distributions-with-redundant-encodings" class="anchor"></a>Discrete distributions with redundant encodings</h3>
+<p>The <code>stat_dist_...</code> family will automatically detect discrete distributions and plot them using stepped histograms instead of densities. As with <code><a href="../reference/stat_sample_slabinterval.html">stat_histinterval()</a></code>, you can choose whether or not to draw outlines between bars of the histogram using <code>outline_bars = TRUE</code> or <code>FALSE</code> (the default is <code>FALSE</code>). Here is an example of a redundant encoding of thickness and fill color on stepped histograms inspired by an example from Isabella Ghement:</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
+  group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>,<span class="st">"d"</span>,<span class="st">"e"</span><span class="op">)</span>,
+  lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">13</span>,<span class="fl">7</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>
+<span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_slab</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_poisson.html">dist_poisson</a></span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span>, fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">stat</a></span><span class="op">(</span><span class="va">pdf</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">lambda</span>, group <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">lambda</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Pr(y)"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"stat_dist_slab()"</span>, <span class="st">"aes(dist = dist_poisson(lambda), fill = stat(pdf))"</span><span class="op">)</span></code></pre></div>
+<p><img src="slabinterval_files/figure-html/dist_slab_discrete-1.png" width="648"></p>
+</div>
 <div id="multiple-slabs-and-intervals-in-composite-plots" class="section level3">
 <h3 class="hasAnchor">
 <a href="#multiple-slabs-and-intervals-in-composite-plots" class="anchor"></a>Multiple slabs and intervals in composite plots</h3>
-<p>Sometimes you may want to include multiple different types of slabs in the same plot in order to take advantage of the features each slab type provides. For example, people often combine densities with dotplots to show the underlying datapoints that go into a density estimate. To use multiple slab geometries together, you can use the <code>side</code> parameter to change which side of the interval a slab is drawn on and set the <code>scale</code> parameter to something around <code>0.5</code> (by default it is <code>0.9</code>) so that the two slabs do not overlap:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<p>Sometimes you may want to include multiple different types of slabs in the same plot in order to take advantage of the features each slab type provides. For example, people often combine densities with dotplots to show the underlying datapoints that go into a density estimate, creating so-called “rain cloud” plots. To use multiple slab geometries together, you can use the <code>side</code> parameter to change which side of the interval a slab is drawn on and set the <code>scale</code> parameter to something around <code>0.5</code> (by default it is <code>0.9</code>) so that the two slabs do not overlap. We’ll also scale the halfeye slab thickness by <code>n</code> (the number of observations in each group) so that the area of each slab represents sample size (and looks similar to the total area of its corresponding dotplot).</p>
+<p>We’ll use a subsample of of the data to show how it might look on a reasonably-sized dataset.</p>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span> <span class="co"># for reproducibility</span>
+<span class="va">df</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">subgroup</span> <span class="op">==</span> <span class="st">"h"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">subgroup</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">group</span>, x <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slab</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">0.6</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"bottom"</span>, scale <span class="op">=</span> <span class="fl">0.6</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'stat_slab(scale = 0.6) + \nstat_dotsinterval(scale = 0.6, side = "bottom")'</span><span class="op">)</span></code></pre></div>
+<p><img src="slabinterval_files/figure-html/halfeye_dotplot-1.png" width="432"></p>
+<p>Geoms can also be dodged together, as in this example using densities with quantile dotplots in subgroups. This example also shows how <code><a href="../reference/stat_pointinterval.html">stat_pointinterval()</a></code> can be repurposed to be used with other geoms; here to replace points with labels (the idea of replacing points with labels comes from Brenton Wiernik).</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slab</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"left"</span>, scale <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'stat_halfeye(side = "left") + stat_dotsinterval()'</span><span class="op">)</span></code></pre></div>
-<p><img src="slabinterval_files/figure-html/halfeye_dotplot-1.png" width="648"></p>
-<p>In this example, depending on your use case you might prefer a quantile dotplot instead of a dotplot of all data points:</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slab</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"left"</span>, scale <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">0.5</span>, quantiles <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100)'</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slab</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"left"</span>, scale <span class="op">=</span> <span class="fl">0.5</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">0.5</span>, quantiles <span class="op">=</span> <span class="fl">100</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/stat_pointinterval.html">stat_pointinterval</a></span><span class="op">(</span>
+    geom <span class="op">=</span> <span class="st">"label"</span>, 
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span>, 
+    .width <span class="op">=</span> <span class="fl">.5</span>,  <span class="co"># set to a scalar to draw only one label instead of two</span>
+    position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+    size <span class="op">=</span> <span class="fl">3.5</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100) +\nstat_pointinterval(geom = "label")'</span><span class="op">)</span></code></pre></div>
 <p><img src="slabinterval_files/figure-html/halfeye_quantile_dotplot-1.png" width="648"></p>
 <p>When constructing composite plots it may be useful to position slab and interval parts of the geometry separately. While some relative positioning of these geometries is supported by manipulating the <code>justification</code> parameter, if you want complete, separate control over positioning of intervals versus slabs, the simplest approach can be to specify those geometries separately.</p>
 <p>For example, the following uses a separate specification of a <code><a href="../reference/stat_sample_slabinterval.html">stat_slab()</a></code> and a <code><a href="../reference/stat_pointinterval.html">stat_pointinterval()</a></code> instead of a combined <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> in order to use <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code> on the intervals but not the slabs:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">group</span>, color <span class="op">=</span> <span class="va">group</span>, x <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_sample_slabinterval.html">stat_slab</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span>

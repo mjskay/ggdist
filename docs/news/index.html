@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
@@ -152,6 +152,46 @@
       <small>Source: <a href='https://github.com/mjskay/ggdist/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="ggdist-300" class="section level1">
+<h1 class="page-header" data-toc-text="3.0.0">
+<a href="#ggdist-300" class="anchor"></a>ggdist 3.0.0<small> Unreleased </small>
+</h1>
+<p>Breaking changes:</p>
+<ul>
+<li>The positioning of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family geoms when using <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code> is now slightly different in order to match up with how other geoms are positioned (<a href='https://github.com/mjskay/ggdist/issues/85'>#85</a>). This may slightly change existing charts that use <code>position = "dodge"</code>, and in some cases may cause slabs to be drawn slightly outside plot boundaries, but makes it much easier to combine <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> with other geoms in the expected way. If dodging more similar to the old approach is needed, use the new “justification-preserving dodge”, <code><a href="../reference/position_dodgejust.html">position_dodgejust()</a></code>, in place of <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code>.</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>For <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code>, <code>side</code>, <code>justification</code>, and <code>scale</code> can now be used as aesthetics instead of parameters, allowing them to vary across slabs within the same geom.</li>
+<li>Varying <code>fill</code>s within a slab in <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> can now be drawn as true gradients rather than segmented polygons in R &gt;= 4.1 by setting <code>fill_type = "gradient"</code>. This substantially improves the appearance of gradient fills in graphics engines that support it (<a href='https://github.com/mjskay/ggdist/issues/44'>#44</a>).</li>
+<li>Improved support for discrete distributions:
+<ul>
+<li>
+<code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabinterval()</a></code> and company now detect discrete distributions and display them as histograms (<a href='https://github.com/mjskay/ggdist/issues/19'>#19</a>).</li>
+<li>
+<code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> now adjusts bin widths on discrete distributions when they would result in bins that are taller than the allocated space to ensure that they fit within the required space (<a href='https://github.com/mjskay/ggdist/issues/42'>#42</a>).</li>
+</ul>
+</li>
+<li>Allow user-specified lower and/or upper bounds on dynamic <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> bin width by passing a vector of two values to the <code>binwidth</code> parameter.</li>
+<li>The automatic bin selection algorithm used by <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> has been factored out and exported as <code><a href="../reference/find_dotplot_binwidth.html">find_dotplot_binwidth()</a></code> and <code><a href="../reference/bin_dots.html">bin_dots()</a></code> for others to use (<a href='https://github.com/mjskay/ggdist/issues/77'>#77</a>).</li>
+<li>Previously, <code><a href="../reference/curve_interval.html">curve_interval()</a></code> used a common (but naive) approach to finding a cutoff on data depth to identify the X% “deepest” curves, simply taking the envelope around the X% quantile of curves ranked by depth. This is quite conservative and tends to create intervals that are too wide; <code><a href="../reference/curve_interval.html">curve_interval()</a></code> now searches for a cutoff in data depth such that X% of curves are contained within its envelope (<a href='https://github.com/mjskay/ggdist/issues/67'>#67</a>).</li>
+<li>
+<code><a href="../reference/point_interval.html">point_interval()</a></code> and company now accept <code>distributional</code> objects and <code><a href="https://mc-stan.org/posterior/reference/rvar.html">posterior::rvar()</a></code>s (full support for <code>distributional</code> objects requires <code>distributional</code> &gt; 0.2.2).</li>
+<li>Reduce dependencies substantially, making the geoms more suitable for use by other packages (thanks to Brenton Wiernik for the help).</li>
+</ul>
+<p>New documentation:</p>
+<ul>
+<li><p>Substantial improvements to the documentation of aesthetics and computed variables in <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code>, <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>, and company, listing all custom aesthetics, computed variables, and their usage.</p></li>
+<li><p>Several new examples in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, including “rain cloud” plots and an example of histograms for discrete analytical distributions.</p></li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Ensure <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabinterval()</a></code> preserves group order (<a href='https://github.com/mjskay/ggdist/issues/88'>#88</a>).</li>
+<li>Improve test coverage up to ~96%.</li>
+<li>Restore computed variable <code>n</code> for <code><a href="../reference/stat_sample_slabinterval.html">stat_sample_slabinterval()</a></code>.</li>
+<li>Various improvements in correct <code>NA</code> handling across the geoms (<a href='https://github.com/mjskay/ggdist/issues/74'>#74</a>, <a href='https://github.com/mjskay/ggdist/issues/51'>#51</a>).</li>
+</ul>
+</div>
     <div id="ggdist-241" class="section level1">
 <h1 class="page-header" data-toc-text="2.4.1">
 <a href="#ggdist-241" class="anchor"></a>ggdist 2.4.1<small> 2021-06-10 </small>

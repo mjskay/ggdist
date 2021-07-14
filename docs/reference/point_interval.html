@@ -94,7 +94,7 @@ multiple groups in a grouped data frame)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
@@ -200,10 +200,58 @@ multiple groups in a grouped data frame).</p>
   <span class='va'>.prob</span>
 <span class='op'>)</span>
 
+<span class='co'># S3 method for rvar</span>
+<span class='fu'>point_interval</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>...</span>,
+  .width <span class='op'>=</span> <span class='fl'>0.95</span>,
+  .point <span class='op'>=</span> <span class='va'>median</span>,
+  .interval <span class='op'>=</span> <span class='va'>qi</span>,
+  .simple_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for distribution</span>
+<span class='fu'>point_interval</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>...</span>,
+  .width <span class='op'>=</span> <span class='fl'>0.95</span>,
+  .point <span class='op'>=</span> <span class='va'>median</span>,
+  .interval <span class='op'>=</span> <span class='va'>qi</span>,
+  .simple_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for dist_default</span>
+<span class='fu'>point_interval</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>...</span>,
+  .width <span class='op'>=</span> <span class='fl'>0.95</span>,
+  .point <span class='op'>=</span> <span class='va'>median</span>,
+  .interval <span class='op'>=</span> <span class='va'>qi</span>,
+  .simple_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
 <span class='fu'>qi</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>.prob</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>hdi</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>.prob</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>hdi</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>.prob</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
+<span class='fu'>Mode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>Mode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='co'># S3 method for rvar</span>
+<span class='fu'>Mode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='co'># S3 method for dist_sample</span>
+<span class='fu'>Mode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='co'># S3 method for dist_default</span>
+<span class='fu'>Mode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='co'># S3 method for distribution</span>
 <span class='fu'>Mode</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='fu'>hdci</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fl'>0.95</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
@@ -240,7 +288,8 @@ that contains draws to summarize.</p></td>
 <code>.data</code>, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in <code>.exclude</code> (by default
 <code>".chain"</code>, <code>".iteration"</code>, <code>".draw"</code>, and <code>".row"</code>) will be summarized.
-This can be list columns.</p></td>
+These columns can be numeric, <span class="pkg">distributional</span> objects, <code><a href='https://mc-stan.org/posterior/reference/rvar.html'>posterior::rvar</a></code>s,
+or list columns of numeric values to summarise.</p></td>
     </tr>
     <tr>
       <th>.width</th>
@@ -354,10 +403,12 @@ information on multimodality and continuous versus discontinuous intervals.</p>
 #&gt; 1 0.009209639 -1.941554 2.037887   0.95 median        qi</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>median_qi</span><span class='op'>(</span><span class='va'>x</span>, .width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.50</span>, <span class='fl'>.80</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;            x    .lower    .upper .width .point .interval
-#&gt; 1 0.05485238 -0.653223 0.7534504   0.50 median        qi
-#&gt; 2 0.05485238 -1.241260 1.3417387   0.80 median        qi
-#&gt; 3 0.05485238 -1.991564 1.9059114   0.95 median        qi</div><div class='input'>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 6</span>
+#&gt;        x .lower .upper .width .point .interval
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    
+#&gt; <span style='color: #BCBCBC;'>1</span> 0.054<span style='text-decoration: underline;'>9</span> -<span style='color: #BB0000;'>0.653</span>  0.753   0.5  median qi       
+#&gt; <span style='color: #BCBCBC;'>2</span> 0.054<span style='text-decoration: underline;'>9</span> -<span style='color: #BB0000;'>1.24</span>   1.34    0.8  median qi       
+#&gt; <span style='color: #BCBCBC;'>3</span> 0.054<span style='text-decoration: underline;'>9</span> -<span style='color: #BB0000;'>1.99</span>   1.91    0.95 median qi       </div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
     x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span>,
     y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span>, mean <span class='op'>=</span> <span class='fl'>2</span>, sd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
@@ -392,10 +443,12 @@ information on multimodality and continuous versus discontinuous intervals.</p>
 
 <span class='va'>multimodal_draws</span> <span class='op'>%&gt;%</span>
   <span class='fu'>mode_hdi</span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.66</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                x    .lower   .upper .width .point .interval
-#&gt; 1    -0.07448236 -1.338450 1.358015   0.66   mode       hdi
-#&gt; 1.1  -0.07448236  3.485694 4.496869   0.66   mode       hdi
-#&gt; ...3 -0.07448236 -1.719262 5.500183   0.95   mode       hdi</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: row names were found from a short variable and have been discarded</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 6</span>
+#&gt;         x .lower .upper .width .point .interval
+#&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    
+#&gt; <span style='color: #BCBCBC;'>1</span> -<span style='color: #BB0000;'>0.074</span><span style='color: #BB0000; text-decoration: underline;'>5</span>  -<span style='color: #BB0000;'>1.34</span>   1.36   0.66 mode   hdi      
+#&gt; <span style='color: #BCBCBC;'>2</span> -<span style='color: #BB0000;'>0.074</span><span style='color: #BB0000; text-decoration: underline;'>5</span>   3.49   4.50   0.66 mode   hdi      
+#&gt; <span style='color: #BCBCBC;'>3</span> -<span style='color: #BB0000;'>0.074</span><span style='color: #BB0000; text-decoration: underline;'>5</span>  -<span style='color: #BB0000;'>1.72</span>   5.50   0.95 mode   hdi      </div><div class='input'>
 <span class='va'>multimodal_draws</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'><a href='stat_sample_slabinterval.html'>stat_halfeye</a></span><span class='op'>(</span>point_interval <span class='op'>=</span> <span class='va'>mode_hdi</span>, .width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.66</span>, <span class='fl'>.95</span><span class='op'>)</span><span class='op'>)</span>

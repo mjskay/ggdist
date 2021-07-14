@@ -92,7 +92,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.1.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
@@ -194,7 +194,7 @@
 <li><p><code>"bin"</code> (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
-the input data are symmetricaly it will return a symmetrical layout.</p></li>
+the input data are symmetrical it will return a symmetrical layout.</p></li>
 <li><p><code>"weave"</code>: uses the same basic binning approach of <code>"bin"</code>, but places dots in the off-axis at their actual
 positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 align dots within columns. Does not work well when <code>side = "both"</code>.</p></li>
@@ -238,7 +238,59 @@ variable and that dots will be stacked up in the <code>x</code> direction.</p></
 (supplied but not used when <code>layout = "swarm"</code>)</p></li>
 </ul>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='find_dotplot_binwidth.html'>find_dotplot_binwidth()</a></code> for an algorithm that finds good bin widths
+to use with this function; <code><a href='geom_dotsinterval.html'>geom_dotsinterval()</a></code> for geometries that use
+these algorithms to create dotplots.</p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'dplyr'</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:stats':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:base':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+
+<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/ppoints.html'>ppoints</a></span><span class='op'>(</span><span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>bin_df</span> <span class='op'>=</span> <span class='fu'>bin_dots</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='fl'>0</span>, binwidth <span class='op'>=</span> <span class='fl'>0.5</span>, heightratio <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>bin_df</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 20 x 3</span>
+#&gt;         x     y   bin
+#&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>1.96</span>   0.25     1
+#&gt; <span style='color: #BCBCBC;'> 2</span> -<span style='color: #BB0000;'>1.29</span>   0.25     2
+#&gt; <span style='color: #BCBCBC;'> 3</span> -<span style='color: #BB0000;'>1.29</span>   0.75     2
+#&gt; <span style='color: #BCBCBC;'> 4</span> -<span style='color: #BB0000;'>0.766</span>  0.25     3
+#&gt; <span style='color: #BCBCBC;'> 5</span> -<span style='color: #BB0000;'>0.766</span>  0.75     3
+#&gt; <span style='color: #BCBCBC;'> 6</span> -<span style='color: #BB0000;'>0.766</span>  1.25     3
+#&gt; <span style='color: #BCBCBC;'> 7</span> -<span style='color: #BB0000;'>0.258</span>  0.25     4
+#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>0.258</span>  0.75     4
+#&gt; <span style='color: #BCBCBC;'> 9</span> -<span style='color: #BB0000;'>0.258</span>  1.25     4
+#&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.258</span>  1.75     4
+#&gt; <span style='color: #BCBCBC;'>11</span>  0.258  0.25     5
+#&gt; <span style='color: #BCBCBC;'>12</span>  0.258  0.75     5
+#&gt; <span style='color: #BCBCBC;'>13</span>  0.258  1.25     5
+#&gt; <span style='color: #BCBCBC;'>14</span>  0.258  1.75     5
+#&gt; <span style='color: #BCBCBC;'>15</span>  0.766  0.25     6
+#&gt; <span style='color: #BCBCBC;'>16</span>  0.766  0.75     6
+#&gt; <span style='color: #BCBCBC;'>17</span>  0.766  1.25     6
+#&gt; <span style='color: #BCBCBC;'>18</span>  1.29   0.25     7
+#&gt; <span style='color: #BCBCBC;'>19</span>  1.29   0.75     7
+#&gt; <span style='color: #BCBCBC;'>20</span>  1.96   0.25     8</div><div class='input'>
+<span class='co'># we can manually plot the binning above, though this is only recommended</span>
+<span class='co'># if you are using find_dotplot_binwidth() and bin_dots() to build your own</span>
+<span class='co'># grob. For practical use it is much easier to use geom_dots(), which will</span>
+<span class='co'># automatically select good bin widths for you (and which uses</span>
+<span class='co'># find_dotplot_binwidth() and bin_dots() internally)</span>
+<span class='va'>bin_df</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_fixed</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='img'><img src='bin_dots-1.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
