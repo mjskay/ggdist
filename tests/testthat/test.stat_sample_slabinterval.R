@@ -182,3 +182,24 @@ test_that("n is calculated correctly", {
       stat_sample_slabinterval(n = 15)
   )
 })
+
+
+# missing data is handled correctly ---------------------------------------
+
+test_that("NAs are handled correctly", {
+  skip_if_no_vdiffr()
+
+  p = data.frame(x = c(1:10, NA)) %>%
+    ggplot(aes(x = x, y = "a"))
+
+  expect_warning(
+    vdiffr::expect_doppelganger("NAs with na.rm = FALSE",
+      p + stat_halfeye(na.rm = FALSE, n = 15)
+    ),
+    "Removed 1 rows"
+  )
+
+  vdiffr::expect_doppelganger("NAs with na.rm = TRUE",
+    p + stat_halfeye(na.rm = TRUE, n = 15)
+  )
+})

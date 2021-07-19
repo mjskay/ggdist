@@ -219,6 +219,9 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
   ) {
     define_orientation_variables(orientation)
 
+    # remove missing values
+    data = ggplot2::remove_missing(data, na.rm, c(x, y), name = "stat_slabinterval")
+
     # figure out coordinate transformation
     x_trans = if (is.null(scales[[x]]) || scales[[x]]$is_discrete()) {
       scales::identity_trans()
