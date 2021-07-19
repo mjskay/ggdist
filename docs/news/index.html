@@ -154,11 +154,11 @@
 
     <div id="ggdist-300" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.0">
-<a href="#ggdist-300" class="anchor"></a>ggdist 3.0.0<small> Unreleased </small>
+<a href="#ggdist-300" class="anchor"></a>ggdist 3.0.0<small> 2021-07-19 </small>
 </h1>
 <p>Breaking changes:</p>
 <ul>
-<li>The positioning of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family geoms when using <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code> is now slightly different in order to match up with how other geoms are positioned (<a href='https://github.com/mjskay/ggdist/issues/85'>#85</a>). This may slightly change existing charts that use <code>position = "dodge"</code>, and in some cases may cause slabs to be drawn slightly outside plot boundaries, but makes it much easier to combine <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> with other geoms in the expected way. If dodging more similar to the old approach is needed, use the new “justification-preserving dodge”, <code><a href="../reference/position_dodgejust.html">position_dodgejust()</a></code>, in place of <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code>.</li>
+<li>The positioning of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family geoms when using <code>position_dodge()</code> is now slightly different in order to match up with how other geoms are positioned (<a href='https://github.com/mjskay/ggdist/issues/85'>#85</a>). This may slightly change existing charts that use <code>position = "dodge"</code>, and in some cases may cause slabs to be drawn slightly outside plot boundaries, but makes it much easier to combine <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> with other geoms in the expected way. If dodging more similar to the old approach is needed, use the new “justification-preserving dodge”, <code><a href="../reference/position_dodgejust.html">position_dodgejust()</a></code>, in place of <code>position_dodge()</code>.</li>
 </ul>
 <p>New features:</p>
 <ul>
@@ -199,7 +199,7 @@
 <p>New features:</p>
 <ul>
 <li>Added <code>"weave"</code> and <code>"swarm"</code> layouts for dots geoms (<a href='https://github.com/mjskay/ggdist/issues/64'>#64</a>). These provide alternative layouts that keep datapoints in their actual positions on the data axis. The <code>"weave"</code> layout maintains rows but not columns and works well for quantile dotplots; the <code>"swarm"</code> layout uses the <code>"compactswarm"</code> method from <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html">beeswarm::beeswarm()</a></code> (courtesy James Trimble) and works well on sample data. See the dotplot section of <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for comparisons.</li>
-<li>Allow the use of <code><a href="https://rdrr.io/r/grid/unit.html">unit()</a></code> to specify bin widths manually for dots geoms and stats, which can be helpful when you need dotplots across facets to have the same bin width (<a href='https://github.com/mjskay/ggdist/issues/53'>#53</a>).</li>
+<li>Allow the use of <code>unit()</code> to specify bin widths manually for dots geoms and stats, which can be helpful when you need dotplots across facets to have the same bin width (<a href='https://github.com/mjskay/ggdist/issues/53'>#53</a>).</li>
 </ul>
 <p>New documentation:</p>
 <ul>
