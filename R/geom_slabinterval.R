@@ -690,6 +690,12 @@ switch_side = function(side, orientation, topright, bottomleft, both) {
 
 # vectorized version of switch_side
 case_when_side = function(side, orientation, topright, bottomleft, both) {
+  # must make sure side and orientation are the same length as ifelse returns
+  # a result of the same length as the first arg only
+  common_length = max(length(side), length(orientation))
+  side = rep_len(side, length.out = common_length)
+  orientation = rep_len(orientation, length.out = common_length)
+
   ifelse(
     orientation %in% c("y", "horizontal"),
     ifelse(

@@ -122,11 +122,20 @@ test_that("side and justification can vary", {
     g = rep(c("a","b"), 10)
   )
 
+  vdiffr::expect_doppelganger("varying side",
+    df %>%
+      ggplot(aes(x = x, y = g, thickness = y,
+        side = ifelse(g == "a", "top", "bottom"),
+        scale = ifelse(g == "a", 0.5, 0.25)
+      )) +
+      geom_slab()
+  )
+
   vdiffr::expect_doppelganger("varying side and just",
     df %>%
       ggplot(aes(x = x, y = g, thickness = y,
         side = ifelse(g == "a", "top", "bottom"),
-        justification = ifelse(g == "a", 0, 1),
+        justification = ifelse(g == "a", 1, 0),
         scale = ifelse(g == "a", 0.5, 0.25)
       )) +
       geom_slab()
