@@ -134,6 +134,16 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     s_data, orientation, normalize, height, y, ymin, ymax
   ))
 
+  # in order for the dots grob to respect the `justification` aesthetic, we
+  # need to adjust the y position based on where ymin and ymax are, as ymin/ymax
+  # are determined by the justification but dots_grob uses y (not ymin/ymax)
+  # to determine where to draw its dots
+  s_data[[y]] = case_when_side(s_data$side, orientation,
+    topright = s_data[[ymin]],
+    bottomleft = s_data[[ymax]],
+    both = (s_data[[ymax]] + s_data[[ymin]])/2
+  )
+
   if (!coord$is_linear()) {
     stop("geom_dotsinterval does not work properly with non-linear coordinates.")
   }

@@ -320,13 +320,21 @@ test_that("geom_dots correctly adjusts dot size for stroke size", {
 test_that("side, justification, and scale can vary", {
   skip_if_no_vdiffr()
 
+  vdiffr::expect_doppelganger("varying side",
+    mtcars %>%
+      ggplot(aes(x = mpg, y = cyl,
+        side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom"),
+        )) +
+      stat_dotsinterval(orientation = "horizontal")
+  )
+
   vdiffr::expect_doppelganger("varying side and just",
     mtcars %>%
       ggplot(aes(x = mpg, y = cyl,
         side = case_when(cyl == 4 ~ "top", cyl == 6 ~ "both", cyl == 8 ~ "bottom"),
-        justification = case_when(cyl == 4 ~ 0, cyl == 6 ~ 0.5, cyl == 8 ~ 1)
-        )) +
-      stat_dotsinterval(orientation = "horizontal")
+        justification = case_when(cyl == 4 ~ 1, cyl == 6 ~ 0.25, cyl == 8 ~ 0)
+      )) +
+      stat_dotsinterval(orientation = "horizontal", scale = 0.5)
   )
 
   vdiffr::expect_doppelganger("varying scale, side, just",
