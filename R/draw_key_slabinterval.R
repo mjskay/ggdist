@@ -20,9 +20,9 @@ draw_key_slabinterval_ = function(self, data, params, size) {
   key_data = k$key_data
   params = k$params
 
-  slab_grob = self$draw_key_slab(data, key_data, params, size)
-  interval_grob = self$draw_key_interval(data, key_data, params, size)
-  point_grob = self$draw_key_point(data, key_data, params, size)
+  slab_grob = if (params$show_slab) self$draw_key_slab(data, key_data, params, size)
+  interval_grob = if (params$show_interval) self$draw_key_interval(data, key_data, params, size)
+  point_grob = if (params$show_point) self$draw_key_point(data, key_data, params, size)
 
   grobTree(slab_grob, interval_grob, point_grob)
 }
