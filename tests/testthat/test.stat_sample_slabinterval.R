@@ -151,6 +151,21 @@ test_that("constant distributions work", {
     p + stat_ccdfinterval()
   )
 
+  # constant dist when n = 1
+  p = data.frame(
+    x = c("constant = 1", rep("normal(2,1)", 50)),
+    # sd of 0 will generate constant dist
+    y = qnorm(c(0.5, ppoints(50)), mean = c(1, rep(2, 50)), sd = c(0, rep(1, 50)))
+  ) %>%
+    ggplot(aes(x = x, y = y))
+
+  vdiffr::expect_doppelganger("constant dist on halfeye with n = 1",
+    p + stat_sample_slabinterval(n = 15)
+  )
+
+  vdiffr::expect_doppelganger("constant dist on ccdf with n = 1",
+    p + stat_ccdfinterval()
+  )
 })
 
 test_that("side and justification can vary", {

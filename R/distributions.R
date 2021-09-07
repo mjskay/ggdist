@@ -43,11 +43,11 @@ distr_pdf = function(dist) {
   if (inherits(dist, "rvar")) {
     draws = posterior::draws_of(dist)
     if (length(unique(draws)) == 1) {
-      return(function(x, ...) ifelse(x == draws[[1]], 1, 0))
+      return(function(x, ...) ifelse(x == draws[[1]], Inf, 0))
     }
   } else if (inherits(dist, "dist_sample")) {
     if (length(unique(dist[[1]])) == 1) {
-      return(function(x, ...) ifelse(x == dist[[1]], 1, 0))
+      return(function(x, ...) ifelse(x == dist[[1]], Inf, 0))
     }
   }
 

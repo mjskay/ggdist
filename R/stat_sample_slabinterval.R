@@ -36,6 +36,14 @@ weighted_ecdf = function(x, weights = NULL) {
   approxfun(x, p, yleft = 0, yright = 1, ties = "ordered", method = method)
 }
 
+sample_density = function(x, ...) {
+  if (length(unique(x)) == 1) {
+    list(x = x[[1]], y = Inf)
+  } else {
+    density(x, ...)
+  }
+}
+
 #' @importFrom rlang missing_arg
 #' @importFrom stats ecdf density
 #' @importFrom graphics hist
@@ -79,7 +87,7 @@ sample_slab_function = function(
     # all other slab types use the density function as the pdf
     cut = if (trim) 0 else 3
     # calculate on the transformed scale to ensure density is correct
-    d = density(df[[x]], n = n, adjust = adjust, cut = cut)
+    d = sample_density(df[[x]], n = n, adjust = adjust, cut = cut)
     data.frame(
       .input = trans$inverse(d$x),
       pdf = d$y
