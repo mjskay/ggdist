@@ -339,7 +339,11 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
-  matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
+  if (is_distribution(x)) {
+    do.call(rbind, quantile(x, c(lower_prob, upper_prob), na.rm = na.rm))
+  } else {
+    matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
+  }
 }
 
 #' @export
@@ -374,13 +378,13 @@ hdi_.rvar = function(x, ...) {
 #' @importFrom distributional hdr
 hdi_.dist_default = function(x, .width = .95, ...) {
   hilos = hdr(x, .width * 100, ...)
-  matrix(c(hilos[[1]]$lower, hilos[[1]]$upper), ncol = 2)
+  matrix(c(unlist(vctrs::field(hilos, "lower")), unlist(vctrs::field(hilos, "upper"))), ncol = 2)
 }
 hdi_.distribution = function(x, .width = .95, ...) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar distributions is not implemented")
   }
-  hdi_(x[[1]])
+  hdi_.dist_default(x[[1]], .width = .width, ...)
 }
 
 #' @export
@@ -437,7 +441,7 @@ Mode.dist_default = function(x, na.rm = FALSE) {
 #' @export
 #' @rdname point_interval
 Mode.distribution = function(x, na.rm = FALSE) {
-  map_dbl_(x, Mode, na.rm)
+  map_dbl_(x, Mode.dist_default, na.rm)
 }
 
 
