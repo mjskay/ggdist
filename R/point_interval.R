@@ -339,7 +339,7 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
-  if (is_distribution(x)) {
+  if (distributional::is_distribution(x)) {
     do.call(rbind, quantile(x, c(lower_prob, upper_prob), na.rm = na.rm))
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
