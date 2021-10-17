@@ -407,9 +407,15 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
     define_orientation_variables(params$orientation)
 
-    # pull out the secondary axis into the dist aesthetic
+    # pull out the x (secondary) axis into the dist aesthetic
     if (is_dist_like(data[[x]])) {
       data$dist = data[[x]]
+    } else if (is.null(data$dist) && !is.null(data[[x]])) {
+      # dist aesthetic is not provided but x aesthetic is, and x is not a dist
+      # this means we need to wrap it as a dist_sample
+      data = summarise_by(data, c("group", y), function(d) {
+        data.frame(dist = dist_sample(list(d[[x]])))
+      })
     }
 
     # for x and y axes that have distributions mapped to them, replace them
