@@ -337,6 +337,9 @@ test_that("stat_dist_ throws appropriate errors on ill-formed dists", {
 # discrete distributions --------------------------------------------------
 
 test_that("stat_dist_ detects discrete distributions", {
+  skip_if_no_vdiffr()
+
+
   p = tibble(lambda = c(13,7,2)) %>%
     ggplot(aes(x = lambda))
 
@@ -362,6 +365,9 @@ test_that("stat_dist_ detects discrete distributions", {
 # grouping order ----------------------------------------------------------
 
 test_that("stat_dist_ preserves existing grouping order", {
+  skip_if_no_vdiffr()
+
+
   df = tribble(
     ~Model, ~Parameter, ~Coefficient,  ~SE, ~linetype,
     "C",       "MZ",         0.34, 0.07,    "dashed",
@@ -383,4 +389,26 @@ test_that("stat_dist_ preserves existing grouping order", {
       geom_label(position = position_dodge(width = 1))
   )
 
+})
+
+
+# constant distributions --------------------------------------------------
+
+test_that("constant distributions work", {
+  skip_if_no_vdiffr()
+
+
+  p = data.frame(
+    x = c("constant = 1", "normal(2,1)", "constant = 2"),
+    y = c(dist_normal(1:2, 0:1), dist_sample(list(2)))
+  ) %>%
+    ggplot(aes(x = x, dist = y))
+
+  vdiffr::expect_doppelganger("constant dist on halfeye",
+    p + stat_dist_slabinterval(n = 15, slab_color = "blue")
+  )
+
+  vdiffr::expect_doppelganger("constant dist on ccdf",
+    p + stat_dist_ccdfinterval(slab_color = "blue", n = 15)
+  )
 })

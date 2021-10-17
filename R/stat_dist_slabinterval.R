@@ -66,7 +66,17 @@ dist_slab_function = function(
     cdf_fun = distr_cdf(dist)
     if (trans$name == "identity") {
       pdf_fun = distr_pdf(dist)
-      if (distr_is_discrete(dist, args)) {
+      if (distr_is_constant(dist, args)) {
+        # for constant distributions, to reliably get the infinite point density
+        # and a constant line in the CDF, need to manually pick input values
+        quantile_fun = distr_quantile(dist)
+        input_2 = do.call(quantile_fun, c(list(0.5), args))
+        input_1 = min(input, input_2)
+        input_3 = max(input, input_2)
+        input = c(input_1, input_2, input_2, input_2, input_3)
+        pdf = c(0, 0, Inf, 0, 0)
+        cdf = c(0, 0, 1, 1, 1)
+      } else if (distr_is_discrete(dist, args)) {
         # for discrete distributions, we have to adjust the positions of the x
         # values to create bin-like things
         input_ = unique(round(input))   # center of bin
@@ -413,7 +423,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     } else if (is.null(data$dist) && !is.null(data[[x]])) {
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
       # this means we need to wrap it as a dist_sample
-      data = summarise_by(data, c("group", y), function(d) {
+      data = summarise_by(data, c("PANEL", y, "group"), function(d) {
         data.frame(dist = dist_sample(list(d[[x]])))
       })
     }

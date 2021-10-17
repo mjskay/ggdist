@@ -529,15 +529,26 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
 
     data$datatype = data[["datatype"]] %||% self$default_aes[["datatype"]]
 
-    # normalize functions according to how we want to scale them
+    # normalize thickness according to what groups the user wants to scale it within
+    normalize_thickness = function(data) {
+      finite_thickness = data$thickness[is.finite(data$thickness)]
+      if (length(finite_thickness) > 0) {
+        max_finite_thickness = max(finite_thickness)
+        if (max_finite_thickness != 0) {
+          data$thickness = data$thickness / max_finite_thickness
+        }
+      }
+      # infinite values get plotted at the max height (e.g. for point masses)
+      if (length(data$thickness) > 0) {
+        data$thickness[data$thickness == Inf] = 1
+      }
+      data
+    }
     switch(params$normalize,
       all = {
         # normalize so max height across all data is 1
         # this preserves slabs across groups in slab plots
-        finite_thickness = data$thickness[data$datatype == "slab" & is.finite(data$thickness)]
-        if (length(finite_thickness) > 0) {
-          data$thickness = data$thickness / max(finite_thickness)
-        }
+        data = normalize_thickness(data)
       },
       panels = ,
       xy = ,
@@ -548,13 +559,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
           xy = c("PANEL", y),
           groups = c("PANEL", y, "group")
         )
-        data = ddply_(data, normalization_groups, function(d) {
-          finite_thickness = d$thickness[d$datatype == "slab" & is.finite(d$thickness)]
-          if (length(finite_thickness) > 0) {
-            d$thickness = d$thickness / max(finite_thickness)
-          }
-          d
-        })
+        data = ddply_(data, normalization_groups, normalize_thickness)
       },
       none = {},
       stop('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
