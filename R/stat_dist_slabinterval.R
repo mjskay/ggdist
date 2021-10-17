@@ -405,6 +405,21 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
+    define_orientation_variables(params$orientation)
+
+    # pull out the secondary axis into the dist aesthetic
+    if (is_dist_like(data[[x]])) {
+      data$dist = data[[x]]
+    }
+
+    # for x and y axes that have distributions mapped to them, replace them
+    # with the medians of those distributions so that those scales are handled
+    # appropriately by base ggplot x/y scale handling code
+    for (xy in c("x", "y")) {
+      if (is_dist_like(data[[xy]])) {
+        data[[xy]] = median(data[[xy]])
+      }
+    }
 
     # ignore unknown distributions (with a warning)
     if (is.character(data$dist) || is.factor(data$dist)) {

@@ -71,12 +71,21 @@ computed_mapping = function(x) {
 
 # detects the orientation of the geometry
 #' @importFrom ggplot2 has_flipped_aes
-get_flipped_aes = function(data, params, ...) {
+get_flipped_aes = function(data, params, ..., secondary_is_dist = TRUE) {
   params$orientation =
     if (params$orientation %in% c("horizontal", "y")) "y"
     else if (params$orientation %in% c("vertical", "x")) "x"
     else if (is.na(params$orientation)) NA
     else stop("Unknown orientation: ", deparse0(params$orientation))
+
+  # checks based on x or y being distribution-like objects
+  if (is.na(params$orientation)) {
+    if (is_dist_like(data$x)) {
+      return(secondary_is_dist)
+    } else if (is_dist_like(data$y)) {
+      return(!secondary_is_dist)
+    }
+  }
 
   has_flipped_aes(data, params, ...)
 }
