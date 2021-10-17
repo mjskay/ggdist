@@ -85,6 +85,13 @@ distr_is_discrete = function(dist, args = list()) {
   }
 }
 
+#' Is x a distribution-like object? i.e. a distributional::distribution or
+#' a posterior::rvar
+#' @noRd
+is_dist_like = function(x) {
+  inherits(x, c("distribution", "rvar"))
+}
+
 
 # transforming density functions ------------------------------------------
 
