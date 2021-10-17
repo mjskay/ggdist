@@ -40,15 +40,9 @@ distr_function.rvar = distr_function.distribution
 
 distr_pdf = function(dist) {
   # handle constant distributions
-  if (inherits(dist, "rvar")) {
-    draws = posterior::draws_of(dist)
-    if (length(unique(draws)) == 1) {
-      return(function(x, ...) ifelse(x == draws[[1]], Inf, 0))
-    }
-  } else if (inherits(dist, "dist_sample")) {
-    if (length(unique(dist[[1]])) == 1) {
-      return(function(x, ...) ifelse(x == dist[[1]], Inf, 0))
-    }
+  if (distr_is_sample(dist) && distr_is_constant(dist)) {
+    draws = distr_get_sample(dist)
+    return(function(x, ...) ifelse(x == draws[[1]], Inf, 0))
   }
 
   distr_function(dist, "d", density)
@@ -83,6 +77,50 @@ distr_is_discrete = function(dist, args = list()) {
       is.integer(one_value_from_dist)
     })
   }
+}
+
+#' Is a distribution sample based?
+#' @noRd
+distr_is_sample = function(dist, args = list()) {
+  inherits(dist, c("rvar", "dist_sample")) ||
+    (
+      inherits(dist, c("distribution")) &&
+      length(dist) == 1 &&
+      inherits(vctrs::field(dist, 1), "dist_sample")
+    )
+}
+
+#' Get all samples from a sample-based distribution
+#' @noRd
+distr_get_sample = function(dist, args = list()) {
+  if (inherits(dist, "rvar")) {
+    posterior::draws_of(dist)
+  } else if (inherits(dist, "distribution")) {
+    vctrs::field(vctrs::field(dist, 1), 1)
+  } else if (inherits(dist, "dist_sample")) {
+    vctrs::field(dist, 1)
+  }
+}
+
+#' Is a distribution a constant?
+#' @noRd
+distr_is_constant = function(dist, args = list()) {
+  if (distr_is_sample(dist, args)) {
+    x = distr_get_sample(dist, args)
+    return(length(unique(x)) == 1)
+  }
+
+  quantile_fun = distr_quantile(dist)
+  cdf_fun = distr_cdf(dist)
+  median = do.call(quantile_fun, c(list(0.5), args))
+  cdf_median_plusminus_eps = do.call(cdf_fun, c(
+    list(c(
+      median - .Machine$double.neg.eps,
+      median + .Machine$double.eps
+    )),
+    args
+  ))
+  cdf_median_plusminus_eps[[1]] == 0 & cdf_median_plusminus_eps[[2]] == 1
 }
 
 #' Is x a distribution-like object? i.e. a distributional::distribution or
