@@ -426,6 +426,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
       data = summarise_by(data, c("PANEL", y, "group"), function(d) {
         data.frame(dist = dist_sample(list(d[[x]])))
       })
+      data[[x]] = median(data$dist)
     }
 
     # for x and y axes that have distributions mapped to them, replace them

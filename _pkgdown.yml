@@ -64,6 +64,7 @@ reference:
   desc:  Scales for custom aesthetics used by ggdist geoms and stats
   contents:
   - scales
+  - scale_x_dist, scale_y_dist
   - scale_colour_ramp
 
 - title: GGplot positions

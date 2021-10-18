@@ -56,7 +56,7 @@ Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
 URL: https://mjskay.github.io/ggdist/, https://github.com/mjskay/ggdist/
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 LazyData: true
 Encoding: UTF-8
 Collate:
@@ -80,6 +80,7 @@ Collate:
     "position_dodgejust.R"
     "scale_colour_ramp.R"
     "scale_.R"
+    "scale_dist.R"
     "stat.R"
     "stat_slabinterval.R"
     "stat_dist_slabinterval.R"
