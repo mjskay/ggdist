@@ -27,6 +27,7 @@
 #'
 #' library(dplyr)
 #' library(ggplot2)
+#' library(distributional)
 #'
 #' data.frame(var = c("a", "b"), dist = dist_normal(c(-5,5), 1)) %>%
 #'   ggplot(aes(x = var, y = dist)) +
