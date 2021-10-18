@@ -786,6 +786,9 @@ group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha
   )
 }
 
+# avoid NOTE on R < 4.1 for the use of linearGradient below
+if(getRversion() < "4.1") globalVariables("linearGradient")
+
 #' construct a linearGradient() that can be used as a fill based on the fill
 #' and alpha aesthetics of the provided data
 #' @noRd
