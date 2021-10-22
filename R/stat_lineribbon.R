@@ -149,7 +149,6 @@ stat_dist_lineribbon = function(
     params = list(
       orientation = "vertical",
 
-      limits_function = dist_limits_function,
       limits_args = list(),
 
       slab_function = dist_slab_function,

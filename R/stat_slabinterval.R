@@ -18,10 +18,6 @@
 #' `stat_slabinterval` and [geom_slabinterval()]
 #' @param ...  Other arguments passed to [layer()]. They may also be arguments to the paired geom
 #' (e.g., [geom_pointinterval()])
-#' @param limits_function A function that takes a data frame of aesthetics and returns a data frame with
-#' columns `.lower` and `.upper` indicating the limits of the input for the slab function for that data frame.
-#' The function may additionally take a `trans` argument which will be passed the scale
-#' [transformation][scales::trans_new] object applied to the coordinate space.
 #' @param limits_args Additional arguments passed to `limits_function`
 #' @param limits Limits for `slab_function`, as a vector of length two. These limits are combined with those
 #' computed by the `limits_function` as well as the limits defined by the scales of the plot to determine the
@@ -80,7 +76,6 @@ stat_slabinterval = function(
 
   orientation = NA,
 
-  limits_function = NULL,
   limits_args = list(),
   limits = NULL,
 
@@ -101,6 +96,7 @@ stat_slabinterval = function(
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
+  .Deprecated_arguments(c("limits_function"), ...)
 
   layer(
     data = data,
@@ -115,7 +111,6 @@ stat_slabinterval = function(
     params = list(
       orientation = orientation,
 
-      limits_function = limits_function,
       limits_args = limits_args,
       limits = limits,
 
@@ -153,7 +148,6 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
   default_params = list(
     orientation = NA,
 
-    limits_function = NULL,
     limits_args = list(),
     limits = NULL,
 
@@ -196,10 +190,18 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     data
   },
 
+  # A function that takes a data frame of aesthetics and returns a data frame with
+  # columns `.lower` and `.upper` indicating the limits of the input for the slab
+  # function for that data frame The function may additionally take a `trans`
+  # argument which will be passed the scale [transformation][scales::trans_new]
+  # object applied to the coordinate space.
+  compute_limits = function(self, data, trans = scales::identity_trans(), ...) {
+    data.frame(.lower = NA, .upper = NA)
+  },
+
   compute_panel = function(self, data, scales,
     orientation = self$default_params$orientation,
 
-    limits_function = self$default_params$limits_function,
     limits_args = self$default_params$limits_args,
     limits = self$default_params$limits,
 
@@ -231,14 +233,14 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
     # SLABS
     s_data = if (show_slab && !is.null(slab_function)) {
-      compute_slabs(data, scales, x_trans, na.rm,
-        orientation, limits_function, limits_args, limits, slab_function, slab_args, n
+      compute_slabs_(self, data, scales, x_trans, na.rm,
+        orientation, limits_args, limits, slab_function, slab_args, n
       )
     }
 
     # INTERVALS
     i_data = if (show_interval) {
-      compute_intervals(data, scales, x_trans, na.rm,
+      compute_intervals_(self, data, scales, x_trans, na.rm,
         orientation, interval_function, interval_args, point_interval, .width
       )
     }
@@ -267,8 +269,8 @@ na_ = function(m_, ...) {
 }
 
 
-compute_slabs = function(data, scales, x_trans, na.rm,
-  orientation, limits_function, limits_args, limits, slab_function, slab_args, n
+compute_slabs_ = function(self, data, scales, x_trans, na.rm,
+  orientation, limits_args, limits, slab_function, slab_args, n
 ) {
   define_orientation_variables(orientation)
 
@@ -297,19 +299,15 @@ compute_slabs = function(data, scales, x_trans, na.rm,
     x_trans$inverse(scales[[x]]$dimension())
   }
 
-  # if a limits function was provided, we also want to account
-  # for the limits suggested by that function based on the data
-  # these will adjust min_limits
-  if (!is.null(limits_function)) {
-    limits_function = as_function(limits_function)
-    limits_args[["trans"]] = x_trans
-    limits_fun = function(df) do.call(limits_function, c(list(quote(df)), limits_args))
-    l_data = summarise_by(data, c("group", y), limits_fun)
-    min_limits = c(
-      na_(min, l_data$.lower, min_limits[[1]]),
-      na_(max, l_data$.upper, min_limits[[2]])
-    )
-  }
+  # we also want to account for the limits suggested by compute_limits()
+  # based on the data; these will adjust min_limits
+  limits_args[["trans"]] = x_trans
+  limits_fun = function(df) do.call(self$compute_limits, c(list(quote(df)), limits_args))
+  l_data = summarise_by(data, c("group", y), limits_fun)
+  min_limits = c(
+    na_(min, l_data$.lower, min_limits[[1]]),
+    na_(max, l_data$.upper, min_limits[[2]])
+  )
 
   limits = c(
     na_(max, min_limits[[1]], max_limits[[1]]),
@@ -344,7 +342,7 @@ compute_slabs = function(data, scales, x_trans, na.rm,
 }
 
 
-compute_intervals = function(data, scales, x_trans, na.rm,
+compute_intervals_ = function(self, data, scales, x_trans, na.rm,
   orientation, interval_function, interval_args, point_interval, .width
 ) {
   define_orientation_variables(orientation)

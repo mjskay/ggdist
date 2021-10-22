@@ -48,7 +48,8 @@ defaults = function(x, defaults) {
   if (length(deprecated_args) > 0) {
     stop0(
       "\nIn ", fun, "(): The `", deprecated_args[[1]], "` argument is deprecated.\n",
-      message
+      message,
+      "See help(\"ggdist-deprecated\").\n"
     )
   }
 }
