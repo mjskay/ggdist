@@ -358,3 +358,6 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
 #' @keywords internal
 #' @name ggdist-ggproto
 NULL
+
+# from ggplot2:::ggproto_formals
+ggproto_formals = function(x) formals(environment(x)$f)
