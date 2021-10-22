@@ -261,9 +261,9 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 # (in compute_slab)
 #' @importFrom stats na.omit
 na_ = function(m_, ...) {
-  values = na.omit(c(...))
-  if (length(values) == 0) NA
-  else m_(values)
+  values = c(...)
+  if (all(is.na(values))) NA
+  else m_(values, na.rm = TRUE)
 }
 
 
