@@ -94,7 +94,7 @@ stat_slabinterval = function(
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
-  .Deprecated_arguments(c("limits_function"), ...)
+  .Deprecated_arguments(c("limits_function", "limits_args"), ...)
 
   layer(
     data = data,
