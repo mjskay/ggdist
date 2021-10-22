@@ -20,7 +20,8 @@ args_from_aes = function(args = list(), ...) {
   c(args_from_dots, args)
 }
 
-compute_limits_dist = function(self, data, trans = scales::identity_trans(), p_limits = c(NA, NA), ...) {
+compute_limits_dist = function(self, data, trans, p_limits = c(NA, NA), ...) {
+
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.lower = NA, .upper = NA))
@@ -324,7 +325,6 @@ stat_dist_slabinterval = function(
 
       orientation = orientation,
 
-      limits_args = list(),
       limits = limits,
 
       slab_function = dist_slab_function,
@@ -398,10 +398,6 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     params$orientation = get_orientation(params$flipped_aes)
 
     params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
-
-    params$limits_args = list(
-      p_limits = params$p_limits %||% self$default_params$p_limits
-    )
 
     params$slab_args = list(
       slab_type = params$slab_type %||% self$default_params$slab_type,

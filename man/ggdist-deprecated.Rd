@@ -16,6 +16,9 @@ function to compute limits of the slab in \code{stat_slabinterval()} and its
 derived stats. This function is really an internal function only needed by
 subclasses of the base class, yet added a lot of noise to the documentation,
 so it was replaced with \code{AbstractStatSlabInterval$compute_limits()}.
+\item The \code{limits_args} argument: stat parameters are now passed through to
+the \code{...} arguments to \code{AbstractStatSlabInterval$compute_limits()}, use
+these instead.
 }
 }
 

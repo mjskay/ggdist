@@ -11,7 +11,6 @@ stat_slabinterval(
   position = "identity",
   ...,
   orientation = NA,
-  limits_args = list(),
   limits = NULL,
   slab_function = NULL,
   slab_args = list(),
@@ -68,8 +67,6 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 \code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
-
-\item{limits_args}{Additional arguments passed to \code{limits_function}}
 
 \item{limits}{Limits for \code{slab_function}, as a vector of length two. These limits are combined with those
 computed by the \code{limits_function} as well as the limits defined by the scales of the plot to determine the
