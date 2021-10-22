@@ -264,7 +264,6 @@ stat_sample_slabinterval = function(
 
       orientation = orientation,
 
-      limits_function = NULL,
       limits_args = list(),
       limits = limits,
 

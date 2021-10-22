@@ -20,8 +20,8 @@ args_from_aes = function(args = list(), ...) {
   c(args_from_dots, args)
 }
 
-dist_limits_function = function(df, p_limits = c(NA, NA), trans = scales::identity_trans(), ...) {
-  pmap_dfr_(df, function(dist, ...) {
+compute_limits_dist = function(self, data, trans = scales::identity_trans(), p_limits = c(NA, NA), ...) {
+  pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.lower = NA, .upper = NA))
     }
@@ -324,7 +324,6 @@ stat_dist_slabinterval = function(
 
       orientation = orientation,
 
-      limits_function = dist_limits_function,
       limits_args = list(),
       limits = limits,
 
@@ -384,7 +383,6 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     p_limits = c(NA, NA),
     outline_bars = FALSE,
 
-    limits_function = dist_limits_function,
     slab_function = dist_slab_function,
     interval_function = dist_interval_function
   ), StatSlabinterval$default_params),
@@ -457,7 +455,9 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     }
 
     data
-  }
+  },
+
+  compute_limits = compute_limits_dist
 )
 
 

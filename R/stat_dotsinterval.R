@@ -195,8 +195,6 @@ stat_dist_dotsinterval = function(
     params = list(
       quantiles = quantiles,
 
-      limits_function = NULL,
-
       slab_function = dots_dist_slab_function,
       slab_args = list(),
 
@@ -218,7 +216,6 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   default_params = defaults(list(
     quantiles = 100,
 
-    limits_function = NULL,
     slab_function = dots_dist_slab_function,
     interval_function = dist_interval_function
   ), StatDistSlabinterval$default_params),

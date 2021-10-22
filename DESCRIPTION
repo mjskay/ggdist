@@ -66,6 +66,7 @@ Collate:
     "curve_interval.R"
     "cut_cdf_qi.R"
     "data.R"
+    "deprecated.R"
     "distributions.R"
     "draw_key_slabinterval.R"
     "geom.R"
