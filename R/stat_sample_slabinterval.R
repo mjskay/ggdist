@@ -265,12 +265,8 @@ stat_sample_slabinterval = function(
       outline_bars = outline_bars,
 
       orientation = orientation,
-
       limits = limits,
-
-      slab_args = list(),
       n = n,
-
       interval_function = interval_function,
       interval_args = interval_args,
       point_interval = point_interval,
@@ -305,20 +301,6 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
 
     point_interval = median_qi
   ), StatSlabinterval$default_params),
-
-  setup_params = function(self, data, params) {
-    params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
-
-    params$slab_args = list(
-      slab_type = params$slab_type %||% self$default_params$slab_type,
-      adjust = params$adjust %||% self$default_params$adjust,
-      trim = params$trim %||% self$default_params$trim,
-      breaks = params$breaks %||% self$default_params$breaks,
-      outline_bars = params$outline_bars %||% self$default_params$outline_bars
-    )
-
-    params
-  },
 
   compute_slab = compute_slab_sample
 )

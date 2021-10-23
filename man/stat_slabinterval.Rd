@@ -12,7 +12,6 @@ stat_slabinterval(
   ...,
   orientation = NA,
   limits = NULL,
-  slab_args = list(),
   n = 501,
   interval_function = NULL,
   interval_args = list(),
@@ -72,8 +71,6 @@ computed automatically for the slab as well as the limits defined by the scales 
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
 \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
-
-\item{slab_args}{Additional arguments passed to \code{limits_function}}
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
 

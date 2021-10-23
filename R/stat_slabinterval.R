@@ -23,7 +23,6 @@
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0.
-#' @param slab_args Additional arguments passed to `limits_function`
 #' @param n Number of points at which to evaluate the function that defines the slab.
 #' @param interval_function Custom function for generating intervals (for most common use cases the `point_interval`
 #' argument will be easier to use). This function takes a data frame of aesthetics and a `.width` parameter (a vector
@@ -68,10 +67,7 @@ stat_slabinterval = function(
   ...,
 
   orientation = NA,
-
   limits = NULL,
-
-  slab_args = list(),
   n = 501,
 
   interval_function = NULL,
@@ -87,7 +83,7 @@ stat_slabinterval = function(
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
-  .Deprecated_arguments(c("limits_function", "limits_args"), ...)
+  .Deprecated_arguments(c("limits_function", "limits_args", "slab_function", "slab_args"), ...)
 
   layer(
     data = data,
@@ -101,10 +97,7 @@ stat_slabinterval = function(
 
     params = list(
       orientation = orientation,
-
       limits = limits,
-
-      slab_args = slab_args,
       n = n,
 
       interval_function = interval_function,
@@ -136,12 +129,8 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
   default_params = list(
     orientation = NA,
-
     limits = NULL,
-
-    slab_args = list(),
     n = 501,
-
     interval_function = NULL,
     interval_args = list(),
     point_interval = NULL,
@@ -202,10 +191,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
   compute_panel = function(self, data, scales,
     orientation = self$default_params$orientation,
-
     limits = self$default_params$limits,
-
-    slab_args = self$default_params$slab_args,
     n = self$default_params$n,
 
     interval_function = self$default_params$interval_function,
@@ -225,7 +211,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     data = ggplot2::remove_missing(data, na.rm, c(x, y), name = "stat_slabinterval")
 
     # figure out coordinate transformation
-    x_trans = if (is.null(scales[[x]]) || scales[[x]]$is_discrete()) {
+    trans = if (is.null(scales[[x]]) || scales[[x]]$is_discrete()) {
       scales::identity_trans()
     } else {
       scales[[x]]$trans
@@ -233,14 +219,16 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
     # SLABS
     s_data = if (show_slab) {
-      compute_slabs_(self, data, scales, x_trans, na.rm,
-        orientation, limits, slab_args, n, ...
+      compute_slabs_(self, data, scales, trans,
+        orientation = orientation, limits = limits, n = n,
+        na.rm = na.rm,
+        ...
       )
     }
 
     # INTERVALS
     i_data = if (show_interval) {
-      compute_intervals_(self, data, scales, x_trans, na.rm,
+      compute_intervals_(self, data, scales, trans, na.rm,
         orientation, interval_function, interval_args, point_interval, .width
       )
     }
@@ -286,8 +274,9 @@ na_ = function(m_, ...) {
 }
 
 
-compute_slabs_ = function(self, data, scales, x_trans, na.rm,
-  orientation, limits, slab_args, n, ...
+compute_slabs_ = function(self, data, scales, trans,
+  orientation, limits, n,
+  ...
 ) {
   define_orientation_variables(orientation)
 
@@ -303,7 +292,7 @@ compute_slabs_ = function(self, data, scales, x_trans, na.rm,
     if (is.null(scales[[x]]$limits)) {
       max_limits = c(NA, NA)
     } else{
-      max_limits = x_trans$inverse(scales[[x]]$limits)
+      max_limits = trans$inverse(scales[[x]]$limits)
     }
   }
 
@@ -313,13 +302,13 @@ compute_slabs_ = function(self, data, scales, x_trans, na.rm,
   min_limits = if (is.null(scales[[x]])) {
     c(NA, NA)
   } else {
-    x_trans$inverse(scales[[x]]$dimension())
+    trans$inverse(scales[[x]]$dimension())
   }
 
   # we also want to account for the limits suggested by compute_limits()
   # based on the data; these will adjust min_limits
   l_data = summarise_by(data, c("group", y), self$compute_limits,
-    trans = x_trans, ...
+    trans = trans, ...
   )
   min_limits = c(
     na_(min, l_data$.lower, min_limits[[1]]),
@@ -337,20 +326,17 @@ compute_slabs_ = function(self, data, scales, x_trans, na.rm,
   # SLABS
   # now, figure out the points at which the slab functions should be evaluated
   # we set up the grid in the transformed space
-  input = x_trans$inverse(seq(x_trans$transform(limits[[1]]), x_trans$transform(limits[[2]]), length.out = n))
-  slab_args[["input"]] = input
-  slab_args[["limits"]] = limits
-  slab_args[["n"]] = n
-  slab_args[["orientation"]] = orientation
-  slab_args[["trans"]] = x_trans
-  slab_args[["na.rm"]] = na.rm
+  input = trans$inverse(seq(trans$transform(limits[[1]]), trans$transform(limits[[2]]), length.out = n))
 
   # evaluate the slab function
-  slab_fun = function(df) do.call(self$compute_slab, c(list(quote(df)), slab_args))
-  s_data = summarise_by(data, c("group", y), slab_fun)
+  s_data = summarise_by(data, c("group", y), self$compute_slab,
+    input = input, trans = trans,
+    limits = limits, n = n, orientation = orientation,
+    ...
+  )
 
   names(s_data)[names(s_data) == ".value"] = "f"
-  s_data[[x]] = x_trans$transform(s_data$.input)
+  s_data[[x]] = trans$transform(s_data$.input)
   s_data$.input = NULL
 
   if (nrow(s_data) > 0) s_data$datatype = "slab"
@@ -358,7 +344,7 @@ compute_slabs_ = function(self, data, scales, x_trans, na.rm,
 }
 
 
-compute_intervals_ = function(self, data, scales, x_trans, na.rm,
+compute_intervals_ = function(self, data, scales, trans, na.rm,
   orientation, interval_function, interval_args, point_interval, .width
 ) {
   define_orientation_variables(orientation)
@@ -382,7 +368,7 @@ compute_intervals_ = function(self, data, scales, x_trans, na.rm,
     }
   } else {
     interval_args[["orientation"]] = orientation
-    interval_args[["trans"]] = x_trans
+    interval_args[["trans"]] = trans
     interval_function = as_function(interval_function)
     interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
   }
