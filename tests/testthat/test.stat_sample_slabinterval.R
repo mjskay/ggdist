@@ -22,8 +22,10 @@ test_that("vanilla stat_slabinterval works", {
     ggplot() +
     scale_slab_alpha_continuous(range = c(0,1))
 
+  # this should be an essentially blank chart since the slab and interval
+  # functions will not be defined
   vdiffr::expect_doppelganger("vanilla stat_slabinterval",
-    p + stat_slabinterval(aes(x = dist, y = x), n = 10, slab_function = sample_slab_function)
+    p + stat_slabinterval(aes(x = dist, y = x), n = 10)
   )
 })
 

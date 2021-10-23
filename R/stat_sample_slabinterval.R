@@ -47,9 +47,11 @@ sample_density = function(x, ...) {
 #' @importFrom rlang missing_arg
 #' @importFrom stats ecdf density
 #' @importFrom graphics hist
-sample_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 501, orientation = NA,
-  adjust = 1, trim = TRUE, breaks = "Sturges", outline_bars = FALSE, trans = scales::identity_trans(), ...
+compute_slab_sample = function(
+  data, input, trans,
+  slab_type = "pdf", limits = NULL, n = 501, orientation = NA,
+  adjust = 1, trim = TRUE, breaks = "Sturges", outline_bars = FALSE,
+  ...
 ) {
   x = switch(orientation,
     y = ,
@@ -64,7 +66,7 @@ sample_slab_function = function(
     # when using a histogram slab, that becomes the density function value
     # TODO: this is a hack for now until we make it so that density estimators
     # can be swapped out (which would be a better solution)
-    h = hist(df[[x]], breaks = breaks, plot = FALSE)
+    h = hist(data[[x]], breaks = breaks, plot = FALSE)
     input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
     input_2 = h$breaks[-1]                 # second edge of bin
 
@@ -87,7 +89,7 @@ sample_slab_function = function(
     # all other slab types use the density function as the pdf
     cut = if (trim) 0 else 3
     # calculate on the transformed scale to ensure density is correct
-    d = sample_density(df[[x]], n = n, adjust = adjust, cut = cut)
+    d = sample_density(data[[x]], n = n, adjust = adjust, cut = cut)
     data.frame(
       .input = trans$inverse(d$x),
       pdf = d$y
@@ -96,7 +98,7 @@ sample_slab_function = function(
 
   # calculate cdf
   trans_input = trans$transform(slab_df$.input)
-  cdf_fun = weighted_ecdf(df[[x]])
+  cdf_fun = weighted_ecdf(data[[x]])
   slab_df[["cdf"]] = cdf_fun(trans_input)
 
   if (slab_type == "cdf" || slab_type == "ccdf") {
@@ -129,7 +131,7 @@ sample_slab_function = function(
     ccdf = 1 - slab_df$cdf
   )
 
-  slab_df$n = nrow(df)
+  slab_df$n = nrow(data)
   slab_df
 }
 
@@ -266,7 +268,6 @@ stat_sample_slabinterval = function(
 
       limits = limits,
 
-      slab_function = sample_slab_function,
       slab_args = list(),
       n = n,
 
@@ -302,7 +303,6 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
     breaks = "Sturges",
     outline_bars = FALSE,
 
-    slab_function = sample_slab_function,
     point_interval = median_qi
   ), StatSlabinterval$default_params),
 
@@ -318,7 +318,9 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
     )
 
     params
-  }
+  },
+
+  compute_slab = compute_slab_sample
 )
 
 

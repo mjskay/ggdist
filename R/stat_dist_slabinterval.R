@@ -53,10 +53,12 @@ compute_limits_dist = function(self, data, trans, p_limits = c(NA, NA), ...) {
 }
 
 #' @importFrom dplyr lag
-dist_slab_function = function(
-  df, input, slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE, trans = scales::identity_trans(), ...
+compute_slab_dist = function(
+  data, input, trans,
+  slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE,
+  ...
 ) {
-  pmap_dfr_(df, function(dist, ...) {
+  pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
     }
@@ -226,7 +228,7 @@ dist_interval_function = function(df, .width, trans, ...) {
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-#' will not be wider than these (but may be narrower).Use `NA` to leave a limit alone; e.g.
+#' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
 #' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
@@ -327,7 +329,6 @@ stat_dist_slabinterval = function(
 
       limits = limits,
 
-      slab_function = dist_slab_function,
       slab_args = list(),
       n = n,
 
@@ -383,7 +384,6 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     p_limits = c(NA, NA),
     outline_bars = FALSE,
 
-    slab_function = dist_slab_function,
     interval_function = dist_interval_function
   ), StatSlabinterval$default_params),
 
@@ -453,7 +453,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     data
   },
 
-  compute_limits = compute_limits_dist
+  compute_limits = compute_limits_dist,
+  compute_slab = compute_slab_dist
 )
 
 

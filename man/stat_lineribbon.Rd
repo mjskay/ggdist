@@ -103,7 +103,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{fun.args}{Deprecated. Use \code{interval_args} instead.}
 
-\item{n}{Number of points at which to evaluate \code{slab_function}}
+\item{n}{Number of points at which to evaluate the function that defines the slab.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a combined line+uncertainty ribbon geometry which can

@@ -12,7 +12,6 @@ stat_slabinterval(
   ...,
   orientation = NA,
   limits = NULL,
-  slab_function = NULL,
   slab_args = list(),
   n = 501,
   interval_function = NULL,
@@ -68,22 +67,15 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
-\item{limits}{Limits for \code{slab_function}, as a vector of length two. These limits are combined with those
-computed by the \code{limits_function} as well as the limits defined by the scales of the plot to determine the
+\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
 \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
 
-\item{slab_function}{A function that takes a data frame of aesthetics and an \code{input} parameter (a vector
-of function inputs), and returns a data frame with
-columns \code{.input} (from the \code{input} vector) and \code{.value} (result of applying the function to
-each value of input). Given the results of \code{slab_function}, \code{.value} will be translated into the
-\code{f} aesthetic and \code{input} will be translated into either the \code{x} or \code{y} aesthetic
-automatically depending on the value of \code{orientation}.}
-
 \item{slab_args}{Additional arguments passed to \code{limits_function}}
 
-\item{n}{Number of points at which to evaluate \code{slab_function}}
+\item{n}{Number of points at which to evaluate the function that defines the slab.}
 
 \item{interval_function}{Custom function for generating intervals (for most common use cases the \code{point_interval}
 argument will be easier to use). This function takes a data frame of aesthetics and a \code{.width} parameter (a vector

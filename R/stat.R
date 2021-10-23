@@ -13,13 +13,15 @@ summarise_by = function(data, by = "group", fun, ...) {
     missing_names = setdiff(names(d), names(new_d))
 
     # add back in columns with only one value in them
-    for (col in missing_names) {
-      if (length(unique(d[[col]])) == 1) {
-        if (is.list(d[[col]])) {
-          # list columns must be wrapped
-          new_d[[col]] = list(d[[col]][[1]])
-        } else{
-          new_d[[col]] = d[[col]][[1]]
+    if (nrow(new_d) > 0) {
+      for (col in missing_names) {
+        if (length(unique(d[[col]])) == 1) {
+          if (is.list(d[[col]])) {
+            # list columns must be wrapped
+            new_d[[col]] = list(d[[col]][[1]])
+          } else{
+            new_d[[col]] = d[[col]][[1]]
+          }
         }
       }
     }

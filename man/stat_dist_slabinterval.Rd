@@ -154,11 +154,11 @@ opinion, backwards; but the base ggplot naming scheme is allowed for compatibili
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower).Use \code{NA} to leave a limit alone; e.g.
+will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
 \code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
 be determined by either \code{p_limits} or the scale settings.}
 
-\item{n}{Number of points at which to evaluate \code{slab_function}}
+\item{n}{Number of points at which to evaluate the function that defines the slab.}
 
 \item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
 
