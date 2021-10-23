@@ -17,13 +17,16 @@ derived stats. This function is really an internal function only needed by
 subclasses of the base class, yet added a lot of noise to the documentation,
 so it was replaced with \code{AbstractStatSlabInterval$compute_limits()}.
 \item The \code{limits_args} argument: extra stat parameters are now passed through to
-the \code{...} arguments to \code{AbstractStatSlabInterval$compute_limits()}, use
+the \code{...} arguments to \code{AbstractStatSlabInterval$compute_limits()}; use
 these instead.
 \item The \code{slab_function} argument: this was a parameter for determining the
 function to compute slabs in \code{stat_slabinterval()} and its
 derived stats. This function is really an internal function only needed by
 subclasses of the base class, yet added a lot of noise to the documentation,
 so it was replaced with \code{AbstractStatSlabInterval$compute_slab()}.
+\item The \code{slab_args} argument: extra stat parameters are now passed through to
+the \code{...} arguments to \code{AbstractStatSlabInterval$compute_slab()}; use
+these instead.
 }
 }
 

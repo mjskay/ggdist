@@ -329,7 +329,6 @@ stat_dist_slabinterval = function(
 
       limits = limits,
 
-      slab_args = list(),
       n = n,
 
       interval_function = dist_interval_function,
@@ -397,14 +396,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     )
     params$orientation = get_orientation(params$flipped_aes)
 
-    params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
-
-    params$slab_args = list(
-      slab_type = params$slab_type %||% self$default_params$slab_type,
-      outline_bars = params$outline_bars %||% self$default_params$outline_bars
-    )
-
-    params
+    ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
   },
 
   setup_data = function(self, data, params) {

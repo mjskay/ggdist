@@ -76,10 +76,10 @@ stat_dotsinterval = function(
   ...,
 
   quantiles = NA,
-
   point_interval = median_qi,
 
   na.rm = FALSE,
+
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
@@ -95,9 +95,6 @@ stat_dotsinterval = function(
 
     params = list(
       quantiles = quantiles,
-
-      slab_args = list(),
-
       point_interval = point_interval,
 
       na.rm = na.rm,
@@ -113,19 +110,8 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
 
   default_params = defaults(list(
     quantiles = NA,
-
     point_interval = median_qi
   ), StatSlabinterval$default_params),
-
-  setup_params = function(self, data, params) {
-    params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
-
-    params$slab_args = list(
-      quantiles = params$quantiles %||% self$default_params$quantiles
-    )
-
-    params
-  },
 
   compute_slab = compute_slab_dots_sample
 )
@@ -182,6 +168,7 @@ stat_dist_dotsinterval = function(
   quantiles = 100,
 
   na.rm = FALSE,
+
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
@@ -197,8 +184,6 @@ stat_dist_dotsinterval = function(
 
     params = list(
       quantiles = quantiles,
-
-      slab_args = list(),
 
       interval_function = dist_interval_function,
       interval_args = list(),
@@ -220,27 +205,6 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
 
     interval_function = dist_interval_function
   ), StatDistSlabinterval$default_params),
-
-  setup_params = function(self, data, params) {
-    params = defaults(params, self$default_params)
-
-    # detect orientation -- this must be done before calling up to StatSlabInterval
-    # since auto-detection here is different (main_is_orthogonal needs to be FALSE)
-    params$flipped_aes = get_flipped_aes(data, params,
-      main_is_orthogonal = FALSE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
-    )
-    params$orientation = get_orientation(params$flipped_aes)
-
-    # we use setup_params from StatSlabinterval instead of StatDistSlabinterval
-    # because StatDistSlabinterval does some limits calculations that are not relevant here
-    params = ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
-
-    params$slab_args = list(
-      quantiles = params$quantiles %||% self$default_params$quantiles
-    )
-
-    params
-  },
 
   compute_slab = compute_slab_dots_dist
 )
