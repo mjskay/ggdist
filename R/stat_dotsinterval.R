@@ -7,9 +7,10 @@
 # slab function for samples -------------------------
 
 #' @importFrom stats ppoints
-dots_sample_slab_function = function(
-  df, input, limits = NULL, quantiles = NA, orientation = NA,
-  trans = scales::identity_trans(), na.rm = FALSE, ...
+compute_slab_dots_sample = function(
+  data, input, trans,
+  quantiles = NA, orientation = NA, na.rm = FALSE,
+  ...
 ) {
   x = switch(orientation,
     y = ,
@@ -19,11 +20,11 @@ dots_sample_slab_function = function(
   )
 
   if (is.null(quantiles) || is.na(quantiles)) {
-    input = df[[x]]
+    input = data[[x]]
   } else {
     # ppoints() with a = 1/2 corresponds to quantile() with type = 5
-    # and ensures that if quantiles == length(df[[x]]) then input == df[[x]]
-    input = quantile(df[[x]], ppoints(quantiles, a = 1/2), type = 5, na.rm = na.rm)
+    # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
+    input = quantile(data[[x]], ppoints(quantiles, a = 1/2), type = 5, na.rm = na.rm)
   }
 
   data.frame(
@@ -37,10 +38,12 @@ dots_sample_slab_function = function(
 # slab functions for distributions -------------------------
 
 #' @importFrom stats ppoints
-dots_dist_slab_function = function(
-  df, input, quantiles = 100, trans = scales::identity_trans(), ...
+compute_slab_dots_dist = function(
+  data, input, trans,
+  quantiles = 100,
+  ...
 ) {
-  pmap_dfr_(df, function(dist, ...) {
+  pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
     }
@@ -93,7 +96,6 @@ stat_dotsinterval = function(
     params = list(
       quantiles = quantiles,
 
-      slab_function = dots_sample_slab_function,
       slab_args = list(),
 
       point_interval = point_interval,
@@ -112,7 +114,6 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
   default_params = defaults(list(
     quantiles = NA,
 
-    slab_function = dots_sample_slab_function,
     point_interval = median_qi
   ), StatSlabinterval$default_params),
 
@@ -124,7 +125,9 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
     )
 
     params
-  }
+  },
+
+  compute_slab = compute_slab_dots_sample
 )
 
 #' @export
@@ -195,7 +198,6 @@ stat_dist_dotsinterval = function(
     params = list(
       quantiles = quantiles,
 
-      slab_function = dots_dist_slab_function,
       slab_args = list(),
 
       interval_function = dist_interval_function,
@@ -216,7 +218,6 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   default_params = defaults(list(
     quantiles = 100,
 
-    slab_function = dots_dist_slab_function,
     interval_function = dist_interval_function
   ), StatDistSlabinterval$default_params),
 
@@ -239,7 +240,9 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
     )
 
     params
-  }
+  },
+
+  compute_slab = compute_slab_dots_dist
 )
 
 #' @export

@@ -18,19 +18,13 @@
 #' `stat_slabinterval` and [geom_slabinterval()]
 #' @param ...  Other arguments passed to [layer()]. They may also be arguments to the paired geom
 #' (e.g., [geom_pointinterval()])
-#' @param limits Limits for `slab_function`, as a vector of length two. These limits are combined with those
-#' computed by the `limits_function` as well as the limits defined by the scales of the plot to determine the
+#' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+#' computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0.
-#' @param slab_function A function that takes a data frame of aesthetics and an `input` parameter (a vector
-#' of function inputs), and returns a data frame with
-#' columns `.input` (from the `input` vector) and `.value` (result of applying the function to
-#' each value of input). Given the results of `slab_function`, `.value` will be translated into the
-#' `f` aesthetic and `input` will be translated into either the `x` or `y` aesthetic
-#' automatically depending on the value of `orientation`.
 #' @param slab_args Additional arguments passed to `limits_function`
-#' @param n Number of points at which to evaluate `slab_function`
+#' @param n Number of points at which to evaluate the function that defines the slab.
 #' @param interval_function Custom function for generating intervals (for most common use cases the `point_interval`
 #' argument will be easier to use). This function takes a data frame of aesthetics and a `.width` parameter (a vector
 #' of interval widths), and returns a data frame with
@@ -77,7 +71,6 @@ stat_slabinterval = function(
 
   limits = NULL,
 
-  slab_function = NULL,
   slab_args = list(),
   n = 501,
 
@@ -111,7 +104,6 @@ stat_slabinterval = function(
 
       limits = limits,
 
-      slab_function = slab_function,
       slab_args = slab_args,
       n = n,
 
@@ -147,7 +139,6 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
     limits = NULL,
 
-    slab_function = NULL,
     slab_args = list(),
     n = 501,
 
@@ -196,12 +187,24 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     data.frame(.lower = NA, .upper = NA)
   },
 
+  # Compute the function that defines the slab. That takes a data frame of
+  # aesthetic values and a vector of function inputs and returns a data frame
+  # with columns `.input` (from the `input` vector) and `.value` (the result of
+  # applying the function to each value of input).
+  # @param data The data frame of aesthetic values
+  # @param input Input values for the function (may be ignored in some cases
+  # where compute_slab() needs to determine its own input values)
+  # @param trans the scale transformation object applied to the coordinate space
+  # @param ... other stat parameters created by children of stat_slabinterval
+  compute_slab = function(self, data, input, trans, ...) {
+    data.frame()
+  },
+
   compute_panel = function(self, data, scales,
     orientation = self$default_params$orientation,
 
     limits = self$default_params$limits,
 
-    slab_function = self$default_params$slab_function,
     slab_args = self$default_params$slab_args,
     n = self$default_params$n,
 
@@ -229,9 +232,9 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     }
 
     # SLABS
-    s_data = if (show_slab && !is.null(slab_function)) {
+    s_data = if (show_slab) {
       compute_slabs_(self, data, scales, x_trans, na.rm,
-        orientation, limits, slab_function, slab_args, n, ...
+        orientation, limits, slab_args, n, ...
       )
     }
 
@@ -245,8 +248,10 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     results = bind_rows(s_data, i_data)
     # must ensure there's an f and a .width aesthetic produced even if we don't draw
     # the slab or the interval, otherwise the default aesthetic mappings can break.
-    results$f = results[["f"]] %||% NA
-    results$.width = results[[".width"]] %||% NA
+    if (nrow(results) > 0) {
+      results$f = results[["f"]] %||% NA
+      results$.width = results[[".width"]] %||% NA
+    }
     results
   },
 
@@ -282,7 +287,7 @@ na_ = function(m_, ...) {
 
 
 compute_slabs_ = function(self, data, scales, x_trans, na.rm,
-  orientation, limits, slab_function, slab_args, n, ...
+  orientation, limits, slab_args, n, ...
 ) {
   define_orientation_variables(orientation)
 
@@ -341,15 +346,14 @@ compute_slabs_ = function(self, data, scales, x_trans, na.rm,
   slab_args[["na.rm"]] = na.rm
 
   # evaluate the slab function
-  slab_function = as_function(slab_function)
-  slab_fun = function(df) do.call(slab_function, c(list(quote(df)), slab_args))
+  slab_fun = function(df) do.call(self$compute_slab, c(list(quote(df)), slab_args))
   s_data = summarise_by(data, c("group", y), slab_fun)
 
   names(s_data)[names(s_data) == ".value"] = "f"
   s_data[[x]] = x_trans$transform(s_data$.input)
   s_data$.input = NULL
 
-  s_data$datatype = "slab"
+  if (nrow(s_data) > 0) s_data$datatype = "slab"
   s_data
 }
 
