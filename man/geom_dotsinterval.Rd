@@ -217,9 +217,9 @@ of quantiles from the distribution (for \code{stat_dist_}). The value of \code{q
 of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, etc). This function should take in a vector of value, and should obey the
+\code{mean_qi}, etc). This function should take in a vector of values, and should obey the
 \code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
-a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
+a vector with \code{.simple_names = TRUE} it should return a data frame with variables \code{.value}, \code{.lower},
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}

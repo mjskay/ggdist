@@ -185,7 +185,6 @@ stat_dist_dotsinterval = function(
     params = list(
       quantiles = quantiles,
 
-      interval_args = list(),
       point_interval = NULL,
 
       na.rm = na.rm,

@@ -36,6 +36,9 @@
 #' derived stats. This function is really an internal function only needed by
 #' subclasses of the base class, yet added a lot of noise to the documentation,
 #' so it was replaced with `AbstractStatSlabInterval$compute_interval()`.
+#' - The `interval_args` and `fun.args` arguments: to pass extra arguments to
+#' a `point_interval` replace the value of the `point_interval` argument with
+#' a simple wrapper; e.g. `stat_halfeye(point_interval = \(...) point_interval(..., extra_arg = XXX))`
 #'
 #' @format NULL
 #' @usage NULL

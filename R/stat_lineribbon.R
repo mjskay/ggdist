@@ -53,7 +53,6 @@ stat_lineribbon = function(
   position = "identity",
   ...,
 
-  interval_args = list(),
   point_interval = median_qi,
   .width = c(.50, .80, .95),
 
@@ -63,10 +62,8 @@ stat_lineribbon = function(
   inherit.aes = TRUE,
 
   #deprecated arguments
-  .prob,
-  fun.args
+  .prob
 ) {
-  interval_args = .Deprecated_argument_alias(interval_args, fun.args)
   .width = .Deprecated_argument_alias(.width, .prob)
 
   layer(
@@ -78,7 +75,6 @@ stat_lineribbon = function(
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
 
@@ -150,7 +146,6 @@ stat_dist_lineribbon = function(
 
       n = n,
 
-      interval_args = list(),
       point_interval = NULL,
       .width = .width,
 

@@ -18,7 +18,6 @@
 #' @inheritParams stat_sample_slabinterval
 #' @inheritParams geom_slabinterval
 #' @param .prob Deprecated. Use `.width` instead.
-#' @param fun.args Deprecated. Use `interval_args` instead.
 #' @return A [ggplot2::Stat] representing a point+multiple uncertainty interval geometry which can
 #' be added to a [ggplot()] object.
 #' @seealso See [geom_pointinterval()] for the geom versions, intended
@@ -59,7 +58,6 @@ stat_pointinterval = function(
 
   orientation = NA,
 
-  interval_args = list(),
   point_interval = median_qi,
   .width = c(.66, .95),
 
@@ -71,10 +69,8 @@ stat_pointinterval = function(
   inherit.aes = TRUE,
 
   #deprecated arguments
-  .prob,
-  fun.args
+  .prob
 ) {
-  interval_args = .Deprecated_argument_alias(interval_args, fun.args)
   .width = .Deprecated_argument_alias(.width, .prob)
 
   layer(
@@ -88,7 +84,6 @@ stat_pointinterval = function(
     params = list(
       orientation = orientation,
 
-      interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
 

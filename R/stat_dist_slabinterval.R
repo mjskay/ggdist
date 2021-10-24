@@ -331,7 +331,6 @@ stat_dist_slabinterval = function(
 
       n = n,
 
-      interval_args = list(),
       point_interval = NULL,
       .width = .width,
 

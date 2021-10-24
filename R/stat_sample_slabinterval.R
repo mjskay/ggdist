@@ -237,7 +237,6 @@ stat_sample_slabinterval = function(
   limits = NULL,
   n = 501,
 
-  interval_args = list(),
   point_interval = median_qi,
   .width = c(.66, .95),
 
@@ -270,7 +269,6 @@ stat_sample_slabinterval = function(
       limits = limits,
       n = n,
 
-      interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
 
