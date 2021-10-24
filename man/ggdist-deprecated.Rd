@@ -27,6 +27,14 @@ so it was replaced with \code{AbstractStatSlabInterval$compute_slab()}.
 \item The \code{slab_args} argument: extra stat parameters are now passed through to
 the \code{...} arguments to \code{AbstractStatSlabInterval$compute_slab()}; use
 these instead.
+\item The \code{interval_function} and \code{fun.data} arguments: these were parameters for determining the
+function to compute intervals in \code{stat_slabinterval()} and its
+derived stats. This function is really an internal function only needed by
+subclasses of the base class, yet added a lot of noise to the documentation,
+so it was replaced with \code{AbstractStatSlabInterval$compute_interval()}.
+\item The \code{interval_args} and \code{fun.args} arguments: to pass extra arguments to
+a \code{point_interval} replace the value of the \code{point_interval} argument with
+a simple wrapper; e.g. \verb{stat_halfeye(point_interval = \\(...) point_interval(..., extra_arg = XXX))}
 }
 }
 

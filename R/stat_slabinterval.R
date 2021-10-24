@@ -24,7 +24,6 @@
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0.
 #' @param n Number of points at which to evaluate the function that defines the slab.
-#' @param interval_args Additional arguments passed to `point_interval`.
 #' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
 #'   `mean_qi`, etc). This function should take in a vector of values, and should obey the
 #'   `.width` and `.simple_names` parameters of [point_interval()] functions, such that when given
@@ -65,7 +64,6 @@ stat_slabinterval = function(
   limits = NULL,
   n = 501,
 
-  interval_args = list(),
   point_interval = NULL,
   .width = c(.66, .95),
 
@@ -80,7 +78,7 @@ stat_slabinterval = function(
   .Deprecated_arguments(c(
     "limits_function", "limits_args",
     "slab_function", "slab_args",
-    "interval_function", "fun.data"
+    "interval_function", "fun.data", "interval_args", "fun.args"
   ), ...)
 
   layer(
@@ -99,7 +97,6 @@ stat_slabinterval = function(
       limits = limits,
       n = n,
 
-      interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
 
@@ -131,7 +128,6 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     limits = NULL,
     n = 501,
 
-    interval_args = list(),
     point_interval = NULL,
     .width = c(.66, .95),
 
@@ -211,10 +207,10 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
   compute_panel = function(self, data, scales,
     orientation = self$default_params$orientation,
+
     limits = self$default_params$limits,
     n = self$default_params$n,
 
-    interval_args = self$default_params$interval_args,
     point_interval = self$default_params$point_interval,
     .width = self$default_params$.width,
 
@@ -238,7 +234,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
     # SLABS
     s_data = if (show_slab) {
-      compute_slabs_(self, data, scales, trans,
+      compute_panel_slabs(self, data, scales, trans,
         orientation = orientation, limits = limits, n = n,
         na.rm = na.rm,
         ...
@@ -247,8 +243,10 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
     # INTERVALS
     i_data = if (show_interval) {
-      compute_intervals_(self, data, scales, trans, na.rm,
-        orientation, interval_args, point_interval, .width
+      compute_panel_intervals(self, data, scales, trans,
+        orientation = orientation, point_interval = point_interval, .width = .width,
+        na.rm = na.rm,
+        ...
       )
     }
 
@@ -262,10 +260,10 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     results
   },
 
+  # Based on ggplot2::Stat$parameters, except we always take parameters
+  # from compute_panel(), because compute_group() is not used by this stat,
+  # and we also take extra_params by default
   parameters = function(self, extra = TRUE) {
-    # Based on ggplot2::Stat$parameters, except we always take parameters
-    # from compute_panel(), because compute_group() is not used by this stat,
-    # and we do take extra_params by default
     panel_args = names(ggproto_formals(self$compute_panel))
 
     # Remove arguments of defaults
@@ -293,7 +291,8 @@ na_ = function(m_, ...) {
 }
 
 
-compute_slabs_ = function(self, data, scales, trans,
+compute_panel_slabs = function(
+  self, data, scales, trans,
   orientation, limits, n,
   ...
 ) {
@@ -343,7 +342,7 @@ compute_slabs_ = function(self, data, scales, trans,
 
 
   # SLABS
-  # now, figure out the points at which the slab functions should be evaluated
+  # now, figure out the points at which values the slab functions should be evaluated
   # we set up the grid in the transformed space
   input = trans$inverse(seq(trans$transform(limits[[1]]), trans$transform(limits[[2]]), length.out = n))
 
@@ -363,18 +362,22 @@ compute_slabs_ = function(self, data, scales, trans,
 }
 
 
-compute_intervals_ = function(self, data, scales, trans, na.rm,
-  orientation, interval_args, point_interval, .width
+compute_panel_intervals = function(
+  self, data, scales, trans,
+  orientation, point_interval, .width,
+  ...
 ) {
   define_orientation_variables(orientation)
 
-  interval_args[[".width"]] = .width
-  interval_args[["orientation"]] = orientation
-  interval_args[["trans"]] = trans
-  interval_args[["point_interval"]] = point_interval
-  interval_fun = function(df) do.call(self$compute_interval, c(list(quote(df)), interval_args))
+  if (!is.null(point_interval)) {
+    point_interval = as_function(point_interval)
+  }
 
-  i_data = summarise_by(data, c("group", y), interval_fun)
+  i_data = summarise_by(data, c("group", y), self$compute_interval,
+    trans = trans,
+    orientation = orientation, point_interval = point_interval, .width = .width,
+    ...
+  )
 
   i_data[[x]] = i_data$.value
   i_data$.value = NULL

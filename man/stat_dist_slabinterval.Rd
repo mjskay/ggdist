@@ -160,7 +160,8 @@ be determined by either \code{p_limits} or the scale settings.}
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
 
-\item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of desired
+interval widths in \emph{\link{0,1}}.}
 
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
 

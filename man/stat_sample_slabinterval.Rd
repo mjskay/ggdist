@@ -17,16 +17,14 @@ stat_sample_slabinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
+  orientation = NA,
   slab_type = c("pdf", "cdf", "ccdf", "histogram"),
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
   outline_bars = FALSE,
-  orientation = NA,
   limits = NULL,
   n = 501,
-  interval_function = NULL,
-  interval_args = list(),
   point_interval = median_qi,
   .width = c(0.66, 0.95),
   na.rm = FALSE,
@@ -112,6 +110,18 @@ a call to a position adjustment function.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
 (e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
+
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.}
 
@@ -128,18 +138,6 @@ input data? Default \code{TRUE}.}
 the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE} (the default), the outline
 is drawn only along the tops of the bars; if \code{TRUE}, outlines in between bars are also drawn.}
 
-\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
-
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
@@ -148,25 +146,16 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
 
-\item{interval_function}{Custom function for generating intervals (for most common use cases the \code{point_interval}
-argument will be easier to use). This function takes a data frame of aesthetics and a \code{.width} parameter (a vector
-of interval widths), and returns a data frame with
-columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
-(endpoints of the intervals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
-\code{y}-based aesthetics depending on the value of \code{orientation}. If \code{interval_function} is \code{NULL},
-\code{point_interval} is used instead.}
-
-\item{interval_args}{Additional arguments passed to \code{interval_function} or \code{point_interval}.}
-
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, etc). This function should take in a vector of value, and should obey the
+\code{mean_qi}, etc). This function should take in a vector of values, and should obey the
 \code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
-a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
+a vector with \code{.simple_names = TRUE} it should return a data frame with variables \code{.value}, \code{.lower},
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 
-\item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of desired
+interval widths in \emph{\link{0,1}}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

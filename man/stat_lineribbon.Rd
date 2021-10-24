@@ -11,16 +11,12 @@ stat_lineribbon(
   geom = "lineribbon",
   position = "identity",
   ...,
-  interval_function = NULL,
-  interval_args = list(),
   point_interval = median_qi,
   .width = c(0.5, 0.8, 0.95),
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  .prob,
-  fun.data,
-  fun.args
+  .prob
 )
 
 stat_dist_lineribbon(
@@ -66,25 +62,16 @@ a call to a position adjustment function.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
 (e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
-\item{interval_function}{Custom function for generating intervals (for most common use cases the \code{point_interval}
-argument will be easier to use). This function takes a data frame of aesthetics and a \code{.width} parameter (a vector
-of interval widths), and returns a data frame with
-columns \code{.width} (from the \code{.width} vector), \code{.value} (point summary) and \code{.lower} and \code{.upper}
-(endpoints of the intervals, given the \code{.width}). Output will be converted to the appropriate \code{x}- or
-\code{y}-based aesthetics depending on the value of \code{orientation}. If \code{interval_function} is \code{NULL},
-\code{point_interval} is used instead.}
-
-\item{interval_args}{Additional arguments passed to \code{interval_function} or \code{point_interval}.}
-
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, etc). This function should take in a vector of value, and should obey the
+\code{mean_qi}, etc). This function should take in a vector of values, and should obey the
 \code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
-a vector with \code{.simple_names = TRUE} should return a data frame with variables \code{.value}, \code{.lower},
+a vector with \code{.simple_names = TRUE} it should return a data frame with variables \code{.value}, \code{.lower},
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 
-\item{.width}{The \code{.width} argument passed to \code{interval_function} or \code{point_interval}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of desired
+interval widths in \emph{\link{0,1}}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
@@ -98,10 +85,6 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{.prob}{Deprecated. Use \code{.width} instead.}
-
-\item{fun.data}{Deprecated. Use \code{point_interval} or \code{interval_function} instead.}
-
-\item{fun.args}{Deprecated. Use \code{interval_args} instead.}
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
 }
