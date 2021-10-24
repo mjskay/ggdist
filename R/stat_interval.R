@@ -57,12 +57,14 @@ stat_interval = function(
   ...,
 
   orientation = NA,
-  interval_function = NULL,
+
   interval_args = list(),
   point_interval = median_qi,
   .width = c(.50, .80, .95),
+
   show_point = FALSE,
   show_slab = FALSE,
+
   na.rm = FALSE,
 
   show.legend = NA,
@@ -70,10 +72,8 @@ stat_interval = function(
 
   #deprecated arguments
   .prob,
-  fun.data,
   fun.args
 ) {
-  interval_function = .Deprecated_argument_alias(interval_function, fun.data)
   interval_args = .Deprecated_argument_alias(interval_args, fun.args)
   .width = .Deprecated_argument_alias(.width, .prob)
 
@@ -87,12 +87,14 @@ stat_interval = function(
     inherit.aes = inherit.aes,
     params = list(
       orientation = orientation,
-      interval_function = interval_function,
+
       interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
+
       show_point = show_point,
       show_slab = show_slab,
+
       na.rm = na.rm,
       ...
     )

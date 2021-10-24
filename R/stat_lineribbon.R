@@ -53,10 +53,10 @@ stat_lineribbon = function(
   position = "identity",
   ...,
 
-  interval_function = NULL,
   interval_args = list(),
   point_interval = median_qi,
   .width = c(.50, .80, .95),
+
   na.rm = FALSE,
 
   show.legend = NA,
@@ -64,10 +64,8 @@ stat_lineribbon = function(
 
   #deprecated arguments
   .prob,
-  fun.data,
   fun.args
 ) {
-  interval_function = .Deprecated_argument_alias(interval_function, fun.data)
   interval_args = .Deprecated_argument_alias(interval_args, fun.args)
   .width = .Deprecated_argument_alias(.width, .prob)
 
@@ -80,11 +78,12 @@ stat_lineribbon = function(
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      interval_function = interval_function,
       interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
+
       show_slab = FALSE,
+
       na.rm = na.rm,
       ...
     )
@@ -151,7 +150,6 @@ stat_dist_lineribbon = function(
 
       n = n,
 
-      interval_function = dist_interval_function,
       interval_args = list(),
       point_interval = NULL,
       .width = .width,

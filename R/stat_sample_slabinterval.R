@@ -48,7 +48,7 @@ sample_density = function(x, ...) {
 #' @importFrom stats ecdf density
 #' @importFrom graphics hist
 compute_slab_sample = function(
-  data, input, trans,
+  self, data, trans, input,
   slab_type = "pdf", limits = NULL, n = 501, orientation = NA,
   adjust = 1, trim = TRUE, breaks = "Sturges", outline_bars = FALSE,
   ...
@@ -226,16 +226,17 @@ stat_sample_slabinterval = function(
   position = "identity",
   ...,
 
+  orientation = NA,
+
   slab_type = c("pdf", "cdf", "ccdf", "histogram"),
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
   outline_bars = FALSE,
 
-  orientation = NA,
   limits = NULL,
   n = 501,
-  interval_function = NULL,
+
   interval_args = list(),
   point_interval = median_qi,
   .width = c(.66, .95),
@@ -258,16 +259,17 @@ stat_sample_slabinterval = function(
     inherit.aes = inherit.aes,
 
     params = list(
+      orientation = orientation,
+
       slab_type = slab_type,
       adjust = adjust,
       trim = trim,
       breaks = breaks,
       outline_bars = outline_bars,
 
-      orientation = orientation,
       limits = limits,
       n = n,
-      interval_function = interval_function,
+
       interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,

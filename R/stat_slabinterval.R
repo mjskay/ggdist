@@ -24,22 +24,16 @@
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0.
 #' @param n Number of points at which to evaluate the function that defines the slab.
-#' @param interval_function Custom function for generating intervals (for most common use cases the `point_interval`
-#' argument will be easier to use). This function takes a data frame of aesthetics and a `.width` parameter (a vector
-#' of interval widths), and returns a data frame with
-#' columns `.width` (from the `.width` vector), `.value` (point summary) and `.lower` and `.upper`
-#' (endpoints of the intervals, given the `.width`). Output will be converted to the appropriate `x`- or
-#' `y`-based aesthetics depending on the value of `orientation`. If `interval_function` is `NULL`,
-#' `point_interval` is used instead.
-#' @param interval_args Additional arguments passed to `interval_function` or `point_interval`.
+#' @param interval_args Additional arguments passed to `point_interval`.
 #' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
-#'   `mean_qi`, etc). This function should take in a vector of value, and should obey the
+#'   `mean_qi`, etc). This function should take in a vector of values, and should obey the
 #'   `.width` and `.simple_names` parameters of [point_interval()] functions, such that when given
-#'   a vector with `.simple_names = TRUE` should return a data frame with variables `.value`, `.lower`,
+#'   a vector with `.simple_names = TRUE` it should return a data frame with variables `.value`, `.lower`,
 #'   `.upper`, and `.width`. Output will be converted to the appropriate `x`- or `y`-based aesthetics
 #'   depending on the value of `orientation`. See the [point_interval()] family of functions for
 #'   more information.
-#' @param .width The `.width` argument passed to `interval_function` or `point_interval`.
+#' @param .width The `.width` argument passed to `point_interval`: a vector of desired
+#'   interval widths in *[0,1]*.
 #' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
 #' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
 #' those that are mapped (the default for most geoms).
@@ -67,10 +61,10 @@ stat_slabinterval = function(
   ...,
 
   orientation = NA,
+
   limits = NULL,
   n = 501,
 
-  interval_function = NULL,
   interval_args = list(),
   point_interval = NULL,
   .width = c(.66, .95),
@@ -83,7 +77,11 @@ stat_slabinterval = function(
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 ) {
-  .Deprecated_arguments(c("limits_function", "limits_args", "slab_function", "slab_args"), ...)
+  .Deprecated_arguments(c(
+    "limits_function", "limits_args",
+    "slab_function", "slab_args",
+    "interval_function", "fun.data"
+  ), ...)
 
   layer(
     data = data,
@@ -97,10 +95,10 @@ stat_slabinterval = function(
 
     params = list(
       orientation = orientation,
+
       limits = limits,
       n = n,
 
-      interval_function = interval_function,
       interval_args = interval_args,
       point_interval = point_interval,
       .width = .width,
@@ -129,9 +127,10 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
 
   default_params = list(
     orientation = NA,
+
     limits = NULL,
     n = 501,
-    interval_function = NULL,
+
     interval_args = list(),
     point_interval = NULL,
     .width = c(.66, .95),
@@ -185,8 +184,29 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
   # where compute_slab() needs to determine its own input values)
   # @param trans the scale transformation object applied to the coordinate space
   # @param ... other stat parameters created by children of stat_slabinterval
-  compute_slab = function(self, data, input, trans, ...) {
+  compute_slab = function(self, data, trans, input, ...) {
     data.frame()
+  },
+
+  # Compute interval(s). Takes a data frame of aesthetics and a `.width`
+  # parameter (a vector of interval widths) and returns a data frame with
+  # columns `.width` (from the `.width` vector), `.value` (point summary) and
+  #`.lower` and `.upper` (endpoints of the intervals, given the `.width`).
+  # Default implementation uses the `point_interval` parameter (a
+  # `point_interval()` function) to compute summaries and intervals.
+  # @param data The data frame of aesthetic values
+  # @param trans the scale transformation object applied to the coordinate space
+  # @param ... other stat parameters created by children of stat_slabinterval
+  compute_interval = function(
+    self, data, trans,
+    orientation, point_interval = NULL,
+    ...
+  ) {
+    if (is.null(point_interval)) return(data.frame())
+
+    define_orientation_variables(orientation)
+
+    point_interval(data[[x]], .simple_names = TRUE, ...)
   },
 
   compute_panel = function(self, data, scales,
@@ -194,7 +214,6 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     limits = self$default_params$limits,
     n = self$default_params$n,
 
-    interval_function = self$default_params$interval_function,
     interval_args = self$default_params$interval_args,
     point_interval = self$default_params$point_interval,
     .width = self$default_params$.width,
@@ -229,7 +248,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     # INTERVALS
     i_data = if (show_interval) {
       compute_intervals_(self, data, scales, trans, na.rm,
-        orientation, interval_function, interval_args, point_interval, .width
+        orientation, interval_args, point_interval, .width
       )
     }
 
@@ -330,8 +349,8 @@ compute_slabs_ = function(self, data, scales, trans,
 
   # evaluate the slab function
   s_data = summarise_by(data, c("group", y), self$compute_slab,
-    input = input, trans = trans,
-    limits = limits, n = n, orientation = orientation,
+    trans = trans, input = input,
+    orientation = orientation, limits = limits, n = n,
     ...
   )
 
@@ -345,33 +364,15 @@ compute_slabs_ = function(self, data, scales, trans,
 
 
 compute_intervals_ = function(self, data, scales, trans, na.rm,
-  orientation, interval_function, interval_args, point_interval, .width
+  orientation, interval_args, point_interval, .width
 ) {
   define_orientation_variables(orientation)
 
   interval_args[[".width"]] = .width
-
-  if (is.null(interval_function)) {
-    if (!is.null(point_interval)) {
-      # need to set .simple_names here to get .value, .lower, and .upper
-      interval_args$.simple_names = TRUE
-
-      # function is a point_interval, we need to make the version that
-      # can take in a data frame
-      point_interval = as_function(point_interval)
-      interval_fun = function(df) {
-        do.call(point_interval, c(list(quote(df[[x]])), interval_args))
-      }
-    } else {
-      # no value for interval_function or pointinterval => no interval to draw
-      return(NULL)
-    }
-  } else {
-    interval_args[["orientation"]] = orientation
-    interval_args[["trans"]] = trans
-    interval_function = as_function(interval_function)
-    interval_fun = function(df) do.call(interval_function, c(list(quote(df)), interval_args))
-  }
+  interval_args[["orientation"]] = orientation
+  interval_args[["trans"]] = trans
+  interval_args[["point_interval"]] = point_interval
+  interval_fun = function(df) do.call(self$compute_interval, c(list(quote(df)), interval_args))
 
   i_data = summarise_by(data, c("group", y), interval_fun)
 
@@ -383,6 +384,6 @@ compute_intervals_ = function(self, data, scales, trans, na.rm,
   i_data$.upper = NULL
 
   i_data$level = fct_rev_(ordered(i_data$.width))
-  i_data$datatype = "interval"
+  if (nrow(i_data) > 0) i_data$datatype = "interval"
   i_data
 }
