@@ -31,6 +31,11 @@
 #' - The `slab_args` argument: extra stat parameters are now passed through to
 #' the `...` arguments to `AbstractStatSlabInterval$compute_slab()`; use
 #' these instead.
+#' - The `interval_function` and `fun.data` arguments: these were parameters for determining the
+#' function to compute intervals in `stat_slabinterval()` and its
+#' derived stats. This function is really an internal function only needed by
+#' subclasses of the base class, yet added a lot of noise to the documentation,
+#' so it was replaced with `AbstractStatSlabInterval$compute_interval()`.
 #'
 #' @format NULL
 #' @usage NULL

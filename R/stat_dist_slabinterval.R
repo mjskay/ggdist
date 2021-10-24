@@ -54,7 +54,7 @@ compute_limits_dist = function(self, data, trans, p_limits = c(NA, NA), ...) {
 
 #' @importFrom dplyr lag
 compute_slab_dist = function(
-  data, input, trans,
+  self, data, trans, input,
   slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE,
   ...
 ) {
@@ -132,8 +132,8 @@ compute_slab_dist = function(
   })
 }
 
-dist_interval_function = function(df, .width, trans, ...) {
-  pmap_dfr_(df, function(dist, ...) {
+compute_interval_dist = function(data, .width, trans, ...) {
+  pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
     }
@@ -331,7 +331,6 @@ stat_dist_slabinterval = function(
 
       n = n,
 
-      interval_function = dist_interval_function,
       interval_args = list(),
       point_interval = NULL,
       .width = .width,
@@ -381,9 +380,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(NA, NA),
-    outline_bars = FALSE,
-
-    interval_function = dist_interval_function
+    outline_bars = FALSE
   ), StatSlabinterval$default_params),
 
   setup_params = function(self, data, params) {
@@ -446,7 +443,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   },
 
   compute_limits = compute_limits_dist,
-  compute_slab = compute_slab_dist
+  compute_slab = compute_slab_dist,
+  compute_interval = compute_interval_dist
 )
 
 

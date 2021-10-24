@@ -8,7 +8,7 @@
 
 #' @importFrom stats ppoints
 compute_slab_dots_sample = function(
-  data, input, trans,
+  self, data, trans, input,
   quantiles = NA, orientation = NA, na.rm = FALSE,
   ...
 ) {
@@ -39,7 +39,7 @@ compute_slab_dots_sample = function(
 
 #' @importFrom stats ppoints
 compute_slab_dots_dist = function(
-  data, input, trans,
+  self, data, trans, input,
   quantiles = 100,
   ...
 ) {
@@ -185,7 +185,6 @@ stat_dist_dotsinterval = function(
     params = list(
       quantiles = quantiles,
 
-      interval_function = dist_interval_function,
       interval_args = list(),
       point_interval = NULL,
 
@@ -201,9 +200,7 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   ),
 
   default_params = defaults(list(
-    quantiles = 100,
-
-    interval_function = dist_interval_function
+    quantiles = 100
   ), StatDistSlabinterval$default_params),
 
   compute_slab = compute_slab_dots_dist
