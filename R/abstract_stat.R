@@ -41,6 +41,9 @@ AbstractStat = ggproto("AbstractStat", Stat,
     inherit.aes = TRUE
   ),
 
+  # parameters to hide from user input in the stat_XXX() constructor
+  hidden_params = character(),
+
   # parameters that have been deprecated and which should throw a warning if used
   deprecated_params = character(),
 
@@ -90,7 +93,8 @@ make_stat = function(stat, geom,
   stat_name = enexpr(stat)
 
   # stat parameters
-  params_to_defaults = lapply(stat$default_params, to_expression)
+  params = stat$default_params[!names(stat$default_params) %in% stat$hidden_params]
+  params_to_defaults = lapply(params, to_expression)
   params_to_syms = syms(names(params_to_defaults))
   names(params_to_syms) = names(params_to_defaults)
 

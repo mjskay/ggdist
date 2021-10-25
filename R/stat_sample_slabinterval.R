@@ -314,7 +314,12 @@ StatSlab = ggproto("StatSlab", StatSampleSlabinterval,
 
   layer_args = defaults(list(
     show.legend = NA
-  ), StatSampleSlabinterval$layer_args)
+  ), StatSampleSlabinterval$layer_args),
+
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "point_interval", ".width"
+  ), StatSampleSlabinterval$hidden_params)
 )
 StatSlab$default_aes$size = NULL
 #' @export

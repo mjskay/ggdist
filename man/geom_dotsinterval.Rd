@@ -42,7 +42,14 @@ stat_dotsinterval(
   position = "identity",
   ...,
   quantiles = NA,
-  point_interval = median_qi,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
@@ -54,6 +61,11 @@ stat_dots(
   geom = "dots",
   position = "identity",
   ...,
+  quantiles = NA,
+  limits = NULL,
+  n = 501,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -65,6 +77,17 @@ stat_dist_dotsinterval(
   position = "identity",
   ...,
   quantiles = 100,
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
@@ -76,6 +99,14 @@ stat_dist_dots(
   geom = "dots",
   position = "identity",
   ...,
+  quantiles = 100,
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -110,17 +141,6 @@ a call to a position adjustment function.}
 \item{...}{
   Arguments passed on to \code{\link[=geom_slabinterval]{geom_slabinterval}}
   \describe{
-    \item{\code{orientation}}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
     \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
 (the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
 panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
@@ -151,9 +171,6 @@ aesthetics; see \link{scales}.}
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
 aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-    \item{\code{show_slab}}{Should the slab portion of the geom be drawn?}
-    \item{\code{show_point}}{Should the point portion of the geom be drawn?}
-    \item{\code{show_interval}}{Should the interval portion of the geom be drawn?}
   }}
 
 \item{dotsize}{The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as
@@ -223,6 +240,37 @@ a vector with \code{.simple_names = TRUE} it should return a data frame with var
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
+
+\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
+limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
+will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
+\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
+
+\item{n}{Number of points at which to evaluate the function that defines the slab.}
+
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
+that determine the widths of the resulting intervals. If multiple probabilities are provided,
+multiple intervals per group are generated, each with a different probability interval (and
+value of the corresponding \code{.width} and \code{level} generated variables).}
+
+\item{show_slab}{Should the slab portion of the geom be drawn?}
+
+\item{show_point}{Should the point portion of the geom be drawn?}
+
+\item{show_interval}{Should the interval portion of the geom be drawn?}
+
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} or \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a dotplot or combined dotplot+interval geometry which can

@@ -12,17 +12,7 @@ stat_lineribbon(
   position = "identity",
   ...,
   .width = c(0.5, 0.8, 0.95),
-  show_slab = FALSE,
-  slab_type = "pdf",
-  adjust = 1,
-  trim = TRUE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
   point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
@@ -35,16 +25,8 @@ stat_dist_lineribbon(
   geom = "lineribbon",
   position = "identity",
   ...,
-  show_slab = FALSE,
   .width = c(0.5, 0.8, 0.95),
-  slab_type = "pdf",
-  p_limits = c(NA, NA),
-  outline_bars = FALSE,
-  limits = NULL,
-  n = 501,
   point_interval = NULL,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
@@ -86,24 +68,6 @@ that determine the widths of the resulting intervals. If multiple probabilities 
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
 
-\item{show_slab}{Should the slab portion of the geom be drawn?}
-
-\item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.}
-
-\item{adjust}{If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
-by this value. See \code{\link[=density]{density()}} for more information.}
-
-\item{trim}{If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
-input data? Default \code{TRUE}.}
-
-\item{breaks}{If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
-\code{\link[=hist]{hist()}} to determine where to put breaks in the histogram.}
-
-\item{outline_bars}{If \code{slab_type} is \code{"histogram"}, \code{outline_bars} determines if outlines in between
-the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE} (the default), the outline
-is drawn only along the tops of the bars; if \code{TRUE}, outlines in between bars are also drawn.}
-
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, etc). This function should take in a vector of values, and should obey the
 \code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
@@ -111,18 +75,6 @@ a vector with \code{.simple_names = TRUE} it should return a data frame with var
 \code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
-
-\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
-limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
-\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
-
-\item{n}{Number of points at which to evaluate the function that defines the slab.}
-
-\item{show_point}{Should the point portion of the geom be drawn?}
-
-\item{show_interval}{Should the interval portion of the geom be drawn?}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
