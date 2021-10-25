@@ -89,7 +89,7 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
   }
 )
 
-#' @importFrom rlang syms
+#' @importFrom rlang syms new_function pairlist2 expr
 make_geom = function(geom,
   mapping = NULL,
   data = NULL,
@@ -110,51 +110,46 @@ make_geom = function(geom,
   args_to_syms = syms(names(args_to_defaults))
   names(args_to_syms) = names(args_to_defaults)
 
-  f = eval(bquote(
-      function(
-        mapping = .(mapping),
-        data = .(data),
-        stat = .(stat),
-        position = .(position),
-        ...
-      ) {
-        .Deprecated_arguments(.(geom$deprecated_params), ...)
-
-        l = layer(
-          data = data,
-          mapping = mapping,
-          geom = .(geom_name),
-          stat = stat,
-          position = position,
-
-          ..(args_to_syms),
-
-          params = list(
-            ..(params_to_syms),
-            ...
-          )
-        )
-
-        .(
-          if (length(geom$default_computed_aes) > 0) {
-            bquote(add_default_computed_aesthetics(l, .(geom$default_computed_aes)))
-          } else {
-            quote(l)
-          }
-        )
-      },
-      splice = TRUE
+  new_function(
+    c(
+      pairlist2(
+        mapping = mapping,
+        data = data,
+        stat = stat,
+        position = position,
+        ... =,
+      ),
+      params_to_defaults,
+      args_to_defaults
     ),
-    envir = parent.frame()
-  )
+    expr({
+      .Deprecated_arguments(!!geom$deprecated_params, ...)
 
-  formals(f) = c(
-    formals(f),
-    params_to_defaults,
-    args_to_defaults
-  )
+      l = layer(
+        data = data,
+        mapping = mapping,
+        geom = !!geom_name,
+        stat = stat,
+        position = position,
 
-  f
+        !!!args_to_syms,
+
+        params = list(
+          !!!params_to_syms,
+          ...
+        )
+      )
+
+      !!(
+        if (length(geom$default_computed_aes) > 0) {
+          expr(add_default_computed_aesthetics(l, !!geom$default_computed_aes))
+        } else {
+          quote(l)
+        }
+      )
+    }),
+    env = parent.frame()
+  )
 }
 
 
