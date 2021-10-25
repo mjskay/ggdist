@@ -88,6 +88,10 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
     "interval_function", "fun.data", "interval_args", "fun.args"
   ), AbstractStat$deprecated_params),
 
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval"
+  ), AbstractStat$hidden_params),
+
   layer_args = defaults(list(
     show.legend = c(size = FALSE)
   ), AbstractStat$layer_args),

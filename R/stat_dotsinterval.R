@@ -72,6 +72,10 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
     point_interval = "median_qi"
   ), StatSlabinterval$default_params),
 
+  hidden_params = union(c(
+    "limits", "n"
+  ), StatSlabinterval$hidden_params),
+
   compute_slab = compute_slab_dots_sample
 )
 #' @rdname geom_dotsinterval
@@ -105,6 +109,11 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   default_params = defaults(list(
     quantiles = 100
   ), StatDistSlabinterval$default_params),
+
+  hidden_params = union(c(
+    "limits", "n",
+    "p_limits", "slab_type", "outline_bars"
+  ), StatSlabinterval$hidden_params),
 
   compute_slab = compute_slab_dots_dist
 )
