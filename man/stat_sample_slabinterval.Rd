@@ -26,9 +26,6 @@ stat_sample_slabinterval(
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
@@ -50,9 +47,6 @@ stat_halfeye(
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
@@ -74,9 +68,6 @@ stat_eye(
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
@@ -99,9 +90,6 @@ stat_ccdfinterval(
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
@@ -124,9 +112,6 @@ stat_cdfinterval(
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
@@ -148,9 +133,6 @@ stat_gradientinterval(
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE, slab_alpha = FALSE),
@@ -172,9 +154,6 @@ stat_histinterval(
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
@@ -266,12 +245,6 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
-
-\item{show_slab}{Should the slab portion of the geom be drawn?}
-
-\item{show_point}{Should the point portion of the geom be drawn?}
-
-\item{show_interval}{Should the interval portion of the geom be drawn?}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the

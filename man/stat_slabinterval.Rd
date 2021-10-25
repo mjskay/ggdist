@@ -14,9 +14,6 @@ stat_slabinterval(
   n = 501,
   point_interval = NULL,
   .width = c(0.66, 0.95),
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
@@ -73,12 +70,6 @@ more information.}
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
-
-\item{show_slab}{Should the slab portion of the geom be drawn?}
-
-\item{show_point}{Should the point portion of the geom be drawn?}
-
-\item{show_interval}{Should the interval portion of the geom be drawn?}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
