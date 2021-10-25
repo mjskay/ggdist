@@ -283,65 +283,8 @@ compute_interval_dist = function(data, .width, trans, ...) {
 #'
 #' # see vignette("slabinterval") for many more examples.
 #'
-#' @export
-stat_dist_slabinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-
-  slab_type = c("pdf", "cdf", "ccdf"),
-  p_limits = c(NA, NA),
-  outline_bars = FALSE,
-
-  orientation = NA,
-  limits = NULL,
-  n = 501,
-  .width = c(.66, .95),
-
-  show_slab = TRUE,
-  show_interval = TRUE,
-
-  na.rm = FALSE,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  slab_type = match.arg(slab_type)
-
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistSlabinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      slab_type = slab_type,
-      p_limits = p_limits,
-      outline_bars = outline_bars,
-
-      orientation = orientation,
-
-      limits = limits,
-
-      n = n,
-
-      point_interval = NULL,
-      .width = .width,
-
-      show_slab = show_slab,
-      show_interval = show_interval,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
+#' @name stat_dist_slabinterval
+NULL
 
 #' @rdname ggdist-ggproto
 #' @format NULL
@@ -362,13 +305,6 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     arg9 = NULL
   ), StatSlabinterval$default_aes),
 
-  extra_params = c(
-    StatSlabinterval$extra_params,
-    "slab_type",
-    "p_limits",
-    "outline_bars"
-  ),
-
   # interval parameter used to determine if the stat re-groups
   # data by the combination of input group + dist + args. For
   # most use cases this should be TRUE, but for some corner
@@ -382,18 +318,11 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     outline_bars = FALSE
   ), StatSlabinterval$default_params),
 
-  setup_params = function(self, data, params) {
-    params = defaults(params, self$default_params)
-
-    # detect orientation -- this must be done before calling up to StatSlabInterval
-    # since auto-detection here is different (main_is_orthogonal needs to be FALSE)
-    params$flipped_aes = get_flipped_aes(data, params,
-      main_is_orthogonal = FALSE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
-    )
-    params$orientation = get_orientation(params$flipped_aes)
-
-    ggproto_parent(StatSlabinterval, self)$setup_params(data, params)
-  },
+  # orientation auto-detection here is different from base StatSlabinterval
+  # (main_is_orthogonal needs to be FALSE)
+  orientation_options = defaults(list(
+    main_is_orthogonal = FALSE
+  ), StatSlabinterval$orientation_options),
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
@@ -446,79 +375,27 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   compute_interval = compute_interval_dist
 )
 
+#' @rdname stat_dist_slabinterval
+#' @export
+stat_dist_slabinterval = make_stat(StatDistSlabinterval, geom = "slabinterval")
+
 
 # shortcut stats ----------------------------------------------------------
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_halfeye = function(...) stat_dist_slabinterval(...)
+stat_dist_halfeye = stat_dist_slabinterval
 
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_eye = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistEye,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      ...
-    )
-  )
-}
 StatDistEye = ggproto("StatDistEye", StatDistSlabinterval,
   default_aes = defaults(aes(
     side = stat("both"),
   ), StatDistSlabinterval$default_aes)
 )
-
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_ccdfinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
+stat_dist_eye = make_stat(StatDistEye, geom = "slabinterval")
 
-  slab_type = "ccdf",
-  normalize = "none",
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistCcdfInterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      slab_type = slab_type,
-      normalize = normalize,
-      ...
-    )
-  )
-}
-StatDistCcdfInterval = ggproto("StatDistCcdfInterval", StatDistSlabinterval,
+StatDistCcdfinterval = ggproto("StatDistCcdfinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
     side = stat("topleft"),
@@ -529,86 +406,43 @@ StatDistCcdfInterval = ggproto("StatDistCcdfInterval", StatDistSlabinterval,
     normalize = "none"
   ), StatDistSlabinterval$default_params)
 )
-
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_cdfinterval = function(...,
-  slab_type = "cdf", normalize = "none"
-) {
-  stat_dist_ccdfinterval(..., slab_type = slab_type, normalize = normalize)
-}
+stat_dist_ccdfinterval = make_stat(StatDistCcdfinterval, geom = "slabinterval")
 
+StatDistCdfinterval = ggproto("StatDistCdfinterval", StatDistCcdfinterval,
+  default_params = defaults(list(
+    slab_type = "cdf"
+  ), StatDistCcdfinterval$default_params)
+)
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_gradientinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
+stat_dist_cdfinterval = make_stat(StatDistCdfinterval, geom = "slabinterval")
 
-  show.legend = c(size = FALSE, slab_alpha = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistGradientinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      ...
-    )
-  )
-}
 StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
     thickness = stat(1),
     slab_alpha = stat(f)
-  ), StatDistSlabinterval$default_aes)
+  ), StatDistSlabinterval$default_aes),
+
+  layer_args = defaults(list(
+    show.legend = c(size = FALSE, slab_alpha = FALSE)
+  ), StatDistSlabinterval$layer_args)
 )
-
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_pointinterval = function(..., show_slab = FALSE) stat_dist_slabinterval(..., show_slab = show_slab)
+stat_dist_gradientinterval = make_stat(StatDistGradientinterval, geom = "slabinterval")
 
+StatDistPointinterval = ggproto("StatDistPointinterval", StatDistSlabinterval,
+  default_params = defaults(list(
+    show_slab = FALSE
+  ), StatDistSlabinterval$default_params)
+)
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_interval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "interval",
-  position = "identity",
-  ...,
+stat_dist_pointinterval = make_stat(StatDistPointinterval, geom = "pointinterval")
 
-  show_slab = FALSE,
-  show_point = FALSE,
-
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistInterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      show_point = show_point,
-      show_slab = show_slab,
-      ...
-    )
-  )
-}
 StatDistInterval = ggproto("StatDistInterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     color = stat(level)
@@ -618,46 +452,31 @@ StatDistInterval = ggproto("StatDistInterval", StatDistSlabinterval,
     show_slab = FALSE,
     show_point = FALSE,
     .width = c(.50, .80, .95)
-  ), StatDistSlabinterval$default_params)
+  ), StatDistSlabinterval$default_params),
+
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatDistSlabinterval$layer_args)
 )
 # have to remove this here instead of in call to defaults()
 # because otherwise it stays in the list as a value = NULL
 # instead of being removed
 StatDistInterval$default_aes$size = NULL
-
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_slab = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slab",
-  position = "identity",
-  ...,
+stat_dist_interval = make_stat(StatDistInterval, geom = "interval")
 
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistSlab,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      show_point = FALSE,
-      show_interval = FALSE,
-      ...
-    )
-  )
-}
 StatDistSlab = ggproto("StatDistSlab", StatDistSlabinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
-  ), StatDistSlabinterval$default_params)
+  ), StatDistSlabinterval$default_params),
+
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatDistSlabinterval$layer_args)
 )
 StatDistSlab$default_aes$size = NULL
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_dist_slab = make_stat(StatDistSlab, geom = "slab")

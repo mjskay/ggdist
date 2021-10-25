@@ -33,6 +33,12 @@ AbstractStat = ggproto("AbstractStat", Stat,
     na.rm = FALSE
   ),
 
+  # arguments passed to the stat_XXX() constructor and the underlying layer() call
+  layer_args = list(
+    show.legend = NA,
+    inherit.aes = TRUE
+  ),
+
   # parameters that have been deprecated and which should throw a warning if used
   deprecated_params = character(),
 
@@ -77,16 +83,19 @@ make_stat = function(stat, geom,
   mapping = NULL,
   data = NULL,
   position = "identity",
-  ...,
-
-  show.legend = NA,
-  inherit.aes = TRUE
+  ...
 ) {
   stat_name = enexpr(stat)
 
+  # stat parameters
   params_to_defaults = stat$default_params
-  params_to_self = syms(names(params_to_defaults))
-  names(params_to_self) = names(params_to_defaults)
+  params_to_syms = syms(names(params_to_defaults))
+  names(params_to_syms) = names(params_to_defaults)
+
+  # layer arguments
+  args_to_defaults = stat$layer_args
+  args_to_syms = syms(names(args_to_defaults))
+  names(args_to_syms) = names(args_to_defaults)
 
   f = eval(bquote(
       function(
@@ -105,11 +114,10 @@ make_stat = function(stat, geom,
           geom = geom,
           position = position,
 
-          show.legend = show.legend,
-          inherit.aes = inherit.aes,
+          ..(args_to_syms),
 
           params = list(
-            ..(params_to_self),
+            ..(params_to_syms),
             ...
           )
         )
@@ -119,7 +127,11 @@ make_stat = function(stat, geom,
     envir = parent.frame()
   )
 
-  formals(f) = c(formals(f), params_to_defaults, list(show.legend = show.legend, inherit.aes = inherit.aes))
+  formals(f) = c(
+    formals(f),
+    params_to_defaults,
+    args_to_defaults
+  )
 
   f
 }
