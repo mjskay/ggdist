@@ -66,48 +66,7 @@ compute_slab_dots_dist = function(
 
 # stat_dotsinterval ------------------------------------------------
 
-#' @rdname geom_dotsinterval
-#' @export
-stat_dotsinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "dotsinterval",
-  position = "identity",
-  ...,
-
-  quantiles = NA,
-  point_interval = median_qi,
-
-  na.rm = FALSE,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDotsinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      quantiles = quantiles,
-      point_interval = point_interval,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
 StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
-  extra_params = c(
-    StatSlabinterval$extra_params,
-    "quantiles"
-  ),
-
   default_params = defaults(list(
     quantiles = NA,
     point_interval = "median_qi"
@@ -115,129 +74,60 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
 
   compute_slab = compute_slab_dots_sample
 )
-
-#' @export
 #' @rdname geom_dotsinterval
-stat_dots = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "dots",
-  position = "identity",
-  ...,
+#' @export
+stat_dotsinterval = make_stat(StatDotsinterval, geom = "dotsinterval")
 
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDots,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      show_point = FALSE,
-      show_interval = FALSE,
-      ...
-    )
-  )
-}
 StatDots = ggproto("StatDots", StatDotsinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
-  ), StatDotsinterval$default_params)
+  ), StatDotsinterval$default_params),
+
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatDotsinterval$layer_args),
+
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "point_interval", ".width"
+  ), StatDotsinterval$hidden_params)
 )
 StatDots$default_aes$size = NULL
+#' @rdname geom_dotsinterval
+#' @export
+stat_dots = make_stat(StatDots, geom = "dots")
 
 
 # stat_dist_dotsinterval -----------------------------------------------
 
-#' @rdname geom_dotsinterval
-#' @export
-stat_dist_dotsinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "dotsinterval",
-  position = "identity",
-  ...,
-
-  quantiles = 100,
-
-  na.rm = FALSE,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistDotsinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      quantiles = quantiles,
-
-      point_interval = NULL,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
 StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
-  extra_params = c(
-    StatDistSlabinterval$extra_params,
-    "quantiles"
-  ),
-
   default_params = defaults(list(
     quantiles = 100
   ), StatDistSlabinterval$default_params),
 
   compute_slab = compute_slab_dots_dist
 )
-
-#' @export
 #' @rdname geom_dotsinterval
-stat_dist_dots = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "dots",
-  position = "identity",
-  ...,
+#' @export
+stat_dist_dotsinterval = make_stat(StatDistDotsinterval, geom = "dotsinterval")
 
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistDots,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      show_point = FALSE,
-      show_interval = FALSE,
-      ...
-    )
-  )
-}
 StatDistDots = ggproto("StatDistDots", StatDistDotsinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
-  ), StatDistDotsinterval$default_params)
+  ), StatDistDotsinterval$default_params),
+
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatDistDotsinterval$layer_args),
+
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "point_interval", ".width"
+  ), StatDistDotsinterval$hidden_params)
 )
 StatDistDots$default_aes$size = NULL
+#' @rdname geom_dotsinterval
+#' @export
+stat_dist_dots = make_stat(StatDistDots, geom = "dots")

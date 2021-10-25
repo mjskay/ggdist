@@ -437,26 +437,30 @@ stat_dist_gradientinterval = make_stat(StatDistGradientinterval, geom = "slabint
 StatDistPointinterval = ggproto("StatDistPointinterval", StatDistSlabinterval,
   default_params = defaults(list(
     show_slab = FALSE
-  ), StatDistSlabinterval$default_params)
+  ), StatDistSlabinterval$default_params),
+
+  hidden_params = union(c(
+    "slab_type", "adjust", "trim", "breaks", "outline_bars", "limits", "n", "p_limits",
+    "show_slab", "show_point", "show_interval"
+  ), StatDistSlabinterval$hidden_params)
 )
 #' @export
 #' @rdname stat_dist_slabinterval
 stat_dist_pointinterval = make_stat(StatDistPointinterval, geom = "pointinterval")
 
-StatDistInterval = ggproto("StatDistInterval", StatDistSlabinterval,
+StatDistInterval = ggproto("StatDistInterval", StatDistPointinterval,
   default_aes = defaults(aes(
     color = stat(level)
-  ), StatDistSlabinterval$default_aes),
+  ), StatDistPointinterval$default_aes),
 
   default_params = defaults(list(
-    show_slab = FALSE,
     show_point = FALSE,
     .width = c(.50, .80, .95)
-  ), StatDistSlabinterval$default_params),
+  ), StatDistPointinterval$default_params),
 
   layer_args = defaults(list(
     show.legend = NA
-  ), StatDistSlabinterval$layer_args)
+  ), StatDistPointinterval$layer_args)
 )
 # have to remove this here instead of in call to defaults()
 # because otherwise it stays in the list as a value = NULL
@@ -474,7 +478,12 @@ StatDistSlab = ggproto("StatDistSlab", StatDistSlabinterval,
 
   layer_args = defaults(list(
     show.legend = NA
-  ), StatDistSlabinterval$layer_args)
+  ), StatDistSlabinterval$layer_args),
+
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "point_interval", ".width"
+  ), StatDistSlabinterval$hidden_params)
 )
 StatDistSlab$default_aes$size = NULL
 #' @export
