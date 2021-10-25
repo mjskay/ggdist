@@ -218,65 +218,8 @@ compute_slab_sample = function(
 #'
 #' # see vignette("slabinterval") for many more examples.
 #'
-#' @export
-stat_sample_slabinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-
-  orientation = NA,
-
-  slab_type = c("pdf", "cdf", "ccdf", "histogram"),
-  adjust = 1,
-  trim = TRUE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-
-  limits = NULL,
-  n = 501,
-
-  point_interval = median_qi,
-  .width = c(.66, .95),
-
-  na.rm = FALSE,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  slab_type = match.arg(slab_type)
-
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatSampleSlabinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      orientation = orientation,
-
-      slab_type = slab_type,
-      adjust = adjust,
-      trim = trim,
-      breaks = breaks,
-      outline_bars = outline_bars,
-
-      limits = limits,
-      n = n,
-
-      point_interval = point_interval,
-      .width = .width,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
+#' @name stat_sample_slabinterval
+NULL
 
 #' @rdname ggdist-ggproto
 #' @format NULL
@@ -290,85 +233,31 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
     breaks = "Sturges",
     outline_bars = FALSE,
 
-    point_interval = median_qi
+    point_interval = "median_qi"
   ), StatSlabinterval$default_params),
 
   compute_slab = compute_slab_sample
 )
 
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_sample_slabinterval = make_stat(StatSampleSlabinterval, geom = "slabinterval")
 
 # shortcut stats ----------------------------------------------------------
 
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_halfeye = function(...) stat_sample_slabinterval(...)
+stat_halfeye = stat_sample_slabinterval
 
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_eye = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatEye,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      ...
-    )
-  )
-}
 StatEye = ggproto("StatEye", StatSampleSlabinterval,
   default_aes = defaults(aes(
     side = stat("both"),
   ), StatSampleSlabinterval$default_aes)
 )
-
-
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_ccdfinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
+stat_eye = make_stat(StatEye, geom = "slabinterval")
 
-  slab_type = "ccdf",
-  normalize = "none",
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatCcdfinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      slab_type = slab_type,
-      normalize = normalize,
-      ...
-    )
-  )
-}
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
@@ -380,89 +269,54 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
     normalize = "none"
   ), StatSampleSlabinterval$default_params)
 )
-
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_cdfinterval = function(...,
-  slab_type = "cdf", normalize = "none"
-) {
-  stat_ccdfinterval(..., slab_type = slab_type, normalize = normalize)
-}
+stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 
+StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
+  default_params = defaults(list(
+    slab_type = "cdf"
+  ), StatCcdfinterval$default_params)
+)
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_gradientinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
+stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
 
-  show.legend = c(size = FALSE, slab_alpha = FALSE),
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatGradientinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      ...
-    )
-  )
-}
 StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
     thickness = stat(1),
     slab_alpha = stat(f)
-  ), StatSampleSlabinterval$default_aes)
+  ), StatSampleSlabinterval$default_aes),
+
+  layer_args = defaults(list(
+    show.legend = c(size = FALSE, slab_alpha = FALSE)
+  ), StatSampleSlabinterval$layer_args)
 )
-
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_histinterval = function(..., slab_type = "histogram") {
-  stat_sample_slabinterval(..., slab_type = slab_type)
-}
+stat_gradientinterval = make_stat(StatGradientinterval, geom = "slabinterval")
 
+StatHistinterval = ggproto("StatHistinterval", StatSampleSlabinterval,
+  default_params = defaults(list(
+    slab_type = "histogram"
+  ), StatSampleSlabinterval$default_params)
+)
 #' @export
 #' @rdname stat_sample_slabinterval
-stat_slab = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slab",
-  position = "identity",
-  ...,
+stat_histinterval = make_stat(StatHistinterval, geom = "slabinterval")
 
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatSlab,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      show_point = FALSE,
-      show_interval = FALSE,
-      ...
-    )
-  )
-}
 StatSlab = ggproto("StatSlab", StatSampleSlabinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
-  ), StatSampleSlabinterval$default_params)
+  ), StatSampleSlabinterval$default_params),
+
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatSampleSlabinterval$layer_args)
 )
 StatSlab$default_aes$size = NULL
+#' @export
+#' @rdname stat_sample_slabinterval
+stat_slab = make_stat(StatSlab, geom = "slab")

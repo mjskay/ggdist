@@ -15,6 +15,7 @@ stat_slabinterval(
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -74,6 +75,8 @@ multiple intervals per group are generated, each with a different probability in
 value of the corresponding \code{.width} and \code{level} generated variables).}
 
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
 

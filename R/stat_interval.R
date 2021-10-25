@@ -48,54 +48,8 @@
 #'   stat_interval() +
 #'   scale_color_brewer()
 #'
-#' @export
-stat_interval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "interval",
-  position = "identity",
-  ...,
-
-  orientation = NA,
-
-  point_interval = median_qi,
-  .width = c(.50, .80, .95),
-
-  show_point = FALSE,
-  show_slab = FALSE,
-
-  na.rm = FALSE,
-
-  show.legend = NA,
-  inherit.aes = TRUE,
-
-  #deprecated arguments
-  .prob
-) {
-  .width = .Deprecated_argument_alias(.width, .prob)
-
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatInterval,
-    geom = geom,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      orientation = orientation,
-
-      point_interval = point_interval,
-      .width = .width,
-
-      show_point = show_point,
-      show_slab = show_slab,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
+#' @name stat_interval
+NULL
 
 #' @rdname ggdist-ggproto
 #' @format NULL
@@ -109,9 +63,17 @@ StatInterval = ggproto("StatInterval", StatPointinterval,
   default_params = defaults(list(
     show_point = FALSE,
     .width = c(.50, .80, .95)
-  ), StatPointinterval$default_params)
+  ), StatPointinterval$default_params),
+
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatPointinterval$layer_args)
 )
 # have to remove this here instead of in call to defaults()
 # because otherwise it stays in the list as a value = NULL
 # instead of being removed
 StatInterval$default_aes$size = NULL
+
+#' @rdname stat_interval
+#' @export
+stat_interval = make_stat(StatInterval, geom = "interval")

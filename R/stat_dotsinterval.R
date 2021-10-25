@@ -110,7 +110,7 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
 
   default_params = defaults(list(
     quantiles = NA,
-    point_interval = median_qi
+    point_interval = "median_qi"
   ), StatSlabinterval$default_params),
 
   compute_slab = compute_slab_dots_sample

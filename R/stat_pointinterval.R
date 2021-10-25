@@ -48,52 +48,8 @@
 #'   ggplot(aes(x = factor(i), y = u_tau)) +
 #'   stat_pointinterval(.width = c(.66, .95))
 #'
-#' @export
-stat_pointinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "pointinterval",
-  position = "identity",
-  ...,
-
-  orientation = NA,
-
-  point_interval = median_qi,
-  .width = c(.66, .95),
-
-  show_slab = FALSE,
-
-  na.rm = FALSE,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE,
-
-  #deprecated arguments
-  .prob
-) {
-  .width = .Deprecated_argument_alias(.width, .prob)
-
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatPointinterval,
-    geom = geom,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      orientation = orientation,
-
-      point_interval = point_interval,
-      .width = .width,
-
-      show_slab = show_slab,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
+#' @name stat_pointinterval
+NULL
 
 #' @rdname ggdist-ggproto
 #' @format NULL
@@ -108,3 +64,7 @@ StatPointinterval = ggproto("StatPointinterval", StatSampleSlabinterval,
     show_slab = FALSE
   ), StatSampleSlabinterval$default_params)
 )
+
+#' @rdname stat_pointinterval
+#' @export
+stat_pointinterval = make_stat(StatPointinterval, geom = "pointinterval")
