@@ -283,15 +283,6 @@ stat_sample_slabinterval = function(
 #' @usage NULL
 #' @export
 StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
-  extra_params = c(
-    StatSlabinterval$extra_params,
-    "slab_type",
-    "adjust",
-    "trim",
-    "breaks",
-    "outline_bars"
-  ),
-
   default_params = defaults(list(
     slab_type = "pdf",
     adjust = 1,

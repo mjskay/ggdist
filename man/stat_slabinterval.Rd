@@ -10,13 +10,13 @@ stat_slabinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
-  orientation = NA,
   limits = NULL,
   n = 501,
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
   show_interval = TRUE,
+  orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
@@ -52,18 +52,6 @@ a call to a position adjustment function.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
 (e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
-\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
-
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
@@ -80,12 +68,26 @@ a vector with \code{.simple_names = TRUE} it should return a data frame with var
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 
-\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of desired
-interval widths in \emph{\link{0,1}}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
+that determine the widths of the resulting intervals. If multiple probabilities are provided,
+multiple intervals per group are generated, each with a different probability interval (and
+value of the corresponding \code{.width} and \code{level} generated variables).}
 
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
@@ -233,4 +235,3 @@ See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and \cod
 built on top of this stat for common use cases (like \code{stat_halfeye}).
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }
-\keyword{internal}

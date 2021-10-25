@@ -31,8 +31,10 @@
 #'   `.upper`, and `.width`. Output will be converted to the appropriate `x`- or `y`-based aesthetics
 #'   depending on the value of `orientation`. See the [point_interval()] family of functions for
 #'   more information.
-#' @param .width The `.width` argument passed to `point_interval`: a vector of desired
-#'   interval widths in *[0,1]*.
+#' @param .width The `.width` argument passed to `point_interval`: a vector of probabilities to use
+#' that determine the widths of the resulting intervals. If multiple probabilities are provided,
+#' multiple intervals per group are generated, each with a different probability interval (and
+#' value of the corresponding `.width` and `level` generated variables).
 #' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
 #' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
 #' those that are mapped (the default for most geoms).
@@ -50,70 +52,15 @@
 #'
 #' @importFrom rlang as_function
 #' @importFrom dplyr bind_rows
-#' @keywords internal
-#' @export
-stat_slabinterval = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
+#' @name stat_slabinterval
+NULL
 
-  orientation = NA,
-
-  limits = NULL,
-  n = 501,
-
-  point_interval = NULL,
-  .width = c(.66, .95),
-
-  show_slab = TRUE,
-  show_interval = TRUE,
-
-  na.rm = FALSE,
-
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-) {
-  .Deprecated_arguments(c(
-    "limits_function", "limits_args",
-    "slab_function", "slab_args",
-    "interval_function", "fun.data", "interval_args", "fun.args"
-  ), ...)
-
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatSlabinterval,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      orientation = orientation,
-
-      limits = limits,
-      n = n,
-
-      point_interval = point_interval,
-      .width = .width,
-
-      show_slab = show_slab,
-      show_interval = show_interval,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
 
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
-StatSlabinterval = ggproto("StatSlabinterval", Stat,
+StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
   default_aes = aes(
     datatype = "slab",
     thickness = stat(f),
@@ -122,9 +69,7 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     y = NULL
   ),
 
-  default_params = list(
-    orientation = NA,
-
+  default_params = defaults(list(
     limits = NULL,
     n = 501,
 
@@ -132,26 +77,21 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
     .width = c(.66, .95),
 
     show_slab = TRUE,
-    show_interval = TRUE,
+    show_interval = TRUE
+  ), AbstractStat$default_params),
 
-    na.rm = FALSE
-  ),
+  deprecated_params = union(c(
+    "limits_function", "limits_args",
+    "slab_function", "slab_args",
+    "interval_function", "fun.data", "interval_args", "fun.args"
+  ), AbstractStat$deprecated_params),
 
-  setup_params = function(self, data, params) {
-    params = defaults(params, self$default_params)
-
-    # detect orientation
-    params$flipped_aes = get_flipped_aes(data, params,
-      main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
-    )
-    params$orientation = get_orientation(params$flipped_aes)
-
-    params
-  },
+  orientation_options = defaults(list(
+    main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
+  ), AbstractStat$orientation_options),
 
   setup_data = function(self, data, params) {
-    #set up orientation
-    data$flipped_aes = params$flipped_aes
+    data = ggproto_parent(AbstractStat, self)$setup_data(data, params)
     define_orientation_variables(params$orientation)
 
     # when we are missing a main aesthetic (e.g. the y aes in a horizontal orientation),
@@ -258,24 +198,16 @@ StatSlabinterval = ggproto("StatSlabinterval", Stat,
       results$.width = results[[".width"]] %||% NA
     }
     results
-  },
-
-  # Based on ggplot2::Stat$parameters, except we always take parameters
-  # from compute_panel(), because compute_group() is not used by this stat,
-  # and we also take extra_params by default
-  parameters = function(self, extra = TRUE) {
-    panel_args = names(ggproto_formals(self$compute_panel))
-
-    # Remove arguments of defaults
-    args <- setdiff(panel_args, c(names(ggproto_formals(Stat$compute_group)), "..."))
-
-    if (extra) {
-      args <- union(args, self$extra_params)
-    }
-    args
   }
 )
 
+#' @rdname stat_slabinterval
+#' @export
+stat_slabinterval = make_stat(
+  StatSlabinterval,
+  geom = "slabinterval",
+  show.legend = c(size = FALSE)
+)
 
 
 # stat computation functions ----------------------------------------------
