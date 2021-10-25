@@ -24,6 +24,8 @@
 #' `setup_data()`.
 #' - `deprecated_params` provides a list of deprecated parameters that will cause
 #' a warning to be generated if used.
+#' - `layer_args` provides a list of layer arguments (such as `show.legend` and
+#' `inherit.aes`) and their default values.
 #'
 #' @keywords internal
 #' @noRd
@@ -78,7 +80,7 @@ AbstractStat = ggproto("AbstractStat", Stat,
   }
 )
 
-
+#' @importFrom rlang enexpr syms
 make_stat = function(stat, geom,
   mapping = NULL,
   data = NULL,
@@ -88,12 +90,12 @@ make_stat = function(stat, geom,
   stat_name = enexpr(stat)
 
   # stat parameters
-  params_to_defaults = stat$default_params
+  params_to_defaults = lapply(stat$default_params, to_expression)
   params_to_syms = syms(names(params_to_defaults))
   names(params_to_syms) = names(params_to_defaults)
 
   # layer arguments
-  args_to_defaults = stat$layer_args
+  args_to_defaults = lapply(stat$layer_args, to_expression)
   args_to_syms = syms(names(args_to_defaults))
   names(args_to_syms) = names(args_to_defaults)
 
@@ -134,4 +136,15 @@ make_stat = function(stat, geom,
   )
 
   f
+}
+
+
+# helpers -----------------------------------------------------------------
+
+#' Convert simple objects to expression representing those objects
+#' Needed for code generation so that the formals of a function's documentation
+#' (which will be expressions) match the formals of the generated code.
+#' @noRd
+to_expression = function(x) {
+  parse(text = deparse(x), keep.source = FALSE)[[1]]
 }
