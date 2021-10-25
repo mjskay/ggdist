@@ -65,42 +65,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'   scale_fill_brewer()
 #'
 #' @import ggplot2
-#' @export
-geom_lineribbon = function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-  ...,
-
-  step = FALSE,
-  orientation = NA,
-
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-
-  l = layer(
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    geom = GeomLineribbon,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      step = step,
-      orientation = orientation,
-      na.rm = na.rm,
-      ...
-    )
-  )
-
-  add_default_computed_aesthetics(l,
-    aes(fill = fct_rev_(ordered(.width)))
-  )
-}
+#' @name geom_lineribbon
+NULL
 
 draw_key_lineribbon = function(self, data, params, size) {
   if (is.null(data[["fill"]]) &&
@@ -124,7 +90,7 @@ draw_key_lineribbon = function(self, data, params, size) {
 #' @usage NULL
 #' @import ggplot2
 #' @export
-GeomLineribbon = ggproto("GeomLineribbon", Geom,
+GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   default_aes = aes(
     colour = NULL,
     size = 1.25,
@@ -141,6 +107,10 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     fill = "gray65"
   ),
 
+  default_computed_aes = aes(
+    fill = fct_rev_(ordered(.width))
+  ),
+
   # workaround (#84)
   draw_key = function(self, ...) draw_key_lineribbon(self, ...),
 
@@ -148,37 +118,21 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
 
   optional_aes = c("ymin", "ymax", "xmin", "xmax", "fill_ramp"),
 
-  extra_params = c("step", "orientation", "na.rm"),
-
   default_params = list(
     step = FALSE,
     orientation = NA,
     na.rm = FALSE
   ),
 
-  setup_params = function(self, data, params) {
-    params = defaults(params, self$default_params)
-
-    # detect orientation
-    params$flipped_aes = get_flipped_aes(data, params,
-      range_is_orthogonal = TRUE, ambiguous = TRUE, group_has_equal = TRUE
-    )
-    params$orientation = get_orientation(params$flipped_aes)
-
-    params
-  },
-
-  setup_data = function(self, data, params) {
-    #set up orientation
-    data$flipped_aes = params$flipped_aes
-
-    data
-  },
+  orientation_options = list(
+    range_is_orthogonal = TRUE, ambiguous = TRUE, group_has_equal = TRUE
+  ),
 
   draw_panel = function(self, data, panel_scales, coord,
     step = self$default_params$step,
     orientation = self$default_params$orientation,
-    flipped_aes = FALSE
+    flipped_aes = FALSE,
+    ...
   ) {
     define_orientation_variables(orientation)
 
@@ -240,6 +194,10 @@ GeomLineribbon = ggproto("GeomLineribbon", Geom,
     )
   }
 )
+
+#' @rdname geom_lineribbon
+#' @export
+geom_lineribbon = make_geom(GeomLineribbon)
 
 
 # helpers -----------------------------------------------------------------
