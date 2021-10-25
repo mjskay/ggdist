@@ -58,14 +58,14 @@ a call to a position adjustment function.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
 (e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
-\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_point}{Should the point portion of the geom be drawn?}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
 
-\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_slab}{Should the slab portion of the geom be drawn?}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.}
@@ -99,7 +99,7 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
 
-\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_interval}{Should the interval portion of the geom be drawn?}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the

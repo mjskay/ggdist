@@ -281,11 +281,11 @@ that determine the widths of the resulting intervals. If multiple probabilities 
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
 
-\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_slab}{Should the slab portion of the geom be drawn?}
 
-\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_point}{Should the point portion of the geom be drawn?}
 
-\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_interval}{Should the interval portion of the geom be drawn?}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the

@@ -286,9 +286,9 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
 #' aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
 #' specified with that aesthetic will not be adjusted using `fatten_point`.
-#' @param show_slab Should the slab portion of the geom be drawn? Default `TRUE`.
-#' @param show_point Should the point portion of the geom be drawn? Default `TRUE`.
-#' @param show_interval Should the interval portion of the geom be drawn? Default `TRUE`.
+#' @param show_slab Should the slab portion of the geom be drawn?
+#' @param show_point Should the point portion of the geom be drawn?
+#' @param show_interval Should the interval portion of the geom be drawn?
 #' @param na.rm	If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
 #' values are silently removed.
 #' @return A [ggplot2::Geom] representing a slab or combined slab+interval geometry which can

@@ -75,8 +75,8 @@ aesthetics; see \link{scales}.}
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
 aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-    \item{\code{show_point}}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
-    \item{\code{show_interval}}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+    \item{\code{show_point}}{Should the point portion of the geom be drawn?}
+    \item{\code{show_interval}}{Should the interval portion of the geom be drawn?}
     \item{\code{na.rm}}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
     \item{\code{inherit.aes}}{If \code{FALSE}, overrides the default aesthetics,
@@ -97,7 +97,7 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
-\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_slab}{Should the slab portion of the geom be drawn?}
 
 \item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
 to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only

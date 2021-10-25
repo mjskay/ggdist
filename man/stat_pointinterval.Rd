@@ -58,7 +58,7 @@ a call to a position adjustment function.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
 (e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
-\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_slab}{Should the slab portion of the geom be drawn?}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.}
@@ -97,9 +97,9 @@ that determine the widths of the resulting intervals. If multiple probabilities 
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
 
-\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_point}{Should the point portion of the geom be drawn?}
 
-\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_interval}{Should the interval portion of the geom be drawn?}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
@@ -124,8 +124,6 @@ those that are mapped (the default for most geoms).}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
-
-\item{.prob}{Deprecated. Use \code{.width} instead.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a point+multiple uncertainty interval geometry which can
