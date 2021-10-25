@@ -62,6 +62,7 @@ Encoding: UTF-8
 Collate:
     "ggdist-package.R"
     "util.R"
+    "abstract_geom.R"
     "abstract_stat.R"
     "binning_methods.R"
     "curve_interval.R"
