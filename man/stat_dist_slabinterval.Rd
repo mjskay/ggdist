@@ -18,21 +18,41 @@ stat_dist_slabinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
-  slab_type = c("pdf", "cdf", "ccdf"),
+  slab_type = "pdf",
   p_limits = c(NA, NA),
   outline_bars = FALSE,
-  orientation = NA,
   limits = NULL,
   n = 501,
+  point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
   show_interval = TRUE,
+  orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 )
 
-stat_dist_halfeye(...)
+stat_dist_halfeye(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_dist_eye(
   mapping = NULL,
@@ -40,6 +60,17 @@ stat_dist_eye(
   geom = "slabinterval",
   position = "identity",
   ...,
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 )
@@ -52,11 +83,41 @@ stat_dist_ccdfinterval(
   ...,
   slab_type = "ccdf",
   normalize = "none",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 )
 
-stat_dist_cdfinterval(..., slab_type = "cdf", normalize = "none")
+stat_dist_cdfinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  slab_type = "cdf",
+  normalize = "none",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_dist_gradientinterval(
   mapping = NULL,
@@ -64,11 +125,41 @@ stat_dist_gradientinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = c(size = FALSE, slab_alpha = FALSE),
   inherit.aes = TRUE
 )
 
-stat_dist_pointinterval(..., show_slab = FALSE)
+stat_dist_pointinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "pointinterval",
+  position = "identity",
+  ...,
+  show_slab = FALSE,
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_dist_interval(
   mapping = NULL,
@@ -78,6 +169,16 @@ stat_dist_interval(
   ...,
   show_slab = FALSE,
   show_point = FALSE,
+  .width = c(0.5, 0.8, 0.95),
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -88,6 +189,18 @@ stat_dist_slab(
   geom = "slab",
   position = "identity",
   ...,
+  show_point = FALSE,
+  show_interval = FALSE,
+  slab_type = "pdf",
+  p_limits = c(NA, NA),
+  outline_bars = FALSE,
+  limits = NULL,
+  n = 501,
+  point_interval = NULL,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -139,6 +252,32 @@ if outlines in between the bars are drawn when the \code{slab_color} aesthetic i
 (the default), the outline is drawn only along the tops of the bars; if \code{TRUE}, outlines in between
 bars are also drawn.}
 
+\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
+limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
+will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
+\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
+be determined by either \code{p_limits} or the scale settings.}
+
+\item{n}{Number of points at which to evaluate the function that defines the slab.}
+
+\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
+\code{mean_qi}, etc). This function should take in a vector of values, and should obey the
+\code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
+a vector with \code{.simple_names = TRUE} it should return a data frame with variables \code{.value}, \code{.lower},
+\code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
+depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
+more information.}
+
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
+that determine the widths of the resulting intervals. If multiple probabilities are provided,
+multiple intervals per group are generated, each with a different probability interval (and
+value of the corresponding \code{.width} and \code{level} generated variables).}
+
+\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
 aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
@@ -150,24 +289,6 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 \code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
-
-\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
-limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
-\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
-be determined by either \code{p_limits} or the scale settings.}
-
-\item{n}{Number of points at which to evaluate the function that defines the slab.}
-
-\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
-that determine the widths of the resulting intervals. If multiple probabilities are provided,
-multiple intervals per group are generated, each with a different probability interval (and
-value of the corresponding \code{.width} and \code{level} generated variables).}
-
-\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
-
-\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

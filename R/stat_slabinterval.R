@@ -86,6 +86,10 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
     "interval_function", "fun.data", "interval_args", "fun.args"
   ), AbstractStat$deprecated_params),
 
+  layer_args = defaults(list(
+    show.legend = c(size = FALSE)
+  ), AbstractStat$layer_args),
+
   orientation_options = defaults(list(
     main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
   ), AbstractStat$orientation_options),
@@ -203,11 +207,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
 
 #' @rdname stat_slabinterval
 #' @export
-stat_slabinterval = make_stat(
-  StatSlabinterval,
-  geom = "slabinterval",
-  show.legend = c(size = FALSE)
-)
+stat_slabinterval = make_stat(StatSlabinterval, geom = "slabinterval")
 
 
 # stat computation functions ----------------------------------------------
