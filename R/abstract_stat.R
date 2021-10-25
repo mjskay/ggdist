@@ -85,7 +85,7 @@ AbstractStat = ggproto("AbstractStat", Stat,
   }
 )
 
-#' @importFrom rlang syms
+#' @importFrom rlang syms new_function pairlist2 expr
 make_stat = function(stat, geom,
   mapping = NULL,
   data = NULL,
@@ -105,41 +105,36 @@ make_stat = function(stat, geom,
   args_to_syms = syms(names(args_to_defaults))
   names(args_to_syms) = names(args_to_defaults)
 
-  f = eval(bquote(
-      function(
-        mapping = .(mapping),
-        data = .(data),
-        geom = .(geom),
-        position = .(position),
-        ...
-      ) {
-        .Deprecated_arguments(.(stat$deprecated_params), ...)
-
-        layer(
-          data = data,
-          mapping = mapping,
-          stat = .(stat_name),
-          geom = geom,
-          position = position,
-
-          ..(args_to_syms),
-
-          params = list(
-            ..(params_to_syms),
-            ...
-          )
-        )
-      },
-      splice = TRUE
+  new_function(
+    c(
+      pairlist2(
+        mapping = mapping,
+        data = data,
+        geom = geom,
+        position = position,
+        ... =,
+      ),
+      params_to_defaults,
+      args_to_defaults
     ),
-    envir = parent.frame()
-  )
+    expr({
+      .Deprecated_arguments(!!stat$deprecated_params, ...)
 
-  formals(f) = c(
-    formals(f),
-    params_to_defaults,
-    args_to_defaults
-  )
+      layer(
+        data = data,
+        mapping = mapping,
+        stat = !!stat_name,
+        geom = geom,
+        position = position,
 
-  f
+        !!!args_to_syms,
+
+        params = list(
+          !!!params_to_syms,
+          ...
+        )
+      )
+    }),
+    env = parent.frame()
+  )
 }
