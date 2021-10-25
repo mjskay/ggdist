@@ -151,9 +151,9 @@ aesthetics; see \link{scales}.}
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
 aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-    \item{\code{show_slab}}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
-    \item{\code{show_point}}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
-    \item{\code{show_interval}}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+    \item{\code{show_slab}}{Should the slab portion of the geom be drawn?}
+    \item{\code{show_point}}{Should the point portion of the geom be drawn?}
+    \item{\code{show_interval}}{Should the interval portion of the geom be drawn?}
   }}
 
 \item{dotsize}{The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as

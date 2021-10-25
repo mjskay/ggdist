@@ -17,7 +17,6 @@
 #' @eval rd_slabinterval_aesthetics(geom = GeomPointinterval, geom_name = "geom_pointinterval", stat = StatPointinterval)
 #' @inheritParams stat_sample_slabinterval
 #' @inheritParams geom_slabinterval
-#' @param .prob Deprecated. Use `.width` instead.
 #' @return A [ggplot2::Stat] representing a point+multiple uncertainty interval geometry which can
 #' be added to a [ggplot()] object.
 #' @seealso See [geom_pointinterval()] for the geom versions, intended

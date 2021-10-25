@@ -66,7 +66,7 @@ sizes for intervals drawn according to \code{interval_size_range} (see the docum
 thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
 aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-    \item{\code{show_interval}}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+    \item{\code{show_interval}}{Should the interval portion of the geom be drawn?}
     \item{\code{na.rm}}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
     \item{\code{show.legend}}{logical. Should this layer be included in the legends?
@@ -103,9 +103,9 @@ that did not have size aesthetics targeting the point and interval separately. I
 size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
 aesthetics; see \link{scales}.}
 
-\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_slab}{Should the slab portion of the geom be drawn?}
 
-\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_point}{Should the point portion of the geom be drawn?}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a multiple interval geometry which can

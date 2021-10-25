@@ -45,46 +45,8 @@
 #'   stat_dist_lineribbon() +
 #'   scale_fill_brewer()
 #'
-#' @export
-stat_lineribbon = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "lineribbon",
-  position = "identity",
-  ...,
-
-  point_interval = median_qi,
-  .width = c(.50, .80, .95),
-
-  na.rm = FALSE,
-
-  show.legend = NA,
-  inherit.aes = TRUE,
-
-  #deprecated arguments
-  .prob
-) {
-  .width = .Deprecated_argument_alias(.width, .prob)
-
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatLineribbon,
-    geom = geom,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      point_interval = point_interval,
-      .width = .width,
-
-      show_slab = FALSE,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
+#' @name stat_lineribbon
+NULL
 
 StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
   default_aes = aes(
@@ -97,66 +59,19 @@ StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
     .width = c(.50, .80, .95)
   ), StatPointinterval$default_params),
 
-  setup_params = function(self, data, params) {
-    params = defaults(params, self$default_params)
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatPointinterval$layer_args),
 
-    # detect orientation -- this must be done before calling up to StatSlabInterval
-    # since auto-detection here is different (main_is_orthogonal needs to be FALSE)
-    params$flipped_aes = get_flipped_aes(data, params,
-      range_is_orthogonal = TRUE, ambiguous = TRUE, group_has_equal = TRUE
-    )
-    params$orientation = get_orientation(params$flipped_aes)
-
-    params = ggproto_parent(StatPointinterval, self)$setup_params(data, params)
-
-    params
-  }
+  orientation_options = defaults(list(
+    main_is_orthogonal = NA
+  ), StatPointinterval$orientation_options)
 )
-
 
 #' @rdname stat_lineribbon
 #' @export
-stat_dist_lineribbon = function(
-  mapping = NULL,
-  data = NULL,
-  geom = "lineribbon",
-  position = "identity",
-  ...,
+stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")
 
-  n = 501,
-  .width = c(.50, .80, .95),
-
-  na.rm = FALSE,
-
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = StatDistLineribbon,
-    geom = geom,
-    position = position,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      orientation = "vertical",
-
-      n = n,
-
-      point_interval = NULL,
-      .width = .width,
-
-      show_slab = FALSE,
-      show_interval = TRUE,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
 
 StatDistLineribbon = ggproto("StatDistLineribbon", StatDistSlabinterval,
   default_aes = defaults(aes(
@@ -170,9 +85,17 @@ StatDistLineribbon = ggproto("StatDistLineribbon", StatDistSlabinterval,
     .width = c(.50, .80, .95)
   ), StatDistSlabinterval$default_params),
 
+  layer_args = defaults(list(
+    show.legend = NA
+  ), StatPointinterval$layer_args),
+
   group_by_dist = FALSE
 )
 # have to remove this here instead of in call to defaults()
 # because otherwise it stays in the list as a value = NULL
 # instead of being removed
 StatDistLineribbon$default_aes$size = NULL
+
+#' @rdname stat_lineribbon
+#' @export
+stat_dist_lineribbon = make_stat(StatDistLineribbon, geom = "lineribbon")

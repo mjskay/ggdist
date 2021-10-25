@@ -112,11 +112,11 @@ thickest interval line. If you wish to specify point sizes directly, you can als
 aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 
-\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_slab}{Should the slab portion of the geom be drawn?}
 
-\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_point}{Should the point portion of the geom be drawn?}
 
-\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+\item{show_interval}{Should the interval portion of the geom be drawn?}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
