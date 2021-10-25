@@ -22,6 +22,8 @@
 #' - An `orientation_options` property provides parameters passed to `get_flipped_aes()`.
 #' Necessary orientation detection boilerplate is included in `setup_params()` and
 #' `setup_data()`.
+#' - `hidden_params` provides a list of parameters not to be exposed in the
+#' `stat_XXX()` constructor
 #' - `deprecated_params` provides a list of deprecated parameters that will cause
 #' a warning to be generated if used.
 #' - `layer_args` provides a list of layer arguments (such as `show.legend` and
