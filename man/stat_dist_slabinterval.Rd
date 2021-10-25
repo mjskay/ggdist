@@ -26,6 +26,7 @@ stat_dist_slabinterval(
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -47,6 +48,7 @@ stat_dist_halfeye(
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -68,6 +70,7 @@ stat_dist_eye(
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -90,6 +93,7 @@ stat_dist_ccdfinterval(
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -112,6 +116,7 @@ stat_dist_cdfinterval(
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -133,6 +138,7 @@ stat_dist_gradientinterval(
   point_interval = NULL,
   .width = c(0.66, 0.95),
   show_slab = TRUE,
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -154,6 +160,7 @@ stat_dist_pointinterval(
   n = 501,
   point_interval = NULL,
   .width = c(0.66, 0.95),
+  show_point = TRUE,
   show_interval = TRUE,
   orientation = NA,
   na.rm = FALSE,
@@ -276,6 +283,8 @@ value of the corresponding \code{.width} and \code{level} generated variables).}
 
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
 
+\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+
 \item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
@@ -309,8 +318,6 @@ the x/y axis opposite the \code{orientation} of this geom so that the maximum he
 opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
-
-\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can

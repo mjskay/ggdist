@@ -9,8 +9,10 @@ Deprecated functions and arguments and their alternatives are listed below.
 \section{Deprecated Arguments}{
 
 
-Arguments to \code{stat_slabinterval()} deprecated in ggdist 3.1 are:
+Parameters for \code{stat_slabinterval()} and family deprecated as of ggdist 3.1 are:
 \itemize{
+\item The \code{.prob} argument, which is a long-deprecated alias for \code{.width}, was
+removed in ggdist 3.1.
 \item The \code{limits_function} argument: this was a parameter for determining the
 function to compute limits of the slab in \code{stat_slabinterval()} and its
 derived stats. This function is really an internal function only needed by

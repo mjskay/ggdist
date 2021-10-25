@@ -17,22 +17,47 @@ stat_sample_slabinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
-  orientation = NA,
-  slab_type = c("pdf", "cdf", "ccdf", "histogram"),
+  slab_type = "pdf",
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
   outline_bars = FALSE,
+  point_interval = "median_qi",
   limits = NULL,
   n = 501,
-  point_interval = median_qi,
   .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 )
 
-stat_halfeye(...)
+stat_halfeye(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  slab_type = "pdf",
+  adjust = 1,
+  trim = TRUE,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_eye(
   mapping = NULL,
@@ -40,6 +65,20 @@ stat_eye(
   geom = "slabinterval",
   position = "identity",
   ...,
+  slab_type = "pdf",
+  adjust = 1,
+  trim = TRUE,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 )
@@ -52,11 +91,47 @@ stat_ccdfinterval(
   ...,
   slab_type = "ccdf",
   normalize = "none",
+  adjust = 1,
+  trim = TRUE,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = c(size = FALSE),
   inherit.aes = TRUE
 )
 
-stat_cdfinterval(..., slab_type = "cdf", normalize = "none")
+stat_cdfinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  slab_type = "cdf",
+  normalize = "none",
+  adjust = 1,
+  trim = TRUE,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_gradientinterval(
   mapping = NULL,
@@ -64,11 +139,47 @@ stat_gradientinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
+  slab_type = "pdf",
+  adjust = 1,
+  trim = TRUE,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = c(size = FALSE, slab_alpha = FALSE),
   inherit.aes = TRUE
 )
 
-stat_histinterval(..., slab_type = "histogram")
+stat_histinterval(
+  mapping = NULL,
+  data = NULL,
+  geom = "slabinterval",
+  position = "identity",
+  ...,
+  slab_type = "histogram",
+  adjust = 1,
+  trim = TRUE,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
+  show.legend = c(size = FALSE),
+  inherit.aes = TRUE
+)
 
 stat_slab(
   mapping = NULL,
@@ -76,6 +187,20 @@ stat_slab(
   geom = "slab",
   position = "identity",
   ...,
+  show_point = FALSE,
+  show_interval = FALSE,
+  slab_type = "pdf",
+  adjust = 1,
+  trim = TRUE,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  point_interval = "median_qi",
+  limits = NULL,
+  n = 501,
+  .width = c(0.66, 0.95),
+  show_slab = TRUE,
+  orientation = NA,
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -110,18 +235,6 @@ a call to a position adjustment function.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
 (e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
 
-\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
-
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}.}
 
@@ -138,14 +251,6 @@ input data? Default \code{TRUE}.}
 the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE} (the default), the outline
 is drawn only along the tops of the bars; if \code{TRUE}, outlines in between bars are also drawn.}
 
-\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
-limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
-\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
-
-\item{n}{Number of points at which to evaluate the function that defines the slab.}
-
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, etc). This function should take in a vector of values, and should obey the
 \code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
@@ -154,10 +259,36 @@ a vector with \code{.simple_names = TRUE} it should return a data frame with var
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 
+\item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
+computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
+limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
+will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
+\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
+
+\item{n}{Number of points at which to evaluate the function that defines the slab.}
+
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
+
+\item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_point}{Should the point portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{show_interval}{Should the interval portion of the geom be drawn? Default \code{TRUE}.}
+
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

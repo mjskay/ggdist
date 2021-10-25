@@ -375,8 +375,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   compute_interval = compute_interval_dist
 )
 
-#' @rdname stat_dist_slabinterval
 #' @export
+#' @rdname stat_dist_slabinterval
 stat_dist_slabinterval = make_stat(StatDistSlabinterval, geom = "slabinterval")
 
 

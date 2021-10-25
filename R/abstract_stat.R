@@ -141,7 +141,7 @@ make_stat = function(stat, geom,
 
 # helpers -----------------------------------------------------------------
 
-#' Convert simple objects to expression representing those objects
+#' Convert simple objects to expressions representing those objects
 #' Needed for code generation so that the formals of a function's documentation
 #' (which will be expressions) match the formals of the generated code.
 #' @noRd

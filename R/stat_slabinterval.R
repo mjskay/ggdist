@@ -77,10 +77,12 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
     .width = c(.66, .95),
 
     show_slab = TRUE,
+    show_point = TRUE,
     show_interval = TRUE
   ), AbstractStat$default_params),
 
   deprecated_params = union(c(
+    ".prob",
     "limits_function", "limits_args",
     "slab_function", "slab_args",
     "interval_function", "fun.data", "interval_args", "fun.args"
@@ -159,6 +161,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
     .width = self$default_params$.width,
 
     show_slab = self$default_params$show_slab,
+    show_point = self$default_params$show_point,
     show_interval = self$default_params$show_interval,
 
     na.rm = self$default_params$na.rm,

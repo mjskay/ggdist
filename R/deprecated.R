@@ -13,8 +13,10 @@
 #'
 #' @section Deprecated Arguments:
 #'
-#' Arguments to `stat_slabinterval()` deprecated in ggdist 3.1 are:
+#' Parameters for `stat_slabinterval()` and family deprecated as of ggdist 3.1 are:
 #'
+#' - The `.prob` argument, which is a long-deprecated alias for `.width`, was
+#' removed in ggdist 3.1.
 #' - The `limits_function` argument: this was a parameter for determining the
 #' function to compute limits of the slab in `stat_slabinterval()` and its
 #' derived stats. This function is really an internal function only needed by
