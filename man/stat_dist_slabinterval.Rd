@@ -160,8 +160,10 @@ be determined by either \code{p_limits} or the scale settings.}
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
 
-\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of desired
-interval widths in \emph{\link{0,1}}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
+that determine the widths of the resulting intervals. If multiple probabilities are provided,
+multiple intervals per group are generated, each with a different probability interval (and
+value of the corresponding \code{.width} and \code{level} generated variables).}
 
 \item{show_slab}{Should the slab portion of the geom be drawn? Default \code{TRUE}.}
 

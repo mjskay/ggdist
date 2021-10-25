@@ -70,8 +70,10 @@ a vector with \code{.simple_names = TRUE} it should return a data frame with var
 depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
 more information.}
 
-\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of desired
-interval widths in \emph{\link{0,1}}.}
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
+that determine the widths of the resulting intervals. If multiple probabilities are provided,
+multiple intervals per group are generated, each with a different probability interval (and
+value of the corresponding \code{.width} and \code{level} generated variables).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
