@@ -16,8 +16,9 @@
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
 #' `stat_slabinterval` and [geom_slabinterval()]
-#' @param ...  Other arguments passed to [layer()]. They may also be arguments to the paired geom
-#' (e.g., [geom_pointinterval()])
+#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
+#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+#' parameters to the paired geom/stat (e.g. `geom_slabinterval()`).
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits

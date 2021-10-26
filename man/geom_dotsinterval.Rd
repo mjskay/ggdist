@@ -18,7 +18,14 @@ geom_dotsinterval(
   dotsize = 1,
   stackratio = 1,
   binwidth = NA,
-  layout = c("bin", "weave", "swarm"),
+  layout = "bin",
+  orientation = NA,
+  interval_size_domain = c(1, 6),
+  interval_size_range = c(0.6, 1.4),
+  fatten_point = 1.8,
+  show_slab = TRUE,
+  show_point = TRUE,
+  show_interval = TRUE,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -30,6 +37,11 @@ geom_dots(
   stat = "identity",
   position = "identity",
   ...,
+  dotsize = 1,
+  stackratio = 1,
+  binwidth = NA,
+  layout = "bin",
+  orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -118,43 +130,9 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{
-  Arguments passed on to \code{\link[=geom_slabinterval]{geom_slabinterval}}
-  \describe{
-    \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
-panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
-the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
-opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
-groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
-normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
-    \item{\code{fill_type}}{What type of fill to use when the fill color or alpha varies within a slab. The default,
-\code{"segments"}, breaks up the slab geometry into segments for each unique combination of fill color and
-alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
-but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{linearGradient()} is used to
-create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
-R > 4.1 and is not yet supported on all graphics devices.}
-    \item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
-sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
-    \item{\code{interval_size_range}}{(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
-they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give sizes
-with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
-(typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
-function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
-the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
-as it may result in strange scaling of legends; this argument is a holdover from earlier versions
-that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
-aesthetics; see \link{scales}.}
-    \item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-    \item{\code{show_slab}}{Should the slab portion of the geom be drawn?}
-    \item{\code{show_point}}{Should the point portion of the geom be drawn?}
-    \item{\code{show_interval}}{Should the interval portion of the geom be drawn?}
-  }}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+parameters to the paired geom/stat.}
 
 \item{dotsize}{The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as
 wide as the bin width.}
@@ -194,6 +172,43 @@ columns, but can be more compact and neat looking, especially for sample data (a
 dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).
 }}
 
+\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
+vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
+the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
+\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
+ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
+\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
+
+\item{interval_size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
+
+\item{interval_size_range}{(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give sizes
+with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
+(typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
+function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
+as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
+aesthetics; see \link{scales}.}
+
+\item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
+aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
+specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+
+\item{show_slab}{Should the slab portion of the geom be drawn?}
+
+\item{show_point}{Should the point portion of the geom be drawn?}
+
+\item{show_interval}{Should the interval portion of the geom be drawn?}
+
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
@@ -228,18 +243,6 @@ more information.}
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
-
-\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} or \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a dotplot or combined dotplot+interval geometry which can

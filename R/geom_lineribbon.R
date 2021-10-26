@@ -23,7 +23,9 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' `aes(fill = forcats::fct_rev(ordered(.width)))`.
 #'
 #' @inheritParams ggplot2::geom_line
-#' @param ...  Other arguments passed to [layer()].
+#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
+#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+#' parameters to the paired geom/stat.
 #' @param step Should the line/ribbon be drawn as a step function? One of: `FALSE` (do not draw as a step
 #' function, the default), `TRUE` (draw a step function using the `"mid"` approach), `"mid"`
 #' (draw steps midway between adjacent x values), `"hv"` (draw horizontal-then-vertical steps), `"vh"`

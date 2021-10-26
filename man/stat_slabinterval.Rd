@@ -47,8 +47,9 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
-(e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
 
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed automatically for the slab as well as the limits defined by the scales of the plot to determine the

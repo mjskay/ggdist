@@ -209,8 +209,6 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @eval rd_slabinterval_aesthetics(geom = GeomDotsinterval, geom_name = "geom_dotsinterval", stat = StatDotsinterval)
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_slabinterval
-#' @inheritDotParams geom_slabinterval
-#' @param ...  Other arguments passed to [layer()].
 #' @author Matthew Kay
 #' @param dotsize The size of the dots relative to the bin width. The default, `1`, makes dots be just about as
 #' wide as the bin width.
@@ -282,48 +280,9 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'
 #' @importFrom rlang %||%
 #' @import grid
-#' @export
-geom_dotsinterval = function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
+#' @name geom_dotsinterval
+NULL
 
-  ...,
-  dotsize = 1,
-  stackratio = 1,
-  binwidth = NA,
-  layout = c("bin", "weave", "swarm"),
-
-  na.rm = FALSE,
-
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layout = match.arg(layout)
-
-  layer(
-    mapping = mapping,
-    data = data,
-    stat = stat,
-    position = position,
-    geom = GeomDotsinterval,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      normalize = "none",
-
-      dotsize = dotsize,
-      stackratio = stackratio,
-      binwidth = binwidth,
-      layout = layout,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
@@ -346,13 +305,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     s_data
   },
 
-  extra_params = c(GeomSlabinterval$extra_params,
-    "dotsize",
-    "stackratio",
-    "binwidth",
-    "layout"
-  ),
-
   default_params = defaults(list(
     normalize = "none",
     dotsize = 1,
@@ -361,9 +313,14 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     layout = "bin"
   ), GeomSlabinterval$default_params),
 
+  hidden_params = union(c(
+    "normalize", "fill_type"
+  ), GeomSlabinterval$hidden_params),
+
   draw_panel = function(self, data, panel_params, coord,
     orientation = self$default_params$orientation,
     normalize = self$default_params$normalize,
+    fill_type = self$default_params$fill_type,
     interval_size_domain = self$default_params$interval_size_domain,
     interval_size_range = self$default_params$interval_size_range,
     fatten_point = self$default_params$fatten_point,
@@ -433,41 +390,12 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   }
 )
 
+#' @rdname geom_dotsinterval
+#' @export
+geom_dotsinterval = make_geom(GeomDotsinterval)
+
 
 # shortcut geoms ----------------------------------------------------------
-#' @export
-#' @rdname geom_dotsinterval
-geom_dots = function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-
-  ...,
-
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    mapping = mapping,
-    data = data,
-    stat = stat,
-    position = position,
-    geom = GeomDots,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      normalize = "none",
-      show_point = FALSE,
-      show_interval = FALSE,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
@@ -501,6 +429,11 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
     show_interval = FALSE
   ), GeomDotsinterval$default_params),
 
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "interval_size_domain", "interval_size_range", "fatten_point"
+  ), GeomDotsinterval$hidden_params),
+
   draw_key_slab = function(self, data, key_data, params, size) {
     # can drop all the complicated checks from this key since it's just one geom
     s_key_data = self$override_slab_aesthetics(key_data)
@@ -514,3 +447,7 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
 # have to unset these here because defaults() does not treat NULLs as unsetting values
 GeomDots$default_key_aes$slab_colour = NULL
 GeomDots$default_key_aes$slab_size = NULL
+
+#' @rdname geom_dotsinterval
+#' @export
+geom_dots = make_geom(GeomDots)

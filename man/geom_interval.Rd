@@ -12,8 +12,11 @@ geom_interval(
   ...,
   orientation = NA,
   interval_size_range = c(1, 6),
-  show_slab = FALSE,
-  show_point = FALSE
+  interval_size_domain = c(1, 6),
+  fatten_point = 1.8,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
 )
 }
 \arguments{
@@ -43,42 +46,9 @@ layer, as a string.}
 \item{position}{The position adjustment to use for overlapping points on this layer. Setting this equal to
 \code{"dodge"} can be useful if you have overlapping intervals.}
 
-\item{...}{
-  Arguments passed on to \code{\link[=geom_slabinterval]{geom_slabinterval}}
-  \describe{
-    \item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
-panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
-the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
-opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
-groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
-normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
-    \item{\code{fill_type}}{What type of fill to use when the fill color or alpha varies within a slab. The default,
-\code{"segments"}, breaks up the slab geometry into segments for each unique combination of fill color and
-alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
-but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{linearGradient()} is used to
-create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
-R > 4.1 and is not yet supported on all graphics devices.}
-    \item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
-sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
-    \item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
-    \item{\code{show_interval}}{Should the interval portion of the geom be drawn?}
-    \item{\code{na.rm}}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
-values are silently removed.}
-    \item{\code{show.legend}}{logical. Should this layer be included in the legends?
-\code{NA}, the default, includes if any aesthetics are mapped.
-\code{FALSE} never includes, and \code{TRUE} always includes.
-It can also be a named logical vector to finely select the aesthetics to
-display.}
-    \item{\code{inherit.aes}}{If \code{FALSE}, overrides the default aesthetics,
-rather than combining with them. This is most useful for helper functions
-that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
-  }}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+parameters to the paired geom/stat.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
@@ -103,9 +73,27 @@ that did not have size aesthetics targeting the point and interval separately. I
 size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
 aesthetics; see \link{scales}.}
 
-\item{show_slab}{Should the slab portion of the geom be drawn?}
+\item{interval_size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
 
-\item{show_point}{Should the point portion of the geom be drawn?}
+\item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
+aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
+specified with that aesthetic will not be adjusted using \code{fatten_point}.}
+
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
+values are silently removed.}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a multiple interval geometry which can

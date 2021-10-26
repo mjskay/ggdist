@@ -26,7 +26,6 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomPointinterval, geom_name = "geom_pointinterval")
 #' @inheritParams geom_slabinterval
-#' @inheritDotParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
 #' `"dodge"` can be useful if you have overlapping intervals.
 #' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
@@ -68,37 +67,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'   geom_pointinterval()
 #'
 #' @import ggplot2
-#' @export
-geom_pointinterval = function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-  ...,
-
-  orientation = NA,
-  show_slab = FALSE,
-
-  show.legend = c(size = FALSE)
-) {
-
-  layer_geom_slabinterval(
-    data = data,
-    mapping = mapping,
-    default_mapping = aes(size = -.width),
-    stat = stat,
-    geom = GeomPointinterval,
-    position = position,
-    ...,
-
-    orientation = orientation,
-    show_slab = show_slab,
-
-    datatype = "interval",
-
-    show.legend = show.legend
-  )
-}
+#' @name geom_pointinterval
+NULL
 
 #' @rdname ggdist-ggproto
 #' @format NULL
@@ -115,8 +85,25 @@ GeomPointinterval = ggproto("GeomPointinterval", GeomSlabinterval,
     fill = NA
   ), GeomSlabinterval$default_key_aes),
 
+  default_computed_aes = defaults(aes(
+    size = -.width
+  ), GeomSlabinterval$default_computed_aes),
+
   default_params = defaults(list(
     orientation = NA,
     show_slab = FALSE
-  ), GeomSlabinterval$default_params)
+  ), GeomSlabinterval$default_params),
+
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "normalize", "fill_type"
+  ), GeomSlabinterval$hidden_params),
+
+  layer_args = defaults(list(
+    show.legend = c(size = FALSE)
+  ), GeomSlabinterval$layer_args)
 )
+
+#' @rdname geom_pointinterval
+#' @export
+geom_pointinterval = make_geom(GeomPointinterval)

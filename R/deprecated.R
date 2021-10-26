@@ -42,6 +42,11 @@
 #' a `point_interval` replace the value of the `point_interval` argument with
 #' a simple wrapper; e.g. `stat_halfeye(point_interval = \(...) point_interval(..., extra_arg = XXX))`
 #'
+#' Parameters for `geom_slabinterval()` and family deprecated as of ggdist 3.1 are:
+#'
+#' - The `size_domain` and `size_range` arguments, which are long-deprecated aliases
+#' for `interval_size_domain` and `interval_size_range`, were removed in ggdist 3.1.
+#'
 #' @format NULL
 #' @usage NULL
 #' @author Matthew Kay
