@@ -45,8 +45,9 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. They may also be arguments to the paired geom
-(e.g., \code{\link[=geom_pointinterval]{geom_pointinterval()}})}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, etc). This function should take in a vector of values, and should obey the

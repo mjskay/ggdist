@@ -38,6 +38,12 @@ so it was replaced with \code{AbstractStatSlabInterval$compute_interval()}.
 a \code{point_interval} replace the value of the \code{point_interval} argument with
 a simple wrapper; e.g. \verb{stat_halfeye(point_interval = \\(...) point_interval(..., extra_arg = XXX))}
 }
+
+Parameters for \code{geom_slabinterval()} and family deprecated as of ggdist 3.1 are:
+\itemize{
+\item The \code{size_domain} and \code{size_range} arguments, which are long-deprecated aliases
+for \code{interval_size_domain} and \code{interval_size_range}, were removed in ggdist 3.1.
+}
 }
 
 \author{

@@ -27,7 +27,6 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval")
 #' @inheritParams geom_slabinterval
-#' @inheritDotParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
 #' `"dodge"` can be useful if you have overlapping intervals.
 #' @return A [ggplot2::Geom] representing a multiple interval geometry which can
@@ -68,37 +67,8 @@ globalVariables(c(".lower", ".upper", ".width"))
 #'   scale_color_brewer()
 #'
 #' @import ggplot2
-#' @export
-geom_interval = function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-  ...,
-
-  orientation = NA,
-  interval_size_range = c(1, 6),
-  show_slab = FALSE,
-  show_point = FALSE
-) {
-
-  layer_geom_slabinterval(
-    data = data,
-    mapping = mapping,
-    default_mapping = aes(color = fct_rev_(ordered(.width))),
-    stat = stat,
-    geom = GeomInterval,
-    position = position,
-    ...,
-
-    orientation = orientation,
-    interval_size_range = interval_size_range,
-    show_slab = show_slab,
-    show_point = show_point,
-
-    datatype = "interval"
-  )
-}
+#' @name geom_interval
+NULL
 
 #' @rdname ggdist-ggproto
 #' @format NULL
@@ -116,10 +86,23 @@ GeomInterval = ggproto("GeomInterval", GeomSlabinterval,
     fill = NA
   ), GeomSlabinterval$default_key_aes),
 
+  default_computed_aes = defaults(aes(
+    color = fct_rev_(ordered(.width))
+  ), GeomSlabinterval$default_computed_aes),
+
   default_params = defaults(list(
     orientation = NA,
     interval_size_range = c(1, 6),
     show_slab = FALSE,
     show_point = FALSE
-  ), GeomSlabinterval$default_params)
+  ), GeomSlabinterval$default_params),
+
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "normalize", "fill_type"
+  ), GeomSlabinterval$hidden_params)
 )
+
+#' @rdname geom_interval
+#' @export
+geom_interval = make_geom(GeomInterval)

@@ -244,7 +244,9 @@ get_line_size = function(i_data, size_domain, size_range) {
 #'
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
-#' @param ...  Other arguments passed to [layer()].
+#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
+#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+#' parameters to the paired geom/stat.
 #' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
 #' vertically (`"vertical"`). The default, `NA`, automatically detects the orientation based on how the
 #' aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
@@ -307,107 +309,14 @@ get_line_size = function(i_data, size_domain, size_range) {
 #'
 #' @importFrom ggplot2 GeomSegment GeomPolygon
 #' @importFrom rlang %||%
-#' @export
-geom_slabinterval = function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-  ...,
-
-  # IF YOU ARE CHANGING THESE,
-  # YOU MUST ALSO UPDATE:
-  # 1. The call to layer_geom_slabinterval below
-  # 2. The definition of GeomSlabinterval$extra_params
-  # 3. The definition of GeomSlabinterval$default_params
-  # 4. The argument definitions of GeomSlabinterval$draw_panel
-  # This is needed to support how defaults work with child geoms,
-  # amongst other things
-  orientation = NA,
-  normalize = c("all", "panels", "xy", "groups", "none"),
-  fill_type = c("segments", "gradient"),
-  interval_size_domain = c(1, 6),
-  interval_size_range = c(0.6, 1.4),
-  fatten_point = 1.8,
-  show_slab = TRUE,
-  show_point = TRUE,
-  show_interval = TRUE,
-  na.rm = FALSE,
-
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  normalize = match.arg(normalize)
-  fill_type = match.arg(fill_type)
-
-  layer_geom_slabinterval(
-    mapping = mapping,
-    data = data,
-    stat = stat,
-    position = position,
-    geom = GeomSlabinterval,
-    ...,
-
-    orientation = orientation,
-    normalize = normalize,
-    fill_type = fill_type,
-    interval_size_domain = interval_size_domain,
-    interval_size_range = interval_size_range,
-    fatten_point = fatten_point,
-    show_slab = show_slab,
-    show_point = show_point,
-    show_interval = show_interval,
-    na.rm = na.rm,
-
-    show.legend = show.legend,
-    inherit.aes = inherit.aes
-  )
-}
-
-layer_geom_slabinterval = function(
-  mapping = NULL,
-  default_mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-  geom = GeomSlabinterval,
-  ...,
-
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-
-  .Deprecated_arguments(
-    c("size_domain", "size_range"), ..., which = -2,
-    message = "Use the interval_size_domain and interval_size_range arguments instead."
-  )
-
-  l = layer(
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    geom = geom,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      ...
-    )
-  )
-
-  if (!is.null(default_mapping)) {
-    add_default_computed_aesthetics(l, default_mapping)
-  } else {
-    l
-  }
-}
+#' @name geom_slabinterval
+NULL
 
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
-GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
+GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
   default_aes = aes(
     # default datatype is slab (other valid value is "interval" for points/intervals)
     datatype = "slab",
@@ -480,19 +389,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
   override_point_aesthetics = function(self, ...) override_point_aesthetics(self, ...),
   override_interval_aesthetics = function(self, ...) override_interval_aesthetics(self, ...),
 
-  extra_params = c(
-    "orientation",
-    "normalize",
-    "fill_type",
-    "interval_size_domain",
-    "interval_size_range",
-    "fatten_point",
-    "show_slab",
-    "show_point",
-    "show_interval",
-    "na.rm"
-  ),
-
   default_params = list(
     orientation = NA,
     normalize = "all",
@@ -506,21 +402,16 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     na.rm = FALSE
   ),
 
-  setup_params = function(self, data, params) {
-    params = defaults(params, self$default_params)
+  deprecated_params = union(c(
+    "size_domain", "size_range"
+  ), AbstractGeom$deprecated_params),
 
-    # detect orientation
-    params$flipped_aes = get_flipped_aes(data, params,
-      main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
-    )
-    params$orientation = get_orientation(params$flipped_aes)
-
-    params
-  },
+  orientation_options = defaults(list(
+    main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
+  ), AbstractGeom$orientation_options),
 
   setup_data = function(self, data, params) {
-    #set up orientation
-    data$flipped_aes = params$flipped_aes
+    data = ggproto_parent(AbstractGeom, self)$setup_data(data, params)
     define_orientation_variables(params$orientation)
 
     # when we are missing a main aesthetic (e.g. the y aes in a horizontal orientation),
@@ -651,6 +542,10 @@ GeomSlabinterval = ggproto("GeomSlabinterval", Geom,
     )
   }
 )
+
+#' @rdname geom_slabinterval
+#' @export
+geom_slabinterval = make_geom(GeomSlabinterval)
 
 
 # side and justification calculations -------------------------------------
@@ -875,38 +770,6 @@ switch_fill_type = function(fill_type, segments, gradient) {
 
 # shortcut geoms ----------------------------------------------------------
 
-#' @export
-#' @rdname geom_slabinterval
-geom_slab = function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-
-  ...,
-
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(
-    mapping = mapping,
-    data = data,
-    stat = stat,
-    position = position,
-    geom = GeomSlab,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-
-    params = list(
-      show_point = FALSE,
-      show_interval = FALSE,
-
-      na.rm = na.rm,
-      ...
-    )
-  )
-}
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
@@ -935,6 +798,11 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
     show_interval = FALSE
   ), GeomSlabinterval$default_params),
 
+  hidden_params = union(c(
+    "show_slab", "show_point", "show_interval",
+    "interval_size_domain", "interval_size_range", "fatten_point"
+  ), GeomSlabinterval$hidden_params),
+
   draw_key_slab = function(self, data, key_data, params, size) {
     # can drop all the complicated checks from this key since it's just one geom
     s_key_data = self$override_slab_aesthetics(key_data)
@@ -951,3 +819,7 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
 # have to unset these here because defaults() does not treat NULLs as unsetting values
 GeomSlab$default_key_aes$slab_colour = NULL
 GeomSlab$default_key_aes$slab_size = NULL
+
+#' @rdname geom_slabinterval
+#' @export
+geom_slab = make_geom(GeomSlab)

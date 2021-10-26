@@ -12,8 +12,8 @@ geom_slabinterval(
   position = "identity",
   ...,
   orientation = NA,
-  normalize = c("all", "panels", "xy", "groups", "none"),
-  fill_type = c("segments", "gradient"),
+  normalize = "all",
+  fill_type = "segments",
   interval_size_domain = c(1, 6),
   interval_size_range = c(0.6, 1.4),
   fatten_point = 1.8,
@@ -31,6 +31,9 @@ geom_slab(
   stat = "identity",
   position = "identity",
   ...,
+  orientation = NA,
+  normalize = "all",
+  fill_type = "segments",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -63,7 +66,9 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+parameters to the paired geom/stat.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the

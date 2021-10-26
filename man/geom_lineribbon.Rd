@@ -44,7 +44,9 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}.}
+\item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
+to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+parameters to the paired geom/stat.}
 
 \item{step}{Should the line/ribbon be drawn as a step function? One of: \code{FALSE} (do not draw as a step
 function, the default), \code{TRUE} (draw a step function using the \code{"mid"} approach), \code{"mid"}
