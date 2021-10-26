@@ -14,6 +14,7 @@ ggname = function(prefix, grob) {
 
 # add default computed aesthetics to a layer --- useful for creating default aesthetics
 # that are computed from the input data rather than default non-data-mapped aesthetics
+#' @importFrom rlang get_expr as_quosure
 add_default_computed_aesthetics = function(l, default_mapping) {
   ggproto(NULL, l,
     setup_layer = function(self, data, plot) {
@@ -25,7 +26,8 @@ add_default_computed_aesthetics = function(l, default_mapping) {
         # we don't use exact matching here because if someone is using ggnewscale
         # then aesthetic "x" will be replaced with "x_new" and we don't want to
         # re-create the default "x" aesthetic mapping in that case.
-        vars_in_mapping = all_names(quo_get_expr(default_mapping[[aesthetic]]))
+        default_aes_mapping = get_expr(default_mapping[[aesthetic]])
+        vars_in_mapping = all_names(default_aes_mapping)
         if (
           # only add the aesthetic if it isn't already set and if the variables it uses
           # are in the provided data and none of them are NA
@@ -34,7 +36,15 @@ add_default_computed_aesthetics = function(l, default_mapping) {
           all(vars_in_mapping %in% names(data)) &&
           !anyNA(data[,vars_in_mapping])
         ) {
-          mapping[[aesthetic]] = default_mapping[[aesthetic]]
+          # We reconstruct the quosure here instead of using default_mapping[[aesthetic]]
+          # as a hack because for some reason when this is run inside {covr} it
+          # gets mangled. So we need to recreate it from the underlying expression
+          # and the environment (which in this case should be the package
+          # environment, which is the same as environment(add_default_computed_aesthetics))
+          mapping[[aesthetic]] = as_quosure(
+            default_aes_mapping,
+            env = environment(add_default_computed_aesthetics)
+          )
         }
       }
 
