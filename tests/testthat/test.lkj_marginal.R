@@ -44,12 +44,13 @@ test_that("marginalize_lkjcorr works", {
   ref = data.frame(
     coef = c("a", "b"),
     prior = c("lkjcorr(3)", "lkjcorr(3)" ),
-    .dist = c("lkjcorr_marginal", "lkjcorr_marginal")
+    .dist = c("lkjcorr_marginal", "lkjcorr_marginal"),
+    stringsAsFactors = FALSE
   )
   ref$.args = list(list(2, 3), list(4, 3))
 
   expect_equal(
-    data.frame(coef = c("a", "b"), prior = "lkjcorr(3)") %>%
+    data.frame(coef = c("a", "b"), prior = "lkjcorr(3)", stringsAsFactors = FALSE) %>%
       parse_dist(prior) %>%
       marginalize_lkjcorr(K = 2, coef == "a") %>%
       marginalize_lkjcorr(K = 4, coef == "b"),
