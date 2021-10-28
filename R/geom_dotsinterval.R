@@ -118,7 +118,8 @@ makeContent.dots_grob = function(x) {
 
 draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
-  child_params
+  dotsize, stackratio, binwidth, layout,
+  ...
 ) {
   define_orientation_variables(orientation)
 
@@ -159,19 +160,19 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
   s_data = coord$transform(s_data, panel_params)
 
-  if (!isTRUE(is.na(child_params$binwidth)) && !is.unit(child_params$binwidth)) {
+  if (!isTRUE(is.na(binwidth)) && !is.unit(binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space
-    child_params$binwidth = child_params$binwidth / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
+    binwidth = binwidth / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
   slab_grobs = list(dots_grob(
       s_data,
       x, y,
-      dotsize = child_params$dotsize,
-      stackratio = child_params$stackratio,
-      binwidth = child_params$binwidth,
-      layout = child_params$layout,
+      dotsize = dotsize,
+      stackratio = stackratio,
+      binwidth = binwidth,
+      layout = layout,
       orientation = orientation
     ))
 }
@@ -316,45 +317,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   hidden_params = union(c(
     "normalize", "fill_type"
   ), GeomSlabinterval$hidden_params),
-
-  draw_panel = function(self, data, panel_params, coord,
-    orientation = self$default_params$orientation,
-    normalize = self$default_params$normalize,
-    fill_type = self$default_params$fill_type,
-    interval_size_domain = self$default_params$interval_size_domain,
-    interval_size_range = self$default_params$interval_size_range,
-    fatten_point = self$default_params$fatten_point,
-    show_slab = self$default_params$show_slab,
-    show_point = self$default_params$show_point,
-    show_interval = self$default_params$show_interval,
-    na.rm = self$default_params$na.rm,
-
-    dotsize = self$default_params$dotsize,
-    stackratio = self$default_params$stackratio,
-    binwidth = self$default_params$binwidth,
-    layout = self$default_params$layout,
-
-    child_params = list()
-  ) {
-    ggproto_parent(GeomSlabinterval, self)$draw_panel(data, panel_params, coord,
-      orientation = orientation,
-      normalize = normalize,
-      interval_size_domain = interval_size_domain,
-      interval_size_range = interval_size_range,
-      fatten_point = fatten_point,
-      show_slab = show_slab,
-      show_point = show_point,
-      show_interval = show_interval,
-      na.rm = na.rm,
-
-      child_params = list(
-        dotsize = dotsize,
-        stackratio = stackratio,
-        binwidth = binwidth,
-        layout = layout
-      )
-    )
-  },
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(GeomSlabinterval, self)$setup_data(data, params)
