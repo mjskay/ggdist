@@ -488,11 +488,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
 
   draw_panel = function(self, data, panel_params, coord,
       orientation = self$default_params$orientation,
-      normalize = self$default_params$normalize,
-      fill_type = self$default_params$fill_type,
-      interval_size_domain = self$default_params$interval_size_domain,
-      interval_size_range = self$default_params$interval_size_range,
-      fatten_point = self$default_params$fatten_point,
       show_slab = self$default_params$show_slab,
       show_point = self$default_params$show_point,
       show_interval = self$default_params$show_interval,
@@ -521,8 +516,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       s_data = data[data$datatype == "slab",]
       if (nrow(s_data) > 0) {
         self$draw_slabs(s_data, panel_params, coord,
-          orientation, normalize, fill_type,
-          na.rm,
+          orientation = orientation,
+          na.rm = na.rm,
           ...
         )
       }
@@ -530,8 +525,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
 
     point_interval_grobs = if (show_interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
       self$draw_pointintervals(data[data$datatype == "interval",], panel_params, coord,
-        orientation, interval_size_domain, interval_size_range, fatten_point, show_point,
-        na.rm,
+        orientation = orientation,
+        show_point = show_point,
+        na.rm = na.rm,
         ...
       )
     }
