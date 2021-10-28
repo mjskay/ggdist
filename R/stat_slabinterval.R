@@ -158,17 +158,9 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
 
   compute_panel = function(self, data, scales,
     orientation = self$default_params$orientation,
-
-    limits = self$default_params$limits,
-    n = self$default_params$n,
-
-    point_interval = self$default_params$point_interval,
-    .width = self$default_params$.width,
-
     show_slab = self$default_params$show_slab,
     show_point = self$default_params$show_point,
     show_interval = self$default_params$show_interval,
-
     na.rm = self$default_params$na.rm,
     ...
   ) {
@@ -187,7 +179,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
     # SLABS
     s_data = if (show_slab) {
       compute_panel_slabs(self, data, scales, trans,
-        orientation = orientation, limits = limits, n = n,
+        orientation = orientation,
         na.rm = na.rm,
         ...
       )
@@ -196,7 +188,8 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
     # INTERVALS
     i_data = if (show_interval) {
       compute_panel_intervals(self, data, scales, trans,
-        orientation = orientation, point_interval = point_interval, .width = .width,
+        orientation = orientation,
+        show_point = show_point,
         na.rm = na.rm,
         ...
       )
@@ -231,6 +224,8 @@ na_ = function(m_, ...) {
 }
 
 
+#' @param ... stat parameters
+#' @noRd
 compute_panel_slabs = function(
   self, data, scales, trans,
   orientation, limits, n,
@@ -301,10 +296,11 @@ compute_panel_slabs = function(
   s_data
 }
 
-
+#' @param ... stat parameters
+#' @noRd
 compute_panel_intervals = function(
   self, data, scales, trans,
-  orientation, point_interval, .width,
+  orientation, point_interval,
   ...
 ) {
   define_orientation_variables(orientation)
@@ -315,7 +311,7 @@ compute_panel_intervals = function(
 
   i_data = summarise_by(data, c("group", y), self$compute_interval,
     trans = trans,
-    orientation = orientation, point_interval = point_interval, .width = .width,
+    orientation = orientation, point_interval = point_interval,
     ...
   )
 
