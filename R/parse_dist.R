@@ -184,6 +184,7 @@ r_dist_name = function(dist_name) {
 # check that distribution names are valid and replace
 # invalid ones with NA
 check_dist_name = function(dist) {
+  dist = as.character(dist)
   invalid =
     is.na(mget(paste0("d", dist), inherits = TRUE, ifnotfound = NA)) |
     is.na(mget(paste0("p", dist), inherits = TRUE, ifnotfound = NA)) |

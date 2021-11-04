@@ -8,16 +8,25 @@
 
 # translate arguments of the form `arg1` ... `arg9` (or from a list column, args) into a single list of arguments
 args_from_aes = function(args = list(), ...) {
+  args_names = names(args)
+  if (length(args_names > 0)) {
+    named_args_i = nzchar(args_names)
+    named_args = args[named_args_i]
+    unnamed_args = args[!named_args_i]
+  } else {
+    named_args = list()
+    unnamed_args = args
+  }
+
   dot_args = list(...)
-  args_from_dots = list()
   for (i in 1:9) {
     arg_name = paste0("arg", i)
     if (arg_name %in% names(dot_args)) {
-      args_from_dots[[i]] = dot_args[[arg_name]]
+      unnamed_args[[i]] = dot_args[[arg_name]]
     }
   }
 
-  c(args_from_dots, args)
+  c(unnamed_args, named_args)
 }
 
 compute_limits_dist = function(self, data, trans, p_limits = c(NA, NA), ...) {
@@ -284,6 +293,8 @@ compute_interval_dist = function(data, .width, trans, ...) {
 #' # see vignette("slabinterval") for many more examples.
 #'
 #' @name stat_dist_slabinterval
+#' @importFrom distributional dist_wrap dist_missing
+#' @importFrom vctrs vec_c
 NULL
 
 #' @rdname ggdist-ggproto
@@ -329,13 +340,13 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     define_orientation_variables(params$orientation)
 
     # pull out the x (secondary) axis into the dist aesthetic
-    if (is_dist_like(data[[x]])) {
+    if (is_dist_like(data[[x]]) || is.list(data[[x]])) {
       data$dist = data[[x]]
-    } else if (is.null(data$dist) && !is.null(data[[x]])) {
+    } else if (is.null(data$dist) && is.numeric(data[[x]])) {
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
       # this means we need to wrap it as a dist_sample
       data = summarise_by(data, c("PANEL", y, "group"), function(d) {
-        data.frame(dist = dist_sample(list(d[[x]])))
+        data.frame(dist = dist_sample(list(as.numeric(d[[x]]))))
       })
       data[[x]] = median(data$dist)
     }
@@ -346,12 +357,26 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     for (xy in c("x", "y")) {
       if (is_dist_like(data[[xy]])) {
         data[[xy]] = median(data[[xy]])
+      } else if (is.list(data[[xy]])) {
+        data[[xy]] = sapply(data[[xy]], median)
       }
     }
 
     # ignore unknown distributions (with a warning)
     if (is.character(data$dist) || is.factor(data$dist)) {
       data$dist = check_dist_name(data$dist)
+      # TODO: convert dist aesthetic into distributional objects
+      # Need to wait until dist_wrap can search the user's path
+      #
+      # arg_cols = names(data)[startsWith(names(data), "arg")]
+      # data$dist = pmap_(data[,c("dist", arg_cols)], function(dist, ...) {
+      #   if (is.na(dist)) {
+      #     dist_missing()
+      #   } else {
+      #     args = args_from_aes(...)
+      #     do.call(dist_wrap, c(list(dist), args))
+      #   }
+      # })
     }
 
     if (self$group_by_dist) {
