@@ -34,7 +34,9 @@ distr_function.distribution = function(dist, prefix, fun) {
   distr_function.dist_default(dist[[1]], prefix, fun)
 }
 distr_function.dist_default = function(dist, prefix, fun) {
-  function(x, ...) unlist(fun(dist, x, ...))
+  # eat up extra args as they are ignored anyway
+  # (and can cause problems, e.g. with cdf())
+  function(x, ...) unlist(fun(dist, x))
 }
 distr_function.rvar = distr_function.distribution
 

@@ -83,6 +83,11 @@ map_dfr_ = function(data, fun, ...) {
   bind_rows(lapply(data, fun, ...))
 }
 
+pmap_ = function(data, fun) {
+  # this is roughly equivalent to purrr::pmap
+  lapply(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
+}
+
 pmap_dfr_ = function(data, fun) {
   # this is roughly equivalent to
   # pmap_dfr(df, function(...) { ... })
