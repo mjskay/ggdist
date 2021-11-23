@@ -166,7 +166,7 @@ compute_slab_sample = function(
 #'   \item `stat_interval`: Interval plots
 #' }
 #'
-#' @eval rd_slabinterval_computed_variables(stat_sample = TRUE)
+#' @eval rd_slabinterval_computed_variables()
 #' @eval rd_slabinterval_aesthetics(stat = StatSampleSlabinterval)
 #'
 #' @inheritParams stat_slabinterval

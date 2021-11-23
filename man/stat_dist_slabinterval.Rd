@@ -347,6 +347,8 @@ For intervals, the point summary from the interval function. Whether it is \code
 determined by \code{slab_type}.
 \item \code{pdf}: For slabs, the probability density function.
 \item \code{cdf}: For slabs, the cumulative distribution function.
+\item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
+an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
 }
 }
 

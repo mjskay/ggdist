@@ -136,7 +136,8 @@ compute_slab_dist = function(
       .input = input,
       .value = value,
       pdf = pdf,
-      cdf = cdf
+      cdf = cdf,
+      n = Inf
     )
   })
 }
@@ -218,7 +219,7 @@ compute_interval_dist = function(data, .width, trans, ...) {
 #'    [parse_dist()] combined with the stats described here can help you visualize the output
 #'    of those functions.
 #'
-#' @eval rd_slabinterval_computed_variables(stat_sample = FALSE)
+#' @eval rd_slabinterval_computed_variables()
 #' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
 #'
 #' @inheritParams stat_slabinterval
@@ -371,7 +372,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     # ignore unknown distributions (with a warning)
     if (is.character(data$dist) || is.factor(data$dist)) {
       data$dist = check_dist_name(data$dist)
-      # TODO: convert dist aesthetic into distributional objects
+      # TODO (#112): convert dist aesthetic into distributional objects
       # Need to wait until dist_wrap can search the user's path
       #
       # arg_cols = names(data)[startsWith(names(data), "arg")]

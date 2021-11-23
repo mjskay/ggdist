@@ -159,7 +159,7 @@ define_orientation_variables = function(orientation) {
 
 # documentation -----------------------------------------------------------
 
-rd_slabinterval_computed_variables = function(stat_sample = TRUE) {
+rd_slabinterval_computed_variables = function() {
   out = '@section Computed Variables:
 The following variables are computed by this stat and made available for
 use in aesthetic specifications (`aes()`) using the `stat()` or `after_stat()`
@@ -174,11 +174,9 @@ functions:
   determined by `slab_type`.
 - `pdf`: For slabs, the probability density function.
 - `cdf`: For slabs, the cumulative distribution function.
+- `n`: For slabs, the number of data points summarized into that slab. If the slab was created from
+  an analytical distribution via the `xdist`, `ydist`, or `dist` aesthetic, `n` will be `Inf`.
 '
-
-  if (stat_sample) {
-    out = c(out, '- `n`: For slabs, the number of data points summarized into that slab.')
-  }
 
   out
 }
