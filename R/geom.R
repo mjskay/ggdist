@@ -81,7 +81,7 @@ computed_mapping = function(x) {
 
 # detects the orientation of the geometry
 #' @importFrom ggplot2 has_flipped_aes
-get_flipped_aes = function(data, params, ..., secondary_is_dist = NA) {
+get_flipped_aes = function(data, params, ..., secondary_is_dist = NA, main_is_orthogonal = NA) {
   params$orientation =
     if (params$orientation %in% c("horizontal", "y")) "y"
     else if (params$orientation %in% c("vertical", "x")) "x"
@@ -94,10 +94,14 @@ get_flipped_aes = function(data, params, ..., secondary_is_dist = NA) {
       return(secondary_is_dist)
     } else if (!is.null(data$ydist)) {
       return(!secondary_is_dist)
+    } else if (!is.null(data$dist)) {
+      # when dist is provided, we can't determine orientation at this point but
+      # main_is_orthogonal must be determined by secondary_is_dist
+      main_is_orthogonal = !secondary_is_dist
     }
   }
 
-  has_flipped_aes(data, params, ...)
+  has_flipped_aes(data, params, ..., main_is_orthogonal = main_is_orthogonal)
 }
 
 # detects the orientation of the geometry

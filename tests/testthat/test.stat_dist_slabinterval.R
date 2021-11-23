@@ -451,4 +451,36 @@ test_that("constant distributions work", {
   vdiffr::expect_doppelganger("constant dist on ccdf",
     p + stat_dist_ccdfinterval(slab_color = "blue", n = 15)
   )
+
+  # with a scale transformation...
+  p = data.frame(
+    x = c("constant = 10", "lognormal(2,1)", "constant = 2"),
+    y = c(dist_wrap("lnorm", c(log(10), 2), 0:1), dist_sample(list(2)))
+  ) %>%
+    ggplot(aes(x = x, dist = y)) +
+    scale_y_log10()
+
+  vdiffr::expect_doppelganger("constant dist on halfeye, log scale",
+    p + stat_dist_slabinterval(n = 15, slab_color = "blue")
+  )
+
+  vdiffr::expect_doppelganger("constant dist on ccdf, log scale",
+    p + stat_dist_ccdfinterval(slab_color = "blue", n = 15)
+  )
+
+  # with sample data...
+  p = data.frame(
+    x = c(5, 5)
+  ) %>%
+    ggplot(aes(x = x)) +
+    expand_limits(x = c(0,10))
+
+  vdiffr::expect_doppelganger("constant dist on halfeye, sample data",
+    p + stat_dist_slabinterval(n = 15, slab_color = "blue")
+  )
+
+  vdiffr::expect_doppelganger("constant dist on ccdf, sample data",
+    p + stat_dist_ccdfinterval(n = 15, slab_color = "blue")
+  )
+
 })

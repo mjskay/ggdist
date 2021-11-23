@@ -76,19 +76,19 @@ compute_slab_dist = function(
 
     # calculate pdf and cdf
     cdf_fun = distr_cdf(dist)
-    if (trans$name == "identity") {
+    if (distr_is_constant(dist, args)) {
+      # for constant distributions, to reliably get the infinite point density
+      # and a constant line in the CDF, need to manually pick input values
+      quantile_fun = distr_quantile(dist)
+      input_2 = do.call(quantile_fun, c(list(0.5), args))
+      input_1 = min(input, input_2)
+      input_3 = max(input, input_2)
+      input = c(input_1, input_2, input_2, input_2, input_3)
+      pdf = c(0, 0, Inf, 0, 0)
+      cdf = c(0, 0, 1, 1, 1)
+    } else if (trans$name == "identity") {
       pdf_fun = distr_pdf(dist)
-      if (distr_is_constant(dist, args)) {
-        # for constant distributions, to reliably get the infinite point density
-        # and a constant line in the CDF, need to manually pick input values
-        quantile_fun = distr_quantile(dist)
-        input_2 = do.call(quantile_fun, c(list(0.5), args))
-        input_1 = min(input, input_2)
-        input_3 = max(input, input_2)
-        input = c(input_1, input_2, input_2, input_2, input_3)
-        pdf = c(0, 0, Inf, 0, 0)
-        cdf = c(0, 0, 1, 1, 1)
-      } else if (distr_is_discrete(dist, args)) {
+      if (distr_is_discrete(dist, args)) {
         # for discrete distributions, we have to adjust the positions of the x
         # values to create bin-like things
         input_ = unique(round(input))   # center of bin
@@ -336,7 +336,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   # orientation auto-detection here is different from base StatSlabinterval
   # (main_is_orthogonal needs to be FALSE)
   orientation_options = defaults(list(
-    main_is_orthogonal = FALSE, secondary_is_dist = TRUE
+    secondary_is_dist = TRUE
   ), StatSlabinterval$orientation_options),
 
   setup_data = function(self, data, params) {

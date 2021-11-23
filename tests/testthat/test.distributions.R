@@ -47,6 +47,7 @@ test_that("constant distributions are detected correctly", {
   expect_equal(distr_is_constant(dist_normal(0,1)), FALSE)
   expect_equal(distr_is_constant(dist_normal(0,.Machine$double.eps)), FALSE)
   expect_equal(distr_is_constant(dist_normal(0,0)), TRUE)
+  expect_equal(distr_is_constant(dist_wrap("lnorm",1,0)), TRUE)
   expect_equal(distr_is_constant(dist_sample(list(1))), TRUE)
   expect_equal(distr_is_constant(dist_sample(list(c(2,2,2)))), TRUE)
   expect_equal(distr_is_constant(dist_sample(list(c(1,2,3)))), FALSE)

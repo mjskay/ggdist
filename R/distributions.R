@@ -109,20 +109,13 @@ distr_get_sample = function(dist, args = list()) {
 distr_is_constant = function(dist, args = list()) {
   if (distr_is_sample(dist, args)) {
     x = distr_get_sample(dist, args)
-    return(length(unique(x)) == 1)
+    length(unique(x)) == 1
+  } else {
+    quantile_fun = distr_quantile(dist)
+    lower = do.call(quantile_fun, c(list(.Machine$double.eps), args))
+    upper = do.call(quantile_fun, c(list(1 - .Machine$double.neg.eps), args))
+    isTRUE(lower == upper)
   }
-
-  quantile_fun = distr_quantile(dist)
-  cdf_fun = distr_cdf(dist)
-  median = do.call(quantile_fun, c(list(0.5), args))
-  cdf_median_plusminus_eps = do.call(cdf_fun, c(
-    list(c(
-      median - .Machine$double.neg.eps,
-      median + .Machine$double.eps
-    )),
-    args
-  ))
-  cdf_median_plusminus_eps[[1]] == 0 & cdf_median_plusminus_eps[[2]] == 1
 }
 
 #' Is x a distribution-like object? i.e. a distributional::distribution or
