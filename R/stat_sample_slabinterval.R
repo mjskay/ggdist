@@ -44,13 +44,33 @@ sample_density = function(x, ...) {
   }
 }
 
+compute_limits_sample = function(self, data, trans, orientation, p_limits = c(NA, NA), trim = TRUE, ...) {
+  x = switch(orientation,
+    y = ,
+    horizontal = "x",
+    x = ,
+    vertical = "y"
+  )
+
+  if (trim) {
+    data.frame(.lower = NA, .upper = NA)
+  } else {
+    # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
+    bw = bw.nrd0(data[[x]])
+    data.frame(
+      .lower = min(data[[x]]) - bw * 3,
+      .upper = max(data[[x]]) + bw * 3
+    )
+  }
+}
+
 #' @importFrom rlang missing_arg
 #' @importFrom stats ecdf density
 #' @importFrom graphics hist
 compute_slab_sample = function(
   self, data, trans, input,
   slab_type = "pdf", limits = NULL, n = 501, orientation = NA,
-  adjust = 1, trim = TRUE, breaks = "Sturges", outline_bars = FALSE,
+  adjust = 1, trim = TRUE, expand = FALSE, breaks = "Sturges", outline_bars = FALSE,
   ...
 ) {
   x = switch(orientation,
@@ -101,10 +121,10 @@ compute_slab_sample = function(
   cdf_fun = weighted_ecdf(data[[x]])
   slab_df[["cdf"]] = cdf_fun(trans_input)
 
-  if (slab_type == "cdf" || slab_type == "ccdf") {
-    # for CDF and CCDF slabs we have to make sure the x values extend to the
-    # range of the plot. To do that we have to include x values requested
-    # from the original `input` if they are outside the range of the slab
+  if (expand) {
+    # extend x values to the range of the plot. To do that we have to include
+    # x values requested from the original `input` if they are outside the
+    # range of the slab
     input_below_slab = input[input < min(slab_df$.input)]
     if (length(input_below_slab) > 0) {
       slab_df = rbind(data.frame(
@@ -176,8 +196,9 @@ compute_slab_sample = function(
 #' cumulative distribution function (`"cdf"`), complementary CDF (`"ccdf"`), or histogram (`"histogram"`.
 #' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator is adjusted by multiplying it
 #' by this value. See [density()] for more information.
-#' @param trim If `slab_type` is `"pdf"`, should the density estimate be trimmed to the range of the
+#' @param trim Should the density estimate be trimmed to the range of the
 #' input data? Default `TRUE`.
+#' @param expand Should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to
 #' [hist()] to determine where to put breaks in the histogram.
 #' @param outline_bars If `slab_type` is `"histogram"`, `outline_bars` determines if outlines in between
@@ -230,12 +251,14 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
     slab_type = "pdf",
     adjust = 1,
     trim = TRUE,
+    expand = FALSE,
     breaks = "Sturges",
     outline_bars = FALSE,
 
     point_interval = "median_qi"
   ), StatSlabinterval$default_params),
 
+  compute_limits = compute_limits_sample,
   compute_slab = compute_slab_sample
 )
 
@@ -261,12 +284,13 @@ stat_eye = make_stat(StatEye, geom = "slabinterval")
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
-    side = stat("topleft"),
+    side = stat("topleft")
   ), StatSampleSlabinterval$default_aes),
 
   default_params = defaults(list(
     slab_type = "ccdf",
-    normalize = "none"
+    normalize = "none",
+    expand = TRUE
   ), StatSampleSlabinterval$default_params)
 )
 #' @export

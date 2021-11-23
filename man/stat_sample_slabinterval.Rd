@@ -20,6 +20,7 @@ stat_sample_slabinterval(
   slab_type = "pdf",
   adjust = 1,
   trim = TRUE,
+  expand = FALSE,
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
@@ -41,6 +42,7 @@ stat_halfeye(
   slab_type = "pdf",
   adjust = 1,
   trim = TRUE,
+  expand = FALSE,
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
@@ -62,6 +64,7 @@ stat_eye(
   slab_type = "pdf",
   adjust = 1,
   trim = TRUE,
+  expand = FALSE,
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
@@ -82,6 +85,7 @@ stat_ccdfinterval(
   ...,
   slab_type = "ccdf",
   normalize = "none",
+  expand = TRUE,
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
@@ -104,6 +108,7 @@ stat_cdfinterval(
   ...,
   slab_type = "cdf",
   normalize = "none",
+  expand = TRUE,
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
@@ -127,6 +132,7 @@ stat_gradientinterval(
   slab_type = "pdf",
   adjust = 1,
   trim = TRUE,
+  expand = FALSE,
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
@@ -148,6 +154,7 @@ stat_histinterval(
   slab_type = "histogram",
   adjust = 1,
   trim = TRUE,
+  expand = FALSE,
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
@@ -169,6 +176,7 @@ stat_slab(
   slab_type = "pdf",
   adjust = 1,
   trim = TRUE,
+  expand = FALSE,
   breaks = "Sturges",
   outline_bars = FALSE,
   limits = NULL,
@@ -216,8 +224,10 @@ cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"
 \item{adjust}{If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator is adjusted by multiplying it
 by this value. See \code{\link[=density]{density()}} for more information.}
 
-\item{trim}{If \code{slab_type} is \code{"pdf"}, should the density estimate be trimmed to the range of the
+\item{trim}{Should the density estimate be trimmed to the range of the
 input data? Default \code{TRUE}.}
+
+\item{expand}{Should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
 
 \item{breaks}{If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
 \code{\link[=hist]{hist()}} to determine where to put breaks in the histogram.}

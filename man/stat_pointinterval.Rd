@@ -10,6 +10,7 @@ stat_pointinterval(
   geom = "pointinterval",
   position = "identity",
   ...,
+  expand = FALSE,
   point_interval = "median_qi",
   .width = c(0.66, 0.95),
   orientation = NA,
@@ -48,6 +49,8 @@ a call to a position adjustment function.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
+
+\item{expand}{Should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, etc). This function should take in a vector of values, and should obey the

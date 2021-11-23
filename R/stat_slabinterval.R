@@ -261,7 +261,7 @@ compute_panel_slabs = function(
   # we also want to account for the limits suggested by compute_limits()
   # based on the data; these will adjust min_limits
   l_data = summarise_by(data, c("group", y), self$compute_limits,
-    trans = trans, ...
+    trans = trans, orientation = orientation, ...
   )
   min_limits = c(
     na_(min, l_data$.lower, min_limits[[1]]),
