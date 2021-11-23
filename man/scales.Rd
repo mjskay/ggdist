@@ -256,8 +256,7 @@ data.frame(distribution = "Normal(1,2)") \%>\%
 Other ggplot2 scales: \code{\link[=scale_color_discrete]{scale_color_discrete()}}, \code{\link[=scale_color_continuous]{scale_color_continuous()}}, etc.
 
 Other ggdist scales: 
-\code{\link{scale_colour_ramp}},
-\code{\link{scale_dist}}
+\code{\link{scale_colour_ramp}}
 }
 \author{
 Matthew Kay

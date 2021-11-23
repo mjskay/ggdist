@@ -126,9 +126,9 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     na.rm = FALSE
   ),
 
-  orientation_options = list(
+  orientation_options = defaults(list(
     range_is_orthogonal = TRUE, ambiguous = TRUE, group_has_equal = TRUE
-  ),
+  ), AbstractGeom$orientation_options),
 
   draw_panel = function(self, data, panel_scales, coord,
     step = self$default_params$step,

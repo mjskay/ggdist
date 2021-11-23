@@ -307,11 +307,14 @@ Stats include:
 \item \code{stat_dist_interval}: Interval plots
 }
 
-These stats expect a \code{dist} aesthetic to specify a distribution. This aesthetic
-can be used in one of two ways:
+These stats expect an \code{xdist} or \code{ydist} aesthetic to specify a distribution. For
+historical reasons, you can also use \code{dist} to specify the distribution, though
+this is not recommended as it does not work as well with orientation detection.
+These aesthetics can be used as follows:
 \itemize{
-\item \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
-package, such as \code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc. Since these functions are vectorized,
+\item \code{xdist}, \code{ydist}, and \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
+package (\code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc) or can be \code{\link[posterior:rvar]{posterior::rvar()}} objects.
+Since these functions are vectorized,
 other columns can be passed directly to them in an \code{\link[=aes]{aes()}} specification; e.g.
 \code{aes(dist = dist_normal(mu, sigma))} will work if \code{mu} and \code{sigma} are columns in the
 input data frame.
@@ -361,9 +364,13 @@ at a time along with the \code{dist} aesthetic).
 \item \code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
 (when \code{orientation = "vertical"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
 at a time along with the \code{dist} aesthetic).
-\item \code{dist}: A name of a distribution (e.g. \code{"norm"}) or a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}).
-See \strong{Details}.
-\item \code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
+\item \code{xdist}: Distribution to map on the x axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+\item \code{ydist}: Distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+\item \code{dist}: (Deprecated). A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
+\item \code{args}: (Deprecated). Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_slabinterval]{geom_slabinterval()}}) the following aesthetics are supported by the underlying geom:
 

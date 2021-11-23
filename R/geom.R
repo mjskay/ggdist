@@ -81,18 +81,18 @@ computed_mapping = function(x) {
 
 # detects the orientation of the geometry
 #' @importFrom ggplot2 has_flipped_aes
-get_flipped_aes = function(data, params, ..., secondary_is_dist = TRUE) {
+get_flipped_aes = function(data, params, ..., secondary_is_dist = NA) {
   params$orientation =
     if (params$orientation %in% c("horizontal", "y")) "y"
     else if (params$orientation %in% c("vertical", "x")) "x"
     else if (is.na(params$orientation)) NA
     else stop("Unknown orientation: ", deparse0(params$orientation))
 
-  # checks based on x or y being distribution-like objects
-  if (is.na(params$orientation)) {
-    if (is_dist_like(data$x)) {
+  # checks based on xdist or ydist
+  if (is.na(params$orientation) && !is.na(secondary_is_dist)) {
+    if (!is.null(data$xdist)) {
       return(secondary_is_dist)
-    } else if (is_dist_like(data$y)) {
+    } else if (!is.null(data$ydist)) {
       return(!secondary_is_dist)
     }
   }
@@ -123,12 +123,14 @@ define_orientation_variables = function(orientation) {
     f$ymax = "ymax"
     f$yend = "yend"
     f$y.range = "y.range"
+    f$ydist = "ydist"
 
     f$x = "x"
     f$xmin = "xmin"
     f$xmax = "xmax"
     f$xend = "xend"
     f$x.range = "x.range"
+    f$xdist = "xdist"
   } else if (orientation == "vertical" || orientation == "x") {
     f$height = "width"
 
@@ -137,12 +139,14 @@ define_orientation_variables = function(orientation) {
     f$ymax = "xmax"
     f$yend = "xend"
     f$y.range = "x.range"
+    f$ydist = "xdist"
 
     f$x = "y"
     f$xmin = "ymin"
     f$xmax = "ymax"
     f$xend = "yend"
     f$x.range = "y.range"
+    f$xdist = "ydist"
   } else {
     stop("Unknown orientation: `", orientation, "`")
   }
@@ -212,10 +216,16 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
       y = 'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
        (when `orientation = "vertical"`) except for `stat_dist_` geometries (which use only one of `x` or `y`
        at a time along with the `dist` aesthetic).',
+      xdist =
+        'Distribution to map on the x axis: a \\pkg{distributional} object (e.g. [dist_normal()]) or
+        a [posterior::rvar()] object.',
+      ydist =
+        'Distribution to map on the y axis: a \\pkg{distributional} object (e.g. [dist_normal()]) or
+        a [posterior::rvar()] object.',
       dist =
-        'A name of a distribution (e.g. `"norm"`) or a \\pkg{distributional} object (e.g. [dist_normal()]).
-       See **Details**.',
-      args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
+        '(Deprecated). A name of a distribution (e.g. `"norm"`), a \\pkg{distributional} object (e.g. [dist_normal()]), or
+        a [posterior::rvar()] object. See **Details**.',
+      args = '(Deprecated). Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
     )
     out = c(out,
       "These `stat`s support the following aesthetics:",

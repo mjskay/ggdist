@@ -194,11 +194,14 @@ compute_interval_dist = function(data, .width, trans, ...) {
 #'   \item `stat_dist_interval`: Interval plots
 #' }
 #'
-#' These stats expect a `dist` aesthetic to specify a distribution. This aesthetic
-#' can be used in one of two ways:
+#' These stats expect an `xdist` or `ydist` aesthetic to specify a distribution. For
+#' historical reasons, you can also use `dist` to specify the distribution, though
+#' this is not recommended as it does not work as well with orientation detection.
+#' These aesthetics can be used as follows:
 #'
-#'  - `dist` can be any distribution object from the [distributional](https://pkg.mitchelloharawild.com/distributional/)
-#'    package, such as [dist_normal()], [dist_beta()], etc. Since these functions are vectorized,
+#'  - `xdist`, `ydist`, and `dist` can be any distribution object from the [distributional](https://pkg.mitchelloharawild.com/distributional/)
+#'    package ([dist_normal()], [dist_beta()], etc) or can be [posterior::rvar()] objects.
+#'    Since these functions are vectorized,
 #'    other columns can be passed directly to them in an [aes()] specification; e.g.
 #'    `aes(dist = dist_normal(mu, sigma))` will work if `mu` and `sigma` are columns in the
 #'    input data frame.
@@ -294,7 +297,6 @@ compute_interval_dist = function(data, .width, trans, ...) {
 #'
 #' @name stat_dist_slabinterval
 #' @importFrom distributional dist_wrap dist_missing
-#' @importFrom vctrs vec_c
 NULL
 
 #' @rdname ggdist-ggproto
@@ -303,6 +305,8 @@ NULL
 #' @export
 StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_aes = defaults(aes(
+    xdist = NULL,
+    ydist = NULL,
     dist = NULL,
     args = NULL,
     arg1 = NULL,
@@ -332,16 +336,17 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   # orientation auto-detection here is different from base StatSlabinterval
   # (main_is_orthogonal needs to be FALSE)
   orientation_options = defaults(list(
-    main_is_orthogonal = FALSE
+    main_is_orthogonal = FALSE, secondary_is_dist = TRUE
   ), StatSlabinterval$orientation_options),
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
     define_orientation_variables(params$orientation)
 
-    # pull out the x (secondary) axis into the dist aesthetic
-    if (is_dist_like(data[[x]]) || is.list(data[[x]])) {
-      data$dist = data[[x]]
+    # pull out the x (secondary) dist axis into the dist aesthetic
+    if (!is.null(data[[xdist]])) {
+      #TODO: reverse this
+      data$dist = data[[xdist]]
     } else if (is.null(data$dist) && is.numeric(data[[x]])) {
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
       # this means we need to wrap it as a dist_sample
@@ -349,17 +354,6 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
         data.frame(dist = dist_sample(list(as.numeric(d[[x]]))))
       })
       data[[x]] = median(data$dist)
-    }
-
-    # for x and y axes that have distributions mapped to them, replace them
-    # with the medians of those distributions so that those scales are handled
-    # appropriately by base ggplot x/y scale handling code
-    for (xy in c("x", "y")) {
-      if (is_dist_like(data[[xy]])) {
-        data[[xy]] = median(data[[xy]])
-      } else if (is.list(data[[xy]])) {
-        data[[xy]] = sapply(data[[xy]], median)
-      }
     }
 
     # ignore unknown distributions (with a warning)

@@ -83,7 +83,6 @@ Collate:
     "position_dodgejust.R"
     "scale_colour_ramp.R"
     "scale_.R"
-    "scale_dist.R"
     "stat.R"
     "stat_slabinterval.R"
     "stat_dist_slabinterval.R"

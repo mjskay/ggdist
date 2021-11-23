@@ -106,7 +106,6 @@ tibble(d = dist_normal(0, 1)) \%>\%
 }
 \seealso{
 Other ggdist scales: 
-\code{\link{scale_dist}},
 \code{\link{scales}}
 }
 \author{

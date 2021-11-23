@@ -61,6 +61,28 @@ test_that("distribution eye plots work with the args aesthetic", {
 
 })
 
+test_that("xdist and ydist aesthetics work", {
+  skip_if_no_vdiffr()
+
+
+  df = data.frame(var = c(1,2), dist = dist_normal(0:1,1))
+
+  vdiffr::expect_doppelganger("ydist",
+    df %>%
+      ggplot(aes(x = var, ydist = dist)) +
+      stat_dist_halfeye(n = 15) +
+      scale_y_continuous(limits = c(-7, 7))
+  )
+
+  vdiffr::expect_doppelganger("xdist",
+    df %>%
+      ggplot(aes(xdist = dist, y = var)) +
+      stat_dist_halfeye(n = 15) +
+      scale_x_continuous(limits = c(-7, 7))
+  )
+
+})
+
 test_that("stat fill aesthetic on halfeye works", {
   skip_if_no_vdiffr()
 
