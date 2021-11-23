@@ -222,3 +222,22 @@ test_that("NAs are handled correctly", {
     p + stat_halfeye(na.rm = TRUE, n = 15)
   )
 })
+
+
+# trim and expand ---------------------------------------------------------
+
+test_that("trim and expand work", {
+  skip_if_no_vdiffr()
+
+  set.seed(1234)
+  df = data.frame(
+    g = c("a","a","a","b","c"),
+    x = rnorm(120, c(1,1,1,2,3))
+  )
+
+  vdiffr::expect_doppelganger("untrimmed and expanded",
+    df %>%
+      ggplot(aes(x = x, y = g)) +
+      stat_sample_slabinterval(n = 15, slab_color = "black", expand = TRUE, trim = FALSE)
+  )
+})
