@@ -94,6 +94,7 @@ test_that("stat_dist_gradientinterval works", {
   # N.B. the following two tests are currently a bit useless as vdiffr doesn't
   # support linearGradient yet, but leaving them here so that once it does we
   # have tests for this.
+  skip("linearGradient not supported in vdiffr yet")
   vdiffr::expect_doppelganger("fill_type = gradient with two groups",
     p + stat_dist_gradientinterval(aes(x = dist), n = 15, p_limits = c(0.01, 0.99), fill_type = "gradient")
   )
