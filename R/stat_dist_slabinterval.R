@@ -343,6 +343,18 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
     define_orientation_variables(params$orientation)
 
+    # check for dist-like objects in x / y axis: these are likely user errors
+    # caused by assigning a distribution to x / y instead of xdist / ydist
+    dist_like_cols = c("x","y")[map_lgl_(c("x", "y"), function(col) is_dist_like(data[[col]]))]
+    if (length(dist_like_cols) > 0) {
+      s = if (length(dist_like_cols) > 1) "s"
+      stop0(
+        "Cannot use distribution or rvar objects with the ", paste0("`", dist_like_cols, "`", collapse = " or "),
+        " aesthetic", s, ". Use the ", paste0("`", dist_like_cols, "dist`", collapse = " or "),
+        " aesthetic", s, " instead."
+      )
+    }
+
     # pull out the x (secondary) dist axis into the dist aesthetic
     if (!is.null(data[[xdist]])) {
       #TODO: reverse this
