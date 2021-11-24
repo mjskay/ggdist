@@ -119,7 +119,7 @@ test_that("mapping custom aesthetics works", {
     p + geom_slabinterval(aes(interval_linetype = x), normalize = "none")
   )
   expect_error(
-    print(p + geom_slabinterval(aes(interval_linetype = x_num), normalize = "none")),
+    ggplot_build(p + geom_slabinterval(aes(interval_linetype = x_num), normalize = "none")),
     "A continuous variable cannot be mapped to linetype"
   )
 
@@ -157,7 +157,7 @@ test_that("mapping custom aesthetics works", {
     p + geom_slabinterval(aes(slab_linetype = x), normalize = "none", slab_color = "black")
   )
   expect_error(
-    print(p + geom_slabinterval(aes(slab_linetype = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)),
+    ggplot_build(p + geom_slabinterval(aes(slab_linetype = x_num), normalize = "none", size = 10, shape = 21, stroke = 2)),
     "A continuous variable cannot be mapped to linetype"
   )
 
@@ -176,7 +176,7 @@ test_that("mapping custom aesthetics works", {
   )
 
   expect_error(
-    print(p + geom_dots(aes(slab_color = x > 1.9, slab_shape = x), orientation = "horizontal")),
+    ggplot_build(p + geom_dots(aes(slab_color = x > 1.9, slab_shape = x), orientation = "horizontal")),
     "A continuous variable cannot be mapped to shape"
   )
 

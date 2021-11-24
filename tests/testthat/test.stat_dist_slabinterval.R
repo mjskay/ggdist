@@ -87,14 +87,14 @@ test_that("mapping dist to x or y gives helpful error", {
   df = data.frame(var = c(1,2), dist = dist_normal(0:1,1))
 
   expect_error(
-    print(df %>%
+    ggplot_build(df %>%
       ggplot(aes(x = var, y = dist)) +
       stat_dist_halfeye(n = 15)),
     "Cannot use distribution or rvar"
   )
 
   expect_error(
-    print(df %>%
+    ggplot_build(df %>%
       ggplot(aes(x = dist, y = var)) +
       stat_dist_halfeye(n = 15)),
     "Cannot use distribution or rvar"
@@ -360,10 +360,11 @@ test_that("NA distributional objects work", {
 
 test_that("stat_dist_ throws appropriate errors on ill-formed dists", {
   expect_warning(
-    print(
+    invisible(ggplot_build(
       tibble(y = c("a","b","c"), x = list(1,2,3)) %>%
         ggplot(aes(y = y, dist = x)) + stat_dist_slabinterval()
-    ),
+    ))
+    ,
     'The `dist` aesthetic does not support objects of type "numeric"'
   )
 

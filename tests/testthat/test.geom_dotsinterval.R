@@ -99,7 +99,7 @@ test_that("coordinate transformations work", {
   )
 
   expect_error(
-    print(p + coord_polar()),
+    print(p + coord_polar(), newpage = FALSE),
     "geom_dotsinterval does not work properly with non-linear coordinates"
   )
 

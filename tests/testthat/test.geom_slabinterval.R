@@ -142,7 +142,7 @@ test_that("side and justification can vary", {
   )
 
   expect_error(
-    print(
+    print(newpage = FALSE,
       ggplot(df, aes(x = x, y = g, thickness = y, group = g,
         side = ifelse(x < 5, "top", "bottom")
       )) +
@@ -152,7 +152,7 @@ test_that("side and justification can vary", {
   )
 
   expect_error(
-    print(
+    print(newpage = FALSE,
       ggplot(df, aes(x = x, y = g, thickness = y, group = g,
         justification = ifelse(x < 5, 0, 1)
       )) +
@@ -162,7 +162,7 @@ test_that("side and justification can vary", {
   )
 
   expect_error(
-    print(
+    print(newpage = FALSE,
       ggplot(df, aes(x = x, y = g, thickness = y, group = g,
         scale = ifelse(x < 5, 0.5, 0.25)
       )) +
