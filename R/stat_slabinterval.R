@@ -26,12 +26,12 @@
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0.
 #' @param n Number of points at which to evaluate the function that defines the slab.
 #' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
-#'   `mean_qi`, etc). This function should take in a vector of values, and should obey the
-#'   `.width` and `.simple_names` parameters of [point_interval()] functions, such that when given
-#'   a vector with `.simple_names = TRUE` it should return a data frame with variables `.value`, `.lower`,
-#'   `.upper`, and `.width`. Output will be converted to the appropriate `x`- or `y`-based aesthetics
-#'   depending on the value of `orientation`. See the [point_interval()] family of functions for
-#'   more information.
+#'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
+#'   (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc). This function determines the point summary
+#'   (typically mean, median, or mode) and interval type (quantile interval, `qi`;
+#'   highest-density interval, `hdi`; or highest-density continuous interval, `hdci`). Output will
+#'   be converted to the appropriate `x`- or `y`-based aesthetics depending on the value of `orientation`.
+#'   See the [point_interval()] family of functions for more information.
 #' @param .width The `.width` argument passed to `point_interval`: a vector of probabilities to use
 #' that determine the widths of the resulting intervals. If multiple probabilities are provided,
 #' multiple intervals per group are generated, each with a different probability interval (and
@@ -146,14 +146,15 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
   # @param ... other stat parameters created by children of stat_slabinterval
   compute_interval = function(
     self, data, trans,
-    orientation, point_interval = NULL,
+    orientation, point_interval,
+    .width, na.rm,
     ...
   ) {
     if (is.null(point_interval)) return(data.frame())
 
     define_orientation_variables(orientation)
 
-    point_interval(data[[x]], .simple_names = TRUE, ...)
+    point_interval(data[[x]], .simple_names = TRUE, .width = .width, na.rm = na.rm)
   },
 
   compute_panel = function(self, data, scales,

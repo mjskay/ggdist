@@ -485,3 +485,32 @@ test_that("constant distributions work", {
   )
 
 })
+
+
+# point_interval ----------------------------------------------------------
+
+
+test_that("mode_hdi works", {
+  skip_if_no_vdiffr()
+
+
+  p = data.frame(
+    x = dist_mixture(dist_normal(0, 0.5), dist_normal(4, 1), weights = c(0.5, 0.5))
+  ) %>%
+    ggplot(aes(xdist = x))
+
+  vdiffr::expect_doppelganger("mixture dist with median_qi",
+    p + stat_dist_halfeye(point_interval = median_qi)
+  )
+
+  # need to set.seed here until https://github.com/mitchelloharawild/distributional/issues/71 is fixed
+  set.seed(1234)
+  vdiffr::expect_doppelganger("mixture dist with mean_qi",
+    p + stat_dist_halfeye(point_interval = mean_qi)
+  )
+
+  vdiffr::expect_doppelganger("mixture dist with mode_hdi",
+    p + stat_dist_halfeye(point_interval = mode_hdi)
+  )
+
+})

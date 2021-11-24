@@ -17,15 +17,19 @@
 distr_function = function(dist, prefix, fun) {
   UseMethod("distr_function")
 }
+#' @export
 distr_function.default = function(dist, prefix, fun) {
   stop0("The `dist` aesthetic does not support objects of type ", deparse0(class(dist)))
 }
+#' @export
 distr_function.character = function(dist, prefix, fun) {
   match.fun(paste0(prefix, dist))
 }
+#' @export
 distr_function.factor = function(dist, prefix, fun) {
   distr_function(as.character(dist), prefix, fun)
 }
+#' @export
 distr_function.distribution = function(dist, prefix, fun) {
   if (length(dist) > 1) stop(
     "distributional objects should never have length > 1 here.\n",
@@ -33,11 +37,13 @@ distr_function.distribution = function(dist, prefix, fun) {
   )
   distr_function.dist_default(dist[[1]], prefix, fun)
 }
+#' @export
 distr_function.dist_default = function(dist, prefix, fun) {
   # eat up extra args as they are ignored anyway
   # (and can cause problems, e.g. with cdf())
   function(x, ...) unlist(fun(dist, x))
 }
+#' @export
 distr_function.rvar = distr_function.distribution
 
 distr_pdf = function(dist) {
@@ -62,6 +68,28 @@ distr_quantile = function(dist) {
 #' @importFrom distributional generate
 distr_random = function(dist) {
   distr_function(dist, "r", generate)
+}
+
+
+# point_interval ----------------------------------------------------------
+
+#' Apply a point_interval to a distribution
+#' @noRd
+distr_point_interval = function(dist, args = list(), point_interval, ...) {
+  UseMethod("distr_point_interval")
+}
+#' @export
+distr_point_interval.default = function(dist, args = list(), point_interval, .simple_names = TRUE, ...) {
+  point_interval(dist, .simple_names = .simple_names, ...)
+}
+#' @importFrom distributional dist_wrap
+#' @export
+distr_point_interval.character = function(dist, args = list(), point_interval, ...) {
+  distr_point_interval(do.call(dist_wrap, c(list(dist), args)), list(), point_interval, ...)
+}
+#' @export
+distr_point_interval.factor = function(dist, args = list(), point_interval, ...) {
+  distr_point_interval(as.character(dist), args, point_interval, ...)
 }
 
 

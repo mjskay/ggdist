@@ -142,26 +142,28 @@ compute_slab_dist = function(
   })
 }
 
-compute_interval_dist = function(data, .width, trans, ...) {
-  pmap_dfr_(data, function(dist, ...) {
+compute_interval_dist = function(
+  self, data, trans,
+  orientation, point_interval,
+  .width, na.rm,
+  ...
+) {
+  if (is.null(point_interval)) return(data.frame())
+
+  intervals = pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
     }
 
     args = args_from_aes(...)
-    quantile_fun = distr_quantile(dist)
 
-    intervals = map_dfr_(.width, function(w) {
-      quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
-      quantiles = do.call(quantile_fun, quantile_args)
-      data.frame(
-        .value = trans$transform(quantiles[[1]]),
-        .lower = trans$transform(quantiles[[2]]),
-        .upper = trans$transform(quantiles[[3]]),
-        .width = w
-      )
-    })
+    distr_point_interval(dist, args, point_interval, .width = .width, na.rm = na.rm)
   })
+
+  intervals$.value = trans$transform(intervals$.value)
+  intervals$.lower = trans$transform(intervals$.lower)
+  intervals$.upper = trans$transform(intervals$.upper)
+  intervals
 }
 
 
@@ -331,7 +333,9 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(NA, NA),
-    outline_bars = FALSE
+    outline_bars = FALSE,
+
+    point_interval = "median_qi"
   ), StatSlabinterval$default_params),
 
   # orientation auto-detection here is different from base StatSlabinterval

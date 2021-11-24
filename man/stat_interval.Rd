@@ -58,12 +58,12 @@ value of the corresponding \code{.width} and \code{level} generated variables).}
 \item{expand}{Should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, etc). This function should take in a vector of values, and should obey the
-\code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
-a vector with \code{.simple_names = TRUE} it should return a data frame with variables \code{.value}, \code{.lower},
-\code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
-depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
-more information.}
+\code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
+(e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc). This function determines the point summary
+(typically mean, median, or mode) and interval type (quantile interval, \code{qi};
+highest-density interval, \code{hdi}; or highest-density continuous interval, \code{hdci}). Output will
+be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
+See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the

@@ -21,9 +21,9 @@ stat_dist_slabinterval(
   slab_type = "pdf",
   p_limits = c(NA, NA),
   outline_bars = FALSE,
+  point_interval = "median_qi",
   limits = NULL,
   n = 501,
-  point_interval = NULL,
   .width = c(0.66, 0.95),
   orientation = NA,
   na.rm = FALSE,
@@ -40,9 +40,9 @@ stat_dist_halfeye(
   slab_type = "pdf",
   p_limits = c(NA, NA),
   outline_bars = FALSE,
+  point_interval = "median_qi",
   limits = NULL,
   n = 501,
-  point_interval = NULL,
   .width = c(0.66, 0.95),
   orientation = NA,
   na.rm = FALSE,
@@ -59,9 +59,9 @@ stat_dist_eye(
   slab_type = "pdf",
   p_limits = c(NA, NA),
   outline_bars = FALSE,
+  point_interval = "median_qi",
   limits = NULL,
   n = 501,
-  point_interval = NULL,
   .width = c(0.66, 0.95),
   orientation = NA,
   na.rm = FALSE,
@@ -79,9 +79,9 @@ stat_dist_ccdfinterval(
   normalize = "none",
   p_limits = c(NA, NA),
   outline_bars = FALSE,
+  point_interval = "median_qi",
   limits = NULL,
   n = 501,
-  point_interval = NULL,
   .width = c(0.66, 0.95),
   orientation = NA,
   na.rm = FALSE,
@@ -99,9 +99,9 @@ stat_dist_cdfinterval(
   normalize = "none",
   p_limits = c(NA, NA),
   outline_bars = FALSE,
+  point_interval = "median_qi",
   limits = NULL,
   n = 501,
-  point_interval = NULL,
   .width = c(0.66, 0.95),
   orientation = NA,
   na.rm = FALSE,
@@ -118,9 +118,9 @@ stat_dist_gradientinterval(
   slab_type = "pdf",
   p_limits = c(NA, NA),
   outline_bars = FALSE,
+  point_interval = "median_qi",
   limits = NULL,
   n = 501,
-  point_interval = NULL,
   .width = c(0.66, 0.95),
   orientation = NA,
   na.rm = FALSE,
@@ -134,7 +134,7 @@ stat_dist_pointinterval(
   geom = "pointinterval",
   position = "identity",
   ...,
-  point_interval = NULL,
+  point_interval = "median_qi",
   .width = c(0.66, 0.95),
   orientation = NA,
   na.rm = FALSE,
@@ -149,7 +149,7 @@ stat_dist_interval(
   position = "identity",
   ...,
   .width = c(0.5, 0.8, 0.95),
-  point_interval = NULL,
+  point_interval = "median_qi",
   orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
@@ -221,6 +221,14 @@ if outlines in between the bars are drawn when the \code{slab_color} aesthetic i
 (the default), the outline is drawn only along the tops of the bars; if \code{TRUE}, outlines in between
 bars are also drawn.}
 
+\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
+\code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
+(e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc). This function determines the point summary
+(typically mean, median, or mode) and interval type (quantile interval, \code{qi};
+highest-density interval, \code{hdi}; or highest-density continuous interval, \code{hdci}). Output will
+be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
+See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
+
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
@@ -229,14 +237,6 @@ will not be wider than these (but may be narrower). Use \code{NA} to leave a lim
 be determined by either \code{p_limits} or the scale settings.}
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
-
-\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, etc). This function should take in a vector of values, and should obey the
-\code{.width} and \code{.simple_names} parameters of \code{\link[=point_interval]{point_interval()}} functions, such that when given
-a vector with \code{.simple_names = TRUE} it should return a data frame with variables \code{.value}, \code{.lower},
-\code{.upper}, and \code{.width}. Output will be converted to the appropriate \code{x}- or \code{y}-based aesthetics
-depending on the value of \code{orientation}. See the \code{\link[=point_interval]{point_interval()}} family of functions for
-more information.}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
 that determine the widths of the resulting intervals. If multiple probabilities are provided,

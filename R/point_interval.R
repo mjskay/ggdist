@@ -340,7 +340,8 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
   if (distributional::is_distribution(x)) {
-    do.call(rbind, quantile(x, c(lower_prob, upper_prob), na.rm = na.rm))
+    #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile here
+    do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
   }
@@ -356,6 +357,7 @@ hdi_ = function(x, ...) {
   UseMethod("hdi_")
 }
 #' @importFrom stats density
+#' @export
 hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
@@ -369,6 +371,7 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   }
   matrix(intervals, ncol = 2)
 }
+#' @export
 hdi_.rvar = function(x, ...) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar rvars is not implemented")
@@ -376,10 +379,12 @@ hdi_.rvar = function(x, ...) {
   hdi_.numeric(posterior::draws_of(x), ...)
 }
 #' @importFrom distributional hdr
+#' @export
 hdi_.dist_default = function(x, .width = .95, ...) {
   hilos = hdr(x, .width * 100, ...)
   matrix(c(unlist(vctrs::field(hilos, "lower")), unlist(vctrs::field(hilos, "upper"))), ncol = 2)
 }
+#' @export
 hdi_.distribution = function(x, .width = .95, ...) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar distributions is not implemented")
@@ -454,6 +459,7 @@ hdci_ = function(x, ...) {
   UseMethod("hdci_")
 }
 #' @importFrom stats density
+#' @export
 hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
@@ -462,6 +468,7 @@ hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   intervals = HDInterval::hdi(x, credMass = .width)
   matrix(intervals, ncol = 2)
 }
+#' @export
 hdci_.rvar = function(x, ...) {
   if (length(x) > 1) {
     stop0("HDCI for non-scalar rvars is not implemented")
@@ -469,9 +476,11 @@ hdci_.rvar = function(x, ...) {
   hdci_.numeric(posterior::draws_of(x), ...)
 }
 #' @importFrom distributional hdr
+#' @export
 hdci_.dist_default = function(x, .width = .95, ...) {
   stop0("HDCI for distributional objects is not implemented")
 }
+#' @export
 hdci_.distribution = hdci_.dist_default
 
 #' @export
