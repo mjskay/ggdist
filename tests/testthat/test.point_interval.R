@@ -360,8 +360,6 @@ test_that("pointintervals work on rvars", {
 # distributional objects --------------------------------------------------
 
 test_that("pointintervals work on distributional objects", {
-  skip_if_not_installed("distributional", "0.2.2.9000")
-
   x = dist_gamma(1:2,2:3)
 
   expect_equal(

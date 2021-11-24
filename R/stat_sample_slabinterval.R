@@ -56,7 +56,7 @@ compute_limits_sample = function(self, data, trans, orientation, p_limits = c(NA
     data.frame(.lower = NA, .upper = NA)
   } else {
     # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
-    bw = bw.nrd0(data[[x]])
+    bw = stats::bw.nrd0(data[[x]])
     data.frame(
       .lower = min(data[[x]]) - bw * 3,
       .upper = max(data[[x]]) + bw * 3

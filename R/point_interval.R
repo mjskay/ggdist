@@ -177,6 +177,15 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     }
   }
 
+  apply_point_summary = function(draws, .point, na.rm) {
+    if (distributional::is_distribution(draws)) {
+      #TODO: when #114 / distributional#72 is fixed, pass na.rm to median in this call
+      .point(draws)
+    } else {
+      map_dbl_(draws, .point, na.rm = na.rm)
+    }
+  }
+
   if (length(col_exprs) == 1 && .simple_names) {
     # only one column provided => summarise that column and use ".lower" and ".upper" as
     # the generated column names for consistency with tidy() in broom
@@ -200,7 +209,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       # to intervals that can return multiple intervals (e.g., hdi())
 
       # reduce `data` to just point estimate column and grouping factors (if any)
-      data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
+      data[[col_name]] = apply_point_summary(draws, .point, na.rm)
 
       # for each row of `data`, compute the intervals (may be more than one),
       # and construct a tibble with grouping factors (if any), point estimate,
@@ -235,7 +244,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
 
-        data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
+        data[[col_name]] = apply_point_summary(draws, .point, na.rm = na.rm)
 
         intervals = lapply(draws, .interval, .width = p, na.rm = na.rm)
 
@@ -326,7 +335,20 @@ point_interval.distribution = point_interval.rvar
 
 #' @rdname point_interval
 #' @export
-point_interval.dist_default = point_interval.rvar
+point_interval.dist_default = function(
+  .data, ...,
+  .width = .95, .point = median, .interval = qi, .simple_names = TRUE, na.rm = FALSE
+) {
+  x = .data
+  # using substitute here so that names of .point / .interval are passed down correctly
+  eval(substitute(point_interval(
+    # must wrap dist_default objects back in vectors to put in a tibble.
+    # This is a hack but will never get called once distributional > 0.2.2 hits.
+    tibble(.value = vctrs::new_vctr(list(x), class = "distribution")), ...,
+    .width = .width, .point = .point, .interval = .interval, .simple_names = .simple_names, na.rm = na.rm
+  )))
+}
+
 
 #' @importFrom stats quantile
 #' @export
@@ -339,9 +361,16 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
+
   if (distributional::is_distribution(x)) {
-    #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile here
-    do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
+    #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in these calls
+    if (packageVersion("distributional") >= "0.2.2.9000") {
+      do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
+    } else {
+      matrix(quantile(x[[1]], c(lower_prob, upper_prob)), ncol = 2)
+    }
+  } else if (inherits(x, "dist_default")) {
+    matrix(quantile(x, c(lower_prob, upper_prob)), ncol = 2)
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
   }

@@ -490,7 +490,7 @@ test_that("constant distributions work", {
 # point_interval ----------------------------------------------------------
 
 
-test_that("mode_hdi works", {
+test_that("point_interval works", {
   skip_if_no_vdiffr()
 
 
@@ -508,6 +508,10 @@ test_that("mode_hdi works", {
   vdiffr::expect_doppelganger("mixture dist with mean_qi",
     p + stat_dist_halfeye(point_interval = mean_qi)
   )
+
+
+  # hdi does not work on old versions of distributional
+  skip_if_not_installed("distributional", "0.2.2.9000")
 
   vdiffr::expect_doppelganger("mixture dist with mode_hdi",
     p + stat_dist_halfeye(point_interval = mode_hdi)

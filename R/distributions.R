@@ -84,8 +84,19 @@ distr_point_interval.default = function(dist, args = list(), point_interval, .si
 }
 #' @importFrom distributional dist_wrap
 #' @export
-distr_point_interval.character = function(dist, args = list(), point_interval, ...) {
-  distr_point_interval(do.call(dist_wrap, c(list(dist), args)), list(), point_interval, ...)
+distr_point_interval.character = function(dist, args = list(), point_interval, .width = .95, ...) {
+  quantile_fun = distr_quantile(dist)
+
+  map_dfr_(.width, function(w) {
+    quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
+    quantiles = do.call(quantile_fun, quantile_args)
+    data.frame(
+      .value = quantiles[[1]],
+      .lower = quantiles[[2]],
+      .upper = quantiles[[3]],
+      .width = w
+    )
+  })
 }
 #' @export
 distr_point_interval.factor = function(dist, args = list(), point_interval, ...) {
