@@ -270,6 +270,13 @@ compute_interval_dist = function(
 #' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
 #' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
 #' bars are also drawn.
+#' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator for sample data
+#' is adjusted by multiplying it by this value. See [density()] for more information.
+#' @param trim For sample data, should the density estimate be trimmed to the range of the
+#' input data? Default `TRUE`.
+#' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
+#' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to
+#' [hist()] to determine where to put breaks in the histogram (for sample data).
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits

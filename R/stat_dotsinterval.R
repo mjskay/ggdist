@@ -112,7 +112,8 @@ StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
 
   hidden_params = union(c(
     "limits", "n",
-    "p_limits", "slab_type", "outline_bars"
+    "p_limits", "slab_type", "outline_bars",
+    "adjust", "trim", "expand", "breaks"
   ), StatSlabinterval$hidden_params),
 
   compute_slab = compute_slab_dots_dist
