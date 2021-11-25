@@ -27,6 +27,7 @@ stat_dist_lineribbon(
   position = "identity",
   ...,
   .width = c(0.5, 0.8, 0.95),
+  expand = FALSE,
   point_interval = "median_qi",
   orientation = NA,
   na.rm = FALSE,

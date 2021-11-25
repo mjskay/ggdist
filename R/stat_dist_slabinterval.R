@@ -29,7 +29,12 @@ args_from_aes = function(args = list(), ...) {
   c(unnamed_args, named_args)
 }
 
-compute_limits_dist = function(self, data, trans, p_limits = c(NA, NA), ...) {
+compute_limits_dist = function(
+  self, data, trans, orientation,
+  p_limits,
+  ...
+) {
+  extra_params = list(...)
 
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
@@ -37,6 +42,18 @@ compute_limits_dist = function(self, data, trans, p_limits = c(NA, NA), ...) {
     }
 
     args = args_from_aes(...)
+
+    if (distr_is_sample(dist, args)) {
+      return(do.call(compute_limits_sample, c(
+        list(
+          self, data.frame(x = distr_get_sample(dist, args)), trans,
+          orientation = "horizontal",
+          p_limits = p_limits
+        ),
+        extra_params
+      )))
+    }
+
     quantile_fun = distr_quantile(dist)
 
     # if the lower or upper p limit is NA, check to see if the dist has a
@@ -63,10 +80,12 @@ compute_limits_dist = function(self, data, trans, p_limits = c(NA, NA), ...) {
 
 #' @importFrom dplyr lag
 compute_slab_dist = function(
-  self, data, trans, input,
+  self, data, trans, input, orientation,
   slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE,
   ...
 ) {
+  extra_params = list(...)
+
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
@@ -86,6 +105,15 @@ compute_slab_dist = function(
       input = c(input_1, input_2, input_2, input_2, input_3)
       pdf = c(0, 0, Inf, 0, 0)
       cdf = c(0, 0, 1, 1, 1)
+    } else if (distr_is_sample(dist, args)) {
+      return(do.call(compute_slab_sample, c(
+        list(
+          self, data.frame(x = distr_get_sample(dist, args)), trans, input,
+          orientation = "horizontal", slab_type = slab_type, limits = limits, n = n,
+          outline_bars = outline_bars
+        ),
+        extra_params
+      )))
     } else if (trans$name == "identity") {
       pdf_fun = distr_pdf(dist)
       if (distr_is_discrete(dist, args)) {
@@ -127,9 +155,11 @@ compute_slab_dist = function(
     }
 
     value = switch(slab_type,
+      histogram = ,
       pdf = pdf,
       cdf = cdf,
-      ccdf = 1 - cdf
+      ccdf = 1 - cdf,
+      stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
     )
 
     data.frame(
@@ -137,7 +167,7 @@ compute_slab_dist = function(
       .value = value,
       pdf = pdf,
       cdf = cdf,
-      n = Inf
+      n = if (distr_is_sample(dist, args)) length(distr_get_sample(dist, args)) else Inf
     )
   })
 }
@@ -333,6 +363,10 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
   default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(NA, NA),
+    adjust = 1,
+    trim = TRUE,
+    expand = FALSE,
+    breaks = "Sturges",
     outline_bars = FALSE,
 
     point_interval = "median_qi"

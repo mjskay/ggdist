@@ -44,7 +44,11 @@ sample_density = function(x, ...) {
   }
 }
 
-compute_limits_sample = function(self, data, trans, orientation, p_limits = c(NA, NA), trim = TRUE, ...) {
+compute_limits_sample = function(
+  self, data, trans, orientation,
+  p_limits, trim, adjust,
+  ...
+) {
   x = switch(orientation,
     y = ,
     horizontal = "x",
@@ -52,24 +56,26 @@ compute_limits_sample = function(self, data, trans, orientation, p_limits = c(NA
     vertical = "y"
   )
 
-  if (trim) {
-    data.frame(.lower = NA, .upper = NA)
+  # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
+  expansion = if (trim) {
+    0
   } else {
-    # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
     bw = stats::bw.nrd0(data[[x]])
-    data.frame(
-      .lower = min(data[[x]]) - bw * 3,
-      .upper = max(data[[x]]) + bw * 3
-    )
+    bw * adjust * 3
   }
+
+  data.frame(
+    .lower = trans$inverse(min(data[[x]]) - expansion),
+    .upper = trans$inverse(max(data[[x]]) + expansion)
+  )
 }
 
 #' @importFrom rlang missing_arg
 #' @importFrom stats ecdf density
 #' @importFrom graphics hist
 compute_slab_sample = function(
-  self, data, trans, input,
-  slab_type = "pdf", limits = NULL, n = 501, orientation = NA,
+  self, data, trans, input, orientation,
+  slab_type = "pdf", limits = NULL, n = 501,
   adjust = 1, trim = TRUE, expand = FALSE, breaks = "Sturges", outline_bars = FALSE,
   ...
 ) {
@@ -148,7 +154,8 @@ compute_slab_sample = function(
     histogram = ,
     pdf = slab_df$pdf,
     cdf = slab_df$cdf,
-    ccdf = 1 - slab_df$cdf
+    ccdf = 1 - slab_df$cdf,
+    stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
   )
 
   slab_df$n = nrow(data)
