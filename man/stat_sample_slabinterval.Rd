@@ -245,10 +245,11 @@ be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending
 See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
 
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
+computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
 limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
 will not be wider than these (but may be narrower). Use \code{NA} to leave a limit alone; e.g.
-\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0.}
+\code{limits = c(0, NA)} will ensure that the lower limit does not go below 0, but let the upper limit
+be determined by either \code{p_limits} or the scale settings.}
 
 \item{n}{Number of points at which to evaluate the function that defines the slab.}
 

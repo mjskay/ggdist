@@ -4,64 +4,13 @@
 ###############################################################################
 
 
-#' Meta-stat for computing slab functions and interval functions (ggplot stat)
-#'
-#' A meta-stat for computing slab and interval functions for use with [geom_slabinterval()]
-#' and its derivatives. Generally speaking not intended to be used directly: The API for
-#' this stat is **experimental and subject to change**. This is used as the basis
-#' for several other more directly useful stats whose APIs are more stable; it is recommended
-#' to use those instead.
-#'
-#' @eval rd_slabinterval_aesthetics(stat = StatSlabinterval)
-#' @inheritParams geom_slabinterval
-#' @param geom Use to override the default connection between
-#' `stat_slabinterval` and [geom_slabinterval()]
-#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
-#' parameters to the paired geom/stat (e.g. `geom_slabinterval()`).
-#' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
-#' computed automatically for the slab as well as the limits defined by the scales of the plot to determine the
-#' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
-#' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
-#' `limits = c(0, NA)` will ensure that the lower limit does not go below 0.
-#' @param n Number of points at which to evaluate the function that defines the slab.
-#' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
-#'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
-#'   (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc). This function determines the point summary
-#'   (typically mean, median, or mode) and interval type (quantile interval, `qi`;
-#'   highest-density interval, `hdi`; or highest-density continuous interval, `hdci`). Output will
-#'   be converted to the appropriate `x`- or `y`-based aesthetics depending on the value of `orientation`.
-#'   See the [point_interval()] family of functions for more information.
-#' @param .width The `.width` argument passed to `point_interval`: a vector of probabilities to use
-#' that determine the widths of the resulting intervals. If multiple probabilities are provided,
-#' multiple intervals per group are generated, each with a different probability interval (and
-#' value of the corresponding `.width` and `level` generated variables).
-#' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
-#' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
-#' those that are mapped (the default for most geoms).
-#' @seealso See [geom_slabinterval()] for the geom version, intended
-#' for use on data that has already been translated into function evaluations, points, and intervals.
-#' See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of stats
-#' built on top of this stat for common use cases (like `stat_halfeye`).
-#' See `vignette("slabinterval")` for a variety of examples of use.
-#' @examples
-#'
-#' # stat_slabinterval() is typically not that useful on its own.
-#' # See vignette("slabinterval") for a variety of examples of the use of its
-#' # shortcut geoms and stats, which are more useful than using
-#' # stat_slabinterval() directly.
-#'
-#' @importFrom rlang as_function
+
 #' @importFrom dplyr bind_rows
-#' @name stat_slabinterval
-NULL
-
-
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
-StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
+AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
   default_aes = aes(
     datatype = "slab",
     thickness = stat(f),
@@ -203,10 +152,6 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
   }
 )
 
-#' @rdname stat_slabinterval
-#' @export
-stat_slabinterval = make_stat(StatSlabinterval, geom = "slabinterval")
-
 
 # stat computation functions ----------------------------------------------
 
@@ -293,6 +238,7 @@ compute_panel_slabs = function(
   s_data
 }
 
+#' @importFrom rlang as_function
 #' @param ... stat parameters
 #' @noRd
 compute_panel_intervals = function(

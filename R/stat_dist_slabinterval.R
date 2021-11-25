@@ -254,8 +254,9 @@ compute_interval_dist = function(
 #' @eval rd_slabinterval_computed_variables()
 #' @eval rd_slabinterval_aesthetics(stat = StatDistSlabinterval)
 #'
-#' @inheritParams stat_slabinterval
 #' @inheritParams geom_slabinterval
+#' @param geom Use to override the default connection between
+#' `stat_slabinterval` and [geom_slabinterval()]
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
 #' cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`).
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
@@ -283,6 +284,24 @@ compute_interval_dist = function(
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
+#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
+#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+#' parameters to the paired geom/stat (e.g. `geom_slabinterval()`).
+#' @param n Number of points at which to evaluate the function that defines the slab.
+#' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
+#'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
+#'   (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc). This function determines the point summary
+#'   (typically mean, median, or mode) and interval type (quantile interval, `qi`;
+#'   highest-density interval, `hdi`; or highest-density continuous interval, `hdci`). Output will
+#'   be converted to the appropriate `x`- or `y`-based aesthetics depending on the value of `orientation`.
+#'   See the [point_interval()] family of functions for more information.
+#' @param .width The `.width` argument passed to `point_interval`: a vector of probabilities to use
+#' that determine the widths of the resulting intervals. If multiple probabilities are provided,
+#' multiple intervals per group are generated, each with a different probability interval (and
+#' value of the corresponding `.width` and `level` generated variables).
+#' @param show.legend Should this layer be included in the legends? Default is `c(size = FALSE)`, unlike most geoms,
+#' to match its common use cases. `FALSE` hides all legends, `TRUE` shows all legends, and `NA` shows only
+#' those that are mapped (the default for most geoms).
 #' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats
@@ -343,7 +362,7 @@ NULL
 #' @format NULL
 #' @usage NULL
 #' @export
-StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
+StatDistSlabinterval = ggproto("StatDistSlabinterval", AbstractStatSlabinterval,
   default_aes = defaults(aes(
     xdist = NULL,
     ydist = NULL,
@@ -358,7 +377,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     arg7 = NULL,
     arg8 = NULL,
     arg9 = NULL
-  ), StatSlabinterval$default_aes),
+  ), AbstractStatSlabinterval$default_aes),
 
   # interval parameter used to determine if the stat re-groups
   # data by the combination of input group + dist + args. For
@@ -377,16 +396,16 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     outline_bars = FALSE,
 
     point_interval = "median_qi"
-  ), StatSlabinterval$default_params),
+  ), AbstractStatSlabinterval$default_params),
 
-  # orientation auto-detection here is different from base StatSlabinterval
+  # orientation auto-detection here is different from base AbstractStatSlabinterval
   # (main_is_orthogonal needs to be FALSE)
   orientation_options = defaults(list(
     secondary_is_dist = TRUE
-  ), StatSlabinterval$orientation_options),
+  ), AbstractStatSlabinterval$orientation_options),
 
   setup_data = function(self, data, params) {
-    data = ggproto_parent(StatSlabinterval, self)$setup_data(data, params)
+    data = ggproto_parent(AbstractStatSlabinterval, self)$setup_data(data, params)
     define_orientation_variables(params$orientation)
 
     # check for dist-like objects in x / y axis: these are likely user errors
@@ -466,7 +485,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
       data[[x]] = median(data$dist)
     }
 
-    ggproto_parent(StatSlabinterval, self)$compute_panel(
+    ggproto_parent(AbstractStatSlabinterval, self)$compute_panel(
       data, scales,
       orientation = orientation,
       na.rm = na.rm,

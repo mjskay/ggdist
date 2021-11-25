@@ -14,7 +14,7 @@
 #' `arg1`, ... `arg9`, and `args` aesthetics.
 #'
 #' @inheritParams stat_interval
-#' @inheritParams stat_slabinterval
+#' @inheritParams stat_dist_slabinterval
 #' @param geom Use to override the default connection between
 #' `geom_lineribbon` and `stat_lineribbon`.
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics

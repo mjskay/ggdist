@@ -209,7 +209,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'
 #' @eval rd_slabinterval_aesthetics(geom = GeomDotsinterval, geom_name = "geom_dotsinterval", stat = StatDotsinterval)
 #' @inheritParams geom_slabinterval
-#' @inheritParams stat_slabinterval
+#' @inheritParams stat_dist_slabinterval
 #' @author Matthew Kay
 #' @param dotsize The size of the dots relative to the bin width. The default, `1`, makes dots be just about as
 #' wide as the bin width.

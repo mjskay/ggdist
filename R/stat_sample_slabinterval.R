@@ -196,9 +196,8 @@ compute_slab_sample = function(
 #' @eval rd_slabinterval_computed_variables()
 #' @eval rd_slabinterval_aesthetics(stat = StatSampleSlabinterval)
 #'
-#' @inheritParams stat_slabinterval
-#' @inheritParams geom_slabinterval
 #' @inheritParams stat_dist_slabinterval
+#' @inheritParams geom_slabinterval
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
 #' cumulative distribution function (`"cdf"`), complementary CDF (`"ccdf"`), or histogram (`"histogram"`.
 #' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator is adjusted by multiplying it
@@ -253,7 +252,7 @@ NULL
 #' @format NULL
 #' @usage NULL
 #' @export
-StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
+StatSampleSlabinterval = ggproto("StatSampleSlabinterval", AbstractStatSlabinterval,
   default_params = defaults(list(
     slab_type = "pdf",
     adjust = 1,
@@ -263,7 +262,7 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", StatSlabinterval,
     outline_bars = FALSE,
 
     point_interval = "median_qi"
-  ), StatSlabinterval$default_params),
+  ), AbstractStatSlabinterval$default_params),
 
   compute_limits = compute_limits_sample,
   compute_slab = compute_slab_sample
