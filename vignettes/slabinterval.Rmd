@@ -90,9 +90,7 @@ dists_df = tibble(
 
 hist_df = tibble(
   geom = "histinterval",
-  x = qnorm(ppoints(1000), 4, 1),
-  dist = NA,
-  args = NA
+  x = qnorm(ppoints(1000), 4, 1)
 )
 
 dists_plot = dists_df %>%
@@ -103,13 +101,13 @@ dists_plot = dists_df %>%
   stat_dist_gradientinterval(data = . %>% filter(geom == "gradientinterval"), scale = .5, fill_type = "gradient") +
   stat_dist_ccdfinterval(data = . %>% filter(geom == "ccdfinterval"), scale = .5) +
   stat_dist_cdfinterval(data = . %>% filter(geom == "cdfinterval"), scale = .5) +
-  stat_interval(aes(x = x, y = "interval"), data = hist_df, color = "gray65", alpha = 1/3, size = 10,
+  stat_interval(aes(x = x, y = "interval", dist = NULL, args = NULL), data = hist_df, color = "gray65", alpha = 1/3, size = 10,
     position = position_nudge(y = -.1)) +
-  stat_pointinterval(aes(x = x, y = "pointinterval"), data = hist_df) +
+  stat_pointinterval(aes(x = x, y = "pointinterval", dist = NULL, args = NULL), data = hist_df) +
   stat_dist_slab(data = . %>% filter(geom == "slab"), position = position_nudge(y = - 0.2)) +
   stat_dist_dotsinterval(data = . %>% filter(geom == "dotsinterval"), position = position_nudge(y = - 0.3)) +
   stat_dist_dots(data = . %>% filter(geom == "dots"), position = position_nudge(y = - 0.3)) +
-  stat_histinterval(aes(x = x), data = hist_df, position = position_nudge(y = - 0.4)) +
+  stat_histinterval(aes(x = x, dist = NULL, args = NULL), data = hist_df, position = position_nudge(y = - 0.4)) +
   scale_slab_alpha_continuous(guide = "none") +
   scale_x_continuous(limits = c(0,8), expand = c(0,0)) +
   labs(
