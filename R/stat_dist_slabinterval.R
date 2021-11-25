@@ -108,7 +108,7 @@ compute_slab_dist = function(
     } else if (distr_is_sample(dist, args)) {
       return(do.call(compute_slab_sample, c(
         list(
-          self, data.frame(x = distr_get_sample(dist, args)), trans, input,
+          self, data.frame(x = trans$transform(distr_get_sample(dist, args))), trans, input,
           orientation = "horizontal", slab_type = slab_type, limits = limits, n = n,
           outline_bars = outline_bars
         ),
@@ -403,17 +403,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
 
     # pull out the x (secondary) dist axis into the dist aesthetic
     if (!is.null(data[[xdist]])) {
-      #TODO: reverse this
+      #TODO: reverse this: move dist into xdist and use xdist elsewhere
       data$dist = data[[xdist]]
-    } else if (is.null(data$dist) && is.numeric(data[[x]])) {
-      # dist aesthetic is not provided but x aesthetic is, and x is not a dist
-      # this means we need to wrap it as a dist_sample
-      data = summarise_by(data, c("PANEL", y, "group"), function(d) {
-        # TODO: don't need to remove missing values here after distributional > 0.2.2
-        d = remove_missing(d, params$na.rm, x, name = "stat_dist_slabinterval")
-        data.frame(dist = dist_sample(list(as.numeric(d[[x]]))))
-      })
-      data[[x]] = median(data$dist)
     }
 
     # ignore unknown distributions (with a warning)
@@ -433,7 +424,7 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
       # })
     }
 
-    if (self$group_by_dist) {
+    if (!is.null(data$dist) && self$group_by_dist) {
       # Need to group by rows in the data frame to draw correctly, as
       # each output slab will need to be in its own group.
       # First check if we are grouped by rows already (in which case leave it)
@@ -447,6 +438,40 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
     }
 
     data
+  },
+
+  compute_panel = function(self, data, scales,
+    orientation,
+    na.rm,
+    ...
+  ) {
+    define_orientation_variables(orientation)
+
+    # convert x/y secondary positional aesthetic into dist_sample
+    # must do this here instead of in setup_data so that we can invert
+    # the scale transformation --- this ensures that data supplied via dist_sample
+    # and data supplied via the x/y positional aesthetics can all be treated
+    # as being on the untransformed scale in any subsequent code
+    if (is.null(data$dist) && is.numeric(data[[x]])) {
+      trans = scales[[x]]$trans %||% scales::identity_trans()
+
+      # TODO: shouldn't need to remove missing values here after distributional > 0.2.2
+      data = remove_missing(data, na.rm, x, name = "stat_dist_slabinterval")
+
+      # dist aesthetic is not provided but x aesthetic is, and x is not a dist
+      # this means we need to wrap it as a dist_sample
+      data = summarise_by(data, c("PANEL", y, "group"), function(d) {
+        data.frame(dist = dist_sample(list(trans$inverse(as.numeric(d[[x]])))))
+      })
+      data[[x]] = median(data$dist)
+    }
+
+    ggproto_parent(StatSlabinterval, self)$compute_panel(
+      data, scales,
+      orientation = orientation,
+      na.rm = na.rm,
+      ...
+    )
   },
 
   compute_limits = compute_limits_dist,

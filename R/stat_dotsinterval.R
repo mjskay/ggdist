@@ -57,7 +57,7 @@ compute_slab_dots_dist = function(
 
     if (distr_is_sample(dist, args)) {
       return(compute_slab_dots_sample(
-        self, data.frame(x = distr_get_sample(dist, args)), trans, input,
+        self, data.frame(x = trans$transform(distr_get_sample(dist, args))), trans, input,
         orientation = "horizontal",
         quantiles = quantiles,
         na.rm = na.rm

@@ -171,11 +171,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStat,
     data = ggplot2::remove_missing(data, na.rm, c(x, y), name = "stat_slabinterval")
 
     # figure out coordinate transformation
-    trans = if (is.null(scales[[x]]) || scales[[x]]$is_discrete()) {
-      scales::identity_trans()
-    } else {
-      scales[[x]]$trans
-    }
+    trans = scales[[x]]$trans %||% scales::identity_trans()
 
     # SLABS
     s_data = if (show_slab) {
