@@ -402,6 +402,8 @@ StatDistSlabinterval = ggproto("StatDistSlabinterval", StatSlabinterval,
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
       # this means we need to wrap it as a dist_sample
       data = summarise_by(data, c("PANEL", y, "group"), function(d) {
+        # TODO: don't need to remove missing values here after distributional > 0.2.2
+        d = remove_missing(d, params$na.rm, x, name = "stat_dist_slabinterval")
         data.frame(dist = dist_sample(list(as.numeric(d[[x]]))))
       })
       data[[x]] = median(data$dist)
