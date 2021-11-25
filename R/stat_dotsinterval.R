@@ -8,8 +8,9 @@
 
 #' @importFrom stats ppoints
 compute_slab_dots_sample = function(
-  self, data, trans, input,
-  quantiles = NA, orientation = NA, na.rm = FALSE,
+  self, data, trans, input, orientation,
+  quantiles,
+  na.rm,
   ...
 ) {
   x = switch(orientation,
@@ -39,21 +40,32 @@ compute_slab_dots_sample = function(
 
 #' @importFrom stats ppoints
 compute_slab_dots_dist = function(
-  self, data, trans, input,
-  quantiles = 100,
+  self, data, trans, input, orientation,
+  quantiles,
+  na.rm,
   ...
 ) {
+  dist_quantiles = if (is.na(quantiles)) 100 else quantiles
+  probs = ppoints(dist_quantiles, a = 1/2)
+
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
     }
 
-    args = c(
-      list(ppoints(quantiles, a = 1/2)),
-      args_from_aes(...)
-    )
+    args = args_from_aes(...)
+
+    if (distr_is_sample(dist, args)) {
+      return(compute_slab_dots_sample(
+        self, data.frame(x = distr_get_sample(dist, args)), trans, input,
+        orientation = "horizontal",
+        quantiles = quantiles,
+        na.rm = na.rm
+      ))
+    }
+
     quantile_fun = distr_quantile(dist)
-    input = do.call(quantile_fun, args)
+    input = do.call(quantile_fun, c(list(probs), args))
 
     data.frame(
       .input = input,
@@ -107,7 +119,7 @@ stat_dots = make_stat(StatDots, geom = "dots")
 
 StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
   default_params = defaults(list(
-    quantiles = 100
+    quantiles = NA
   ), StatDistSlabinterval$default_params),
 
   hidden_params = union(c(

@@ -105,6 +105,28 @@ test_that("coordinate transformations work", {
 
 })
 
+
+test_that("scale transformations work", {
+  skip_if_no_vdiffr()
+  skip("TODO: fix")
+
+  p = data.frame(x = dist_sample(list(qlnorm(ppoints(20))))) %>%
+    ggplot(aes(xdist = x, y = 0))
+
+  vdiffr::expect_doppelganger("transformed scale with dist_sample",
+    p + stat_dist_dotsinterval() + scale_x_log10()
+  )
+
+  p = data.frame(x = qlnorm(ppoints(20))) %>%
+    ggplot(aes(x = x, y = 0))
+
+  vdiffr::expect_doppelganger("transformed scale with dist_sample",
+    p + stat_dist_dotsinterval(quantiles = NA) + scale_x_log10()
+  )
+
+})
+
+
 test_that("stat_dist_dots[interval] works", {
   skip_if_no_vdiffr()
 
