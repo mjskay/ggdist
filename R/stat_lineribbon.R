@@ -49,31 +49,6 @@
 NULL
 
 StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
-  default_aes = aes(
-    datatype = "interval",
-    group = stat(level),
-    fill = stat(level)
-  ),
-
-  default_params = defaults(list(
-    .width = c(.50, .80, .95)
-  ), StatPointinterval$default_params),
-
-  layer_args = defaults(list(
-    show.legend = NA
-  ), StatPointinterval$layer_args),
-
-  orientation_options = defaults(list(
-    main_is_orthogonal = NA
-  ), StatPointinterval$orientation_options)
-)
-
-#' @rdname stat_lineribbon
-#' @export
-stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")
-
-
-StatDistLineribbon = ggproto("StatDistLineribbon", StatPointinterval,
   default_aes = defaults(aes(
     datatype = "interval",
     group = stat(level),
@@ -88,13 +63,17 @@ StatDistLineribbon = ggproto("StatDistLineribbon", StatPointinterval,
     show.legend = NA
   ), StatPointinterval$layer_args),
 
+  orientation_options = defaults(list(
+    main_is_orthogonal = NA
+  ), StatPointinterval$orientation_options),
+
   group_by_dist = FALSE
 )
 # have to remove this here instead of in call to defaults()
 # because otherwise it stays in the list as a value = NULL
 # instead of being removed
-StatDistLineribbon$default_aes$size = NULL
+StatLineribbon$default_aes$size = NULL
 
 #' @rdname stat_lineribbon
 #' @export
-stat_dist_lineribbon = make_stat(StatDistLineribbon, geom = "lineribbon")
+stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")

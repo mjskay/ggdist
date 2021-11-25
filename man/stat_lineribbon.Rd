@@ -2,25 +2,9 @@
 % Please edit documentation in R/stat_lineribbon.R
 \name{stat_lineribbon}
 \alias{stat_lineribbon}
-\alias{stat_dist_lineribbon}
 \title{Line + multiple probability ribbon plots (ggplot stat)}
 \usage{
 stat_lineribbon(
-  mapping = NULL,
-  data = NULL,
-  geom = "lineribbon",
-  position = "identity",
-  ...,
-  .width = c(0.5, 0.8, 0.95),
-  expand = FALSE,
-  point_interval = "median_qi",
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-)
-
-stat_dist_lineribbon(
   mapping = NULL,
   data = NULL,
   geom = "lineribbon",

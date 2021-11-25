@@ -67,3 +67,9 @@ stat_dist_pointinterval = stat_pointinterval
 #' @usage NULL
 #' @export
 stat_dist_interval = stat_interval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_lineribbon = stat_lineribbon
