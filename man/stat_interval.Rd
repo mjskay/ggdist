@@ -136,6 +136,13 @@ at a time along with the \code{dist} aesthetic).
 \item \code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
 (when \code{orientation = "vertical"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
 at a time along with the \code{dist} aesthetic).
+\item \code{xdist}: Distribution to map on the x axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+\item \code{ydist}: Distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+\item \code{dist}: (Deprecated). A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
+\item \code{args}: (Deprecated). Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_interval]{geom_interval()}}) the following aesthetics are supported by the underlying geom:
 

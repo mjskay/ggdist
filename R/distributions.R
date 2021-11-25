@@ -102,6 +102,14 @@ distr_point_interval.character = function(dist, args = list(), point_interval, .
 distr_point_interval.factor = function(dist, args = list(), point_interval, ...) {
   distr_point_interval(as.character(dist), args, point_interval, ...)
 }
+#' @export
+distr_point_interval.distribution = function(dist, args = list(), point_interval, ...) {
+  if (distr_is_sample(dist, args)) {
+    distr_point_interval(distr_get_sample(dist, args), args, point_interval, ...)
+  } else {
+    NextMethod()
+  }
+}
 
 
 # other distribution helpers ----------------------------------------------

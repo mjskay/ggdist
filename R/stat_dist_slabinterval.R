@@ -572,28 +572,6 @@ StatDistPointinterval = ggproto("StatDistPointinterval", StatDistSlabinterval,
 #' @rdname stat_dist_slabinterval
 stat_dist_pointinterval = make_stat(StatDistPointinterval, geom = "pointinterval")
 
-StatDistInterval = ggproto("StatDistInterval", StatDistPointinterval,
-  default_aes = defaults(aes(
-    color = stat(level)
-  ), StatDistPointinterval$default_aes),
-
-  default_params = defaults(list(
-    show_point = FALSE,
-    .width = c(.50, .80, .95)
-  ), StatDistPointinterval$default_params),
-
-  layer_args = defaults(list(
-    show.legend = NA
-  ), StatDistPointinterval$layer_args)
-)
-# have to remove this here instead of in call to defaults()
-# because otherwise it stays in the list as a value = NULL
-# instead of being removed
-StatDistInterval$default_aes$size = NULL
-#' @export
-#' @rdname stat_dist_slabinterval
-stat_dist_interval = make_stat(StatDistInterval, geom = "interval")
-
 StatDistSlab = ggproto("StatDistSlab", StatDistSlabinterval,
   default_params = defaults(list(
     show_point = FALSE,

@@ -52,3 +52,12 @@
 #' @author Matthew Kay
 #' @name ggdist-deprecated
 NULL
+
+
+# stat_dist_... -----------------------------------------------------------
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_interval = stat_interval

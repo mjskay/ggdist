@@ -2,6 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{ggdist-deprecated}
 \alias{ggdist-deprecated}
+\alias{stat_dist_interval}
 \title{Deprecated functions and arguments in ggdist}
 \description{
 Deprecated functions and arguments and their alternatives are listed below.
