@@ -473,7 +473,8 @@ StatDistCcdfinterval = ggproto("StatDistCcdfinterval", StatDistSlabinterval,
 
   default_params = defaults(list(
     slab_type = "ccdf",
-    normalize = "none"
+    normalize = "none",
+    expand = TRUE
   ), StatDistSlabinterval$default_params)
 )
 #' @export
