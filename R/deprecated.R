@@ -60,4 +60,10 @@ NULL
 #' @format NULL
 #' @usage NULL
 #' @export
+stat_dist_pointinterval = stat_pointinterval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
 stat_dist_interval = stat_interval

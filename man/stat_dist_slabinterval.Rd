@@ -7,7 +7,6 @@
 \alias{stat_dist_ccdfinterval}
 \alias{stat_dist_cdfinterval}
 \alias{stat_dist_gradientinterval}
-\alias{stat_dist_pointinterval}
 \alias{stat_dist_slab}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)}
 \usage{
@@ -148,21 +147,6 @@ stat_dist_gradientinterval(
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE, slab_alpha = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_dist_pointinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "pointinterval",
-  position = "identity",
-  ...,
-  expand = FALSE,
-  point_interval = "median_qi",
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
   inherit.aes = TRUE
 )
 

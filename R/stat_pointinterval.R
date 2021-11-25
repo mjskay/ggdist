@@ -54,19 +54,19 @@ NULL
 #' @format NULL
 #' @usage NULL
 #' @export
-StatPointinterval = ggproto("StatPointinterval", StatSampleSlabinterval,
+StatPointinterval = ggproto("StatPointinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     datatype = "interval"
-  ), StatSampleSlabinterval$default_aes),
+  ), StatDistSlabinterval$default_aes),
 
   default_params = defaults(list(
     show_slab = FALSE
-  ), StatSampleSlabinterval$default_params),
+  ), StatDistSlabinterval$default_params),
 
   hidden_params = union(c(
-    "slab_type", "adjust", "trim", "breaks", "outline_bars", "limits", "n",
+    "slab_type", "adjust", "trim", "breaks", "outline_bars", "limits", "n", "p_limits",
     "show_slab", "show_point", "show_interval"
-  ), StatSampleSlabinterval$hidden_params)
+  ), StatDistSlabinterval$hidden_params)
 )
 
 #' @rdname stat_pointinterval

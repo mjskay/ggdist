@@ -73,20 +73,20 @@ StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
 stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")
 
 
-StatDistLineribbon = ggproto("StatDistLineribbon", StatDistPointinterval,
+StatDistLineribbon = ggproto("StatDistLineribbon", StatPointinterval,
   default_aes = defaults(aes(
     datatype = "interval",
     group = stat(level),
     fill = stat(level)
-  ), StatDistPointinterval$default_aes),
+  ), StatPointinterval$default_aes),
 
   default_params = defaults(list(
     .width = c(.50, .80, .95)
-  ), StatDistPointinterval$default_params),
+  ), StatPointinterval$default_params),
 
   layer_args = defaults(list(
     show.legend = NA
-  ), StatDistPointinterval$layer_args),
+  ), StatPointinterval$layer_args),
 
   group_by_dist = FALSE
 )

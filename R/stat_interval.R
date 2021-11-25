@@ -51,24 +51,23 @@
 #' @name stat_interval
 NULL
 
-
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
-StatInterval = ggproto("StatInterval", StatDistPointinterval,
+StatInterval = ggproto("StatInterval", StatPointinterval,
   default_aes = defaults(aes(
     color = stat(level)
-  ), StatDistPointinterval$default_aes),
+  ), StatPointinterval$default_aes),
 
   default_params = defaults(list(
     show_point = FALSE,
     .width = c(.50, .80, .95)
-  ), StatDistPointinterval$default_params),
+  ), StatPointinterval$default_params),
 
   layer_args = defaults(list(
     show.legend = NA
-  ), StatDistPointinterval$layer_args)
+  ), StatPointinterval$layer_args)
 )
 # have to remove this here instead of in call to defaults()
 # because otherwise it stays in the list as a value = NULL
