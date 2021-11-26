@@ -78,17 +78,18 @@ compute_slab_dots_dist = function(
 
 # stat_dotsinterval ------------------------------------------------
 
-StatDotsinterval = ggproto("StatDotsinterval", AbstractStatSlabinterval,
+StatDotsinterval = ggproto("StatDotsinterval", StatDistSlabinterval,
   default_params = defaults(list(
-    quantiles = NA,
-    point_interval = "median_qi"
-  ), AbstractStatSlabinterval$default_params),
+    quantiles = NA
+  ), StatDistSlabinterval$default_params),
 
   hidden_params = union(c(
-    "limits", "n"
-  ), AbstractStatSlabinterval$hidden_params),
+    "limits", "n",
+    "p_limits", "slab_type", "outline_bars",
+    "adjust", "trim", "expand", "breaks"
+  ), StatDistSlabinterval$hidden_params),
 
-  compute_slab = compute_slab_dots_sample
+  compute_slab = compute_slab_dots_dist
 )
 #' @rdname geom_dotsinterval
 #' @export
@@ -113,43 +114,3 @@ StatDots$default_aes$size = NULL
 #' @rdname geom_dotsinterval
 #' @export
 stat_dots = make_stat(StatDots, geom = "dots")
-
-
-# stat_dist_dotsinterval -----------------------------------------------
-
-StatDistDotsinterval = ggproto("StatDistDotsinterval", StatDistSlabinterval,
-  default_params = defaults(list(
-    quantiles = NA
-  ), StatDistSlabinterval$default_params),
-
-  hidden_params = union(c(
-    "limits", "n",
-    "p_limits", "slab_type", "outline_bars",
-    "adjust", "trim", "expand", "breaks"
-  ), StatDistSlabinterval$hidden_params),
-
-  compute_slab = compute_slab_dots_dist
-)
-#' @rdname geom_dotsinterval
-#' @export
-stat_dist_dotsinterval = make_stat(StatDistDotsinterval, geom = "dotsinterval")
-
-StatDistDots = ggproto("StatDistDots", StatDistDotsinterval,
-  default_params = defaults(list(
-    show_point = FALSE,
-    show_interval = FALSE
-  ), StatDistDotsinterval$default_params),
-
-  layer_args = defaults(list(
-    show.legend = NA
-  ), StatDistDotsinterval$layer_args),
-
-  hidden_params = union(c(
-    "show_slab", "show_point", "show_interval",
-    "point_interval", ".width"
-  ), StatDistDotsinterval$hidden_params)
-)
-StatDistDots$default_aes$size = NULL
-#' @rdname geom_dotsinterval
-#' @export
-stat_dist_dots = make_stat(StatDistDots, geom = "dots")

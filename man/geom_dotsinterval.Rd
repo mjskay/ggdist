@@ -5,8 +5,6 @@
 \alias{geom_dots}
 \alias{stat_dotsinterval}
 \alias{stat_dots}
-\alias{stat_dist_dotsinterval}
-\alias{stat_dist_dots}
 \title{Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)}
 \usage{
 geom_dotsinterval(
@@ -63,34 +61,6 @@ stat_dotsinterval(
 )
 
 stat_dots(
-  mapping = NULL,
-  data = NULL,
-  geom = "dots",
-  position = "identity",
-  ...,
-  quantiles = NA,
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-)
-
-stat_dist_dotsinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "dotsinterval",
-  position = "identity",
-  ...,
-  quantiles = NA,
-  point_interval = "median_qi",
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_dist_dots(
   mapping = NULL,
   data = NULL,
   geom = "dots",
@@ -289,6 +259,13 @@ at a time along with the \code{dist} aesthetic).
 \item \code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
 (when \code{orientation = "vertical"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
 at a time along with the \code{dist} aesthetic).
+\item \code{xdist}: Distribution to map on the x axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+\item \code{ydist}: Distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+\item \code{dist}: (Deprecated). A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
+a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
+\item \code{args}: (Deprecated). Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}) the following aesthetics are supported by the underlying geom:
 

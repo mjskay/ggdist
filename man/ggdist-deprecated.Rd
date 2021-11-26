@@ -5,6 +5,8 @@
 \alias{stat_dist_pointinterval}
 \alias{stat_dist_interval}
 \alias{stat_dist_lineribbon}
+\alias{stat_dist_dotsinterval}
+\alias{stat_dist_dots}
 \title{Deprecated functions and arguments in ggdist}
 \description{
 Deprecated functions and arguments and their alternatives are listed below.

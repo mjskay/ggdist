@@ -73,3 +73,15 @@ stat_dist_interval = stat_interval
 #' @usage NULL
 #' @export
 stat_dist_lineribbon = stat_lineribbon
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_dotsinterval = stat_dotsinterval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_dots = stat_dots
