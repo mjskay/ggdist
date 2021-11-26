@@ -195,7 +195,7 @@ test_that("scale transformation works", {
     p_log + stat_dist_halfeye(n = 20)
   )
 
-  vdiffr::expect_doppelganger("dist_halfeyeh log scale transform, mode_hdi",
+  vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi",
     p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
   )
 

@@ -92,6 +92,7 @@ distr_point_interval.character = function(dist, args = list(), point_interval, t
 distr_point_interval.factor = function(dist, args = list(), point_interval, trans, ...) {
   distr_point_interval(as.character(dist), args, point_interval, trans, ...)
 }
+#' @importFrom distributional dist_transformed
 #' @export
 distr_point_interval.distribution = function(dist, args = list(), point_interval, trans, ...) {
   if (distr_is_sample(dist, args)) {
