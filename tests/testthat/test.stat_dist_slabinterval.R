@@ -195,22 +195,26 @@ test_that("scale transformation works", {
     p_log + stat_dist_halfeye(n = 20)
   )
 
+  vdiffr::expect_doppelganger("dist_halfeyeh log scale transform, mode_hdi",
+    p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
+  )
+
   vdiffr::expect_doppelganger("dist_ccdfintervalh log scale transform",
     p_log + stat_dist_ccdfinterval(n = 20)
   )
 
-  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(20))))) %>%
+  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(100))))) %>%
     ggplot(aes(xdist = x, y = 0))
 
   vdiffr::expect_doppelganger("transformed scale with dist_sample",
-    p_log_dist + stat_dist_halfeye(n = 20) + scale_x_log10()
+    p_log_dist + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
   )
 
-  p_log_samp = data.frame(x = qlnorm(ppoints(20))) %>%
+  p_log_samp = data.frame(x = qlnorm(ppoints(100))) %>%
     ggplot(aes(x = x, y = 0))
 
   vdiffr::expect_doppelganger("transformed scale with sample data on x",
-    p_log_samp + stat_dist_halfeye(n = 20) + scale_x_log10()
+    p_log_samp + stat_dist_halfeye(n = 20, point_interval = mode_hdi) + scale_x_log10()
   )
 
   p_rev = data.frame(dist = "lnorm") %>%

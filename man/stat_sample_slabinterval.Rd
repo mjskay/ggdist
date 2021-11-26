@@ -2,8 +2,6 @@
 % Please edit documentation in R/stat_sample_slabinterval.R
 \name{stat_sample_slabinterval}
 \alias{stat_sample_slabinterval}
-\alias{stat_halfeye}
-\alias{stat_eye}
 \alias{stat_ccdfinterval}
 \alias{stat_cdfinterval}
 \alias{stat_gradientinterval}
@@ -12,50 +10,6 @@
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)}
 \usage{
 stat_sample_slabinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_halfeye(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_eye(
   mapping = NULL,
   data = NULL,
   geom = "slabinterval",

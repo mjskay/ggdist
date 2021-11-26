@@ -46,7 +46,7 @@ compute_limits_dist = function(
     if (distr_is_sample(dist, args)) {
       return(do.call(compute_limits_sample, c(
         list(
-          self, data.frame(x = distr_get_sample(dist, args)), trans,
+          self, data.frame(x = trans$transform(distr_get_sample(dist, args))), trans,
           orientation = "horizontal",
           p_limits = p_limits
         ),
@@ -187,13 +187,8 @@ compute_interval_dist = function(
 
     args = args_from_aes(...)
 
-    distr_point_interval(dist, args, point_interval, .width = .width, na.rm = na.rm)
+    distr_point_interval(dist, args, point_interval, trans = trans, .width = .width, na.rm = na.rm)
   })
-
-  intervals$.value = trans$transform(intervals$.value)
-  intervals$.lower = trans$transform(intervals$.lower)
-  intervals$.upper = trans$transform(intervals$.upper)
-  intervals
 }
 
 
@@ -355,7 +350,7 @@ compute_interval_dist = function(
 #' # see vignette("slabinterval") for many more examples.
 #'
 #' @name stat_dist_slabinterval
-#' @importFrom distributional dist_wrap dist_missing
+#' @importFrom distributional dist_wrap dist_missing dist_sample
 NULL
 
 #' @rdname ggdist-ggproto
@@ -507,16 +502,16 @@ stat_dist_slabinterval = make_stat(StatDistSlabinterval, geom = "slabinterval")
 
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_halfeye = stat_dist_slabinterval
+stat_halfeye = stat_dist_slabinterval
 
-StatDistEye = ggproto("StatDistEye", StatDistSlabinterval,
+StatEye = ggproto("StatEye", StatDistSlabinterval,
   default_aes = defaults(aes(
     side = stat("both"),
   ), StatDistSlabinterval$default_aes)
 )
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_eye = make_stat(StatDistEye, geom = "slabinterval")
+stat_eye = make_stat(StatEye, geom = "slabinterval")
 
 StatDistCcdfinterval = ggproto("StatDistCcdfinterval", StatDistSlabinterval,
   default_aes = defaults(aes(

@@ -2,6 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{ggdist-deprecated}
 \alias{ggdist-deprecated}
+\alias{stat_dist_halfeye}
+\alias{stat_dist_eye}
 \alias{stat_dist_pointinterval}
 \alias{stat_dist_interval}
 \alias{stat_dist_lineribbon}

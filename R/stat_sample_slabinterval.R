@@ -274,19 +274,6 @@ stat_sample_slabinterval = make_stat(StatSampleSlabinterval, geom = "slabinterva
 
 # shortcut stats ----------------------------------------------------------
 
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_halfeye = stat_sample_slabinterval
-
-StatEye = ggproto("StatEye", StatSampleSlabinterval,
-  default_aes = defaults(aes(
-    side = stat("both"),
-  ), StatSampleSlabinterval$default_aes)
-)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_eye = make_stat(StatEye, geom = "slabinterval")
-
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),

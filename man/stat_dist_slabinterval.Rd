@@ -2,8 +2,8 @@
 % Please edit documentation in R/stat_dist_slabinterval.R
 \name{stat_dist_slabinterval}
 \alias{stat_dist_slabinterval}
-\alias{stat_dist_halfeye}
-\alias{stat_dist_eye}
+\alias{stat_halfeye}
+\alias{stat_eye}
 \alias{stat_dist_ccdfinterval}
 \alias{stat_dist_cdfinterval}
 \alias{stat_dist_gradientinterval}
@@ -33,7 +33,7 @@ stat_dist_slabinterval(
   inherit.aes = TRUE
 )
 
-stat_dist_halfeye(
+stat_halfeye(
   mapping = NULL,
   data = NULL,
   geom = "slabinterval",
@@ -56,7 +56,7 @@ stat_dist_halfeye(
   inherit.aes = TRUE
 )
 
-stat_dist_eye(
+stat_eye(
   mapping = NULL,
   data = NULL,
   geom = "slabinterval",

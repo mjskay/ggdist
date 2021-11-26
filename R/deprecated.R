@@ -60,6 +60,18 @@ NULL
 #' @format NULL
 #' @usage NULL
 #' @export
+stat_dist_halfeye = stat_halfeye
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_eye = stat_eye
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
 stat_dist_pointinterval = stat_pointinterval
 
 #' @rdname ggdist-deprecated

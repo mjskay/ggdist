@@ -75,43 +75,37 @@ distr_random = function(dist) {
 
 #' Apply a point_interval to a distribution
 #' @noRd
-distr_point_interval = function(dist, args = list(), point_interval, ...) {
+distr_point_interval = function(dist, args = list(), point_interval, trans, ...) {
   UseMethod("distr_point_interval")
 }
 #' @export
-distr_point_interval.default = function(dist, args = list(), point_interval, .simple_names = TRUE, ...) {
-  point_interval(dist, .simple_names = .simple_names, ...)
+distr_point_interval.numeric = function(dist, args = list(), point_interval, trans, ...) {
+  point_interval(trans$transform(dist), .simple_names = TRUE, ...)
 }
 #' @importFrom distributional dist_wrap
 #' @export
-distr_point_interval.character = function(dist, args = list(), point_interval, .width = .95, ...) {
-  quantile_fun = distr_quantile(dist)
-
-  map_dfr_(.width, function(w) {
-    quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
-    quantiles = do.call(quantile_fun, quantile_args)
-    data.frame(
-      .value = quantiles[[1]],
-      .lower = quantiles[[2]],
-      .upper = quantiles[[3]],
-      .width = w
-    )
-  })
+distr_point_interval.character = function(dist, args = list(), point_interval, trans, ...) {
+  dist = do.call(dist_wrap, c(list(dist), args))
+  distr_point_interval(dist, args, point_interval, trans, ...)
 }
 #' @export
-distr_point_interval.factor = function(dist, args = list(), point_interval, ...) {
-  distr_point_interval(as.character(dist), args, point_interval, ...)
+distr_point_interval.factor = function(dist, args = list(), point_interval, trans, ...) {
+  distr_point_interval(as.character(dist), args, point_interval, trans, ...)
 }
 #' @export
-distr_point_interval.distribution = function(dist, args = list(), point_interval, ...) {
+distr_point_interval.distribution = function(dist, args = list(), point_interval, trans, ...) {
   if (distr_is_sample(dist, args)) {
-    distr_point_interval(distr_get_sample(dist, args), args, point_interval, ...)
+    distr_point_interval(distr_get_sample(dist, args), args, point_interval, trans, ...)
   } else {
-    NextMethod()
+    t_dist = dist_transformed(dist, trans$transform, trans$inverse)
+    point_interval(t_dist, .simple_names = TRUE, ...)
   }
 }
 #' @export
-distr_point_interval.dist_default = distr_point_interval.distribution
+distr_point_interval.dist_default = function(dist, args = list(), point_interval, trans, ...) {
+  dist = vctrs::new_vctr(list(dist), class = "distribution")
+  distr_point_interval(dist, args, point_interval, trans, ...)
+}
 
 
 # other distribution helpers ----------------------------------------------
