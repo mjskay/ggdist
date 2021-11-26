@@ -110,6 +110,8 @@ distr_point_interval.distribution = function(dist, args = list(), point_interval
     NextMethod()
   }
 }
+#' @export
+distr_point_interval.dist_default = distr_point_interval.distribution
 
 
 # other distribution helpers ----------------------------------------------

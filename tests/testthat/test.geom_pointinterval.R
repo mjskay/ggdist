@@ -129,7 +129,6 @@ test_that("missing data is handled correctly", {
 
 })
 
-
 test_that("dist aesthetic can be NULLed out", {
   skip_if_no_vdiffr()
 
