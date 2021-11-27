@@ -54,6 +54,21 @@
 NULL
 
 
+# stat_sample_... ---------------------------------------------------------
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+StatSampleSlabinterval = StatDistSlabinterval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_sample_slabinterval = stat_dist_slabinterval
+
+
 # stat_dist_... -----------------------------------------------------------
 
 #' @rdname ggdist-deprecated

@@ -40,30 +40,12 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
-
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
-
-\item{expand}{Should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
-
-\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
-\code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
-(e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc). This function determines the point summary
-(typically mean, median, or mode) and interval type (quantile interval, \code{qi};
-highest-density interval, \code{hdi}; or highest-density continuous interval, \code{hdci}). Output will
-be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
-See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
-
-\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
-that determine the widths of the resulting intervals. If multiple probabilities are provided,
-multiple intervals per group are generated, each with a different probability interval (and
-value of the corresponding \code{.width} and \code{level} generated variables).}
+parameters to the paired geom/stat.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
@@ -80,9 +62,11 @@ opinion, backwards; but the base ggplot naming scheme is allowed for compatibili
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-those that are mapped (the default for most geoms).}
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
@@ -140,9 +124,9 @@ at a time along with the \code{dist} aesthetic).
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
 \item \code{ydist}: Distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-\item \code{dist}: (Deprecated). A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
+\item \code{dist}: A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
-\item \code{args}: (Deprecated). Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
+\item \code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_pointinterval]{geom_pointinterval()}}) the following aesthetics are supported by the underlying geom:
 

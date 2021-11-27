@@ -225,9 +225,9 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
         'Distribution to map on the y axis: a \\pkg{distributional} object (e.g. [dist_normal()]) or
         a [posterior::rvar()] object.',
       dist =
-        '(Deprecated). A name of a distribution (e.g. `"norm"`), a \\pkg{distributional} object (e.g. [dist_normal()]), or
+        'A name of a distribution (e.g. `"norm"`), a \\pkg{distributional} object (e.g. [dist_normal()]), or
         a [posterior::rvar()] object. See **Details**.',
-      args = '(Deprecated). Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
+      args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
     )
     out = c(out,
       "These `stat`s support the following aesthetics:",

@@ -263,9 +263,9 @@ at a time along with the \code{dist} aesthetic).
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
 \item \code{ydist}: Distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-\item \code{dist}: (Deprecated). A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
+\item \code{dist}: A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
-\item \code{args}: (Deprecated). Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
+\item \code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}) the following aesthetics are supported by the underlying geom:
 

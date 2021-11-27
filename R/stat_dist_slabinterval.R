@@ -199,13 +199,14 @@ compute_interval_dist = function(
 
 # stat_dist_slabinterval --------------------------------------------------
 
-#' Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)
+#' Distribution + interval plots for sample data and analytical distributions (ggplot stat)
 #'
 #' Stats for computing distribution functions (densities or CDFs) + intervals for use with
-#' [geom_slabinterval()]. Uses the `dist` aesthetic to specify a distribution using
-#' objects from the [distributional](https://pkg.mitchelloharawild.com/distributional/) package,
-#' or using distribution names and `arg1`, ... `arg9` aesthetics (or `args` as a list column)
-#' to specify distribution arguments. See *Details*.
+#' [geom_slabinterval()]. Useful for creating eye plots, half-eye plots, CCDF bar plots,
+#' gradient plots, histograms, and more. Sample data can be supplied to the `x` and `y`
+#' aesthetics or analytical distributions (in a variety of formats) can be supplied to the
+#' `xdist` and `ydist` aesthetics.
+#' See *Details*.
 #'
 #' A highly configurable stat for generating a variety of plots that combine a "slab"
 #' that describes a distribution plus an interval. Several "shortcut" stats are provided
@@ -213,27 +214,33 @@ compute_interval_dist = function(
 #' (a combination of a violin plot and interval), *half-eye plots* (a density plus interval),
 #' and *CCDF bar plots* (a complementary CDF plus interval).
 #'
-#' The shortcut stat names follow the pattern `stat_dist_[name]`.
+#' The shortcut stat names follow the pattern `stat_[name]`.
 #'
 #' Stats include:
 #'
 #' \itemize{
-#'   \item `stat_dist_eye`: Eye plots (violin + interval)
-#'   \item `stat_dist_halfeye`: Half-eye plots (density + interval)
-#'   \item `stat_dist_ccdfinterval`: CCDF bar plots (CCDF + interval)
-#'   \item `stat_dist_cdfinterval`: CDF bar plots (CDF + interval)
-#'   \item `stat_dist_gradientinterval`: Density gradient + interval plots
-#'   \item `stat_dist_pointinterval`: Point + interval plots
-#'   \item `stat_dist_interval`: Interval plots
+#'   \item `stat_eye`: Eye plots (violin + interval)
+#'   \item `stat_halfeye`: Half-eye plots (density + interval)
+#'   \item `stat_ccdfinterval`: CCDF bar plots (CCDF + interval)
+#'   \item `stat_cdfinterval`: CDF bar plots (CDF + interval)
+#'   \item `stat_gradientinterval`: Density gradient + interval plots
+#'   \item `stat_slab`: Density plots
+#'   \item `stat_histinterval`: Histogram + interval plots
+#'   \item `stat_pointinterval`: Point + interval plots
+#'   \item `stat_interval`: Interval plots
 #' }
 #'
-#' These stats expect an `xdist` or `ydist` aesthetic to specify a distribution. For
-#' historical reasons, you can also use `dist` to specify the distribution, though
+#' **To visualize sample data**, such as a data distribution, samples from a
+#' bootstrap distribution, or a Bayesian posterior, you can supply samples to
+#' the `x` or `y` aesthetic.
+#'
+#' **To visualize analytical distributions**, you can use the `xdist` or `ydist`
+#' aesthetic. For historical reasons, you can also use `dist` to specify the distribution, though
 #' this is not recommended as it does not work as well with orientation detection.
 #' These aesthetics can be used as follows:
 #'
 #'  - `xdist`, `ydist`, and `dist` can be any distribution object from the [distributional](https://pkg.mitchelloharawild.com/distributional/)
-#'    package ([dist_normal()], [dist_beta()], etc) or can be [posterior::rvar()] objects.
+#'    package ([dist_normal()], [dist_beta()], etc) or can be a [posterior::rvar()] object.
 #'    Since these functions are vectorized,
 #'    other columns can be passed directly to them in an [aes()] specification; e.g.
 #'    `aes(dist = dist_normal(mu, sigma))` will work if `mu` and `sigma` are columns in the
@@ -267,7 +274,8 @@ compute_interval_dist = function(
 #' `p_limits` is `c(NA, NA)` on a gamma distribution the effective value of `p_limits` would be
 #' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
 #' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
-#' @param outline_bars For discrete distributions (whose slabs are drawn as histograms), determines
+#' @param outline_bars For sample data (if `slab_type` is `"histogram"`) and for discrete analytical
+#' distributions (whose slabs are drawn as histograms), determines
 #' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
 #' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
 #' bars are also drawn.
@@ -305,8 +313,7 @@ compute_interval_dist = function(
 #' @return A [ggplot2::Stat] representing a slab or combined slab+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @seealso See [geom_slabinterval()] for more information on the geom these stats
-#' use by default and some of the options they have. See [stat_sample_slabinterval()]
-#' for the versions of these stats that can be used on samples.
+#' use by default and some of the options it has.
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples
 #'
@@ -315,6 +322,32 @@ compute_interval_dist = function(
 #' library(distributional)
 #'
 #' theme_set(theme_ggdist())
+#'
+#'
+#' # EXAMPLES ON SAMPLE DATA
+#' set.seed(1234)
+#' df = data.frame(
+#'   group = c("a", "b", "c", "c", "c"),
+#'   value = rnorm(2500, mean = c(5, 7, 9, 9, 9), sd = c(1, 1.5, 1, 1, 1))
+#' )
+#'
+#' # here are vertical eyes:
+#' df %>%
+#'   ggplot(aes(x = group, y = value)) +
+#'   stat_eye()
+#'
+#' # note the sample size is not automatically incorporated into the
+#' # area of the densities in case one wishes to plot densities against
+#' # a reference (e.g. a prior generated by a stat_dist_... function).
+#' # But you may wish to account for sample size if using these geoms
+#' # for something other than visualizing posteriors; in which case
+#' # you can use stat(f*n):
+#' df %>%
+#'   ggplot(aes(x = group, y = value)) +
+#'   stat_eye(aes(thickness = stat(pdf*n)))
+#'
+#'
+#' # EXAMPLES ON ANALYTICAL DISTRIBUTIONS
 #'
 #' dist_df = tribble(
 #'   ~group, ~subgroup, ~mean, ~sd,
@@ -325,18 +358,19 @@ compute_interval_dist = function(
 #'   "c",          "j",     7,   1
 #' )
 #'
-#' dist_df %>%
-#'   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
-#'   stat_dist_eye(position = "dodge")
-#'
 #' # Using functions from the distributional package (like dist_normal()) with the
 #' # dist aesthetic can lead to more compact/expressive specifications
 #'
 #' dist_df %>%
-#'   ggplot(aes(x = group, dist = dist_normal(mean, sd), fill = subgroup)) +
-#'   stat_dist_eye(position = "dodge")
+#'   ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = subgroup)) +
+#'   stat_eye(position = "dodge")
 #'
-#' # the stat_dist_... family applies a Jacobian adjustment to densities
+#' # using the old character vector + args approach
+#' dist_df %>%
+#'   ggplot(aes(x = group, dist = "norm", arg1 = mean, arg2 = sd, fill = subgroup)) +
+#'   stat_eye(position = "dodge")
+#'
+#' # the stat_slabinterval family applies a Jacobian adjustment to densities
 #' # when plotting on transformed scales in order to plot them correctly.
 #' # It determines the Jacobian using symbolic differentiation if possible,
 #' # using stats::D(). If symbolic differentation fails, it falls back
@@ -349,7 +383,7 @@ compute_interval_dist = function(
 #' # scale, where it will appear Normal:
 #' data.frame(dist = "lnorm", logmean = log(10), logsd = 2*log(10)) %>%
 #'   ggplot(aes(y = 1, dist = dist, arg1 = logmean, arg2 = logsd)) +
-#'   stat_dist_halfeye() +
+#'   stat_halfeye() +
 #'   scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 #'
 #' # see vignette("slabinterval") for many more examples.
