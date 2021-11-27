@@ -2,8 +2,6 @@
 % Please edit documentation in R/stat_sample_slabinterval.R
 \name{stat_sample_slabinterval}
 \alias{stat_sample_slabinterval}
-\alias{stat_ccdfinterval}
-\alias{stat_cdfinterval}
 \alias{stat_gradientinterval}
 \alias{stat_histinterval}
 \alias{stat_slab}
@@ -19,52 +17,6 @@ stat_sample_slabinterval(
   adjust = 1,
   trim = TRUE,
   expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_ccdfinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "ccdf",
-  normalize = "none",
-  expand = TRUE,
-  adjust = 1,
-  trim = TRUE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_cdfinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "cdf",
-  normalize = "none",
-  expand = TRUE,
-  adjust = 1,
-  trim = TRUE,
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
@@ -235,14 +187,6 @@ those that are mapped (the default for most geoms).}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
-
-\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
-panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
-the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
-opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
-groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
-normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can

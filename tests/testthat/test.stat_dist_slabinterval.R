@@ -481,6 +481,10 @@ test_that("constant distributions work", {
     p + stat_dist_slabinterval(n = 15, slab_color = "blue")
   )
 
+  vdiffr::expect_doppelganger("constant dist on halfeye expanded",
+    p + stat_dist_slabinterval(n = 15, slab_color = "blue", expand = TRUE)
+  )
+
   vdiffr::expect_doppelganger("constant dist on ccdf",
     p + stat_dist_ccdfinterval(slab_color = "blue", n = 15)
   )

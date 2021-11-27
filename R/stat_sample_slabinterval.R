@@ -274,31 +274,6 @@ stat_sample_slabinterval = make_stat(StatSampleSlabinterval, geom = "slabinterva
 
 # shortcut stats ----------------------------------------------------------
 
-StatCcdfinterval = ggproto("StatCcdfinterval", StatSampleSlabinterval,
-  default_aes = defaults(aes(
-    justification = stat(0.5),
-    side = stat("topleft")
-  ), StatSampleSlabinterval$default_aes),
-
-  default_params = defaults(list(
-    slab_type = "ccdf",
-    normalize = "none",
-    expand = TRUE
-  ), StatSampleSlabinterval$default_params)
-)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
-
-StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
-  default_params = defaults(list(
-    slab_type = "cdf"
-  ), StatCcdfinterval$default_params)
-)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
-
 StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),

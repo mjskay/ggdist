@@ -81,7 +81,7 @@ compute_limits_dist = function(
 #' @importFrom dplyr lag
 compute_slab_dist = function(
   self, data, trans, input, orientation,
-  slab_type = "pdf", limits = NULL, n = 501, outline_bars = FALSE,
+  slab_type, limits, n, outline_bars, expand,
   ...
 ) {
   extra_params = list(...)
@@ -105,12 +105,17 @@ compute_slab_dist = function(
       input = c(input_1, input_2, input_2, input_2, input_3)
       pdf = c(0, 0, Inf, 0, 0)
       cdf = c(0, 0, 1, 1, 1)
+      if (!expand) {
+        input = input[-c(1,5)]
+        pdf = pdf[-c(1,5)]
+        cdf = cdf[-c(1,5)]
+      }
     } else if (distr_is_sample(dist, args)) {
       return(do.call(compute_slab_sample, c(
         list(
           self, data.frame(x = trans$transform(distr_get_sample(dist, args))), trans, input,
           orientation = "horizontal", slab_type = slab_type, limits = limits, n = n,
-          outline_bars = outline_bars
+          outline_bars = outline_bars, expand = expand
         ),
         extra_params
       )))
@@ -513,7 +518,7 @@ StatEye = ggproto("StatEye", StatDistSlabinterval,
 #' @rdname stat_dist_slabinterval
 stat_eye = make_stat(StatEye, geom = "slabinterval")
 
-StatDistCcdfinterval = ggproto("StatDistCcdfinterval", StatDistSlabinterval,
+StatCcdfinterval = ggproto("StatCcdfinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
     side = stat("topleft"),
@@ -527,16 +532,16 @@ StatDistCcdfinterval = ggproto("StatDistCcdfinterval", StatDistSlabinterval,
 )
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_ccdfinterval = make_stat(StatDistCcdfinterval, geom = "slabinterval")
+stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 
-StatDistCdfinterval = ggproto("StatDistCdfinterval", StatDistCcdfinterval,
+StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
   default_params = defaults(list(
     slab_type = "cdf"
-  ), StatDistCcdfinterval$default_params)
+  ), StatCcdfinterval$default_params)
 )
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_cdfinterval = make_stat(StatDistCdfinterval, geom = "slabinterval")
+stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
 
 StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinterval,
   default_aes = defaults(aes(

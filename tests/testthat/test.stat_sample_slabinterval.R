@@ -127,7 +127,7 @@ test_that("constant distributions work", {
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("constant dist on halfeye",
-    p + stat_sample_slabinterval(n = 15, slab_color = "blue")
+    p + stat_halfeye(n = 15, slab_color = "blue")
   )
 
   vdiffr::expect_doppelganger("constant dist on ccdf",

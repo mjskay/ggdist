@@ -72,6 +72,18 @@ stat_dist_eye = stat_eye
 #' @format NULL
 #' @usage NULL
 #' @export
+stat_dist_ccdfinterval = stat_ccdfinterval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_cdfinterval = stat_cdfinterval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
 stat_dist_pointinterval = stat_pointinterval
 
 #' @rdname ggdist-deprecated

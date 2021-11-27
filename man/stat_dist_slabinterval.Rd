@@ -4,8 +4,8 @@
 \alias{stat_dist_slabinterval}
 \alias{stat_halfeye}
 \alias{stat_eye}
-\alias{stat_dist_ccdfinterval}
-\alias{stat_dist_cdfinterval}
+\alias{stat_ccdfinterval}
+\alias{stat_cdfinterval}
 \alias{stat_dist_gradientinterval}
 \alias{stat_dist_slab}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for analytical distributions (ggplot stat)}
@@ -79,7 +79,7 @@ stat_eye(
   inherit.aes = TRUE
 )
 
-stat_dist_ccdfinterval(
+stat_ccdfinterval(
   mapping = NULL,
   data = NULL,
   geom = "slabinterval",
@@ -103,7 +103,7 @@ stat_dist_ccdfinterval(
   inherit.aes = TRUE
 )
 
-stat_dist_cdfinterval(
+stat_cdfinterval(
   mapping = NULL,
   data = NULL,
   geom = "slabinterval",
