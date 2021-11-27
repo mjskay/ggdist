@@ -43,7 +43,7 @@ if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
 
 ## Introduction
   
-This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use the `stat_dist_...` family of ggplot stats to visualize *confidence distributions* instead of visualizing posterior distributions as we might from a Bayesian model. For more information on that family of stats and geoms, see `vignette("slabinterval")`.
+This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use `xdist` and `ydist` aesthetics supported by `ggdist` stats to visualize *confidence distributions* instead of visualizing posterior distributions as we might from a Bayesian model. For more information on the families of geoms and stats in ggdist, see `vignette("slabinterval")` and `vignette("lineribbon")`.
 
 *Confidence distributions* are a way of unifying the notion of sampling distributions, bootstrap distributions, and several other concepts in frequentist inference. They are a convenient tool for visualizing uncertainty in a way that generalizes across Bayesian and frequentist frameworks: where in a Bayesian framework we might visualize a *probability* distribution, in the frequentist framework we visualize a *confidence* distribution. This gives us a way to use the same geometries for uncertainty visualization in either framework.
 
@@ -106,7 +106,7 @@ The default summary is not great from an uncertainty communication perspective:
 summary(m_ABC)
 ```
 
-So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_dist_halfeye()` to plot them. The confidence distribution for parameter $i$, $\tilde\beta_i$, from an `lm` model is a scaled-and-shifted t distribution:
+So let's try half-eye plots instead. The basic idea is that we need to get the three parameters for the sampling distribution of each parameter and then use `stat_halfeye()` to plot them. The confidence distribution for parameter $i$, $\tilde\beta_i$, from an `lm` model is a scaled-and-shifted t distribution:
 
 $$
 \tilde\beta_i \sim \textrm{student_t}\left(\nu, \hat\beta_i, \sigma_{\hat\beta_i}\right)
@@ -135,8 +135,8 @@ Putting everything together, we have:
 m_ABC %>%
   tidy() %>%
   ggplot(aes(y = term)) +
-  stat_dist_halfeye(
-    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = estimate, sigma = std.error))
+  stat_halfeye(
+    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = estimate, sigma = std.error))
   )
 ```
 
@@ -159,8 +159,8 @@ ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_halfeye(
-    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
+  stat_halfeye(
+    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
     scale = .5
   ) +
   # we'll add the data back in too (scale = .5 above adjusts the halfeye height so
@@ -168,15 +168,15 @@ ABC %>%
   geom_point(aes(x = response), data = ABC, pch = "|", size = 2, position = position_nudge(y = -.15))
 ```
 
-Of course, this works with the entire `stat_dist_...` family. Here are gradient plots instead:
+Of course, this works with the entire `stat_slabinterval()` family. Here are gradient plots instead:
 
 ```{r gradientinterval}
 ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_gradientinterval(
-    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
+  stat_gradientinterval(
+    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)), 
     scale = .5, fill_type = "gradient"
   )
 ```
@@ -192,8 +192,8 @@ ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_ccdfinterval(
-    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit))
+  stat_ccdfinterval(
+    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit))
   )
 ```
 
@@ -204,8 +204,8 @@ ABC %>%
   data_grid(condition) %>%
   augment(m_ABC, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(y = condition)) +
-  stat_dist_dots(
-    aes(dist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
+  stat_dots(
+    aes(xdist = dist_student_t(df = df.residual(m_ABC), mu = .fitted, sigma = .se.fit)),
     quantiles = 100
   )
 ```
@@ -214,13 +214,13 @@ See `vignette("slabinterval")` for more examples of uncertainty geoms and stats 
 
 ## For a fit line
 
-The same principle of reconstructing the confidence distribution allows us to use `stat_dist_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms", package = "tidybayes")`, but using `lm()` instead:
+The same principle of reconstructing the confidence distribution allows us to use `stat_lineribbon()` to construct uncertainty bands around regression fit lines. Here we'll reconstruct an example with the `mtcars` dataset from `vignette("tidy-brms", package = "tidybayes")`, but using `lm()` instead:
 
 ```{r m_mpg}
 m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 ```
 
-Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ `stat_dist_lineribbon()`:
+Again we'll use `modelr::data_grid()` with `broom::tidy()`, but now we'll employ `stat_lineribbon()`:
 
 ```{r lineribbon}
 mtcars %>%
@@ -228,8 +228,8 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
-  stat_dist_lineribbon(
-    aes(dist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit)),
+  stat_lineribbon(
+    aes(ydist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit)),
     alpha = 1/4
   ) +
   geom_point(aes(y = mpg), data = mtcars) +
@@ -256,8 +256,8 @@ mtcars %>%
   data_grid(hp = seq_range(hp, n = 101)) %>%
   augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, color = ordered(cyl))) +
-  stat_dist_lineribbon(aes(
-    dist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit),
+  stat_lineribbon(aes(
+    ydist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit),
     fill = ordered(cyl),
     fill_ramp = stat(level)
   )) +

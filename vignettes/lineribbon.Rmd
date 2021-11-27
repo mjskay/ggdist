@@ -72,11 +72,12 @@ theme_set(theme_ggdist())
 ## The lineribbon family
 
 The lineribbon family follows the same naming scheme as the larger family of slabinterval geoms (see `vignette("slabinterval")`).
-It has three members: `geom_lineribbon()`, `stat_lineribbon()`, and `stat_dist_lineribbon()`.
+It has two members: `geom_lineribbon()` and `stat_lineribbon()`.
 
-* `geom_lineribbon()` is meant to be used on data already summarized into points and intervals.
-* `stat_lineribbon()` is meant to be used on sample data; e.g. draws from a posterior distribution of lines/curves, a bootstrap sampling distribution of lines/curves, an ensemble distribution, or any other distribution, really. This stat computes relevant summaries (points and intervals) before forwarding the summaries to `geom_lineribbon()`.
-* `stat_dist_lineribbon()` can be used to create lineribbon geoms for analytical distributions. It takes either [distributional](https://pkg.mitchelloharawild.com/distributional/) objects or distribution names (the `dist` aesthetic) and arguments (the `args` aesthetic or `arg1`, ... `arg9` aesthetics) and compute the relevant slabs and intervals.
+* `geom_lineribbon()` can be used on data already summarized into points and intervals.
+* `stat_lineribbon()` can be used:
+  * on sample data by mapping values onto the `x` or `y` aesthetic. For example, it could be used with draws from a posterior distribution of lines/curves, a bootstrap sampling distribution of lines/curves, an ensemble distribution, or any other distribution, really. This stat computes relevant summaries (points and intervals) before forwarding the summaries to `geom_lineribbon()`.
+  * on analytical distributions by mapping distributions onto the `xdist` or `ydist` aesthetic. It takes [distributional](https://pkg.mitchelloharawild.com/distributional/) objects, `posterior::rvar()` objects, or distribution names (the `dist` aesthetic) and arguments (the `args` aesthetic or `arg1`, ... `arg9` aesthetics) and computes the relevant slabs and intervals.
 
 All lineribbon geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting `orientation = "horizontal"` or `orientation = "vertical"`.
 
@@ -269,12 +270,12 @@ analytical_df = tibble(
 analytical_df
 ```
 
-We can visualize this conditional distribution with `stat_dist_lineribbon()` using `distributional::dist_normal()`:
+We can visualize this conditional distribution using `stat_lineribbon()` with `distributional::dist_normal()`:
 
-```{r stat_dist_lineribbon, fig.width = tiny_width, fig.height = tiny_height}
+```{r stat_lineribbon_dist, fig.width = tiny_width, fig.height = tiny_height}
 analytical_df %>%
-  ggplot(aes(x = x, dist = dist_normal(y_mean, y_sd))) +
-  stat_dist_lineribbon() +
+  ggplot(aes(x = x, ydist = dist_normal(y_mean, y_sd))) +
+  stat_lineribbon() +
   scale_fill_brewer()
 ```
 
