@@ -271,14 +271,3 @@ StatSampleSlabinterval = ggproto("StatSampleSlabinterval", AbstractStatSlabinter
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_sample_slabinterval = make_stat(StatSampleSlabinterval, geom = "slabinterval")
-
-# shortcut stats ----------------------------------------------------------
-
-StatHistinterval = ggproto("StatHistinterval", StatSampleSlabinterval,
-  default_params = defaults(list(
-    slab_type = "histogram"
-  ), StatSampleSlabinterval$default_params)
-)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_histinterval = make_stat(StatHistinterval, geom = "slabinterval")

@@ -558,6 +558,15 @@ StatGradientinterval = ggproto("StatGradientinterval", StatDistSlabinterval,
 #' @rdname stat_dist_slabinterval
 stat_gradientinterval = make_stat(StatGradientinterval, geom = "slabinterval")
 
+StatHistinterval = ggproto("StatHistinterval", StatDistSlabinterval,
+  default_params = defaults(list(
+    slab_type = "histogram"
+  ), StatDistSlabinterval$default_params)
+)
+#' @export
+#' @rdname stat_dist_slabinterval
+stat_histinterval = make_stat(StatHistinterval, geom = "slabinterval")
+
 StatSlab = ggproto("StatSlab", StatDistSlabinterval,
   default_params = defaults(list(
     show_point = FALSE,
