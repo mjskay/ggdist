@@ -506,11 +506,21 @@ hdci_.rvar = function(x, ...) {
 }
 #' @importFrom distributional hdr
 #' @export
-hdci_.dist_default = function(x, .width = .95, ...) {
-  stop0("HDCI for distributional objects is not implemented")
+hdci_.dist_default = function(x, .width = .95, na.rm = FALSE, ...) {
+  if (!na.rm && anyNA(x)) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+
+  intervals = HDInterval::hdi(function(p) quantile(x, p), credMass = .width)
+  matrix(intervals, ncol = 2)
 }
 #' @export
-hdci_.distribution = hdci_.dist_default
+hdci_.distribution = function(x, ...) {
+  if (length(x) > 1) {
+    stop0("HDCI for non-scalar distributions is not implemented")
+  }
+  hdci_.dist_default(x, ...)
+}
 
 #' @export
 #' @rdname point_interval

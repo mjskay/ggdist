@@ -195,13 +195,10 @@ test_that("scale transformation works", {
     p_log + stat_dist_halfeye(n = 20)
   )
 
-  vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi",
-    p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
-  )
-
   vdiffr::expect_doppelganger("dist_ccdfintervalh log scale transform",
     p_log + stat_dist_ccdfinterval(n = 20)
   )
+
 
   p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(100))))) %>%
     ggplot(aes(xdist = x, y = 0))
@@ -209,6 +206,15 @@ test_that("scale transformation works", {
   vdiffr::expect_doppelganger("transformed scale with dist_sample",
     p_log_dist + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
   )
+
+
+  p_log_gamma = data.frame(x = dist_gamma(2,2)) %>%
+    ggplot(aes(xdist = x, y = 0))
+
+  vdiffr::expect_doppelganger("transformed scale with dist_gamma",
+    p_log_gamma + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
+  )
+
 
   p_log_samp = data.frame(x = qlnorm(ppoints(100))) %>%
     ggplot(aes(x = x, y = 0))
@@ -227,6 +233,15 @@ test_that("scale transformation works", {
 
   vdiffr::expect_doppelganger("ccdfinterval reverse scale transform",
     p_rev + stat_dist_ccdfinterval(n = 40)
+  )
+
+
+  # distributional < 0.2.2.9000 does not support point_intervals except median_qi
+  # on character dist aesthetics
+  skip_if_not_installed("distributional", "0.2.2.9000")
+
+  vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi",
+    p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
   )
 })
 
