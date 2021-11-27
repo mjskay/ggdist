@@ -60,16 +60,28 @@ NULL
 #' @format NULL
 #' @usage NULL
 #' @export
-StatSampleSlabinterval = StatDistSlabinterval
+StatSampleSlabinterval = StatSlabinterval
 
 #' @rdname ggdist-deprecated
 #' @format NULL
 #' @usage NULL
 #' @export
-stat_sample_slabinterval = stat_dist_slabinterval
+stat_sample_slabinterval = stat_slabinterval
 
 
 # stat_dist_... -----------------------------------------------------------
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+StatDistSlabinterval = StatSlabinterval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_slabinterval = stat_slabinterval
 
 #' @rdname ggdist-deprecated
 #' @format NULL

@@ -701,7 +701,7 @@ All of the above geoms follow the naming scheme `stat_[dist_]dots[interval]`.
 
 ## Custom plots
 
-The `slabinterval` family of stats and geoms is designed to be very flexible. Most of the shortcut geoms above can be created simply by setting particular combinations of options and aesthetic mappings using the basic `geom_slabinterval()`, `stat_sample_slabinterval()`, and `stat_dist_slabinterval()`. Some useful combinations do not have specific shortcut geoms currently, but can be created manually with only a bit of additional effort.
+The `slabinterval` family of stats and geoms is designed to be very flexible. Most of the shortcut geoms above can be created simply by setting particular combinations of options and aesthetic mappings using the basic `geom_slabinterval()` and `stat_slabinterval()`. Some useful combinations do not have specific shortcut geoms currently, but can be created manually with only a bit of additional effort.
 
 ### Gradients of alpha, color, and fill
 

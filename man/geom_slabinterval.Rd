@@ -177,8 +177,7 @@ use case.
 
 Wrapper geoms and stats include:
 \itemize{
-\item \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and associated stats
-\item \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and associated stats
+\item \code{\link[=stat_slabinterval]{stat_slabinterval()}}
 \item \code{\link[=geom_pointinterval]{geom_pointinterval()}} / \code{\link[=stat_pointinterval]{stat_pointinterval()}}
 \item \code{\link[=geom_interval]{geom_interval()}} / \code{\link[=stat_interval]{stat_interval()}}
 \item \code{\link[=geom_dots]{geom_dots()}} / \code{\link[=stat_dots]{stat_dots()}}
@@ -303,7 +302,7 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 \seealso{
 See \code{\link[=geom_lineribbon]{geom_lineribbon()}} for a combination geom designed for fit curves plus probability bands.
-See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} for families of stats
+See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for families of stats
 built on top of this geom for common use cases (like \code{\link[=stat_halfeye]{stat_halfeye()}}).
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }

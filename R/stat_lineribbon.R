@@ -7,14 +7,14 @@
 #' Line + multiple probability ribbon plots (ggplot stat)
 #'
 #' A combination of [stat_slabinterval()] and [geom_lineribbon()] with sensible defaults.
-#' While `geom_lineribbon` is intended for use on data frames that have already been summarized using
-#' a [point_interval()] function, `stat_lineribbon` is intended for use directly on data
-#' frames of draws, and will perform the summarization using a [point_interval()] function;
-#' `stat_dist_lineribbon` is intended for use on analytical distributions through the `dist`,
-#' `arg1`, ... `arg9`, and `args` aesthetics.
+#' While `geom_lineribbon()` is intended for use on data frames that have already been summarized using
+#' a [point_interval()] function, `stat_lineribbon()` is intended for use directly on data
+#' frames of draws or of analytical distributions, and will perform the summarization using a
+#' [point_interval()] function.
 #'
+#' @template details-x-y-xdist-ydist
 #' @inheritParams stat_interval
-#' @inheritParams stat_dist_slabinterval
+#' @inheritParams stat_slabinterval
 #' @param geom Use to override the default connection between
 #' `geom_lineribbon` and `stat_lineribbon`.
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics
@@ -41,8 +41,8 @@
 #'   x = 1:10,
 #'   sd = seq(1, 3, length.out = 10)
 #' ) %>%
-#'   ggplot(aes(x = x, dist = dist_normal(x, sd))) +
-#'   stat_dist_lineribbon() +
+#'   ggplot(aes(x = x, ydist = dist_normal(x, sd))) +
+#'   stat_lineribbon() +
 #'   scale_fill_brewer()
 #'
 #' @name stat_lineribbon

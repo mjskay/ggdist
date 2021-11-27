@@ -56,10 +56,10 @@ dist_df = tribble(
 # which can cause slabs to be positioned outside their bounds.
 dist_df \%>\%
   ggplot(aes(
-    x = factor(group), dist = dist_normal(mean, sd),
+    x = factor(group), ydist = dist_normal(mean, sd),
     fill = subgroup
   )) +
-  stat_dist_halfeye(
+  stat_halfeye(
     position = "dodge"
   ) +
   geom_rect(
@@ -81,15 +81,15 @@ dist_df \%>\%
 
 # This same example with "dodgejust" positioning. For the points we
 # supply a justification parameter to position_dodgejust which mimics the
-# justification parameter of stat_dist_halfeye, ensuring that they are
+# justification parameter of stat_halfeye, ensuring that they are
 # placed appropriately. On slabinterval family geoms, position_dodgejust()
 # will automatically detect the appropriate justification.
 dist_df \%>\%
   ggplot(aes(
-    x = factor(group), dist = dist_normal(mean, sd),
+    x = factor(group), ydist = dist_normal(mean, sd),
     fill = subgroup
   )) +
-  stat_dist_halfeye(
+  stat_halfeye(
     position = "dodgejust"
   ) +
   geom_rect(

@@ -6,13 +6,14 @@
 
 #' Multiple uncertainty interval plots (ggplot stat)
 #'
-#' A combination of [stat_sample_slabinterval()] and
+#' A combination of [stat_slabinterval()] and
 #' [geom_slabinterval()] with sensible defaults.
 #' While the corresponding `geom`s are intended for use on
 #' data frames that have already been summarized using a [point_interval()]
 #' function, these `stat`s are intended for use directly on data frames of draws, and
 #' will perform the summarization using a [point_interval()] function.
 #'
+#' @template details-x-y-xdist-ydist
 #' @eval rd_slabinterval_computed_variables()
 #' @eval rd_slabinterval_aesthetics(geom = GeomInterval, geom_name = "geom_interval", stat = StatInterval)
 #' @inheritParams stat_pointinterval
@@ -23,7 +24,7 @@
 #' for use on points and intervals that have already been summarized using a [point_interval()] function.
 #' See [stat_pointinterval()] for a similar stat intended for
 #' point summaries and intervals.
-#' See [stat_sample_slabinterval()] for a variety of other
+#' See [stat_slabinterval()] for a variety of other
 #' stats that combine intervals with densities and CDFs.
 #' See [geom_slabinterval()] for the geom that these geoms wrap. All parameters of that geom are
 #' available to these geoms.

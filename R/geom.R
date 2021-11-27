@@ -213,19 +213,17 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
   if (!is.null(stat)) {
     stat_aes = list(
       x = 'x position of the geometry (when orientation = `"vertical"`); or sample data to be summarized
-       (when `orientation = "horizontal"`) except for `stat_dist_` geometries (which use only one of `x` or `y`
-       at a time along with the `dist` aesthetic).',
+       (when `orientation = "horizontal"` with sample data).',
       y = 'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
-       (when `orientation = "vertical"`) except for `stat_dist_` geometries (which use only one of `x` or `y`
-       at a time along with the `dist` aesthetic).',
+       (when `orientation = "vertical"` with sample data).',
       xdist =
-        'Distribution to map on the x axis: a \\pkg{distributional} object (e.g. [dist_normal()]) or
+        'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional} object (e.g. [dist_normal()]) or
         a [posterior::rvar()] object.',
       ydist =
-        'Distribution to map on the y axis: a \\pkg{distributional} object (e.g. [dist_normal()]) or
+        'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional} object (e.g. [dist_normal()]) or
         a [posterior::rvar()] object.',
       dist =
-        'A name of a distribution (e.g. `"norm"`), a \\pkg{distributional} object (e.g. [dist_normal()]), or
+        'When using analytical distributions, a name of a distribution (e.g. `"norm"`), a \\pkg{distributional} object (e.g. [dist_normal()]), or
         a [posterior::rvar()] object. See **Details**.',
       args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
     )

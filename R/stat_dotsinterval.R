@@ -78,16 +78,16 @@ compute_slab_dots_dist = function(
 
 # stat_dotsinterval ------------------------------------------------
 
-StatDotsinterval = ggproto("StatDotsinterval", StatDistSlabinterval,
+StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
   default_params = defaults(list(
     quantiles = NA
-  ), StatDistSlabinterval$default_params),
+  ), StatSlabinterval$default_params),
 
   hidden_params = union(c(
     "limits", "n",
     "p_limits", "slab_type", "outline_bars",
     "adjust", "trim", "expand", "breaks"
-  ), StatDistSlabinterval$hidden_params),
+  ), StatSlabinterval$hidden_params),
 
   compute_slab = compute_slab_dots_dist
 )

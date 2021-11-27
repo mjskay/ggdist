@@ -12,9 +12,9 @@ globalVariables(c("prior"))
 #' Parse distribution specifications into columns of a data frame
 #'
 #' Parses simple string distribution specifications, like `"normal(0, 1)"`, into two columns of
-#' a data frame, suitable for use with [stat_dist_slabinterval()] and its shortcut stats
-#' (like `stat_dist_halfeye`). This format is output
-#' by `brms::get_prior`, making it particularly useful for visualizing priors from
+#' a data frame, suitable for use with the `dist` and `args` aesthetics of [stat_slabinterval()]
+#' and its shortcut stats (like `stat_halfeye()`). This format is output
+#' by `brms::get_prior()`, making it particularly useful for visualizing priors from
 #' brms models.
 #'
 #' `parse_dist()` can be applied to character vectors or to a data frame + bare column name of the
@@ -52,7 +52,7 @@ globalVariables(c("prior"))
 #' - `r_dist_name` returns a character vector the same length as the input containing translations of the
 #' input names into distribution names R can recognize.
 #'
-#' @seealso See [stat_dist_slabinterval()] and its shortcut stats, which can easily make use of
+#' @seealso See [stat_slabinterval()] and its shortcut stats, which can easily make use of
 #' the output of this function using the `dist` and `args` aesthetics.
 #' @examples
 #'
@@ -194,7 +194,7 @@ check_dist_name = function(dist) {
     warning(
       "The following distribution names were not recognized and were ignored: \n",
       "    ", paste(failed_names, collapse = ", "), "\n",
-      "  See help('stat_dist_slabinterval') for information on specifying distribution names.",
+      "  See help('stat_slabinterval') for information on specifying distribution names.",
       if ("lkjcorr" %in% failed_names) "\n  See help('marginalize_lkjcorr') for help visualizing LKJ distributions."
     )
   }

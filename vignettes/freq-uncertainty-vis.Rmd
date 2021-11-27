@@ -127,7 +127,7 @@ tidy(m_ABC)
 Finally, we can construct vectors of probability distributions using functions 
 like `distributional::dist_student_t()` from 
 the [distributional](https://pkg.mitchelloharawild.com/distributional/) package.
-The `stat_dist_slabinterval()` family of functions supports these objects.
+The `stat_slabinterval()` family of functions supports these objects.
 
 Putting everything together, we have:
 

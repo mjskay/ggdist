@@ -5,6 +5,8 @@
 \alias{ggdist-deprecated}
 \alias{StatSampleSlabinterval}
 \alias{stat_sample_slabinterval}
+\alias{StatDistSlabinterval}
+\alias{stat_dist_slabinterval}
 \alias{stat_dist_halfeye}
 \alias{stat_dist_eye}
 \alias{stat_dist_ccdfinterval}

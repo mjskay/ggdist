@@ -10,12 +10,12 @@
 #' and a list of desired quantile intervals, return a vector categorizing each
 #' element of the input vector according to which quantile interval it falls into.
 #' Useful for drawing slabs with intervals overlaid on the density, e.g. using
-#' [stat_halfeye()] or [stat_dist_halfeye()]
+#' [stat_halfeye()].
 #'
 #' @param p A numeric vector of values from a cumulative distribution function,
 #' such as values returned by `p`-prefixed distribution functions in base R (e.g. [pnorm()]),
 #' the [cdf()] function, or values of the `cdf` computed aesthetic from the
-#' [stat_sample_slabinterval()] or [stat_dist_slabinterval()] stats.
+#' [stat_slabinterval()] family of stats.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' @param labels One of:
 #'   - `NULL` to use the default labels (`.width` converted to a character vector).
@@ -27,8 +27,8 @@
 #' An [ordered] factor of the same length as `p` giving the quantile interval to
 #' which each value of `p` belongs.
 #'
-#' @seealso See [stat_sample_slabinterval()] or [stat_dist_slabinterval()] and
-#' their shortcut stats, which generate `cdf` aesthetics that can be used with
+#' @seealso See [stat_slabinterval()] and
+#' its shortcut stats, which generate `cdf` aesthetics that can be used with
 #' `cut_cdf_qi()` to draw slabs colored by their intervals.
 #' @examples
 #'
@@ -41,8 +41,8 @@
 #'
 #' # with a slab
 #' tibble(x = dist_normal(0, 1)) %>%
-#'   ggplot(aes(dist = x, y = "a")) +
-#'   stat_dist_slab(aes(
+#'   ggplot(aes(xdist = x)) +
+#'   stat_slab(aes(
 #'     fill = stat(cut_cdf_qi(cdf))
 #'   )) +
 #'   scale_fill_brewer(direction = -1, na.value = "gray90")
@@ -51,8 +51,8 @@
 #' # show up in the fill scale from the CDF function applied to the internal
 #' # interval geometry data and can be ignored, hence na.translate = FALSE
 #' tibble(x = dist_normal(0, 1)) %>%
-#'   ggplot(aes(dist = x, y = "a")) +
-#'   stat_dist_halfeye(aes(
+#'   ggplot(aes(xdist = x)) +
+#'   stat_halfeye(aes(
 #'     fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95, 1)))
 #'   )) +
 #'   scale_fill_brewer(direction = -1, na.translate = FALSE)
@@ -61,8 +61,8 @@
 #' # and provide a better name for the legend, and omit the 100% interval
 #' # if desired
 #' tibble(x = dist_normal(0, 1)) %>%
-#'   ggplot(aes(dist = x, y = "a")) +
-#'   stat_dist_halfeye(aes(
+#'   ggplot(aes(xdist = x)) +
+#'   stat_halfeye(aes(
 #'     fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95), labels = percent_format(accuracy = 1)))
 #'   )) +
 #'   labs(fill = "Interval") +

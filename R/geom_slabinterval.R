@@ -233,8 +233,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #'
 #' Wrapper geoms and stats include:
 #'
-#'  - [stat_sample_slabinterval()] and associated stats
-#'  - [stat_dist_slabinterval()] and associated stats
+#'  - [stat_slabinterval()]
 #'  - [geom_pointinterval()] / [stat_pointinterval()]
 #'  - [geom_interval()] / [stat_interval()]
 #'  - [geom_dots()] / [stat_dots()]
@@ -297,7 +296,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' be added to a [ggplot()] object.
 #' @author Matthew Kay
 #' @seealso See [geom_lineribbon()] for a combination geom designed for fit curves plus probability bands.
-#' See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of stats
+#' See [stat_slabinterval()] for families of stats
 #' built on top of this geom for common use cases (like [stat_halfeye()]).
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples

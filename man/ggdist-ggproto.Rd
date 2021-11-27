@@ -15,7 +15,7 @@
 \alias{GeomLineribbon}
 \alias{GeomPointinterval}
 \alias{PositionDodgejust}
-\alias{StatDistSlabinterval}
+\alias{StatSlabinterval}
 \alias{StatPointinterval}
 \alias{StatInterval}
 \title{Base ggproto classes for ggdist}

@@ -72,9 +72,9 @@ input names into distribution names R can recognize.
 }
 \description{
 Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
-a data frame, suitable for use with \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and its shortcut stats
-(like \code{stat_dist_halfeye}). This format is output
-by \code{brms::get_prior}, making it particularly useful for visualizing priors from
+a data frame, suitable for use with the \code{dist} and \code{args} aesthetics of \code{\link[=stat_slabinterval]{stat_slabinterval()}}
+and its shortcut stats (like \code{stat_halfeye()}). This format is output
+by \code{brms::get_prior()}, making it particularly useful for visualizing priors from
 brms models.
 }
 \details{
@@ -106,6 +106,6 @@ data.frame(prior = c("normal(0,1)", "student_t(3,0,1)")) \%>\%
 
 }
 \seealso{
-See \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} and its shortcut stats, which can easily make use of
+See \code{\link[=stat_slabinterval]{stat_slabinterval()}} and its shortcut stats, which can easily make use of
 the output of this function using the \code{dist} and \code{args} aesthetics.
 }

@@ -184,8 +184,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'
 #' Geoms and stats for creating dotplots that automatically determines a bin width that
 #' ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-#' generation of quantile dotplots using the `quantiles` argument to `stat_dotsinterval`/`stat_dots`
-#' and `stat_dist_dotsinterval`/`stat_dist_dots`. Generally follows the naming scheme and
+#' generation of quantile dotplots using the `quantiles` argument to `stat_dotsinterval()`/`stat_dots()`.
+#' Generally follows the naming scheme and
 #' arguments of the [geom_slabinterval()] and [stat_slabinterval()] family of
 #' geoms and stats.
 #'
@@ -203,13 +203,14 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   `dotsinterval` family) or the `shape` or `slab_shape` aesthetic (when using the `dots` family)
 #' }
 #'
-#' The `stat_...` and `stat_dist_...` versions of the stats when used with the `quantiles` argument
+#' `stat_dots()` and `stat_dotsinterval()`, when used with the `quantiles` argument,
 #' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
 #' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 #'
+#' @template details-x-y-xdist-ydist
 #' @eval rd_slabinterval_aesthetics(geom = GeomDotsinterval, geom_name = "geom_dotsinterval", stat = StatDotsinterval)
 #' @inheritParams geom_slabinterval
-#' @inheritParams stat_dist_slabinterval
+#' @inheritParams stat_slabinterval
 #' @author Matthew Kay
 #' @param dotsize The size of the dots relative to the bin width. The default, `1`, makes dots be just about as
 #' wide as the bin width.
@@ -231,9 +232,10 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' dotplot is drawn; `unit(c(0, 0.1), "npc")` would make dots that are *at most*
 #' 10% of the viewport size.
 #' @template param-dots-layout
-#' @param quantiles For the `stat_` and `stat_dist_` stats, setting this to a value other than `NA`
-#' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for `stat_`) or a dotplot
-#' of quantiles from the distribution (for `stat_dist_`). The value of `quantiles` determines the number
+#' @param quantiles Setting this to a value other than `NA`
+#' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
+#' (for analytical distributions, the default of `NA` is taken to mean `100` quantiles). The value of
+#' `quantiles` determines the number
 #' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
 #' @return A [ggplot2::Geom] or [ggplot2::Stat] representing a dotplot or combined dotplot+interval geometry which can
 #' be added to a [ggplot()] object.
@@ -245,7 +247,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   Fernandes, M., Walls, L., Munson, S., Hullman, J., & Kay, M. (2018). Uncertainty Displays Using Quantile Dotplots
 #'   or CDFs Improve Transit Decision-Making. *Conference on Human Factors in Computing Systems - CHI '18*.
 #'   \doi{10.1145/3173574.3173718}.
-#' @seealso See [stat_sample_slabinterval()] and [stat_dist_slabinterval()] for families of other
+#' @seealso See the [stat_slabinterval()] family for other
 #' stats built on top of [geom_slabinterval()].
 #' See `vignette("slabinterval")` for a variety of examples of use.
 #' @examples

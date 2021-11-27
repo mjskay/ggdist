@@ -18,9 +18,9 @@ for frequentist models, one visualizes confidence distributions or bootstrap dis
 (see \code{vignette("freq-uncertainty-vis")}); for Bayesian models, one visualizes probability
 distributions (see \code{vignette("tidybayes", package = "tidybayes")}).
 
-The \code{\link[=geom_slabinterval]{geom_slabinterval()}} / \code{\link[=stat_slabinterval]{stat_slabinterval()}} / \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} family (see \code{vignette("slabinterval")}) includes
+The \code{\link[=geom_slabinterval]{geom_slabinterval()}} / \code{\link[=stat_slabinterval]{stat_slabinterval()}} family (see \code{vignette("slabinterval")}) includes
 point summaries and intervals, eye plots, half-eye plots, CCDF bar plots, gradient plots, dotplots, and histograms.
 
-The \code{\link[=geom_lineribbon]{geom_lineribbon()}} / \code{\link[=stat_lineribbon]{stat_lineribbon()}} / \code{\link[=stat_dist_lineribbon]{stat_dist_lineribbon()}} family (see \code{vignette("lineribbon")})
+The \code{\link[=geom_lineribbon]{geom_lineribbon()}} / \code{\link[=stat_lineribbon]{stat_lineribbon()}} family (see \code{vignette("lineribbon")})
 makes it easy to visualize fit lines with an arbitrary number of uncertainty bands.
 }

@@ -43,7 +43,7 @@
 #'   and extended onion method. *Journal of Multivariate Analysis*, 100(9), 1989--2001.
 #'   \doi{10.1016/j.jmva.2009.04.008}.
 #' @seealso [parse_dist()] and [marginalize_lkjcorr()] for parsing specs that use the
-#' LKJ correlation distribution and the [stat_dist_slabinterval()] family of stats for visualizing them.
+#' LKJ correlation distribution and the [stat_slabinterval()] family of stats for visualizing them.
 #' @examples
 #'
 #' library(dplyr)
@@ -57,7 +57,7 @@
 #'   K = 2:6
 #' ) %>%
 #'   ggplot(aes(y = fct_rev(ordered(eta)), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
-#'   stat_dist_slab() +
+#'   stat_slab() +
 #'   facet_grid(~ paste0(K, "x", K)) +
 #'   labs(
 #'     title = paste0(
@@ -132,7 +132,7 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' as returned by [parse_dist()]), this function updates any rows with `.dist == "lkjcorr"`
 #' so that the first argument to the distribution is equal to the specified dimension
 #' of the correlation matrix (`K`) and changes the distribution name to `"lkjcorr_marginal"`,
-#' allowing the distribution to be easily visualized using the [stat_dist_slabinterval()]
+#' allowing the distribution to be easily visualized using the [stat_slabinterval()]
 #' family of ggplot2 stats.
 #'
 #' @inheritParams lkjcorr_marginal
@@ -163,7 +163,7 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #'   parse_dist(prior) %>%
 #'   marginalize_lkjcorr(K = 2) %>%
 #'   ggplot(aes(y = prior, dist = .dist, args = .args)) +
-#'   stat_dist_halfeye() +
+#'   stat_halfeye() +
 #'   xlim(-1, 1) +
 #'   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
 #'

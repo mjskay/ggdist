@@ -196,9 +196,10 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \item{geom}{Use to override the default connection between
 \code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
-\item{quantiles}{For the \code{stat_} and \code{stat_dist_} stats, setting this to a value other than \code{NA}
-will produce a quantile dotplot: that is, a dotplot of quantiles from the sample (for \code{stat_}) or a dotplot
-of quantiles from the distribution (for \code{stat_dist_}). The value of \code{quantiles} determines the number
+\item{quantiles}{Setting this to a value other than \code{NA}
+will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
+(for analytical distributions, the default of \code{NA} is taken to mean \code{100} quantiles). The value of
+\code{quantiles} determines the number
 of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
@@ -221,8 +222,8 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 \description{
 Geoms and stats for creating dotplots that automatically determines a bin width that
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-generation of quantile dotplots using the \code{quantiles} argument to \code{stat_dotsinterval}/\code{stat_dots}
-and \code{stat_dist_dotsinterval}/\code{stat_dist_dots}. Generally follows the naming scheme and
+generation of quantile dotplots using the \code{quantiles} argument to \code{stat_dotsinterval()}/\code{stat_dots()}.
+Generally follows the naming scheme and
 arguments of the \code{\link[=geom_slabinterval]{geom_slabinterval()}} and \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of
 geoms and stats.
 }
@@ -241,9 +242,37 @@ dots from overlapping each other.
 \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
 }
 
-The \code{stat_...} and \code{stat_dist_...} versions of the stats when used with the \code{quantiles} argument
+\code{stat_dots()} and \code{stat_dotsinterval()}, when used with the \code{quantiles} argument,
 are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
 using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
+
+\strong{To visualize sample data}, such as a data distribution, samples from a
+bootstrap distribution, or a Bayesian posterior, you can supply samples to
+the \code{x} or \code{y} aesthetic.
+
+\strong{To visualize analytical distributions}, you can use the \code{xdist} or \code{ydist}
+aesthetic. For historical reasons, you can also use \code{dist} to specify the distribution, though
+this is not recommended as it does not work as well with orientation detection.
+These aesthetics can be used as follows:
+\itemize{
+\item \code{xdist}, \code{ydist}, and \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
+package (\code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc) or can be a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+Since these functions are vectorized,
+other columns can be passed directly to them in an \code{\link[=aes]{aes()}} specification; e.g.
+\code{aes(dist = dist_normal(mu, sigma))} will work if \code{mu} and \code{sigma} are columns in the
+input data frame.
+\item \code{dist} can be a character vector giving the distribution name. Then the  \code{arg1}, ... \code{arg9}
+aesthetics (or \code{args} as a list column) specify distribution arguments. Distribution names
+should correspond to R functions that have \code{"p"}, \code{"q"}, and \code{"d"} functions; e.g. \code{"norm"}
+is a valid distribution name because R defines the \code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, and \code{\link[=dnorm]{dnorm()}}
+functions for Normal distributions.
+
+See the \code{\link[=parse_dist]{parse_dist()}} function for a useful way to generate \code{dist} and \code{args}
+values from human-readable distribution specs (like \code{"normal(0,1)"}). Such specs are also
+produced by other packages (like the \code{brms::get_prior} function in brms); thus,
+\code{\link[=parse_dist]{parse_dist()}} combined with the stats described here can help you visualize the output
+of those functions.
+}
 }
 \section{Aesthetics}{
 
@@ -254,16 +283,14 @@ the \strong{interval}.
 These \code{stat}s support the following aesthetics:
 \itemize{
 \item \code{x}: x position of the geometry (when orientation = \code{"vertical"}); or sample data to be summarized
-(when \code{orientation = "horizontal"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time along with the \code{dist} aesthetic).
+(when \code{orientation = "horizontal"} with sample data).
 \item \code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
-(when \code{orientation = "vertical"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time along with the \code{dist} aesthetic).
-\item \code{xdist}: Distribution to map on the x axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+(when \code{orientation = "vertical"} with sample data).
+\item \code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-\item \code{ydist}: Distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+\item \code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-\item \code{dist}: A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
+\item \code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
 \item \code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
@@ -407,7 +434,7 @@ or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Co
 \doi{10.1145/3173574.3173718}.
 }
 \seealso{
-See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} for families of other
+See the \code{\link[=stat_slabinterval]{stat_slabinterval()}} family for other
 stats built on top of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
 See \code{vignette("slabinterval")} for a variety of examples of use.
 }

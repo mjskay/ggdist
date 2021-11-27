@@ -31,13 +31,13 @@ for frequentist models, one visualizes confidence distributions or bootstrap dis
 for Bayesian models, one visualizes probability distributions (see the [tidybayes](https://mjskay.github.io/tidybayes/) 
 package, which builds on top of `ggdist`).
 
-The `geom_slabinterval()` / `stat_slabinterval()` / `stat_dist_slabinterval()` family (see `vignette("slabinterval")`) includes
+The `geom_slabinterval()` / `stat_slabinterval()` family (see `vignette("slabinterval")`) includes
 point summaries and intervals, eye plots, half-eye plots, CCDF bar plots, gradient plots, 
 dotplots, and histograms:
 
 ![The slabinterval family of geoms and stats](man/figures/slabinterval_family.png)
   
-The `geom_lineribbon()` / `stat_lineribbon()` / `stat_dist_lineribbon()` family (see `vignette("lineribbon")`) makes it easy to visualize fit lines with an arbitrary 
+The `geom_lineribbon()` / `stat_lineribbon()` family (see `vignette("lineribbon")`) makes it easy to visualize fit lines with an arbitrary 
 number of uncertainty bands:
   
 ```{r lineribbon, echo=FALSE, message=FALSE, warning=FALSE}
@@ -53,7 +53,7 @@ mtcars %>%
   expand(hp = seq(min(hp), max(hp), length.out = 101)) %>%
   augment(m_mpg, newdata = ., se_fit = TRUE) %>%
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
-  stat_dist_lineribbon(
+  stat_lineribbon(
     aes(dist = "norm", arg1 = .fitted, arg2 = .se.fit), 
     alpha = 1/4
   ) +
@@ -69,8 +69,9 @@ mtcars %>%
   theme_ggdist()
 ```
 
-All geoms in `ggdist` also have `stat_dist_` counterparts designed for visualizing analytical
-distributions, which is particularly useful when visualizing uncertainty in frequentist
+All stat in `ggdist` also support visualizing analytical distributions and vectorized distribution
+data types like [distributional](https://pkg.mitchelloharawild.com/distributional/) objects or `posterior::rvar()` 
+objects. This is particularly useful when visualizing uncertainty in frequentist
 models (see `vignette("freq-uncertainty-vis")`) or when visualizing priors in a
 Bayesian analysis.
 

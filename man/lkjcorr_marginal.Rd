@@ -83,7 +83,7 @@ expand.grid(
   K = 2:6
 ) \%>\%
   ggplot(aes(y = fct_rev(ordered(eta)), dist = "lkjcorr_marginal", arg1 = K, arg2 = eta)) +
-  stat_dist_slab() +
+  stat_slab() +
   facet_grid(~ paste0(K, "x", K)) +
   labs(
     title = paste0(
@@ -104,5 +104,5 @@ and extended onion method. \emph{Journal of Multivariate Analysis}, 100(9), 1989
 }
 \seealso{
 \code{\link[=parse_dist]{parse_dist()}} and \code{\link[=marginalize_lkjcorr]{marginalize_lkjcorr()}} for parsing specs that use the
-LKJ correlation distribution and the \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}} family of stats for visualizing them.
+LKJ correlation distribution and the \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of stats for visualizing them.
 }

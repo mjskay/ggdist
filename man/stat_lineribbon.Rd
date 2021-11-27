@@ -48,7 +48,7 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat.}
+parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
@@ -94,11 +94,39 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 A combination of \code{\link[=stat_slabinterval]{stat_slabinterval()}} and \code{\link[=geom_lineribbon]{geom_lineribbon()}} with sensible defaults.
-While \code{geom_lineribbon} is intended for use on data frames that have already been summarized using
-a \code{\link[=point_interval]{point_interval()}} function, \code{stat_lineribbon} is intended for use directly on data
-frames of draws, and will perform the summarization using a \code{\link[=point_interval]{point_interval()}} function;
-\code{stat_dist_lineribbon} is intended for use on analytical distributions through the \code{dist},
-\code{arg1}, ... \code{arg9}, and \code{args} aesthetics.
+While \code{geom_lineribbon()} is intended for use on data frames that have already been summarized using
+a \code{\link[=point_interval]{point_interval()}} function, \code{stat_lineribbon()} is intended for use directly on data
+frames of draws or of analytical distributions, and will perform the summarization using a
+\code{\link[=point_interval]{point_interval()}} function.
+}
+\details{
+\strong{To visualize sample data}, such as a data distribution, samples from a
+bootstrap distribution, or a Bayesian posterior, you can supply samples to
+the \code{x} or \code{y} aesthetic.
+
+\strong{To visualize analytical distributions}, you can use the \code{xdist} or \code{ydist}
+aesthetic. For historical reasons, you can also use \code{dist} to specify the distribution, though
+this is not recommended as it does not work as well with orientation detection.
+These aesthetics can be used as follows:
+\itemize{
+\item \code{xdist}, \code{ydist}, and \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
+package (\code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc) or can be a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+Since these functions are vectorized,
+other columns can be passed directly to them in an \code{\link[=aes]{aes()}} specification; e.g.
+\code{aes(dist = dist_normal(mu, sigma))} will work if \code{mu} and \code{sigma} are columns in the
+input data frame.
+\item \code{dist} can be a character vector giving the distribution name. Then the  \code{arg1}, ... \code{arg9}
+aesthetics (or \code{args} as a list column) specify distribution arguments. Distribution names
+should correspond to R functions that have \code{"p"}, \code{"q"}, and \code{"d"} functions; e.g. \code{"norm"}
+is a valid distribution name because R defines the \code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, and \code{\link[=dnorm]{dnorm()}}
+functions for Normal distributions.
+
+See the \code{\link[=parse_dist]{parse_dist()}} function for a useful way to generate \code{dist} and \code{args}
+values from human-readable distribution specs (like \code{"normal(0,1)"}). Such specs are also
+produced by other packages (like the \code{brms::get_prior} function in brms); thus,
+\code{\link[=parse_dist]{parse_dist()}} combined with the stats described here can help you visualize the output
+of those functions.
+}
 }
 \examples{
 
@@ -117,8 +145,8 @@ tibble(
   x = 1:10,
   sd = seq(1, 3, length.out = 10)
 ) \%>\%
-  ggplot(aes(x = x, dist = dist_normal(x, sd))) +
-  stat_dist_lineribbon() +
+  ggplot(aes(x = x, ydist = dist_normal(x, sd))) +
+  stat_lineribbon() +
   scale_fill_brewer()
 
 }

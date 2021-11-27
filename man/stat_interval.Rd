@@ -40,12 +40,30 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
+\item{geom}{Use to override the default connection between
+\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
+
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat.}
+parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
+
+\item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
+that determine the widths of the resulting intervals. If multiple probabilities are provided,
+multiple intervals per group are generated, each with a different probability interval (and
+value of the corresponding \code{.width} and \code{level} generated variables).}
+
+\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
+
+\item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
+\code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
+(e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc). This function determines the point summary
+(typically mean, median, or mode) and interval type (quantile interval, \code{qi};
+highest-density interval, \code{hdi}; or highest-density continuous interval, \code{hdci}). Output will
+be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
+See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
@@ -62,11 +80,9 @@ opinion, backwards; but the base ggplot naming scheme is allowed for compatibili
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{logical. Should this layer be included in the legends?
-\code{NA}, the default, includes if any aesthetics are mapped.
-\code{FALSE} never includes, and \code{TRUE} always includes.
-It can also be a named logical vector to finely select the aesthetics to
-display.}
+\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
+to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
+those that are mapped (the default for most geoms).}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
@@ -78,12 +94,41 @@ A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a multiple interval
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-A combination of \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} and
+A combination of \code{\link[=stat_slabinterval]{stat_slabinterval()}} and
 \code{\link[=geom_slabinterval]{geom_slabinterval()}} with sensible defaults.
 While the corresponding \code{geom}s are intended for use on
 data frames that have already been summarized using a \code{\link[=point_interval]{point_interval()}}
 function, these \code{stat}s are intended for use directly on data frames of draws, and
 will perform the summarization using a \code{\link[=point_interval]{point_interval()}} function.
+}
+\details{
+\strong{To visualize sample data}, such as a data distribution, samples from a
+bootstrap distribution, or a Bayesian posterior, you can supply samples to
+the \code{x} or \code{y} aesthetic.
+
+\strong{To visualize analytical distributions}, you can use the \code{xdist} or \code{ydist}
+aesthetic. For historical reasons, you can also use \code{dist} to specify the distribution, though
+this is not recommended as it does not work as well with orientation detection.
+These aesthetics can be used as follows:
+\itemize{
+\item \code{xdist}, \code{ydist}, and \code{dist} can be any distribution object from the \href{https://pkg.mitchelloharawild.com/distributional/}{distributional}
+package (\code{\link[=dist_normal]{dist_normal()}}, \code{\link[=dist_beta]{dist_beta()}}, etc) or can be a \code{\link[posterior:rvar]{posterior::rvar()}} object.
+Since these functions are vectorized,
+other columns can be passed directly to them in an \code{\link[=aes]{aes()}} specification; e.g.
+\code{aes(dist = dist_normal(mu, sigma))} will work if \code{mu} and \code{sigma} are columns in the
+input data frame.
+\item \code{dist} can be a character vector giving the distribution name. Then the  \code{arg1}, ... \code{arg9}
+aesthetics (or \code{args} as a list column) specify distribution arguments. Distribution names
+should correspond to R functions that have \code{"p"}, \code{"q"}, and \code{"d"} functions; e.g. \code{"norm"}
+is a valid distribution name because R defines the \code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, and \code{\link[=dnorm]{dnorm()}}
+functions for Normal distributions.
+
+See the \code{\link[=parse_dist]{parse_dist()}} function for a useful way to generate \code{dist} and \code{args}
+values from human-readable distribution specs (like \code{"normal(0,1)"}). Such specs are also
+produced by other packages (like the \code{brms::get_prior} function in brms); thus,
+\code{\link[=parse_dist]{parse_dist()}} combined with the stats described here can help you visualize the output
+of those functions.
+}
 }
 \section{Computed Variables}{
 
@@ -115,16 +160,14 @@ the \strong{interval}.
 These \code{stat}s support the following aesthetics:
 \itemize{
 \item \code{x}: x position of the geometry (when orientation = \code{"vertical"}); or sample data to be summarized
-(when \code{orientation = "horizontal"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time along with the \code{dist} aesthetic).
+(when \code{orientation = "horizontal"} with sample data).
 \item \code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
-(when \code{orientation = "vertical"}) except for \code{stat_dist_} geometries (which use only one of \code{x} or \code{y}
-at a time along with the \code{dist} aesthetic).
-\item \code{xdist}: Distribution to map on the x axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+(when \code{orientation = "vertical"} with sample data).
+\item \code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-\item \code{ydist}: Distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
+\item \code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object.
-\item \code{dist}: A name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
+\item \code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a \pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or
 a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
 \item \code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.
 }
@@ -252,7 +295,7 @@ See \code{\link[=geom_interval]{geom_interval()}} for the geom versions, intende
 for use on points and intervals that have already been summarized using a \code{\link[=point_interval]{point_interval()}} function.
 See \code{\link[=stat_pointinterval]{stat_pointinterval()}} for a similar stat intended for
 point summaries and intervals.
-See \code{\link[=stat_sample_slabinterval]{stat_sample_slabinterval()}} for a variety of other
+See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for a variety of other
 stats that combine intervals with densities and CDFs.
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geom that these geoms wrap. All parameters of that geom are
 available to these geoms.

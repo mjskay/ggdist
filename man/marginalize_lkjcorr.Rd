@@ -46,7 +46,7 @@ Given a data frame representing parsed distribution specifications (such
 as returned by \code{\link[=parse_dist]{parse_dist()}}), this function updates any rows with \code{.dist == "lkjcorr"}
 so that the first argument to the distribution is equal to the specified dimension
 of the correlation matrix (\code{K}) and changes the distribution name to \code{"lkjcorr_marginal"},
-allowing the distribution to be easily visualized using the \code{\link[=stat_dist_slabinterval]{stat_dist_slabinterval()}}
+allowing the distribution to be easily visualized using the \code{\link[=stat_slabinterval]{stat_slabinterval()}}
 family of ggplot2 stats.
 }
 \examples{
@@ -60,7 +60,7 @@ data.frame(prior = "lkjcorr(3)") \%>\%
   parse_dist(prior) \%>\%
   marginalize_lkjcorr(K = 2) \%>\%
   ggplot(aes(y = prior, dist = .dist, args = .args)) +
-  stat_dist_halfeye() +
+  stat_halfeye() +
   xlim(-1, 1) +
   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
 
