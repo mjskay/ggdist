@@ -2,9 +2,7 @@
 % Please edit documentation in R/stat_sample_slabinterval.R
 \name{stat_sample_slabinterval}
 \alias{stat_sample_slabinterval}
-\alias{stat_gradientinterval}
 \alias{stat_histinterval}
-\alias{stat_slab}
 \title{Distribution + interval plots (eye plots, half-eye plots, CCDF barplots, etc) for samples (ggplot stat)}
 \usage{
 stat_sample_slabinterval(
@@ -29,28 +27,6 @@ stat_sample_slabinterval(
   inherit.aes = TRUE
 )
 
-stat_gradientinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE, slab_alpha = FALSE),
-  inherit.aes = TRUE
-)
-
 stat_histinterval(
   mapping = NULL,
   data = NULL,
@@ -70,26 +46,6 @@ stat_histinterval(
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_slab(
-  mapping = NULL,
-  data = NULL,
-  geom = "slab",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  limits = NULL,
-  n = 501,
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = NA,
   inherit.aes = TRUE
 )
 }

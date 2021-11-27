@@ -274,21 +274,6 @@ stat_sample_slabinterval = make_stat(StatSampleSlabinterval, geom = "slabinterva
 
 # shortcut stats ----------------------------------------------------------
 
-StatGradientinterval = ggproto("StatGradientinterval", StatSampleSlabinterval,
-  default_aes = defaults(aes(
-    justification = stat(0.5),
-    thickness = stat(1),
-    slab_alpha = stat(f)
-  ), StatSampleSlabinterval$default_aes),
-
-  layer_args = defaults(list(
-    show.legend = c(size = FALSE, slab_alpha = FALSE)
-  ), StatSampleSlabinterval$layer_args)
-)
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_gradientinterval = make_stat(StatGradientinterval, geom = "slabinterval")
-
 StatHistinterval = ggproto("StatHistinterval", StatSampleSlabinterval,
   default_params = defaults(list(
     slab_type = "histogram"
@@ -297,23 +282,3 @@ StatHistinterval = ggproto("StatHistinterval", StatSampleSlabinterval,
 #' @export
 #' @rdname stat_sample_slabinterval
 stat_histinterval = make_stat(StatHistinterval, geom = "slabinterval")
-
-StatSlab = ggproto("StatSlab", StatSampleSlabinterval,
-  default_params = defaults(list(
-    show_point = FALSE,
-    show_interval = FALSE
-  ), StatSampleSlabinterval$default_params),
-
-  layer_args = defaults(list(
-    show.legend = NA
-  ), StatSampleSlabinterval$layer_args),
-
-  hidden_params = union(c(
-    "show_slab", "show_point", "show_interval",
-    "point_interval", ".width"
-  ), StatSampleSlabinterval$hidden_params)
-)
-StatSlab$default_aes$size = NULL
-#' @export
-#' @rdname stat_sample_slabinterval
-stat_slab = make_stat(StatSlab, geom = "slab")

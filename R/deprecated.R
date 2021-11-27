@@ -84,6 +84,18 @@ stat_dist_cdfinterval = stat_cdfinterval
 #' @format NULL
 #' @usage NULL
 #' @export
+stat_dist_gradientinterval = stat_gradientinterval
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
+stat_dist_slab = stat_slab
+
+#' @rdname ggdist-deprecated
+#' @format NULL
+#' @usage NULL
+#' @export
 stat_dist_pointinterval = stat_pointinterval
 
 #' @rdname ggdist-deprecated

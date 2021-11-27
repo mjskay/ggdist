@@ -543,7 +543,7 @@ StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
 #' @rdname stat_dist_slabinterval
 stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
 
-StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinterval,
+StatGradientinterval = ggproto("StatGradientinterval", StatDistSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
     thickness = stat(1),
@@ -556,9 +556,9 @@ StatDistGradientinterval = ggproto("StatDistGradientinterval", StatDistSlabinter
 )
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_gradientinterval = make_stat(StatDistGradientinterval, geom = "slabinterval")
+stat_gradientinterval = make_stat(StatGradientinterval, geom = "slabinterval")
 
-StatDistSlab = ggproto("StatDistSlab", StatDistSlabinterval,
+StatSlab = ggproto("StatSlab", StatDistSlabinterval,
   default_params = defaults(list(
     show_point = FALSE,
     show_interval = FALSE
@@ -573,7 +573,7 @@ StatDistSlab = ggproto("StatDistSlab", StatDistSlabinterval,
     "point_interval", ".width"
   ), StatDistSlabinterval$hidden_params)
 )
-StatDistSlab$default_aes$size = NULL
+StatSlab$default_aes$size = NULL
 #' @export
 #' @rdname stat_dist_slabinterval
-stat_dist_slab = make_stat(StatDistSlab, geom = "slab")
+stat_slab = make_stat(StatSlab, geom = "slab")
