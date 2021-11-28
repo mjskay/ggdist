@@ -560,7 +560,7 @@ StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
     show.legend = c(size = FALSE, slab_alpha = FALSE)
   ), StatSlabinterval$layer_args)
 )
-#' @eval rd_shortcut_stat("gradientinterval", "gradient + interval", geom_name = "slabinterval", example_params = 'fill_type = "gradient"')
+#' @eval rd_shortcut_stat("gradientinterval", "gradient + interval", geom_name = "slabinterval")
 #' @description
 #' If your graphics device supports it, it is recommended to use this stat
 #' with `fill_type = "gradient"` (see the description of that parameter).

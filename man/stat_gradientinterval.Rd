@@ -366,7 +366,7 @@ df = data.frame(
 )
 df \%>\%
   ggplot(aes(x = value, y = group)) +
-  stat_gradientinterval(fill_type = "gradient")
+  stat_gradientinterval()
 
 # ON ANALYTICAL DISTRIBUTIONS
 dist_df = data.frame(
@@ -378,7 +378,7 @@ dist_df = data.frame(
 # and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
 dist_df \%>\%
   ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
-  stat_gradientinterval(fill_type = "gradient")
+  stat_gradientinterval()
 }
 \seealso{
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geom underlying this stat.

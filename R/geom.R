@@ -167,7 +167,7 @@ title_case = function(x) {
 rd_shortcut_stat = function(
   stat_name, chart_type,
   geom_name = stat_name,
-  example_layers = NULL, example_params = NULL,
+  example_layers = NULL,
   describe = TRUE
 ) {
   stat = get(paste0("Stat", title_case(stat_name)))
@@ -247,7 +247,7 @@ df = data.frame(
 )
 df %>%
   ggplot(aes(x = value, y = group)) +
-  stat_', stat_name, '(', example_params, ')', example_layers, '
+  stat_', stat_name, '()', example_layers, '
 
 # ON ANALYTICAL DISTRIBUTIONS
 dist_df = data.frame(
@@ -259,7 +259,7 @@ dist_df = data.frame(
 # and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
 dist_df %>%
   ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
-  stat_', stat_name, '(', example_params, ')', example_layers)
+  stat_', stat_name, '()', example_layers)
   )
 }
 
