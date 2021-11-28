@@ -336,7 +336,7 @@ normalization (this should probably only be used with functions whose values are
 `"segments"`, breaks up the slab geometry into segments for each unique combination of fill color and
 alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
 but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-like in [stat_gradientinterval()]). When `fill_type == "gradient"`, a [linearGradient()] is used to
+like in [stat_gradientinterval()]). When `fill_type == "gradient"`, a `grid::linearGradient()` is used to
 create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
 R > 4.1 and is not yet supported on all graphics devices.
 ',

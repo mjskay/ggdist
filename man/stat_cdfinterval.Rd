@@ -61,7 +61,7 @@ these include:    \describe{\item{\code{fill_type}}{What type of fill to use whe
 \code{"segments"}, breaks up the slab geometry into segments for each unique combination of fill color and
 alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
 but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{\link[=linearGradient]{linearGradient()}} is used to
+like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{grid::linearGradient()} is used to
 create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
 R > 4.1 and is not yet supported on all graphics devices.
 }}
