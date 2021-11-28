@@ -11,7 +11,6 @@ stat_lineribbon(
   position = "identity",
   ...,
   .width = c(0.5, 0.8, 0.95),
-  expand = FALSE,
   point_interval = "median_qi",
   orientation = NA,
   na.rm = FALSE,
@@ -54,8 +53,6 @@ parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
 multiple intervals per group are generated, each with a different probability interval (and
 value of the corresponding \code{.width} and \code{level} generated variables).}
-
-\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family

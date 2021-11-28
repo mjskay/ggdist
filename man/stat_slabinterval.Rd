@@ -319,7 +319,7 @@ Stats for computing distribution functions (densities or CDFs) + intervals for u
 gradient plots, histograms, and more. Sample data can be supplied to the \code{x} and \code{y}
 aesthetics or analytical distributions (in a variety of formats) can be supplied to the
 \code{xdist} and \code{ydist} aesthetics.
-See \emph{Details}.
+See \strong{Details}.
 }
 \details{
 A highly configurable stat for generating a variety of plots that combine a "slab"

@@ -2,7 +2,7 @@
 % Please edit documentation in R/stat_pointinterval.R
 \name{stat_pointinterval}
 \alias{stat_pointinterval}
-\title{Point summary + multiple uncertainty interval plots (ggplot stat)}
+\title{Point + multiple-interval plot (shortcut stat)}
 \usage{
 stat_pointinterval(
   mapping = NULL,
@@ -10,7 +10,6 @@ stat_pointinterval(
   geom = "pointinterval",
   position = "identity",
   ...,
-  expand = FALSE,
   point_interval = "median_qi",
   .width = c(0.66, 0.95),
   orientation = NA,
@@ -50,8 +49,6 @@ a call to a position adjustment function.}
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
 
-\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
-
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
 (e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc). This function determines the point summary
@@ -90,16 +87,18 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
-A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a point+multiple uncertainty interval geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a
+point + multiple-interval
+geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-A combination of \code{\link[=stat_slabinterval]{stat_slabinterval()}} and
-\code{\link[=geom_slabinterval]{geom_slabinterval()}} with sensible defaults.
-While the corresponding \code{geom}s are intended for use on
-data frames that have already been summarized using a \code{\link[=point_interval]{point_interval()}}
-function, these \code{stat}s are intended for use directly on data frames of draws, and
-will perform the summarization using a \code{\link[=point_interval]{point_interval()}} function.
+Shortcut version of \code{stat_slabinterval()} with \code{geom_pointinterval()} for creating point + multiple-interval plots.
+Roughly equivalent to:\preformatted{stat_slabinterval(
+  geom = "pointinterval",
+  show_slab = FALSE
+)
+}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a
@@ -173,29 +172,6 @@ a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.
 }
 In addition, in their default configuration (paired with \code{\link[=geom_pointinterval]{geom_pointinterval()}}) the following aesthetics are supported by the underlying geom:
 
-\strong{Slab-specific aesthetics}
-\itemize{
-\item \code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
-\code{y} value (if \code{orientation = "vertical"}) of the slab.
-\item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
-causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
-sides (as in a violin plot).
-\item \code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
-slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
-\item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
-\item \code{datatype}: When using composite geoms directly without a \code{stat} (e.g. \code{\link[=geom_slabinterval]{geom_slabinterval()}}), \code{datatype} is used to
-indicate which part of the geom a row in the data targets: rows with \code{datatype = "slab"} target the
-slab portion of the geometry and rows with \code{datatype = "interval"} target the interval portion of
-the geometry. This is set automatically when using ggdist \code{stat}s.
-}
 \strong{Interval-specific aesthetics}
 \itemize{
 \item \code{xmin}: Left end of the interval sub-geometry (if \code{orientation = "horizontal"}).
@@ -235,14 +211,6 @@ sizes are not affected by \code{interval_size_domain}, \code{interval_size_range
 and the outline of the \strong{slab} (if it is visible). Use the \code{slab_linetype} or
 \code{interval_linetype} aesthetics (below) to set sub-geometry line types separately.
 }
-\strong{Slab-specific color/line override aesthetics}
-\itemize{
-\item \code{slab_fill}: Override for \code{fill}: the fill color of the slab.
-\item \code{slab_colour}: (or \code{slab_color}) Override for \code{colour}/\code{color}: the outline color of the slab.
-\item \code{slab_alpha}: Override for \code{alpha}: the opacity of the slab.
-\item \code{slab_size}: Override for \code{size}: the width of the outline of the slab.
-\item \code{slab_linetype}: Override for \code{linetype}: the line type of the outline of the slab.
-}
 \strong{Interval-specific color/line override aesthetics}
 \itemize{
 \item \code{interval_colour}: (or \code{interval_color}) Override for \code{colour}/\code{color}: the color of the interval.
@@ -269,28 +237,40 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 
 \examples{
-
 library(dplyr)
 library(ggplot2)
+library(distributional)
 
-data(RankCorr_u_tau, package = "ggdist")
+theme_set(theme_ggdist())
 
-RankCorr_u_tau \%>\%
-  ggplot(aes(y = factor(i), x = u_tau)) +
-  stat_pointinterval(.width = c(.66, .95))
+# ON SAMPLE DATA
+set.seed(1234)
+df = data.frame(
+  group = c("a", "b", "c"),
+  value = rnorm(1500, mean = c(5, 7, 9), sd = c(1, 1.5, 1))
+)
+df \%>\%
+  ggplot(aes(x = value, y = group)) +
+  stat_interval()
 
-RankCorr_u_tau \%>\%
-  ggplot(aes(x = factor(i), y = u_tau)) +
-  stat_pointinterval(.width = c(.66, .95))
-
+# ON ANALYTICAL DISTRIBUTIONS
+dist_df = data.frame(
+  group = c("a", "b", "c"),
+  mean =  c(  5,   7,   8),
+  sd =    c(  1, 1.5,   1)
+)
+# Vectorized distribution types, like distributional::dist_normal()
+# and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
+dist_df \%>\%
+  ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
+  stat_interval()
 }
 \seealso{
-See \code{\link[=geom_pointinterval]{geom_pointinterval()}} for the geom versions, intended
-for use on points and intervals that have already been summarized using a \code{\link[=point_interval]{point_interval()}} function.
-See \code{\link[=stat_interval]{stat_interval()}} for a similar stat intended for intervals without
-point summaries.
-See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for a variety of other
-stats that combine intervals with densities and CDFs.
-See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geom that these geoms wrap. All parameters of that geom are
-available to these geoms.
+See \code{geom_pointinterval()} for the geom underlying this stat.
+
+See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for the stat this shortcut is based on.
+
+Other \code{stat_slabinterval()} shortcut stats: 
+\code{\link{stat_interval}()}
 }
+\concept{\code{stat_slabinterval()} shortcut stats}

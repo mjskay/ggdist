@@ -123,29 +123,6 @@ the \strong{interval}.
 \item \code{x}: x position of the geometry
 \item \code{y}: y position of the geometry
 }
-\strong{Slab-specific aesthetics}
-\itemize{
-\item \code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
-\code{y} value (if \code{orientation = "vertical"}) of the slab.
-\item \code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
-which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
-or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
-to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
-\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
-causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
-sides (as in a violin plot).
-\item \code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
-slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.
-\item \code{justification}: Justification of the interval relative to the slab, where \code{0} indicates bottom/left
-justification and \code{1} indicates top/right justification (depending on \code{orientation}). If \code{justification}
-is \code{NULL} (the default), then it is set automatically based on the value of \code{side}: when \code{side} is
-\code{"top"}/\code{"right"} \code{justification} is set to \code{0}, when \code{side} is \code{"bottom"}/\code{"left"}
-\code{justification} is set to \code{1}, and when \code{side} is \code{"both"} \code{justification} is set to 0.5.
-\item \code{datatype}: When using composite geoms directly without a \code{stat} (e.g. \code{\link[=geom_slabinterval]{geom_slabinterval()}}), \code{datatype} is used to
-indicate which part of the geom a row in the data targets: rows with \code{datatype = "slab"} target the
-slab portion of the geometry and rows with \code{datatype = "interval"} target the interval portion of
-the geometry. This is set automatically when using ggdist \code{stat}s.
-}
 \strong{Interval-specific aesthetics}
 \itemize{
 \item \code{xmin}: Left end of the interval sub-geometry (if \code{orientation = "horizontal"}).
@@ -184,14 +161,6 @@ sizes are not affected by \code{interval_size_domain}, \code{interval_size_range
 \item \code{linetype}: Type of line (e.g., \code{"solid"}, \code{"dashed"}, etc) used to draw the \strong{interval}
 and the outline of the \strong{slab} (if it is visible). Use the \code{slab_linetype} or
 \code{interval_linetype} aesthetics (below) to set sub-geometry line types separately.
-}
-\strong{Slab-specific color/line override aesthetics}
-\itemize{
-\item \code{slab_fill}: Override for \code{fill}: the fill color of the slab.
-\item \code{slab_colour}: (or \code{slab_color}) Override for \code{colour}/\code{color}: the outline color of the slab.
-\item \code{slab_alpha}: Override for \code{alpha}: the opacity of the slab.
-\item \code{slab_size}: Override for \code{size}: the width of the outline of the slab.
-\item \code{slab_linetype}: Override for \code{linetype}: the line type of the outline of the slab.
 }
 \strong{Interval-specific color/line override aesthetics}
 \itemize{

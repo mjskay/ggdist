@@ -206,7 +206,7 @@ compute_interval_dist = function(
 #' gradient plots, histograms, and more. Sample data can be supplied to the `x` and `y`
 #' aesthetics or analytical distributions (in a variety of formats) can be supplied to the
 #' `xdist` and `ydist` aesthetics.
-#' See *Details*.
+#' See **Details**.
 #'
 #' A highly configurable stat for generating a variety of plots that combine a "slab"
 #' that describes a distribution plus an interval. Several "shortcut" stats are provided

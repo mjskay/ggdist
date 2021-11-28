@@ -159,6 +159,110 @@ define_orientation_variables = function(orientation) {
 
 # documentation -----------------------------------------------------------
 
+title_case = function(x) {
+  substring(x, 1, 1) = toupper(substring(x, 1, 1))
+  x
+}
+
+rd_shortcut_stat = function(stat_name, chart_type, geom_name = stat_name, example_layers = NULL) {
+  stat = get(paste0("Stat", title_case(stat_name)))
+  geom = get(paste0("Geom", title_case(stat_name)))
+
+  # find the changed aesthetics and params for this stat
+  changed_values = function(list, exclude = character()) {
+    # find values changes in the child stat
+    values = stat[[list]][
+      map_lgl_(names(stat[[list]]), function(name)
+        !identical(stat[[list]][[name]], StatSlabinterval[[list]][[name]])
+      )
+    ]
+    # find deleted values
+    deleted_names = setdiff(names(StatSlabinterval[[list]]), names(stat[[list]]))
+    deleted_values = rep(list(NULL), length(deleted_names))
+    names(deleted_values) = deleted_names
+    values = c(values, deleted_values)
+
+    # turn values into strings like x = "foo", y = "bar"
+    value_text = lapply(values, function(x) deparse0(get_expr(x)))
+    value_text = value_text[!names(value_text) %in% exclude]
+    if (length(value_text)) paste(names(value_text), "=", value_text, collapse = ", ")
+  }
+  changed_aes = changed_values(
+    "default_aes",
+    exclude = c("datatype")
+  )
+  changed_params = changed_values(
+    "default_params",
+    exclude = c("show_point", "show_interval")
+  )
+
+  # find the parameters that are passed down via `...` to the paired stat
+  # TODO: output these
+  dot_params = setdiff(
+    names(geom$default_params),
+    c(names(stat$default_params), geom$hidden_params, stat$hidden_params)
+  )
+
+  if (length(example_layers) > 0) {
+    example_layers = paste0(" +\n  ", paste0(example_layers, collapse = " +\n  "))
+  }
+
+  c(
+    paste0('@title ', title_case(chart_type), ' plot (shortcut stat)'),
+    paste0('@description
+Shortcut version of `stat_slabinterval()` with `geom_', geom_name, '()` for creating ', chart_type, ' plots.
+Roughly equivalent to:
+
+```
+stat_slabinterval(\n',
+  if (length(changed_aes)) paste0('  aes(', changed_aes, ')\n'),
+  '  geom = "', geom_name, '"',
+  if (length(changed_params)) paste0(',\n  ', changed_params), '
+)
+```
+'),
+    '@template details-x-y-xdist-ydist',
+    rd_slabinterval_computed_variables(),
+    rd_slabinterval_aesthetics(geom, paste0("geom_", geom_name), stat),
+    '@inheritParams stat_slabinterval',
+    '@inheritParams geom_slabinterval',
+    '@return A [ggplot2::Stat] representing a ', chart_type, ' geometry which can
+     be added to a [ggplot()] object.',
+    '@seealso',
+    paste0('See `geom_', geom_name, '()` for the geom underlying this stat.\n'),
+    'See [stat_slabinterval()] for the stat this shortcut is based on.\n',
+    '@family `stat_slabinterval()` shortcut stats',
+    paste0('@examples
+library(dplyr)
+library(ggplot2)
+library(distributional)
+
+theme_set(theme_ggdist())
+
+# ON SAMPLE DATA
+set.seed(1234)
+df = data.frame(
+  group = c("a", "b", "c"),
+  value = rnorm(1500, mean = c(5, 7, 9), sd = c(1, 1.5, 1))
+)
+df %>%
+  ggplot(aes(x = value, y = group)) +
+  stat_interval()', example_layers, '
+
+# ON ANALYTICAL DISTRIBUTIONS
+dist_df = data.frame(
+  group = c("a", "b", "c"),
+  mean =  c(  5,   7,   8),
+  sd =    c(  1, 1.5,   1)
+)
+# Vectorized distribution types, like distributional::dist_normal()
+# and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
+dist_df %>%
+  ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
+  stat_interval()', example_layers)
+  )
+}
+
 rd_slabinterval_computed_variables = function() {
   out = '@section Computed Variables:
 The following variables are computed by this stat and made available for
@@ -269,7 +373,9 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
        slab portion of the geometry and rows with `datatype = "interval"` target the interval portion of
        the geometry. This is set automatically when using ggdist `stat`s.'
   )
-  out = c(out, "**Slab-specific aesthetics**", rd_aesthetics(slab_aes, geom$aesthetics()))
+  if (geom$default_params$show_slab) {
+    out = c(out, "**Slab-specific aesthetics**", rd_aesthetics(slab_aes, geom$aesthetics()))
+  }
 
   # interval-specific aesthetics
   int_aes = list(
@@ -278,13 +384,17 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     ymin = 'Lower end of the interval sub-geometry (if `orientation = "vertical"`).',
     ymax = 'Upper end of the interval sub-geometry (if `orientation = "vertical"`).'
   )
-  out = c(out, "**Interval-specific aesthetics**", rd_aesthetics(int_aes, geom$aesthetics()))
+  if (geom$default_params$show_interval) {
+    out = c(out, "**Interval-specific aesthetics**", rd_aesthetics(int_aes, geom$aesthetics()))
+  }
 
   # interval-specific aesthetics
   point_aes = list(
     shape = 'Shape type used to draw the **point** sub-geometry.'
   )
-  out = c(out, "**Point-specific aesthetics**", rd_aesthetics(point_aes, geom$aesthetics()))
+  if (geom$default_params$show_point) {
+    out = c(out, "**Point-specific aesthetics**", rd_aesthetics(point_aes, geom$aesthetics()))
+  }
 
   # color aesthetics
   color_aes = list(
@@ -327,7 +437,9 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     slab_linetype = 'Override for `linetype`: the line type of the outline of the slab.',
     slab_shape = 'Override for `shape`: the shape of the dots used to draw the dotplot slab.'
   )
-  out = c(out, "**Slab-specific color/line override aesthetics**", rd_aesthetics(slab_override_aes, geom$aesthetics()))
+  if (geom$default_params$show_slab) {
+    out = c(out, "**Slab-specific color/line override aesthetics**", rd_aesthetics(slab_override_aes, geom$aesthetics()))
+  }
 
   # interval override aesthetics
   int_override_aes = list(
@@ -336,7 +448,9 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     interval_size = 'Override for `size`: the line width of the interval.',
     interval_linetype = 'Override for `linetype`: the line type of the interval.'
   )
-  out = c(out, "**Interval-specific color/line override aesthetics**", rd_aesthetics(int_override_aes, geom$aesthetics()))
+  if (geom$default_params$show_interval) {
+    out = c(out, "**Interval-specific color/line override aesthetics**", rd_aesthetics(int_override_aes, geom$aesthetics()))
+  }
 
   # point override aesthetics
   point_override_aes = list(
@@ -345,7 +459,9 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     point_alpha = 'Override for `alpha`: the opacity of the point.',
     point_size = 'Override for `size`: the size of the point.'
   )
-  out = c(out, "**Point-specific color/line override aesthetics**", rd_aesthetics(point_override_aes, geom$aesthetics()))
+  if (geom$default_params$show_point) {
+    out = c(out, "**Point-specific color/line override aesthetics**", rd_aesthetics(point_override_aes, geom$aesthetics()))
+  }
 
   # undocumented aesthetics
   documented_aes = c(
