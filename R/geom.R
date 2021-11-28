@@ -231,7 +231,7 @@ stat_slabinterval(', paste0(collapse = ',', '\n  ', c(
     '@seealso',
     paste0('See [geom_', geom_name, '()] for the geom underlying this stat.\n'),
     'See [stat_slabinterval()] for the stat this shortcut is based on.\n',
-    '@family [stat_slabinterval()] shortcut stats',
+    '@family stat_slabinterval shortcut stats',
     paste0('@examples
 library(dplyr)
 library(ggplot2)

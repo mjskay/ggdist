@@ -324,7 +324,7 @@ See \code{\link[=geom_slab]{geom_slab()}} for the geom underlying this stat.
 
 See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for the stat this shortcut is based on.
 
-Other \code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats: 
+Other stat_slabinterval shortcut stats: 
 \code{\link{stat_ccdfinterval}()},
 \code{\link{stat_cdfinterval}()},
 \code{\link{stat_eye}()},
@@ -334,4 +334,4 @@ Other \code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats:
 \code{\link{stat_interval}()},
 \code{\link{stat_pointinterval}()}
 }
-\concept{\code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats}
+\concept{stat_slabinterval shortcut stats}

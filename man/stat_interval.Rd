@@ -270,7 +270,7 @@ See \code{\link[=geom_interval]{geom_interval()}} for the geom underlying this s
 
 See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for the stat this shortcut is based on.
 
-Other \code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats: 
+Other stat_slabinterval shortcut stats: 
 \code{\link{stat_ccdfinterval}()},
 \code{\link{stat_cdfinterval}()},
 \code{\link{stat_eye}()},
@@ -280,4 +280,4 @@ Other \code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats:
 \code{\link{stat_pointinterval}()},
 \code{\link{stat_slab}()}
 }
-\concept{\code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats}
+\concept{stat_slabinterval shortcut stats}
