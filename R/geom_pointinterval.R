@@ -24,7 +24,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' Specifically, `geom_pointinterval` acts as if its default aesthetics are
 #' `aes(size = -.width)`.
 #'
-#' @eval rd_slabinterval_aesthetics(geom = GeomPointinterval, geom_name = "geom_pointinterval")
+#' @eval rd_slabinterval_aesthetics("pointinterval")
 #' @inheritParams geom_slabinterval
 #' @param position The position adjustment to use for overlapping points on this layer. Setting this equal to
 #' `"dodge"` can be useful if you have overlapping intervals.

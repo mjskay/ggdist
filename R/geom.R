@@ -201,14 +201,6 @@ rd_shortcut_stat = function(
     exclude = c("show_point", "show_interval")
   )
 
-  # find the parameters that are passed down via `...` to the paired stat
-  # TODO: output these
-  dot_params = setdiff(
-    names(geom$default_params),
-    c(names(stat$default_params), geom$hidden_params, stat$hidden_params)
-  )
-  dot_params_description = rd_slabinterval_params(geom, include_only = dot_params, as_bullets = TRUE)
-
   if (length(example_layers) > 0) {
     example_layers = paste0(" +\n  ", paste0(example_layers, collapse = " +\n  "))
   }
@@ -230,15 +222,12 @@ stat_slabinterval(', paste0(collapse = ',', '\n  ', c(
 '),
     '@inheritParams stat_slabinterval',
     '@inheritParams geom_slabinterval',
-    paste0('@param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-    to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
-    parameters to the paired geom/stat. When paired with the default geom, [geom_', geom_name, '()],
-    these include:', paste0(dot_params_description, collapse = '')),
+    rd_slabinterval_params(geom_name, stat, as_dots = TRUE),
     '@template details-x-y-xdist-ydist',
     '@return A [ggplot2::Stat] representing a ', chart_type, ' geometry which can
      be added to a [ggplot()] object.',
-    rd_slabinterval_computed_variables(),
-    rd_slabinterval_aesthetics(geom, paste0("geom_", geom_name), stat),
+    rd_slabinterval_computed_variables(stat),
+    rd_slabinterval_aesthetics(geom_name, stat),
     '@seealso',
     paste0('See [geom_', geom_name, '()] for the geom underlying this stat.\n'),
     'See [stat_slabinterval()] for the stat this shortcut is based on.\n',
@@ -274,8 +263,8 @@ dist_df %>%
   )
 }
 
-rd_slabinterval_computed_variables = function() {
-  out = '@section Computed Variables:
+rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
+  out = paste0('@section Computed Variables:
 The following variables are computed by this stat and made available for
 use in aesthetic specifications ([aes()]) using the [stat()] or [after_stat()]
 functions:
@@ -285,20 +274,24 @@ functions:
 - `xmax` or `ymax`: For intervals, the upper end of the interval from the interval function.
 - `.width`: For intervals, the interval width as a numeric value in `[0, 1]`.
 - `level`: For intervals, the interval width as an ordered factor.
--  `f`: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+',
+    if (isTRUE(stat$default_params$show_slab)) {
+'-  `f`: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
   determined by `slab_type`.
 - `pdf`: For slabs, the probability density function.
 - `cdf`: For slabs, the cumulative distribution function.
 - `n`: For slabs, the number of data points summarized into that slab. If the slab was created from
   an analytical distribution via the `xdist`, `ydist`, or `dist` aesthetic, `n` will be `Inf`.
-'
+'})
 
   out
 }
 
 #' Provides documentation of params for slabinterval geoms
 #' @noRd
-rd_slabinterval_params = function(geom = GeomSlabinterval, include_only = NA, as_bullets = FALSE) {
+rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_dots = FALSE) {
+  geom = get(paste0("Geom", title_case(geom_name)))
+
   params = list(
     orientation =
 'Whether this geom is drawn horizontally (`"horizontal"`) or
@@ -352,20 +345,43 @@ thickest interval line. If you wish to specify point sizes directly, you can als
 aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
 specified with that aesthetic will not be adjusted using `fatten_point`.
 ',
+    step = 'Should the line/ribbon be drawn as a step function? One of: `FALSE` (do not draw as a step
+function, the default), `TRUE` (draw a step function using the `"mid"` approach), `"mid"`
+(draw steps midway between adjacent x values), `"hv"` (draw horizontal-then-vertical steps), `"vh"`
+(draw as vertical-then-horizontal steps). `TRUE` is an alias for `"mid"` because for a step function with
+ribbons, `"mid"` is probably what you want (for the other two step approaches the ribbons at either the
+very first or very last x value will not be visible).',
     show_slab = 'Should the slab portion of the geom be drawn?',
     show_point = 'Should the point portion of the geom be drawn?',
-    show_interval = 'Should the interval portion of the geom be drawn?'
+    show_interval = 'Should the interval portion of the geom be drawn?',
+    na.rm = 'If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
+values are silently removed.'
   )
 
-  if (!isTRUE(is.na(include_only))) params = params[include_only]
+  # filter out hidden params or ones defined in the stat
+  param_names = setdiff(
+    names(geom$default_params),
+    c(names(stat$default_params), geom$hidden_params, stat$hidden_params)
+  )
+  params = params[param_names]
+
+  missing_docs = sapply(params, is.null)
+  if (any(missing_docs)) {
+    stop("Missing docs for params: ", paste0(param_names[missing_docs], collapse = ", "))
+  }
 
   if (length(params)) {
-    if (as_bullets) {
+    if (as_dots) {
+      paste0('@param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
+        to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+        parameters to the paired geom/stat. When paired with the default geom, [geom_', geom_name, '()],
+        these include:',
       paste0(
         '    \\describe{',
         paste0('\\item{\\code{', names(params), '}}{', params, '}'),
-        '}\n'
-      )
+        '}\n',
+        collapse = ''
+      ))
     } else {
       paste0('@param ', names(params), ' ', params)
     }
@@ -388,7 +404,9 @@ rd_aesthetics = function(aes_docs, include_only) {
 
 #' Provides documentation of aesthetics for slabintervals
 #' @noRd
-rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom_slabinterval", stat = NULL) {
+rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL) {
+  geom = get(paste0("Geom", title_case(geom_name)))
+
   # build docs
   out = c(
     "@section Aesthetics:",
@@ -422,7 +440,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     out = c(out,
       "These `stat`s support the following aesthetics:",
       rd_aesthetics(stat_aes, stat$aesthetics()),
-      paste0("In addition, in their default configuration (paired with [", geom_name, "()]) ",
+      paste0("In addition, in their default configuration (paired with [geom_", geom_name, "()]) ",
         "the following aesthetics are supported by the underlying geom:\n")
     )
   } else {

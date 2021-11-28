@@ -2,7 +2,7 @@
 % Please edit documentation in R/stat_dist_slabinterval.R
 \name{stat_slabinterval}
 \alias{stat_slabinterval}
-\title{Distribution + interval plots for sample data and analytical distributions (ggplot stat)}
+\title{Slab + interval plots for sample data and analytical distributions (ggplot stat)}
 \usage{
 stat_slabinterval(
   mapping = NULL,
@@ -56,7 +56,42 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat (e.g. \code{\link[=geom_slabinterval]{geom_slabinterval()}}).}
+parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_slabinterval]{geom_slabinterval()}},
+these include:    \describe{\item{\code{normalize}}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
+(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
+panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
+the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
+opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
+groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
+normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).
+}}
+\describe{\item{\code{fill_type}}{What type of fill to use when the fill color or alpha varies within a slab. The default,
+\code{"segments"}, breaks up the slab geometry into segments for each unique combination of fill color and
+alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
+but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
+like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{\link[=linearGradient]{linearGradient()}} is used to
+create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
+R > 4.1 and is not yet supported on all graphics devices.
+}}
+\describe{\item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)
+}}
+\describe{\item{\code{interval_size_range}}{(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of \code{\link[=scale_size_continuous]{scale_size_continuous()}}, which give sizes
+with a range of \code{c(1, 6)}. The \code{interval_size_domain} value indicates the input domain of raw size values
+(typically this should be equal to the value of the \code{range} argument of the \code{\link[=scale_size_continuous]{scale_size_continuous()}}
+function), and \code{interval_size_range} indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
+as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
+aesthetics; see \link{scales}.
+}}
+\describe{\item{\code{fatten_point}}{A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
+aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
+specified with that aesthetic will not be adjusted using \code{fatten_point}.
+}}}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
@@ -138,7 +173,7 @@ A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a slab or combined 
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-Stats for computing distribution functions (densities or CDFs) + intervals for use with
+"Meta" stat for computing distribution functions (densities or CDFs) + intervals for use with
 \code{\link[=geom_slabinterval]{geom_slabinterval()}}. Useful for creating eye plots, half-eye plots, CCDF bar plots,
 gradient plots, histograms, and more. Sample data can be supplied to the \code{x} and \code{y}
 aesthetics or analytical distributions (in a variety of formats) can be supplied to the
@@ -147,14 +182,14 @@ See \strong{Details}.
 }
 \details{
 A highly configurable stat for generating a variety of plots that combine a "slab"
-that describes a distribution plus an interval. Several "shortcut" stats are provided
+that describes a distribution plus a point summary and any number of intervals.
+Several "shortcut" stats are provided
 which combine multiple options to create useful geoms, particularly \emph{eye plots}
-(a combination of a violin plot and interval), \emph{half-eye plots} (a density plus interval),
-and \emph{CCDF bar plots} (a complementary CDF plus interval).
+(a violin plot of density plus interval), \emph{half-eye plots} (a density plot plus interval),
+\emph{CCDF bar plots} (a complementary CDF plus interval), and \emph{gradient plots}
+(a density encoded in color alpha plus interval).
 
-The shortcut stat names follow the pattern \code{stat_[name]}.
-
-Stats include:
+The shortcut stats include:
 \itemize{
 \item \code{\link[=stat_eye]{stat_eye()}}: Eye plots (violin + interval)
 \item \code{\link[=stat_halfeye]{stat_halfeye()}}: Half-eye plots (density + interval)

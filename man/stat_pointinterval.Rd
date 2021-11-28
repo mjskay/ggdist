@@ -160,12 +160,6 @@ For intervals, the point summary from the interval function. Whether it is \code
 \item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
 \item \code{.width}: For intervals, the interval width as a numeric value in \verb{[0, 1]}.
 \item \code{level}: For intervals, the interval width as an ordered factor.
-\item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-determined by \code{slab_type}.
-\item \code{pdf}: For slabs, the probability density function.
-\item \code{cdf}: For slabs, the cumulative distribution function.
-\item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
-an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
 }
 }
 

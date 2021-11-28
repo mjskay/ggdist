@@ -53,7 +53,7 @@ function, the default), \code{TRUE} (draw a step function using the \code{"mid"}
 (draw steps midway between adjacent x values), \code{"hv"} (draw horizontal-then-vertical steps), \code{"vh"}
 (draw as vertical-then-horizontal steps). \code{TRUE} is an alias for \code{"mid"} because for a step function with
 ribbons, \code{"mid"} is probably what you want (for the other two step approaches the ribbons at either the
-vert first or vert last x value will not be visible).}
+very first or very last x value will not be visible).}
 
 \item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
 vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
@@ -67,8 +67,8 @@ ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias 
 scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
 
-\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
-a warning. If \code{TRUE}, missing values are silently removed.}
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
+values are silently removed.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.

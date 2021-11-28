@@ -13,11 +13,9 @@
 #' [point_interval()] function.
 #'
 #' @template details-x-y-xdist-ydist
-#' @inheritParams stat_interval
-#' @inheritParams stat_slabinterval
-#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
-#' parameters to the paired geom/stat (e.g. [geom_lineribbon()]).
+#' @eval rd_slabinterval_computed_variables(stat = StatLineribbon)
+#' @eval rd_slabinterval_params("lineribbon", StatLineribbon, as_dots = TRUE)
+#' @inheritParams stat_pointinterval
 #' @param geom Use to override the default connection between
 #' `geom_lineribbon` and `stat_lineribbon`.
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics

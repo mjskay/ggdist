@@ -208,7 +208,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 #'
 #' @template details-x-y-xdist-ydist
-#' @eval rd_slabinterval_aesthetics(geom = GeomDotsinterval, geom_name = "geom_dotsinterval", stat = StatDotsinterval)
+#' @eval rd_slabinterval_aesthetics("dotsinterval", stat = StatDotsinterval)
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_slabinterval
 #' @author Matthew Kay

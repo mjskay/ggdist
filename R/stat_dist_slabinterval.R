@@ -199,9 +199,9 @@ compute_interval_dist = function(
 
 # stat_slabinterval --------------------------------------------------
 
-#' Distribution + interval plots for sample data and analytical distributions (ggplot stat)
+#' Slab + interval plots for sample data and analytical distributions (ggplot stat)
 #'
-#' Stats for computing distribution functions (densities or CDFs) + intervals for use with
+#' "Meta" stat for computing distribution functions (densities or CDFs) + intervals for use with
 #' [geom_slabinterval()]. Useful for creating eye plots, half-eye plots, CCDF bar plots,
 #' gradient plots, histograms, and more. Sample data can be supplied to the `x` and `y`
 #' aesthetics or analytical distributions (in a variety of formats) can be supplied to the
@@ -209,14 +209,14 @@ compute_interval_dist = function(
 #' See **Details**.
 #'
 #' A highly configurable stat for generating a variety of plots that combine a "slab"
-#' that describes a distribution plus an interval. Several "shortcut" stats are provided
+#' that describes a distribution plus a point summary and any number of intervals.
+#' Several "shortcut" stats are provided
 #' which combine multiple options to create useful geoms, particularly *eye plots*
-#' (a combination of a violin plot and interval), *half-eye plots* (a density plus interval),
-#' and *CCDF bar plots* (a complementary CDF plus interval).
+#' (a violin plot of density plus interval), *half-eye plots* (a density plot plus interval),
+#' *CCDF bar plots* (a complementary CDF plus interval), and *gradient plots*
+#' (a density encoded in color alpha plus interval).
 #'
-#' The shortcut stat names follow the pattern `stat_[name]`.
-#'
-#' Stats include:
+#' The shortcut stats include:
 #'
 #'  - [stat_eye()]: Eye plots (violin + interval)
 #'  - [stat_halfeye()]: Half-eye plots (density + interval)
@@ -229,8 +229,9 @@ compute_interval_dist = function(
 #'  - [stat_interval()]: Interval plots
 #'
 #' @template details-x-y-xdist-ydist
-#' @eval rd_slabinterval_computed_variables()
+#' @eval rd_slabinterval_computed_variables(stat = StatSlabinterval)
 #' @eval rd_slabinterval_aesthetics(stat = StatSlabinterval)
+#' @eval rd_slabinterval_params(stat = StatSlabinterval, as_dots = TRUE)
 #'
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
@@ -263,9 +264,6 @@ compute_interval_dist = function(
 #' will not be wider than these (but may be narrower). Use `NA` to leave a limit alone; e.g.
 #' `limits = c(0, NA)` will ensure that the lower limit does not go below 0, but let the upper limit
 #' be determined by either `p_limits` or the scale settings.
-#' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
-#' parameters to the paired geom/stat (e.g. [geom_slabinterval()]).
 #' @param n Number of points at which to evaluate the function that defines the slab.
 #' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
 #'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family

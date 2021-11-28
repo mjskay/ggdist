@@ -47,7 +47,13 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat (e.g. \code{\link[=geom_lineribbon]{geom_lineribbon()}}).}
+parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_lineribbon]{geom_lineribbon()}},
+these include:    \describe{\item{\code{step}}{Should the line/ribbon be drawn as a step function? One of: \code{FALSE} (do not draw as a step
+function, the default), \code{TRUE} (draw a step function using the \code{"mid"} approach), \code{"mid"}
+(draw steps midway between adjacent x values), \code{"hv"} (draw horizontal-then-vertical steps), \code{"vh"}
+(draw as vertical-then-horizontal steps). \code{TRUE} is an alias for \code{"mid"} because for a step function with
+ribbons, \code{"mid"} is probably what you want (for the other two step approaches the ribbons at either the
+very first or very last x value will not be visible).}}}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
@@ -125,6 +131,21 @@ produced by other packages (like the \code{brms::get_prior} function in brms); t
 of those functions.
 }
 }
+\section{Computed Variables}{
+
+The following variables are computed by this stat and made available for
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
+functions:
+\itemize{
+\item \code{x} or \code{y}: For slabs, the input values to the slab function.
+For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
+\item \code{xmin} or \code{ymin}: For intervals, the lower end of the interval from the interval function.
+\item \code{xmax} or \code{ymax}: For intervals, the upper end of the interval from the interval function.
+\item \code{.width}: For intervals, the interval width as a numeric value in \verb{[0, 1]}.
+\item \code{level}: For intervals, the interval width as an ordered factor.
+}
+}
+
 \examples{
 
 library(dplyr)

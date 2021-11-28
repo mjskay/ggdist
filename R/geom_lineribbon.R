@@ -22,27 +22,11 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' Specifically, `geom_lineribbon` acts as if its default aesthetics are
 #' `aes(fill = forcats::fct_rev(ordered(.width)))`.
 #'
+#' @eval rd_slabinterval_params("lineribbon")
 #' @inheritParams ggplot2::geom_line
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
 #' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
 #' parameters to the paired geom/stat.
-#' @param step Should the line/ribbon be drawn as a step function? One of: `FALSE` (do not draw as a step
-#' function, the default), `TRUE` (draw a step function using the `"mid"` approach), `"mid"`
-#' (draw steps midway between adjacent x values), `"hv"` (draw horizontal-then-vertical steps), `"vh"`
-#' (draw as vertical-then-horizontal steps). `TRUE` is an alias for `"mid"` because for a step function with
-#' ribbons, `"mid"` is probably what you want (for the other two step approaches the ribbons at either the
-#' vert first or vert last x value will not be visible).
-#' @param orientation Whether this geom is drawn horizontally (`"horizontal"`) or
-#' vertically (`"vertical"`). The default, `NA`, automatically detects the orientation based on how the
-#' aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-#' the geom uses the `y` (resp. `x`) aesthetic to identify different groups, then for each group uses
-#' the `x` (resp. `y`) aesthetic and the `thickness` aesthetic to draw a function as an slab, and draws
-#' points and intervals horizontally (resp. vertically) using the `xmin`, `x`, and `xmax` (resp.
-#' `ymin`, `y`, and `ymax`) aesthetics. For compatibility with the base
-#' ggplot naming scheme for `orientation`, `"x"` can be used as an alias for `"vertical"` and `"y"` as an alias for
-#' `"horizontal"` (tidybayes had an `orientation` parameter before ggplot did, and I think the tidybayes naming
-#' scheme is more intuitive: `"x"` and `"y"` are not orientations and their mapping to orientations is, in my
-#' opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
 #' @return A [ggplot2::Geom] representing a combined line+uncertainty ribbon geometry which can
 #' be added to a [ggplot()] object.
 #' @author Matthew Kay

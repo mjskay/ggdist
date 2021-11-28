@@ -247,8 +247,6 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
 #' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
 #' parameters to the paired geom/stat.
-#' @param na.rm	If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
-#' values are silently removed.
 #' @return A [ggplot2::Geom] representing a slab or combined slab+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @author Matthew Kay
