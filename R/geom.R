@@ -202,6 +202,7 @@ rd_shortcut_stat = function(stat_name, chart_type, geom_name = stat_name, exampl
     names(geom$default_params),
     c(names(stat$default_params), geom$hidden_params, stat$hidden_params)
   )
+  dot_params_description = rd_slabinterval_params(geom, include_only = dot_params, as_bullets = TRUE)
 
   if (length(example_layers) > 0) {
     example_layers = paste0(" +\n  ", paste0(example_layers, collapse = " +\n  "))
@@ -226,6 +227,10 @@ stat_slabinterval(\n',
     rd_slabinterval_aesthetics(geom, paste0("geom_", geom_name), stat),
     '@inheritParams stat_slabinterval',
     '@inheritParams geom_slabinterval',
+    paste0('@param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
+    to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+    parameters to the paired geom/stat. When paired with the default geom, `geom_', geom_name, '()`,
+    these include:', paste0(dot_params_description, collapse = '')),
     '@return A [ggplot2::Stat] representing a ', chart_type, ' geometry which can
      be added to a [ggplot()] object.',
     '@seealso',
@@ -247,7 +252,7 @@ df = data.frame(
 )
 df %>%
   ggplot(aes(x = value, y = group)) +
-  stat_interval()', example_layers, '
+  stat_', stat_name, '()', example_layers, '
 
 # ON ANALYTICAL DISTRIBUTIONS
 dist_df = data.frame(
@@ -259,7 +264,7 @@ dist_df = data.frame(
 # and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
 dist_df %>%
   ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
-  stat_interval()', example_layers)
+  stat_', stat_name, '()', example_layers)
   )
 }
 
@@ -284,6 +289,83 @@ functions:
 
   out
 }
+
+#' Provides documentation of params for slabinterval geoms
+#' @noRd
+rd_slabinterval_params = function(geom = GeomSlabinterval, include_only = NA, as_bullets = FALSE) {
+  params = list(
+    orientation =
+'Whether this geom is drawn horizontally (`"horizontal"`) or
+vertically (`"vertical"`). The default, `NA`, automatically detects the orientation based on how the
+aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
+the geom uses the `y` (resp. `x`) aesthetic to identify different groups, then for each group uses
+the `x` (resp. `y`) aesthetic and the `thickness` aesthetic to draw a function as an slab, and draws
+points and intervals horizontally (resp. vertically) using the `xmin`, `x`, and `xmax` (resp.
+`ymin`, `y`, and `ymax`) aesthetics. For compatibility with the base
+ggplot naming scheme for `orientation`, `"x"` can be used as an alias for `"vertical"` and `"y"` as an alias for
+`"horizontal"` (tidybayes had an `orientation` parameter before ggplot did, and I think the tidybayes naming
+scheme is more intuitive: `"x"` and `"y"` are not orientations and their mapping to orientations is, in my
+opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
+',
+    normalize =
+'How to normalize heights of functions input to the `thickness` aesthetic. If `"all"`
+(the default), normalize so that the maximum height across all data is `1`; if `"panels"`, normalize within
+panels so that the maximum height in each panel is `1`; if `"xy"`, normalize within
+the x/y axis opposite the `orientation` of this geom so that the maximum height at each value of the
+opposite axis is `1`; if `"groups"`, normalize within values of the opposite axis and within
+groups so that the maximum height in each group is `1`; if `"none"`, values are taken as is with no
+normalization (this should probably only be used with functions whose values are in \\[0,1\\], such as CDFs).
+',
+    fill_type = 'What type of fill to use when the fill color or alpha varies within a slab. The default,
+`"segments"`, breaks up the slab geometry into segments for each unique combination of fill color and
+alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
+but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
+like in [`stat_gradientinterval()`]). When `fill_type == "gradient"`, a `linearGradient()` is used to
+create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
+R > 4.1 and is not yet supported on all graphics devices.
+',
+    interval_size_domain =
+'The minimum and maximum of the values of the size aesthetic that will be translated into actual
+sizes for intervals drawn according to `interval_size_range` (see the documentation for that argument.)
+',
+    interval_size_range =
+'(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
+they tend to be too thick when using the default settings of [scale_size_continuous()], which give sizes
+with a range of `c(1, 6)`. The `interval_size_domain` value indicates the input domain of raw size values
+(typically this should be equal to the value of the `range` argument of the [scale_size_continuous()]
+function), and `interval_size_range` indicates the desired output range of the size values (the min and max of
+the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
+as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+size of the interval or points separately, you can instead use the `interval_size` or `point_size`
+aesthetics; see [scales].
+',
+    fatten_point =
+'A multiplicative factor used to adjust the size of the point relative to the size of the
+thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
+aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
+specified with that aesthetic will not be adjusted using `fatten_point`.
+',
+    show_slab = 'Should the slab portion of the geom be drawn?',
+    show_point = 'Should the point portion of the geom be drawn?',
+    show_interval = 'Should the interval portion of the geom be drawn?'
+  )
+
+  if (!isTRUE(is.na(include_only))) params = params[include_only]
+
+  if (length(params)) {
+    if (as_bullets) {
+      paste0(
+        '    \\describe{',
+        paste0('\\item{\\code{', names(params), '}}{', params, '}'),
+        '}\n'
+      )
+    } else {
+      paste0('@param ', names(params), ' ', params)
+    }
+  }
+}
+
 
 #' Given a names list of aesthetic / aesthetic doc pairs, output a list of them
 #' for use in docs. Used by rd_slabinterval_aesthetics
@@ -373,7 +455,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
        slab portion of the geometry and rows with `datatype = "interval"` target the interval portion of
        the geometry. This is set automatically when using ggdist `stat`s.'
   )
-  if (geom$default_params$show_slab) {
+  if (isTRUE(geom$default_params$show_slab)) {
     out = c(out, "**Slab-specific aesthetics**", rd_aesthetics(slab_aes, geom$aesthetics()))
   }
 
@@ -384,7 +466,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     ymin = 'Lower end of the interval sub-geometry (if `orientation = "vertical"`).',
     ymax = 'Upper end of the interval sub-geometry (if `orientation = "vertical"`).'
   )
-  if (geom$default_params$show_interval) {
+  if (isTRUE(geom$default_params$show_interval)) {
     out = c(out, "**Interval-specific aesthetics**", rd_aesthetics(int_aes, geom$aesthetics()))
   }
 
@@ -392,7 +474,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
   point_aes = list(
     shape = 'Shape type used to draw the **point** sub-geometry.'
   )
-  if (geom$default_params$show_point) {
+  if (isTRUE(geom$default_params$show_point)) {
     out = c(out, "**Point-specific aesthetics**", rd_aesthetics(point_aes, geom$aesthetics()))
   }
 
@@ -437,7 +519,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     slab_linetype = 'Override for `linetype`: the line type of the outline of the slab.',
     slab_shape = 'Override for `shape`: the shape of the dots used to draw the dotplot slab.'
   )
-  if (geom$default_params$show_slab) {
+  if (isTRUE(geom$default_params$show_slab)) {
     out = c(out, "**Slab-specific color/line override aesthetics**", rd_aesthetics(slab_override_aes, geom$aesthetics()))
   }
 
@@ -448,7 +530,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     interval_size = 'Override for `size`: the line width of the interval.',
     interval_linetype = 'Override for `linetype`: the line type of the interval.'
   )
-  if (geom$default_params$show_interval) {
+  if (isTRUE(geom$default_params$show_interval)) {
     out = c(out, "**Interval-specific color/line override aesthetics**", rd_aesthetics(int_override_aes, geom$aesthetics()))
   }
 
@@ -459,7 +541,7 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     point_alpha = 'Override for `alpha`: the opacity of the point.',
     point_size = 'Override for `size`: the size of the point.'
   )
-  if (geom$default_params$show_point) {
+  if (isTRUE(geom$default_params$show_point)) {
     out = c(out, "**Point-specific color/line override aesthetics**", rd_aesthetics(point_override_aes, geom$aesthetics()))
   }
 

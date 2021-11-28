@@ -13,7 +13,6 @@ geom_interval(
   orientation = NA,
   interval_size_range = c(1, 6),
   interval_size_domain = c(1, 6),
-  fatten_point = 1.8,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -75,11 +74,6 @@ aesthetics; see \link{scales}.}
 
 \item{interval_size_domain}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
-
-\item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
