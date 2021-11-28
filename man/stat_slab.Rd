@@ -46,8 +46,7 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
+\item{geom}{Use to override the default connection between \code{\link[=stat_slab]{stat_slab()}} and \code{\link[=geom_slab]{geom_slab()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
@@ -142,9 +141,13 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_slab]{geom_slab()}} for creating slab (ridge) plots.
-Roughly equivalent to:\preformatted{stat_slabinterval(
+
+Roughly equivalent to:
+
+\preformatted{stat_slabinterval(
   aes(size = NULL),
-  geom = "slab"
+  geom = "slab",
+  show.legend = NA
 )
 }
 }

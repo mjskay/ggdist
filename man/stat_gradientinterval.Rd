@@ -48,8 +48,7 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
+\item{geom}{Use to override the default connection between \code{\link[=stat_gradientinterval]{stat_gradientinterval()}} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
@@ -176,8 +175,12 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_slabinterval]{geom_slabinterval()}} for creating gradient + interval plots.
-Roughly equivalent to:\preformatted{stat_slabinterval(
-  aes(justification = stat(0.5), thickness = stat(1), slab_alpha = stat(f))
+
+Roughly equivalent to:
+
+\preformatted{stat_slabinterval(
+  aes(justification = stat(0.5), thickness = stat(1), slab_alpha = stat(f)),
+  show.legend = c(size = FALSE, slab_alpha = FALSE)
 )
 }
 

@@ -6,18 +6,22 @@
 
 #' Line + multiple probability ribbon plots (ggplot stat)
 #'
+#' @description
 #' A combination of [stat_slabinterval()] and [geom_lineribbon()] with sensible defaults.
 #' While [geom_lineribbon()] is intended for use on data frames that have already been summarized using
 #' a [point_interval()] function, [stat_lineribbon()] is intended for use directly on data
 #' frames of draws or of analytical distributions, and will perform the summarization using a
 #' [point_interval()] function.
 #'
+#' Roughly equivalent to:
+#' @eval rd_shortcut_stat("lineribbon")
+#'
 #' @template details-x-y-xdist-ydist
 #' @eval rd_slabinterval_computed_variables(stat = StatLineribbon)
 #' @eval rd_slabinterval_params("lineribbon", StatLineribbon, as_dots = TRUE)
 #' @inheritParams stat_pointinterval
 #' @param geom Use to override the default connection between
-#' `geom_lineribbon` and `stat_lineribbon`.
+#' [stat_lineribbon()] and [geom_lineribbon()].
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics
 #' are mapped. `FALSE` never includes, and `TRUE` always includes.
 #' @return A [ggplot2::Stat] representing a combined line+uncertainty ribbon geometry which can

@@ -235,7 +235,7 @@ compute_interval_dist = function(
 #'
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
-#' `stat_slabinterval` and [geom_slabinterval()]
+#' [stat_slabinterval()] and [geom_slabinterval()]
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
 #' cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`).
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
@@ -509,7 +509,7 @@ stat_slabinterval = make_stat(StatSlabinterval, geom = "slabinterval")
 # shortcut stats ----------------------------------------------------------
 
 StatHalfeye = StatSlabinterval
-#' @eval rd_shortcut_stat("halfeye", "half-eye (density + interval)", geom_name = "slabinterval", describe = FALSE)
+#' @eval rd_slabinterval_shortcut_stat("halfeye", "half-eye (density + interval)", geom_name = "slabinterval", describe = FALSE)
 #' @description
 #' Equivalent to [stat_slabinterval()], whose default settings create half-eye (density + interval) plots.
 #' @export
@@ -520,7 +520,7 @@ StatEye = ggproto("StatEye", StatSlabinterval,
     side = stat("both"),
   ), StatSlabinterval$default_aes)
 )
-#' @eval rd_shortcut_stat("eye", "eye (violin + interval)", geom_name = "slabinterval")
+#' @eval rd_slabinterval_shortcut_stat("eye", "eye (violin + interval)", geom_name = "slabinterval")
 #' @export
 stat_eye = make_stat(StatEye, geom = "slabinterval")
 
@@ -536,7 +536,7 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
     expand = TRUE
   ), StatSlabinterval$default_params)
 )
-#' @eval rd_shortcut_stat("ccdfinterval", "CCDF bar", geom_name = "slabinterval", example_layers = "expand_limits(x = 0)")
+#' @eval rd_slabinterval_shortcut_stat("ccdfinterval", "CCDF bar", geom_name = "slabinterval", example_layers = "expand_limits(x = 0)")
 #' @export
 stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 
@@ -545,7 +545,7 @@ StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
     slab_type = "cdf"
   ), StatCcdfinterval$default_params)
 )
-#' @eval rd_shortcut_stat("cdfinterval", "CDF bar", geom_name = "slabinterval")
+#' @eval rd_slabinterval_shortcut_stat("cdfinterval", "CDF bar", geom_name = "slabinterval")
 #' @export
 stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
 
@@ -560,7 +560,7 @@ StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
     show.legend = c(size = FALSE, slab_alpha = FALSE)
   ), StatSlabinterval$layer_args)
 )
-#' @eval rd_shortcut_stat("gradientinterval", "gradient + interval", geom_name = "slabinterval")
+#' @eval rd_slabinterval_shortcut_stat("gradientinterval", "gradient + interval", geom_name = "slabinterval")
 #' @description
 #' If your graphics device supports it, it is recommended to use this stat
 #' with `fill_type = "gradient"` (see the description of that parameter).
@@ -572,7 +572,7 @@ StatHistinterval = ggproto("StatHistinterval", StatSlabinterval,
     slab_type = "histogram"
   ), StatSlabinterval$default_params)
 )
-#' @eval rd_shortcut_stat("histinterval", "histogram + interval", geom_name = "slabinterval")
+#' @eval rd_slabinterval_shortcut_stat("histinterval", "histogram + interval", geom_name = "slabinterval")
 #' @export
 stat_histinterval = make_stat(StatHistinterval, geom = "slabinterval")
 
@@ -592,6 +592,6 @@ StatSlab = ggproto("StatSlab", StatSlabinterval,
   ), StatSlabinterval$hidden_params)
 )
 StatSlab$default_aes$size = NULL
-#' @eval rd_shortcut_stat("slab", "slab (ridge)", geom_name = "slab")
+#' @eval rd_slabinterval_shortcut_stat("slab", "slab (ridge)", geom_name = "slab")
 #' @export
 stat_slab = make_stat(StatSlab, geom = "slab")

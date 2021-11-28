@@ -23,6 +23,6 @@ StatPointinterval = ggproto("StatPointinterval", StatSlabinterval,
   ), StatSlabinterval$hidden_params)
 )
 
-#' @eval rd_shortcut_stat("pointinterval", "point + multiple-interval")
+#' @eval rd_slabinterval_shortcut_stat("pointinterval", "point + multiple-interval")
 #' @export
 stat_pointinterval = make_stat(StatPointinterval, geom = "pointinterval")

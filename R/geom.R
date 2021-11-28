@@ -164,12 +164,7 @@ title_case = function(x) {
   x
 }
 
-rd_shortcut_stat = function(
-  stat_name, chart_type,
-  geom_name = stat_name,
-  example_layers = NULL,
-  describe = TRUE
-) {
+rd_shortcut_stat = function(stat_name, geom_name = stat_name) {
   stat = get(paste0("Stat", title_case(stat_name)))
   geom = get(paste0("Geom", title_case(geom_name)))
 
@@ -200,6 +195,31 @@ rd_shortcut_stat = function(
     "default_params",
     exclude = c("show_point", "show_interval")
   )
+  changed_args = changed_values(
+    "layer_args"
+  )
+
+paste0('@description
+```
+stat_slabinterval(', paste0(collapse = ',', '\n  ', c(
+  if (length(changed_aes)) paste0('aes(', changed_aes, ')'),
+  if (geom_name != "slabinterval") paste0('geom = "', geom_name, '"'),
+  if (length(changed_params)) changed_params,
+  if (length(changed_args)) changed_args
+)), '
+)
+```
+')
+}
+
+rd_slabinterval_shortcut_stat = function(
+  stat_name, chart_type,
+  geom_name = stat_name,
+  example_layers = NULL,
+  describe = TRUE
+) {
+  stat = get(paste0("Stat", title_case(stat_name)))
+  geom = get(paste0("Geom", title_case(geom_name)))
 
   if (length(example_layers) > 0) {
     example_layers = paste0(" +\n  ", paste0(example_layers, collapse = " +\n  "))
@@ -207,22 +227,19 @@ rd_shortcut_stat = function(
 
   c(
     paste0('@title ', title_case(chart_type), ' plot (shortcut stat)'),
-    if (describe) paste0('@description
+    if (describe) c(
+paste0('@description
 Shortcut version of [stat_slabinterval()] with [geom_', geom_name, '()] for creating ', chart_type, ' plots.
-Roughly equivalent to:
 
-```
-stat_slabinterval(', paste0(collapse = ',', '\n  ', c(
-  if (length(changed_aes)) paste0('aes(', changed_aes, ')'),
-  if (geom_name != "slabinterval") paste0('geom = "', geom_name, '"'),
-  if (length(changed_params)) changed_params
-)), '
-)
-```
-'),
+Roughly equivalent to:\n'),
+      rd_shortcut_stat(stat_name, geom_name)
+    ),
     '@inheritParams stat_slabinterval',
     '@inheritParams geom_slabinterval',
     rd_slabinterval_params(geom_name, stat, as_dots = TRUE),
+    paste0('@param geom Use to override the default connection between [stat_',
+      stat_name, '()] and [geom_', geom_name, '()]'
+    ),
     '@template details-x-y-xdist-ydist',
     '@return A [ggplot2::Stat] representing a ', chart_type, ' geometry which can
      be added to a [ggplot()] object.',

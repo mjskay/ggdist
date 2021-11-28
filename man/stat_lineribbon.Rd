@@ -40,7 +40,7 @@ will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{geom}{Use to override the default connection between
-\code{geom_lineribbon} and \code{stat_lineribbon}.}
+\code{\link[=stat_lineribbon]{stat_lineribbon()}} and \code{\link[=geom_lineribbon]{geom_lineribbon()}}.}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
@@ -101,6 +101,16 @@ While \code{\link[=geom_lineribbon]{geom_lineribbon()}} is intended for use on d
 a \code{\link[=point_interval]{point_interval()}} function, \code{\link[=stat_lineribbon]{stat_lineribbon()}} is intended for use directly on data
 frames of draws or of analytical distributions, and will perform the summarization using a
 \code{\link[=point_interval]{point_interval()}} function.
+
+Roughly equivalent to:
+
+\preformatted{stat_slabinterval(
+  aes(group = stat(level), fill = stat(level), size = NULL),
+  geom = "lineribbon",
+  .width = c(0.5, 0.8, 0.95), show_slab = FALSE,
+  show.legend = NA
+)
+}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

@@ -39,8 +39,7 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
+\item{geom}{Use to override the default connection between \code{\link[=stat_pointinterval]{stat_pointinterval()}} and \code{\link[=geom_pointinterval]{geom_pointinterval()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
@@ -113,7 +112,10 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_pointinterval]{geom_pointinterval()}} for creating point + multiple-interval plots.
-Roughly equivalent to:\preformatted{stat_slabinterval(
+
+Roughly equivalent to:
+
+\preformatted{stat_slabinterval(
   geom = "pointinterval",
   show_slab = FALSE
 )

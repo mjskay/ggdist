@@ -194,7 +194,7 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{geom}{Use to override the default connection between
-\code{stat_slabinterval} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
+\code{\link[=stat_slabinterval]{stat_slabinterval()}} and \code{\link[=geom_slabinterval]{geom_slabinterval()}}}
 
 \item{quantiles}{Setting this to a value other than \code{NA}
 will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution

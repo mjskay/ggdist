@@ -27,6 +27,6 @@ StatInterval = ggproto("StatInterval", StatPointinterval,
 # instead of being removed
 StatInterval$default_aes$size = NULL
 
-#' @eval rd_shortcut_stat("interval", "multiple-interval", example_layers = "scale_color_brewer()")
+#' @eval rd_slabinterval_shortcut_stat("interval", "multiple-interval", example_layers = "scale_color_brewer()")
 #' @export
 stat_interval = make_stat(StatInterval, geom = "interval")
