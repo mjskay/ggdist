@@ -13,16 +13,16 @@ globalVariables(c("prior"))
 #'
 #' Parses simple string distribution specifications, like `"normal(0, 1)"`, into two columns of
 #' a data frame, suitable for use with the `dist` and `args` aesthetics of [stat_slabinterval()]
-#' and its shortcut stats (like `stat_halfeye()`). This format is output
-#' by `brms::get_prior()`, making it particularly useful for visualizing priors from
+#' and its shortcut stats (like [stat_halfeye()]). This format is output
+#' by [brms::get_prior()], making it particularly useful for visualizing priors from
 #' brms models.
 #'
-#' `parse_dist()` can be applied to character vectors or to a data frame + bare column name of the
+#' [parse_dist()] can be applied to character vectors or to a data frame + bare column name of the
 #' column to parse, and returns a data frame with `".dist"` and `".args"` columns added.
-#' `parse_dist()` uses `r_dist_name()` to translate distribution names into names recognized
+#' [parse_dist()] uses [r_dist_name()] to translate distribution names into names recognized
 #' by R.
 #'
-#' `r_dist_name()` takes a character vector of names and translates common names into R
+#' [r_dist_name()] takes a character vector of names and translates common names into R
 #' distribution names. Names are first made into valid R names using [make.names()],
 #' then translated (ignoring character case, `"."`, and `"_"`). Thus, `"lognormal"`,
 #' `"LogNormal"`, `"log_normal"`, `"log-Normal"`, and any number of other variants

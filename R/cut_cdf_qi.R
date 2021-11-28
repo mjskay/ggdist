@@ -29,7 +29,7 @@
 #'
 #' @seealso See [stat_slabinterval()] and
 #' its shortcut stats, which generate `cdf` aesthetics that can be used with
-#' `cut_cdf_qi()` to draw slabs colored by their intervals.
+#' [cut_cdf_qi()] to draw slabs colored by their intervals.
 #' @examples
 #'
 #' library(ggplot2)

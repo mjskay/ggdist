@@ -75,5 +75,5 @@ tibble(x = dist_normal(0, 1)) \%>\%
 \seealso{
 See \code{\link[=stat_slabinterval]{stat_slabinterval()}} and
 its shortcut stats, which generate \code{cdf} aesthetics that can be used with
-\code{cut_cdf_qi()} to draw slabs colored by their intervals.
+\code{\link[=cut_cdf_qi]{cut_cdf_qi()}} to draw slabs colored by their intervals.
 }

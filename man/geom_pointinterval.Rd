@@ -144,9 +144,9 @@ or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.
 \item \code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
 \code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.
 \item \code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
-scale to "ramp" to another color. See \code{scale_colour_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.
 \item \code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
-scale to "ramp" to another color. See \code{scale_fill_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.
 }
 \strong{Line aesthetics}
 \itemize{

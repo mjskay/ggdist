@@ -26,14 +26,14 @@ are not supplied; in that case, \code{justification} will be used along with
 \code{width} to determine the bounds of the object prior to dodging.}
 }
 \description{
-A justification-preserving variant of \code{ggplot2::position_dodge()} which preserves the
+A justification-preserving variant of \code{\link[ggplot2:position_dodge]{ggplot2::position_dodge()}} which preserves the
 vertical position of a geom while adjusting the horizontal position (or vice
-versa when in a horizontal orientation). Unlike \code{ggplot2::position_dodge()},
-\code{position_dodgejust()} attempts to preserve the "justification" of \code{x}
+versa when in a horizontal orientation). Unlike \code{\link[ggplot2:position_dodge]{ggplot2::position_dodge()}},
+\code{\link[=position_dodgejust]{position_dodgejust()}} attempts to preserve the "justification" of \code{x}
 positions relative to the bounds containing them (\code{xmin}/\code{xmax}) (or \code{y}
 positions relative to \code{ymin}/\code{ymax} when in a horizontal orientation). This
 makes it useful for dodging annotations to geoms and stats from the
-\code{geom_slabinterval()} family, which also preserve the justification of their
+\code{\link[=geom_slabinterval]{geom_slabinterval()}} family, which also preserve the justification of their
 intervals relative to their slabs when dodging.
 }
 \examples{

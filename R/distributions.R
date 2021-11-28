@@ -9,10 +9,10 @@
 
 #' Helper function to create pdf/cdf/quantile functions
 #' @param dist The distribution, either as a string (given the suffix to a
-#' p/q/d/r function set), \pkg{distributional} object, or `rvar()`
+#' p/q/d/r function set), \pkg{distributional} object, or [rvar()]
 #' @param prefix For strings, one of `"p"`, `"q"`, `"d"`, or `"r"`
 #' @param fun For \pkg{distributional} objects and `rvar`s, the function to apply (e.g.
-#' `pdf()`, `cdf()`, `quantile()`, or `generate()`).
+#' [`pdf`], [`cdf`], [`quantile`], or [`generate`]).
 #' @noRd
 distr_function = function(dist, prefix, fun) {
   UseMethod("distr_function")

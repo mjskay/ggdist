@@ -18,7 +18,7 @@
 #' @template param-dots-layout
 #' @template param-slab-side
 #' @param orientation Whether the dots are laid out horizontally or vertically.
-#' Follows the naming scheme of `geom_slabinterval()`:
+#' Follows the naming scheme of [geom_slabinterval()]:
 #'
 #'   - `"horizontal"` assumes the data values for the dotplot are in the `x`
 #'   variable and that dots will be stacked up in the `y` direction.
@@ -172,7 +172,7 @@ bin_dots = function(x, y, binwidth,
 #' using a Wilkinson-style dotplot algorithm the height of the tallest bin
 #' will be less than `maxheight`.
 #'
-#' This algorithm is used by `geom_dotsinterval()` (and its variants) to automatically
+#' This algorithm is used by [geom_dotsinterval()] (and its variants) to automatically
 #' select bin widths. Unless you are manually implementing you own dotplot [`grob`]
 #' or `geom`, you probably do not need to use this function directly
 #'

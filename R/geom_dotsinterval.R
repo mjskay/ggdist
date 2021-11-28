@@ -184,7 +184,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'
 #' Geoms and stats for creating dotplots that automatically determines a bin width that
 #' ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-#' generation of quantile dotplots using the `quantiles` argument to `stat_dotsinterval()`/`stat_dots()`.
+#' generation of quantile dotplots using the `quantiles` argument to [stat_dotsinterval()]/[stat_dots()].
 #' Generally follows the naming scheme and
 #' arguments of the [geom_slabinterval()] and [stat_slabinterval()] family of
 #' geoms and stats.
@@ -203,7 +203,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   `dotsinterval` family) or the `shape` or `slab_shape` aesthetic (when using the `dots` family)
 #' }
 #'
-#' `stat_dots()` and `stat_dotsinterval()`, when used with the `quantiles` argument,
+#' [stat_dots()] and [stat_dotsinterval()], when used with the `quantiles` argument,
 #' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
 #' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 #'
@@ -225,7 +225,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'     these bounds.
 #'
 #' If the value is numeric, it is assumed to be in units of data. The bin width
-#' (or its bounds) can also be specified using `unit()`, which may be useful if
+#' (or its bounds) can also be specified using [unit()], which may be useful if
 #' it is desired that the dots be a certain point size or a certain percentage of
 #' the width/height of the viewport. For example, `unit(0.1, "npc")` would make
 #' dots that are *exactly* 10% of the viewport size along whichever dimension the

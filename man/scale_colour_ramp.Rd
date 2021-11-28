@@ -49,8 +49,8 @@ scale_fill_ramp_discrete(..., aesthetics = "fill_ramp")
 \arguments{
 \item{from}{The color to ramp from. Corresponds to \code{0} on the scale.}
 
-\item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{scale_colour_ramp_discrete()},
-passes arguments to \code{\link[=discrete_scale]{discrete_scale()}}, \code{scale_colour_ramp_continuous()} passes arguments
+\item{...}{Arguments passed to underlying scale or guide functions. E.g. \code{\link[=scale_colour_ramp_discrete]{scale_colour_ramp_discrete()}},
+passes arguments to \code{\link[=discrete_scale]{discrete_scale()}}, \code{\link[=scale_colour_ramp_continuous]{scale_colour_ramp_continuous()}} passes arguments
 to \code{\link[=continuous_scale]{continuous_scale()}}. See those functions for more details.}
 
 \item{limits}{One of:

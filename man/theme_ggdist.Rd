@@ -33,7 +33,7 @@ It is currently based on \code{\link[ggplot2:ggtheme]{ggplot2::theme_light()}}.
 
 A word of warning: this theme may (and very likely will) change in the future as I tweak it to my taste.
 
-\code{theme_ggdist()} and \code{theme_tidybayes()} are aliases.
+\code{\link[=theme_ggdist]{theme_ggdist()}} and \code{\link[=theme_tidybayes]{theme_tidybayes()}} are aliases.
 }
 \examples{
 

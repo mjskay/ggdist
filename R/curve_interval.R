@@ -26,9 +26,9 @@
 #' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.
 #' This can be list columns.
 #' @param .along Which columns are the input values to the function describing the curve (e.g., the "x"
-#' values). Supports tidyselect syntax, as in `dplyr::select()`. Intervals are calculated jointly with
+#' values). Supports tidyselect syntax, as in [dplyr::select()]. Intervals are calculated jointly with
 #' respect to these variables, conditional on all other grouping variables in the data frame. The default
-#' (`NULL`) causes `curve_interval()` to use all grouping variables in the input data frame as the value
+#' (`NULL`) causes [curve_interval()] to use all grouping variables in the input data frame as the value
 #' for `.along`, which will generate the most conservative intervals. However, if you want to calculate
 #' intervals for some function `y = f(x)` conditional on some other variable(s) (say, conditional on a
 #' factor `g`), you would group by `g`, then use `.along = x` to calculate intervals jointly over `x`
@@ -87,7 +87,7 @@
 #' *arXiv e-print*.
 #' [arXiv:2007.05035](https://arxiv.org/abs/2007.05035)
 #'
-#' @seealso `point_interval()` for pointwise intervals. See `vignette("lineribbon")` for more examples
+#' @seealso [point_interval()] for pointwise intervals. See `vignette("lineribbon")` for more examples
 #' and discussion of the differences between pointwise and curvewise intervals.
 #' @examples
 #'

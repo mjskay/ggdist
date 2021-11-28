@@ -26,14 +26,14 @@
 
 #' Dodge overlapping objects side-to-side, preserving justification
 #'
-#' A justification-preserving variant of `ggplot2::position_dodge()` which preserves the
+#' A justification-preserving variant of [ggplot2::position_dodge()] which preserves the
 #' vertical position of a geom while adjusting the horizontal position (or vice
-#' versa when in a horizontal orientation). Unlike `ggplot2::position_dodge()`,
-#' `position_dodgejust()` attempts to preserve the "justification" of `x`
+#' versa when in a horizontal orientation). Unlike [ggplot2::position_dodge()],
+#' [position_dodgejust()] attempts to preserve the "justification" of `x`
 #' positions relative to the bounds containing them (`xmin`/`xmax`) (or `y`
 #' positions relative to `ymin`/`ymax` when in a horizontal orientation). This
 #' makes it useful for dodging annotations to geoms and stats from the
-#' `geom_slabinterval()` family, which also preserve the justification of their
+#' [geom_slabinterval()] family, which also preserve the justification of their
 #' intervals relative to their slabs when dodging.
 #'
 #' @inheritParams ggplot2::position_dodge

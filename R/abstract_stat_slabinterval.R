@@ -89,7 +89,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
   # columns `.width` (from the `.width` vector), `.value` (point summary) and
   #`.lower` and `.upper` (endpoints of the intervals, given the `.width`).
   # Default implementation uses the `point_interval` parameter (a
-  # `point_interval()` function) to compute summaries and intervals.
+  # [point_interval()] function) to compute summaries and intervals.
   # @param data The data frame of aesthetic values
   # @param trans the scale transformation object applied to the coordinate space
   # @param ... other stat parameters created by children of stat_slabinterval

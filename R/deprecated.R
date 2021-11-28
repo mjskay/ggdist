@@ -13,12 +13,12 @@
 #'
 #' @section Deprecated Arguments:
 #'
-#' Parameters for `stat_slabinterval()` and family deprecated as of ggdist 3.1 are:
+#' Parameters for [stat_slabinterval()] and family deprecated as of ggdist 3.1 are:
 #'
 #' - The `.prob` argument, which is a long-deprecated alias for `.width`, was
 #' removed in ggdist 3.1.
 #' - The `limits_function` argument: this was a parameter for determining the
-#' function to compute limits of the slab in `stat_slabinterval()` and its
+#' function to compute limits of the slab in [stat_slabinterval()] and its
 #' derived stats. This function is really an internal function only needed by
 #' subclasses of the base class, yet added a lot of noise to the documentation,
 #' so it was replaced with `AbstractStatSlabInterval$compute_limits()`.
@@ -26,7 +26,7 @@
 #' the `...` arguments to `AbstractStatSlabInterval$compute_limits()`; use
 #' these instead.
 #' - The `slab_function` argument: this was a parameter for determining the
-#' function to compute slabs in `stat_slabinterval()` and its
+#' function to compute slabs in [stat_slabinterval()] and its
 #' derived stats. This function is really an internal function only needed by
 #' subclasses of the base class, yet added a lot of noise to the documentation,
 #' so it was replaced with `AbstractStatSlabInterval$compute_slab()`.
@@ -34,7 +34,7 @@
 #' the `...` arguments to `AbstractStatSlabInterval$compute_slab()`; use
 #' these instead.
 #' - The `interval_function` and `fun.data` arguments: these were parameters for determining the
-#' function to compute intervals in `stat_slabinterval()` and its
+#' function to compute intervals in [stat_slabinterval()] and its
 #' derived stats. This function is really an internal function only needed by
 #' subclasses of the base class, yet added a lot of noise to the documentation,
 #' so it was replaced with `AbstractStatSlabInterval$compute_interval()`.
@@ -42,7 +42,7 @@
 #' a `point_interval` replace the value of the `point_interval` argument with
 #' a simple wrapper; e.g. `stat_halfeye(point_interval = \(...) point_interval(..., extra_arg = XXX))`
 #'
-#' Parameters for `geom_slabinterval()` and family deprecated as of ggdist 3.1 are:
+#' Parameters for [geom_slabinterval()] and family deprecated as of ggdist 3.1 are:
 #'
 #' - The `size_domain` and `size_range` arguments, which are long-deprecated aliases
 #' for `interval_size_domain` and `interval_size_range`, were removed in ggdist 3.1.

@@ -94,7 +94,7 @@ normalization (this should probably only be used with functions whose values are
 \code{"segments"}, breaks up the slab geometry into segments for each unique combination of fill color and
 alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
 but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{linearGradient()} is used to
+like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{\link[=linearGradient]{linearGradient()}} is used to
 create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
 R > 4.1 and is not yet supported on all graphics devices.}
 
@@ -241,9 +241,9 @@ or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.
 \item \code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
 \code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.
 \item \code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
-scale to "ramp" to another color. See \code{scale_colour_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.
 \item \code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
-scale to "ramp" to another color. See \code{scale_fill_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.
 }
 \strong{Line aesthetics}
 \itemize{

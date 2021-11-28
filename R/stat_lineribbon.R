@@ -7,8 +7,8 @@
 #' Line + multiple probability ribbon plots (ggplot stat)
 #'
 #' A combination of [stat_slabinterval()] and [geom_lineribbon()] with sensible defaults.
-#' While `geom_lineribbon()` is intended for use on data frames that have already been summarized using
-#' a [point_interval()] function, `stat_lineribbon()` is intended for use directly on data
+#' While [geom_lineribbon()] is intended for use on data frames that have already been summarized using
+#' a [point_interval()] function, [stat_lineribbon()] is intended for use directly on data
 #' frames of draws or of analytical distributions, and will perform the summarization using a
 #' [point_interval()] function.
 #'
@@ -17,7 +17,7 @@
 #' @inheritParams stat_slabinterval
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
 #' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
-#' parameters to the paired geom/stat (e.g. `geom_lineribbon()`).
+#' parameters to the paired geom/stat (e.g. [geom_lineribbon()]).
 #' @param geom Use to override the default connection between
 #' `geom_lineribbon` and `stat_lineribbon`.
 #' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics

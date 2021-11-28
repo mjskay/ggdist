@@ -218,15 +218,15 @@ compute_interval_dist = function(
 #'
 #' Stats include:
 #'
-#'  - `stat_eye`: Eye plots (violin + interval)
-#'  - `stat_halfeye`: Half-eye plots (density + interval)
-#'  - `stat_ccdfinterval`: CCDF bar plots (CCDF + interval)
-#'  - `stat_cdfinterval`: CDF bar plots (CDF + interval)
-#'  - `stat_gradientinterval`: Density gradient + interval plots
-#'  - `stat_slab`: Density plots
-#'  - `stat_histinterval`: Histogram + interval plots
-#'  - [`stat_pointinterval`]: Point + interval plots
-#'  - [`stat_interval`]: Interval plots
+#'  - [stat_eye()]: Eye plots (violin + interval)
+#'  - [stat_halfeye()]: Half-eye plots (density + interval)
+#'  - [stat_ccdfinterval()]: CCDF bar plots (CCDF + interval)
+#'  - [stat_cdfinterval()]: CDF bar plots (CDF + interval)
+#'  - [stat_gradientinterval()]: Density gradient + interval plots
+#'  - [stat_slab()]: Density plots
+#'  - [stat_histinterval()]: Histogram + interval plots
+#'  - [stat_pointinterval()]: Point + interval plots
+#'  - [stat_interval()]: Interval plots
 #'
 #' @template details-x-y-xdist-ydist
 #' @eval rd_slabinterval_computed_variables()
@@ -265,7 +265,7 @@ compute_interval_dist = function(
 #' be determined by either `p_limits` or the scale settings.
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
 #' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
-#' parameters to the paired geom/stat (e.g. `geom_slabinterval()`).
+#' parameters to the paired geom/stat (e.g. [geom_slabinterval()]).
 #' @param n Number of points at which to evaluate the function that defines the slab.
 #' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
 #'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
@@ -510,8 +510,11 @@ stat_slabinterval = make_stat(StatSlabinterval, geom = "slabinterval")
 
 # shortcut stats ----------------------------------------------------------
 
+StatHalfeye = StatSlabinterval
+#' @eval rd_shortcut_stat("halfeye", "half-eye (density + interval)", geom_name = "slabinterval", describe = FALSE)
+#' @description
+#' Equivalent to [stat_slabinterval()], whose default settings create half-eye (density + interval) plots.
 #' @export
-#' @rdname stat_slabinterval
 stat_halfeye = stat_slabinterval
 
 StatEye = ggproto("StatEye", StatSlabinterval,
@@ -519,8 +522,8 @@ StatEye = ggproto("StatEye", StatSlabinterval,
     side = stat("both"),
   ), StatSlabinterval$default_aes)
 )
+#' @eval rd_shortcut_stat("eye", "eye (violin + interval)", geom_name = "slabinterval")
 #' @export
-#' @rdname stat_slabinterval
 stat_eye = make_stat(StatEye, geom = "slabinterval")
 
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
@@ -535,8 +538,8 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
     expand = TRUE
   ), StatSlabinterval$default_params)
 )
+#' @eval rd_shortcut_stat("ccdfinterval", "CCDF bar", geom_name = "slabinterval", example_layers = "expand_limits(x = 0)")
 #' @export
-#' @rdname stat_slabinterval
 stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 
 StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
@@ -544,8 +547,8 @@ StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
     slab_type = "cdf"
   ), StatCcdfinterval$default_params)
 )
+#' @eval rd_shortcut_stat("cdfinterval", "CDF bar", geom_name = "slabinterval")
 #' @export
-#' @rdname stat_slabinterval
 stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
 
 StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
@@ -559,8 +562,11 @@ StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
     show.legend = c(size = FALSE, slab_alpha = FALSE)
   ), StatSlabinterval$layer_args)
 )
+#' @eval rd_shortcut_stat("gradientinterval", "gradient + interval", geom_name = "slabinterval", example_params = 'fill_type = "gradient"')
+#' @description
+#' If your graphics device supports it, it is recommended to use this stat
+#' with `fill_type = "gradient"` (see the description of that parameter).
 #' @export
-#' @rdname stat_slabinterval
 stat_gradientinterval = make_stat(StatGradientinterval, geom = "slabinterval")
 
 StatHistinterval = ggproto("StatHistinterval", StatSlabinterval,
@@ -568,8 +574,8 @@ StatHistinterval = ggproto("StatHistinterval", StatSlabinterval,
     slab_type = "histogram"
   ), StatSlabinterval$default_params)
 )
+#' @eval rd_shortcut_stat("histinterval", "histogram + interval", geom_name = "slabinterval")
 #' @export
-#' @rdname stat_slabinterval
 stat_histinterval = make_stat(StatHistinterval, geom = "slabinterval")
 
 StatSlab = ggproto("StatSlab", StatSlabinterval,
@@ -588,6 +594,6 @@ StatSlab = ggproto("StatSlab", StatSlabinterval,
   ), StatSlabinterval$hidden_params)
 )
 StatSlab$default_aes$size = NULL
+#' @eval rd_shortcut_stat("slab", "slab (ridge)", geom_name = "slab")
 #' @export
-#' @rdname stat_slabinterval
 stat_slab = make_stat(StatSlab, geom = "slab")

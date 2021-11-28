@@ -2,13 +2,6 @@
 % Please edit documentation in R/stat_dist_slabinterval.R
 \name{stat_slabinterval}
 \alias{stat_slabinterval}
-\alias{stat_halfeye}
-\alias{stat_eye}
-\alias{stat_ccdfinterval}
-\alias{stat_cdfinterval}
-\alias{stat_gradientinterval}
-\alias{stat_histinterval}
-\alias{stat_slab}
 \title{Distribution + interval plots for sample data and analytical distributions (ggplot stat)}
 \usage{
 stat_slabinterval(
@@ -31,167 +24,6 @@ stat_slabinterval(
   orientation = NA,
   na.rm = FALSE,
   show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_halfeye(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  p_limits = c(NA, NA),
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_eye(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  p_limits = c(NA, NA),
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_ccdfinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "ccdf",
-  normalize = "none",
-  expand = TRUE,
-  p_limits = c(NA, NA),
-  adjust = 1,
-  trim = TRUE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_cdfinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "cdf",
-  normalize = "none",
-  expand = TRUE,
-  p_limits = c(NA, NA),
-  adjust = 1,
-  trim = TRUE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_gradientinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  p_limits = c(NA, NA),
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE, slab_alpha = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_histinterval(
-  mapping = NULL,
-  data = NULL,
-  geom = "slabinterval",
-  position = "identity",
-  ...,
-  slab_type = "histogram",
-  p_limits = c(NA, NA),
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  point_interval = "median_qi",
-  limits = NULL,
-  n = 501,
-  .width = c(0.66, 0.95),
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = c(size = FALSE),
-  inherit.aes = TRUE
-)
-
-stat_slab(
-  mapping = NULL,
-  data = NULL,
-  geom = "slab",
-  position = "identity",
-  ...,
-  slab_type = "pdf",
-  p_limits = c(NA, NA),
-  adjust = 1,
-  trim = TRUE,
-  expand = FALSE,
-  breaks = "Sturges",
-  outline_bars = FALSE,
-  limits = NULL,
-  n = 501,
-  orientation = NA,
-  na.rm = FALSE,
-  show.legend = NA,
   inherit.aes = TRUE
 )
 }
@@ -224,7 +56,7 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat (e.g. \code{geom_slabinterval()}).}
+parameters to the paired geom/stat (e.g. \code{\link[=geom_slabinterval]{geom_slabinterval()}}).}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
 cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
@@ -300,14 +132,6 @@ those that are mapped (the default for most geoms).}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
-
-\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
-panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
-the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
-opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
-groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
-normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a slab or combined slab+interval geometry which can
@@ -332,15 +156,15 @@ The shortcut stat names follow the pattern \code{stat_[name]}.
 
 Stats include:
 \itemize{
-\item \code{stat_eye}: Eye plots (violin + interval)
-\item \code{stat_halfeye}: Half-eye plots (density + interval)
-\item \code{stat_ccdfinterval}: CCDF bar plots (CCDF + interval)
-\item \code{stat_cdfinterval}: CDF bar plots (CDF + interval)
-\item \code{stat_gradientinterval}: Density gradient + interval plots
-\item \code{stat_slab}: Density plots
-\item \code{stat_histinterval}: Histogram + interval plots
-\item \code{\link{stat_pointinterval}}: Point + interval plots
-\item \code{\link{stat_interval}}: Interval plots
+\item \code{\link[=stat_eye]{stat_eye()}}: Eye plots (violin + interval)
+\item \code{\link[=stat_halfeye]{stat_halfeye()}}: Half-eye plots (density + interval)
+\item \code{\link[=stat_ccdfinterval]{stat_ccdfinterval()}}: CCDF bar plots (CCDF + interval)
+\item \code{\link[=stat_cdfinterval]{stat_cdfinterval()}}: CDF bar plots (CDF + interval)
+\item \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}: Density gradient + interval plots
+\item \code{\link[=stat_slab]{stat_slab()}}: Density plots
+\item \code{\link[=stat_histinterval]{stat_histinterval()}}: Histogram + interval plots
+\item \code{\link[=stat_pointinterval]{stat_pointinterval()}}: Point + interval plots
+\item \code{\link[=stat_interval]{stat_interval()}}: Interval plots
 }
 
 \strong{To visualize sample data}, such as a data distribution, samples from a
@@ -374,7 +198,7 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{aes()}) using the \code{stat()} or \code{after_stat()}
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
 functions:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
@@ -458,9 +282,9 @@ or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.
 \item \code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
 \code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.
 \item \code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
-scale to "ramp" to another color. See \code{scale_colour_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.
 \item \code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
-scale to "ramp" to another color. See \code{scale_fill_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.
 }
 \strong{Line aesthetics}
 \itemize{

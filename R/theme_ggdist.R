@@ -12,7 +12,7 @@
 #'
 #' A word of warning: this theme may (and very likely will) change in the future as I tweak it to my taste.
 #'
-#' `theme_ggdist()` and `theme_tidybayes()` are aliases.
+#' [theme_ggdist()] and [theme_tidybayes()] are aliases.
 #'
 #' @return A named list in the format of [ggplot2::theme()]
 #' @author Matthew Kay

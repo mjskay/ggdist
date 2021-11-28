@@ -33,7 +33,7 @@ the input data are symmetrical it will return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
 positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 align dots within columns. Does not work well when \code{side = "both"}.
-\item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{beeswarm::beeswarm()}. Does not maintain alignment of rows or
+\item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).
 }}
@@ -47,7 +47,7 @@ causes the slab to be drawn on the bottom or the right. \code{"both"} draws the 
 sides (as in a violin plot).}
 
 \item{orientation}{Whether the dots are laid out horizontally or vertically.
-Follows the naming scheme of \code{geom_slabinterval()}:
+Follows the naming scheme of \code{\link[=geom_slabinterval]{geom_slabinterval()}}:
 \itemize{
 \item \code{"horizontal"} assumes the data values for the dotplot are in the \code{x}
 variable and that dots will be stacked up in the \code{y} direction.

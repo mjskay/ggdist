@@ -164,9 +164,14 @@ title_case = function(x) {
   x
 }
 
-rd_shortcut_stat = function(stat_name, chart_type, geom_name = stat_name, example_layers = NULL) {
+rd_shortcut_stat = function(
+  stat_name, chart_type,
+  geom_name = stat_name,
+  example_layers = NULL, example_params = NULL,
+  describe = TRUE
+) {
   stat = get(paste0("Stat", title_case(stat_name)))
-  geom = get(paste0("Geom", title_case(stat_name)))
+  geom = get(paste0("Geom", title_case(geom_name)))
 
   # find the changed aesthetics and params for this stat
   changed_values = function(list, exclude = character()) {
@@ -210,33 +215,34 @@ rd_shortcut_stat = function(stat_name, chart_type, geom_name = stat_name, exampl
 
   c(
     paste0('@title ', title_case(chart_type), ' plot (shortcut stat)'),
-    paste0('@description
-Shortcut version of `stat_slabinterval()` with `geom_', geom_name, '()` for creating ', chart_type, ' plots.
+    if (describe) paste0('@description
+Shortcut version of [stat_slabinterval()] with [geom_', geom_name, '()] for creating ', chart_type, ' plots.
 Roughly equivalent to:
 
 ```
-stat_slabinterval(\n',
-  if (length(changed_aes)) paste0('  aes(', changed_aes, ')\n'),
-  '  geom = "', geom_name, '"',
-  if (length(changed_params)) paste0(',\n  ', changed_params), '
+stat_slabinterval(', paste0(collapse = ',', '\n  ', c(
+  if (length(changed_aes)) paste0('aes(', changed_aes, ')'),
+  if (geom_name != "slabinterval") paste0('geom = "', geom_name, '"'),
+  if (length(changed_params)) changed_params
+)), '
 )
 ```
 '),
-    '@template details-x-y-xdist-ydist',
-    rd_slabinterval_computed_variables(),
-    rd_slabinterval_aesthetics(geom, paste0("geom_", geom_name), stat),
     '@inheritParams stat_slabinterval',
     '@inheritParams geom_slabinterval',
     paste0('@param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
     to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
-    parameters to the paired geom/stat. When paired with the default geom, `geom_', geom_name, '()`,
+    parameters to the paired geom/stat. When paired with the default geom, [geom_', geom_name, '()],
     these include:', paste0(dot_params_description, collapse = '')),
+    '@template details-x-y-xdist-ydist',
     '@return A [ggplot2::Stat] representing a ', chart_type, ' geometry which can
      be added to a [ggplot()] object.',
+    rd_slabinterval_computed_variables(),
+    rd_slabinterval_aesthetics(geom, paste0("geom_", geom_name), stat),
     '@seealso',
-    paste0('See `geom_', geom_name, '()` for the geom underlying this stat.\n'),
+    paste0('See [geom_', geom_name, '()] for the geom underlying this stat.\n'),
     'See [stat_slabinterval()] for the stat this shortcut is based on.\n',
-    '@family `stat_slabinterval()` shortcut stats',
+    '@family [stat_slabinterval()] shortcut stats',
     paste0('@examples
 library(dplyr)
 library(ggplot2)
@@ -252,7 +258,7 @@ df = data.frame(
 )
 df %>%
   ggplot(aes(x = value, y = group)) +
-  stat_', stat_name, '()', example_layers, '
+  stat_', stat_name, '(', example_params, ')', example_layers, '
 
 # ON ANALYTICAL DISTRIBUTIONS
 dist_df = data.frame(
@@ -264,14 +270,14 @@ dist_df = data.frame(
 # and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
 dist_df %>%
   ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
-  stat_', stat_name, '()', example_layers)
+  stat_', stat_name, '(', example_params, ')', example_layers)
   )
 }
 
 rd_slabinterval_computed_variables = function() {
   out = '@section Computed Variables:
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (`aes()`) using the `stat()` or `after_stat()`
+use in aesthetic specifications ([aes()]) using the [stat()] or [after_stat()]
 functions:
 - `x` or `y`: For slabs, the input values to the slab function.
   For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`
@@ -320,7 +326,7 @@ normalization (this should probably only be used with functions whose values are
 `"segments"`, breaks up the slab geometry into segments for each unique combination of fill color and
 alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
 but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-like in [`stat_gradientinterval()`]). When `fill_type == "gradient"`, a `linearGradient()` is used to
+like in [stat_gradientinterval()]). When `fill_type == "gradient"`, a [linearGradient()] is used to
 create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
 R > 4.1 and is not yet supported on all graphics devices.
 ',
@@ -488,9 +494,9 @@ rd_slabinterval_aesthetics = function(geom = GeomSlabinterval, geom_name = "geom
     alpha = 'The opacity of the **slab**, **interval**, and **point** sub-geometries. Use the `slab_alpha`,
      `interval_alpha`, or `point_alpha` aesthetics (below) to set sub-geometry colors separately.',
     colour_ramp = '(or `color_ramp`) A secondary scale that modifies the `color`
-     scale to "ramp" to another color. See `scale_colour_ramp()` for examples.',
+     scale to "ramp" to another color. See [scale_colour_ramp()] for examples.',
     fill_ramp = '(or `fill_ramp`) A secondary scale that modifies the `fill`
-     scale to "ramp" to another color. See `scale_fill_ramp()` for examples.'
+     scale to "ramp" to another color. See [scale_fill_ramp()] for examples.'
   )
   out = c(out, "**Color aesthetics**", rd_aesthetics(color_aes, geom$aesthetics()))
 

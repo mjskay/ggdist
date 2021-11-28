@@ -121,7 +121,7 @@ these bounds.
 }
 
 If the value is numeric, it is assumed to be in units of data. The bin width
-(or its bounds) can also be specified using \code{unit()}, which may be useful if
+(or its bounds) can also be specified using \code{\link[=unit]{unit()}}, which may be useful if
 it is desired that the dots be a certain point size or a certain percentage of
 the width/height of the viewport. For example, \code{unit(0.1, "npc")} would make
 dots that are \emph{exactly} 10\% of the viewport size along whichever dimension the
@@ -137,7 +137,7 @@ the input data are symmetrical it will return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
 positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 align dots within columns. Does not work well when \code{side = "both"}.
-\item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{beeswarm::beeswarm()}. Does not maintain alignment of rows or
+\item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).
 }}
@@ -222,7 +222,7 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 \description{
 Geoms and stats for creating dotplots that automatically determines a bin width that
 ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-generation of quantile dotplots using the \code{quantiles} argument to \code{stat_dotsinterval()}/\code{stat_dots()}.
+generation of quantile dotplots using the \code{quantiles} argument to \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}/\code{\link[=stat_dots]{stat_dots()}}.
 Generally follows the naming scheme and
 arguments of the \code{\link[=geom_slabinterval]{geom_slabinterval()}} and \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of
 geoms and stats.
@@ -242,7 +242,7 @@ dots from overlapping each other.
 \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
 }
 
-\code{stat_dots()} and \code{stat_dotsinterval()}, when used with the \code{quantiles} argument,
+\code{\link[=stat_dots]{stat_dots()}} and \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}, when used with the \code{quantiles} argument,
 are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty
 using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 
@@ -340,9 +340,9 @@ or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.
 \item \code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
 \code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.
 \item \code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
-scale to "ramp" to another color. See \code{scale_colour_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.
 \item \code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
-scale to "ramp" to another color. See \code{scale_fill_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.
 }
 \strong{Line aesthetics}
 \itemize{

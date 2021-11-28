@@ -31,7 +31,7 @@ formats (each format using a different naming scheme for its columns).
 Function prefixed with \code{to_} translate from the ggdist/tidybayes format to another format, functions
 prefixed with \code{from_} translate from that format back to the ggdist/tidybayes format. Formats include:
 
-\code{to_broom_names()} / \code{from_broom_names()}:
+\code{\link[=to_broom_names]{to_broom_names()}} / \code{\link[=from_broom_names]{from_broom_names()}}:
 
 \itemize{
 \item \code{.variable} <-> \code{term}
@@ -41,7 +41,7 @@ prefixed with \code{from_} translate from that format back to the ggdist/tidybay
 \item \code{.upper} <-> \code{conf.high}
 }
 
-\code{to_ggmcmc_names()} / \code{from_ggmcmc_names()}:
+\code{\link[=to_ggmcmc_names]{to_ggmcmc_names()}} / \code{\link[=from_ggmcmc_names]{from_ggmcmc_names()}}:
 
 \itemize{
 \item \code{.chain} <-> \code{Chain}

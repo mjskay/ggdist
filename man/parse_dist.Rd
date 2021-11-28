@@ -73,17 +73,17 @@ input names into distribution names R can recognize.
 \description{
 Parses simple string distribution specifications, like \code{"normal(0, 1)"}, into two columns of
 a data frame, suitable for use with the \code{dist} and \code{args} aesthetics of \code{\link[=stat_slabinterval]{stat_slabinterval()}}
-and its shortcut stats (like \code{stat_halfeye()}). This format is output
-by \code{brms::get_prior()}, making it particularly useful for visualizing priors from
+and its shortcut stats (like \code{\link[=stat_halfeye]{stat_halfeye()}}). This format is output
+by \code{\link[brms:get_prior]{brms::get_prior()}}, making it particularly useful for visualizing priors from
 brms models.
 }
 \details{
-\code{parse_dist()} can be applied to character vectors or to a data frame + bare column name of the
+\code{\link[=parse_dist]{parse_dist()}} can be applied to character vectors or to a data frame + bare column name of the
 column to parse, and returns a data frame with \code{".dist"} and \code{".args"} columns added.
-\code{parse_dist()} uses \code{r_dist_name()} to translate distribution names into names recognized
+\code{\link[=parse_dist]{parse_dist()}} uses \code{\link[=r_dist_name]{r_dist_name()}} to translate distribution names into names recognized
 by R.
 
-\code{r_dist_name()} takes a character vector of names and translates common names into R
+\code{\link[=r_dist_name]{r_dist_name()}} takes a character vector of names and translates common names into R
 distribution names. Names are first made into valid R names using \code{\link[=make.names]{make.names()}},
 then translated (ignoring character case, \code{"."}, and \code{"_"}). Thus, \code{"lognormal"},
 \code{"LogNormal"}, \code{"log_normal"}, \code{"log-Normal"}, and any number of other variants

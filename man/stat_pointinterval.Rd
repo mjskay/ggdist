@@ -47,7 +47,7 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat. When paired with the default geom, \code{geom_pointinterval()},
+parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_pointinterval]{geom_pointinterval()}},
 these include:    \describe{\item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)
 }}
@@ -112,7 +112,7 @@ geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-Shortcut version of \code{stat_slabinterval()} with \code{geom_pointinterval()} for creating point + multiple-interval plots.
+Shortcut version of \code{\link[=stat_slabinterval]{stat_slabinterval()}} with \code{\link[=geom_pointinterval]{geom_pointinterval()}} for creating point + multiple-interval plots.
 Roughly equivalent to:\preformatted{stat_slabinterval(
   geom = "pointinterval",
   show_slab = FALSE
@@ -151,7 +151,7 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{aes()}) using the \code{stat()} or \code{after_stat()}
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
 functions:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
@@ -212,9 +212,9 @@ or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.
 \item \code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
 \code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.
 \item \code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
-scale to "ramp" to another color. See \code{scale_colour_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.
 \item \code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
-scale to "ramp" to another color. See \code{scale_fill_ramp()} for examples.
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.
 }
 \strong{Line aesthetics}
 \itemize{
@@ -285,11 +285,18 @@ dist_df \%>\%
   stat_pointinterval()
 }
 \seealso{
-See \code{geom_pointinterval()} for the geom underlying this stat.
+See \code{\link[=geom_pointinterval]{geom_pointinterval()}} for the geom underlying this stat.
 
 See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for the stat this shortcut is based on.
 
-Other \code{stat_slabinterval()} shortcut stats: 
-\code{\link{stat_interval}()}
+Other \code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats: 
+\code{\link{stat_ccdfinterval}()},
+\code{\link{stat_cdfinterval}()},
+\code{\link{stat_eye}()},
+\code{\link{stat_gradientinterval}()},
+\code{\link{stat_halfeye}()},
+\code{\link{stat_histinterval}()},
+\code{\link{stat_interval}()},
+\code{\link{stat_slab}()}
 }
-\concept{\code{stat_slabinterval()} shortcut stats}
+\concept{\code{\link[=stat_slabinterval]{stat_slabinterval()}} shortcut stats}

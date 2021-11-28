@@ -47,7 +47,7 @@ a call to a position adjustment function.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
-parameters to the paired geom/stat (e.g. \code{geom_lineribbon()}).}
+parameters to the paired geom/stat (e.g. \code{\link[=geom_lineribbon]{geom_lineribbon()}}).}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
 that determine the widths of the resulting intervals. If multiple probabilities are provided,
@@ -91,8 +91,8 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 A combination of \code{\link[=stat_slabinterval]{stat_slabinterval()}} and \code{\link[=geom_lineribbon]{geom_lineribbon()}} with sensible defaults.
-While \code{geom_lineribbon()} is intended for use on data frames that have already been summarized using
-a \code{\link[=point_interval]{point_interval()}} function, \code{stat_lineribbon()} is intended for use directly on data
+While \code{\link[=geom_lineribbon]{geom_lineribbon()}} is intended for use on data frames that have already been summarized using
+a \code{\link[=point_interval]{point_interval()}} function, \code{\link[=stat_lineribbon]{stat_lineribbon()}} is intended for use directly on data
 frames of draws or of analytical distributions, and will perform the summarization using a
 \code{\link[=point_interval]{point_interval()}} function.
 }

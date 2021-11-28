@@ -15,8 +15,8 @@
 #'
 #' @inheritParams ggplot2::continuous_scale
 #' @param from The color to ramp from. Corresponds to `0` on the scale.
-#' @param ... Arguments passed to underlying scale or guide functions. E.g. `scale_colour_ramp_discrete()`,
-#' passes arguments to [discrete_scale()], `scale_colour_ramp_continuous()` passes arguments
+#' @param ... Arguments passed to underlying scale or guide functions. E.g. [scale_colour_ramp_discrete()],
+#' passes arguments to [discrete_scale()], [scale_colour_ramp_continuous()] passes arguments
 #' to [continuous_scale()]. See those functions for more details.
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @param range a numeric vector of length 2 that specifies the minimum and maximum

@@ -6,6 +6,6 @@
 #'  - `"weave"`: uses the same basic binning approach of `"bin"`, but places dots in the off-axis at their actual
 #'    positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 #'    align dots within columns. Does not work well when `side = "both"`.
-#'  - `"swarm"`: uses the `"compactswarm"` layout from `beeswarm::beeswarm()`. Does not maintain alignment of rows or
+#'  - `"swarm"`: uses the `"compactswarm"` layout from [beeswarm::beeswarm()]. Does not maintain alignment of rows or
 #'    columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 #'    dotplots of theoretical distributions, which may look better with `"bin"` or `"weave"`).

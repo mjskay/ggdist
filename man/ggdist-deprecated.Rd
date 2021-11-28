@@ -25,12 +25,12 @@ Deprecated functions and arguments and their alternatives are listed below.
 \section{Deprecated Arguments}{
 
 
-Parameters for \code{stat_slabinterval()} and family deprecated as of ggdist 3.1 are:
+Parameters for \code{\link[=stat_slabinterval]{stat_slabinterval()}} and family deprecated as of ggdist 3.1 are:
 \itemize{
 \item The \code{.prob} argument, which is a long-deprecated alias for \code{.width}, was
 removed in ggdist 3.1.
 \item The \code{limits_function} argument: this was a parameter for determining the
-function to compute limits of the slab in \code{stat_slabinterval()} and its
+function to compute limits of the slab in \code{\link[=stat_slabinterval]{stat_slabinterval()}} and its
 derived stats. This function is really an internal function only needed by
 subclasses of the base class, yet added a lot of noise to the documentation,
 so it was replaced with \code{AbstractStatSlabInterval$compute_limits()}.
@@ -38,7 +38,7 @@ so it was replaced with \code{AbstractStatSlabInterval$compute_limits()}.
 the \code{...} arguments to \code{AbstractStatSlabInterval$compute_limits()}; use
 these instead.
 \item The \code{slab_function} argument: this was a parameter for determining the
-function to compute slabs in \code{stat_slabinterval()} and its
+function to compute slabs in \code{\link[=stat_slabinterval]{stat_slabinterval()}} and its
 derived stats. This function is really an internal function only needed by
 subclasses of the base class, yet added a lot of noise to the documentation,
 so it was replaced with \code{AbstractStatSlabInterval$compute_slab()}.
@@ -46,7 +46,7 @@ so it was replaced with \code{AbstractStatSlabInterval$compute_slab()}.
 the \code{...} arguments to \code{AbstractStatSlabInterval$compute_slab()}; use
 these instead.
 \item The \code{interval_function} and \code{fun.data} arguments: these were parameters for determining the
-function to compute intervals in \code{stat_slabinterval()} and its
+function to compute intervals in \code{\link[=stat_slabinterval]{stat_slabinterval()}} and its
 derived stats. This function is really an internal function only needed by
 subclasses of the base class, yet added a lot of noise to the documentation,
 so it was replaced with \code{AbstractStatSlabInterval$compute_interval()}.
@@ -55,7 +55,7 @@ a \code{point_interval} replace the value of the \code{point_interval} argument 
 a simple wrapper; e.g. \verb{stat_halfeye(point_interval = \\(...) point_interval(..., extra_arg = XXX))}
 }
 
-Parameters for \code{geom_slabinterval()} and family deprecated as of ggdist 3.1 are:
+Parameters for \code{\link[=geom_slabinterval]{geom_slabinterval()}} and family deprecated as of ggdist 3.1 are:
 \itemize{
 \item The \code{size_domain} and \code{size_range} arguments, which are long-deprecated aliases
 for \code{interval_size_domain} and \code{interval_size_range}, were removed in ggdist 3.1.

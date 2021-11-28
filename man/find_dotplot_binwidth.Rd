@@ -27,7 +27,7 @@ bins to find a bin width such that if the input data (\code{x}) is binned
 using a Wilkinson-style dotplot algorithm the height of the tallest bin
 will be less than \code{maxheight}.
 
-This algorithm is used by \code{geom_dotsinterval()} (and its variants) to automatically
+This algorithm is used by \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} (and its variants) to automatically
 select bin widths. Unless you are manually implementing you own dotplot \code{\link{grob}}
 or \code{geom}, you probably do not need to use this function directly
 }
