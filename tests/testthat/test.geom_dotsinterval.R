@@ -124,6 +124,13 @@ test_that("scale transformations work", {
     p + stat_dist_dotsinterval() + scale_x_log10()
   )
 
+  p = data.frame(x = qlnorm(ppoints(100))) %>%
+    ggplot(aes(x = x, y = 0))
+
+  vdiffr::expect_doppelganger("transformed scale, sample data, quantiles",
+    p + stat_dist_dotsinterval(quantiles = 20) + scale_x_log10()
+  )
+
 })
 
 

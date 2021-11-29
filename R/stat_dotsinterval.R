@@ -4,48 +4,20 @@
 ###############################################################################
 
 
-# slab function for samples -------------------------
+# compute_slab ------------------------------------------------------------
 
+#' StatDotsinterval$compute_slab()
 #' @importFrom stats ppoints
-compute_slab_dots_sample = function(
+#' @noRd
+compute_slab_dots = function(
   self, data, trans, input, orientation,
   quantiles,
   na.rm,
   ...
 ) {
-  x = switch(orientation,
-    y = ,
-    horizontal = "x",
-    x = ,
-    vertical = "y"
-  )
-
-  if (is.null(quantiles) || is.na(quantiles)) {
-    input = data[[x]]
-  } else {
-    # ppoints() with a = 1/2 corresponds to quantile() with type = 5
-    # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
-    input = quantile(data[[x]], ppoints(quantiles, a = 1/2), type = 5, na.rm = na.rm)
-  }
-
-  data.frame(
-    .input = trans$inverse(input),
-    .value = 1,
-    n = length(input)
-  )
-}
-
-
-# slab functions for distributions -------------------------
-
-#' @importFrom stats ppoints
-compute_slab_dots_dist = function(
-  self, data, trans, input, orientation,
-  quantiles,
-  na.rm,
-  ...
-) {
-  dist_quantiles = if (is.na(quantiles)) 100 else quantiles
+  quantiles = quantiles %||% NA
+  quantiles_provided = !isTRUE(is.na(quantiles))
+  dist_quantiles = if (quantiles_provided) quantiles else 100
   probs = ppoints(dist_quantiles, a = 1/2)
 
   pmap_dfr_(data, function(dist, ...) {
@@ -56,16 +28,16 @@ compute_slab_dots_dist = function(
     args = args_from_aes(...)
 
     if (distr_is_sample(dist, args)) {
-      return(compute_slab_dots_sample(
-        self, data.frame(x = trans$transform(distr_get_sample(dist, args))), trans, input,
-        orientation = "horizontal",
-        quantiles = quantiles,
-        na.rm = na.rm
-      ))
+      input = distr_get_sample(dist, args)
+      if (quantiles_provided) {
+        # ppoints() with a = 1/2 corresponds to quantile() with type = 5
+        # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
+        input = quantile(input, ppoints(quantiles, a = 1/2), type = 5, na.rm = na.rm)
+      }
+    } else {
+      quantile_fun = distr_quantile(dist)
+      input = do.call(quantile_fun, c(list(probs), args))
     }
-
-    quantile_fun = distr_quantile(dist)
-    input = do.call(quantile_fun, c(list(probs), args))
 
     data.frame(
       .input = input,
@@ -89,11 +61,15 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
     "adjust", "trim", "expand", "breaks"
   ), StatSlabinterval$hidden_params),
 
-  compute_slab = compute_slab_dots_dist
+  # workaround (#84)
+  compute_slab = function(self, ...) compute_slab_dots(self, ...)
 )
 #' @rdname geom_dotsinterval
 #' @export
 stat_dotsinterval = make_stat(StatDotsinterval, geom = "dotsinterval")
+
+
+# stat_dots ---------------------------------------------------------------
 
 StatDots = ggproto("StatDots", StatDotsinterval,
   default_params = defaults(list(

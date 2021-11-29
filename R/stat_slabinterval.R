@@ -23,7 +23,7 @@ compute_limits_slabinterval = function(
 
     if (distr_is_sample(dist, args)) {
       sample = distr_get_sample(dist, args)
-      return(compute_sample_limits(sample, trans, trim, adjust))
+      return(compute_limits_sample(sample, trans, trim, adjust))
     }
 
     quantile_fun = distr_quantile(dist)
@@ -55,7 +55,7 @@ compute_limits_slabinterval = function(
 #' @param trans scale transformation
 #' @param trim/adjust see stat_slabinterval
 #' @noRd
-compute_sample_limits = function(x, trans, trim, adjust) {
+compute_limits_sample = function(x, trans, trim, adjust) {
   if (trim) {
     data.frame(
       .lower = min(x),
@@ -110,7 +110,7 @@ compute_slab_slabinterval = function(
         cdf = cdf[-c(1,5)]
       }
     } else if (distr_is_sample(dist, args)) {
-      return(compute_sample_slab(
+      return(compute_slab_sample(
         trans$transform(distr_get_sample(dist, args)), trans, input,
         slab_type = slab_type, limits = limits, n = n,
         adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
@@ -180,7 +180,7 @@ compute_slab_slabinterval = function(
 #' @importFrom stats density
 #' @importFrom graphics hist
 #' @noRd
-compute_sample_slab = function(
+compute_slab_sample = function(
   x, trans, input,
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars
