@@ -525,7 +525,6 @@ test_that("constant distributions work", {
 
 # point_interval ----------------------------------------------------------
 
-
 test_that("point_interval works", {
   skip_if_no_vdiffr()
 
@@ -553,4 +552,23 @@ test_that("point_interval works", {
     p + stat_dist_halfeye(point_interval = mode_hdi)
   )
 
+})
+
+
+# rvars -------------------------------------------------------------------
+
+test_that("rvars work", {
+  skip_if_no_vdiffr()
+  skip_if_not_installed("posterior")
+
+
+  p = tibble(
+      mu = 1:2,
+      x = posterior::rvar_rng(rnorm, 2, mu, 1:2)
+    ) %>%
+    ggplot(aes(y = mu, xdist = x, fill = stat(cdf)))
+
+  vdiffr::expect_doppelganger("halfeye with rvar and cdf",
+    p + stat_halfeye(n = 20, trim = FALSE, expand = TRUE, slab_color = "black")
+  )
 })

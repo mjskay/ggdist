@@ -128,7 +128,8 @@ distr_point_interval.dist_default = function(dist, args = list(), point_interval
   dist = vctrs::new_vctr(list(dist), class = "distribution")
   distr_point_interval(dist, args, point_interval, trans, ...)
 }
-
+#' @export
+distr_point_interval.rvar = distr_point_interval.distribution
 
 # other distribution helpers ----------------------------------------------
 
