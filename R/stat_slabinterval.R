@@ -1,35 +1,14 @@
-# Distribution + interval stat for analytical distributions
+# Distribution + interval stat for analytical and sample-based distributions
 #
 # Author: mjskay
 ###############################################################################
 
 
-# limits, slab, and interval functions for distributions -------------------------
+# compute_limits ----------------------------------------------------------
 
-# translate arguments of the form `arg1` ... `arg9` (or from a list column, args) into a single list of arguments
-args_from_aes = function(args = list(), ...) {
-  args_names = names(args)
-  if (length(args_names > 0)) {
-    named_args_i = nzchar(args_names)
-    named_args = args[named_args_i]
-    unnamed_args = args[!named_args_i]
-  } else {
-    named_args = list()
-    unnamed_args = args
-  }
-
-  dot_args = list(...)
-  for (i in 1:9) {
-    arg_name = paste0("arg", i)
-    if (arg_name %in% names(dot_args)) {
-      unnamed_args[[i]] = dot_args[[arg_name]]
-    }
-  }
-
-  c(unnamed_args, named_args)
-}
-
-compute_limits_dist = function(
+#' StatSlabinterval$compute_limits()
+#' @noRd
+compute_limits_slabinterval = function(
   self, data, trans, orientation,
   p_limits,
   trim, adjust,
@@ -44,7 +23,7 @@ compute_limits_dist = function(
 
     if (distr_is_sample(dist, args)) {
       sample = distr_get_sample(dist, args)
-      return(compute_limits_sample(sample, trans, trim, adjust))
+      return(compute_sample_limits(sample, trans, trim, adjust))
     }
 
     quantile_fun = distr_quantile(dist)
@@ -71,8 +50,36 @@ compute_limits_dist = function(
   })
 }
 
-#' @importFrom dplyr lag
-compute_slab_dist = function(
+#' compute limits of the provided sample
+#' @param x sample data on **original** scale
+#' @param trans scale transformation
+#' @param trim/adjust see stat_slabinterval
+#' @noRd
+compute_sample_limits = function(x, trans, trim, adjust) {
+  if (trim) {
+    data.frame(
+      .lower = min(x),
+      .upper = max(x)
+    )
+  } else {
+    # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
+    # bandwidth must be calculated on the transformed scale
+    x = trans$transform(x)
+    bw = stats::bw.nrd0(x)
+    expansion = bw * adjust * 3
+    data.frame(
+      .lower = trans$inverse(min(x) - expansion),
+      .upper = trans$inverse(max(x) + expansion)
+    )
+  }
+}
+
+
+# compute_slab ------------------------------------------------------------
+
+#' StatSlabinterval$compute_slab()
+#' @noRd
+compute_slab_slabinterval = function(
   self, data, trans, input, orientation,
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars,
@@ -103,7 +110,7 @@ compute_slab_dist = function(
         cdf = cdf[-c(1,5)]
       }
     } else if (distr_is_sample(dist, args)) {
-      return(compute_slab_sample(
+      return(compute_sample_slab(
         trans$transform(distr_get_sample(dist, args)), trans, input,
         slab_type = slab_type, limits = limits, n = n,
         adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
@@ -166,7 +173,130 @@ compute_slab_dist = function(
   })
 }
 
-compute_interval_dist = function(
+#' compute slab functions for the provided sample
+#' @param x sample data on **transformed** scale
+#' @param trans scale transformation
+#' @param (others) see stat_slabinterval
+#' @importFrom stats density
+#' @importFrom graphics hist
+#' @noRd
+compute_sample_slab = function(
+  x, trans, input,
+  slab_type, limits, n,
+  adjust, trim, expand, breaks, outline_bars
+) {
+  # calculate the density first, since we'll use the x values from it
+  # to calculate the cdf
+  slab_df = if (slab_type == "histogram") {
+    # when using a histogram slab, that becomes the density function value
+    # TODO: this is a hack for now until we make it so that density estimators
+    # can be swapped out (which would be a better solution)
+    h = hist(x, breaks = breaks, plot = FALSE)
+    input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
+    input_2 = h$breaks[-1]                 # second edge of bin
+
+    if (!outline_bars) {
+      # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
+      # us the bin endpoints --- then just need to repeat the same value of density
+      # for both endpoints of the same bin
+      .input = trans$inverse(as.vector(rbind(input_1, input_2)))
+      .value = rep(h$density, each = 2)
+    } else {
+      # have to return to 0 in between each bar so that bar outlines are drawn
+      .input = trans$inverse(as.vector(rbind(input_1, input_1, input_2, input_2)))
+      .value = as.vector(rbind(0, h$density, h$density, 0))
+    }
+    data.frame(
+      .input = .input,
+      pdf = .value
+    )
+  } else {
+    # all other slab types use the density function as the pdf
+    cut = if (trim) 0 else 3
+    # calculate on the transformed scale to ensure density is correct
+    d = density(x, n = n, adjust = adjust, cut = cut)
+    data.frame(
+      .input = trans$inverse(d$x),
+      pdf = d$y
+    )
+  }
+
+  # calculate cdf
+  trans_input = trans$transform(slab_df$.input)
+  cdf_fun = weighted_ecdf(x)
+  slab_df$cdf = cdf_fun(trans_input)
+
+  if (expand) {
+    # extend x values to the range of the plot. To do that we have to include
+    # x values requested from the original `input` if they are outside the
+    # range of the slab
+    input_below_slab = input[input < min(slab_df$.input)]
+    if (length(input_below_slab) > 0) {
+      slab_df = rbind(data.frame(
+        .input = input_below_slab,
+        pdf = 0,
+        cdf = 0
+      ), slab_df)
+    }
+
+    input_above_slab = input[input > max(slab_df$.input)]
+    if (length(input_above_slab) > 0) {
+      slab_df = rbind(slab_df, data.frame(
+        .input = input_above_slab,
+        pdf = 0,
+        cdf = 1
+      ))
+    }
+  }
+
+  slab_df[[".value"]] = switch(slab_type,
+    histogram = ,
+    pdf = slab_df$pdf,
+    cdf = slab_df$cdf,
+    ccdf = 1 - slab_df$cdf,
+    stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
+  )
+
+  slab_df$n = length(x)
+  slab_df
+}
+
+#' @importFrom stats approxfun
+weighted_ecdf = function(x, weights = NULL) {
+  n = length(x)
+  if (n < 1) stop("Need at least 1 or more values to calculate an ECDF")
+
+  #sort x
+  sort_order = order(x)
+  x = x[sort_order]
+
+  # calculate weighted cumulative probabilities
+  weights = if (is.null(weights)) rep(1, n) else weights
+  weights = weights[sort_order]
+  p = cumsum(weights) / sum(weights)
+
+  # need to manually do tie removal before passing to approxfun, otherwise it
+  # will fail when all x values are equal
+  unique_x = unique(x)
+  if (length(unique_x) < length(x)) {
+    # if x[i] ... x[i + k] are all equal ("tied"), collapse to a single x
+    # value and let corresponding value in p = max(p[i] ... p[i + k])
+    p = as.vector(tapply(p, match(x, x), max))
+    x = unique_x
+    stopifnot(length(p) == length(x))
+  }
+
+  method = "constant"
+
+  approxfun(x, p, yleft = 0, yright = 1, ties = "ordered", method = method)
+}
+
+
+# compute_interval --------------------------------------------------------
+
+#' StatSlabinterval$compute_interval()
+#' @noRd
+compute_interval_slabinterval = function(
   self, data, trans,
   orientation, point_interval,
   .width, na.rm,
@@ -485,9 +615,10 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     )
   },
 
-  compute_limits = compute_limits_dist,
-  compute_slab = compute_slab_dist,
-  compute_interval = compute_interval_dist
+  # workaround (#84)
+  compute_limits = function(self, ...) compute_limits_slabinterval(self, ...),
+  compute_slab = function(self, ...) compute_slab_slabinterval(self, ...),
+  compute_interval = function(self, ...) compute_interval_slabinterval(self, ...)
 )
 
 #' @export
@@ -584,3 +715,33 @@ StatSlab$default_aes$size = NULL
 #' @eval rd_slabinterval_shortcut_stat("slab", "slab (ridge)", geom_name = "slab")
 #' @export
 stat_slab = make_stat(StatSlab, geom = "slab")
+
+
+# helpers -----------------------------------------------------------------
+
+#' translate distribution arguments of the form `arg1` ... `arg9` (or from a
+#' list column, `args`) into a single list of arguments
+#' @param args list-column of arguments
+#' @param ... other columns, including `arg1` ... `arg9`
+#' @noRd
+args_from_aes = function(args = list(), ...) {
+  args_names = names(args)
+  if (length(args_names > 0)) {
+    named_args_i = nzchar(args_names)
+    named_args = args[named_args_i]
+    unnamed_args = args[!named_args_i]
+  } else {
+    named_args = list()
+    unnamed_args = args
+  }
+
+  dot_args = list(...)
+  for (i in 1:9) {
+    arg_name = paste0("arg", i)
+    if (arg_name %in% names(dot_args)) {
+      unnamed_args[[i]] = dot_args[[arg_name]]
+    }
+  }
+
+  c(unnamed_args, named_args)
+}

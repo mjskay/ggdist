@@ -2,7 +2,7 @@
 % Please edit documentation in R/abstract_stat_slabinterval.R, R/geom.R,
 %   R/geom_slabinterval.R, R/geom_dotsinterval.R, R/geom_interval.R,
 %   R/geom_lineribbon.R, R/geom_pointinterval.R, R/position_dodgejust.R,
-%   R/stat_dist_slabinterval.R, R/stat_pointinterval.R, R/stat_interval.R
+%   R/stat_slabinterval.R, R/stat_pointinterval.R, R/stat_interval.R
 \docType{data}
 \name{AbstractStatSlabinterval}
 \alias{AbstractStatSlabinterval}
