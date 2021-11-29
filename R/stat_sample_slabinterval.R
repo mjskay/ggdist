@@ -36,63 +36,49 @@ weighted_ecdf = function(x, weights = NULL) {
   approxfun(x, p, yleft = 0, yright = 1, ties = "ordered", method = method)
 }
 
-sample_density = function(x, ...) {
-  if (length(unique(x)) == 1) {
-    list(x = x[[1]], y = Inf)
+#' compute limits of the provided sample
+#' @param x sample data on **original** scale
+#' @param trans scale transformation
+#' @param trim/adjust see stat_slabinterval
+#' @noRd
+compute_limits_sample = function(x, trans, trim, adjust) {
+  if (trim) {
+    data.frame(
+      .lower = min(x),
+      .upper = max(x)
+    )
   } else {
-    density(x, ...)
+    # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
+    # bandwidth must be calculated on the transformed scale
+    x = trans$transform(x)
+    bw = stats::bw.nrd0(x)
+    expansion = bw * adjust * 3
+    data.frame(
+      .lower = trans$inverse(min(x) - expansion),
+      .upper = trans$inverse(max(x) + expansion)
+    )
   }
 }
 
-compute_limits_sample = function(
-  self, data, trans, orientation,
-  p_limits, trim, adjust,
-  ...
-) {
-  x = switch(orientation,
-    y = ,
-    horizontal = "x",
-    x = ,
-    vertical = "y"
-  )
-
-  # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
-  expansion = if (trim) {
-    0
-  } else {
-    bw = stats::bw.nrd0(data[[x]])
-    bw * adjust * 3
-  }
-
-  data.frame(
-    .lower = trans$inverse(min(data[[x]]) - expansion),
-    .upper = trans$inverse(max(data[[x]]) + expansion)
-  )
-}
-
-#' @importFrom rlang missing_arg
-#' @importFrom stats ecdf density
+#' compute limits of the provided sample
+#' @param x sample data on **transformed** scale
+#' @param trans scale transformation
+#' @param (others) see stat_slabinterval
+#' @importFrom stats density
 #' @importFrom graphics hist
+#' @noRd
 compute_slab_sample = function(
-  self, data, trans, input, orientation,
-  slab_type = "pdf", limits = NULL, n = 501,
-  adjust = 1, trim = TRUE, expand = FALSE, breaks = "Sturges", outline_bars = FALSE,
-  ...
+  x, trans, input,
+  slab_type, limits, n,
+  adjust, trim, expand, breaks, outline_bars
 ) {
-  x = switch(orientation,
-    y = ,
-    horizontal = "x",
-    x = ,
-    vertical = "y"
-  )
-
   # calculate the density first, since we'll use the x values from it
   # to calculate the cdf
   slab_df = if (slab_type == "histogram") {
     # when using a histogram slab, that becomes the density function value
     # TODO: this is a hack for now until we make it so that density estimators
     # can be swapped out (which would be a better solution)
-    h = hist(data[[x]], breaks = breaks, plot = FALSE)
+    h = hist(x, breaks = breaks, plot = FALSE)
     input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
     input_2 = h$breaks[-1]                 # second edge of bin
 
@@ -115,7 +101,7 @@ compute_slab_sample = function(
     # all other slab types use the density function as the pdf
     cut = if (trim) 0 else 3
     # calculate on the transformed scale to ensure density is correct
-    d = sample_density(data[[x]], n = n, adjust = adjust, cut = cut)
+    d = density(x, n = n, adjust = adjust, cut = cut)
     data.frame(
       .input = trans$inverse(d$x),
       pdf = d$y
@@ -124,8 +110,8 @@ compute_slab_sample = function(
 
   # calculate cdf
   trans_input = trans$transform(slab_df$.input)
-  cdf_fun = weighted_ecdf(data[[x]])
-  slab_df[["cdf"]] = cdf_fun(trans_input)
+  cdf_fun = weighted_ecdf(x)
+  slab_df$cdf = cdf_fun(trans_input)
 
   if (expand) {
     # extend x values to the range of the plot. To do that we have to include
@@ -158,6 +144,6 @@ compute_slab_sample = function(
     stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
   )
 
-  slab_df$n = nrow(data)
+  slab_df$n = length(x)
   slab_df
 }

@@ -32,10 +32,9 @@ args_from_aes = function(args = list(), ...) {
 compute_limits_dist = function(
   self, data, trans, orientation,
   p_limits,
+  trim, adjust,
   ...
 ) {
-  extra_params = list(...)
-
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.lower = NA, .upper = NA))
@@ -44,14 +43,8 @@ compute_limits_dist = function(
     args = args_from_aes(...)
 
     if (distr_is_sample(dist, args)) {
-      return(do.call(compute_limits_sample, c(
-        list(
-          self, data.frame(x = trans$transform(distr_get_sample(dist, args))), trans,
-          orientation = "horizontal",
-          p_limits = p_limits
-        ),
-        extra_params
-      )))
+      sample = distr_get_sample(dist, args)
+      return(compute_limits_sample(sample, trans, trim, adjust))
     }
 
     quantile_fun = distr_quantile(dist)
@@ -81,11 +74,10 @@ compute_limits_dist = function(
 #' @importFrom dplyr lag
 compute_slab_dist = function(
   self, data, trans, input, orientation,
-  slab_type, limits, n, outline_bars, expand,
+  slab_type, limits, n,
+  adjust, trim, expand, breaks, outline_bars,
   ...
 ) {
-  extra_params = list(...)
-
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
@@ -111,14 +103,11 @@ compute_slab_dist = function(
         cdf = cdf[-c(1,5)]
       }
     } else if (distr_is_sample(dist, args)) {
-      return(do.call(compute_slab_sample, c(
-        list(
-          self, data.frame(x = trans$transform(distr_get_sample(dist, args))), trans, input,
-          orientation = "horizontal", slab_type = slab_type, limits = limits, n = n,
-          outline_bars = outline_bars, expand = expand
-        ),
-        extra_params
-      )))
+      return(compute_slab_sample(
+        trans$transform(distr_get_sample(dist, args)), trans, input,
+        slab_type = slab_type, limits = limits, n = n,
+        adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
+      ))
     } else if (trans$name == "identity") {
       pdf_fun = distr_pdf(dist)
       if (distr_is_discrete(dist, args)) {
