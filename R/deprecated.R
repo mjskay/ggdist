@@ -11,7 +11,19 @@
 #'
 #' Deprecated functions and arguments and their alternatives are listed below.
 #'
-#' @section Deprecated Arguments:
+#' @section Deprecated stats and geoms:
+#'
+#' The `stat_sample_...` and `stat_dist_...` families of stats were merged in ggdist 3.1.
+#' This means:
+#'
+#' - `stat_dist_...` is deprecated. For any code using `stat_dist_XXX()`, you should now
+#' be able to use `stat_XXX()` instead without additional modifications in almost all cases.
+#' - `stat_sample_slabinterval()` is deprecated. You should be able to use
+#' [stat_slabinterval()] instead without additional modifications in almost all cases.
+#'
+#' The old `stat_dist_...` names are currently kept as aliases, but may be removed in the future.
+#'
+#' @section Deprecated arguments:
 #'
 #' Parameters for [stat_slabinterval()] and family deprecated as of ggdist 3.1 are:
 #'
