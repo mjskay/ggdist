@@ -1,7 +1,7 @@
 Package: ggdist
 Title: Visualizations of Distributions and Uncertainty
-Version: 3.0.0.9000
-Date: 2021-07-19
+Version: 3.0.1
+Date: 2021-11-29
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu"),
         person("Brenton M.", "Wiernik", role = "ctb", email = "brenton@wiernik.org")
@@ -56,7 +56,7 @@ Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
 URL: https://mjskay.github.io/ggdist/, https://github.com/mjskay/ggdist/
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 LazyData: true
 Encoding: UTF-8
 Collate:
