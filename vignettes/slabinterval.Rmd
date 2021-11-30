@@ -445,7 +445,7 @@ There are currently no analytical (`stat_dist_`) versions of `stat_histinterval(
 
 ## CCDF bar plots
 
-Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These [can be more effective for some decision-making tasks](http://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf) than densities or intervals, and require fewer assumptions to create from sample data than density plots.
+Another (perhaps sorely underused) technique for visualizing distributions is cumulative distribution functions (CDFs) and complementary CDFs (CCDFs). These [can be more effective for some decision-making tasks](https://www.mjskay.com/papers/chi2018-uncertain-bus-decisions.pdf) than densities or intervals, and require fewer assumptions to create from sample data than density plots.
 
 For all of the examples above, both on sample data and analytical distributions, you can replace `[half]eye` with `[c]cdfinterval` to get a stat that creates a CDF or CCDF bar plot. 
 
