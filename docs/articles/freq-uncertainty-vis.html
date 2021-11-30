@@ -45,7 +45,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -99,13 +99,13 @@
 
       
 
-      </header><script src="freq-uncertainty-vis_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="freq-uncertainty-vis_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Frequentist uncertainty visualization</h1>
                         <h4 class="author">Matthew Kay</h4>
             
-            <h4 class="date">2021-07-13</h4>
+            <h4 class="date">2021-11-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/master/vignettes/freq-uncertainty-vis.Rmd"><code>vignettes/freq-uncertainty-vis.Rmd</code></a></small>
       <div class="hidden name"><code>freq-uncertainty-vis.Rmd</code></div>
@@ -159,7 +159,7 @@ img {
   <span class="op">)</span></code></pre></div>
 <p>This is a typical tidy format data frame: one observation per row. Graphically:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ABC</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">ABC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">response</span>, y <span class="op">=</span> <span class="va">condition</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"condition"</span><span class="op">)</span></code></pre></div>
@@ -198,7 +198,7 @@ img {
 <p>With:</p>
 <ul>
 <li>
-<span class="math inline">\(\nu\)</span>: <em>degrees of freedom</em>, equal to <code><a href="https://rdrr.io/r/stats/df.residual.html">df.residual(m_ABC)</a></code>
+<span class="math inline">\(\nu\)</span>: <em>degrees of freedom</em>, equal to <code>df.residual(m_ABC)</code>
 </li>
 <li>
 <span class="math inline">\(\hat\beta_i\)</span>: <em>location</em>, equal to the point estimate of the parameter (<code>estimate</code> column from <code><a href="https://generics.r-lib.org/reference/tidy.html">broom::tidy()</a></code>)</li>
@@ -219,32 +219,32 @@ img {
 <p>Finally, we can construct vectors of probability distributions using functions like <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">distributional::dist_student_t()</a></code> from the <a href="https://pkg.mitchelloharawild.com/distributional/">distributional</a> package. The <code><a href="../reference/stat_dist_slabinterval.html">stat_dist_slabinterval()</a></code> family of functions supports these objects.</p>
 <p>Putting everything together, we have:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m_ABC</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">m_ABC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">term</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">estimate</span>, sigma <span class="op">=</span> <span class="va">std.error</span><span class="op">)</span><span class="op">)</span>
   <span class="op">)</span></code></pre></div>
 <p><img src="freq-uncertainty-vis_files/figure-html/halfeye-1.png" width="648"></p>
-<p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code> (similar to how we can use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="http://mjskay.github.io/tidybayes/reference/add_predicted_draws.html">tidybayes::add_fitted_draws()</a></code> for Bayesian models). Here we want the confidence distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\tilde\mu_c\)</span>:</p>
+<p>If we would rather see uncertainty in conditional means, we can instead use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> along with <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code> (similar to how we can use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code>tidybayes::add_fitted_draws()</code> for Bayesian models). Here we want the confidence distribution for the mean in condition <span class="math inline">\(c\)</span>, <span class="math inline">\(\tilde\mu_c\)</span>:</p>
 <p><span class="math display">\[
 \tilde\mu_c \sim \textrm{student_t}\left(\nu, \hat\mu_c, \sigma_{\hat\mu_c} \right)
 \]</span></p>
 <p>With:</p>
 <ul>
 <li>
-<span class="math inline">\(\nu\)</span>: <em>degrees of freedom</em>, equal to <code><a href="https://rdrr.io/r/stats/df.residual.html">df.residual(m_ABC)</a></code>
+<span class="math inline">\(\nu\)</span>: <em>degrees of freedom</em>, equal to <code>df.residual(m_ABC)</code>
 </li>
 <li>
 <span class="math inline">\(\hat\mu_c\)</span>: <em>location</em>, equal to the point estimate of the mean in condition <span class="math inline">\(c\)</span> (<code>.fitted</code> column from <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code>)</li>
 <li>
-<span class="math inline">\(\sigma_{\hat\mu_c}\)</span>: <em>scale</em>, equal to the standard error of the mean in condition <span class="math inline">\(c\)</span> (<code>.se.fit</code> column from <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment(..., se_fit = TRUE)</a></code>)</li>
+<span class="math inline">\(\sigma_{\hat\mu_c}\)</span>: <em>scale</em>, equal to the standard error of the mean in condition <span class="math inline">\(c\)</span> (<code>.se.fit</code> column from <code>broom::augment(..., se_fit = TRUE)</code>)</li>
 </ul>
 <p>Putting everything together, we have:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ABC</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">ABC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">condition</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_halfeye</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span>, 
@@ -256,9 +256,9 @@ img {
 <p><img src="freq-uncertainty-vis_files/figure-html/halfeye_with_data-1.png" width="648"></p>
 <p>Of course, this works with the entire <code>stat_dist_...</code> family. Here are gradient plots instead:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ABC</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">ABC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">condition</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_gradientinterval</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span>, 
@@ -268,9 +268,9 @@ img {
 <p><strong>Note:</strong> The example above uses the <strong>experimental</strong> <code>fill_type = "gradient"</code> option. This can be omitted if your system does not support it; see further discussion in the section on gradient plots in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>.</p>
 <p>Or complementary cumulative distribution function (CCDF) bar plots:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ABC</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">ABC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">condition</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_dist_slabinterval.html">stat_dist_ccdfinterval</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span>
@@ -278,9 +278,9 @@ img {
 <p><img src="freq-uncertainty-vis_files/figure-html/ccdfinterval-1.png" width="648"></p>
 <p>We can also create quantile dotplots by using the <code>dots</code> family of geoms. Quantile dotplots show quantiles from a distribution (in this case, the sampling distribution), employing a <em>frequency framing</em> approach to uncertainty communication that can be easier for people to interpret (<a href="https://doi.org/10.1145/2858036.2858558">Kay et al. 2016</a>, <a href="https://doi.org/10.1145/3173574.3173718">Fernandes et al. 2018</a>):</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ABC</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">ABC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_ABC</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">condition</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dist_dots</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_ABC</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span>,
@@ -297,10 +297,10 @@ img {
 <code class="sourceCode R"><span class="va">m_mpg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">cyl</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></code></pre></div>
 <p>Again we’ll use <code><a href="https://modelr.tidyverse.org/reference/data_grid.html">modelr::data_grid()</a></code> with <code><a href="https://generics.r-lib.org/reference/tidy.html">broom::tidy()</a></code>, but now we’ll employ <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mtcars</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span><span class="op">(</span><span class="va">hp</span>, n <span class="op">=</span> <span class="fl">101</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_mpg</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span><span class="op">(</span><span class="va">hp</span>, n <span class="op">=</span> <span class="fl">101</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_mpg</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_mpg</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span><span class="op">)</span>,
@@ -318,10 +318,10 @@ img {
 <p><img src="freq-uncertainty-vis_files/figure-html/lineribbon-1.png" width="648"></p>
 <p>Another alternative to using <code>alpha</code> to create gradations of lineribbon colors in different groups is to use the <code>fill_ramp</code> aesthetic provided by <code>ggdist</code> to “ramp” the fill color of the ribbons from <code>"white"</code> to their full color (see <code><a href="../reference/scale_colour_ramp.html">help("scale_fill_ramp")</a></code>). Here we’ll “whiten” the fill color of each band according to its <code>level</code> (the <code>level</code> variable is computed by <code><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon()</a></code> and is an ordered factor version of <code>.width</code>):</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mtcars</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span><span class="op">(</span><span class="va">hp</span>, n <span class="op">=</span> <span class="fl">101</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_mpg</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://modelr.tidyverse.org/reference/data_grid.html">data_grid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://modelr.tidyverse.org/reference/seq_range.html">seq_range</a></span><span class="op">(</span><span class="va">hp</span>, n <span class="op">=</span> <span class="fl">101</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">m_mpg</span>, newdata <span class="op">=</span> <span class="va">.</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_lineribbon.html">stat_dist_lineribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>
     dist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html">df.residual</a></span><span class="op">(</span><span class="va">m_mpg</span><span class="op">)</span>, mu <span class="op">=</span> <span class="va">.fitted</span>, sigma <span class="op">=</span> <span class="va">.se.fit</span><span class="op">)</span>,

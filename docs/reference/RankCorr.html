@@ -92,7 +92,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -165,9 +165,9 @@
     <p>For more details, see Kay and Heer (2016) or the Github repository describing the analysis:
 <a href='https://github.com/mjskay/ranking-correlation'>https://github.com/mjskay/ranking-correlation</a>. The original experiment (but not this analysis of it)
 is described in Harrison <em>et al.</em> (2014).</p>
-<p><code><a href='https://rdrr.io/r/utils/data.html'>data("RankCorr")</a></code> is a substantially thinned version of the original posterior sample and has omitted several
+<p><code>data("RankCorr")</code> is a substantially thinned version of the original posterior sample and has omitted several
 parameters in order for it to be a more manageable size.</p>
-<p><code><a href='https://rdrr.io/r/utils/data.html'>data("RankCorr_u_tau")</a></code> is used for testing and examples and is roughly the equivalent of the following:</p><pre>data("RankCorr")
+<p><code>data("RankCorr_u_tau")</code> is used for testing and examples and is roughly the equivalent of the following:</p><pre>data("RankCorr")
 RankCorr_u_tau = tidybayes::spread_draws(RankCorr, u_tau[i]))
 </pre>
 

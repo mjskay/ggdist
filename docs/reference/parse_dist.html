@@ -96,7 +96,7 @@ brms models." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -162,7 +162,7 @@ brms models." />
     <p>Parses simple string distribution specifications, like <code>"normal(0, 1)"</code>, into two columns of
 a data frame, suitable for use with <code><a href='stat_dist_slabinterval.html'>stat_dist_slabinterval()</a></code> and its shortcut stats
 (like <code>stat_dist_halfeye</code>). This format is output
-by <code><a href='https://rdrr.io/pkg/brms/man/get_prior.html'>brms::get_prior</a></code>, making it particularly useful for visualizing priors from
+by <code>brms::get_prior</code>, making it particularly useful for visualizing priors from
 brms models.</p>
     </div>
 
@@ -268,27 +268,29 @@ all get translated into <code>"lnorm"</code>.</p>
 the output of this function using the <code>dist</code> and <code>args</code> aesthetics.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-
-<span class='co'># parse dist can operate on strings directly...</span>
-<span class='fu'>parse_dist</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 2 x 2</span>
-#&gt;   .dist     .args     
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>    
-#&gt; <span style='color: #BCBCBC;'>1</span> norm      <span style='color: #949494;'>&lt;list [2]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>2</span> student_t <span style='color: #949494;'>&lt;list [3]&gt;</span></div><div class='input'>
-<span class='co'># ... or on columns of a data frame, where it adds the</span>
-<span class='co'># parsed specs back on as columns</span>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>parse_dist</span><span class='op'>(</span><span class='va'>prior</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;              prior     .dist   .args
-#&gt; 1      normal(0,1)      norm    0, 1
-#&gt; 2 student_t(3,0,1) student_t 3, 0, 1</div><div class='input'>
-<span class='co'># parse_dist is particularly useful with the output of brms::prior(),</span>
-<span class='co'># which follow the same format as above</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># parse dist can operate on strings directly...</span></span>
+<span class='r-in'><span class='fu'>parse_dist</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 2 x 2</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   .dist     .args     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span> norm      <span style='color: #949494;'>&lt;list [2]&gt;</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>2</span> student_t <span style='color: #949494;'>&lt;list [3]&gt;</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># ... or on columns of a data frame, where it adds the</span></span>
+<span class='r-in'><span class='co'># parsed specs back on as columns</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal(0,1)"</span>, <span class='st'>"student_t(3,0,1)"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'>parse_dist</span><span class='op'>(</span><span class='va'>prior</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>              prior     .dist   .args</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      normal(0,1)      norm    0, 1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 student_t(3,0,1) student_t 3, 0, 1</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># parse_dist is particularly useful with the output of brms::prior(),</span></span>
+<span class='r-in'><span class='co'># which follow the same format as above</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

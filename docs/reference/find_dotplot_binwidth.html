@@ -93,7 +93,7 @@ the height of the dotplot fits within a given space (maxheight)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -199,50 +199,53 @@ by this function; <code><a href='geom_dotsinterval.html'>geom_dotsinterval()</a>
 these algorithms to create dotplots.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-
-<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/ppoints.html'>ppoints</a></span><span class='op'>(</span><span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>binwidth</span> <span class='op'>=</span> <span class='fu'>find_dotplot_binwidth</span><span class='op'>(</span><span class='va'>x</span>, maxheight <span class='op'>=</span> <span class='fl'>4</span>, heightratio <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>binwidth</span>
-</div><div class='output co'>#&gt; [1] 0.6533213</div><div class='input'>
-<span class='va'>bin_df</span> <span class='op'>=</span> <span class='fu'><a href='bin_dots.html'>bin_dots</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='fl'>0</span>, binwidth <span class='op'>=</span> <span class='va'>binwidth</span>, heightratio <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>bin_df</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 20 x 3</span>
-#&gt;         x     y   bin
-#&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>1.70</span>  0.327     1
-#&gt; <span style='color: #BCBCBC;'> 2</span> -<span style='color: #BB0000;'>1.70</span>  0.980     1
-#&gt; <span style='color: #BCBCBC;'> 3</span> -<span style='color: #BB0000;'>0.984</span> 0.327     2
-#&gt; <span style='color: #BCBCBC;'> 4</span> -<span style='color: #BB0000;'>0.984</span> 0.980     2
-#&gt; <span style='color: #BCBCBC;'> 5</span> -<span style='color: #BB0000;'>0.984</span> 1.63      2
-#&gt; <span style='color: #BCBCBC;'> 6</span> -<span style='color: #BB0000;'>0.330</span> 0.327     3
-#&gt; <span style='color: #BCBCBC;'> 7</span> -<span style='color: #BB0000;'>0.330</span> 0.980     3
-#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>0.330</span> 1.63      3
-#&gt; <span style='color: #BCBCBC;'> 9</span> -<span style='color: #BB0000;'>0.330</span> 2.29      3
-#&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.330</span> 2.94      3
-#&gt; <span style='color: #BCBCBC;'>11</span>  0.330 0.327     4
-#&gt; <span style='color: #BCBCBC;'>12</span>  0.330 0.980     4
-#&gt; <span style='color: #BCBCBC;'>13</span>  0.330 1.63      4
-#&gt; <span style='color: #BCBCBC;'>14</span>  0.330 2.29      4
-#&gt; <span style='color: #BCBCBC;'>15</span>  0.330 2.94      4
-#&gt; <span style='color: #BCBCBC;'>16</span>  0.984 0.327     5
-#&gt; <span style='color: #BCBCBC;'>17</span>  0.984 0.980     5
-#&gt; <span style='color: #BCBCBC;'>18</span>  0.984 1.63      5
-#&gt; <span style='color: #BCBCBC;'>19</span>  1.70  0.327     6
-#&gt; <span style='color: #BCBCBC;'>20</span>  1.70  0.980     6</div><div class='input'>
-<span class='co'># we can manually plot the binning above, though this is only recommended</span>
-<span class='co'># if you are using find_dotplot_binwidth() and bin_dots() to build your own</span>
-<span class='co'># grob. For practical use it is much easier to use geom_dots(), which will</span>
-<span class='co'># automatically select good bin widths for you (and which uses</span>
-<span class='co'># find_dotplot_binwidth() and bin_dots() internally)</span>
-<span class='va'>bin_df</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_fixed</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='img'><img src='find_dotplot_binwidth-1.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/ppoints.html'>ppoints</a></span><span class='op'>(</span><span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>binwidth</span> <span class='op'>=</span> <span class='fu'>find_dotplot_binwidth</span><span class='op'>(</span><span class='va'>x</span>, maxheight <span class='op'>=</span> <span class='fl'>4</span>, heightratio <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>binwidth</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.6533213</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>bin_df</span> <span class='op'>=</span> <span class='fu'><a href='bin_dots.html'>bin_dots</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='fl'>0</span>, binwidth <span class='op'>=</span> <span class='va'>binwidth</span>, heightratio <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>bin_df</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 20 x 3</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         x     y   bin</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>1.70</span>  0.327     1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 2</span> -<span style='color: #BB0000;'>1.70</span>  0.980     1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 3</span> -<span style='color: #BB0000;'>0.984</span> 0.327     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 4</span> -<span style='color: #BB0000;'>0.984</span> 0.980     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 5</span> -<span style='color: #BB0000;'>0.984</span> 1.63      2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 6</span> -<span style='color: #BB0000;'>0.330</span> 0.327     3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 7</span> -<span style='color: #BB0000;'>0.330</span> 0.980     3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>0.330</span> 1.63      3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 9</span> -<span style='color: #BB0000;'>0.330</span> 2.29      3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.330</span> 2.94      3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>11</span>  0.330 0.327     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>12</span>  0.330 0.980     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>13</span>  0.330 1.63      4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>14</span>  0.330 2.29      4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>15</span>  0.330 2.94      4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>16</span>  0.984 0.327     5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>17</span>  0.984 0.980     5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>18</span>  0.984 1.63      5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>19</span>  1.70  0.327     6</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>20</span>  1.70  0.980     6</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># we can manually plot the binning above, though this is only recommended</span></span>
+<span class='r-in'><span class='co'># if you are using find_dotplot_binwidth() and bin_dots() to build your own</span></span>
+<span class='r-in'><span class='co'># grob. For practical use it is much easier to use geom_dots(), which will</span></span>
+<span class='r-in'><span class='co'># automatically select good bin widths for you (and which uses</span></span>
+<span class='r-in'><span class='co'># find_dotplot_binwidth() and bin_dots() internally)</span></span>
+<span class='r-in'><span class='va'>bin_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_fixed</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='find_dotplot_binwidth-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

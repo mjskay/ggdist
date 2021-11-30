@@ -96,7 +96,7 @@ to specify distribution arguments. See Details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -293,13 +293,13 @@ cumulative distribution function (<code>"cdf"</code>), or complementary CDF (<co
     <tr>
       <th>p_limits</th>
       <td><p>Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of the slab. E.g., if this is <code><a href='https://rdrr.io/r/base/c.html'>c(.001, .999)</a></code>, then a slab is drawn
+limits of the slab. E.g., if this is <code>c(.001, .999)</code>, then a slab is drawn
 for the distribution from the quantile at <code>p = .001</code> to the quantile at <code>p = .999</code>. If the lower
 (respectively upper) limit is <code>NA</code>, then the lower (upper) limit will be the minimum (maximum) of the
 distribution's support if it is finite, and <code>0.001</code> (<code>0.999</code>) if it is not finite. E.g., if
-<code>p_limits</code> is <code><a href='https://rdrr.io/r/base/c.html'>c(NA, NA)</a></code> on a gamma distribution the effective value of <code>p_limits</code> would be
-<code><a href='https://rdrr.io/r/base/c.html'>c(0, .999)</a></code> since the gamma distribution is defined on <code>(0, Inf)</code>; whereas on a normal distribution
-it would be equivalent to <code><a href='https://rdrr.io/r/base/c.html'>c(.001, .999)</a></code> since the normal distribution is defined on <code>(-Inf, Inf)</code>.</p></td>
+<code>p_limits</code> is <code>c(NA, NA)</code> on a gamma distribution the effective value of <code>p_limits</code> would be
+<code>c(0, .999)</code> since the gamma distribution is defined on <code>(0, Inf)</code>; whereas on a normal distribution
+it would be equivalent to <code>c(.001, .999)</code> since the normal distribution is defined on <code>(-Inf, Inf)</code>.</p></td>
     </tr>
     <tr>
       <th>outline_bars</th>
@@ -354,7 +354,7 @@ values are silently removed.</p></td>
     </tr>
     <tr>
       <th>show.legend</th>
-      <td><p>Should this layer be included in the legends? Default is <code><a href='https://rdrr.io/r/base/c.html'>c(size = FALSE)</a></code>, unlike most geoms,
+      <td><p>Should this layer be included in the legends? Default is <code>c(size = FALSE)</code>, unlike most geoms,
 to match its common use cases. <code>FALSE</code> hides all legends, <code>TRUE</code> shows all legends, and <code>NA</code> shows only
 those that are mapped (the default for most geoms).</p></td>
     </tr>
@@ -409,7 +409,7 @@ can be used in one of two ways:</p><ul>
 <li><p><code>dist</code> can be any distribution object from the <a href='https://pkg.mitchelloharawild.com/distributional/'>distributional</a>
 package, such as <code><a href='https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html'>dist_normal()</a></code>, <code><a href='https://pkg.mitchelloharawild.com/distributional/reference/dist_beta.html'>dist_beta()</a></code>, etc. Since these functions are vectorized,
 other columns can be passed directly to them in an <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code> specification; e.g.
-<code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(dist = dist_normal(mu, sigma))</a></code> will work if <code>mu</code> and <code>sigma</code> are columns in the
+<code>aes(dist = dist_normal(mu, sigma))</code> will work if <code>mu</code> and <code>sigma</code> are columns in the
 input data frame.</p></li>
 <li><p><code>dist</code> can be a character vector giving the distribution name. Then the  <code>arg1</code>, ... <code>arg9</code>
 aesthetics (or <code>args</code> as a list column) specify distribution arguments. Distribution names
@@ -418,7 +418,7 @@ is a valid distribution name because R defines the <code><a href='https://rdrr.i
 functions for Normal distributions.</p>
 <p>See the <code><a href='parse_dist.html'>parse_dist()</a></code> function for a useful way to generate <code>dist</code> and <code>args</code>
 values from human-readable distribution specs (like <code>"normal(0,1)"</code>). Such specs are also
-produced by other packages (like the <code><a href='https://rdrr.io/pkg/brms/man/get_prior.html'>brms::get_prior</a></code> function in brms); thus,
+produced by other packages (like the <code>brms::get_prior</code> function in brms); thus,
 <code><a href='parse_dist.html'>parse_dist()</a></code> combined with the stats described here can help you visualize the output
 of those functions.</p></li>
 </ul>
@@ -543,52 +543,55 @@ for the versions of these stats that can be used on samples.
 See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></code> for a variety of examples of use.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://pkg.mitchelloharawild.com/distributional/'>distributional</a></span><span class='op'>)</span>
-
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>dist_df</span> <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tribble.html'>tribble</a></span><span class='op'>(</span>
-  <span class='op'>~</span><span class='va'>group</span>, <span class='op'>~</span><span class='va'>subgroup</span>, <span class='op'>~</span><span class='va'>mean</span>, <span class='op'>~</span><span class='va'>sd</span>,
-  <span class='st'>"a"</span>,          <span class='st'>"h"</span>,     <span class='fl'>5</span>,   <span class='fl'>1</span>,
-  <span class='st'>"b"</span>,          <span class='st'>"h"</span>,     <span class='fl'>7</span>,   <span class='fl'>1.5</span>,
-  <span class='st'>"c"</span>,          <span class='st'>"h"</span>,     <span class='fl'>8</span>,   <span class='fl'>1</span>,
-  <span class='st'>"c"</span>,          <span class='st'>"i"</span>,     <span class='fl'>9</span>,   <span class='fl'>1</span>,
-  <span class='st'>"c"</span>,          <span class='st'>"j"</span>,     <span class='fl'>7</span>,   <span class='fl'>1</span>
-<span class='op'>)</span>
-
-<span class='va'>dist_df</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>group</span>, dist <span class='op'>=</span> <span class='st'>"norm"</span>, arg1 <span class='op'>=</span> <span class='va'>mean</span>, arg2 <span class='op'>=</span> <span class='va'>sd</span>, fill <span class='op'>=</span> <span class='va'>subgroup</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>stat_dist_eye</span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span>
-</div><div class='img'><img src='stat_dist_slabinterval-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># Using functions from the distributional package (like dist_normal()) with the</span>
-<span class='co'># dist aesthetic can lead to more compact/expressive specifications</span>
-
-<span class='va'>dist_df</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>group</span>, dist <span class='op'>=</span> <span class='fu'><a href='https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html'>dist_normal</a></span><span class='op'>(</span><span class='va'>mean</span>, <span class='va'>sd</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='va'>subgroup</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>stat_dist_eye</span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span>
-</div><div class='img'><img src='stat_dist_slabinterval-2.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># the stat_dist_... family applies a Jacobian adjustment to densities</span>
-<span class='co'># when plotting on transformed scales in order to plot them correctly.</span>
-<span class='co'># It determines the Jacobian using symbolic differentiation if possible,</span>
-<span class='co'># using stats::D(). If symbolic differentation fails, it falls back</span>
-<span class='co'># to numericDeriv(), which is less reliable; therefore, it is</span>
-<span class='co'># advisable to use scale transformation functions that are defined in</span>
-<span class='co'># terms of basic math functions so that their derivatives can be</span>
-<span class='co'># determined analytically (most of the transformation functions in the</span>
-<span class='co'># scales package currently have this property).</span>
-<span class='co'># For example, here is a log-Normal distribution plotted on the log</span>
-<span class='co'># scale, where it will appear Normal:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>dist <span class='op'>=</span> <span class='st'>"lnorm"</span>, logmean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>, logsd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>1</span>, dist <span class='op'>=</span> <span class='va'>dist</span>, arg1 <span class='op'>=</span> <span class='va'>logmean</span>, arg2 <span class='op'>=</span> <span class='va'>logsd</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>stat_dist_halfeye</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span><span class='op'>(</span>breaks <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>,<span class='fl'>7</span>, by <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='stat_dist_slabinterval-3.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># see vignette("slabinterval") for many more examples.</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://pkg.mitchelloharawild.com/distributional/'>distributional</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>dist_df</span> <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tribble.html'>tribble</a></span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='op'>~</span><span class='va'>group</span>, <span class='op'>~</span><span class='va'>subgroup</span>, <span class='op'>~</span><span class='va'>mean</span>, <span class='op'>~</span><span class='va'>sd</span>,</span>
+<span class='r-in'>  <span class='st'>"a"</span>,          <span class='st'>"h"</span>,     <span class='fl'>5</span>,   <span class='fl'>1</span>,</span>
+<span class='r-in'>  <span class='st'>"b"</span>,          <span class='st'>"h"</span>,     <span class='fl'>7</span>,   <span class='fl'>1.5</span>,</span>
+<span class='r-in'>  <span class='st'>"c"</span>,          <span class='st'>"h"</span>,     <span class='fl'>8</span>,   <span class='fl'>1</span>,</span>
+<span class='r-in'>  <span class='st'>"c"</span>,          <span class='st'>"i"</span>,     <span class='fl'>9</span>,   <span class='fl'>1</span>,</span>
+<span class='r-in'>  <span class='st'>"c"</span>,          <span class='st'>"j"</span>,     <span class='fl'>7</span>,   <span class='fl'>1</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>dist_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>group</span>, dist <span class='op'>=</span> <span class='st'>"norm"</span>, arg1 <span class='op'>=</span> <span class='va'>mean</span>, arg2 <span class='op'>=</span> <span class='va'>sd</span>, fill <span class='op'>=</span> <span class='va'>subgroup</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'>stat_dist_eye</span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='stat_dist_slabinterval-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using functions from the distributional package (like dist_normal()) with the</span></span>
+<span class='r-in'><span class='co'># dist aesthetic can lead to more compact/expressive specifications</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>dist_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>group</span>, dist <span class='op'>=</span> <span class='fu'><a href='https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html'>dist_normal</a></span><span class='op'>(</span><span class='va'>mean</span>, <span class='va'>sd</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='va'>subgroup</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'>stat_dist_eye</span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='stat_dist_slabinterval-2.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># the stat_dist_... family applies a Jacobian adjustment to densities</span></span>
+<span class='r-in'><span class='co'># when plotting on transformed scales in order to plot them correctly.</span></span>
+<span class='r-in'><span class='co'># It determines the Jacobian using symbolic differentiation if possible,</span></span>
+<span class='r-in'><span class='co'># using stats::D(). If symbolic differentation fails, it falls back</span></span>
+<span class='r-in'><span class='co'># to numericDeriv(), which is less reliable; therefore, it is</span></span>
+<span class='r-in'><span class='co'># advisable to use scale transformation functions that are defined in</span></span>
+<span class='r-in'><span class='co'># terms of basic math functions so that their derivatives can be</span></span>
+<span class='r-in'><span class='co'># determined analytically (most of the transformation functions in the</span></span>
+<span class='r-in'><span class='co'># scales package currently have this property).</span></span>
+<span class='r-in'><span class='co'># For example, here is a log-Normal distribution plotted on the log</span></span>
+<span class='r-in'><span class='co'># scale, where it will appear Normal:</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>dist <span class='op'>=</span> <span class='st'>"lnorm"</span>, logmean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>, logsd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>1</span>, dist <span class='op'>=</span> <span class='va'>dist</span>, arg1 <span class='op'>=</span> <span class='va'>logmean</span>, arg2 <span class='op'>=</span> <span class='va'>logsd</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'>stat_dist_halfeye</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span><span class='op'>(</span>breaks <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>,<span class='fl'>7</span>, by <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='stat_dist_slabinterval-3.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># see vignette("slabinterval") for many more examples.</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

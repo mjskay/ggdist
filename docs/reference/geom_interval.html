@@ -94,7 +94,7 @@ Wrapper around geom_slabinterval()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -264,7 +264,7 @@ opinion, backwards; but the base ggplot naming scheme is allowed for compatibili
       <th>interval_size_range</th>
       <td><p>(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
 they tend to be too thick when using the default settings of <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>, which give sizes
-with a range of <code><a href='https://rdrr.io/r/base/c.html'>c(1, 6)</a></code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
+with a range of <code>c(1, 6)</code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
 (typically this should be equal to the value of the <code>range</code> argument of the <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>
 function), and <code>interval_size_range</code> indicates the desired output range of the size values (the min and max of
 the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
@@ -296,7 +296,7 @@ of functions, making them often more convenient than vanilla <code><a href='http
 when used with functions like <code><a href='point_interval.html'>median_qi()</a></code>, <code><a href='point_interval.html'>mean_qi()</a></code>,
 <code><a href='point_interval.html'>mode_hdi()</a></code>, etc.</p>
 <p>Specifically, <code>geom_interval</code> acts as if its default aesthetics are
-<code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes(color = forcats::fct_rev(ordered(.width)))</a></code>.</p>
+<code>aes(color = forcats::fct_rev(ordered(.width)))</code>.</p>
     <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
 
     
@@ -397,32 +397,34 @@ available to these geoms.</p></div>
     <p>Matthew Kay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>RankCorr_u_tau</span>, package <span class='op'>=</span> <span class='st'>"ggdist"</span><span class='op'>)</span>
-
-<span class='co'># orientation is detected automatically based on</span>
-<span class='co'># use of xmin/xmax or ymin/ymax</span>
-
-<span class='va'>RankCorr_u_tau</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>i</span>, x <span class='op'>=</span> <span class='va'>u_tau</span>, xmin <span class='op'>=</span> <span class='va'>.lower</span>, xmax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>geom_interval</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='img'><img src='geom_interval-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='va'>RankCorr_u_tau</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>i</span>, y <span class='op'>=</span> <span class='va'>u_tau</span>, ymin <span class='op'>=</span> <span class='va'>.lower</span>, ymax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>geom_interval</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='img'><img src='geom_interval-2.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span><span class='op'>(</span><span class='fu'><a href='theme_ggdist.html'>theme_ggdist</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>RankCorr_u_tau</span>, package <span class='op'>=</span> <span class='st'>"ggdist"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># orientation is detected automatically based on</span></span>
+<span class='r-in'><span class='co'># use of xmin/xmax or ymin/ymax</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>RankCorr_u_tau</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>i</span>, x <span class='op'>=</span> <span class='va'>u_tau</span>, xmin <span class='op'>=</span> <span class='va'>.lower</span>, xmax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'>geom_interval</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='geom_interval-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>RankCorr_u_tau</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='point_interval.html'>median_qi</a></span><span class='op'>(</span>.width <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.5</span>, <span class='fl'>.8</span>, <span class='fl'>.95</span>, <span class='fl'>.99</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>i</span>, y <span class='op'>=</span> <span class='va'>u_tau</span>, ymin <span class='op'>=</span> <span class='va'>.lower</span>, ymax <span class='op'>=</span> <span class='va'>.upper</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'>geom_interval</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='geom_interval-2.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

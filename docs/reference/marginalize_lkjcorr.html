@@ -95,7 +95,7 @@ Useful for visualizing prior correlations from LKJ distributions." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -221,31 +221,33 @@ family of ggplot2 stats.</p>
     <div class='dont-index'><p><code><a href='parse_dist.html'>parse_dist()</a></code>, <code><a href='lkjcorr_marginal.html'>lkjcorr_marginal()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-
-<span class='co'># Say we have an LKJ(3) prior on a 2x2 correlation matrix. We can visualize</span>
-<span class='co'># its marginal distribution as follows...</span>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>prior <span class='op'>=</span> <span class='st'>"lkjcorr(3)"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span><span class='op'>(</span><span class='va'>prior</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>marginalize_lkjcorr</span><span class='op'>(</span>K <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>prior</span>, dist <span class='op'>=</span> <span class='va'>.dist</span>, args <span class='op'>=</span> <span class='va'>.args</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeye</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>xlim</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span><span class='op'>(</span><span class='st'>"Marginal correlation for LKJ(3) prior on 2x2 correlation matrix"</span><span class='op'>)</span>
-</div><div class='img'><img src='marginalize_lkjcorr-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># Say our prior list has multiple LKJ priors on correlation matrices</span>
-<span class='co'># of different sizes, we can supply a predicate expression to select</span>
-<span class='co'># only those rows we want to modify</span>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>coef <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span>, <span class='st'>"b"</span><span class='op'>)</span>, prior <span class='op'>=</span> <span class='st'>"lkjcorr(3)"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span><span class='op'>(</span><span class='va'>prior</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>marginalize_lkjcorr</span><span class='op'>(</span>K <span class='op'>=</span> <span class='fl'>2</span>, <span class='va'>coef</span> <span class='op'>==</span> <span class='st'>"a"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>marginalize_lkjcorr</span><span class='op'>(</span>K <span class='op'>=</span> <span class='fl'>4</span>, <span class='va'>coef</span> <span class='op'>==</span> <span class='st'>"b"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   coef      prior            .dist .args
-#&gt; 1    a lkjcorr(3) lkjcorr_marginal  2, 3
-#&gt; 2    b lkjcorr(3) lkjcorr_marginal  4, 3</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Say we have an LKJ(3) prior on a 2x2 correlation matrix. We can visualize</span></span>
+<span class='r-in'><span class='co'># its marginal distribution as follows...</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>prior <span class='op'>=</span> <span class='st'>"lkjcorr(3)"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span><span class='op'>(</span><span class='va'>prior</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'>marginalize_lkjcorr</span><span class='op'>(</span>K <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>prior</span>, dist <span class='op'>=</span> <span class='va'>.dist</span>, args <span class='op'>=</span> <span class='va'>.args</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeye</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/lims.html'>xlim</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span><span class='op'>(</span><span class='st'>"Marginal correlation for LKJ(3) prior on 2x2 correlation matrix"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='marginalize_lkjcorr-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Say our prior list has multiple LKJ priors on correlation matrices</span></span>
+<span class='r-in'><span class='co'># of different sizes, we can supply a predicate expression to select</span></span>
+<span class='r-in'><span class='co'># only those rows we want to modify</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>coef <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span>, <span class='st'>"b"</span><span class='op'>)</span>, prior <span class='op'>=</span> <span class='st'>"lkjcorr(3)"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span><span class='op'>(</span><span class='va'>prior</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'>marginalize_lkjcorr</span><span class='op'>(</span>K <span class='op'>=</span> <span class='fl'>2</span>, <span class='va'>coef</span> <span class='op'>==</span> <span class='st'>"a"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'>marginalize_lkjcorr</span><span class='op'>(</span>K <span class='op'>=</span> <span class='fl'>4</span>, <span class='va'>coef</span> <span class='op'>==</span> <span class='st'>"b"</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   coef      prior            .dist .args</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1    a lkjcorr(3) lkjcorr_marginal  2, 3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2    b lkjcorr(3) lkjcorr_marginal  4, 3</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

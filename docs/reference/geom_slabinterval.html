@@ -96,7 +96,7 @@ corresponding intervals." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -278,7 +278,7 @@ sizes for intervals drawn according to <code>interval_size_range</code> (see the
       <th>interval_size_range</th>
       <td><p>(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
 they tend to be too thick when using the default settings of <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>, which give sizes
-with a range of <code><a href='https://rdrr.io/r/base/c.html'>c(1, 6)</a></code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
+with a range of <code>c(1, 6)</code>. The <code>interval_size_domain</code> value indicates the input domain of raw size values
 (typically this should be equal to the value of the <code>range</code> argument of the <code><a href='https://ggplot2.tidyverse.org/reference/scale_size.html'>scale_size_continuous()</a></code>
 function), and <code>interval_size_range</code> indicates the desired output range of the size values (the min and max of
 the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this argument,
@@ -462,13 +462,14 @@ See <code><a href='../articles/slabinterval.html'>vignette("slabinterval")</a></
     <p>Matthew Kay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># geom_slabinterval() is typically not that useful on its own.</span>
-<span class='co'># See vignette("slabinterval") for a variety of examples of the use of its</span>
-<span class='co'># shortcut geoms and stats, which are more useful than using</span>
-<span class='co'># geom_slabinterval() directly.</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='co'># geom_slabinterval() is typically not that useful on its own.</span></span>
+<span class='r-in'><span class='co'># See vignette("slabinterval") for a variety of examples of the use of its</span></span>
+<span class='r-in'><span class='co'># shortcut geoms and stats, which are more useful than using</span></span>
+<span class='r-in'><span class='co'># geom_slabinterval() directly.</span></span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

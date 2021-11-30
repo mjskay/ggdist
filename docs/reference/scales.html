@@ -93,7 +93,7 @@ and stats/geoms based on it (like eye plots)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -346,10 +346,10 @@ densities of 0 get mapped to 0 in the output.</p></li>
 <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html'>scale_color_discrete()</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous()</a></code>, etc.</p>
 <p>Other scale functions can be used with the aesthetics/scales defined here by using the <code>aesthetics</code>
 argument to that scale function. For example, to use color brewer scales with the <code>point_color</code> aesthetic:</p>
-<p><code><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_brewer(..., aesthetics = "point_color")</a></code></p>
+<p><code>scale_color_brewer(..., aesthetics = "point_color")</code></p>
 <p>With continuous color scales, you may also need to provide a guide as the default guide does not work properly;
 this is what <code>guide_colorbar2</code> is for:</p>
-<p><code><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")</a></code></p>
+<p><code>scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")</code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other ggplot2 scales: <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html'>scale_color_discrete()</a></code>, <code><a href='https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html'>scale_color_continuous()</a></code>, etc.</p>
@@ -360,37 +360,38 @@ this is what <code>guide_colorbar2</code> is for:</p>
     <p>Matthew Kay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-
-<span class='co'># This plot shows how to set multiple specific aesthetics</span>
-<span class='co'># NB it is very ugly and is only for demo purposes.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>distribution <span class='op'>=</span> <span class='st'>"Normal(1,2)"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span><span class='op'>(</span><span class='va'>distribution</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>distribution</span>, dist <span class='op'>=</span> <span class='va'>.dist</span>, args <span class='op'>=</span> <span class='va'>.args</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeye</a></span><span class='op'>(</span>
-    shape <span class='op'>=</span> <span class='fl'>21</span>,  <span class='co'># this point shape has a fill and outline</span>
-    point_color <span class='op'>=</span> <span class='st'>"red"</span>,
-    point_fill <span class='op'>=</span> <span class='st'>"black"</span>,
-    point_alpha <span class='op'>=</span> <span class='fl'>.1</span>,
-    point_size <span class='op'>=</span> <span class='fl'>6</span>,
-    stroke <span class='op'>=</span> <span class='fl'>2</span>,
-    interval_color <span class='op'>=</span> <span class='st'>"blue"</span>,
-    <span class='co'># interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default</span>
-    <span class='co'># see the interval_size_range parameter in help("geom_slabinterval")</span>
-    interval_size <span class='op'>=</span> <span class='fl'>8</span>,
-    interval_linetype <span class='op'>=</span> <span class='st'>"dashed"</span>,
-    interval_alpha <span class='op'>=</span> <span class='fl'>.25</span>,
-    <span class='co'># fill sets the fill color of the slab (here the density)</span>
-    slab_color <span class='op'>=</span> <span class='st'>"green"</span>,
-    slab_fill <span class='op'>=</span> <span class='st'>"purple"</span>,
-    slab_size <span class='op'>=</span> <span class='fl'>3</span>,
-    slab_linetype <span class='op'>=</span> <span class='st'>"dotted"</span>,
-    slab_alpha <span class='op'>=</span> <span class='fl'>.5</span>
-  <span class='op'>)</span>
-</div><div class='img'><img src='scales-1.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># This plot shows how to set multiple specific aesthetics</span></span>
+<span class='r-in'><span class='co'># NB it is very ugly and is only for demo purposes.</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>distribution <span class='op'>=</span> <span class='st'>"Normal(1,2)"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='parse_dist.html'>parse_dist</a></span><span class='op'>(</span><span class='va'>distribution</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>distribution</span>, dist <span class='op'>=</span> <span class='va'>.dist</span>, args <span class='op'>=</span> <span class='va'>.args</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='stat_dist_slabinterval.html'>stat_dist_halfeye</a></span><span class='op'>(</span></span>
+<span class='r-in'>    shape <span class='op'>=</span> <span class='fl'>21</span>,  <span class='co'># this point shape has a fill and outline</span></span>
+<span class='r-in'>    point_color <span class='op'>=</span> <span class='st'>"red"</span>,</span>
+<span class='r-in'>    point_fill <span class='op'>=</span> <span class='st'>"black"</span>,</span>
+<span class='r-in'>    point_alpha <span class='op'>=</span> <span class='fl'>.1</span>,</span>
+<span class='r-in'>    point_size <span class='op'>=</span> <span class='fl'>6</span>,</span>
+<span class='r-in'>    stroke <span class='op'>=</span> <span class='fl'>2</span>,</span>
+<span class='r-in'>    interval_color <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
+<span class='r-in'>    <span class='co'># interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default</span></span>
+<span class='r-in'>    <span class='co'># see the interval_size_range parameter in help("geom_slabinterval")</span></span>
+<span class='r-in'>    interval_size <span class='op'>=</span> <span class='fl'>8</span>,</span>
+<span class='r-in'>    interval_linetype <span class='op'>=</span> <span class='st'>"dashed"</span>,</span>
+<span class='r-in'>    interval_alpha <span class='op'>=</span> <span class='fl'>.25</span>,</span>
+<span class='r-in'>    <span class='co'># fill sets the fill color of the slab (here the density)</span></span>
+<span class='r-in'>    slab_color <span class='op'>=</span> <span class='st'>"green"</span>,</span>
+<span class='r-in'>    slab_fill <span class='op'>=</span> <span class='st'>"purple"</span>,</span>
+<span class='r-in'>    slab_size <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>    slab_linetype <span class='op'>=</span> <span class='st'>"dotted"</span>,</span>
+<span class='r-in'>    slab_alpha <span class='op'>=</span> <span class='fl'>.5</span></span>
+<span class='r-in'>  <span class='op'>)</span></span>
+<span class='r-plt img'><img src='scales-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

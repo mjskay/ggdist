@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.1</span>
       </span>
     </div>
 
@@ -152,13 +152,25 @@
       <small>Source: <a href='https://github.com/mjskay/ggdist/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="ggdist-301" class="section level1">
+<h1 class="page-header" data-toc-text="3.0.1">
+<a href="#ggdist-301" class="anchor"></a>ggdist 3.0.1<small> Unreleased </small>
+</h1>
+<p>Bug fixes:</p>
+<ul>
+<li>Forward-compatibility fixes for <code>distributional</code> &gt;= 0.2.2.9000 (<a href='https://github.com/mjskay/ggdist/issues/91'>#91</a>).</li>
+<li>Allow densities for samples of size 1 in <code><a href="../reference/stat_sample_slabinterval.html">stat_sample_slabinterval()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/98'>#98</a>).</li>
+<li>Avoid NOTE about missing <code>linearGradient()</code> function on R &lt; 4.1.</li>
+<li>Do not draw legend components for inactive sub-geoms in <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code>.</li>
+</ul>
+</div>
     <div id="ggdist-300" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.0">
 <a href="#ggdist-300" class="anchor"></a>ggdist 3.0.0<small> 2021-07-19 </small>
 </h1>
 <p>Breaking changes:</p>
 <ul>
-<li>The positioning of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family geoms when using <code>position_dodge()</code> is now slightly different in order to match up with how other geoms are positioned (<a href='https://github.com/mjskay/ggdist/issues/85'>#85</a>). This may slightly change existing charts that use <code>position = "dodge"</code>, and in some cases may cause slabs to be drawn slightly outside plot boundaries, but makes it much easier to combine <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> with other geoms in the expected way. If dodging more similar to the old approach is needed, use the new “justification-preserving dodge”, <code><a href="../reference/position_dodgejust.html">position_dodgejust()</a></code>, in place of <code>position_dodge()</code>.</li>
+<li>The positioning of <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family geoms when using <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code> is now slightly different in order to match up with how other geoms are positioned (<a href='https://github.com/mjskay/ggdist/issues/85'>#85</a>). This may slightly change existing charts that use <code>position = "dodge"</code>, and in some cases may cause slabs to be drawn slightly outside plot boundaries, but makes it much easier to combine <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> with other geoms in the expected way. If dodging more similar to the old approach is needed, use the new “justification-preserving dodge”, <code><a href="../reference/position_dodgejust.html">position_dodgejust()</a></code>, in place of <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html">position_dodge()</a></code>.</li>
 </ul>
 <p>New features:</p>
 <ul>
@@ -199,7 +211,7 @@
 <p>New features:</p>
 <ul>
 <li>Added <code>"weave"</code> and <code>"swarm"</code> layouts for dots geoms (<a href='https://github.com/mjskay/ggdist/issues/64'>#64</a>). These provide alternative layouts that keep datapoints in their actual positions on the data axis. The <code>"weave"</code> layout maintains rows but not columns and works well for quantile dotplots; the <code>"swarm"</code> layout uses the <code>"compactswarm"</code> method from <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html">beeswarm::beeswarm()</a></code> (courtesy James Trimble) and works well on sample data. See the dotplot section of <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for comparisons.</li>
-<li>Allow the use of <code>unit()</code> to specify bin widths manually for dots geoms and stats, which can be helpful when you need dotplots across facets to have the same bin width (<a href='https://github.com/mjskay/ggdist/issues/53'>#53</a>).</li>
+<li>Allow the use of <code><a href="https://rdrr.io/r/grid/unit.html">unit()</a></code> to specify bin widths manually for dots geoms and stats, which can be helpful when you need dotplots across facets to have the same bin width (<a href='https://github.com/mjskay/ggdist/issues/53'>#53</a>).</li>
 </ul>
 <p>New documentation:</p>
 <ul>
@@ -223,10 +235,10 @@
 <p>New features:</p>
 <ul>
 <li>add <code>pdf</code> and <code>cdf</code> computed variables for the <code><a href="../reference/stat_sample_slabinterval.html">stat_sample_slabinterval()</a></code> subfamily. See new examples of usage in the last section of <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>. (<a href='https://github.com/mjskay/ggdist/issues/11'>#11</a>)</li>
-<li>add <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> for creating (amongst other things) interval-filled halfeyes, in the style of <code><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html">bayesplot::mcmc_areas()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/11'>#11</a>)</li>
+<li>add <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> for creating (amongst other things) interval-filled halfeyes, in the style of <code>bayesplot::mcmc_areas()</code> (<a href='https://github.com/mjskay/ggdist/issues/11'>#11</a>)</li>
 <li>add <code>fill_ramp</code> and <code>color_ramp</code> scales to <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> families, making it easier to separate group colors from interval/density/CDF colors. See new examples in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code>, and <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. (<a href='https://github.com/mjskay/ggdist/issues/16'>#16</a>)</li>
 <li>auto-detect finite limits on analytical distributions, so (e.g.) distributions like the beta will not cut off tails close to 0 or 1. (<a href='https://github.com/mjskay/ggdist/issues/18'>#18</a>)</li>
-<li>add <code><a href="https://rdrr.io/pkg/brms/man/set_prior.html">brms::brmsprior</a></code> implementation for <code><a href="../reference/parse_dist.html">parse_dist()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/34'>#34</a>)</li>
+<li>add <code>brms::brmsprior</code> implementation for <code><a href="../reference/parse_dist.html">parse_dist()</a></code> (<a href='https://github.com/mjskay/ggdist/issues/34'>#34</a>)</li>
 </ul>
 <p>New documentation:</p>
 <ul>
@@ -281,7 +293,7 @@
 <li>Initial split from tidybayes: ggdist now contains all stats/geoms from tidybayes (except deprecated ones), all support functions for stats/geoms (such as <code><a href="../reference/point_interval.html">point_interval()</a></code>), <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code>, and <code><a href="../articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>. Tidybayes will retain all other functions, and will re-export all <code>ggdist</code> functions for now.</li>
 <li>All stats and geoms now support automatic orientation determination. Thus, all <code>h</code>-suffix geoms are now deprecated. Those geoms have been left in <code>tidybayes</code> and give a deprecation warning when used; they cannot be used from <code>ggdist</code> directly.</li>
 <li>
-<code><a href="../reference/geom_interval.html">geom_interval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics if <code>.lower</code> or <code>.upper</code> are present in the data. This allows them to work better with automatic orientation detection (and was a bad feature to have existed in the first place anyway). The deprecated <code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html">tidybayes::geom_intervalh()</a></code> and <code><a href="http://mjskay.github.io/tidybayes/reference/tidybayes-deprecated.html">tidybayes::geom_pointintervalh()</a></code> still automatically set those aesthetics, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
+<code><a href="../reference/geom_interval.html">geom_interval()</a></code>, <code><a href="../reference/geom_pointinterval.html">geom_pointinterval()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> no longer automatically set the <code>ymin</code> and <code>ymax</code> aesthetics if <code>.lower</code> or <code>.upper</code> are present in the data. This allows them to work better with automatic orientation detection (and was a bad feature to have existed in the first place anyway). The deprecated <code>tidybayes::geom_intervalh()</code> and <code>tidybayes::geom_pointintervalh()</code> still automatically set those aesthetics, since they are deprecated anyway (so supporting the old behavior is fine in these functions).</li>
 <li>
 <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code>/<code><a href="../reference/stat_lineribbon.html">stat_lineribbon()</a></code> now supports a <code>step</code> argument for creating stepped lineribbons. H/T to Solomon Kurz for the suggestion.</li>
 <li>
