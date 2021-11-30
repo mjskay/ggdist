@@ -208,11 +208,11 @@ test_that("scale transformation works", {
   )
 
 
-  p_log_gamma = data.frame(x = dist_gamma(2,2)) %>%
+  p_log_wrap = data.frame(x = dist_wrap("lnorm")) %>%
     ggplot(aes(xdist = x, y = 0))
 
-  vdiffr::expect_doppelganger("transformed scale with dist_gamma",
-    p_log_gamma + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
+  vdiffr::expect_doppelganger("transformed scale with dist_wrap(lnorm)",
+    p_log_wrap + stat_dist_halfeye(n = 20, point_interval = mode_hdci) + scale_x_log10()
   )
 
 
