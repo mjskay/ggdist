@@ -1,3 +1,13 @@
+# ggdist 3.0.1
+
+Bug fixes:
+
+* Forward-compatibility fixes for `distributional` >= 0.2.2.9000 (#91).
+* Allow densities for samples of size 1 in `stat_sample_slabinterval()` (#98).
+* Avoid NOTE about missing `linearGradient()` function on R < 4.1.
+* Do not draw legend components for inactive sub-geoms in `geom_slabinterval()`.
+
+
 # ggdist 3.0.0
 
 Breaking changes:
@@ -88,6 +98,7 @@ Bug fixes:
 * Move *fda* to suggests as it brings in a large number of dependencies and is rarely used.
 * Use trimmed density for mode estimation (#57).
 
+
 # ggdist 2.4.0
 
 New features:
@@ -117,6 +128,7 @@ Bug fixes:
 * add limited `na.rm` support to `curve_interval()` (#22)
 * use analytical instead of numerical derivatives on scale transformations where possible, improving reliability.
 
+
 # ggdist 2.3.0
 
 New features and documentation:
@@ -131,6 +143,7 @@ Bug fixes:
 * Fix slab drawing order for overlapping (ggridges-style) slabs (#30)
 * Workaround for changes to {distributional} distribution functions until #31 is fixed.
 
+
 # ggdist 2.2.0
 
 * Support for [distributional](https://pkg.mitchelloharawild.com/distributional/), including new
@@ -139,6 +152,7 @@ Bug fixes:
   functions, such as Correll-style gradient plots combined with violins, as in Helske *et al.* (#11).
 * `stat_dist_...` geoms should now work with `gganimate` (#15).
 * Examples updated to fix errors introduced by `broom::augment()` defaulting to `se_fit = FALSE`.
+
 
 # ggdist 2.1.1
 
