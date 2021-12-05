@@ -82,6 +82,7 @@ Collate:
     "parse_dist.R"
     "point_interval.R"
     "position_dodgejust.R"
+    "rd_slabinterval.R"
     "scale_colour_ramp.R"
     "scale_.R"
     "stat.R"
