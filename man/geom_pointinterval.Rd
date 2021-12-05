@@ -226,6 +226,7 @@ See \code{\link[=stat_pointinterval]{stat_pointinterval()}} for the stat version
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geometry this shortcut is based on.
 
 Other geom_slabinterval shortcut geoms: 
-\code{\link{geom_interval}()}
+\code{\link{geom_interval}()},
+\code{\link{geom_slab}()}
 }
 \concept{geom_slabinterval shortcut geoms}

@@ -713,6 +713,18 @@ StatSlab = ggproto("StatSlab", StatSlabinterval,
 )
 StatSlab$default_aes$size = NULL
 #' @eval rd_slabinterval_shortcut_stat("slab", "slab (ridge)", geom_name = "slab")
+#' @examples
+#'
+#' # RIDGE PLOTS
+#' # "ridge" plots can be created by expanding the slabs to the limits of the plot
+#' # (expand = TRUE), allowing the density estimator to be nonzero outside the
+#' # limits of the data (trim = FALSE), and increasing the height of the slabs.
+#' data.frame(
+#'   group = letters[1:3],
+#'   value = rnorm(3000, 3:1)
+#' ) %>%
+#'   ggplot(aes(y = group, x = value)) +
+#'   stat_slab(color = "black", expand = TRUE, trim = FALSE, height = 2)
 #' @export
 stat_slab = make_stat(StatSlab, geom = "slab")
 

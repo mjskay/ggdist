@@ -322,6 +322,17 @@ dist_df = data.frame(
 dist_df \%>\%
   ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
   stat_slab()
+
+# RIDGE PLOTS
+# "ridge" plots can be created by expanding the slabs to the limits of the plot
+# (expand = TRUE), allowing the density estimator to be nonzero outside the
+# limits of the data (trim = FALSE), and increasing the height of the slabs.
+data.frame(
+  group = letters[1:3],
+  value = rnorm(3000, 3:1)
+) \%>\%
+  ggplot(aes(y = group, x = value)) +
+  stat_slab(color = "black", expand = TRUE, trim = FALSE, height = 2)
 }
 \seealso{
 See \code{\link[=geom_slab]{geom_slab()}} for the geom underlying this stat.

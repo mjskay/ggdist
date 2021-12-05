@@ -2,7 +2,6 @@
 % Please edit documentation in R/geom_slabinterval.R
 \name{geom_slabinterval}
 \alias{geom_slabinterval}
-\alias{geom_slab}
 \title{Slab + point + interval meta-geom}
 \usage{
 geom_slabinterval(
@@ -20,20 +19,6 @@ geom_slabinterval(
   show_slab = TRUE,
   show_point = TRUE,
   show_interval = TRUE,
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-)
-
-geom_slab(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-  ...,
-  orientation = NA,
-  normalize = "all",
-  fill_type = "segments",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
