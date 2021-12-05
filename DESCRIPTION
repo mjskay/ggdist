@@ -40,6 +40,7 @@ Suggests:
     broom (>= 0.5.6),
     modelr,
     cowplot,
+    patchwork,
     covr,
     gdtools,
     rmarkdown,
