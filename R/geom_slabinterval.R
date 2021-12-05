@@ -205,22 +205,22 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' vertical orientations, dodging (via the `position` argument), and relative justification of slabs with their
 #' corresponding intervals.
 #'
-#' `geom_slabinterval` is a flexible meta-geom that you can use directly or through a variety of "shortcut"
+#' [geom_slabinterval()] is a flexible meta-geom that you can use directly or through a variety of "shortcut"
 #' geoms that represent useful combinations of the various parameters of this geom. In many cases you will want to
 #' use the shortcut geoms instead as they create more useful mnemonic primitives, such as eye plots,
 #' half-eye plots, point+interval plots, or CCDF barplots.
 #'
 #' The *slab* portion of the geom is much like a ridge or "joy" plot: it represents the value of a function
-#' scaled to fit between values on the x or y access (depending on the value of `orientation`). Values of
+#' scaled to fit between values on the `x` or `y` axis (depending on the value of `orientation`). Values of
 #' the functions are specified using the `thickness` aesthetic and are scaled to fit into `scale`
 #' times the distance between points on the relevant axis. E.g., if `orientation` is `"horizontal"`,
-#' `scale` is 0.9, and `y` is a discrete variable, then the `thickness` aesthetic specifies the
-#' value of some function of `x` that is drawn for every `y` value and scaled to fit into 0.9 times
-#' the distance between points on the y axis.
+#' `scale` is `0.9`, and `y` is a discrete variable, then the `thickness` aesthetic specifies the
+#' value of some function of `x` that is drawn for every `y` value and scaled to fit into `0.9` times
+#' the distance between points on the `y` axis.
 #'
 #' For the *interval* portion of the geom, `x` and `y` aesthetics specify the location of the
-#' point and `ymin`/`ymax` or `xmin`/`xmax` (depending on the value of `orientation`
-#' specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
+#' point, and `ymin`/`ymax` or `xmin`/`xmax` (depending on the value of `orientation`)
+#' specify the endpoints of the interval. A scaling factor for interval line width and point size is applied
 #' through the `interval_size_domain`, `interval_size_range`, and `fatten_point` parameters.
 #' These scaling factors are designed to give multiple uncertainty intervals reasonable
 #' scaling at the default settings for [scale_size_continuous()].
@@ -231,14 +231,15 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' usually set this aesthetic for you as needed, and their use is recommended unless you have a very custom
 #' use case.
 #'
-#' Wrapper geoms and stats include:
+#' Wrapper geoms include:
 #'
-#'  - [stat_slabinterval()]
-#'  - [geom_pointinterval()] / [stat_pointinterval()]
-#'  - [geom_interval()] / [stat_interval()]
-#'  - [geom_dots()] / [stat_dots()]
+#'  - [geom_pointinterval()]
+#'  - [geom_interval()]
+#'  - [geom_slab()]
 #'
-#' Typically, the `geom_*` versions are meant for use with already-summarized data (such as intervals) and the
+#' In addition, the [stat_slabinterval()] family of stats uses geoms from the
+#' [geom_slabinterval()] family, and is often easier to use than using these geoms
+#' directly. Typically, the `geom_*` versions are meant for use with already-summarized data (such as intervals) and the
 #' `stat_*` versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
 #'
 #' @eval rd_slabinterval_params()
@@ -247,10 +248,14 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
 #' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
 #' parameters to the paired geom/stat.
+#' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
+#' Setting this equal to `"dodge"` ([position_dodge()]) or `"dodgejust"` ([position_dodgejust()]) can be useful if
+#' you have overlapping geometries.
 #' @return A [ggplot2::Geom] representing a slab or combined slab+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @author Matthew Kay
 #' @seealso See [geom_lineribbon()] for a combination geom designed for fit curves plus probability bands.
+#' See [geom_dotsinterval()] for a combination geom designed for plotting dotplots with intervals.
 #' See [stat_slabinterval()] for families of stats
 #' built on top of this geom for common use cases (like [stat_halfeye()]).
 #' See `vignette("slabinterval")` for a variety of examples of use.

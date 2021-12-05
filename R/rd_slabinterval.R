@@ -7,52 +7,98 @@
 
 # documentation methods ---------------------------------------------------
 
-rd_shortcut_stat = function(stat_name, geom_name = stat_name) {
-  stat = get(paste0("Stat", title_case(stat_name)))
+rd_shortcut_geom = function(geom_name, from_name = "slabinterval") {
+  from = get(paste0("Geom", title_case(from_name)))
   geom = get(paste0("Geom", title_case(geom_name)))
 
-  # find the changed aesthetics and params for this stat
-  changed_values = function(list, exclude = character()) {
-    # find values changes in the child stat
-    values = stat[[list]][
-      map_lgl_(names(stat[[list]]), function(name)
-        !identical(stat[[list]][[name]], StatSlabinterval[[list]][[name]])
-      )
-    ]
-    # find deleted values
-    deleted_names = setdiff(names(StatSlabinterval[[list]]), names(stat[[list]]))
-    deleted_values = rep(list(NULL), length(deleted_names))
-    names(deleted_values) = deleted_names
-    values = c(values, deleted_values)
+  changed = changed_geom_values(from = from, to = geom)
 
-    # turn values into strings like x = "foo", y = "bar"
-    value_text = lapply(values, function(x) deparse0(get_expr(x)))
-    value_text = value_text[!names(value_text) %in% exclude]
-    if (length(value_text)) paste(names(value_text), "=", value_text, collapse = ", ")
-  }
-  changed_aes = changed_values(
-    "default_aes",
-    exclude = c("datatype")
-  )
-  changed_params = changed_values(
-    "default_params",
-    exclude = c("show_point", "show_interval")
-  )
-  changed_args = changed_values(
-    "layer_args"
-  )
-
-paste0('@description
+  paste0('@description
 ```
-stat_slabinterval(', paste0(collapse = ',', '\n  ', c(
-  if (length(changed_aes)) paste0('aes(', changed_aes, ')'),
-  if (geom_name != "slabinterval") paste0('geom = "', geom_name, '"'),
-  if (length(changed_params)) changed_params,
-  if (length(changed_args)) changed_args
+geom_', from_name, '(', paste0(collapse = ',', '\n  ', c(
+  if (length(changed$aes)) paste0('aes(', changed$aes, ')'),
+  if (length(changed$params)) changed$params,
+  if (length(changed$args)) changed$args
 )), '
 )
 ```
 ')
+}
+
+rd_shortcut_stat = function(stat_name, geom_name = stat_name, from_name = "slabinterval") {
+  from = get(paste0("Stat", title_case(from_name)))
+  stat = get(paste0("Stat", title_case(stat_name)))
+  geom = get(paste0("Geom", title_case(geom_name)))
+
+  changed = changed_geom_values(
+    from = from, to = stat,
+    exclude_aes = "datatype",
+    exclude_params = c("show_point", "show_interval")
+  )
+
+paste0('@description
+```
+stat_', from_name, '(', paste0(collapse = ',', '\n  ', c(
+  if (length(changed$aes)) paste0('aes(', changed$aes, ')'),
+  if (geom_name != from_name) paste0('geom = "', geom_name, '"'),
+  if (length(changed$params)) changed$params,
+  if (length(changed$args)) changed$args
+)), '
+)
+```
+')
+}
+
+rd_slabinterval_shortcut_geom = function(
+  geom_name, chart_type
+) {
+  geom = get(paste0("Geom", title_case(geom_name)))
+
+  c(
+    paste0('@title ', title_case(chart_type), ' plot (shortcut geom)'),
+    if (describe) c(
+      paste0('@description
+Shortcut version of [geom_slabinterval()] for creating ', chart_type, ' plots.
+
+Roughly equivalent to:\n'),
+      rd_shortcut_geom(geom_name)
+    ),
+    '@inheritParams geom_slabinterval',
+    '@return A [ggplot2::Geom] representing a ', chart_type, ' geometry which can
+     be added to a [ggplot()] object.',
+    rd_slabinterval_aesthetics(geom_name),
+    '@seealso',
+    'See [geom_slabinterval()] for the geometry this shortcut is based on.\n',
+    '@family geom_slabinterval shortcut geoms',
+    paste0('@examples
+library(dplyr)
+library(ggplot2)
+library(distributional)
+
+theme_set(theme_ggdist())
+
+# ON SAMPLE DATA
+set.seed(1234)
+df = data.frame(
+  group = c("a", "b", "c"),
+  value = rnorm(1500, mean = c(5, 7, 9), sd = c(1, 1.5, 1))
+)
+df %>%
+  ggplot(aes(x = value, y = group)) +
+  stat_', stat_name, '()', example_layers, '
+
+# ON ANALYTICAL DISTRIBUTIONS
+dist_df = data.frame(
+  group = c("a", "b", "c"),
+  mean =  c(  5,   7,   8),
+  sd =    c(  1, 1.5,   1)
+)
+# Vectorized distribution types, like distributional::dist_normal()
+# and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
+dist_df %>%
+  ggplot(aes(y = group, xdist = dist_normal(mean, sd))) +
+  stat_', stat_name, '()', example_layers)
+  )
 }
 
 rd_slabinterval_shortcut_stat = function(
@@ -153,6 +199,8 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
   geom = get(paste0("Geom", title_case(geom_name)))
 
   params = list(
+
+    # BASE PARAMS
     orientation =
 'Whether this geom is drawn horizontally (`"horizontal"`) or
 vertically (`"vertical"`). The default, `NA`, automatically detects the orientation based on how the
@@ -166,6 +214,8 @@ ggplot naming scheme for `orientation`, `"x"` can be used as an alias for `"vert
 scheme is more intuitive: `"x"` and `"y"` are not orientations and their mapping to orientations is, in my
 opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).
 ',
+
+    # SLAB PARAMS
     normalize =
 'How to normalize heights of functions input to the `thickness` aesthetic. If `"all"`
 (the default), normalize so that the maximum height across all data is `1`; if `"panels"`, normalize within
@@ -183,6 +233,8 @@ like in [stat_gradientinterval()]). When `fill_type == "gradient"`, a `grid::lin
 create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
 R > 4.1 and is not yet supported on all graphics devices.
 ',
+
+    # INTERVAL PARAMS
     interval_size_domain =
 'The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to `interval_size_range` (see the documentation for that argument.)
@@ -205,6 +257,8 @@ thickest interval line. If you wish to specify point sizes directly, you can als
 aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
 specified with that aesthetic will not be adjusted using `fatten_point`.
 ',
+
+    # LINERIBBON PARAMS
     step = 'Should the line/ribbon be drawn as a step function? One of: `FALSE` (do not draw as a step
 function, the default), `TRUE` (draw a step function using the `"mid"` approach), `"mid"`
 (draw steps midway between adjacent x values), `"hv"` (draw horizontal-then-vertical steps), `"vh"`
@@ -457,4 +511,47 @@ rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL) {
 title_case = function(x) {
   substring(x, 1, 1) = toupper(substring(x, 1, 1))
   x
+}
+
+#' get the values of aesthetics, parameters, and layer arguments
+#' that have changed from one stat/geom (`from`) to another (`to`)
+#' @param from a Stat or Geom
+#' @param to a Stat or Geom that is a child of `from`
+#' @param exclude_aes,exclude_params,exclude_args names of elements to
+#' ignore when looking for changes
+#' @return a list with `"aes"`, `"params"`, and `"args"`, each of which is
+#' a string with comma-separated `name = value` pairs giving the changed
+#' values of aesthetics, parameters, and layer arguments
+#' @noRd
+changed_geom_values = function(
+  from, to,
+  exclude_aes = character(),
+  exclude_params = character(),
+  exclude_args = character()
+) {
+  # find the changed aesthetics and params for this stat
+  changed_values = function(list, exclude) {
+    # find values changes in the child stat
+    values = to[[list]][
+      map_lgl_(names(to[[list]]), function(name)
+        !identical(to[[list]][[name]], from[[list]][[name]])
+      )
+    ]
+    # find deleted values
+    deleted_names = setdiff(names(from[[list]]), names(to[[list]]))
+    deleted_values = rep(list(NULL), length(deleted_names))
+    names(deleted_values) = deleted_names
+    values = c(values, deleted_values)
+
+    # turn values into strings like x = "foo", y = "bar"
+    value_text = lapply(values, function(x) deparse0(get_expr(x)))
+    value_text = value_text[!names(value_text) %in% exclude]
+    if (length(value_text)) paste(names(value_text), "=", value_text, collapse = ", ")
+  }
+
+  list(
+    aes = changed_values("default_aes", exclude = exclude_aes),
+    params = changed_values("default_params", exclude = exclude_params),
+    args = changed_values("layer_args", exclude = exclude_args)
+  )
 }

@@ -41,8 +41,9 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{geom}{Use to override the default connection between \code{\link[=stat_interval]{stat_interval()}} and \code{\link[=geom_interval]{geom_interval()}}}
 
-\item{position}{Position adjustment, either as a string, or the result of
-a call to a position adjustment function.}
+\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
+Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
+you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be

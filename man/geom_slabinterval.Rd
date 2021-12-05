@@ -63,8 +63,9 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 \item{stat}{The statistical transformation to use on the data for this
 layer, as a string.}
 
-\item{position}{Position adjustment, either as a string, or the result of
-a call to a position adjustment function.}
+\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
+Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
+you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
@@ -149,22 +150,22 @@ vertical orientations, dodging (via the \code{position} argument), and relative 
 corresponding intervals.
 }
 \details{
-\code{geom_slabinterval} is a flexible meta-geom that you can use directly or through a variety of "shortcut"
+\code{\link[=geom_slabinterval]{geom_slabinterval()}} is a flexible meta-geom that you can use directly or through a variety of "shortcut"
 geoms that represent useful combinations of the various parameters of this geom. In many cases you will want to
 use the shortcut geoms instead as they create more useful mnemonic primitives, such as eye plots,
 half-eye plots, point+interval plots, or CCDF barplots.
 
 The \emph{slab} portion of the geom is much like a ridge or "joy" plot: it represents the value of a function
-scaled to fit between values on the x or y access (depending on the value of \code{orientation}). Values of
+scaled to fit between values on the \code{x} or \code{y} axis (depending on the value of \code{orientation}). Values of
 the functions are specified using the \code{thickness} aesthetic and are scaled to fit into \code{scale}
 times the distance between points on the relevant axis. E.g., if \code{orientation} is \code{"horizontal"},
-\code{scale} is 0.9, and \code{y} is a discrete variable, then the \code{thickness} aesthetic specifies the
-value of some function of \code{x} that is drawn for every \code{y} value and scaled to fit into 0.9 times
-the distance between points on the y axis.
+\code{scale} is \code{0.9}, and \code{y} is a discrete variable, then the \code{thickness} aesthetic specifies the
+value of some function of \code{x} that is drawn for every \code{y} value and scaled to fit into \code{0.9} times
+the distance between points on the \code{y} axis.
 
 For the \emph{interval} portion of the geom, \code{x} and \code{y} aesthetics specify the location of the
-point and \code{ymin}/\code{ymax} or \code{xmin}/\code{xmax} (depending on the value of \code{orientation}
-specifying the endpoints of the interval. A scaling factor for interval line width and point size is applied
+point, and \code{ymin}/\code{ymax} or \code{xmin}/\code{xmax} (depending on the value of \code{orientation})
+specify the endpoints of the interval. A scaling factor for interval line width and point size is applied
 through the \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point} parameters.
 These scaling factors are designed to give multiple uncertainty intervals reasonable
 scaling at the default settings for \code{\link[=scale_size_continuous]{scale_size_continuous()}}.
@@ -175,15 +176,16 @@ manually is typically only necessary if you use this geom directly; the numerous
 usually set this aesthetic for you as needed, and their use is recommended unless you have a very custom
 use case.
 
-Wrapper geoms and stats include:
+Wrapper geoms include:
 \itemize{
-\item \code{\link[=stat_slabinterval]{stat_slabinterval()}}
-\item \code{\link[=geom_pointinterval]{geom_pointinterval()}} / \code{\link[=stat_pointinterval]{stat_pointinterval()}}
-\item \code{\link[=geom_interval]{geom_interval()}} / \code{\link[=stat_interval]{stat_interval()}}
-\item \code{\link[=geom_dots]{geom_dots()}} / \code{\link[=stat_dots]{stat_dots()}}
+\item \code{\link[=geom_pointinterval]{geom_pointinterval()}}
+\item \code{\link[=geom_interval]{geom_interval()}}
+\item \code{\link[=geom_slab]{geom_slab()}}
 }
 
-Typically, the \verb{geom_*} versions are meant for use with already-summarized data (such as intervals) and the
+In addition, the \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of stats uses geoms from the
+\code{\link[=geom_slabinterval]{geom_slabinterval()}} family, and is often easier to use than using these geoms
+directly. Typically, the \verb{geom_*} versions are meant for use with already-summarized data (such as intervals) and the
 \verb{stat_*} versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
 }
 \section{Aesthetics}{
@@ -302,6 +304,7 @@ Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
 }
 \seealso{
 See \code{\link[=geom_lineribbon]{geom_lineribbon()}} for a combination geom designed for fit curves plus probability bands.
+See \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} for a combination geom designed for plotting dotplots with intervals.
 See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for families of stats
 built on top of this geom for common use cases (like \code{\link[=stat_halfeye]{stat_halfeye()}}).
 See \code{vignette("slabinterval")} for a variety of examples of use.
