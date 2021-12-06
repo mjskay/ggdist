@@ -24,22 +24,24 @@ probability distributions (see the
 [tidybayes](https://mjskay.github.io/tidybayes/) package, which builds
 on top of `ggdist`).
 
-The `geom_slabinterval()` / `stat_slabinterval()` /
-`stat_dist_slabinterval()` family (see `vignette("slabinterval")`)
-includes point summaries and intervals, eye plots, half-eye plots, CCDF
-bar plots, gradient plots, dotplots, and histograms:
+The `geom_slabinterval()` / `stat_slabinterval()` family (see
+`vignette("slabinterval")`) includes point summaries and intervals, eye
+plots, half-eye plots, CCDF bar plots, gradient plots, dotplots, and
+histograms:
 
 ![The slabinterval family of geoms and
 stats](man/figures/slabinterval_family.png)
 
-The `geom_lineribbon()` / `stat_lineribbon()` / `stat_dist_lineribbon()`
-family (see `vignette("lineribbon")`) makes it easy to visualize fit
-lines with an arbitrary number of uncertainty bands:
+The `geom_lineribbon()` / `stat_lineribbon()` family (see
+`vignette("lineribbon")`) makes it easy to visualize fit lines with an
+arbitrary number of uncertainty bands:
 
 ![](man/figures/README/lineribbon-1.png)<!-- -->
 
-All geoms in `ggdist` also have `stat_dist_` counterparts designed for
-visualizing analytical distributions, which is particularly useful when
+All stat in `ggdist` also support visualizing analytical distributions
+and vectorized distribution data types like
+[distributional](https://pkg.mitchelloharawild.com/distributional/)
+objects or `posterior::rvar()` objects. This is particularly useful when
 visualizing uncertainty in frequentist models (see
 `vignette("freq-uncertainty-vis")`) or when visualizing priors in a
 Bayesian analysis.
@@ -84,6 +86,6 @@ reproduce the issue. Pull requests should be filed against the
 ## Citing `ggdist`
 
 Matthew Kay (2021). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 3.0.1,
+Uncertainty*. R package version 3.0.1.9000,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

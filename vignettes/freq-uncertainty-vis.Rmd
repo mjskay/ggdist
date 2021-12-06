@@ -247,7 +247,7 @@ Another alternative to using `alpha` to create gradations of lineribbon colors i
 groups is to use the `fill_ramp` aesthetic provided by `ggdist` to "ramp" the fill
 color of the ribbons from `"white"` to their full color (see `help("scale_fill_ramp")`).
 Here we'll "whiten" the fill color of each band according to its `level` (the `level`
-variable is computed by `stat_dist_lineribbon()` and is an ordered factor version of
+variable is computed by `stat_lineribbon()` and is an ordered factor version of
 `.width`):
 
 ```{r lineribbon_lightened}

@@ -34,27 +34,40 @@ reference:
   - ends_with("qi")
   - cut_cdf_qi
 
-- title: Visualizing draws
-  desc:  Stats and geoms for visualizing tidy data frames of draws (e.g. sample data,
-    draws from a bootstrap distributation, draws from a Bayesian posterior).
+- title: Visualizing sample data and distribution vectors
+  desc:  Stats for visualizing tidy data frames of draws (e.g. sample data,
+    draws from a bootstrap distributation, draws from a Bayesian posterior) and
+    distribution vectors (such as `{distributional}` objects and `posterior::rvar()`s).
+  contents:
+  - stat_slabinterval
+  - stat_pointinterval
+  - stat_interval
+  - stat_slab
+  - stat_halfeye
+  - stat_eye
+  - stat_ccdfinterval
+  - stat_cdfinterval
+  - stat_gradientinterval
+  - stat_histinterval
+  - stat_lineribbon
+  - stat_dotsinterval
+  - stat_dots
+
+- title: Visualizing already-summarized data
+  desc:  Geoms for visualizing data that has already been summarized (e.g.
+    into density function evaluations, points, intervals, etc).
   contents:
   - geom_slabinterval
-  - stat_sample_slabinterval
-  - geom_interval
-  - geom_lineribbon
   - geom_pointinterval
+  - geom_interval
+  - geom_slab
+  - geom_lineribbon
   - geom_dotsinterval
-  - stat_interval
-  - stat_lineribbon
-  - stat_pointinterval
-  - stat_dotsinterval
+  - geom_dots
 
-- title: Visualizing analytical distributions
-  desc:  Stats, geoms, and helper functions for visualizing analytical distributions (e.g.
-    frequentist confidence distributions, Bayesian priors).
+- title: Distributions
+  desc:  Helper functions for manipulating and visualizing analytical distributions.
   contents:
-  - stat_dist_slabinterval
-  - stat_dist_dotsinterval
   - parse_dist
   - student_t
   - lkjcorr_marginal
@@ -64,7 +77,6 @@ reference:
   desc:  Scales for custom aesthetics used by ggdist geoms and stats
   contents:
   - scales
-  - scale_x_dist, scale_y_dist
   - scale_colour_ramp
 
 - title: GGplot positions
@@ -100,3 +112,8 @@ reference:
   desc:  Datasets used for examples and testing
   contents:
   - RankCorr
+
+- title: Deprecated functions
+  desc:  Deprecated functions.
+  contents:
+  - ggdist-deprecated
