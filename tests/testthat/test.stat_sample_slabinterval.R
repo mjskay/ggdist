@@ -130,6 +130,10 @@ test_that("constant distributions work", {
     p + stat_halfeye(n = 15, slab_color = "blue")
   )
 
+  vdiffr::expect_doppelganger("constant dist on histinterval",
+    p + stat_histinterval(n = 15, slab_color = "blue")
+  )
+
   vdiffr::expect_doppelganger("constant dist on ccdf",
     p + stat_ccdfinterval()
   )
