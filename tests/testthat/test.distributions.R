@@ -34,10 +34,15 @@ test_that("sample distributions can be detected and samples extracted", {
   expect_equal(distr_is_sample(x), TRUE)
   expect_equal(distr_get_sample(x), 1:10)
 
+  # RVAR
   skip_if_not_installed("posterior")
-  x = posterior::rvar(1:10)
+  x = posterior::rvar(1:10L)
   expect_equal(distr_is_sample(x), TRUE)
   expect_equal(as.vector(distr_get_sample(x)), 1:10)
+  expect_equal(distr_is_discrete(x), TRUE)
+
+  x = posterior::rvar(1:10/2)
+  expect_equal(distr_is_discrete(x), FALSE)
 })
 
 

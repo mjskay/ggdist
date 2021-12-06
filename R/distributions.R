@@ -47,12 +47,6 @@ distr_function.dist_default = function(dist, prefix, fun) {
 distr_function.rvar = distr_function.distribution
 
 distr_pdf = function(dist) {
-  # handle constant distributions
-  if (distr_is_sample(dist) && distr_is_constant(dist)) {
-    draws = distr_get_sample(dist)
-    return(function(x, ...) ifelse(x == draws[[1]], Inf, 0))
-  }
-
   distr_function(dist, "d", density)
 }
 
