@@ -1146,6 +1146,54 @@ dist_df %>%
 
 See `help("scale_color_ramp")` for more information on the color ramp aesthetics/scales.
 
+### Creating ridge plots
+
+When plotting densities (as in `stat_halfeye()`, `stat_slab()`, etc) it can be useful to
+overplot many densities simultaneously, an approach sometimes called *ridge plots*
+(e.g. as in the [ggridges](https://wilkelab.org/ggridges/) package).
+This can be done by setting `scale` or `height` to a value greater than 1. 
+Setting `height` is often the best approach as it will correctly adjust plot boundaries
+(unless you need to use `position = "dodge"`, in which case you should use `scale`
+and adjust plot boundaries manually).
+
+```{r slab_ridge, fig.width = med_width, fig.height = small_height}
+set.seed(1234)
+
+ridges_df = data.frame(
+  group = letters[7:1],
+  x = rnorm(700, mean = 1:7, sd = 2)
+)
+
+ridges_df %>%
+  ggplot(aes(y = group, x = x)) +
+  stat_slab(height = 2, color = "black") +
+  ggtitle("stat_slab(height = 2, color = 'black')")
+```
+
+Depending on if it makes sense for your data (for example, if the scale is unbounded),
+you may also wish to adjust the `trim` parameter, which by default restricts the density
+estimator to 0 outside of the range of the data. Setting `trim` to `FALSE` will
+ensure the densities smoothly go down to 0. Combining this with `expand = TRUE`
+will make each slab expand itself to the limits of the `x` axis.
+
+We'll use `trim` and `expand` along with a combination of `fill` and `fill_ramp`
+to give each group on the y axis a different color and to vary the fill along
+the `x` axis as well:
+
+```{r slab_ridge_ramp, fig.width = med_width, fig.height = small_height}
+ridges_df %>%
+  ggplot(aes(y = group, x = x, fill = group, fill_ramp = stat(x))) +
+  stat_slab(
+    height = 2, color = "black", expand = TRUE, trim = FALSE, fill_type = "gradient"
+  ) +
+  ggtitle(
+    'stat_slab(height = 2, color = "black", expand = TRUE, trim = FALSE)',
+    'aes(fill = group, fill_ramp = stat(x))'
+  ) +
+  scale_fill_viridis_d()
+```
+
+
 ### Varying side, scale, and justification within geoms
 
 The `side`, `scale`, and `justification` parameters can also be varied within
