@@ -173,3 +173,29 @@ test_that("side and justification can vary", {
 
 })
 
+
+
+# Incorrect values of enums -----------------------------------------------
+
+
+test_that("incorrect side, orientation are caught", {
+  p = data.frame(x = 1) %>%
+    ggplot(aes(x = x, y = x, thickness = x))
+
+  expect_error(print(newpage = FALSE,
+    p + geom_slabinterval(side = "foo", orientation = "horizontal")
+  ), "Unknown side")
+
+  expect_error(print(newpage = FALSE,
+    p + geom_slabinterval(side = "foo", orientation = "vertical")
+  ), "Unknown side")
+
+  expect_error(print(newpage = FALSE,
+    p + geom_slabinterval(orientation = "foo")
+  ), "Unknown orientation")
+
+  expect_error(print(newpage = FALSE,
+    p + geom_slabinterval(fill_type = "foo")
+  ), "Unknown fill_type")
+
+})

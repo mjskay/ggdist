@@ -520,7 +520,7 @@ switch_side = function(side, orientation, topright, bottomleft, both) {
 
       both = both,
 
-      stop("Invalid side: `", side, "`")
+      stop0("Unknown side: ", deparse0(side))
     ),
     x = ,
     vertical = switch(side,
@@ -536,9 +536,9 @@ switch_side = function(side, orientation, topright, bottomleft, both) {
 
       both = both,
 
-      stop("Invalid side: `", side, "`")
+      stop0("Unknown side: ", deparse0(side))
     ),
-    stop("Invalid orientation: `", orientation, "`")
+    stop0("Unknown orientation: ", deparse0(orientation))
   )
 }
 
@@ -717,6 +717,6 @@ switch_fill_type = function(fill_type, segments, gradient) {
   switch(fill_type,
     segments = segments,
     gradient = gradient,
-    stop("Unknown fill_type: ", deparse0(fill_type), '\nShould be "segments" or "gradient"')
+    stop0("Unknown fill_type: ", deparse0(fill_type), '\nShould be "segments" or "gradient"')
   )
 }

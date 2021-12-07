@@ -86,7 +86,7 @@ get_flipped_aes = function(data, params, ..., secondary_is_dist = NA, main_is_or
     if (params$orientation %in% c("horizontal", "y")) "y"
     else if (params$orientation %in% c("vertical", "x")) "x"
     else if (is.na(params$orientation)) NA
-    else stop("Unknown orientation: ", deparse0(params$orientation))
+    else stop0("Unknown orientation: ", deparse0(params$orientation))
 
   # checks based on xdist or ydist
   if (is.na(params$orientation) && !is.na(secondary_is_dist)) {
@@ -152,7 +152,7 @@ define_orientation_variables = function(orientation) {
     f$x.range = "y.range"
     f$xdist = "ydist"
   } else {
-    stop("Unknown orientation: `", orientation, "`")
+    stop0("Unknown orientation: ", deparse0(orientation))
   }
 }
 
