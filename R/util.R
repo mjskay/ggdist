@@ -92,7 +92,7 @@ pmap_dfr_ = function(data, fun) {
   # this is roughly equivalent to
   # pmap_dfr(df, function(...) { ... })
   # but works properly with vctrs (pmap_dfr seems broken on rvars?)
-  map_dfr_(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
+  bind_rows(pmap_(data, fun))
 }
 
 ddply_ = function(data, groups, fun, ...) {

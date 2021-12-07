@@ -61,6 +61,18 @@ test_that("distribution eye plots work with the args aesthetic", {
 
 })
 
+test_that("args and arg1...n work with named args", {
+  skip_if_no_vdiffr()
+
+
+  vdiffr::expect_doppelganger("named args for dist", {
+    tibble(args = list(list(mean = 1)), sd = 2) %>%
+      ggplot(aes(xdist = "norm", args = args, arg1 = sd)) +
+      stat_halfeye(n = 15)
+  })
+
+})
+
 test_that("xdist and ydist aesthetics work", {
   skip_if_no_vdiffr()
 
@@ -177,6 +189,10 @@ test_that("stat_dist_pointinterval, interval, and slab work", {
   )
 })
 
+
+
+# scale (and density) transformation --------------------------------------
+
 test_that("density transformation works", {
   expect_equal(transform_pdf(dnorm, 1:5, scales::exp_trans()), dlnorm(1:5))
   expect_equal(transform_pdf(dlnorm, -2:2, scales::log_trans()), dnorm(-2:2))
@@ -244,6 +260,9 @@ test_that("scale transformation works", {
     p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
   )
 })
+
+
+# orientation detection ---------------------------------------------------
 
 test_that("orientation detection works properly on stat_dist", {
   skip_if_no_vdiffr()
