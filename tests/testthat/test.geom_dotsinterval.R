@@ -75,6 +75,9 @@ test_that("vanilla dots geoms and stats work", {
 
 })
 
+
+# scale_ and coord_ transformations ----------------------------------------------
+
 test_that("coordinate transformations work", {
   skip_if_no_vdiffr()
 
@@ -133,6 +136,8 @@ test_that("scale transformations work", {
 
 })
 
+
+# dists -------------------------------------------------------------------
 
 test_that("stat_dist_dots[interval] works", {
   skip_if_no_vdiffr()
@@ -195,6 +200,9 @@ test_that("stat_dist_dots works on distributional objects", {
 
 })
 
+
+# binwidth -----------------------------------------------------
+
 test_that("geom_dots binwidth can be specified in unit()s", {
   skip_if_no_vdiffr()
 
@@ -207,6 +215,28 @@ test_that("geom_dots binwidth can be specified in unit()s", {
       facet_grid(~ am, scales = "free")
   )
 })
+
+test_that("geom_dots allows constraints on binwidth", {
+  skip_if_no_vdiffr()
+
+  p = data.frame(x = ppoints(20)) %>%
+    ggplot(aes(x = x, y = 0L))
+
+  # max width of 1/40th of the viewport should approx space
+  # this data with about 1 dot of space in between each dot
+  vdiffr::expect_doppelganger("max binwidth",
+    p + geom_dots(binwidth = unit(c(0, 1/40), "npc"))
+  )
+
+  # min width of 1/4th of the viewport should give us four giant bins
+  vdiffr::expect_doppelganger("min binwidth",
+    p + geom_dots(binwidth = unit(c(1/4, Inf), "npc"))
+  )
+
+})
+
+
+# layout ------------------------------------------------------------------
 
 test_that("dotplot layouts work", {
   skip_if_no_vdiffr()
@@ -255,6 +285,9 @@ test_that("dotplot layouts work", {
 
 })
 
+
+# NAs -------------------------------------------------------------------
+
 test_that("na.rm is propagated to quantile dotplot", {
   skip_if_no_vdiffr()
 
@@ -265,6 +298,38 @@ test_that("na.rm is propagated to quantile dotplot", {
       scale_x_continuous(limits = c(0,4))
   )
 })
+
+test_that("geom_dots works with NA in non-data axis", {
+  skip_if_no_vdiffr()
+
+  p = mtcars %>%
+    ggplot(aes(x = mpg, y = factor(cyl))) +
+    scale_y_discrete(limits = c("4", "6"))
+
+  # without na.rm this should work but also throw a warning
+  expect_warning(vdiffr::expect_doppelganger("NA on y axis",
+    p + geom_dots(na.rm = FALSE)
+  ))
+
+  # with na.rm this should not throw a warning
+  vdiffr::expect_doppelganger("removed NA on y axis",
+    p + geom_dots(na.rm = TRUE)
+  )
+})
+
+test_that("empty slab from NA removal works", {
+  skip_if_no_vdiffr()
+
+
+  vdiffr::expect_doppelganger("dots with no slab from NA removal", {
+    data.frame(x = c(1, NA), datatype = c("interval", "slab")) %>%
+      ggplot(aes(x = x, xmin = x - 1, xmax = x + 1, datatype = datatype)) +
+      geom_dotsinterval(na.rm = TRUE)
+  })
+})
+
+
+# discrete distributions --------------------------------------------------
 
 test_that("geom_dots works on discrete distributions", {
   skip_if_no_vdiffr()
@@ -295,42 +360,9 @@ test_that("geom_dots works on discrete distributions", {
 
 })
 
-test_that("geom_dots works with NA in non-data axis", {
-  skip_if_no_vdiffr()
 
-  p = mtcars %>%
-    ggplot(aes(x = mpg, y = factor(cyl))) +
-    scale_y_discrete(limits = c("4", "6"))
 
-  # without na.rm this should work but also throw a warning
-  expect_warning(vdiffr::expect_doppelganger("NA on y axis",
-    p + geom_dots(na.rm = FALSE)
-  ))
-
-  # with na.rm this should not throw a warning
-  vdiffr::expect_doppelganger("removed NA on y axis",
-    p + geom_dots(na.rm = TRUE)
-  )
-})
-
-test_that("geom_dots allows constraints on binwidth", {
-  skip_if_no_vdiffr()
-
-  p = data.frame(x = ppoints(20)) %>%
-    ggplot(aes(x = x, y = 0L))
-
-  # max width of 1/40th of the viewport should approx space
-  # this data with about 1 dot of space in between each dot
-  vdiffr::expect_doppelganger("max binwidth",
-    p + geom_dots(binwidth = unit(c(0, 1/40), "npc"))
-  )
-
-  # min width of 1/4th of the viewport should give us four giant bins
-  vdiffr::expect_doppelganger("min binwidth",
-    p + geom_dots(binwidth = unit(c(1/4, Inf), "npc"))
-  )
-
-})
+# dot stroke --------------------------------------------------------------
 
 test_that("geom_dots correctly adjusts dot size for stroke size", {
   skip_if_no_vdiffr()
@@ -345,6 +377,9 @@ test_that("geom_dots correctly adjusts dot size for stroke size", {
   )
 
 })
+
+
+# side, justification, scale aes ------------------------------------------
 
 test_that("side, justification, and scale can vary", {
   skip_if_no_vdiffr()
