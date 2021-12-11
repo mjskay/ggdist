@@ -554,13 +554,17 @@ test_that("point_interval works", {
     ggplot(aes(xdist = x))
 
   vdiffr::expect_doppelganger("mixture dist with median_qi",
-    p + stat_dist_halfeye(point_interval = median_qi)
+    p + stat_dist_halfeye(point_interval = median_qi, n = 30)
+  )
+
+  vdiffr::expect_doppelganger("mixture dist with NULL point_interval",
+    p + stat_dist_halfeye(point_interval = NULL, n = 30)
   )
 
   # need to set.seed here until https://github.com/mitchelloharawild/distributional/issues/71 is fixed
   set.seed(1234)
   vdiffr::expect_doppelganger("mixture dist with mean_qi",
-    p + stat_dist_halfeye(point_interval = mean_qi)
+    p + stat_dist_halfeye(point_interval = mean_qi, n = 30)
   )
 
 
@@ -568,7 +572,7 @@ test_that("point_interval works", {
   skip_if_not_installed("distributional", "0.2.2.9000")
 
   vdiffr::expect_doppelganger("mixture dist with mode_hdi",
-    p + stat_dist_halfeye(point_interval = mode_hdi)
+    p + stat_dist_halfeye(point_interval = mode_hdi, n = 30)
   )
 
 })

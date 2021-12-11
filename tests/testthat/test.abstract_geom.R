@@ -7,6 +7,19 @@
 
 test_that("make_geom works", {
 
+  geom = make_geom(GeomSlabinterval)
+
+  args = setdiff(
+    c(
+      "mapping", "data", "stat", "position", "...",
+      names(GeomSlabinterval$default_params),
+      names(GeomSlabinterval$layer_args)
+    ),
+    GeomSlabinterval$hidden_params
+  )
+  expect_setequal(args, names(formals(geom)))
+
+
   geom = make_geom(GeomInterval)
 
   args = setdiff(
@@ -17,7 +30,6 @@ test_that("make_geom works", {
     ),
     GeomInterval$hidden_params
   )
-
   expect_setequal(args, names(formals(geom)))
 
 })
