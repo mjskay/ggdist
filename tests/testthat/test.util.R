@@ -3,6 +3,7 @@
 # Author: mjskay
 ###############################################################################
 
+library(dplyr)
 
 
 test_that("all_names works", {
@@ -38,7 +39,25 @@ test_that(".Deprecated_arguments works properly", {
 
 })
 
+
+# fct_rev_ ----------------------------------------------------------------
+
 test_that("fct_rev_ works properly", {
   expect_equal(fct_rev_(c("a","b","c")), factor(c("a","b","c"), levels = c("c","b","a")))
   expect_error(fct_rev_(1:3), "must be a factor")
+})
+
+
+# dlply_ ------------------------------------------------------------------
+
+test_that("dlply_ works properly", {
+  df = tibble(
+    x = 1:8,
+    g = c(rep("a", 2), rep("(Missing)", 2), rep("(Missing)+", 2), rep(NA, 2))
+  )
+
+  expect_equal(dlply_(df, "g", identity), list(df[3:4,], df[5:6,], df[1:2,], df[7:8,]))
+
+  expect_equal(dlply_(df, NULL, identity), list(df))
+
 })

@@ -173,7 +173,8 @@ PositionDodgejust <- ggproto("PositionDodgejust", Position,
       strategy = pos_dodge,
       preserve = params$preserve,
       justification = params$justification,
-      check.width = FALSE
+      check.width = FALSE,
+      x_name = if (isTRUE(params$flipped_aes)) "y" else "x"
     )
     flip_data(collided, params$flipped_aes)
   }
@@ -193,23 +194,22 @@ pos_dodge <- function(df, width, n = NULL) {
     df$xmax = df$x
   }
 
-  x_width = df$xmax - df$xmin
-  max_width = max(x_width)
-
   # Have a new group index from 1 to number of groups.
   # This might be needed if the group numbers in this set don't include all of 1:n
   groupidx = match(df$group, sort(unique(df$group)))
 
   # Find the justification of each point so we can preserve it
+  x_width = df$xmax - df$xmin
   just = ifelse(x_width == 0, 0, (df$x - df$xmin) / x_width)
 
   # Find the center for each group, then use that to calculate xmin and xmax
+  max_width = max(x_width)
   df$x = df$x + width * ((groupidx - 0.5) / n - .5)
   df$xmin = df$x - max_width / n / 2
   df$xmax = df$x + max_width / n / 2
 
   # Reset x position based on justification
-  df$x = df$xmin + just * x_width
+  df$x = df$xmin + just * (df$xmax - df$xmin)
 
   df
 }
@@ -250,7 +250,7 @@ collide_setup = function(
 collide = function(
   data, width = NULL, name, strategy,
   preserve = "total", justification = NULL,
-  check.width = TRUE
+  check.width = TRUE, x_name = "x"
 ) {
   dlist = collide_setup(data, width, name, strategy, justification, check.width)
   data = dlist$data
@@ -272,7 +272,7 @@ collide = function(
   intervals = intervals[!is.na(intervals)]
 
   if (length(unique(intervals)) > 1 & any(diff(scale(intervals)) < -1e-6)) {
-    warning0(paste0(name, " requires non-overlapping x intervals"))
+    warning0(paste0(name, " requires non-overlapping ", x_name, " intervals"))
   }
 
   # workaround so that mapped_discrete columns can be combined with numerics
