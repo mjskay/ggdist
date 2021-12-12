@@ -170,29 +170,22 @@ PositionDodgejust <- ggproto("PositionDodgejust", Position,
       data,
       params$width,
       name = "position_dodgejust",
-      strategy = pos_dodge,
+      strategy = pos_dodgejust,
       preserve = params$preserve,
       justification = params$justification,
-      check.width = FALSE,
       x_name = if (isTRUE(params$flipped_aes)) "y" else "x"
     )
     flip_data(collided, params$flipped_aes)
   }
 )
 
-# Dodge overlapping interval.
+# Justification-preserving dodge of overlapping intervals.
 # Assumes that each set has the same horizontal position.
-pos_dodge <- function(df, width, n = NULL) {
-  if (is.null(n)) {
-    n = length(unique(df$group))
-  }
+# df must have x, xmin, and xmax defined
+pos_dodgejust = function(df, width, n = NULL) {
+  n = n %||% length(unique(df$group))
 
   if (n == 1) return(df)
-
-  if (!all(c("xmin", "xmax") %in% names(df))) {
-    df$xmin = df$x
-    df$xmax = df$x
-  }
 
   # Have a new group index from 1 to number of groups.
   # This might be needed if the group numbers in this set don't include all of 1:n
@@ -214,15 +207,11 @@ pos_dodge <- function(df, width, n = NULL) {
   df
 }
 
-# helper functions from position-collide ----------------------------------
 
-# Detect and prevent collisions.
-# Powers dodging, stacking and filling.
-collide_setup = function(
-  data, width = NULL, name, strategy,
-  justification = NULL,
-  check.width = TRUE
-) {
+# helper functions originally based on position-collide ------------------------
+
+# Setup data for collision detection by making sure width and xmin/xmax are set
+collide_setup = function(data, width = NULL, justification = NULL) {
   # Determine width
   if (!is.null(width)) {
     # Width set manually
@@ -247,12 +236,13 @@ collide_setup = function(
   list(data = data, width = width)
 }
 
+# Collision detection
 collide = function(
   data, width = NULL, name, strategy,
   preserve = "total", justification = NULL,
-  check.width = TRUE, x_name = "x"
+  x_name = "x"
 ) {
-  dlist = collide_setup(data, width, name, strategy, justification, check.width)
+  dlist = collide_setup(data, width, justification)
   data = dlist$data
   width = dlist$width
 
