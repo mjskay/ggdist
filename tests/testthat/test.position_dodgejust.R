@@ -75,6 +75,17 @@ test_that("position_dodgejust works on zero-width geoms", {
 })
 
 
+# missing y/ymax --------------------------------------------------------------
+
+test_that("position_dodgejust warns on missing y/ymax", {
+  expect_error(ggplot_build(
+    data.frame(xmin = 1) %>%
+      ggplot(aes(xmin = xmin)) +
+      geom_blank(position = position_dodgejust(width = 1))
+  ), "Neither y nor ymax defined")
+})
+
+
 # overlapping intervals ---------------------------------------------------
 
 test_that("position_dodgejust warns on overlapping intervals", {
