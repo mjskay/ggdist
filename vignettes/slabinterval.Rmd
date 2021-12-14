@@ -1186,7 +1186,7 @@ ridges_df %>%
   stat_slab(
     height = 2, color = "gray15", expand = TRUE, trim = FALSE, fill_type = "gradient"
   ) +
-  geom_vline(xintercept = 0, color = "gray90") +
+  geom_vline(xintercept = 0, color = "gray85", linetype = "dashed") +
   ggtitle(
     'stat_slab(height = 2, color = "black", expand = TRUE, trim = FALSE)',
     'aes(fill = group, fill_ramp = stat(abs(x)), color_ramp = stat(-dnorm(x, 0, 2)))'
