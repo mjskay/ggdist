@@ -1178,21 +1178,25 @@ will make each slab expand itself to the limits of the `x` axis.
 
 We'll use `trim` and `expand` along with a combination of `fill` and `fill_ramp`
 to give each group on the y axis a different color and to vary the fill along
-the `x` axis as well:
+the `x` axis in a way that provides a "softer" form of region of practical equivalence:
 
 ```{r slab_ridge_ramp, fig.width = med_width, fig.height = small_height}
 ridges_df %>%
-  ggplot(aes(y = group, x = x, fill = group, fill_ramp = stat(x))) +
+  ggplot(aes(y = group, x = x, fill = group, fill_ramp = stat(abs(x)), color_ramp = stat(-dnorm(x, 0, 2)))) +
   stat_slab(
-    height = 2, color = "black", expand = TRUE, trim = FALSE, fill_type = "gradient"
+    height = 2, color = "gray15", expand = TRUE, trim = FALSE, fill_type = "gradient"
   ) +
+  geom_vline(xintercept = 0, color = "gray90") +
   ggtitle(
     'stat_slab(height = 2, color = "black", expand = TRUE, trim = FALSE)',
-    'aes(fill = group, fill_ramp = stat(x))'
+    'aes(fill = group, fill_ramp = stat(abs(x)), color_ramp = stat(-dnorm(x, 0, 2)))'
   ) +
   scale_fill_viridis_d()
 ```
 
+We use a tighter ramp on `color` compared to `fill` (via `-dnorm()` instead of `abs()`)
+because we want the outlines to quickly ramp back to black outside of 0 so that they 
+have sufficient contrast against the slabs when they overlap.
 
 ### Varying side, scale, and justification within geoms
 
