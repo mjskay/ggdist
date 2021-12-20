@@ -252,6 +252,15 @@ test_that("scale transformation works", {
   )
 
 
+  p_logit = data.frame(dist = dist_beta(2,2)) %>%
+    ggplot(aes(xdist = dist)) +
+    scale_x_continuous(trans = scales::trans_new("logit", qlogis, plogis))
+
+  vdiffr::expect_doppelganger("beta eye with logit scale",
+    p_logit + stat_eye(n = 15, slab_color = "gray50")
+  )
+
+
   # distributional < 0.2.2.9000 does not support point_intervals except median_qi
   # on character dist aesthetics
   skip_if_not_installed("distributional", "0.2.2.9000")

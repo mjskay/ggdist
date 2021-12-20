@@ -31,7 +31,8 @@ Imports:
     tibble,
     vctrs,
     withr,
-    distributional (>= 0.2.2)
+    distributional (>= 0.2.2),
+    numDeriv
 Suggests:
     knitr,
     testthat,

@@ -217,7 +217,7 @@ f_deriv_at_y = function(f, y) {
     # if analytical approach fails, use numerical approach
     # need to convert y to numeric in case it's an integer (numericDeriv doesn't like ints)
     y = as.numeric(y)
-    diag(attr(numericDeriv(quote(f(y)), "y"), "gradient"))
+    vapply(y, numDeriv::jacobian, numeric(1), func = f)
   })
 }
 
