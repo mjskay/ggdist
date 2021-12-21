@@ -215,9 +215,7 @@ f_deriv_at_y = function(f, y) {
     eval(f_deriv_expr, args, environment(f))
   }, error = function(e) {
     # if analytical approach fails, use numerical approach
-    # need to convert y to numeric in case it's an integer (numericDeriv doesn't like ints)
-    y = as.numeric(y)
-    vapply(y, numDeriv::jacobian, numeric(1), func = f)
+    numDeriv::grad(f, y)
   })
 }
 
