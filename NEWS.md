@@ -19,8 +19,8 @@ New features:
   and `posterior::rvar()` objects, meaning that means and modes (in addition
   to medians) and highest-density intervals (in addition to quantile intervals)
   can now be visualized for analytical distributions.
-* Improved handling of constant distributions, which are now reliably detected
-  in a variety of situations and rendered as point masses (#103, #32).
+* Constant distributions are now reliably detected in a variety of situations
+  and rendered as point masses in both density plots and histograms (#103, #32).
   
 Documentation:
 

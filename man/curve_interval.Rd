@@ -115,19 +115,18 @@ df \%>\%
   ggtitle("50\% pointwise intervals with point_interval()") +
   theme_ggdist()
 
+\dontshow{if (requireNamespace("posterior", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # ... compare them to curvewise intervals
-if (requireNamespace("posterior", quietly = TRUE)) {
-  df \%>\%
-    group_by(x) \%>\%
-    curve_interval(y, .width = c(.5)) \%>\%
-    ggplot(aes(x = x, y = y)) +
-    geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
-    geom_line(aes(group = .draw), alpha=0.15, data = df) +
-    scale_fill_brewer() +
-    ggtitle("50\% curvewise intervals with curve_interval()") +
-    theme_ggdist()
-}
-
+df \%>\%
+  group_by(x) \%>\%
+  curve_interval(y, .width = c(.5)) \%>\%
+  ggplot(aes(x = x, y = y)) +
+  geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
+  geom_line(aes(group = .draw), alpha=0.15, data = df) +
+  scale_fill_brewer() +
+  ggtitle("50\% curvewise intervals with curve_interval()") +
+  theme_ggdist()
+\dontshow{\}) # examplesIf}
 }
 \references{
 Fraiman, Ricardo and Graciela Muniz. (2001).
