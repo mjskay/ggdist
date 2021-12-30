@@ -1,3 +1,53 @@
+# ggdist 3.0.99.9000
+
+New features:
+
+* The `stat_sample_...` and `stat_dist_...` families of stats have been merged (#83).
+  * All `stat_dist_...` stats are deprecated in favor of their `stat_...` counterparts,
+    which now understand the `dist`, `args`, and `arg1`...`arg9` aesthetics.
+  * `xdist` and `ydist` can now be used in place of the `dist` aesthetic to
+    specify the axis one is mapping a distribution onto (`dist` may be
+    deprecated in the future).
+  * Passing dist-like objects to the `x` or `y` aesthetics now raise a helpful
+    error message suggesting you probably want to use `xdist` or `ydist`.
+  * Restructured internals for stats and geoms makes it much easier to maintain
+    shortcut geoms and stats, eliminating a large amount of code duplication (#106).
+  * New `expand` parameter to `stat_slabinterval()` allows explicitly setting 
+    whether or not the slab is expanded to the limits of the scale (rather than
+    implicitly setting this based on `slab_type`).
+* The `point_interval()` family of functions can now be passed `distributional`
+  and `posterior::rvar()` objects, meaning that means and modes (in addition
+  to medians) and highest-density intervals (in addition to quantile intervals)
+  can now be visualized for analytical distributions.
+* Improved handling of constant distributions, which are now reliably detected
+  in a variety of situations and rendered as point masses (#103, #32).
+  
+Documentation:
+
+* Vastly improved and expanded documentation for the `stat_slabinterval()` and
+  `geom_slabinterval()` family: each shortcut stat/geom now has its own documentation
+  page that comprehensively lists all parameters, aesthetics, and computed variables,
+  including those pulled in via `...` from typically-paired geoms. These docs are
+  auto-generated and should be easy to maintain going forward.
+* Ridgeplot-like example in `vignette("slabinterval")` using the new `expand`
+  parameter (#115).
+  
+Deprecations and removals:
+
+* The `.prob` argument, a long-deprecated alias for `.width`, was removed.
+* The `limits_function`, `limits_args`, `slab_function`, `slab_args`, `interval_function`,
+  and `interval_args` arguments to `stat_slabinterval()` were removed: these were
+  largely internal-use parameters only needed by subclasses of the base class for
+  creating shortcut stats, yet added a lot of noise to the documentation, so these
+  were replaced with the `$compute_limits()`, `$compute_slabs()`, and 
+  `$compute_intervals()` methods on the new `AbstractStatSlabinterval` 
+  internal base class.
+  
+Bug fixes:
+
+* Improved handling of `NA`s for analytical distributions.
+
+
 # ggdist 3.0.1
 
 Bug fixes:
