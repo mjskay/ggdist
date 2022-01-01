@@ -90,10 +90,12 @@ makeContent.dots_grob = function(x) {
     # the font size in points needed to draw that dot (dot_fontsize); need a fudge
     # factor based on how big the circle glyph is as a ratio of font size
     # (font_size_ratio) plus need to account for stroke width
+    lwd = d$size * .stroke/2
+    lwd[is.na(lwd)] = 0
     dot_pointsize = convertUnit(unit(binwidth * dotsize, "native"),
       "points", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
     dot_fontsize = max(
-      dot_pointsize * font_size_ratio - max(d$size, 0, na.rm = TRUE) * .stroke/2,
+      dot_pointsize * font_size_ratio - lwd,
       0.5
     )
 
@@ -104,7 +106,7 @@ makeContent.dots_grob = function(x) {
         col = alpha(d$colour, d$alpha),
         fill = alpha(d$fill, d$alpha),
         fontsize = dot_fontsize,
-        lwd = d$size * .stroke/2,
+        lwd = lwd,
         lty = d$linetype
       )
     )
