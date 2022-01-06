@@ -29,15 +29,36 @@ test_that("gradientinterval works", {
     p + stat_gradientinterval(aes(y = dist, x = x), n = 15, fill_type = "segments")
   )
 
-  # N.B. the following two tests are currently a bit useless as vdiffr doesn't
-  # support linearGradient yet, but leaving them here so that once it does we
-  # have tests for this.
-  skip("linearGradient not supported in vdiffr yet")
+})
+
+test_that("fill_type = 'gradient' works", {
+  skip_if_no_vdiffr()
+  skip_if_no_linearGradient()
+
+
+  set.seed(1234)
+  p = tribble(
+    ~dist,  ~x,
+    "norm", rnorm(100),
+    "t",    rt(100, 3)
+  ) %>%
+    unnest(x) %>%
+    ggplot() +
+    scale_slab_alpha_continuous(range = c(0,1))
+
+  write_svg_with_gradient = function(plot, file, title = "") {
+    svglite::svglite(file, width = 10, height = 8, bg = "white", pointsize = 12, standalone = TRUE, always_valid = FALSE)
+    on.exit(grDevices::dev.off())
+    vdiffr:::print_plot(plot, title)
+  }
+
   vdiffr::expect_doppelganger("fill_type = gradient with two groups",
-    p + stat_gradientinterval(aes(x = dist, y = x), n = 15, fill_type = "gradient")
+    p + stat_gradientinterval(aes(x = dist, y = x), n = 15, fill_type = "gradient"),
+    writer = write_svg_with_gradient
   )
   vdiffr::expect_doppelganger("fill_type = gradient with two groups, h",
-    p + stat_gradientinterval(aes(y = dist, x = x), n = 15, fill_type = "gradient")
+    p + stat_gradientinterval(aes(y = dist, x = x), n = 15, fill_type = "gradient"),
+    writer = write_svg_with_gradient
   )
 
 })

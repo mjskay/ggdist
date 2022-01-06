@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='720.00pt' height='576.00pt' viewBox='0 0 720.00 576.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA='>
+    <rect x='0.00' y='0.00' width='720.00' height='576.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<rect x='0.00' y='0.00' width='720.00' height='576.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpMzguNDh8NzE0LjUyfDIzLjE1fDU0NC41Ng=='>
+    <rect x='38.48' y='23.15' width='676.04' height='521.42' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMzguNDh8NzE0LjUyfDIzLjE1fDU0NC41Ng==)'>
+<rect x='38.48' y='23.15' width='676.04' height='521.42' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+</g>
+<defs>
+<linearGradient id='pat-0' gradientUnits='userSpaceOnUse' spreadMethod='pad' x1='530.15' y1='520.86' x2='530.15' y2='46.85'>
+  <stop offset='0.00' stop-color='#A6A6A6' stop-opacity='0.027'/>
+  <stop offset='0.071' stop-color='#A6A6A6' stop-opacity='0.016'/>
+  <stop offset='0.14' stop-color='#A6A6A6' stop-opacity='0.082'/>
+  <stop offset='0.21' stop-color='#A6A6A6' stop-opacity='0.051'/>
+  <stop offset='0.29' stop-color='#A6A6A6' stop-opacity='0.14'/>
+  <stop offset='0.36' stop-color='#A6A6A6' stop-opacity='0.26'/>
+  <stop offset='0.43' stop-color='#A6A6A6' stop-opacity='0.67'/>
+  <stop offset='0.50' stop-color='#A6A6A6' stop-opacity='1.00'/>
+  <stop offset='0.57' stop-color='#A6A6A6' stop-opacity='0.46'/>
+  <stop offset='0.64' stop-color='#A6A6A6' stop-opacity='0.25'/>
+  <stop offset='0.71' stop-color='#A6A6A6' stop-opacity='0.11'/>
+  <stop offset='0.79' stop-color='#A6A6A6' stop-opacity='0.035'/>
+  <stop offset='0.86' stop-color='#A6A6A6' stop-opacity='0.027'/>
+  <stop offset='0.93' stop-color='#A6A6A6' stop-opacity='0.0039'/>
+  <stop offset='1.00' stop-color='#A6A6A6' stop-opacity='0.027'/>
+</linearGradient>
+</defs>
+<g clip-path='url(#cpMzguNDh8NzE0LjUyfDIzLjE1fDU0NC41Ng==)'>
+<polygon points='668.43,520.86 668.43,487.00 668.43,453.14 668.43,419.29 668.43,385.43 668.43,351.57 668.43,317.71 668.43,283.85 668.43,250.00 668.43,216.14 668.43,182.28 668.43,148.42 668.43,114.56 668.43,80.70 668.43,46.85 391.87,46.85 391.87,80.70 391.87,114.56 391.87,148.42 391.87,182.28 391.87,216.14 391.87,250.00 391.87,283.85 391.87,317.71 391.87,351.57 391.87,385.43 391.87,419.29 391.87,453.14 391.87,487.00 391.87,520.86 ' style='stroke-width: 2.13; stroke: none; fill: url(#pat-0);' />
+</g>
+<defs>
+<linearGradient id='pat-1' gradientUnits='userSpaceOnUse' spreadMethod='pad' x1='222.86' y1='412.49' x2='222.86' y2='175.47'>
+  <stop offset='0.00' stop-color='#A6A6A6' stop-opacity='0.063'/>
+  <stop offset='0.071' stop-color='#A6A6A6' stop-opacity='0.12'/>
+  <stop offset='0.14' stop-color='#A6A6A6' stop-opacity='0.28'/>
+  <stop offset='0.21' stop-color='#A6A6A6' stop-opacity='0.58'/>
+  <stop offset='0.29' stop-color='#A6A6A6' stop-opacity='0.84'/>
+  <stop offset='0.36' stop-color='#A6A6A6' stop-opacity='0.95'/>
+  <stop offset='0.43' stop-color='#A6A6A6' stop-opacity='0.87'/>
+  <stop offset='0.50' stop-color='#A6A6A6' stop-opacity='0.67'/>
+  <stop offset='0.57' stop-color='#A6A6A6' stop-opacity='0.53'/>
+  <stop offset='0.64' stop-color='#A6A6A6' stop-opacity='0.42'/>
+  <stop offset='0.71' stop-color='#A6A6A6' stop-opacity='0.31'/>
+  <stop offset='0.79' stop-color='#A6A6A6' stop-opacity='0.24'/>
+  <stop offset='0.86' stop-color='#A6A6A6' stop-opacity='0.18'/>
+  <stop offset='0.93' stop-color='#A6A6A6' stop-opacity='0.13'/>
+  <stop offset='1.00' stop-color='#A6A6A6' stop-opacity='0.075'/>
+</linearGradient>
+</defs>
+<g clip-path='url(#cpMzguNDh8NzE0LjUyfDIzLjE1fDU0NC41Ng==)'>
+<polygon points='361.14,412.49 361.14,395.56 361.14,378.63 361.14,361.70 361.14,344.77 361.14,327.84 361.14,310.91 361.14,293.98 361.14,277.05 361.14,260.12 361.14,243.19 361.14,226.26 361.14,209.33 361.14,192.40 361.14,175.47 84.58,175.47 84.58,192.40 84.58,209.33 84.58,226.26 84.58,243.19 84.58,260.12 84.58,277.05 84.58,293.98 84.58,310.91 84.58,327.84 84.58,344.77 84.58,361.70 84.58,378.63 84.58,395.56 84.58,412.49 ' style='stroke-width: 2.13; stroke: none; fill: url(#pat-1);' />
+<line x1='530.15' y1='455.07' x2='530.15' y2='167.59' style='stroke-width: 1.28; stroke-linecap: butt;' />
+<line x1='222.86' y1='382.28' x2='222.86' y2='197.36' style='stroke-width: 1.28; stroke-linecap: butt;' />
+<line x1='530.15' y1='332.69' x2='530.15' y2='236.00' style='stroke-width: 2.99; stroke-linecap: butt;' />
+<line x1='222.86' y1='350.96' x2='222.86' y2='257.50' style='stroke-width: 2.99; stroke-linecap: butt;' />
+<circle cx='530.15' cy='289.17' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='222.86' cy='317.52' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='530.15' cy='289.17' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='222.86' cy='317.52' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
+<rect x='38.48' y='23.15' width='676.04' height='521.42' style='stroke-width: 1.07; stroke: #333333;' />
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<text x='33.55' y='544.16' text-anchor='end' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='15.17px' lengthAdjust='spacingAndGlyphs'>-5.0</text>
+<text x='33.55' y='423.11' text-anchor='end' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='15.17px' lengthAdjust='spacingAndGlyphs'>-2.5</text>
+<text x='33.55' y='302.05' text-anchor='end' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='12.24px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='33.55' y='180.99' text-anchor='end' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='12.24px' lengthAdjust='spacingAndGlyphs'>2.5</text>
+<text x='33.55' y='59.94' text-anchor='end' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='12.24px' lengthAdjust='spacingAndGlyphs'>5.0</text>
+<polyline points='35.74,541.01 38.48,541.01 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='35.74,419.96 38.48,419.96 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='35.74,298.90 38.48,298.90 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='35.74,177.84 38.48,177.84 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='35.74,56.79 38.48,56.79 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='222.86,547.30 222.86,544.56 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='530.15,547.30 530.15,544.56 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='222.86' y='555.79' text-anchor='middle' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>norm</text>
+<text x='530.15' y='555.79' text-anchor='middle' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='2.45px' lengthAdjust='spacingAndGlyphs'>t</text>
+<text x='376.50' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: "Arial";' textLength='17.12px' lengthAdjust='spacingAndGlyphs'>dist</text>
+<text transform='translate(13.36,283.85) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: "Arial";' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>x</text>
+<text x='38.48' y='14.93' style='font-size: 13.20px; font-family: "Arial";' textLength='202.74px' lengthAdjust='spacingAndGlyphs'>fill_type = gradient with two groups</text>
+</g>
+</svg>
