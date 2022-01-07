@@ -278,11 +278,6 @@ test_that("scale transformation works", {
     p_logit + stat_eye(n = 15, slab_color = "gray50")
   )
 
-
-  # distributional < 0.2.2.9000 does not support point_intervals except median_qi
-  # on character dist aesthetics
-  skip_if_not_installed("distributional", "0.2.2.9000")
-
   vdiffr::expect_doppelganger("dist_halfeyeh log scale mode_hdi",
     p_log + stat_dist_halfeye(n = 20, point_interval = mode_hdi)
   )
@@ -593,10 +588,6 @@ test_that("point_interval works", {
   vdiffr::expect_doppelganger("mixture dist with mean_qi",
     p + stat_dist_halfeye(point_interval = mean_qi, n = 30)
   )
-
-
-  # hdi does not work on old versions of distributional
-  skip_if_not_installed("distributional", "0.2.2.9000")
 
   vdiffr::expect_doppelganger("mixture dist with mode_hdi",
     p + stat_dist_halfeye(point_interval = mode_hdi, n = 30)
