@@ -193,9 +193,23 @@ test_that("incorrect side, orientation are caught", {
   expect_error(print(newpage = FALSE,
     p + geom_slabinterval(orientation = "foo")
   ), "Unknown orientation")
+  expect_error(switch_side("top", "foo"), "Unknown orientation")
 
   expect_error(print(newpage = FALSE,
     p + geom_slabinterval(fill_type = "foo")
   ), "Unknown fill_type")
 
+})
+
+
+# no interval data in input -----------------------------------------------
+
+test_that("geoms without interval data are valid", {
+  skip_if_no_vdiffr()
+
+  vdiffr::expect_doppelganger("slabinterval without interval data", {
+    data.frame(x = 1:2) %>%
+      ggplot(aes(x = x, xmin = x,xmax = x, datatype = "slab", thickness = x)) +
+      geom_slabinterval()
+  })
 })

@@ -677,7 +677,10 @@ make_gradient_fill = function(slab_data, orientation = "horizontal") {
 draw_polygon = function(data, panel_params, coord, fill = NULL) {
   n = nrow(data)
 
-  if (n == 1) return(zeroGrob())
+  # NOTE: this condition should always be false given where draw_polygon()
+  # is currently used (after group_slab_data_by(), which returns data in pairs)
+  # but leaving it in for safety and setting nocov
+  if (n == 1) return(zeroGrob())  # nocov
 
   munched = coord_munch(coord, data, panel_params)
 
