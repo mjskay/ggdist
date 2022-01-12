@@ -356,6 +356,26 @@ test_that("pointintervals work on rvars", {
   )
 })
 
+test_that("non-scalar rvars throw appropriate warnings", {
+  x = posterior::rvar(matrix(1:6, nrow = 2))
+  expect_error(hdi(x), "HDI for non-scalar rvars is not implemented")
+  expect_error(hdci(x), "HDCI for non-scalar rvars is not implemented")
+})
+
+test_that("point_interval works on NA rvars", {
+  ref = tibble(
+    .value = NA_real_,
+    .lower = NA_real_,
+    .upper = NA_real_,
+    .width = 0.95
+  )
+
+  x = posterior::rvar(NA_real_)
+  expect_equal(median_qi(x), mutate(ref, .point = "median", .interval = "qi"))
+  expect_equal(mean_hdi(x), mutate(ref, .point = "mean", .interval = "hdi"))
+  expect_equal(mode_hdci(x), mutate(ref, .point = "mode", .interval = "hdci"))
+})
+
 
 # distributional objects --------------------------------------------------
 
@@ -375,4 +395,31 @@ test_that("pointintervals work on distributional objects", {
     tibble(x = 0:1 / 2:3, .lower = qgamma(0.2, 1:2, 2:3), .upper = qgamma(0.8, 1:2, 2:3), .width = 0.6, .point = "mode", .interval = "qi"),
     tolerance = 1e-05
   )
+})
+
+test_that("Mode on dist_sample uses the numeric method", {
+  x_values = dgamma(ppoints(100), 2, 2)
+  x = dist_sample(list(x_values))
+
+  expect_equal(Mode(x), Mode(x_values))
+})
+
+test_that("non-scalar distributions throw appropriate warnings", {
+  x = dist_normal(0:1)
+  expect_error(hdi(x), "HDI for non-scalar distributions is not implemented")
+  expect_error(hdci(x), "HDCI for non-scalar distributions is not implemented")
+})
+
+test_that("point_interval works on NA dists", {
+  ref = tibble(
+    .value = NA_real_,
+    .lower = NA_real_,
+    .upper = NA_real_,
+    .width = 0.95
+  )
+
+  x = dist_missing()
+  expect_equal(median_qi(x), mutate(ref, .point = "median", .interval = "qi"))
+  expect_equal(mean_hdi(x), mutate(ref, .point = "mean", .interval = "hdi"))
+  expect_equal(mode_hdci(x), mutate(ref, .point = "mode", .interval = "hdci"))
 })

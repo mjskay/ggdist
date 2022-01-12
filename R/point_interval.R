@@ -173,7 +173,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
     if (length(col_exprs) == 0) {
       #still nothing to aggregate? not sure what the user wants
-      stop("No columns found to calculate point and interval summaries for.")
+      stop0("No columns found to calculate point and interval summaries for.")
     }
   }
 
@@ -245,7 +245,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         lower = lapply(intervals, function(x) x[, 1])
         upper = lapply(intervals, function(x) x[, 2])
         if (any(lengths(lower) > 1) || any(lengths(upper) > 1)) {
-          stop(
+          stop0(
             "You are summarizing a multimodal distribution using a method that returns\n",
             "multiple intervals (such as `hdi()`), but you are attempting to generate\n",
             "intervals for multiple columns in wide format.\n\n",
@@ -253,8 +253,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
             "multi-modal, you can only summarize one column at a time.\n\n",
             "You might try using `tidybayes::gather_variables()` to put all your draws into\n",
             "a single column before summarizing them, or use an interval type that always\n",
-            "returns exactly one interval per probability level (such as `hdci()` or `qi()`).",
-            call. = FALSE
+            "returns exactly one interval per probability level (such as `hdci()` or `qi()`)."
           )
         }
         data[[paste0(col_name, ".lower")]] = unlist(lower)
@@ -382,6 +381,10 @@ hdi_.distribution = function(x, .width = .95, ...) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar distributions is not implemented")
   }
+  if (anyNA(x)) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+
   hilos = hdr(x, .width * 100, ...)
   matrix(c(unlist(vctrs::field(hilos, "lower")), unlist(vctrs::field(hilos, "upper"))), ncol = 2)
 }
@@ -420,24 +423,25 @@ Mode.rvar = function(x, na.rm = FALSE) {
   dim <- dim(draws)
   apply(draws, seq_along(dim)[-1], Mode, na.rm = na.rm)
 }
-#' @export
-#' @rdname point_interval
-Mode.dist_sample = function(x, na.rm = FALSE) {
-  Mode(x[[1]], na.rm = na.rm)
-}
 #' @importFrom stats optim
 #' @export
 #' @rdname point_interval
 Mode.distribution = function(x, na.rm = FALSE) {
   find_mode = function(x) {
-    optim(
-      median(x, na.rm = na.rm),
-      function(q) -density(x, at = q, na.rm = na.rm),
-      #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile below
-      lower = quantile(x, 0),
-      upper = quantile(x, 1),
-      method = "L-BFGS-B"
-    )$par
+    if (anyNA(x)) {
+      NA_real_
+    } else if (distr_is_sample(x)) {
+      Mode(distr_get_sample(x), na.rm = na.rm)
+    } else {
+      optim(
+        median(x, na.rm = na.rm),
+        function(q) -density(x, at = q, na.rm = na.rm),
+        #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile below
+        lower = quantile(x, 0),
+        upper = quantile(x, 1),
+        method = "L-BFGS-B"
+      )$par
+    }
   }
 
   map_dbl_(x, find_mode)
@@ -475,10 +479,11 @@ hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
   if (length(x) > 1) {
     stop0("HDCI for non-scalar distributions is not implemented")
   }
-  if (!na.rm && anyNA(x)) {
+  if (anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
+  #TODO: after #114, pass na.rm to quantile here
   intervals = HDInterval::hdi(function(p) quantile(x, p), credMass = .width)
   matrix(intervals, ncol = 2)
 }

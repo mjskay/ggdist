@@ -11,7 +11,6 @@
 \alias{Mode}
 \alias{Mode.default}
 \alias{Mode.rvar}
-\alias{Mode.dist_sample}
 \alias{Mode.distribution}
 \alias{hdci}
 \alias{mean_qi}
@@ -90,8 +89,6 @@ Mode(x, na.rm = FALSE)
 \method{Mode}{default}(x, na.rm = FALSE)
 
 \method{Mode}{rvar}(x, na.rm = FALSE)
-
-\method{Mode}{dist_sample}(x, na.rm = FALSE)
 
 \method{Mode}{distribution}(x, na.rm = FALSE)
 

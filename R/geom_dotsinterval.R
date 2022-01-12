@@ -148,7 +148,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   )
 
   if (!coord$is_linear()) {
-    stop("geom_dotsinterval does not work properly with non-linear coordinates.")
+    stop0("geom_dotsinterval does not work properly with non-linear coordinates.")
   }
   # Swap axes if using coord_flip
   if (inherits(coord, "CoordFlip")) {

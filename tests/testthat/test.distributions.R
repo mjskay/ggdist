@@ -7,6 +7,16 @@ library(distributional)
 
 
 
+
+# factor distributions ----------------------------------------------------
+
+test_that("distribution functions work on factors", {
+  expect_equal(distr_pdf(factor("norm"))(-2:2, 1, 2), dnorm(-2:2, 1, 2))
+  expect_equal(distr_cdf(factor("norm"))(-2:2, 1, 2), pnorm(-2:2, 1, 2))
+  expect_equal(distr_quantile(factor("norm"))(ppoints(5), 1, 2), qnorm(ppoints(5), 1, 2))
+})
+
+
 # distributional objects --------------------------------------------------
 
 test_that("distribution functions work on distributional objects", {
@@ -20,7 +30,6 @@ test_that("distribution functions work on distributional objects", {
   expect_equal(distr_cdf(x[[1]])(-2:2), pnorm(-2:2, 1, 2))
   expect_equal(distr_quantile(x[[1]])(ppoints(5)), qnorm(ppoints(5), 1, 2))
 })
-
 
 
 # sample distributions ----------------------------------------------------
