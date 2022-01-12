@@ -596,7 +596,6 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     if (is.null(data$dist) && is.numeric(data[[x]])) {
       trans = scales[[x]]$trans %||% scales::identity_trans()
 
-      # TODO: shouldn't need to remove missing values here after distributional > 0.2.2
       data = remove_missing(data, na.rm, x, name = "stat_slabinterval")
 
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist

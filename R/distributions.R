@@ -35,13 +35,10 @@ distr_function.distribution = function(dist, prefix, fun) {
     "distributional objects should never have length > 1 here.\n",
     "Please report this bug at https://github.com/mjskay/ggdist/issues"
   )
-  distr_function.dist_default(dist[[1]], prefix, fun)
-}
-#' @export
-distr_function.dist_default = function(dist, prefix, fun) {
   # eat up extra args as they are ignored anyway
   # (and can cause problems, e.g. with cdf())
-  function(x, ...) unlist(fun(dist, x))
+  # TODO: at least until #114 / distributional/#72
+  function(x, ...) unlist(fun(dist[[1]], x))
 }
 #' @export
 distr_function.rvar = distr_function.distribution
@@ -79,29 +76,8 @@ distr_point_interval.numeric = function(dist, args = list(), point_interval, tra
 #' @importFrom distributional dist_wrap
 #' @export
 distr_point_interval.character = function(dist, args = list(), point_interval, trans, .width = 0.95, ...) {
-  if (packageVersion("distributional") >= "0.2.2.9000") {
-    dist = do.call(dist_wrap, c(list(dist), args))
-    distr_point_interval(dist, args, point_interval, trans, .width = .width, ...)
-  } else{
-    # distributional <= 0.2.2 doesn't support dist_wrap of arbitrary functions outside packages
-    quantile_fun = distr_quantile(dist)
-
-    intervals = map_dfr_(.width, function(w) {
-      quantile_args = c(list(c(0.5, (1 - w)/2, (1 + w)/2)), args)
-      quantiles = do.call(quantile_fun, quantile_args)
-      data.frame(
-        .value = quantiles[[1]],
-        .lower = quantiles[[2]],
-        .upper = quantiles[[3]],
-        .width = w
-      )
-    })
-
-    intervals$.value = trans$transform(intervals$.value)
-    intervals$.lower = trans$transform(intervals$.lower)
-    intervals$.upper = trans$transform(intervals$.upper)
-    intervals
-  }
+  dist = do.call(dist_wrap, c(list(dist), args))
+  distr_point_interval(dist, args, point_interval, trans, .width = .width, ...)
 }
 #' @export
 distr_point_interval.factor = function(dist, args = list(), point_interval, trans, ...) {
@@ -116,11 +92,6 @@ distr_point_interval.distribution = function(dist, args = list(), point_interval
     t_dist = dist_transformed(dist, trans$transform, trans$inverse)
     point_interval(t_dist, .simple_names = TRUE, ...)
   }
-}
-#' @export
-distr_point_interval.dist_default = function(dist, args = list(), point_interval, trans, ...) {
-  dist = vctrs::new_vctr(list(dist), class = "distribution")
-  distr_point_interval(dist, args, point_interval, trans, ...)
 }
 #' @export
 distr_point_interval.rvar = distr_point_interval.distribution

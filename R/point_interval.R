@@ -177,15 +177,6 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
     }
   }
 
-  apply_point_summary = function(draws, .point, na.rm) {
-    if (distributional::is_distribution(draws)) {
-      #TODO: when #114 / distributional#72 is fixed, pass na.rm to median in this call
-      .point(draws)
-    } else {
-      map_dbl_(draws, .point, na.rm = na.rm)
-    }
-  }
-
   if (length(col_exprs) == 1 && .simple_names) {
     # only one column provided => summarise that column and use ".lower" and ".upper" as
     # the generated column names for consistency with tidy() in broom
@@ -209,7 +200,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       # to intervals that can return multiple intervals (e.g., hdi())
 
       # reduce `data` to just point estimate column and grouping factors (if any)
-      data[[col_name]] = apply_point_summary(draws, .point, na.rm)
+      data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
       # for each row of `data`, compute the intervals (may be more than one),
       # and construct a tibble with grouping factors (if any), point estimate,
@@ -244,7 +235,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         draws = data[[col_name]]
         data[[col_name]] = NULL  # to move the column to the end so that the column is beside its interval columns
 
-        data[[col_name]] = apply_point_summary(draws, .point, na.rm = na.rm)
+        data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
 
         intervals = lapply(draws, .interval, .width = p, na.rm = na.rm)
 
@@ -333,22 +324,6 @@ point_interval.rvar = function(
 #' @export
 point_interval.distribution = point_interval.rvar
 
-#' @rdname point_interval
-#' @export
-point_interval.dist_default = function(
-  .data, ...,
-  .width = .95, .point = median, .interval = qi, .simple_names = TRUE, na.rm = FALSE
-) {
-  x = .data
-  # using substitute here so that names of .point / .interval are passed down correctly
-  eval(substitute(point_interval(
-    # must wrap dist_default objects back in vectors to put in a tibble.
-    # This is a hack but will never get called once distributional > 0.2.2 hits.
-    tibble(.value = vctrs::new_vctr(list(x), class = "distribution")), ...,
-    .width = .width, .point = .point, .interval = .interval, .simple_names = .simple_names, na.rm = na.rm
-  )))
-}
-
 
 #' @importFrom stats quantile
 #' @export
@@ -363,14 +338,8 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   upper_prob = (1 + .width) / 2
 
   if (distributional::is_distribution(x)) {
-    #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in these calls
-    if (packageVersion("distributional") >= "0.2.2.9000") {
-      do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
-    } else {
-      matrix(quantile(x[[1]], c(lower_prob, upper_prob)), ncol = 2)
-    }
-  } else if (inherits(x, "dist_default")) {
-    matrix(quantile(x, c(lower_prob, upper_prob)), ncol = 2)
+    #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in this call
+    do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
   }
@@ -409,16 +378,12 @@ hdi_.rvar = function(x, ...) {
 }
 #' @importFrom distributional hdr
 #' @export
-hdi_.dist_default = function(x, .width = .95, ...) {
-  hilos = hdr(x, .width * 100, ...)
-  matrix(c(unlist(vctrs::field(hilos, "lower")), unlist(vctrs::field(hilos, "upper"))), ncol = 2)
-}
-#' @export
 hdi_.distribution = function(x, .width = .95, ...) {
   if (length(x) > 1) {
     stop0("HDI for non-scalar distributions is not implemented")
   }
-  hdi_.dist_default(x[[1]], .width = .width, ...)
+  hilos = hdr(x, .width * 100, ...)
+  matrix(c(unlist(vctrs::field(hilos, "lower")), unlist(vctrs::field(hilos, "upper"))), ncol = 2)
 }
 
 #' @export
@@ -463,19 +428,19 @@ Mode.dist_sample = function(x, na.rm = FALSE) {
 #' @importFrom stats optim
 #' @export
 #' @rdname point_interval
-Mode.dist_default = function(x, na.rm = FALSE) {
-  optim(
-    quantile(x, 0.5),
-    function(q) -density(x, at = q),
-    lower = quantile(x, 0),
-    upper = quantile(x, 1),
-    method = "L-BFGS-B"
-  )$par
-}
-#' @export
-#' @rdname point_interval
 Mode.distribution = function(x, na.rm = FALSE) {
-  map_dbl_(x, Mode.dist_default, na.rm)
+  find_mode = function(x) {
+    optim(
+      median(x, na.rm = na.rm),
+      function(q) -density(x, at = q, na.rm = na.rm),
+      #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile below
+      lower = quantile(x, 0),
+      upper = quantile(x, 1),
+      method = "L-BFGS-B"
+    )$par
+  }
+
+  map_dbl_(x, find_mode)
 }
 
 
@@ -506,20 +471,16 @@ hdci_.rvar = function(x, ...) {
 }
 #' @importFrom distributional hdr
 #' @export
-hdci_.dist_default = function(x, .width = .95, na.rm = FALSE, ...) {
+hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
+  if (length(x) > 1) {
+    stop0("HDCI for non-scalar distributions is not implemented")
+  }
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
 
   intervals = HDInterval::hdi(function(p) quantile(x, p), credMass = .width)
   matrix(intervals, ncol = 2)
-}
-#' @export
-hdci_.distribution = function(x, ...) {
-  if (length(x) > 1) {
-    stop0("HDCI for non-scalar distributions is not implemented")
-  }
-  hdci_.dist_default(x, ...)
 }
 
 #' @export
