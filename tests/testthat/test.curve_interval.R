@@ -57,6 +57,7 @@ test_that("curve_interval works with lineribbon", {
   # TODO: fix
   # vdiffr::expect_doppelganger("joint curve_interval with mhd",
   #   ab_curve_df %>%
+  #     arrange(.draw) %>%  # TODO: this should not be needed
   #     curve_interval(y, .along = c(group, x), .width = c(.5, .8), .interval = "mhd") %>%
   #     ggplot(aes(x = x, y = y)) +
   #     geom_lineribbon(aes(ymin = .lower, ymax = .upper)) +
@@ -120,3 +121,14 @@ test_that("basic cases on single curve work", {
 })
 
 
+# errors ------------------------------------------------------------------
+
+test_that("error is thrown when no columns found to summarize", {
+  df = data.frame(value = ppoints(10))
+  expect_error(curve_interval(df, .exclude = "value"), "No columns found to calculate point and interval summaries for")
+})
+
+test_that("error is thrown with groups of different sizes", {
+  df = data.frame(value = ppoints(9), group = c("a", "a", "b"))
+  expect_error(curve_interval(df, .along = group), "Must have the same number of values in each group")
+})

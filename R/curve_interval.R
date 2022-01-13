@@ -136,7 +136,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   if (!requireNamespace("posterior", quietly = TRUE)) {
-    stop('curve_interval() requires the `posterior` package to be installed.') #nocov
+    stop0('curve_interval() requires the `posterior` package to be installed.') #nocov
   }
 
   .interval = match.arg(.interval)
@@ -169,7 +169,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
 
     if (length(col_exprs) == 0) {
       #still nothing to aggregate? not sure what the user wants
-      stop("No columns found to calculate point and interval summaries for.")
+      stop0("No columns found to calculate point and interval summaries for.")
     }
   }
 
@@ -223,7 +223,7 @@ halfspace_depth = function(x) {
 
 .curve_interval = function(data, col_name, lower, upper, .width, .interval, .conditional_groups, na.rm = FALSE) {
   if (length(unique(lengths(data[[col_name]]))) != 1) {
-    stop("Must have the same number of values in each group.")
+    stop0("Must have the same number of values in each group.")
   }
 
   dfs = group_split(group_by_at(data, .conditional_groups))
@@ -279,22 +279,24 @@ halfspace_depth = function(x) {
     # by the envelope around all draws deeper than the depth cutoff
     sorted_draw_depths = sort(draw_depth)
     map_dfr_(.width, function(w) {
-      if (FALSE) {
-        # naive approach: just use quantiles of draw depths to determine cutoff
-        depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
-      } else {
-        # use binary search to find a cutoff
-        draw_depth_i = binary_search(
-          function(i) {
-            depth_cutoff = sorted_draw_depths[i]
-            actual_width = calc_intervals_at_depth_cutoff(depth_cutoff)[[".actual_width"]][[1]]
-            actual_width >= w
-          },
-          min_i = 1,
-          max_i = length(sorted_draw_depths)
-        )
-        depth_cutoff = sorted_draw_depths[draw_depth_i]
-      }
+      # The naive approach would be to just use quantiles of draw depths to determine
+      # the cutoff; something like:
+      #   depth_cutoff = quantile(draw_depth, 1 - w, na.rm = na.rm)
+      # However this does not work well, since the envelope around a w% set of curves
+      # determined via quantiles tends to incidentally cover some other curves, making
+      # the coverage be (sometimes substantially) more than w%.
+      # Thus instead, we use binary search to find a depth cutoff that contains
+      # w% of the curves:
+      draw_depth_i = binary_search(
+        function(i) {
+          depth_cutoff = sorted_draw_depths[i]
+          actual_width = calc_intervals_at_depth_cutoff(depth_cutoff)[[".actual_width"]][[1]]
+          actual_width >= w
+        },
+        min_i = 1,
+        max_i = length(sorted_draw_depths)
+      )
+      depth_cutoff = sorted_draw_depths[draw_depth_i]
 
       d = calc_intervals_at_depth_cutoff(depth_cutoff)
       d[[col_name]] = median_y
