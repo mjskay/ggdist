@@ -185,8 +185,11 @@ f_deriv_at_y = function(f, y) {
     names(args) = y_name
     eval(f_deriv_expr, args, environment(f))
   }, error = function(e) {
-    # if analytical approach fails, use numerical approach
-    numDeriv::grad(f, y)
+    # if analytical approach fails, use numerical approach.
+    # we use this (slightly less quick) approach instead of numDeriv::grad()
+    # because numDeriv::grad() errors out if any data point fails while this
+    # will return `NA` for those points
+    vapply(y, numDeriv::jacobian, func = f, numeric(1))
   })
 }
 
