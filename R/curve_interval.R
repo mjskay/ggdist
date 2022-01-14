@@ -200,13 +200,24 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
       data = summarise_at(data, names(col_exprs), list)
     }
 
+    result = NULL
+    actual_widths = NULL
     for (col_name in names(col_exprs)) {
-      data = .curve_interval(
+      col_result = .curve_interval(
         data, col_name, paste0(col_name, ".lower"), paste0(col_name, ".upper"), .width, .interval, .conditional_groups, na.rm = na.rm
       )
-    }
 
-    data
+      # actual widths aren't always going to be equal so we'll take the means of them
+      actual_widths = cbind(actual_widths, col_result$.actual_width)
+
+      result = bind_cols(
+        result[, names(result) != col_name],
+        col_result[, names(col_result) == col_name | (!names(col_result) %in% names(result))]
+      )
+    }
+    result$.actual_width = rowMeans(actual_widths)
+
+    result
   }
 
   result[[".point"]] = .interval
