@@ -148,13 +148,6 @@ map2_dfr_ = function(X, Y, FUN) {
   bind_rows(mapply(FUN, X, Y, SIMPLIFY = FALSE, USE.NAMES = FALSE))
 }
 
-iwalk_ = function(vec, fun, ...) {
-  # drop in replacement for purrr::iwalk()
-  nms = names(vec) %||% seq_along(x)
-  mapply(fun, vec, nms, MoreArgs = list(...))
-  invisible(vec)
-}
-
 fct_rev_ = function(x) {
   if (is.character(x)) {
     x = factor(x)

@@ -128,7 +128,7 @@
 #'   theme_ggdist()
 #'
 #' @importFrom dplyr group_vars summarise_at %>% group_split
-#' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr
+#' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr syms enquo
 #' @importFrom tidyselect eval_select
 #' @export
 curve_interval = function(.data, ..., .along = NULL, .width = .5,
@@ -162,9 +162,7 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
       #don't aggregate groups because we aggregate within these
       setdiff(group_vars(data)) %>%
       setdiff(.exclude) %>%
-      # have to use quos here because lists of symbols don't work correctly with iwalk() for some reason
-      # (the simpler version of this line would be `syms() %>%`)
-      lapply(function(x) quo(!!sym(x))) %>%
+      syms() %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
@@ -190,9 +188,9 @@ curve_interval = function(.data, ..., .along = NULL, .width = .5,
 
     .curve_interval(data, col_name, ".lower", ".upper", .width, .interval, .conditional_groups, na.rm = na.rm)
   } else {
-    iwalk_(col_exprs, function(col_expr, col_name) {
-      data[[col_name]] <<- eval_tidy(col_expr, data)
-    })
+    for (i in seq_along(col_exprs)) {
+      data[[names(col_exprs)[[i]]]] = eval_tidy(col_exprs[[i]], data)
+    }
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)

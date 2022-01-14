@@ -138,7 +138,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
 #' @importFrom dplyr do bind_cols group_vars summarise_at %>%
-#' @importFrom rlang set_names quos quos_auto_name eval_tidy as_quosure
+#' @importFrom rlang quos quos_auto_name eval_tidy syms
 #' @importFrom stats median
 #' @importFrom tibble as_tibble
 #' @export
@@ -166,9 +166,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       #don't aggregate groups because we aggregate within these
       setdiff(group_vars(data)) %>%
       setdiff(.exclude) %>%
-      # have to use quos here because lists of symbols don't work correctly with iwalk() for some reason
-      # (the simpler version of this line would be `syms() %>%`)
-      lapply(function(x) quo(!!sym(x))) %>%
+      syms() %>%
       quos_auto_name()
 
     if (length(col_exprs) == 0) {
@@ -219,9 +217,9 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       as_tibble(data)
     })
   } else {
-    iwalk_(col_exprs, function(col_expr, col_name) {
-      data[[col_name]] <<- eval_tidy(col_expr, data)
-    })
+    for (i in seq_along(col_exprs)) {
+      data[[names(col_exprs)[[i]]]] = eval_tidy(col_exprs[[i]], data)
+    }
 
     # if the values we are going to summarise are not already list columns, make them into list columns
     # (making them list columns first is faster than anything else I've tried)
