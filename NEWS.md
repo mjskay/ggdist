@@ -19,6 +19,12 @@ New features:
   and `posterior::rvar()` objects, meaning that means and modes (in addition
   to medians) and highest-density intervals (in addition to quantile intervals)
   can now be visualized for analytical distributions.
+* New `stat_ribbon()` provided as a shortcut stat for `stat_lineribbon()` with
+  no line (#48).
+* One-sided intervals (i.e. quantiles) can now be calculated using `ul()` (upper
+  limit) or `ll()` (lower limit), e.g. with `point_interval()` explicitly or
+  via `mean_ll()`, `median_ll()`, `mode_ll()`, `mean_ul()`, `median_ul()`, 
+  or `mode_ul()` (#49).
 * Constant distributions are now reliably detected in a variety of situations
   and rendered as point masses in both density plots and histograms (#103, #32).
   
@@ -28,7 +34,9 @@ Documentation:
   `geom_slabinterval()` family: each shortcut stat/geom now has its own documentation
   page that comprehensively lists all parameters, aesthetics, and computed variables,
   including those pulled in via `...` from typically-paired geoms. These docs are
-  auto-generated and should be easy to maintain going forward.
+  auto-generated and should be easy to maintain going forward. (#36)
+* The `stat_lineribbon()` and `geom_lineribbon()` family now also has separate
+  documentation pages with a comprehensive listing of aesthetics and parameters (#107).
 * Ridgeplot-like example in `vignette("slabinterval")` using the new `expand`
   parameter (#115).
   
