@@ -169,3 +169,21 @@ test_that("the stepped lineribbons work", {
   )
 
 })
+
+
+
+# stat_ribbon -------------------------------------------------------------
+
+test_that("stat_ribbon works", {
+  skip_if_no_vdiffr()
+
+
+  df = make_line_data()
+
+  p = ggplot(df, aes(x = x, y = y))
+
+  vdiffr::expect_doppelganger("one-group stat_ribbon",
+    p + stat_ribbon(.width = c(.50, .75, .90)) + scale_fill_brewer()
+  )
+})
+

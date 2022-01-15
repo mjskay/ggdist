@@ -5,7 +5,7 @@
 
 
 
-test_that("geom aesthetic documention generator works", {
+test_that("slabinterval aesthetic documention generator works", {
 
   geom_output = paste0(rd_slabinterval_aesthetics("slabinterval"), collapse = "\n")
   expect_match(geom_output, "@section Aesthetics:")
@@ -21,7 +21,7 @@ test_that("geom aesthetic documention generator works", {
 
 })
 
-test_that("geom parameter documention generator works", {
+test_that("slabinterval parameter documention generator works", {
 
   geom_output = paste0(rd_slabinterval_params("slabinterval"), collapse = "\n")
   expect_match(geom_output, "@param na.rm", fixed = TRUE)
@@ -36,7 +36,7 @@ test_that("geom parameter documention generator works", {
 
 })
 
-test_that("shortcut stat documentation generator works", {
+test_that("shortcut stat_slabinterval documentation generator works", {
 
   stat_output = paste0(rd_slabinterval_shortcut_stat("interval", chart_type = "multiple-interval"), collapse = "\n")
   expect_match(stat_output, "@title Multiple-interval plot (shortcut stat)", fixed = TRUE)
@@ -50,7 +50,7 @@ test_that("shortcut stat documentation generator works", {
 
 })
 
-test_that("shortcut geom documentation generator works", {
+test_that("shortcut geom_slabinterval documentation generator works", {
 
   geom_output = paste0(rd_slabinterval_shortcut_geom("interval", chart_type = "multiple-interval"), collapse = "\n")
   expect_match(geom_output, "@title Multiple-interval plot (shortcut geom)", fixed = TRUE)
