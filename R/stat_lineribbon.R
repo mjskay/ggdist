@@ -33,3 +33,17 @@ StatLineribbon$default_aes$size = NULL
 #' @eval rd_lineribbon_shortcut_stat("lineribbon", "line + multiple-ribbon")
 #' @export
 stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")
+
+
+
+# shortcut stats ----------------------------------------------------------
+
+StatRibbon = ggproto("StatRibbon", StatLineribbon,
+  default_aes = defaults(aes(
+    color = stat(I(NA))
+  ), StatLineribbon$default_aes)
+)
+
+#' @eval rd_lineribbon_shortcut_stat("ribbon", "multiple-ribbon", geom_name = "lineribbon", from_name = "lineribbon", line = FALSE)
+#' @export
+stat_ribbon = make_stat(StatRibbon, geom = "lineribbon")

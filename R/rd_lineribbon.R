@@ -9,7 +9,9 @@
 
 rd_lineribbon_shortcut_stat = function(
   stat_name, chart_type,
-  geom_name = stat_name
+  geom_name = stat_name,
+  from_name = "slabinterval",
+  line = TRUE
 ) {
   stat = get(paste0("Stat", title_case(stat_name)))
   geom = get(paste0("Geom", title_case(geom_name)))
@@ -26,7 +28,7 @@ rd_lineribbon_shortcut_stat = function(
       function.
       '),
     '@description\n Roughly equivalent to:',
-    rd_shortcut_stat(stat_name, geom_name),
+    rd_shortcut_stat(stat_name, geom_name, from_name = from_name),
     '@inheritParams stat_pointinterval',
     '@inheritParams geom_lineribbon',
     rd_slabinterval_params(geom_name, stat, as_dots = TRUE),
@@ -42,7 +44,7 @@ rd_lineribbon_shortcut_stat = function(
       @return A [ggplot2::Stat] representing a <<chart_type>> geometry which can
       be added to a [ggplot()] object.'),
     rd_slabinterval_computed_variables(stat),
-    rd_lineribbon_aesthetics(geom_name, stat),
+    rd_lineribbon_aesthetics(geom_name, stat, line = line),
     glue_doc('
       @seealso
       See [geom_<<geom_name>>()] for the geom underlying this stat.
@@ -80,7 +82,7 @@ rd_lineribbon_shortcut_stat = function(
 
 #' Provides documentation of aesthetics for lineribbons
 #' @noRd
-rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vignette = "lineribbon") {
+rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vignette = "lineribbon", line = TRUE) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
   out = glue_doc('
@@ -111,7 +113,7 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
   )
 
   # line aesthetics
-  if (is.null(stat) || isTRUE(stat$default_params$show_point)) geom_aes_sections[["Line aesthetics"]] = list(
+  if (line) geom_aes_sections[["Line aesthetics"]] = list(
     size = 'Width of **line**.',
     linetype = 'Type of **line** (e.g., `"solid"`, `"dashed"`, etc)'
   )
@@ -120,7 +122,7 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
     geom_name, stat,
     geom_aes_sections = geom_aes_sections,
     stat_aes = rd_stat_slabinterval_aes,
-    # undocumented_aes = c("width", "height", "group"),
+    undocumented_aes = c("group"),
     vignette = vignette
   ))
 
