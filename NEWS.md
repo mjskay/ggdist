@@ -30,6 +30,7 @@ New features:
   
 Documentation:
 
+* New vignette for the `stat_dotsinterval()` sub-family: `vignette("dotsinterval")` (#120).
 * Vastly improved and expanded documentation for the `stat_slabinterval()` and
   `geom_slabinterval()` family: each shortcut stat/geom now has its own documentation
   page that comprehensively lists all parameters, aesthetics, and computed variables,
