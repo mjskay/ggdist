@@ -19,6 +19,8 @@ test_that("slabinterval aesthetic documention generator works", {
   expect_match(geom_stat_output, "\\itemize", fixed = TRUE)
   expect_match(geom_stat_output, "\\item{`group`", fixed = TRUE)
 
+  aesthetic_output = rd_aesthetics_sections(geom_aes_sections = list("Color" = list("colour" = "foo")))
+  expect_match(aesthetic_output, "\\item{`colour`: foo}", fixed = TRUE)
 })
 
 test_that("slabinterval parameter documention generator works", {

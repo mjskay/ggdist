@@ -335,6 +335,24 @@ test_that("NAs are handled correctly in point_interval", {
 })
 
 
+# upper/lower limits (ul/ll) ----------------------------------------------
+
+test_that("ll and ul work", {
+  df = data.frame(x = ppoints(100, a = 1))
+
+  ref = tibble(x = 0.5, .lower = c(0.25, 0), .upper = Inf, .width = c(0.75, 1), .point = "mean", .interval = "ll")
+
+  expect_equal(mean_ll(df, x, .width = c(.75, 1)), ref)
+  expect_equal(median_ll(df, x, .width = c(.75, 1)), mutate(ref, .point = "median"))
+  expect_equal(mode_ll(df, x, .width = c(.75, 1)) %>% mutate(x = round(x, 2)), mutate(ref, .point = "mode"))
+
+  ref = tibble(x = 0.5, .lower = -Inf, .upper = c(0.75, 1), .width = c(0.75, 1), .point = "mean", .interval = "ul")
+
+  expect_equal(mean_ul(df, x, .width = c(.75, 1)), ref)
+  expect_equal(median_ul(df, x, .width = c(.75, 1)), mutate(ref, .point = "median"))
+  expect_equal(mode_ul(df, x, .width = c(.75, 1)) %>% mutate(x = round(x, 2)), mutate(ref, .point = "mode"))
+})
+
 # rvars -------------------------------------------------
 
 test_that("pointintervals work on rvars", {
