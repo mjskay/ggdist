@@ -111,7 +111,7 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
   )
 
   # line aesthetics
-  if (isTRUE(stat$default_params$show_point)) geom_aes_sections[["Line aesthetics"]] = list(
+  if (is.null(stat) || isTRUE(stat$default_params$show_point)) geom_aes_sections[["Line aesthetics"]] = list(
     size = 'Width of **line**.',
     linetype = 'Type of **line** (e.g., `"solid"`, `"dashed"`, etc)'
   )

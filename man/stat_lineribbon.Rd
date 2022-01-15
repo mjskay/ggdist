@@ -215,8 +215,6 @@ scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_r
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{
-\item{\code{shape}}
-\item{\code{stroke}}
 \item{\code{group}}
 }
 
