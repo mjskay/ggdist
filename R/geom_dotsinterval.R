@@ -251,7 +251,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   \doi{10.1145/3173574.3173718}.
 #' @seealso See the [stat_slabinterval()] family for other
 #' stats built on top of [geom_slabinterval()].
-#' See `vignette("slabinterval")` for a variety of examples of use.
+#' See `vignette("dotsinterval")` for a variety of examples of use.
 #' @examples
 #'
 #' library(dplyr)

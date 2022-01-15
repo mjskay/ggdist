@@ -1,0 +1,647 @@
+---
+title: "Dots + interval stats and geoms"
+author: "Matthew Kay"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    df_print: kable
+vignette: >
+  %\VignetteIndexEntry{Dots + interval stats and geoms}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+img {
+  border: none;
+}
+</style>
+
+```{r chunk_options, include=FALSE}
+tiny_width = 5.5
+tiny_height = 3 + 2/3
+small_width = med_width = 6.75
+small_height = med_height = 4.5
+large_width = 8
+large_height = 5.25
+
+knitr::opts_chunk$set(
+  fig.width = small_width,
+  fig.height = small_height
+)
+if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
+  knitr::opts_chunk$set(
+    dev = "png",
+    dev.args = list(type = "cairo")
+  )
+}
+```
+
+## Introduction
+  
+This vignette describes the dots+interval geoms and stats in `ggdist`. This is a flexible sub-family of stats and geoms designed to make plotting dotplots straightforward. In particular, it supports a selection of useful layouts (including the classic Wilkinson layout, a weave layout, and a beeswarm layout) and can automatically select the dot size so that the dotplot stays within the bounds of the plot.
+
+## Setup
+  
+The following libraries are required to run this vignette:
+  
+```{r setup, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(distributional)
+library(ggdist)
+library(ggplot2)
+library(patchwork)
+library(palmerpenguins)
+
+theme_set(theme_ggdist())
+```
+
+```{r hidden_options, include=FALSE}
+.old_options = options(width = 120)
+```
+
+
+## Anatomy of `geom_dotsinterval()`
+
+The dotsinterval family of geoms and stats is a sub-family of slabinterval (see `vignette("slabinterval")`), where the "slab" is a collection of dots forming a dotplot and the interval is a summary point (e.g., mean, median, mode) with an arbitrary number of intervals.
+
+The base `geom_dotsinterval()` uses a variety of custom aesthetics to create the composite geometry:
+
+```{r dotsinterval_components, echo=FALSE, fig.height=4.2, fig.width=6.5}
+red_ = "#de2d26"
+
+bracket_ = function(..., x, xend = x, y, yend = y) {
+  annotate("segment",
+    arrow = arrow(angle = 90, ends = "both", length = unit(3, "points")),
+    color = red_, size = 0.75,
+    x = x, xend = xend, y = y, yend = yend,
+    ...
+  )
+}
+thickness_ = function(x) dnorm(x,4,1) * 0.9 / dnorm(4,4,1)
+refline_ = function(..., x, xend = x, y, yend = y) {
+  annotate("segment",
+    color = red_, linetype = "22", size = 0.75,
+    x = x, xend = xend, y = y, yend = yend,
+    ...
+  )
+}
+label_ = function(..., hjust = 0) {
+  annotate("text",
+    color = red_, hjust = hjust, lineheight = 1,
+    size = 3.25,
+    ...
+  )
+}
+arrow_ = function(..., curvature = 0, x, xend = x, y, yend = y) {
+  annotate("curve", 
+    color = red_, arrow = arrow(angle = 45, length = unit(3, "points"), type = "closed"),
+    curvature = curvature,
+    x = x, xend = xend, y = y, yend = yend
+  )
+}
+
+
+tibble(dist = dist_normal(4, 1.2)) %>%
+  ggplot(aes(y = 0, xdist = dist)) +
+  stat_dotsinterval(
+    aes(interval_size = NULL),
+    slab_color = "gray50", 
+    .width = 1 - 2*pnorm(-1, sd = 1.2),
+    fill = "gray75",
+    point_size = 5,
+    shape = 22,
+    slab_shape = 21,
+    stroke = 1.5,
+    interval_size = 5,
+    slab_size = 1.5
+  ) +
+  
+  # height
+  refline_(x = 0, xend = 8.4, y = 1) +
+  bracket_(x = 8.4, y = 0, yend = 1) +
+  label_(label = "height", x = 8.6, y = 1) +
+  
+  # scale
+  refline_(x = 4, xend = 8.6, y = 0.9) +
+  bracket_(x = 8.6, y = 0, yend = 0.9) +
+  label_(label = "scale = 0.9", x = 8.8, y = 0.9) +
+  
+  # slab line properties
+  label_(x = 2.5, y = 0.7, 
+    label = 'slab_color = "gray50"\nslab_size = 1.5',
+    vjust = 1, hjust = 1
+  ) +
+  arrow_(x = 2.52, xend = 3, y = 0.67, yend = thickness_(3.1) + 0.03, curvature = -0.2) +
+  
+  # slab fill
+  label_(x = 5.5, y = 0.7,
+    label = 'slab_fill = fill = "gray75"\nslab_alpha = alpha = 1\nslab_shape = 21',
+    vjust = 1,
+  ) +
+  arrow_(x = 5.48, xend = 4.81, y = 0.67, yend = thickness_(3.1) + 0.01, curvature = 0.2) +
+
+  # xmin / x / xmax
+  arrow_(x = 2.65, xend = 3, y = -0.1, yend = -0.01, curvature = -0.2) +
+  label_(x = 2.7, y = -0.1, label = "xmin", hjust = 1, vjust = 1) +
+  arrow_(x = 4, y = -0.1, yend = -0.05) +
+  label_(x = 4, y = -0.1, label = "x", hjust = 0.5, vjust = 1) +
+  arrow_(x = 5.35, xend = 5, y = -0.1, yend = -0.01, curvature = 0.2) +
+  label_(x = 5.3, y = -0.1, label = "xmax", hjust = 0, vjust = 1) +
+  
+  # interval properties
+  label_(x = 3.5, y = -0.2,
+    label = 'interval_color = color = "black"\ninterval_alpha = alpha = 1\ninterval_linetype = linetype = "solid"\ninterval_size = size = 5',
+    vjust = 1, hjust = 1
+  ) +
+  arrow_(x = 3.3, xend = 3.4, y = -0.18, yend = -0.015, curvature = -0.1) +
+
+  # point properties
+  label_(x = 4.5, y = -0.2,
+    label = 'point_fill = fill = "gray75"\npoint_color = color = "black"\npoint_alpha = alpha = 1\npoint_size = size = 5\nshape = 22\nstroke = 1.5',
+    vjust = 1, hjust = 0
+  ) +
+  arrow_(x = 4.55, xend = 4.2, y = -0.18, yend = -0.03, curvature = 0.2) +
+  
+  coord_cartesian(xlim = c(-1, 10), ylim = c(-0.6, 1)) +
+  labs(subtitle = "Properties of geom_dotsinterval")
+```
+
+Depending on whether you want a horizontal or vertical orientation, you can provide `ymin` and `ymax` instead of `xmin` and `xmax`. By default, some aesthetics (e.g., `fill`, `color`, `size`, `alpha`) set properties of multiple sub-geometries at once. For example, the `color` aesthetic by default sets both the color of the point and the interval, but can also be overridden by `point_color` or `interval_color` to set the color of each sub-geometry separately. 
+
+Due to its relationship to the `geom_slabinterval()` family, aesthetics specific
+to the "dots" sub-geometry are referred to with the prefix `slab_`. When using
+the standalone `geom_dots()` geometry, it is not necessary to use these custom
+aesthetics:
+
+```{r dots_components, echo=FALSE, fig.height=3.0, fig.width=6.5}
+tibble(dist = dist_normal(4, 1.2)) %>%
+  ggplot(aes(y = 0, xdist = dist)) +
+  stat_dots(
+    aes(interval_size = NULL),
+    color = "gray50",
+    fill = "gray75",
+    size = 1.5,
+    shape = 21
+  ) +
+  
+  # height
+  refline_(x = 0, xend = 8.4, y = 1) +
+  bracket_(x = 8.4, y = 0, yend = 1) +
+  label_(label = "height", x = 8.6, y = 1) +
+  
+  # scale
+  refline_(x = 4, xend = 8.6, y = 0.9) +
+  bracket_(x = 8.6, y = 0, yend = 0.9) +
+  label_(label = "scale = 0.9", x = 8.8, y = 0.9) +
+  
+  # slab line properties
+  label_(x = 2.5, y = 0.7, 
+    label = 'color = "gray50"\nsize = 1.5',
+    vjust = 1, hjust = 1
+  ) +
+  arrow_(x = 2.52, xend = 3, y = 0.67, yend = thickness_(3.1) + 0.03, curvature = -0.2) +
+  
+  # slab fill
+  label_(x = 5.5, y = 0.7,
+    label = 'fill = "gray75"\nalpha = 1\nshape = 21',
+    vjust = 1,
+  ) +
+  arrow_(x = 5.48, xend = 4.81, y = 0.67, yend = thickness_(3.1) + 0.01, curvature = 0.2) +
+
+  coord_cartesian(xlim = c(-1, 10), ylim = c(-0.05, 1)) +
+  labs(subtitle = "Properties of geom_dots")
+```
+
+`geom_dotsinterval()` is often most useful when paired with `stat_dotsinterval()`, which will automatically calculate points and intervals and map these onto endpoints of the interval sub-geometry.
+
+`stat_dotsinterval()` and `stat_dots()` can be used on two types of data, depending on what aesthetic mappings you provide:
+
+   * **Sample data**; e.g. draws from a data distribution, bootstrap distribution, Bayesian posterior distribution (or any other distribution, really). To use the stats on sample data, map sample values onto the `x` or `y` aesthetic. 
+   
+   * **Distribution objects and analytical distributions**. To use the stats on this type of data, you must use the `xdist`, or `ydist` aesthetics, which take [distributional](https://pkg.mitchelloharawild.com/distributional/) objects, `posterior::rvar()` objects, or distribution names (e.g. `"norm"`, which refers to the Normal distribution provided by the `dnorm/pnorm/qnorm` functions). When used on analytical distributions (e.g. `distributional::dist_normal()`), the `quantiles` argument determines the number of quantiles used (and therefore the number of dots shown); the default is `100`.
+
+All dotsinterval geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting `orientation = "horizontal"` or `orientation = "vertical"`.
+
+## Side and layout
+
+The `side` aesthetic allows you to adjust the positioning and
+direction of the dots:
+
+* `"top"`, `"right"`, or `"topright"`: draw the dots on the top or on the right, depending on rientation`
+* `"bottom"`, `"left"`, or `"bottomleft"`: draw the dots on the bottom or on the left, pending on `orientation`
+* `"topleft"`: draw the dots on top or on the left, depending on `orientation`
+* `"bottomright"`: draw the dots on the bottom or on the right, depending on `orientation`
+* `"both"`: draw the dots mirrored, as in a "beeswarm" plot.
+
+The `layout` parameter allows you to adjust the algorithm used to place dots:
+
+* `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot. This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if the input data are symmetrical it will return a symmetrical layout.
+* `"weave"`: uses the same basic binning approach of "bin", but places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not align dots within columns. Does not work well when `side = "both"`.
+* "swarm": uses the `"compactswarm"` layout from `beeswarm::beeswarm()`. Does not maintain alignment of rows or columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile dotplots of theoretical distributions, which may look better with `"bin"` or `"weave"`).
+
+That yields these combinations (amongst many others):
+
+```{r side_layout, fig.width = small_width, fig.height = small_width * 3/2}
+set.seed(1234)
+x = rnorm(100)
+
+make_plot = function(layout) {
+  expand.grid(
+    x = x,
+    side = c("topright", "both", "bottomleft"),
+    stringsAsFactors = FALSE
+  ) %>%
+    ggplot(aes(side = side, x = x)) +
+    stat_dotsinterval(layout = layout) +
+    facet_grid(~ side, labeller = "label_both") +
+    labs(
+      subtitle = paste0("stat_dotsinterval(layout = '", layout, "')"),
+      x = NULL,
+      y = NULL
+    )
+}
+
+make_plot("bin") /
+  make_plot("weave") /
+  make_plot("swarm")
+```
+
+### Beeswarm plots
+
+Thus, it is possible to create the beeswarm plots by using `stat_dots()`
+with `side = "both"`:
+
+```{r beeswarm_bin}
+set.seed(1234)
+
+abc_df = data.frame(
+  value = rnorm(300, mean = c(1,2,3), sd = c(1,2,2)),
+  abc = c("a", "b", "c")
+)
+
+abc_df %>%
+  ggplot(aes(x = abc, y = value)) +
+  stat_dots(side = "both") +
+  ggtitle('stat_dots(side = "both")')
+```
+
+`side = "both"` also tends to work well with the `"swarm"` layout for a more
+classic-looking "beeswarm" plot:
+
+```{r beeswarm}
+abc_df %>%
+  ggplot(aes(x = abc, y = value)) +
+  stat_dots(side = "both", layout = "swarm") +
+  ggtitle('stat_dots(side = "both", layout = "swarm")')
+```
+
+## Varying `color`, `fill`, `shape`, and `size`
+
+Aesthetics like `color`, `fill`, `shape`, and `size` can be varied over the dots.
+For example, we can vary the `fill` aesthetic to create two
+subgroups, and use `position = "dodge"` to dodge entire "swarms" at once so
+the subgroups do not overlap:
+
+```{r beeswarm_dodge}
+set.seed(12345)
+
+abcc_df = data.frame(
+  value = rnorm(300, mean = c(1,2,3,4), sd = c(1,2,2,1)),
+  abc = c("a", "b", "c", "c"),
+  hi = c("h", "h", "h", "i")
+)
+
+abcc_df %>%
+  ggplot(aes(y = value, x = abc, fill = hi)) +
+  geom_dots(side = "both", position = "dodge") +
+  scale_color_brewer(palette = "Dark2") +
+  ggtitle(
+    'geom_dots(side = "both", position = "dodge")',
+    'aes(fill = hi)'
+  )
+```
+
+The color of the default gray outline can be changed using the `color` aesthetic,
+or you can remove it altogether by setting `size = 0` (or `slab_size = 0` when
+using `stat_dotsinterval()` / `geom_dotsinterval()`), or by changing to solid
+shapes and using the `color` aesthetic (the usual "plotting characters", e.g. 
+numbers from `0:24`, are supported).
+
+For example, we can vary `shape` and `color` simultaneously:
+
+```{r beeswarm_shape_color}
+abcc_df %>%
+  ggplot(aes(y = value, x = abc, shape = abc, color = hi)) +
+  geom_dots(side = "both", position = "dodge") +
+  scale_color_brewer(palette = "Dark2") +
+  ggtitle(
+    'geom_dots(side = "both", position = "dodge")',
+    'aes(shape = abc, fill = hi)'
+  )
+```
+
+### Varying discrete aesthetics within dot groups
+
+By default, if you assign a discrete variable to `color`, `shape`, etc it
+will also be used in the `group` aesthetic to determine dot groups, which
+are laid out separate (and can be dodged separately, as above).
+
+If you override this behavior by setting `group` to `NA` (or to some other
+variable you want to group dot layouts by), `geom_dotsinterval()` will leave
+dots in data order within the layout but allow aesthetics to vary across them.
+
+For example:
+
+```{r beeswarm_shape_color_together}
+abcc_df %>%
+  ggplot(aes(y = value, x = abc, shape = abc, color = hi, group = NA)) +
+  geom_dots() +
+  scale_color_brewer(palette = "Dark2") +
+  ggtitle(
+    'geom_dots()',
+    'aes(shape = abc, color = hi, group = NA)'
+  )
+```
+
+
+### Varying continuous aesthetics within dot groups
+
+Continuous variables can also be varied within groups. Since continuous variables
+will not automatically set the `group` aesthetic, we can simply assign them to
+the desired aesthetic we want to vary:
+
+```{r beeswarm_shape_color_continuous}
+abcc_df %>%
+  arrange(hi) %>%
+  ggplot(aes(y = value, x = abc, shape = abc, color = value)) +
+  geom_dots() +
+  ggtitle(
+    'geom_dots()',
+    'aes(color = value)'
+  )
+```
+
+This can be particularly useful with the `color`, `fill`, `color_ramp`, `fill_ramp`, and `alpha`
+aesthetics. For example, encoding distance from 0 on `alpha`:
+
+```{r beeswarm_shape_color_alpha}
+abcc_df %>%
+  arrange(hi) %>%
+  ggplot(aes(y = value, x = abc, shape = abc, color = abc, alpha = abs(value))) +
+  geom_dots(position = "dodge") +
+  ggtitle(
+    'geom_dots(side = "both", layout = "swarm")',
+    'aes(color = value, alpha = abs(value))'
+  )
+```
+
+## On analytical distributions
+
+Like the `stat_slabinterval()` family, `stat_dotsinterval()` and `stat_dots()`
+support using both sample data (via `x` and `y` aesthetics) or analytical distributions
+(via the `xdist` and `ydist` aesthetics). For analytical distributions, these stats 
+accept specifications for distributions in one of two ways:
+
+1. **Using distribution names as character vectors**: this format uses aesthetics as follows:
+
+   * `xdist`, `ydist`, or `dist`: the name of the distribution, following R's naming scheme. This is a string which should have `"p"`, `"q"`, and `"d"` functions defined for it: e.g., "norm" is a valid distribution name because the `pnorm()`, `qnorm()`, and `dnorm()` functions define the CDF, quantile function, and density function of the Normal distribution.
+   * `args` or `arg1`, ... `arg9`: arguments for the distribution. If you use `args`, it should be a list column where each element is a list containing arguments for the distribution functions; alternatively, you can pass the arguments directly using `arg1`, ... `arg9`.
+
+2. **Using distribution vectors from the [distributional](https://pkg.mitchelloharawild.com/distributional/) package or `posterior::rvar()` objects**: this format uses aesthetics as follows:
+
+   * `xdist`, `ydist`, or `dist`: a distribution vector or `posterior::rvar()` produced by functions such as `distributional::dist_normal()`, `distributional::dist_beta()`, `posterior::rvar_rng()`, etc.
+
+For example, here are a variety of distributions:
+
+```{r dotsinterval_dist}
+dist_df = tibble(
+  dist = c(dist_normal(1,0.25), dist_beta(3,3), dist_gamma(5,5)),
+  dist_name = format(dist)
+)
+
+dist_df %>%
+  ggplot(aes(y = dist_name, xdist = dist)) +
+  stat_dotsinterval() +
+  ggtitle(
+    "stat_dotsinterval()",
+    "aes(y = dist_name, xdist = dist)"
+  )
+```
+
+Analytical distributions are shown by default using 100 quantiles, sometimes
+refered to as a *quantile dotplot*, which can help people make better decisions under uncertainty ([Kay 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes 2018](https://doi.org/10.1145/3173574.3173718)). 
+
+This can be changed using the `quantiles` argument. For example, we can plot the same
+distributions again, now with 1000 quantiles:
+
+```{r dotsinterval_dist_1000}
+dist_df %>%
+  ggplot(aes(y = dist_name, xdist = dist)) +
+  stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci) +
+  ggtitle(
+    "stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)",
+    "aes(y = dist_name, xdist = dist)"
+  )
+```
+
+This example also shows the use of `point_interval` to plot the mode and 
+highest-density continuous intervals (instead of the default median and quantile
+intervals). For more, see `point_interval()`.
+
+When summarizing sample distributions
+with `stat_dots()`/`stat_dotsinterval()` (e.g. samples from Bayesian posteriors),
+one can also use the `quantiles` argument, though it is not on by default.
+
+
+### Varying continuous aesthetics with analytical distributions
+
+While varying discrete aesthetics works similarly with `stat_dotsinterval()`/`stat_dots()`
+as it does with `geom_dotsinterval()`/`geom_dots()`, varying continuous aesthetics within
+dot groups typically requires mapping the continuous aesthetic *after* the stats
+are computed. This is because the stat (at least for analytical distributions) must
+first generate the quantiles before properties of those quantiles can be mapped to
+aesthetics.
+
+Thus, because it relies upon generated variables from the stat, you can use the
+`stat()` or `stage()` functions from `ggplot2` to map those variables. For example:
+
+```{r dotsinterval_dist_color}
+dist_df %>%
+  ggplot(aes(y = dist_name, xdist = dist, slab_color = stat(x))) +
+  stat_dotsinterval(slab_shape = 19, quantiles = 500) +
+  scale_color_distiller(aesthetics = "slab_color", guide = "colorbar2") +
+  ggtitle(
+    "stat_dotsinterval(slab_shape = 19, quantiles = 500)",
+    'aes(slab_color = stat(x)) +\nscale_color_distiller(aesthetics = "slab_color", guide = "colorbar2")'
+  )
+```
+
+This example also demonstrates the use of sub-geometry scales: the `slab_`-prefixed
+aesthetics `slab_color` and `slab_shape` must be used to target the color and shape
+of the slab ("slab" here refers to the stack of dots) when using `geom_dotsinterval()`
+and `stat_dotsinterval()` to disambiguate between the point/interval and the dot stack.
+When using `stat_dots()`/`geom_dots()` this is not necessary.
+
+Also note the use of `scale_color_distiller()`, a base ggplot2 color scale, with the
+`slab_color` aesthetic by setting the `aesthetics` and `guide` properties (the latter
+is necessary because the default `guide = "colorbar"` will not work with non-standard
+color aesthetics).
+
+### Thresholds
+
+Another potentially useful application of post-stat aesthetic computation is to
+apply thresholds on a dotplot, coloring points on one side of a line differently:
+
+```{r dist_dots_shape_color, fig.width = med_width, fig.height = large_height}
+ab_df = tibble(
+  ab = c("a", "b"),
+  mean = c(5, 7),
+  sd = c(1, 1.5)
+)
+
+ab_df %>%
+  ggplot(aes(
+    y = ab, xdist = dist_normal(mean, sd),
+    fill = stat(x < 5), shape = stat(x < 5)
+  )) +
+  stat_dots(position = "dodge", color = NA) +
+  labs(
+    title = "stat_dots()",
+    subtitle = "aes(xdist = dist_normal(mean, sd), fill and shape = stat(x < 5))"
+  ) +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:10) +
+  # we'll use these shapes since they have fill and outlines
+  scale_shape_manual(values = c(21,22))
+```
+
+Notice the default dotplot layout, `"bin"`, can cause dots to be on the wrong
+side of a cutoff when coloring dots within dotplots. Thus it can be useful to use the
+`"weave"` or `"swarm"` layouts, which tend to position dots closer to their true
+`x` positions, rather than at bin centers:
+
+```{r dist_dots_swarm, fig.width = med_width, fig.height = large_height}
+ab_df %>%
+  ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = stat(x < 5))) +
+  stat_dots(position = "dodge", color = NA, layout = "swarm") +
+  labs(
+    title = 'stat_dots(layout = "swarm")',
+    subtitle = "aes(fill = stat(x < 5))"
+  ) +
+  geom_vline(xintercept = 5, alpha = 0.25) +
+  scale_x_continuous(breaks = 2:10)
+```
+
+
+## Raincloud plots
+
+Sometimes you may want to include multiple different types of slabs in the same plot
+in order to take advantage of the features each slab type provides. For example,
+people often combine densities with dotplots to show the underlying datapoints that
+go into a density estimate, creating so-called *rain cloud* plots. 
+
+To use multiple
+slab geometries together, you can use the `side` parameter to change which side
+of the interval a slab is drawn on and set the `scale` parameter to something around
+`0.5` (by default it is `0.9`) so that the two slabs do not overlap. We'll also
+scale the halfeye slab thickness by `n` (the number of observations in each group)
+so that the area of each slab represents sample size (and looks similar to
+the total area of its corresponding dotplot).
+
+We'll use a subsample of of the data to show how it might look on a reasonably-sized
+dataset.
+
+```{r halfeye_dotplot}
+set.seed(12345) # for reproducibility
+
+data.frame(
+  abc = c("a", "b", "b", "c"),
+  value = rnorm(200, c(1, 8, 8, 3), c(1, 1.5, 1.5, 1))
+) %>%
+  ggplot(aes(y = abc, x = value, fill = abc)) +
+  stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +
+  stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
+  scale_fill_brewer(palette = "Set2") +
+  ggtitle(paste0(
+      'stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +\n',
+      'stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA)'
+    ),
+    'aes(fill = abc)'
+  )
+```
+
+## Logit dotplots
+
+To demonstrate another useful plot type, the *logit dotplot* (courtesy [Ladislas Nalborczyk](https://www.barelysignificant.com/post/glm/)), we'll fit a 
+logistic regression to some data on the sex and body mass of Gentoo penguins.
+
+First, we'll demo varying the `side` aesthetic to create two dotplots that are
+"facing" each other. We also adjust the `scale` so that the dots don't overlap:
+
+```{r gentoo_raw}
+gentoo = penguins %>%
+  filter(species == "Gentoo", !is.na(sex))
+
+gentoo %>%
+  ggplot(aes(x = body_mass_g, y = sex, side = ifelse(sex == "male", "bottom", "top"))) +
+  geom_dots(scale = 0.5) +
+  ggtitle(
+    "geom_dots(scale = 0.5)",
+    'aes(side = ifelse(sex == "male", "bottom", "top"))'
+  ) 
+```
+
+Now we fit a logisitic regression predicting sex based on body mass:
+
+```{r m_gentoo}
+m = glm(sex == "male" ~ body_mass_g, data = gentoo, family = binomial)
+m
+```
+
+Then we can overlay a fit line as a `stat_lineribbon()` (see `vignette("lineribbon")`)
+on top of the mirrored dotplots to create a *logit dotplot*:
+
+```{r logit_dotplot}
+# construct a prediction grid for the fit line
+prediction_grid = with(gentoo, 
+  data.frame(body_mass_g = seq(min(body_mass_g), max(body_mass_g), length.out = 100))
+)
+
+prediction_grid %>%
+  bind_cols(predict(m, ., se.fit = TRUE)) %>%
+  mutate(
+    # distribution describing uncertainty in log odds
+    log_odds = dist_normal(fit, se.fit),
+    # inverse-logit transform the log odds to get
+    # distribution describing uncertainty in Pr(sex == "male")
+    p_male = dist_transformed(log_odds, plogis, qlogis)
+  ) %>%
+  ggplot(aes(x = body_mass_g)) +
+  geom_dots(
+    aes(y = as.numeric(sex == "male"), side = ifelse(sex == "male", "bottom", "top")),
+    scale = 0.4,
+    data = gentoo
+  ) +
+  stat_lineribbon(
+    aes(ydist = p_male), alpha = 1/4, fill = "#08306b"
+  ) +
+  labs(
+    title = "logit dotplot: stat_dots() with stat_lineribbon()",
+    subtitle = 'aes(side = ifelse(sex == "male", "bottom", "top"))',
+    x = "Body mass (g) of Gentoo penguins",
+    y = "Pr(sex = male)"
+  )
+  
+```
+
+
+
+```{r reset_options, include=FALSE}
+options(.old_options)
+```

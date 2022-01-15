@@ -828,89 +828,7 @@ df %>%
   labs(title = "stat_dots(quantiles = 50)")
 ```
 
-### On analytical distributions
-
-As with other plot types, you can also use `xdist`/`ydist` instead of `x`/`y` if you wish to visualize analytical distributions or distribution vectors. Analytical dotplots default to 100-dot quantile dotplots (as above, this can be adjusted with the `quantiles` argument). Shapes of the dots can also be changed using the `shape` aesthetic, and as with all slabinterval geoms, fill and color aesthetics can be varied within the geoms, as demonstrated below (we'll also put the group on the y axis to plot it horizontally):
-
-```{r dist_dots_shape_color, fig.width = med_width, fig.height = large_height}
-dist_df %>%
-  filter(group != "c") %>%
-  ggplot(aes(
-    y = group, xdist = dist_normal(mean, sd),
-    fill = stat(x < 5), shape = stat(x < 5)
-  )) +
-  stat_dots(position = "dodge", color = NA) +
-  labs(
-    title = "stat_dots()",
-    subtitle = "aes(xdist = dist_normal(mean, sd), fill and shape = stat(x < 5))"
-  ) +
-  geom_vline(xintercept = 5, alpha = 0.25) +
-  scale_x_continuous(breaks = 2:10) +
-  # we'll use these shapes since they have fill and outlines
-  scale_shape_manual(values = c(21,22))
-```
-
-Notice the default dotplot layout, `"bin"`, can cause dots to be on the wrong
-side of a cutoff when coloring dots within dotplots. Thus it can be useful to use the
-`"weave"` layout, which positions dots at (or at least closer to) their true positions,
-rather than at bin centers:
-
-```{r dist_dots_weave, fig.width = med_width, fig.height = large_height}
-dist_df %>%
-  filter(group != "c") %>%
-  ggplot(aes(y = group, xdist = dist_normal(mean, sd), fill = stat(x < 5))) +
-  stat_dots(position = "dodge", color = NA, layout = "weave") +
-  labs(
-    title = 'stat_dots(layout = "weave")',
-    subtitle = "aes(fill = stat(x < 5))"
-  ) +
-  geom_vline(xintercept = 5, alpha = 0.25) +
-  scale_x_continuous(breaks = 2:10)
-```
-
-As with other slabinterval geoms, the `side` argument can also be used to construct violin-style dotplots. This example also shows the use of `stat_dotsinterval()` in place of `stat_dots()` to construct a combined quantile dotplot violin + interval plot. We also set `slab_color = NA` to turn off the outline on the dots:
-
-```{r dist_dots_violin, fig.width = med_width, fig.height = small_height}
-dist_df %>%
-  filter(group != "c") %>%
-  ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = group)) +
-  stat_dotsinterval(position = "dodge", side = "both", slab_color = NA) +
-  labs(title = "stat_dotsinterval(side = 'both', slab_color = NA)") 
-```
-
-### Using beeswarm layouts
-
-Finally, while the `"bin"` and `"weave"` layout methods shown above work especially 
-well for quantile dotplots, it can be useful when visualizing sample data
-(especially in large amounts) to employ so-called "beeswarm" plots. Setting
-`layout = "swarm"` will use the `"compactswarm"` layout type from `beeswarm::beeswarm()`,
-which tends to work well on sample data (but not on quantiles), especially when
-`side = "both"`:
-
-```{r dots_swarm, fig.width = med_width, fig.height = large_height}
-df %>%
-  filter(group == "a") %>%
-  ggplot(aes(y = group, x = value, fill = stat(x < 5))) +
-  stat_dots(color = NA, layout = "swarm", side = "both") +
-  labs(
-    title = 'stat_dots(layout = "swarm", side = "both")', 
-    subtitle = "aes(fill = stat(x < 5))"
-  ) +
-  geom_vline(xintercept = 5, alpha = 0.25) +
-  scale_x_continuous(breaks = 2:8)
-```
-
-### Summing up dotplot layouts
-
-Thus there are three layout options with `stat_dots()` and `stat_dotsinterval()`:
-
-- `layout = "bin"`, which maintains neat rows and columns and works well on
-  quantile dotplots.
-- `layout = "weave"`, which maintains neat rows (but not columns) and works well
-  on quantile dotplots when you need to map other aesthetics based on positional 
-  cutoffs.
-- `layout = "swarm"`, which does not maintain rows or columns, and works well
-  when you need a compact layout for sample data (not quantiles).
+For more on dotplots, see `vignette("dotsinterval")`
 
 
 ## Custom plots
@@ -1182,9 +1100,16 @@ the `x` axis in a way that provides a "softer" form of region of practical equiv
 
 ```{r slab_ridge_ramp, fig.width = med_width, fig.height = small_height}
 ridges_df %>%
-  ggplot(aes(y = group, x = x, fill = group, fill_ramp = stat(abs(x)), color_ramp = stat(-dnorm(x, 0, 2)))) +
+  ggplot(aes(
+    y = group, x = x, 
+    fill = group, fill_ramp = stat(abs(x)), 
+    color_ramp = stat(-dnorm(x, 0, 2))
+  )) +
   stat_slab(
-    height = 2, color = "gray15", expand = TRUE, trim = FALSE, fill_type = "gradient"
+    height = 2, color = "gray15", 
+    expand = TRUE, trim = FALSE, 
+    fill_type = "gradient", 
+    show.legend = FALSE
   ) +
   geom_vline(xintercept = 0, color = "gray85", linetype = "dashed") +
   ggtitle(
@@ -1226,26 +1151,7 @@ go into a density estimate, creating so-called "rain cloud" plots.
 To use multiple
 slab geometries together, you can use the `side` parameter to change which side
 of the interval a slab is drawn on and set the `scale` parameter to something around
-`0.5` (by default it is `0.9`) so that the two slabs do not overlap. We'll also
-scale the halfeye slab thickness by `n` (the number of observations in each group)
-so that the area of each slab represents sample size (and looks similar to
-the total area of its corresponding dotplot).
-
-We'll use a subsample of of the data to show how it might look on a reasonably-sized
-dataset.
-
-```{r halfeye_dotplot, fig.width = small_height, fig.height = med_width}
-set.seed(12345) # for reproducibility
-df %>%
-  filter(subgroup == "h") %>%
-  group_by(group, subgroup) %>%
-  sample_n(100) %>%
-  ggplot(aes(y = group, x = value)) +
-  stat_slab(scale = 0.6, position = "dodge") +
-  stat_dotsinterval(side = "bottom", scale = 0.6, position = "dodge") +
-  labs(title = 'stat_slab(scale = 0.6) + \nstat_dotsinterval(scale = 0.6, side = "bottom")')
-```
-
+`0.5` (by default it is `0.9`) so that the two slabs do not overlap.
 Geoms can also be dodged together, as in this example using densities with
 quantile dotplots in subgroups. This example also shows how `stat_pointinterval()`
 can be repurposed to be used with other geoms; here to replace points with labels

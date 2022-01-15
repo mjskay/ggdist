@@ -459,7 +459,7 @@ or CDFs Improve Transit Decision-Making. \emph{Conference on Human Factors in Co
 \seealso{
 See the \code{\link[=stat_slabinterval]{stat_slabinterval()}} family for other
 stats built on top of \code{\link[=geom_slabinterval]{geom_slabinterval()}}.
-See \code{vignette("slabinterval")} for a variety of examples of use.
+See \code{vignette("dotsinterval")} for a variety of examples of use.
 }
 \author{
 Matthew Kay

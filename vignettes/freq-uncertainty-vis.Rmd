@@ -43,7 +43,7 @@ if (capabilities("cairo") && Sys.info()[['sysname']] != "Darwin") {
 
 ## Introduction
   
-This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use `xdist` and `ydist` aesthetics supported by `ggdist` stats to visualize *confidence distributions* instead of visualizing posterior distributions as we might from a Bayesian model. For more information on the families of geoms and stats in ggdist, see `vignette("slabinterval")` and `vignette("lineribbon")`.
+This vignette shows how to combine the `ggdist` geoms with output from the `broom` package to enable visualization of uncertainty from frequentist models. The general idea is to use `xdist` and `ydist` aesthetics supported by `ggdist` stats to visualize *confidence distributions* instead of visualizing posterior distributions as we might from a Bayesian model. For more information on the families of geoms and stats in ggdist, see `vignette("slabinterval")`, `vignette("dotsinterval")`, and `vignette("lineribbon")`.
 
 *Confidence distributions* are a way of unifying the notion of sampling distributions, bootstrap distributions, and several other concepts in frequentist inference. They are a convenient tool for visualizing uncertainty in a way that generalizes across Bayesian and frequentist frameworks: where in a Bayesian framework we might visualize a *probability* distribution, in the frequentist framework we visualize a *confidence* distribution. This gives us a way to use the same geometries for uncertainty visualization in either framework.
 
@@ -210,7 +210,7 @@ ABC %>%
   )
 ```
 
-See `vignette("slabinterval")` for more examples of uncertainty geoms and stats in the slabinterval family.
+See `vignette("slabinterval")` and `vignette("dotsinterval")` for more examples of uncertainty geoms and stats in the slabinterval family.
 
 ## For a fit line
 

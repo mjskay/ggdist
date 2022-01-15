@@ -25,12 +25,51 @@ probability distributions (see the
 on top of `ggdist`).
 
 The `geom_slabinterval()` / `stat_slabinterval()` family (see
-`vignette("slabinterval")`) includes point summaries and intervals, eye
-plots, half-eye plots, CCDF bar plots, gradient plots, dotplots, and
-histograms:
+`vignette("slabinterval")`) makes it easy to visualize point summaries
+and intervals, eye plots, half-eye plots, ridge plots, CCDF bar plots,
+gradient plots, histograms, and more:
 
 ![The slabinterval family of geoms and
 stats](man/figures/slabinterval_family.png)
+
+The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
+`vignette("dotsinterval")`) makes it easy to visualize dot+interval
+plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and
+combined with half-eyes, composite plots like raincloud plots):
+
+``` r
+library(ggplot2)
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+library(ggdist)
+
+set.seed(12345) # for reproducibility
+
+data.frame(
+  abc = c("a", "b", "c"),
+  value = rnorm(300, c(1, 8, 3), c(1, 1.7, 1))
+) %>%
+  ggplot(aes(y = abc, x = value, fill = abc)) +
+  stat_slab() +
+  stat_dotsinterval(side = "bottom", slab_color = NA) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_ggdist()
+```
+
+![](man/figures/README/halfeye_dotplot-1.png)<!-- -->
 
 The `geom_lineribbon()` / `stat_lineribbon()` family (see
 `vignette("lineribbon")`) makes it easy to visualize fit lines with an
@@ -85,7 +124,7 @@ reproduce the issue. Pull requests should be filed against the
 
 ## Citing `ggdist`
 
-Matthew Kay (2021). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 3.0.1.9000,
+Matthew Kay (2022). *ggdist: Visualizations of Distributions and
+Uncertainty*. R package version 3.0.99.9000,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).
