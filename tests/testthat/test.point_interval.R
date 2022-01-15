@@ -335,12 +335,12 @@ test_that("NAs are handled correctly in point_interval", {
 
   expect_equal(
     mean_ll(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ll", stringsAsFactors = FALSE)
+    data.frame(y = NA_real_, ymin = NA_real_, ymax = Inf, .width = 0.6, .point = "mean", .interval = "ll", stringsAsFactors = FALSE)
   )
 
   expect_equal(
     mean_ul(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ul", stringsAsFactors = FALSE)
+    data.frame(y = NA_real_, ymin = -Inf, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ul", stringsAsFactors = FALSE)
   )
 
 })

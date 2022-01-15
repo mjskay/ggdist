@@ -330,9 +330,6 @@ point_interval.distribution = point_interval.rvar
 #' @rdname point_interval
 qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  if (!na.rm && anyNA(x)) {
-    return(matrix(c(NA_real_, NA_real_), ncol = 2))
-  }
 
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
@@ -341,6 +338,10 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
 }
 
 qi_ = function(x, lower_prob, upper_prob, na.rm) {
+  if (!na.rm && anyNA(x)) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+
   if (distributional::is_distribution(x)) {
     #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in this call
     do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
@@ -352,10 +353,6 @@ qi_ = function(x, lower_prob, upper_prob, na.rm) {
 #' @export
 #' @rdname point_interval
 ll = function(x, .width = .95, na.rm = FALSE) {
-  if (!na.rm && anyNA(x)) {
-    return(matrix(c(NA_real_, NA_real_), ncol = 2))
-  }
-
   lower_prob = 1 - .width
   upper_prob = rep(1, length(.width))
 
@@ -367,10 +364,6 @@ ll = function(x, .width = .95, na.rm = FALSE) {
 #' @export
 #' @rdname point_interval
 ul = function(x, .width = .95, na.rm = FALSE) {
-  if (!na.rm && anyNA(x)) {
-    return(matrix(c(NA_real_, NA_real_), ncol = 2))
-  }
-
   lower_prob = rep(0, length(.width))
   upper_prob = .width
 
