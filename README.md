@@ -37,38 +37,6 @@ The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
 plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and
 combined with half-eyes, composite plots like raincloud plots):
 
-``` r
-library(ggplot2)
-library(dplyr)
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
-library(ggdist)
-
-set.seed(12345) # for reproducibility
-
-data.frame(
-  abc = c("a", "b", "c"),
-  value = rnorm(300, c(1, 8, 3), c(1, 1.7, 1))
-) %>%
-  ggplot(aes(y = abc, x = value, fill = abc)) +
-  stat_slab() +
-  stat_dotsinterval(side = "bottom", slab_color = NA) +
-  scale_fill_brewer(palette = "Set2") +
-  theme_ggdist()
-```
-
 ![](man/figures/README/halfeye_dotplot-1.png)<!-- -->
 
 The `geom_lineribbon()` / `stat_lineribbon()` family (see
