@@ -91,9 +91,7 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
-A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a
-multiple-interval
-geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} representing a multiple-interval geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
@@ -125,60 +123,63 @@ the \strong{interval}.
 
 \strong{Positional aesthetics}
 \itemize{
-\item \code{x}: x position of the geometry
-\item \code{y}: y position of the geometry
+\item{\code{x}: x position of the geometry}
+\item{\code{y}: y position of the geometry}
 }
 \strong{Interval-specific aesthetics}
 \itemize{
-\item \code{xmin}: Left end of the interval sub-geometry (if \code{orientation = "horizontal"}).
-\item \code{xmax}: Right end of the interval sub-geometry (if \code{orientation = "horizontal"}).
-\item \code{ymin}: Lower end of the interval sub-geometry (if \code{orientation = "vertical"}).
-\item \code{ymax}: Upper end of the interval sub-geometry (if \code{orientation = "vertical"}).
+\item{\code{xmin}: Left end of the interval sub-geometry (if \code{orientation = "horizontal"}).}
+\item{\code{xmax}: Right end of the interval sub-geometry (if \code{orientation = "horizontal"}).}
+\item{\code{ymin}: Lower end of the interval sub-geometry (if \code{orientation = "vertical"}).}
+\item{\code{ymax}: Upper end of the interval sub-geometry (if \code{orientation = "vertical"}).}
 }
 \strong{Color aesthetics}
 \itemize{
-\item \code{colour}: (or \code{color}) The color of the \strong{interval} and \strong{point} sub-geometries.
+\item{\code{colour}: (or \code{color}) The color of the \strong{interval} and \strong{point} sub-geometries.
 Use the \code{slab_color}, \code{interval_color}, or \code{point_color} aesthetics (below) to
-set sub-geometry colors separately.
-\item \code{fill}: The fill color of the \strong{slab} and \strong{point} sub-geometries. Use the \code{slab_fill}
-or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.
-\item \code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
-\code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.
-\item \code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
-scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.
-\item \code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
-scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.
+set sub-geometry colors separately.}
+\item{\code{fill}: The fill color of the \strong{slab} and \strong{point} sub-geometries. Use the \code{slab_fill}
+or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.}
+\item{\code{alpha}: The opacity of the \strong{slab}, \strong{interval}, and \strong{point} sub-geometries. Use the \code{slab_alpha},
+\code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.}
+\item{\code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
+scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.}
+\item{\code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.}
 }
 \strong{Line aesthetics}
 \itemize{
-\item \code{size}: Width of the outline around the \strong{slab} (if visible). Also determines the width of
+\item{\code{size}: Width of the outline around the \strong{slab} (if visible). Also determines the width of
 the line used to draw the \strong{interval} and the size of the \strong{point}, but raw
 \code{size} values are transformed according to the \code{interval_size_domain}, \code{interval_size_range},
 and \code{fatten_point} parameters of the \code{geom} (see above). Use the \code{slab_size},
 \code{interval_size}, or \code{point_size} aesthetics (below) to set sub-geometry line widths separately
 (note that when size is set directly using the override aesthetics, interval and point
-sizes are not affected by \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point}).
-\item \code{stroke}: Width of the outline around the \strong{point} sub-geometry.
-\item \code{linetype}: Type of line (e.g., \code{"solid"}, \code{"dashed"}, etc) used to draw the \strong{interval}
+sizes are not affected by \code{interval_size_domain}, \code{interval_size_range}, and \code{fatten_point}).}
+\item{\code{stroke}: Width of the outline around the \strong{point} sub-geometry.}
+\item{\code{linetype}: Type of line (e.g., \code{"solid"}, \code{"dashed"}, etc) used to draw the \strong{interval}
 and the outline of the \strong{slab} (if it is visible). Use the \code{slab_linetype} or
-\code{interval_linetype} aesthetics (below) to set sub-geometry line types separately.
+\code{interval_linetype} aesthetics (below) to set sub-geometry line types separately.}
 }
 \strong{Interval-specific color/line override aesthetics}
 \itemize{
-\item \code{interval_colour}: (or \code{interval_color}) Override for \code{colour}/\code{color}: the color of the interval.
-\item \code{interval_alpha}: Override for \code{alpha}: the opacity of the interval.
-\item \code{interval_size}: Override for \code{size}: the line width of the interval.
-\item \code{interval_linetype}: Override for \code{linetype}: the line type of the interval.
+\item{\code{interval_colour}: (or \code{interval_color}) Override for \code{colour}/\code{color}: the color of the interval.}
+\item{\code{interval_alpha}: Override for \code{alpha}: the opacity of the interval.}
+\item{\code{interval_size}: Override for \code{size}: the line width of the interval.}
+\item{\code{interval_linetype}: Override for \code{linetype}: the line type of the interval.}
 }
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
+
 \itemize{
-\item \code{width}
-\item \code{height}
-\item \code{group}
+\item{\code{width}}
+\item{\code{height}}
+\item{\code{group}}
 }
+
 See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
-Learn more about the sub-geom override aesthetics (like \code{interval_color}) in the \link[ggdist]{scales} documentation.
-Learn more about basic ggplot aesthetics in \code{vignette("ggplot2-specs")}.
+Learn more about the sub-geom override aesthetics (like \code{interval_color}) in the
+\link[ggdist]{scales} documentation. Learn more about basic ggplot aesthetics in
+\code{vignette("ggplot2-specs")}.
 }
 
 \examples{
@@ -209,8 +210,8 @@ RankCorr_u_tau \%>\%
 
 }
 \seealso{
-See \code{\link[=stat_interval]{stat_interval()}} for the stat version, intended for use on sample data or analytical distributions.
-
+See \code{\link[=stat_interval]{stat_interval()}} for the stat version, intended for
+use on sample data or analytical distributions.
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geometry this shortcut is based on.
 
 Other geom_slabinterval shortcut geoms: 

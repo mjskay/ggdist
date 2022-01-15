@@ -177,6 +177,9 @@ test_that("side and justification can vary", {
 
 # Incorrect values of enums -----------------------------------------------
 
+test_that("define_orientation_variables fails on incorrect orientation", {
+  expect_error(define_orientation_variables("foo"), "Unknown orientation")
+})
 
 test_that("incorrect side, orientation are caught", {
   p = data.frame(x = 1) %>%
