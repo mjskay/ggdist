@@ -227,9 +227,13 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
       ribbons, `"mid"` is probably what you want (for the other two step approaches the ribbons at either the
       very first or very last x value will not be visible).
       '),
+
+    # SUB_GEOMETRY FLAGS
     show_slab = 'Should the slab portion of the geom be drawn?',
     show_point = 'Should the point portion of the geom be drawn?',
     show_interval = 'Should the interval portion of the geom be drawn?',
+
+    # BASE PARAMS
     na.rm = glue_doc('
       If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
       values are silently removed.
