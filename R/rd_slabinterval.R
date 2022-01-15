@@ -263,12 +263,28 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
   }
 }
 
+#' docstrings for the stat_slabinterval aesthetics
+#' @noRd
+rd_stat_slabinterval_aes = list(
+  x = 'x position of the geometry (when orientation = `"vertical"`); or sample data to be summarized
+    (when `orientation = "horizontal"` with sample data).',
+  y = 'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
+    (when `orientation = "vertical"` with sample data).',
+  xdist = 'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional}
+    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
+  ydist = 'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional}
+    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
+  dist = 'When using analytical distributions, a name of a distribution (e.g. `"norm"`), a
+    \\pkg{distributional} object (e.g. [dist_normal()]), or a [posterior::rvar()] object. See **Details**.',
+  args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
+)
+
+
 #' Provides documentation of aesthetics for slabintervals
 #' @noRd
-rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL) {
+rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL, vignette = "slabinterval") {
   geom = get(paste0("Geom", title_case(geom_name)))
 
-  # build docs
   out = glue_doc('
     @section Aesthetics:
     The slab+interval `stat`s and `geom`s have a wide variety of aesthetics that control
@@ -277,98 +293,53 @@ rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL) {
 
     ')
 
-  # stat aesthetics
-  pos_aes = list(
-    x = 'x position of the geometry',
-    y = 'y position of the geometry'
-  )
-  if (!is.null(stat)) {
-    stat_aes = list(
-      x =
-        'x position of the geometry (when orientation = `"vertical"`); or sample data to be summarized
-        (when `orientation = "horizontal"` with sample data).',
-      y =
-        'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
-        (when `orientation = "vertical"` with sample data).',
-      xdist =
-        'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional}
-        object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
-      ydist =
-        'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional}
-        object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
-      dist =
-        'When using analytical distributions, a name of a distribution (e.g. `"norm"`), a
-        \\pkg{distributional} object (e.g. [dist_normal()]), or a [posterior::rvar()] object. See **Details**.',
-      args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
-    )
-    out = c(out, glue_doc('
-      These `stat`s support the following aesthetics:
+  # Build sections for the geom-specific aesthetics ...
+  geom_aes_sections = list()
 
-      <<rd_aesthetics(stat_aes, stat$aesthetics())>>
-
-      In addition, in their default configuration (paired with [geom_<<geom_name>>()])
-      the following aesthetics are supported by the underlying geom:
-
-      '))
-  } else {
-    # do not include positional aesthetics with stats (since those are included).
-    out = c(out, "**Positional aesthetics**", rd_aesthetics(pos_aes, geom$aesthetics()))
-  }
-
-
-  # slab aesthetics
-  slab_aes = list(
+  # slab-specific aesthetics
+  if (isTRUE(geom$default_params$show_slab)) geom_aes_sections[["Slab-specific aesthetics"]] = list(
     thickness =
       'The thickness of the slab at each `x` value (if `orientation = "horizontal"`) or
-       `y` value (if `orientation = "vertical"`) of the slab.',
+      `y` value (if `orientation = "vertical"`) of the slab.',
     side =
       'Which side to place the slab on. `"topright"`, `"top"`, and `"right"` are synonyms
-       which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`
-       or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab
-       to be drawn on the bottom or the left depending on if `orientation` is `"horizontal"` or
-       `"vertical"`. `"topleft"` causes the slab to be drawn on the top or the left, and `"bottomright"`
-       causes the slab to be drawn on the bottom or the right. `"both"` draws the slab mirrored on both
-       sides (as in a violin plot).',
+      which cause the slab to be drawn on the top or the right depending on if `orientation` is `"horizontal"`
+      or `"vertical"`. `"bottomleft"`, `"bottom"`, and `"left"` are synonyms which cause the slab
+      to be drawn on the bottom or the left depending on if `orientation` is `"horizontal"` or
+      `"vertical"`. `"topleft"` causes the slab to be drawn on the top or the left, and `"bottomright"`
+      causes the slab to be drawn on the bottom or the right. `"both"` draws the slab mirrored on both
+      sides (as in a violin plot).',
     scale =
       'What proportion of the region allocated to this geom to use to draw the slab. If `scale = 1`,
-       slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.',
+      slabs that use the maximum range will just touch each other. Default is `0.9` to leave some space.',
     justification =
       'Justification of the interval relative to the slab, where `0` indicates bottom/left
-       justification and `1` indicates top/right justification (depending on `orientation`). If `justification`
-       is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is
-       `"top"`/`"right"` `justification` is set to `0`, when `side` is `"bottom"`/`"left"`
-       `justification` is set to `1`, and when `side` is `"both"` `justification` is set to 0.5.',
+      justification and `1` indicates top/right justification (depending on `orientation`). If `justification`
+      is `NULL` (the default), then it is set automatically based on the value of `side`: when `side` is
+      `"top"`/`"right"` `justification` is set to `0`, when `side` is `"bottom"`/`"left"`
+      `justification` is set to `1`, and when `side` is `"both"` `justification` is set to 0.5.',
     datatype =
       'When using composite geoms directly without a `stat` (e.g. [geom_slabinterval()]), `datatype` is used to
-       indicate which part of the geom a row in the data targets: rows with `datatype = "slab"` target the
-       slab portion of the geometry and rows with `datatype = "interval"` target the interval portion of
-       the geometry. This is set automatically when using ggdist `stat`s.'
+      indicate which part of the geom a row in the data targets: rows with `datatype = "slab"` target the
+      slab portion of the geometry and rows with `datatype = "interval"` target the interval portion of
+      the geometry. This is set automatically when using ggdist `stat`s.'
   )
-  if (isTRUE(geom$default_params$show_slab)) {
-    out = c(out, "**Slab-specific aesthetics**", rd_aesthetics(slab_aes, geom$aesthetics()))
-  }
 
   # interval-specific aesthetics
-  int_aes = list(
+  if (isTRUE(geom$default_params$show_interval)) geom_aes_sections[["Interval-specific aesthetics"]] = list(
     xmin = 'Left end of the interval sub-geometry (if `orientation = "horizontal"`).',
     xmax = 'Right end of the interval sub-geometry (if `orientation = "horizontal"`).',
     ymin = 'Lower end of the interval sub-geometry (if `orientation = "vertical"`).',
     ymax = 'Upper end of the interval sub-geometry (if `orientation = "vertical"`).'
   )
-  if (isTRUE(geom$default_params$show_interval)) {
-    out = c(out, "**Interval-specific aesthetics**", rd_aesthetics(int_aes, geom$aesthetics()))
-  }
 
-  # interval-specific aesthetics
-  point_aes = list(
+  # point-specific aesthetics
+  if (isTRUE(geom$default_params$show_point)) geom_aes_sections[["Point-specific aesthetics"]] = list(
     shape = 'Shape type used to draw the **point** sub-geometry.'
   )
-  if (isTRUE(geom$default_params$show_point)) {
-    out = c(out, "**Point-specific aesthetics**", rd_aesthetics(point_aes, geom$aesthetics()))
-  }
 
   # color aesthetics
-  color_aes = list(
+  geom_aes_sections[["Color aesthetics"]] = list(
     colour = '(or `color`) The color of the **interval** and **point** sub-geometries.
      Use the `slab_color`, `interval_color`, or `point_color` aesthetics (below) to
      set sub-geometry colors separately.',
@@ -378,13 +349,12 @@ rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL) {
      `interval_alpha`, or `point_alpha` aesthetics (below) to set sub-geometry colors separately.',
     colour_ramp = '(or `color_ramp`) A secondary scale that modifies the `color`
      scale to "ramp" to another color. See [scale_colour_ramp()] for examples.',
-    fill_ramp = '(or `fill_ramp`) A secondary scale that modifies the `fill`
+    fill_ramp = 'A secondary scale that modifies the `fill`
      scale to "ramp" to another color. See [scale_fill_ramp()] for examples.'
   )
-  out = c(out, "**Color aesthetics**", rd_aesthetics(color_aes, geom$aesthetics()))
 
   # line aesthetics
-  line_aes = list(
+  geom_aes_sections[["Line aesthetics"]] = list(
     size = 'Width of the outline around the **slab** (if visible). Also determines the width of
      the line used to draw the **interval** and the size of the **point**, but raw
      `size` values are transformed according to the `interval_size_domain`, `interval_size_range`,
@@ -397,10 +367,9 @@ rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL) {
      and the outline of the **slab** (if it is visible). Use the `slab_linetype` or
      `interval_linetype` aesthetics (below) to set sub-geometry line types separately.'
   )
-  out = c(out, "**Line aesthetics**", rd_aesthetics(line_aes, geom$aesthetics()))
 
   # slab override aesthetics
-  slab_override_aes = list(
+  if (isTRUE(geom$default_params$show_slab)) geom_aes_sections[["Slab-specific color/line override aesthetics"]] = list(
     slab_fill = 'Override for `fill`: the fill color of the slab.',
     slab_colour = '(or `slab_color`) Override for `colour`/`color`: the outline color of the slab.',
     slab_alpha = 'Override for `alpha`: the opacity of the slab.',
@@ -408,52 +377,30 @@ rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL) {
     slab_linetype = 'Override for `linetype`: the line type of the outline of the slab.',
     slab_shape = 'Override for `shape`: the shape of the dots used to draw the dotplot slab.'
   )
-  if (isTRUE(geom$default_params$show_slab)) {
-    out = c(out, "**Slab-specific color/line override aesthetics**", rd_aesthetics(slab_override_aes, geom$aesthetics()))
-  }
 
   # interval override aesthetics
-  int_override_aes = list(
+  if (isTRUE(geom$default_params$show_interval)) geom_aes_sections[["Interval-specific color/line override aesthetics"]] = list(
     interval_colour = '(or `interval_color`) Override for `colour`/`color`: the color of the interval.',
     interval_alpha = 'Override for `alpha`: the opacity of the interval.',
     interval_size = 'Override for `size`: the line width of the interval.',
     interval_linetype = 'Override for `linetype`: the line type of the interval.'
   )
-  if (isTRUE(geom$default_params$show_interval)) {
-    out = c(out, "**Interval-specific color/line override aesthetics**", rd_aesthetics(int_override_aes, geom$aesthetics()))
-  }
 
   # point override aesthetics
-  point_override_aes = list(
+  if (isTRUE(geom$default_params$show_point)) geom_aes_sections[["Point-specific color/line override aesthetics"]] = list(
     point_fill = 'Override for `fill`: the fill color of the point.',
     point_colour = '(or `point_color`) Override for `colour`/`color`: the outline color of the point.',
     point_alpha = 'Override for `alpha`: the opacity of the point.',
     point_size = 'Override for `size`: the size of the point.'
   )
-  if (isTRUE(geom$default_params$show_point)) {
-    out = c(out, "**Point-specific color/line override aesthetics**", rd_aesthetics(point_override_aes, geom$aesthetics()))
-  }
 
-  # undocumented aesthetics
-  documented_aes = c(
-    pos_aes, slab_aes, int_aes, point_aes, color_aes, line_aes, slab_override_aes, int_override_aes, point_override_aes
-  )
-  undocumented_aes = setdiff(geom$aesthetics(), names(documented_aes))
-  if (length(undocumented_aes) > 0) {
-    out = c(out, glue_doc('
-      **Other aesthetics** (these work as in standard `geom`s)
-
-      <<rd_bulleted_list(glue::backtick(undocumented_aes))>>
-
-      '))
-  }
-
-  out = c(out, glue_doc('
-    See examples of some of these aesthetics in action in `vignette(\"slabinterval\")`.
-    Learn more about the sub-geom override aesthetics (like `interval_color`) in the
-    \\link[ggdist]{scales} documentation. Learn more about basic ggplot aesthetics in
-    `vignette(\"ggplot2-specs\")`.
-    '))
+  out = c(out, rd_aesthetics_sections(
+    geom_name, stat,
+    geom_aes_sections = geom_aes_sections,
+    stat_aes = rd_stat_slabinterval_aes,
+    undocumented_aes = c("width", "height", "group"),
+    vignette = vignette
+  ))
 
   glue_collapse(out, "\n")
 }

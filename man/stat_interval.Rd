@@ -190,13 +190,16 @@ In addition, in their default configuration (paired with \code{\link[=geom_inter
 the following aesthetics are supported by the underlying geom:
 
 \strong{Interval-specific aesthetics}
+
 \itemize{
 \item{\code{xmin}: Left end of the interval sub-geometry (if \code{orientation = "horizontal"}).}
 \item{\code{xmax}: Right end of the interval sub-geometry (if \code{orientation = "horizontal"}).}
 \item{\code{ymin}: Lower end of the interval sub-geometry (if \code{orientation = "vertical"}).}
 \item{\code{ymax}: Upper end of the interval sub-geometry (if \code{orientation = "vertical"}).}
 }
+
 \strong{Color aesthetics}
+
 \itemize{
 \item{\code{colour}: (or \code{color}) The color of the \strong{interval} and \strong{point} sub-geometries.
 Use the \code{slab_color}, \code{interval_color}, or \code{point_color} aesthetics (below) to
@@ -207,10 +210,12 @@ or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.}
 \code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.}
 \item{\code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
 scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.}
-\item{\code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
+\item{\code{fill_ramp}: A secondary scale that modifies the \code{fill}
 scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.}
 }
+
 \strong{Line aesthetics}
+
 \itemize{
 \item{\code{size}: Width of the outline around the \strong{slab} (if visible). Also determines the width of
 the line used to draw the \strong{interval} and the size of the \strong{point}, but raw
@@ -224,13 +229,16 @@ sizes are not affected by \code{interval_size_domain}, \code{interval_size_range
 and the outline of the \strong{slab} (if it is visible). Use the \code{slab_linetype} or
 \code{interval_linetype} aesthetics (below) to set sub-geometry line types separately.}
 }
+
 \strong{Interval-specific color/line override aesthetics}
+
 \itemize{
 \item{\code{interval_colour}: (or \code{interval_color}) Override for \code{colour}/\code{color}: the color of the interval.}
 \item{\code{interval_alpha}: Override for \code{alpha}: the opacity of the interval.}
 \item{\code{interval_size}: Override for \code{size}: the line width of the interval.}
 \item{\code{interval_linetype}: Override for \code{linetype}: the line type of the interval.}
 }
+
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{

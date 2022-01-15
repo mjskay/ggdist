@@ -4,55 +4,6 @@
 ###############################################################################
 
 
-#' Line + multiple probability ribbon plots (ggplot stat)
-#'
-#' @description
-#' A combination of [stat_slabinterval()] and [geom_lineribbon()] with sensible defaults.
-#' While [geom_lineribbon()] is intended for use on data frames that have already been summarized using
-#' a [point_interval()] function, [stat_lineribbon()] is intended for use directly on data
-#' frames of draws or of analytical distributions, and will perform the summarization using a
-#' [point_interval()] function.
-#'
-#' Roughly equivalent to:
-#' @eval rd_shortcut_stat("lineribbon")
-#'
-#' @template details-x-y-xdist-ydist
-#' @eval rd_slabinterval_computed_variables(stat = StatLineribbon)
-#' @eval rd_slabinterval_params("lineribbon", StatLineribbon, as_dots = TRUE)
-#' @inheritParams stat_pointinterval
-#' @param geom Use to override the default connection between
-#' [stat_lineribbon()] and [geom_lineribbon()].
-#' @param show.legend Should this layer be included in the legends? `NA`, the default, includes if any aesthetics
-#' are mapped. `FALSE` never includes, and `TRUE` always includes.
-#' @return A [ggplot2::Stat] representing a combined line+uncertainty ribbon geometry which can
-#' be added to a [ggplot()] object.
-#' @seealso See [geom_lineribbon()] for the geom version, intended for use on points and intervals that have
-#' already been summarized using a [point_interval()] function. See [stat_pointinterval()]
-#' for a similar stat intended for point summaries and intervals.
-#' @examples
-#'
-#' library(dplyr)
-#' library(ggplot2)
-#' library(distributional)
-#'
-#' tibble(x = 1:10) %>%
-#'   group_by_all() %>%
-#'   do(tibble(y = rnorm(100, .$x))) %>%
-#'   ggplot(aes(x = x, y = y)) +
-#'   stat_lineribbon() +
-#'   scale_fill_brewer()
-#'
-#' tibble(
-#'   x = 1:10,
-#'   sd = seq(1, 3, length.out = 10)
-#' ) %>%
-#'   ggplot(aes(x = x, ydist = dist_normal(x, sd))) +
-#'   stat_lineribbon() +
-#'   scale_fill_brewer()
-#'
-#' @name stat_lineribbon
-NULL
-
 StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
   default_aes = defaults(aes(
     datatype = "interval",
@@ -79,6 +30,6 @@ StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
 # instead of being removed
 StatLineribbon$default_aes$size = NULL
 
-#' @rdname stat_lineribbon
+#' @eval rd_lineribbon_shortcut_stat("lineribbon", "line + multiple-ribbon")
 #' @export
 stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")

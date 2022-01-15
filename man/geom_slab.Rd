@@ -113,11 +113,14 @@ the appearance of their three sub-geometries: the \strong{slab}, the \strong{poi
 the \strong{interval}.
 
 \strong{Positional aesthetics}
+
 \itemize{
 \item{\code{x}: x position of the geometry}
 \item{\code{y}: y position of the geometry}
 }
+
 \strong{Slab-specific aesthetics}
+
 \itemize{
 \item{\code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
 \code{y} value (if \code{orientation = "vertical"}) of the slab.}
@@ -140,7 +143,9 @@ indicate which part of the geom a row in the data targets: rows with \code{datat
 slab portion of the geometry and rows with \code{datatype = "interval"} target the interval portion of
 the geometry. This is set automatically when using ggdist \code{stat}s.}
 }
+
 \strong{Color aesthetics}
+
 \itemize{
 \item{\code{colour}: (or \code{color}) The color of the \strong{interval} and \strong{point} sub-geometries.
 Use the \code{slab_color}, \code{interval_color}, or \code{point_color} aesthetics (below) to
@@ -151,10 +156,12 @@ or \code{point_fill} aesthetics (below) to set sub-geometry colors separately.}
 \code{interval_alpha}, or \code{point_alpha} aesthetics (below) to set sub-geometry colors separately.}
 \item{\code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
 scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.}
-\item{\code{fill_ramp}: (or \code{fill_ramp}) A secondary scale that modifies the \code{fill}
+\item{\code{fill_ramp}: A secondary scale that modifies the \code{fill}
 scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.}
 }
+
 \strong{Line aesthetics}
+
 \itemize{
 \item{\code{size}: Width of the outline around the \strong{slab} (if visible). Also determines the width of
 the line used to draw the \strong{interval} and the size of the \strong{point}, but raw
@@ -168,7 +175,9 @@ sizes are not affected by \code{interval_size_domain}, \code{interval_size_range
 and the outline of the \strong{slab} (if it is visible). Use the \code{slab_linetype} or
 \code{interval_linetype} aesthetics (below) to set sub-geometry line types separately.}
 }
+
 \strong{Slab-specific color/line override aesthetics}
+
 \itemize{
 \item{\code{slab_fill}: Override for \code{fill}: the fill color of the slab.}
 \item{\code{slab_colour}: (or \code{slab_color}) Override for \code{colour}/\code{color}: the outline color of the slab.}
@@ -176,6 +185,7 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 \item{\code{slab_size}: Override for \code{size}: the width of the outline of the slab.}
 \item{\code{slab_linetype}: Override for \code{linetype}: the line type of the outline of the slab.}
 }
+
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{

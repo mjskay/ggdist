@@ -2,7 +2,7 @@
 % Please edit documentation in R/stat_lineribbon.R
 \name{stat_lineribbon}
 \alias{stat_lineribbon}
-\title{Line + multiple probability ribbon plots (ggplot stat)}
+\title{Line + multiple-ribbon plot (shortcut stat)}
 \usage{
 stat_lineribbon(
   mapping = NULL,
@@ -40,7 +40,7 @@ will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{geom}{Use to override the default connection between
-\code{\link[=stat_lineribbon]{stat_lineribbon()}} and \code{\link[=geom_lineribbon]{geom_lineribbon()}}.}
+\code{\link[=stat_lineribbon]{stat_lineribbon()}} and \code{\link[=geom_lineribbon]{geom_lineribbon()}}}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.
 Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodge()}}) or \code{"dodgejust"} (\code{\link[=position_dodgejust]{position_dodgejust()}}) can be useful if
@@ -87,8 +87,9 @@ opinion, backwards; but the base ggplot naming scheme is allowed for compatibili
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics
-are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.}
+\item{show.legend}{Should this layer be included in the legends? \code{NA},
+the default, includes if any aesthetics are mapped. \code{FALSE} never includes,
+and \code{TRUE} always includes.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
@@ -96,15 +97,16 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
-A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a combined line+uncertainty ribbon geometry which can
+A \link[ggplot2:ggplot2-ggproto]{ggplot2::Stat} representing a line + multiple-ribbon geometry which can
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-A combination of \code{\link[=stat_slabinterval]{stat_slabinterval()}} and \code{\link[=geom_lineribbon]{geom_lineribbon()}} with sensible defaults.
-While \code{\link[=geom_lineribbon]{geom_lineribbon()}} is intended for use on data frames that have already been summarized using
-a \code{\link[=point_interval]{point_interval()}} function, \code{\link[=stat_lineribbon]{stat_lineribbon()}} is intended for use directly on data
-frames of draws or of analytical distributions, and will perform the summarization using a
-\code{\link[=point_interval]{point_interval()}} function.
+A combination of \code{\link[=stat_slabinterval]{stat_slabinterval()}} and \code{\link[=geom_lineribbon]{geom_lineribbon()}} with sensible defaults
+for making line + multiple-ribbon plots. While \code{\link[=geom_lineribbon]{geom_lineribbon()}} is intended for use on data
+frames that have already been summarized using a \code{\link[=point_interval]{point_interval()}} function,
+\code{\link[=stat_lineribbon]{stat_lineribbon()}} is intended for use directly on data frames of draws or of
+analytical distributions, and will perform the summarization using a \code{\link[=point_interval]{point_interval()}}
+function.
 
 Roughly equivalent to:
 
@@ -160,12 +162,78 @@ For intervals, the point summary from the interval function. Whether it is \code
 }
 }
 
-\examples{
+\section{Aesthetics}{
 
+The line+ribbon \code{stat}s and \code{geom}s have a wide variety of aesthetics that control
+the appearance of their two sub-geometries: the \strong{line} and the \strong{ribbon}.
+
+These \code{stat}s support the following aesthetics:
+
+\itemize{
+\item{\code{x}: x position of the geometry (when orientation = \code{"vertical"}); or sample data to be summarized
+(when \code{orientation = "horizontal"} with sample data).}
+\item{\code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
+(when \code{orientation = "vertical"} with sample data).}
+\item{\code{xdist}: When using analytical distributions, distribution to map on the x axis: a \pkg{distributional}
+object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{ydist}: When using analytical distributions, distribution to map on the y axis: a \pkg{distributional}
+object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posterior:rvar]{posterior::rvar()}} object.}
+\item{\code{dist}: When using analytical distributions, a name of a distribution (e.g. \code{"norm"}), a
+\pkg{distributional} object (e.g. \code{\link[=dist_normal]{dist_normal()}}), or a \code{\link[posterior:rvar]{posterior::rvar()}} object. See \strong{Details}.}
+\item{\code{args}: Distribution arguments (\code{args} or \code{arg1}, ... \code{arg9}). See \strong{Details}.}
+}
+
+In addition, in their default configuration (paired with \code{\link[=geom_lineribbon]{geom_lineribbon()}})
+the following aesthetics are supported by the underlying geom:
+
+\strong{Ribbon-specific aesthetics}
+
+\itemize{
+\item{\code{xmin}: Left edge of the ribbon sub-geometry (if \code{orientation = "horizontal"}).}
+\item{\code{xmax}: Right edge of the ribbon sub-geometry (if \code{orientation = "horizontal"}).}
+\item{\code{ymin}: Lower edge of the ribbon sub-geometry (if \code{orientation = "vertical"}).}
+\item{\code{ymax}: Upper edge of the ribbon sub-geometry (if \code{orientation = "vertical"}).}
+}
+
+\strong{Color aesthetics}
+
+\itemize{
+\item{\code{colour}: (or \code{color}) The color of the \strong{line} sub-geometry.}
+\item{\code{fill}: The fill color of the \strong{ribbon} sub-geometry.}
+\item{\code{alpha}: The opacity of the \strong{line} and \strong{ribbon} sub-geometries.}
+\item{\code{fill_ramp}: A secondary scale that modifies the \code{fill}
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.}
+}
+
+\strong{Line aesthetics}
+
+\itemize{
+\item{\code{size}: Width of \strong{line}.}
+\item{\code{linetype}: Type of \strong{line} (e.g., \code{"solid"}, \code{"dashed"}, etc)}
+}
+
+\strong{Other aesthetics} (these work as in standard \code{geom}s)
+
+\itemize{
+\item{\code{shape}}
+\item{\code{stroke}}
+\item{\code{group}}
+}
+
+See examples of some of these aesthetics in action in \code{vignette("lineribbon")}.
+Learn more about the sub-geom override aesthetics (like \code{interval_color}) in the
+\link[ggdist]{scales} documentation. Learn more about basic ggplot aesthetics in
+\code{vignette("ggplot2-specs")}.
+}
+
+\examples{
 library(dplyr)
 library(ggplot2)
 library(distributional)
 
+theme_set(theme_ggdist())
+
+# ON SAMPLE DATA
 tibble(x = 1:10) \%>\%
   group_by_all() \%>\%
   do(tibble(y = rnorm(100, .$x))) \%>\%
@@ -173,6 +241,9 @@ tibble(x = 1:10) \%>\%
   stat_lineribbon() +
   scale_fill_brewer()
 
+# ON ANALYTICAL DISTRIBUTIONS
+# Vectorized distribution types, like distributional::dist_normal()
+# and posterior::rvar(), can be used with the `xdist` / `ydist` aesthetics
 tibble(
   x = 1:10,
   sd = seq(1, 3, length.out = 10)
@@ -180,10 +251,8 @@ tibble(
   ggplot(aes(x = x, ydist = dist_normal(x, sd))) +
   stat_lineribbon() +
   scale_fill_brewer()
-
 }
 \seealso{
-See \code{\link[=geom_lineribbon]{geom_lineribbon()}} for the geom version, intended for use on points and intervals that have
-already been summarized using a \code{\link[=point_interval]{point_interval()}} function. See \code{\link[=stat_pointinterval]{stat_pointinterval()}}
-for a similar stat intended for point summaries and intervals.
+See \code{\link[=geom_lineribbon]{geom_lineribbon()}} for the geom underlying this stat.
 }
+\concept{stat_lineribbon shortcut stats}
