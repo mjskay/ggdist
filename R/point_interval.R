@@ -61,6 +61,9 @@ globalVariables(c("y", "ymin", "ymax"))
 #' [HDInterval::hdi()] with `allowSplit = FALSE`; see that function for more
 #' information on multimodality and continuous versus discontinuous intervals.
 #'
+#' `ll` and `ul` yield lower limits and upper limits, respectively (where the opposite
+#' limit is set to either `Inf` or `-Inf`).
+#'
 #' @param .data Data frame (or grouped data frame as returned by [group_by()])
 #' that contains draws to summarize.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
@@ -334,12 +337,46 @@ qi = function(x, .width = .95, .prob, na.rm = FALSE) {
   lower_prob = (1 - .width) / 2
   upper_prob = (1 + .width) / 2
 
+  qi_(x, lower_prob, upper_prob, na.rm)
+}
+
+qi_ = function(x, lower_prob, upper_prob, na.rm) {
   if (distributional::is_distribution(x)) {
     #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in this call
     do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
   }
+}
+
+#' @export
+#' @rdname point_interval
+ll = function(x, .width = .95, na.rm = FALSE) {
+  if (!na.rm && anyNA(x)) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+
+  lower_prob = 1 - .width
+  upper_prob = rep(1, length(.width))
+
+  out = qi_(x, lower_prob, upper_prob, na.rm)
+  out[,2] = Inf
+  out
+}
+
+#' @export
+#' @rdname point_interval
+ul = function(x, .width = .95, na.rm = FALSE) {
+  if (!na.rm && anyNA(x)) {
+    return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+
+  lower_prob = rep(0, length(.width))
+  upper_prob = .width
+
+  out = qi_(x, lower_prob, upper_prob, na.rm)
+  out[,1] = -Inf
+  out
 }
 
 #' @export
@@ -500,6 +537,36 @@ median_qi = function(.data, ..., .width = .95)
 #' @rdname point_interval
 mode_qi = function(.data, ..., .width = .95)
   point_interval(.data, ..., .width = .width, .point = Mode, .interval = qi)
+
+#' @export
+#' @rdname point_interval
+mean_ll = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = mean, .interval = ll)
+
+#' @export
+#' @rdname point_interval
+median_ll = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = median, .interval = ll)
+
+#' @export
+#' @rdname point_interval
+mode_ll = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = Mode, .interval = ll)
+
+#' @export
+#' @rdname point_interval
+mean_ul = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = mean, .interval = ul)
+
+#' @export
+#' @rdname point_interval
+median_ul = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = median, .interval = ul)
+
+#' @export
+#' @rdname point_interval
+mode_ul = function(.data, ..., .width = .95)
+  point_interval(.data, ..., .width = .width, .point = Mode, .interval = ul)
 
 #' @export
 #' @rdname point_interval
