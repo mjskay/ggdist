@@ -194,6 +194,10 @@ title_case = function(x) {
   x
 }
 
+snake_case = function(x) {
+  tolower(gsub("([a-z])([A-Z])", "\\1_\\2", x))
+}
+
 #' get the values of aesthetics, parameters, and layer arguments
 #' that have changed from one stat/geom (`from`) to another (`to`)
 #' @param from a Stat or Geom

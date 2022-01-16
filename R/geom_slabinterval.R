@@ -116,24 +116,33 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
   if (nrow(i_data) == 0) return(list())
   define_orientation_variables(orientation)
 
+  if (is.null(i_data[[xmin]]) || is.null(i_data[[xmax]])) {
+    stop0(glue('
+      You did not specify {xmin} or {xmax} aesthetics, which are needed to
+      draw intervals with {snake_case(class(self)[[1]])}.
+       - If you were using ggdist or tidybayes prior to version 2.1,
+         these aesthetics were automatically set to ".lower" and ".upper" if
+         those columns were in your data, in which case you may need to set
+         aes({xmin} = .lower, {xmax} = .upper) explicitly.
+      '))
+  }
+
   interval_grobs = list()
   point_grobs = list()
 
-  if (nrow(i_data) > 0) {
-    # reorder by interval width so largest intervals are drawn first
-    i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
+  # reorder by interval width so largest intervals are drawn first
+  i_data = i_data[order(abs(i_data[[xmax]] - i_data[[xmin]]), decreasing = TRUE),]
 
-    point_grobs = if (show_point) {
-      p_data = self$override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
-      point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, na.rm = na.rm))
-    }
-
-    i_data[[x]] = i_data[[xmin]]
-    i_data[[xend]] = i_data[[xmax]]
-    i_data[[yend]] = i_data[[y]]
-    i_data = self$override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
-    interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm))
+  point_grobs = if (show_point) {
+    p_data = self$override_point_aesthetics(i_data, interval_size_domain, interval_size_range, fatten_point)
+    point_grobs = list(GeomPoint$draw_panel(p_data, panel_params, coord, na.rm = na.rm))
   }
+
+  i_data[[x]] = i_data[[xmin]]
+  i_data[[xend]] = i_data[[xmax]]
+  i_data[[yend]] = i_data[[y]]
+  i_data = self$override_interval_aesthetics(i_data, interval_size_domain, interval_size_range)
+  interval_grobs = list(GeomSegment$draw_panel(i_data, panel_params, coord, lineend = "butt", na.rm = na.rm))
 
   c(interval_grobs, point_grobs)
 }
@@ -485,7 +494,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       }
     }
 
-    point_interval_grobs = if (show_interval && !is.null(data[[xmin]]) && !is.null(data[[xmax]])) {
+    point_interval_grobs = if (show_interval) {
       self$draw_pointintervals(data[data$datatype == "interval",], panel_params, coord,
         orientation = orientation,
         show_point = show_point,

@@ -145,3 +145,16 @@ test_that("dist aesthetic can be NULLed out", {
       stat_pointinterval(aes(x = x, y = "pointinterval", dist = NULL))
   )
 })
+
+
+# error on missing xmin/ymin/xmax/ymax ------------------------------------
+
+test_that("missing min/max aesthetics are caught", {
+  expect_error(
+    print(newpage = FALSE,
+      ggplot(data.frame(x = 1), aes(x = x)) +
+        geom_pointinterval()
+    ),
+    "You did not specify xmin or xmax aesthetics"
+  )
+})
