@@ -189,31 +189,37 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
     # if the value we are going to summarise is not already a list column, make it into a list column
     # (making it a list column first is faster than anything else I've tried)
-    if (is.list(data[[col_name]])) {
-      draws = data[[col_name]]
-    } else {
+    if (!is.list(data[[col_name]])) {
       data = summarise_at(data, col_name, list)
-      draws = data[[col_name]]
     }
 
     result = map_dfr_(.width, function(p) {
       # compute intervals; this is robust to grouped data frames and
       # to intervals that can return multiple intervals (e.g., hdi())
 
-      # reduce `data` to just point estimate column and grouping factors (if any)
-      data[[col_name]] = map_dbl_(draws, .point, na.rm = na.rm)
-
-      # for each row of `data`, compute the intervals (may be more than one),
+      # for each row of `data`, compute the point and the intervals (may be more than one),
       # and construct a tibble with grouping factors (if any), point estimate,
       # lower and upper values, and width
       # - equivalent to unnest_legacy()
-      data = map2_dfr_(seq_len(nrow(data)), draws, function(row_i, draws_i) {
-        interval = .interval(draws_i, .width = p, na.rm = na.rm) # intervals (one or more rows)
+      data = map_dfr_(seq_len(nrow(data)), function(i) {
+        row_i = data[i, , drop = FALSE]
+        draws_i = row_i[[col_name]]
+        if (is.list(draws_i) && is.atomic(draws_i[[1]])) {
+          # have to unwrap numerics / etc (unlike distributions or rvars)
+          draws_i = draws_i[[1]]
+        }
+
+        # make one row of `data` with point estimate and grouping factors
+        row_i[[col_name]] = .point(draws_i, na.rm = na.rm)
+
+        # calculate intervals (one or more rows)
+        interval = .interval(draws_i, .width = p, na.rm = na.rm)
         dimnames(interval)[[2]] = c(".lower", ".upper")
+
         cbind(
-          data[row_i, , drop = FALSE], # each row of `data`; grouping factors and point estimate
+          row_i,
           interval,
-          .width = p # width
+          .width = p
         )
       })
 
