@@ -185,13 +185,24 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
       normalization (this should probably only be used with functions whose values are in \\[0,1\\], such as CDFs).
       '),
     fill_type = glue_doc('
-      What type of fill to use when the fill color or alpha varies within a slab. The default,
-      `"segments"`, breaks up the slab geometry into segments for each unique combination of fill color and
-      alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
-      but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-      like in [stat_gradientinterval()]). When `fill_type == "gradient"`, a `grid::linearGradient()` is used to
-      create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
-      R > 4.1 and is not yet supported on all graphics devices.
+      What type of fill to use when the fill color or alpha varies within a slab. One of:
+      \\itemize{
+        \\item `"segments"`: breaks up the slab geometry into segments for each unique combination of fill color and
+          alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
+          but can give ugly results if a large number of unique fill colors are being used (as in gradients,
+          like in [stat_gradientinterval()]).
+        \\item `"gradient"`: a `grid::linearGradient()` is used to create a smooth gradient fill. This works well for
+          large numbers of unique fill colors, but requires R >= 4.1 and is not yet supported on all graphics devices.
+          As of this writing, the `png()` graphics device with `type = "cairo"`, the `svg()` device, the `pdf()`
+          device, and the `ragg::agg_png()` devices are known to support this option. On R < 4.1, this option
+          will fall back to `fill_type = "segment"` with a message.
+        \\item `"auto"`: attempts to use `fill_type = "gradient"` if support for it can be auto-detected. On R >= 4.2,
+          support for gradients can be auto-detected on some graphics devices; if support is not detected, this
+          option will fall back to `fill_type = "segments"` (in case of a false negative, `fill_type = "gradient"`
+          can be set explictly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
+          fall back to `fill_type = "segments"`, in which case you can set `fill_type = "gradient"` explicitly
+          if you are using a graphics device that support gradients.
+      }
       '),
 
     # INTERVAL PARAMS

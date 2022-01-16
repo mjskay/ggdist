@@ -675,6 +675,10 @@ StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
     slab_alpha = stat(f)
   ), StatSlabinterval$default_aes),
 
+  default_params = defaults(list(
+    fill_type = "auto"
+  ), StatSlabinterval$default_params),
+
   layer_args = defaults(list(
     show.legend = c(size = FALSE, slab_alpha = FALSE)
   ), StatSlabinterval$layer_args)
@@ -682,7 +686,9 @@ StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
 #' @eval rd_slabinterval_shortcut_stat("gradientinterval", "gradient + interval", geom_name = "slabinterval")
 #' @description
 #' If your graphics device supports it, it is recommended to use this stat
-#' with `fill_type = "gradient"` (see the description of that parameter).
+#' with `fill_type = "gradient"` (see the description of that parameter). On R >= 4.2,
+#' support for `fill_type = "gradient"` should be auto-detected based on the
+#' graphics device you are using.
 #' @export
 stat_gradientinterval = make_stat(StatGradientinterval, geom = "slabinterval")
 

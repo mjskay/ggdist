@@ -765,11 +765,14 @@ df %>%
 ### Avoiding "choppy"-looking gradients
 
 Depending on your graphics device, gradients may be "choppy" looking. 
-You can fix this choppiness by setting `fill_type = "gradient"`, which uses an **experimental**
-gradient feature introduced in R 4.1 (in some future version of *ggdist* this is likely
-to become the default). This works so long as you have R version 4.1 or greater and you
-are using one of the graphics devices supported by the new `grid::linearGradient()`
-function (such as `pdf()`, `svg()`, or `png(type = "cairo")`; see [here](https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/) for more about the changes to the R graphics engine):
+You can fix this choppiness by setting `fill_type = "gradient"`, which uses a
+gradient feature introduced in some graphics engines in R 4.1. If you use
+`stat_gradientinterval()` in R 4.1, you will receive a message suggesting you
+may want to explicitly set `fill_type = "gradient"` to improve output quality.
+If you are using R 4.2 or greater, you should not need to set 
+`fill_type = "gradient"` as support for gradients can be auto-detected in that
+version, but you will get a warning message if you use `stat_gradientinterval()`
+with a graphics engine that does not support gradients.
 
 ```{r gradient_dodge_nice}
 df %>%
@@ -778,6 +781,9 @@ df %>%
   labs(title = "stat_gradientinterval(position = 'dodge', fill_type = 'gradient')")
 ```
 
+As of this writing, in R version 4.1 or greater the graphics devices that support
+gradients --- i.e. device that support the `grid::linearGradient()` function ---
+include `pdf()`, `svg()`, and `png(type = "cairo")`. See [here](https://developer.r-project.org/Blog/public/2020/07/15/new-features-in-the-r-graphics-engine/) for more about the changes to the R graphics engine.
 
 ### On analytical distributions
 
@@ -786,7 +792,7 @@ As with other plot types, you can also use `stat_gradientinterval()` to visualiz
 ```{r dist_gradient_dodge}
 dist_df %>%
   ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = subgroup)) +
-  stat_gradientinterval(position = "dodge") +
+  stat_gradientinterval(position = "dodge", fill_type = "gradient") +
   labs(
     title = "stat_gradientinterval(position = 'dodge')",
     subtitle = "aes(ydist = dist_normal(mean, sd), fill = subgroup)"

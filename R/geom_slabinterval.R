@@ -60,6 +60,9 @@ draw_slabs = function(self, s_data, panel_params, coord,
     s_data, orientation, normalize, height, y, ymin, ymax
   ))
 
+  # avoid giving fill type warnings multiple times
+  fill_type = switch_fill_type(fill_type, segments = "segments", gradient = "gradient")
+
   # build groups for the slabs
   # must group within both group and y for the polygon and path drawing functions to work
   slab_grobs = dlply_(s_data, c("group", y), function(d) {
@@ -710,11 +713,35 @@ draw_polygon = function(data, panel_params, coord, fill = NULL) {
 
 switch_fill_type = function(fill_type, segments, gradient) {
   if (getRversion() < "4.1.0" && fill_type == "gradient") {
-    message(                                                      # nocov
-      'fill_type = "gradient" is not supported in R < 4.1.0.\n',  # nocov
-      'Falling back to fill_type = "segments"'                    # nocov
-    )                                                             # nocov
-    fill_type = "segments"                                        # nocov
+    warning0(glue('
+      fill_type = "gradient" is not supported in R < 4.1.0.
+       - Falling back to fill_type = "segments".
+       - See help("geom_slabinterval") for more information.
+      '))                                                                # nocov
+    fill_type = "segments"                                               # nocov
+  } else if (getRversion() < "4.2.0" && fill_type == "auto") {           # nocov
+    warning0(glue('
+      fill_type cannot be auto-detected in R < 4.2.0.
+       - Falling back to fill_type = "segments".
+       - For best results, if you are using a graphics device that
+         supports gradients, set fill_type = "gradient".
+       - See help("geom_slabinterval") for more information.
+      '))                                                                # nocov
+    fill_type = "segments"                                               # nocov
+  } else if (fill_type == "auto") {                                      # nocov
+    if ("LinearGradient" %in% dev.capabilities()$patterns) {             # nocov
+      fill_type = "gradient"                                             # nocov
+    } else {                                                             # nocov
+      warning0(glue('
+        fill_type = "gradient" is not supported by the current graphics device.
+         - Falling back to fill_type = "segments".
+         - If you believe your current graphics device *does* support
+           fill_type = "gradient" but auto-detection failed, set that option
+           explicitly and consider reporting a bug.
+         - See help("geom_slabinterval") for more information.
+        '))                                                              # nocov
+      fill_type = "segments"                                             # nocov
+    }
   }
 
   switch(fill_type,

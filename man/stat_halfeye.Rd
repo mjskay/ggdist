@@ -67,13 +67,24 @@ the x/y axis opposite the \code{orientation} of this geom so that the maximum he
 opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
 groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
 normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
-\item{\code{fill_type}}{What type of fill to use when the fill color or alpha varies within a slab. The default,
-\code{"segments"}, breaks up the slab geometry into segments for each unique combination of fill color and
+\item{\code{fill_type}}{What type of fill to use when the fill color or alpha varies within a slab. One of:
+\itemize{
+\item \code{"segments"}: breaks up the slab geometry into segments for each unique combination of fill color and
 alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
-but can result in ugly results if a large number of unique fill colors are being used (as in gradients,
-like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}). When \code{fill_type == "gradient"}, a \code{grid::linearGradient()} is used to
-create a smooth gradient fill. This works well for large numbers of unique fill colors, but requires
-R > 4.1 and is not yet supported on all graphics devices.}
+but can give ugly results if a large number of unique fill colors are being used (as in gradients,
+like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}).
+\item \code{"gradient"}: a \code{grid::linearGradient()} is used to create a smooth gradient fill. This works well for
+large numbers of unique fill colors, but requires R >= 4.1 and is not yet supported on all graphics devices.
+As of this writing, the \code{png()} graphics device with \code{type = "cairo"}, the \code{svg()} device, the \code{pdf()}
+device, and the \code{ragg::agg_png()} devices are known to support this option. On R < 4.1, this option
+will fall back to \code{fill_type = "segment"} with a message.
+\item \code{"auto"}: attempts to use \code{fill_type = "gradient"} if support for it can be auto-detected. On R >= 4.2,
+support for gradients can be auto-detected on some graphics devices; if support is not detected, this
+option will fall back to \code{fill_type = "segments"} (in case of a false negative, \code{fill_type = "gradient"}
+can be set explictly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
+fall back to \code{fill_type = "segments"}, in which case you can set \code{fill_type = "gradient"} explicitly
+if you are using a graphics device that support gradients.
+}}
 \item{\code{interval_size_domain}}{The minimum and maximum of the values of the size aesthetic that will be translated into actual
 sizes for intervals drawn according to \code{interval_size_range} (see the documentation for that argument.)}
 \item{\code{interval_size_range}}{(Deprecated). This geom scales the raw size aesthetic values when drawing interval and point sizes, as
