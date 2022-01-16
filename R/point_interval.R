@@ -202,25 +202,44 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       # lower and upper values, and width
       # - equivalent to unnest_legacy()
       data = map_dfr_(seq_len(nrow(data)), function(i) {
-        row_i = data[i, , drop = FALSE]
-        draws_i = row_i[[col_name]]
-        if (is.list(draws_i) && is.atomic(draws_i[[1]])) {
-          # have to unwrap numerics / etc (unlike distributions or rvars)
-          draws_i = draws_i[[1]]
+        row = data[i, , drop = FALSE]
+        draws = row[[col_name]]
+
+        # if multivariate rvar => flatten it first
+        if (inherits(draws, "rvar") && length(draws) > 1) {
+          draws = flatten_array(draws)
+          row[[col_name]] = NA
+          row = bind_cols(row, .index = names(draws))
+          row[[col_name]] = draws
         }
 
-        # make one row of `data` with point estimate and grouping factors
-        row_i[[col_name]] = .point(draws_i, na.rm = na.rm)
+        # unless draws is multivariate this will usually be just one iteration
+        map_dfr_(seq_len(nrow(row)), function(j) {
+          # get row of `data` with grouping factors
+          row_j = row[j, , drop = FALSE]
+          draws_j = draws[[j]]
 
-        # calculate intervals (one or more rows)
-        interval = .interval(draws_i, .width = p, na.rm = na.rm)
-        dimnames(interval)[[2]] = c(".lower", ".upper")
+          # calculate point estimate --- usually a scalar
+          point_j = .point(draws_j, na.rm = na.rm)
 
-        cbind(
-          row_i,
-          interval,
-          .width = p
-        )
+          # if this is a multivariate distributional object, flatten the point estimate
+          if (distributional::is_distribution(draws_j) && length(point_j) > 1) {
+            point_j = flatten_array(point_j)
+            row_j[[col_name]] = NA
+            row_j = bind_cols(row_j, .index = names(point_j))
+          }
+          row_j[[col_name]] = point_j
+
+          # calculate intervals (one or more rows)
+          interval = .interval(draws_j, .width = p, na.rm = na.rm)
+          dimnames(interval)[[2]] = c(".lower", ".upper")
+
+          cbind(
+            row_j,
+            interval,
+            .width = p
+          )
+        })
       })
 
       as_tibble(data)
@@ -350,7 +369,7 @@ qi_ = function(x, lower_prob, upper_prob, na.rm) {
 
   if (distributional::is_distribution(x)) {
     #TODO: when #114 / distributional#72 is fixed, pass na.rm to quantile in this call
-    do.call(rbind, quantile(x, c(lower_prob, upper_prob)))
+    do.call(rbind, lapply(quantile(x, c(lower_prob, upper_prob)), t))
   } else {
     matrix(quantile(x, c(lower_prob, upper_prob), na.rm = na.rm), ncol = 2)
   }
@@ -409,11 +428,14 @@ hdi_.rvar = function(x, ...) {
   }
   hdi_.numeric(posterior::draws_of(x), ...)
 }
-#' @importFrom distributional hdr
+#' @importFrom distributional hdr support
 #' @export
 hdi_.distribution = function(x, .width = .95, ...) {
   if (length(x) > 1) {
-    stop0("HDI for non-scalar distributions is not implemented")
+    stop0("HDI for non-scalar distribution objects is not implemented")
+  }
+  if (length(dim(vctrs::field(support(x), "x")[[1]])) > 1) {
+    stop0("HDI for multivariate distribution objects is not implemented")
   }
   if (anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
@@ -507,11 +529,14 @@ hdci_.rvar = function(x, ...) {
   }
   hdci_.numeric(posterior::draws_of(x), ...)
 }
-#' @importFrom distributional hdr
+#' @importFrom distributional hdr support
 #' @export
 hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
   if (length(x) > 1) {
     stop0("HDCI for non-scalar distributions is not implemented")
+  }
+  if (length(dim(vctrs::field(support(x), "x")[[1]])) > 1) {
+    stop0("HDCI for multivariate distribution objects is not implemented")
   }
   if (anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))

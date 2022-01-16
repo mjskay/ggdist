@@ -158,6 +158,36 @@ fct_rev_ = function(x) {
 }
 
 
+# array manipulation ------------------------------------------------------
+
+# flatten dimensions of an array
+flatten_array = function(x) {
+  # determine new dimension names in the form x,y,z
+  # start with numeric names
+  .dim = dim(x) %||% length(x)
+  dimname_lists = lapply(.dim, seq_len)
+  .dimnames = dimnames(x)
+  if (!is.null(.dimnames)) {
+    # where character names are provided, use those instead of the numeric names
+    dimname_lists = lapply(seq_along(dimname_lists), function(i) .dimnames[[i]] %||% dimname_lists[[i]])
+  }
+  # if this has more than one dimension and the first dim is length 1 and is unnamed, drop it
+  # basically: we don't want row vectors to have a bunch of "1,"s in front of their indices.
+  if (length(.dim) > 1 && length(.dim[[1]]) == 1 && length(.dimnames[[1]]) == 0) {
+    dimname_lists = dimname_lists[-1]
+  }
+
+  # flatten array
+  dim(x) = length(x)
+
+  # expand out the dimname lists into the appropriate combinations and assemble into new names
+  dimname_grid = expand.grid(dimname_lists, KEEP.OUT.ATTRS = FALSE)
+  names(x) = do.call(paste, c(list(sep = ","), dimname_grid))
+
+  x
+}
+
+
 # sequences ---------------------------------------------------------------
 
 #' Create sequences of length n interleaved with its own reverse sequence.
