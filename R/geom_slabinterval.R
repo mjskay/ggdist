@@ -721,26 +721,26 @@ draw_polygon = function(data, panel_params, coord, fill = NULL) {
 }
 
 switch_fill_type = function(fill_type, segments, gradient) {
-  if (getRversion() < "4.1.0" && fill_type == "gradient") {
+  if (getRversion() < "4.1.0" && fill_type == "gradient") {             # nocov start
     warning0(glue('
       fill_type = "gradient" is not supported in R < 4.1.0.
        - Falling back to fill_type = "segments".
        - See help("geom_slabinterval") for more information.
-      '))                                                                # nocov
-    fill_type = "segments"                                               # nocov
-  } else if (getRversion() < "4.2.0" && fill_type == "auto") {           # nocov
+      '))
+    fill_type = "segments"
+  } else if (getRversion() < "4.2.0" && fill_type == "auto") {
     warning0(glue('
       fill_type cannot be auto-detected in R < 4.2.0.
        - Falling back to fill_type = "segments".
        - For best results, if you are using a graphics device that
          supports gradients, set fill_type = "gradient".
        - See help("geom_slabinterval") for more information.
-      '))                                                                # nocov
-    fill_type = "segments"                                               # nocov
-  } else if (fill_type == "auto") {                                      # nocov
-    if ("LinearGradient" %in% dev.capabilities()$patterns) {             # nocov
-      fill_type = "gradient"                                             # nocov
-    } else {                                                             # nocov
+      '))
+    fill_type = "segments"
+  } else if (fill_type == "auto") {
+    if ("LinearGradient" %in% grDevices::dev.capabilities()$patterns) {
+      fill_type = "gradient"
+    } else {
       warning0(glue('
         fill_type = "gradient" is not supported by the current graphics device.
          - Falling back to fill_type = "segments".
@@ -748,10 +748,10 @@ switch_fill_type = function(fill_type, segments, gradient) {
            fill_type = "gradient" but auto-detection failed, set that option
            explicitly and consider reporting a bug.
          - See help("geom_slabinterval") for more information.
-        '))                                                              # nocov
-      fill_type = "segments"                                             # nocov
+        '))
+      fill_type = "segments"
     }
-  }
+  }                                                                     # nocov end
 
   switch(fill_type,
     segments = segments,
