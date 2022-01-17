@@ -533,7 +533,7 @@ hdci_.rvar = function(x, ...) {
 #' @export
 hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
   if (length(x) > 1) {
-    stop0("HDCI for non-scalar distributions is not implemented")
+    stop0("HDCI for non-scalar distribution objects is not implemented")
   }
   if (length(dim(vctrs::field(support(x), "x")[[1]])) > 1) {
     stop0("HDCI for multivariate distribution objects is not implemented")

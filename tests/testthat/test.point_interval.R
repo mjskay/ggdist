@@ -435,8 +435,8 @@ test_that("Mode on dist_sample uses the numeric method", {
 
 test_that("non-scalar distributions throw appropriate warnings", {
   x = dist_normal(0:1)
-  expect_error(hdi(x), "HDI for non-scalar distributions is not implemented")
-  expect_error(hdci(x), "HDCI for non-scalar distributions is not implemented")
+  expect_error(hdi(x), "HDI for non-scalar distribution objects is not implemented")
+  expect_error(hdci(x), "HDCI for non-scalar distribution objects is not implemented")
 })
 
 test_that("point_interval works on NA dists", {
