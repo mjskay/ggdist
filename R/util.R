@@ -180,11 +180,17 @@ flatten_array = function(x) {
   # flatten array
   dim(x) = length(x)
 
-  # expand out the dimname lists into the appropriate combinations and assemble into new names
-  dimname_grid = expand.grid(dimname_lists, KEEP.OUT.ATTRS = FALSE)
-  names(x) = do.call(paste, c(list(sep = ","), dimname_grid))
+  if (length(dimname_lists) == 1) {
+    index_names = dimname_lists[[1]]
+  } else {
+    # expand out the dimname lists into the appropriate combinations and assemble into new names
+    dimname_grid = expand.grid(dimname_lists, KEEP.OUT.ATTRS = FALSE)
+    index_names = do.call(paste, c(list(sep = ","), dimname_grid))
+    # make it a factor to preserve original order
+    index_names = ordered(index_names, levels = index_names)
+  }
 
-  x
+  list(x = x, index_names = index_names)
 }
 
 

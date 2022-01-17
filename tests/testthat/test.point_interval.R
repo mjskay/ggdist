@@ -443,7 +443,7 @@ test_that("multivariate rvars work", {
   ref = tibble(
     g = rep(c("a", "a", "b", "b"), 2),
     x = rep(c(2.5, 2, 3, 4), 2),
-    .index = as.character(rep(1:2, 4)),
+    .index = rep(1:2, 4),
     .lower = c(qis_50[,1], qis_90[,1]),
     .upper = c(qis_50[,2], qis_90[,2]),
     .width = rep(c(0.5, 0.9), each = 4),
@@ -474,7 +474,7 @@ test_that("multivariate rvars work", {
   ref = tibble(
     g = rep(c("a", "a", "a", "b", "b"), 2),
     x = rep(c(2.5, 2.5, 2, 3, 4), 2),
-    .index = as.character(rep(c(1,1,2,1,2), 2)),
+    .index = rep(c(1,1,2,1,2), 2),
     .lower = c(hdis_50[,1], hdis_90[,1]),
     .upper = c(hdis_50[,2], hdis_90[,2]),
     .width = rep(c(0.5, 0.9), each = 5),
@@ -483,6 +483,29 @@ test_that("multivariate rvars work", {
   )
 
   expect_equal(median_hdi(df, x, .width = c(.5, .9)), ref)
+
+
+  # > 2 dims
+  x_draws = array(c(
+    rep(qi(ppoints(100, a = 1)), 12) + rep(1:12, each = 100)
+  ), dim = c(100, 2, 3, 2))
+  df = tibble(i = 1:2, x = posterior::rvar(x_draws))
+
+  .index = paste0(rep(1:3, 4), ",", rep(1:2, each = 3, times = 2))
+  .index = ordered(.index, levels = paste0(rep(1:3, 2), ",", rep(1:2, each = 3)))
+  .x = c(seq(1, 11, by = 2), seq(2, 12, by = 2))
+  ref = tibble(
+    i = rep(1:2, each = 6),
+    x = .x + 0.5,
+    .index = .index,
+    .lower = .x + .025,
+    .upper = .x + .975,
+    .width = .95,
+    .point = "median",
+    .interval = "qi"
+  )
+
+  expect_equal(median_qi(df, x), ref)
 })
 
 
@@ -550,7 +573,7 @@ test_that("multivariate distributions work", {
   ref = tibble(
     g = rep(c("a", "a", "a", "b"), 2),
     x = rep(c(1, 2, 3, 0), 2),
-    .index = as.character(rep(c(1, 2, 3, NA), 2)),
+    .index = rep(c(1, 2, 3, NA), 2),
     .lower = c(
       qnorm(0.25, c(1, 2, 3, 0), c(1, 1, 1, 0.5)),
       qnorm(0.05, c(1, 2, 3, 0), c(1, 1, 1, 0.5))
@@ -565,5 +588,28 @@ test_that("multivariate distributions work", {
   )
 
   expect_equal(median_qi(df, x, .width = c(.5, .9)), ref)
+})
+
+test_that("flattened indices retain index order", {
+  skip_if_no_vdiffr()
+
+  vdiffr::expect_doppelganger("flattened indices with geom_pointinterval",
+    tibble(x = dist_multivariate_normal(list(c(1:10)), list(diag(10)))) %>%
+      median_qi(x, .width = c(.66, .95)) %>%
+      ggplot(aes(x, xmin = .lower, xmax = .upper, y = .index)) +
+      geom_pointinterval()
+  )
+
+  vdiffr::expect_doppelganger("flattened indices with stat_pointinterval",
+    tibble(
+      x = c(
+        dist_multivariate_normal(list(c(1:10)), list(diag(10))),
+        dist_normal()
+      ),
+      y = c("a","b")
+    )  %>%
+    ggplot(aes(xdist = x, y = y, group = stat(.index))) +
+    stat_pointinterval(position = "dodge")
+  )
 
 })

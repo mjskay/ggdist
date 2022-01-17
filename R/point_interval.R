@@ -207,9 +207,12 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
         # if multivariate rvar => flatten it first
         if (inherits(draws, "rvar") && length(draws) > 1) {
-          draws = flatten_array(draws)
-          row[[col_name]] = NA
-          row = bind_cols(row, .index = names(draws))
+          flat_draws = flatten_array(draws)
+          draws = flat_draws$x
+          row[[col_name]] = NA # the next line will have to recycle row[[col_name]]
+                               # which may be expensive b/c it is an rvar, so just
+                               # skip that since we're overwriting it after anyway
+          row = bind_cols(row, .index = flat_draws$index_names)
           row[[col_name]] = draws
         }
 
@@ -224,9 +227,10 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
 
           # if this is a multivariate distributional object, flatten the point estimate
           if (distributional::is_distribution(draws_j) && length(point_j) > 1) {
-            point_j = flatten_array(point_j)
+            flat_point = flatten_array(point_j)
+            point_j = flat_point$x
             row_j[[col_name]] = NA
-            row_j = bind_cols(row_j, .index = names(point_j))
+            row_j = bind_cols(row_j, .index = flat_point$index_names)
           }
           row_j[[col_name]] = as.vector(point_j)
 
