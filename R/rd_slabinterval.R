@@ -199,7 +199,7 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
         \\item `"auto"`: attempts to use `fill_type = "gradient"` if support for it can be auto-detected. On R >= 4.2,
           support for gradients can be auto-detected on some graphics devices; if support is not detected, this
           option will fall back to `fill_type = "segments"` (in case of a false negative, `fill_type = "gradient"`
-          can be set explictly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
+          can be set explicitly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
           fall back to `fill_type = "segments"`, in which case you can set `fill_type = "gradient"` explicitly
           if you are using a graphics device that support gradients.
       }

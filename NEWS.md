@@ -41,7 +41,7 @@ Documentation:
   auto-generated and should be easy to maintain going forward. (#36)
 * The `stat_lineribbon()` and `geom_lineribbon()` family now also has separate
   documentation pages with a comprehensive listing of aesthetics and parameters (#107).
-* Ridgeplot-like example in `vignette("slabinterval")` using the new `expand`
+* Ridge plot-like example in `vignette("slabinterval")` using the new `expand`
   parameter (#115).
   
 Deprecations and removals:

@@ -818,7 +818,7 @@ df %>%
   )
 ```
 
-Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. You can set the `binwidth` parameter manually to overide this.
+Unlike the base `ggplot2::geom_dotplot()` geom, `ggdist::geom_dots()` automatically determines a bin width to ensure that the dot stacks fit within the available space. You can set the `binwidth` parameter manually to override this.
 
 
 ### Quantile dotplots

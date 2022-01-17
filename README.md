@@ -35,7 +35,7 @@ stats](man/figures/slabinterval_family.png)
 The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
 `vignette("dotsinterval")`) makes it easy to visualize dot+interval
 plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and
-combined with half-eyes, composite plots like raincloud plots):
+combined with half-eyes, composite plots like rain cloud plots):
 
 ![](man/figures/README/halfeye_dotplot-1.png)<!-- -->
 

@@ -68,7 +68,7 @@ theme_set(theme_ggdist())
 
 ## Anatomy of `geom_dotsinterval()`
 
-The dotsinterval family of geoms and stats is a sub-family of slabinterval (see `vignette("slabinterval")`), where the "slab" is a collection of dots forming a dotplot and the interval is a summary point (e.g., mean, median, mode) with an arbitrary number of intervals.
+The `dotsinterval` family of geoms and stats is a sub-family of slabinterval (see `vignette("slabinterval")`), where the "slab" is a collection of dots forming a dotplot and the interval is a summary point (e.g., mean, median, mode) with an arbitrary number of intervals.
 
 The base `geom_dotsinterval()` uses a variety of custom aesthetics to create the composite geometry:
 
@@ -226,15 +226,15 @@ tibble(dist = dist_normal(4, 1.2)) %>%
    
    * **Distribution objects and analytical distributions**. To use the stats on this type of data, you must use the `xdist`, or `ydist` aesthetics, which take [distributional](https://pkg.mitchelloharawild.com/distributional/) objects, `posterior::rvar()` objects, or distribution names (e.g. `"norm"`, which refers to the Normal distribution provided by the `dnorm/pnorm/qnorm` functions). When used on analytical distributions (e.g. `distributional::dist_normal()`), the `quantiles` argument determines the number of quantiles used (and therefore the number of dots shown); the default is `100`.
 
-All dotsinterval geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting `orientation = "horizontal"` or `orientation = "vertical"`.
+All `dotsinterval` geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting `orientation = "horizontal"` or `orientation = "vertical"`.
 
 ## Side and layout
 
 The `side` aesthetic allows you to adjust the positioning and
 direction of the dots:
 
-* `"top"`, `"right"`, or `"topright"`: draw the dots on the top or on the right, depending on rientation`
-* `"bottom"`, `"left"`, or `"bottomleft"`: draw the dots on the bottom or on the left, pending on `orientation`
+* `"top"`, `"right"`, or `"topright"`: draw the dots on the top or on the right, depending on `orientation`
+* `"bottom"`, `"left"`, or `"bottomleft"`: draw the dots on the bottom or on the left, depending on `orientation`
 * `"topleft"`: draw the dots on top or on the left, depending on `orientation`
 * `"bottomright"`: draw the dots on the bottom or on the right, depending on `orientation`
 * `"both"`: draw the dots mirrored, as in a "beeswarm" plot.
@@ -435,7 +435,7 @@ dist_df %>%
 ```
 
 Analytical distributions are shown by default using 100 quantiles, sometimes
-refered to as a *quantile dotplot*, which can help people make better decisions under uncertainty ([Kay 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes 2018](https://doi.org/10.1145/3173574.3173718)). 
+referred to as a *quantile dotplot*, which can help people make better decisions under uncertainty ([Kay 2016](https://doi.org/10.1145/2858036.2858558), [Fernandes 2018](https://doi.org/10.1145/3173574.3173718)). 
 
 This can be changed using the `quantiles` argument. For example, we can plot the same
 distributions again, now with 1000 quantiles:
@@ -539,7 +539,7 @@ ab_df %>%
 ```
 
 
-## Raincloud plots
+## Rain cloud plots
 
 Sometimes you may want to include multiple different types of slabs in the same plot
 in order to take advantage of the features each slab type provides. For example,
@@ -597,7 +597,7 @@ gentoo %>%
   ) 
 ```
 
-Now we fit a logisitic regression predicting sex based on body mass:
+Now we fit a logistic regression predicting sex based on body mass:
 
 ```{r m_gentoo}
 m = glm(sex == "male" ~ body_mass_g, data = gentoo, family = binomial)

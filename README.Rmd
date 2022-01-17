@@ -39,7 +39,7 @@ CCDF bar plots, gradient plots, histograms, and more:
 
 The `geom_dotsinterval()` / `stat_dotsinterval()` family (see `vignette("dotsinterval")`) makes
 it easy to visualize dot+interval plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots
-(and combined with half-eyes, composite plots like raincloud plots):
+(and combined with half-eyes, composite plots like rain cloud plots):
 
 ```{r halfeye_dotplot, echo=FALSE, message=FALSE, warning=FALSE}
 library(ggplot2)

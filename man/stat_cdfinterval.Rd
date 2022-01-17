@@ -75,7 +75,7 @@ will fall back to \code{fill_type = "segment"} with a message.
 \item \code{"auto"}: attempts to use \code{fill_type = "gradient"} if support for it can be auto-detected. On R >= 4.2,
 support for gradients can be auto-detected on some graphics devices; if support is not detected, this
 option will fall back to \code{fill_type = "segments"} (in case of a false negative, \code{fill_type = "gradient"}
-can be set explictly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
+can be set explicitly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
 fall back to \code{fill_type = "segments"}, in which case you can set \code{fill_type = "gradient"} explicitly
 if you are using a graphics device that support gradients.
 }}
