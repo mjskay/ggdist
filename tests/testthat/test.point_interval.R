@@ -520,6 +520,8 @@ test_that("non-scalar distributions throw appropriate warnings", {
 })
 
 test_that("multivariate distributions throw appropriate warnings", {
+  skip_if_not_installed("mvtnorm") # needed by distributional::support for dist_mvnorm
+
   x = dist_multivariate_normal(list(0:1), list(diag(2)))
   expect_error(hdi(x), "HDI for multivariate distribution objects is not implemented")
   expect_error(hdci(x), "HDCI for multivariate distribution objects is not implemented")

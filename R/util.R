@@ -144,9 +144,9 @@ map2_chr_ = function(X, Y, FUN) {
   as.character(mapply(FUN, X, Y, USE.NAMES = FALSE))
 }
 
-map2_dfr_ = function(X, Y, FUN) {
-  bind_rows(mapply(FUN, X, Y, SIMPLIFY = FALSE, USE.NAMES = FALSE))
-}
+# map2_dfr_ = function(X, Y, FUN) {
+#   bind_rows(mapply(FUN, X, Y, SIMPLIFY = FALSE, USE.NAMES = FALSE))
+# }
 
 fct_rev_ = function(x) {
   if (is.character(x)) {
