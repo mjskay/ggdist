@@ -19,6 +19,9 @@ New features:
   and `posterior::rvar()` objects, meaning that means and modes (in addition
   to medians) and highest-density intervals (in addition to quantile intervals)
   can now be visualized for analytical distributions.
+  * As part of this, multivariate distribution objects and `rvar`s will generate
+    a `.index` column when passed to `point_interval()` functions (#111).
+    Based on a suggestion from @mitchelloharawild.
 * New `stat_ribbon()` provided as a shortcut stat for `stat_lineribbon()` with
   no line (#48).
 * One-sided intervals (i.e. quantiles) can now be calculated using `ul()` (upper
