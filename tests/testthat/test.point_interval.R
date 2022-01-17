@@ -335,12 +335,12 @@ test_that("NAs are handled correctly in point_interval", {
 
   expect_equal(
     mean_ll(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = NA_real_, ymax = Inf, .width = 0.6, .point = "mean", .interval = "ll", stringsAsFactors = FALSE)
+    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ll", stringsAsFactors = FALSE)
   )
 
   expect_equal(
     mean_ul(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = FALSE),
-    data.frame(y = NA_real_, ymin = -Inf, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ul", stringsAsFactors = FALSE)
+    data.frame(y = NA_real_, ymin = NA_real_, ymax = NA_real_, .width = 0.6, .point = "mean", .interval = "ul", stringsAsFactors = FALSE)
   )
 
 })
@@ -351,13 +351,13 @@ test_that("NAs are handled correctly in point_interval", {
 test_that("ll and ul work", {
   df = data.frame(x = ppoints(100, a = 1))
 
-  ref = tibble(x = 0.5, .lower = c(0.25, 0), .upper = Inf, .width = c(0.75, 1), .point = "mean", .interval = "ll")
+  ref = tibble(x = 0.5, .lower = c(0.25, 0), .upper = 1, .width = c(0.75, 1), .point = "mean", .interval = "ll")
 
   expect_equal(mean_ll(df, x, .width = c(.75, 1)), ref)
   expect_equal(median_ll(df, x, .width = c(.75, 1)), mutate(ref, .point = "median"))
   expect_equal(mode_ll(df, x, .width = c(.75, 1)) %>% mutate(x = round(x, 2)), mutate(ref, .point = "mode"))
 
-  ref = tibble(x = 0.5, .lower = -Inf, .upper = c(0.75, 1), .width = c(0.75, 1), .point = "mean", .interval = "ul")
+  ref = tibble(x = 0.5, .lower = 0, .upper = c(0.75, 1), .width = c(0.75, 1), .point = "mean", .interval = "ul")
 
   expect_equal(mean_ul(df, x, .width = c(.75, 1)), ref)
   expect_equal(median_ul(df, x, .width = c(.75, 1)), mutate(ref, .point = "median"))
@@ -386,12 +386,16 @@ test_that("pointintervals work on rvars", {
 })
 
 test_that("non-scalar rvars throw appropriate warnings", {
+  skip_if_not_installed("posterior")
+
   x = posterior::rvar(matrix(1:6, nrow = 2))
   expect_error(hdi(x), "HDI for non-scalar rvars is not implemented")
   expect_error(hdci(x), "HDCI for non-scalar rvars is not implemented")
 })
 
 test_that("point_interval works on NA rvars", {
+  skip_if_not_installed("posterior")
+
   ref = tibble(
     .value = NA_real_,
     .lower = NA_real_,
@@ -403,6 +407,82 @@ test_that("point_interval works on NA rvars", {
   expect_equal(median_qi(x), mutate(ref, .point = "median", .interval = "qi"))
   expect_equal(mean_hdi(x), mutate(ref, .point = "mean", .interval = "hdi"))
   expect_equal(mode_hdci(x), mutate(ref, .point = "mode", .interval = "hdci"))
+})
+
+test_that("multivariate rvars work", {
+  skip_if_not_installed("posterior")
+
+  x = c(
+    posterior::rvar(c(qnorm(ppoints(50)), qnorm(ppoints(50), 5))),
+    posterior::rvar(c(qnorm(ppoints(100), 3))),
+    posterior::rvar(c(qnorm(ppoints(100), 2))),
+    posterior::rvar(c(qnorm(ppoints(100), 4)))
+  )
+  dim(x) = c(2,2)
+
+  df = tibble(g = c("a", "b"), x = x)
+
+
+  # build qi ref
+  qis_50 = rbind(
+    qi(posterior::draws_of(x[1,1]), .width = .5),
+    qi(posterior::draws_of(x[1,2]), .width = .5),
+    qi(posterior::draws_of(x[2,1]), .width = .5),
+    qi(posterior::draws_of(x[2,2]), .width = .5)
+  )
+  qis_90 = rbind(
+    qi(posterior::draws_of(x[1,1]), .width = .9),
+    qi(posterior::draws_of(x[1,2]), .width = .9),
+    qi(posterior::draws_of(x[2,1]), .width = .9),
+    qi(posterior::draws_of(x[2,2]), .width = .9)
+  )
+
+  expect_equal(dim(qis_50), c(4,2))
+  expect_equal(dim(qis_90), c(4,2))
+
+  ref = tibble(
+    g = rep(c("a", "a", "b", "b"), 2),
+    x = rep(c(2.5, 2, 3, 4), 2),
+    .index = as.character(rep(1:2, 4)),
+    .lower = c(qis_50[,1], qis_90[,1]),
+    .upper = c(qis_50[,2], qis_90[,2]),
+    .width = rep(c(0.5, 0.9), each = 4),
+    .point = "median",
+    .interval = "qi"
+  )
+
+  expect_equal(median_qi(df, x, .width = c(.5, .9)), ref)
+
+
+  # build hdi ref
+  hdis_50 = rbind(
+    hdi(posterior::draws_of(x[1,1]), .width = .5),
+    hdi(posterior::draws_of(x[1,2]), .width = .5),
+    hdi(posterior::draws_of(x[2,1]), .width = .5),
+    hdi(posterior::draws_of(x[2,2]), .width = .5)
+  )
+  hdis_90 = rbind(
+    hdi(posterior::draws_of(x[1,1]), .width = .9),
+    hdi(posterior::draws_of(x[1,2]), .width = .9),
+    hdi(posterior::draws_of(x[2,1]), .width = .9),
+    hdi(posterior::draws_of(x[2,2]), .width = .9)
+  )
+
+  expect_equal(dim(hdis_50), c(5,2))
+  expect_equal(dim(hdis_90), c(5,2))
+
+  ref = tibble(
+    g = rep(c("a", "a", "a", "b", "b"), 2),
+    x = rep(c(2.5, 2.5, 2, 3, 4), 2),
+    .index = as.character(rep(c(1,1,2,1,2), 2)),
+    .lower = c(hdis_50[,1], hdis_90[,1]),
+    .upper = c(hdis_50[,2], hdis_90[,2]),
+    .width = rep(c(0.5, 0.9), each = 5),
+    .point = "median",
+    .interval = "hdi"
+  )
+
+  expect_equal(median_hdi(df, x, .width = c(.5, .9)), ref)
 })
 
 
@@ -439,6 +519,12 @@ test_that("non-scalar distributions throw appropriate warnings", {
   expect_error(hdci(x), "HDCI for non-scalar distribution objects is not implemented")
 })
 
+test_that("multivariate distributions throw appropriate warnings", {
+  x = dist_multivariate_normal(list(0:1), list(diag(2)))
+  expect_error(hdi(x), "HDI for multivariate distribution objects is not implemented")
+  expect_error(hdci(x), "HDCI for multivariate distribution objects is not implemented")
+})
+
 test_that("point_interval works on NA dists", {
   ref = tibble(
     .value = NA_real_,
@@ -451,4 +537,31 @@ test_that("point_interval works on NA dists", {
   expect_equal(median_qi(x), mutate(ref, .point = "median", .interval = "qi"))
   expect_equal(mean_hdi(x), mutate(ref, .point = "mean", .interval = "hdi"))
   expect_equal(mode_hdci(x), mutate(ref, .point = "mode", .interval = "hdci"))
+})
+
+test_that("multivariate distributions work", {
+
+  x = c(dist_multivariate_normal(list(1:3), list(diag(3))), dist_normal(0,0.5))
+
+  df = tibble(g = c("a", "b"), x = x)
+
+  ref = tibble(
+    g = rep(c("a", "a", "a", "b"), 2),
+    x = rep(c(1, 2, 3, 0), 2),
+    .index = as.character(rep(c(1, 2, 3, NA), 2)),
+    .lower = c(
+      qnorm(0.25, c(1, 2, 3, 0), c(1, 1, 1, 0.5)),
+      qnorm(0.05, c(1, 2, 3, 0), c(1, 1, 1, 0.5))
+    ),
+    .upper = c(
+      qnorm(0.75, c(1, 2, 3, 0), c(1, 1, 1, 0.5)),
+      qnorm(0.95, c(1, 2, 3, 0), c(1, 1, 1, 0.5))
+    ),
+    .width = rep(c(0.5, 0.9), each = 4),
+    .point = "median",
+    .interval = "qi"
+  )
+
+  expect_equal(median_qi(df, x, .width = c(.5, .9)), ref)
+
 })

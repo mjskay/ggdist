@@ -173,7 +173,7 @@ flatten_array = function(x) {
   }
   # if this has more than one dimension and the first dim is length 1 and is unnamed, drop it
   # basically: we don't want row vectors to have a bunch of "1,"s in front of their indices.
-  if (length(.dim) > 1 && length(.dim[[1]]) == 1 && length(.dimnames[[1]]) == 0) {
+  if (length(.dim) > 1 && .dim[[1]] == 1 && length(.dimnames[[1]]) == 0) {
     dimname_lists = dimname_lists[-1]
   }
 

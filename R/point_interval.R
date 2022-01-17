@@ -228,7 +228,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
             row_j[[col_name]] = NA
             row_j = bind_cols(row_j, .index = names(point_j))
           }
-          row_j[[col_name]] = point_j
+          row_j[[col_name]] = as.vector(point_j)
 
           # calculate intervals (one or more rows)
           interval = .interval(draws_j, .width = p, na.rm = na.rm)
@@ -382,8 +382,6 @@ ll = function(x, .width = .95, na.rm = FALSE) {
   upper_prob = rep(1, length(.width))
 
   out = qi_(x, lower_prob, upper_prob, na.rm)
-  out[,2] = Inf
-  out
 }
 
 #' @export
@@ -393,8 +391,6 @@ ul = function(x, .width = .95, na.rm = FALSE) {
   upper_prob = .width
 
   out = qi_(x, lower_prob, upper_prob, na.rm)
-  out[,1] = -Inf
-  out
 }
 
 #' @export
