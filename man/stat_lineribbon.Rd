@@ -51,12 +51,16 @@ to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aes
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_lineribbon]{geom_lineribbon()}},
 these include:
 \describe{
-\item{\code{step}}{Should the line/ribbon be drawn as a step function? One of: \code{FALSE} (do not draw as a step
-function, the default), \code{TRUE} (draw a step function using the \code{"mid"} approach), \code{"mid"}
-(draw steps midway between adjacent x values), \code{"hv"} (draw horizontal-then-vertical steps), \code{"vh"}
-(draw as vertical-then-horizontal steps). \code{TRUE} is an alias for \code{"mid"} because for a step function with
-ribbons, \code{"mid"} is probably what you want (for the other two step approaches the ribbons at either the
-very first or very last x value will not be visible).}
+\item{\code{step}}{Should the line/ribbon be drawn as a step function? One of:
+\itemize{
+\item \code{FALSE} (default): do not draw as a step function.
+\item \code{"mid"} (or \code{TRUE}): draw steps midway between adjacent x values.
+\item \code{"hv"}: draw horizontal-then-vertical steps.
+\item \code{"vh"}: draw as vertical-then-horizontal steps.
+}
+\code{TRUE} is an alias for \code{"mid"} because for a step function with ribbons, \code{"mid"} is probably what you want
+(for the other two step approaches the ribbons at either the very first or very last x value will not be
+visible).}
 }}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
@@ -72,17 +76,20 @@ highest-density interval, \code{hdi}; or highest-density continuous interval, \c
 be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
 See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
 
-\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
+\item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
+\itemize{
+\item \code{NA} (default): automatically detect the orientation based on how the aesthetics
+are assigned. Automatic detection works most of the time.
+\item \code{"horizontal"} (or \code{"y"}): draw horizontally, using the \code{y} aesthetic to identify different
+groups. For each group, uses the \code{x}, \code{xmin}, \code{xmax}, and \code{thickness} aesthetics to
+draw points, intervals, and slabs.
+\item \code{"vertical"} (or \code{"x"}): draw vertically, using the \code{x} aesthetic to identify different
+groups. For each group, uses the \code{y}, \code{ymin}, \code{ymax}, and \code{thickness} aesthetics to
+draw points, intervals, and slabs.
+}
+For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
+for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
+before base ggplot did, hence the discrepency).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}

@@ -50,25 +50,32 @@ you have overlapping geometries.}
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{orientation}{Whether this geom is drawn horizontally (\code{"horizontal"}) or
-vertically (\code{"vertical"}). The default, \code{NA}, automatically detects the orientation based on how the
-aesthetics are assigned, and should generally do an okay job at this. When horizontal (resp. vertical),
-the geom uses the \code{y} (resp. \code{x}) aesthetic to identify different groups, then for each group uses
-the \code{x} (resp. \code{y}) aesthetic and the \code{thickness} aesthetic to draw a function as an slab, and draws
-points and intervals horizontally (resp. vertically) using the \code{xmin}, \code{x}, and \code{xmax} (resp.
-\code{ymin}, \code{y}, and \code{ymax}) aesthetics. For compatibility with the base
-ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
-\code{"horizontal"} (tidybayes had an \code{orientation} parameter before ggplot did, and I think the tidybayes naming
-scheme is more intuitive: \code{"x"} and \code{"y"} are not orientations and their mapping to orientations is, in my
-opinion, backwards; but the base ggplot naming scheme is allowed for compatibility).}
+\item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
+\itemize{
+\item \code{NA} (default): automatically detect the orientation based on how the aesthetics
+are assigned. Automatic detection works most of the time.
+\item \code{"horizontal"} (or \code{"y"}): draw horizontally, using the \code{y} aesthetic to identify different
+groups. For each group, uses the \code{x}, \code{xmin}, \code{xmax}, and \code{thickness} aesthetics to
+draw points, intervals, and slabs.
+\item \code{"vertical"} (or \code{"x"}): draw vertically, using the \code{x} aesthetic to identify different
+groups. For each group, uses the \code{y}, \code{ymin}, \code{ymax}, and \code{thickness} aesthetics to
+draw points, intervals, and slabs.
+}
+For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
+for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
+before base ggplot did, hence the discrepency).}
 
-\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. If \code{"all"}
-(the default), normalize so that the maximum height across all data is \code{1}; if \code{"panels"}, normalize within
-panels so that the maximum height in each panel is \code{1}; if \code{"xy"}, normalize within
-the x/y axis opposite the \code{orientation} of this geom so that the maximum height at each value of the
-opposite axis is \code{1}; if \code{"groups"}, normalize within values of the opposite axis and within
-groups so that the maximum height in each group is \code{1}; if \code{"none"}, values are taken as is with no
-normalization (this should probably only be used with functions whose values are in [0,1], such as CDFs).}
+\item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. One of:
+\itemize{
+\item \code{"all"}: normalize so that the maximum height across all data is \code{1}.
+\item \code{"panels"}: normalize within panels so that the maximum height in each panel is \code{1}.
+\item \code{"xy"}: normalize within the x/y axis opposite the \code{orientation} of this geom so
+that the maximum height at each value of the opposite axis is \code{1}.
+\item \code{"groups"}: normalize within values of the opposite axis and within each
+group so that the maximum height in each group is \code{1}.
+\item \code{"none"}: values are taken as is with no normalization (this should probably
+only be used with functions whose values are in [0,1], such as CDFs).
+}}
 
 \item{fill_type}{What type of fill to use when the fill color or alpha varies within a slab. One of:
 \itemize{
