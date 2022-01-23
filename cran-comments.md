@@ -1,5 +1,5 @@
 ## Submission comments
-This version includes minor changes for forward compatibility with the next version of {distributional}.
+This version includes various new features, bugfixes, and doc updates (see NEWS.md).
 
 ## Test environments
 * MacOS (Github), R-release 4.1.2
@@ -20,7 +20,7 @@ This version includes minor changes for forward compatibility with the next vers
 
 ## revdepcheck results
 
-We checked 10 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+We checked 11 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 0 new problems
  * We failed to check 0 packages
