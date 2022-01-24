@@ -148,6 +148,8 @@ globalVariables(c("y", "ymin", "ymax"))
 point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
+  if (missing(.data)) return(partial_self("point_interval"))
+
   UseMethod("point_interval")
 }
 
@@ -160,7 +162,9 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   col_exprs = quos(..., .named = TRUE)
   point_name = tolower(quo_name(enquo(.point)))
+  .point = match.fun(.point)
   interval_name = tolower(quo_name(enquo(.interval)))
+  .interval = match.fun(.interval)
 
   if (length(col_exprs) == 0) {
     # no column expressions provided => summarise all columns that are not groups and which
@@ -311,7 +315,9 @@ point_interval.numeric = function(.data, ..., .width = .95, .point = median, .in
   .width = .Deprecated_argument_alias(.width, .prob)
   data = .data    # to avoid conflicts with tidy eval's `.data` pronoun
   point_name = tolower(quo_name(enquo(.point)))
+  .point = match.fun(.point)
   interval_name = tolower(quo_name(enquo(.interval)))
+  .interval = match.fun(.interval)
 
   result = map_dfr_(.width, function(p) {
     interval = .interval(data, .width = p, na.rm = na.rm)
