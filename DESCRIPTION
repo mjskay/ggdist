@@ -72,9 +72,12 @@ Collate:
     "abstract_stat.R"
     "abstract_stat_slabinterval.R"
     "binning_methods.R"
+    "cpp11.R"
     "curve_interval.R"
     "cut_cdf_qi.R"
     "data.R"
+    "density_bounded.R"
+    "density_unbounded.R"
     "distributions.R"
     "draw_key_slabinterval.R"
     "geom.R"
@@ -105,3 +108,5 @@ Collate:
     "tidy_format_translators.R"
     "deprecated.R"
 Roxygen: list(markdown = TRUE)
+LinkingTo: cpp11
+SystemRequirements: C++11

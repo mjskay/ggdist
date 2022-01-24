@@ -29,4 +29,5 @@
 #' The [geom_lineribbon()] / [stat_lineribbon()] family (see `vignette("lineribbon")`)
 #' makes it easy to visualize fit lines with an arbitrary number of uncertainty bands.
 #'
+#' @useDynLib ggdist, .registration = TRUE
 NULL
