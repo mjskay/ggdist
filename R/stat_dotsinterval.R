@@ -58,7 +58,8 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
   hidden_params = union(c(
     "limits", "n",
     "p_limits", "slab_type", "outline_bars",
-    "adjust", "trim", "expand", "breaks"
+    "adjust", "trim", "expand", "breaks",
+    "density"
   ), StatSlabinterval$hidden_params),
 
   # workaround (#84)

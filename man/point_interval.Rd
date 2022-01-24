@@ -186,7 +186,8 @@ width of the interval (\code{.width}), the type of point summary (\code{.point})
 \description{
 Translates draws from distributions in a (possibly grouped) data frame into point and
 interval summaries (or set of point and interval summaries, if there are
-multiple groups in a grouped data frame).
+multiple groups in a grouped data frame). Supports
+\link[=partial-functions]{partial function application}.
 }
 \details{
 If \code{.data} is a data frame, then \code{...} is a list of bare names of

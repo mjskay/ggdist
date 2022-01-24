@@ -83,8 +83,14 @@ compute_slab_slabinterval = function(
   self, data, trans, input, orientation,
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars,
+  density,
   ...
 ) {
+  if (is.character(density)) {
+    density = match.fun(paste0("density_", density))
+  }
+  density = merge_partial(density, adjust = adjust, trim = trim)
+
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA, .value = NA))
@@ -113,7 +119,8 @@ compute_slab_slabinterval = function(
       return(compute_slab_sample(
         trans$transform(distr_get_sample(dist, args)), trans, input,
         slab_type = slab_type, limits = limits, n = n,
-        adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
+        adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars,
+        density = density
       ))
     } else if (trans$name == "identity") {
       pdf_fun = distr_pdf(dist)
@@ -183,7 +190,8 @@ compute_slab_slabinterval = function(
 compute_slab_sample = function(
   x, trans, input,
   slab_type, limits, n,
-  adjust, trim, expand, breaks, outline_bars
+  adjust, trim, expand, breaks, outline_bars,
+  density
 ) {
   # calculate the density first, since we'll use the x values from it
   # to calculate the cdf
@@ -212,7 +220,7 @@ compute_slab_sample = function(
     )
   } else {
     # calculate on the transformed scale to ensure density is correct
-    d = density_unbounded(x, n = n, adjust = adjust, trim = trim)
+    d = density(x, n = n)
     data.frame(
       .input = trans$inverse(d$x),
       pdf = d$y
@@ -356,7 +364,7 @@ compute_interval_slabinterval = function(
 #' @param geom Use to override the default connection between
 #' [stat_slabinterval()] and [geom_slabinterval()]
 #' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
-#' cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`).
+#' cumulative distribution function (`"cdf"`), complementary CDF (`"ccdf"`), or histogram (`"histogram"`).
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
 #' limits of the slab. E.g., if this is `c(.001, .999)`, then a slab is drawn
 #' for the distribution from the quantile at `p = .001` to the quantile at `p = .999`. If the lower
@@ -370,8 +378,17 @@ compute_interval_slabinterval = function(
 #' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
 #' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
 #' bars are also drawn.
-#' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator for sample data
-#' is adjusted by multiplying it by this value. See [density()] for more information.
+#' @param density For sample data (if `slab_type` is `"pdf"`), determines
+#' the function used for density estimation. Can be one of:
+#'  - A function like [density_unbounded()], [density_bounded()], or another function following
+#'    the same signature, which takes a sample, a grid size (`n`), and the various other parameters
+#'    such as `trim`, `bandwidth`, and `adjust`, and returns a `list()` with `x` and `y` components
+#'    corresponding to grid points (`x`) and densities (`y`).
+#'  - A string indicating the suffix of a `density_` function, such as `"bounded"` or `"unbounded"`.
+#'  - A partially-applied `density_` function giving parameters for density estimation, for
+#'    example: `density_unbounded(adjust = 1.5)`. See [partial function application][partial-functions].
+#' @param adjust If `slab_type` is `"pdf"`, the bandwidth for the density estimator for sample data
+#' is adjusted by multiplying it by this value. See [density_unbounded()] for more information.
 #' @param trim For sample data, should the density estimate be trimmed to the range of the
 #' input data? Default `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
@@ -516,6 +533,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     expand = FALSE,
     breaks = "Sturges",
     outline_bars = FALSE,
+    density = "unbounded",
 
     point_interval = "median_qi"
   ), AbstractStatSlabinterval$default_params),

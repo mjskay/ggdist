@@ -18,6 +18,7 @@ stat_ccdfinterval(
   trim = TRUE,
   breaks = "Sturges",
   outline_bars = FALSE,
+  density = "unbounded",
   point_interval = "median_qi",
   limits = NULL,
   n = 501,
@@ -99,7 +100,7 @@ specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 }}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
+cumulative distribution function (\code{"cdf"}), complementary CDF (\code{"ccdf"}), or histogram (\code{"histogram"}).}
 
 \item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. One of:
 \itemize{
@@ -124,8 +125,8 @@ distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is
 \code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
 it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
 
-\item{adjust}{If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator for sample data
-is adjusted by multiplying it by this value. See \code{\link[=density]{density()}} for more information.}
+\item{adjust}{If \code{slab_type} is \code{"pdf"}, the bandwidth for the density estimator for sample data
+is adjusted by multiplying it by this value. See \code{\link[=density_unbounded]{density_unbounded()}} for more information.}
 
 \item{trim}{For sample data, should the density estimate be trimmed to the range of the
 input data? Default \code{TRUE}.}
@@ -138,6 +139,18 @@ distributions (whose slabs are drawn as histograms), determines
 if outlines in between the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE}
 (the default), the outline is drawn only along the tops of the bars; if \code{TRUE}, outlines in between
 bars are also drawn.}
+
+\item{density}{For sample data (if \code{slab_type} is \code{"pdf"}), determines
+the function used for density estimation. Can be one of:
+\itemize{
+\item A function like \code{\link[=density_unbounded]{density_unbounded()}}, \code{\link[=density_bounded]{density_bounded()}}, or another function following
+the same signature, which takes a sample, a grid size (\code{n}), and the various other parameters
+such as \code{trim}, \code{bandwidth}, and \code{adjust}, and returns a \code{list()} with \code{x} and \code{y} components
+corresponding to grid points (\code{x}) and densities (\code{y}).
+\item A string indicating the suffix of a \code{density_} function, such as \code{"bounded"} or \code{"unbounded"}.
+\item A partially-applied \code{density_} function giving parameters for density estimation, for
+example: \code{density_unbounded(adjust = 1.5)}. See \link[=partial-functions]{partial function application}.
+}}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
