@@ -12,7 +12,8 @@ globalVariables(c("y", "ymin", "ymax"))
 #'
 #' Translates draws from distributions in a (possibly grouped) data frame into point and
 #' interval summaries (or set of point and interval summaries, if there are
-#' multiple groups in a grouped data frame).
+#' multiple groups in a grouped data frame). Supports
+#' [partial function application][partial-functions].
 #'
 #' If `.data` is a data frame, then `...` is a list of bare names of
 #' columns (or expressions derived from columns) of `.data`, on which

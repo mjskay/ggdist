@@ -89,6 +89,7 @@ Collate:
     "geom_slab.R"
     "lkjcorr_marginal.R"
     "parse_dist.R"
+    "partial.R"
     "point_interval.R"
     "position_dodgejust.R"
     "rd.R"

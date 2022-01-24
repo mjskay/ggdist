@@ -9,6 +9,7 @@
 
 #' Bounded density estimator using beta kernels from Chen (1999)
 #' @noRd
+#' @importFrom rlang as_label enexpr get_expr
 density_bounded = function(
   x,
   n = 512, bandwidth = "bw.nrd0", adjust = 1,
@@ -18,7 +19,7 @@ density_bounded = function(
 ) {
   if (missing(x)) return(partial_self("density_bounded"))
 
-  name = deparse1(substitute(x))
+  name = as_label(enexpr(x))
 
   if (any(x < limits[[1]] | x > limits[[2]])) {
     stop0(
@@ -31,6 +32,7 @@ density_bounded = function(
   if (!is.numeric(bandwidth)) {
     bandwidth = match.fun(bandwidth)(x)
   }
+  bandwidth = bandwidth
 
   # scale x into [0,1]
   # infinite limits are placed at 3*bandwidth beyond the data;
@@ -42,7 +44,7 @@ density_bounded = function(
 
   # bandwidth parameter per Chen (1999) is not on the standard deviation scale,
   # so translate sd-scale bandwidth to the parameter used by Chen
-  b = sd_to_beta_bandwidth(bandwidth / abs(diff(limits)))
+  b = sd_to_beta_bandwidth(bandwidth / abs(diff(limits))) * adjust
 
   # determine the grid we will evaluate the density estimator over
   at_limits = if (trim) range(x) else c(0, 1)
@@ -85,9 +87,11 @@ density_bounded = function(
     list(
       x = at * diff(limits) + limits[1],
       y = densities / abs(diff(limits)),
-      bw = bandwidth,
+      bw = if (adjust == 1) bandwidth else paste0("b(", bandwidth, ") * ", adjust),
       n = length(x),
-      call = match.call(),
+      # need to apply get_expr over match.call() instead of just using match.call()
+      # to remove tildes from the call created by partial application
+      call = as.call(lapply(match.call(), get_expr)),
       data.name = name,
       has.na = FALSE
     ),

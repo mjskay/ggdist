@@ -9,7 +9,7 @@
 
 #' Unbounded density estimator
 #'
-#' Uses [stats::density()]
+#' Uses [stats::density()]. Supports [partial function application][partial-functions].
 #' @noRd
 density_unbounded = function(
   x,
@@ -20,6 +20,12 @@ density_unbounded = function(
 ) {
   if (missing(x)) return(partial_self("density_unbounded"))
 
+  if (!is.numeric(bandwidth)) {
+    bandwidth = match.fun(bandwidth)(x)
+  }
+
   cut = if (trim) 0 else 3
-  density(x, n = n, bw = bandwidth, adjust = adjust, cut = cut, kernel = kernel)
+  out = density(x, n = n, bw = bandwidth, adjust = adjust, cut = cut, kernel = kernel)
+  out$call = match.call()
+  out
 }

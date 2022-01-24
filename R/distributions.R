@@ -75,9 +75,9 @@ distr_point_interval.numeric = function(dist, args = list(), point_interval, tra
 }
 #' @importFrom distributional dist_wrap
 #' @export
-distr_point_interval.character = function(dist, args = list(), point_interval, trans, .width = 0.95, ...) {
+distr_point_interval.character = function(dist, args = list(), point_interval, trans, ...) {
   dist = do.call(dist_wrap, c(list(dist), args))
-  distr_point_interval(dist, args, point_interval, trans, .width = .width, ...)
+  distr_point_interval(dist, args, point_interval, trans, ...)
 }
 #' @export
 distr_point_interval.factor = function(dist, args = list(), point_interval, trans, ...) {

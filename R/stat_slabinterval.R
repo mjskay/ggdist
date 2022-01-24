@@ -211,10 +211,8 @@ compute_slab_sample = function(
       pdf = .value
     )
   } else {
-    # all other slab types use the density function as the pdf
-    cut = if (trim) 0 else 3
     # calculate on the transformed scale to ensure density is correct
-    d = density(x, n = n, adjust = adjust, cut = cut)
+    d = density_unbounded(x, n = n, adjust = adjust, trim = trim)
     data.frame(
       .input = trans$inverse(d$x),
       pdf = d$y
@@ -311,7 +309,9 @@ compute_interval_slabinterval = function(
 
     args = args_from_aes(...)
 
-    distr_point_interval(dist, args, point_interval, trans = trans, .width = .width, na.rm = na.rm)
+    point_interval = merge_partial(point_interval, .width = .width, na.rm = na.rm)
+
+    distr_point_interval(dist, args, point_interval, trans = trans)
   })
 }
 
