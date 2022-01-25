@@ -7,8 +7,103 @@
 
 # bounded density estimator -----------------------------------------------
 
-#' Bounded density estimator using beta kernels from Chen (1999)
-#' @noRd
+#' Bounded density estimator using Beta kernels
+#'
+#' Bounded density estimator using Beta kernels, based on Chen (1999), but using
+#' a different approach to specifying the bandwidth (see *Bandwidth specification*).
+#' Supports [partial function application][partial-functions].
+#'
+#' @param x Numeric vector containing a sample to compute a density estimate for.
+#' @param n The number of equally-spaced points to use as a grid for density estimation.
+#' @param bandwidth The bandwidth of the density estimator or a function to compute the
+#' bandwidth. The bandwidth is expressed as the desired standard deviation of the Beta
+#' kernel when its mean is 0.25 or 0.75 times the range of the
+#' `limits`; because the bandwidth is adaptive this implies a slightly larger bandwidth
+#' towards the center of the range and a smaller bandwidth towards the boundaries
+#' (See *Bandwidth specification* below).
+#' This approach allows bandwidths to be specified on the scale of the original data
+#' and for existing bandwidth estimators, such as [bw.nrd0()] or [bw.SJ()], to be used.
+#' Can be:
+#'  - a function that takes a numeric vector containing the sample and returns a bandwidth.
+#'  - a string naming such a function.
+#'  - a single numeric value giving the desired bandwidth.
+#' @param adjust The bandwidth used is actually `bandwidth*adjust`. This makes it easy
+#' to specify values like "half the default bandwidth".
+#' @param trim Should the result be trimmed to the range of `x` (`trim = TRUE`), or extend
+#' all the way to the range of `limits` (`trim = FALSE`)?
+#' @param limits Numeric vector of size 2 giving the boundaries of the density estimator.
+#' Boundaries can be infinite; infinite boundaries are set at `3*bandwidth` beyond the
+#' range of the input data (because `bandwidth` is on a standard deviation scale this
+#' should allow the density estimator to go approximately to 0 before hitting the limit).
+#' This allows density estimation of data with one finite limit, e.g. by setting
+#' `limits = c(0, Inf)`.
+#' @param corrected Should the bias-corrected form of Chen's (1999) estimator be used?
+#' If `FALSE`, the uncorrected estimator (\eqn{\hat{f}_1}{f_1} in Chen) is used; if
+#' `TRUE` the bias-corrected estimator (\eqn{\hat{f}_2}{f_2} in Chen) is used.
+#' @param ... Other arguments passed on to other methods (currently ignored).
+#'
+#' @section Bounded Beta kernels:
+#'
+#' The kernel density estimate \eqn{\hat(f)(x)} using Beta kernels on a bounded support takes the
+#' following general form:
+#'
+#' \deqn{\hat{f}(x) = \frac{1}{n} \sum_{i=1}^n f_\textrm{Beta}(X_i|\alpha(x),\beta(x))}
+#'
+#' \eqn{X_1, ..., X_n} is the sample (`x`) and \eqn{b} is
+#' a bandwidth parameter derived from `bandwidth` (see *Bandwidth specification* below).
+#' We assume the support is \[0,1\]; if not, we scale from `limits` into \[0,1\].
+#'
+#' Which estimator is used is determined by the functions \eqn{\alpha(x)} and \eqn{\beta(x)}.
+#'
+#' For `corrected = FALSE` (\eqn{\hat{f}_1}{f_1} in Chen), these are:
+#'
+#' \deqn{\alpha_1(x) = \frac{x}{b}+1}
+#' \deqn{\beta_1(x) = \frac{1 - x}{b}+1}
+#'
+#' For `corrected = TRUE` (\eqn{\hat{f}_2}{f_2} in Chen), these are:
+#'
+#' \deqn{\alpha_2(x) = \left\{
+#'   \begin{array}{ c l }
+#'     \rho(x,b)   & \quad \textrm{if } x < 2b \\
+#'     \frac{x}{b} & \quad \textrm{if } x \geq 2b
+#'   \end{array}
+#' \right.}
+#' \deqn{\beta_2(x) = \left\{
+#'   \begin{array}{ c l }
+#'     \frac{1 - x}{b} & \quad \textrm{if } x \leq 1 - 2b\\
+#'     \rho(1 - x,b)   & \quad \textrm{if } x > 1 - 2b
+#'   \end{array}
+#' \right.}
+#'
+#' Where:
+#'
+#' \deqn{\rho(x,b) = 2b^2 + 2.5 - \sqrt{4b^4 + 6b^2 + 2.25 - x^2 - \frac{x}{b}}}
+#'
+#' In practice, for moderate or large samples this bias correction is small, and for some
+#' bandwidths the correction results in a discontinuous density estimate, so
+#' the current default is `corrected = FALSE`.
+#'
+#' @section Bandwidth specification:
+#'
+#' Unlike the \eqn{b} parameter for bandwidths defined in Chen (1999),
+#' `bandwidth` is expressed as the desired standard deviation of the Beta
+#' kernel when its mean is 0.25 or 0.75 times the range of
+#' the `limits`. This is intended to allow more natural specification of
+#' bandwidths on the scale of the original data.
+#'
+#' Specifically, given a `bandwidth` expressed as a standard deviation \eqn{s},
+#' we translate this to the bandwidth parameter \eqn{b} via:
+#'
+#' \deqn{b = \frac{1}{\frac{3}{16}s^{-2} - 1}}{b = 1/(s^(-2) * 3/16 - 1)}
+#'
+#' This is derived from the formula for the standard deviation of a Beta
+#' distribution with \eqn{\alpha_1(0.25)} and \eqn{\beta_1(0.25)}.
+#'
+#' @references
+#' Chen, Song Xi. (1999). "Beta kernel estimators for density functions".
+#' *Computational Statistics and Data Analysis* 31 (2): 131--145.
+#' \doi{10.1016/S0167-9473(99)00010-9}.
+#'
 #' @importFrom rlang as_label enexpr get_expr
 density_bounded = function(
   x,
@@ -114,11 +209,11 @@ rho_Chen = function(x, b) {
 #' will be a bit more than this in the middle and less towards the edges).
 #' @noRd
 sd_to_beta_bandwidth = function(s) {
-  # 1/(s^(-2) / 4 - 1) #would be at x = 0.5
-  # 4 * s^2
+  # at x = 0.5 (instead of x = 0.25) this would be:
+  # 1/(s^(-2) / 4 - 1)
   # This function has an asymptote at sqrt(3/16), above which the bandwidth
-  # is so large that it implies the density should just be flat over the
-  # entire domain (i.e. b = Inf)
+  # is so large that it should imply the density should just be flat over the
+  # entire domain (i.e. b = Inf), so cap s at sqrt(3/16).
   s = min(s, sqrt(3/16))
   1/(s^(-2) * 3/16 - 1)
 }
