@@ -100,7 +100,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   # workaround (#84)
   draw_key = function(self, ...) draw_key_lineribbon(self, ...),
 
-  required_aes = c("x", "y"),
+  required_aes = c("x|y"),
 
   optional_aes = c("ymin", "ymax", "xmin", "xmax", "fill_ramp"),
 

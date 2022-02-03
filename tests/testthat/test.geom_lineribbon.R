@@ -187,3 +187,33 @@ test_that("stat_ribbon works", {
   )
 })
 
+
+
+# geom_lineribbon without line --------------------------------------------
+
+test_that("geom_lineribbon without line works", {
+  skip_if_no_vdiffr()
+
+  df = tibble(
+    x = 1:10,
+    y = (1:10)^2/2,
+    lower = y - 10/(10:1),
+    upper = y + 10/(10:1)
+  )
+
+  vdiffr::expect_doppelganger("geom_lineribbon without line",
+    df %>%
+      ggplot(aes(x = x, ymin = lower, ymax = upper)) +
+      geom_lineribbon()
+  )
+
+  vdiffr::expect_doppelganger("geom_lineribbon without line, vertical",
+    df %>%
+      ggplot(aes(y = x, xmin = lower, xmax = upper)) +
+      geom_lineribbon()
+  )
+
+})
+
+
+
