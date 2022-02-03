@@ -82,7 +82,7 @@ partial_self = function(function_name = NULL) {
 
   attr(partial_f, "default_args") = default_args
   attr(partial_f, "name") = function_name
-  class(partial_f) = c("partial_function", "function")
+  class(partial_f) = c("ggdist_partial_function", "function")
   partial_f
 }
 
@@ -111,7 +111,7 @@ merge_partial = function(f, ...) {
 
 #' @importFrom rlang get_expr
 #' @export
-print.partial_function = function(x, ...) {
+print.ggdist_partial_function = function(x, ...) {
   function_sym = as.name(attr(x, "name"))
   args = lapply(attr(x, "default_args"), get_expr)
 

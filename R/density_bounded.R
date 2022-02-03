@@ -99,10 +99,59 @@
 #' This is derived from the formula for the standard deviation of a Beta
 #' distribution with \eqn{\alpha_1(0.25)} and \eqn{\beta_1(0.25)}.
 #'
+#' @return An object of class `"density"`, mimicking the output format of
+#' `stats:density()`, with the following components:
+#'
+#' \describe{
+#'   \item x The grid of points at which the density was estimated.
+#'   \item y The estimated density values.
+#'   \item bw The `bandwidth`.
+#'   \item n The sample size of the `x` input argument.
+#'   \item call The call used to produce the result, as a quoted expression.
+#'   \item data.name The deparsed name of the `x` input argument.
+#'   \item has.na Always `FALSE` (for compatibility).
+#' }
+#'
+#' This allows existing methods (like `print()` and `plot()`) to work if desired.
+#' This output format (and in particular, the `x` and `y` components) is also
+#' the format expected by the `density` argument of the [stat_slabinterval()].
+#'
 #' @references
 #' Chen, Song Xi. (1999). "Beta kernel estimators for density functions".
 #' *Computational Statistics and Data Analysis* 31 (2): 131--145.
 #' \doi{10.1016/S0167-9473(99)00010-9}.
+#'
+#' @examples
+#'
+#' library(distributional)
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' # For compatibility with existing code, the return type of density_bounded()
+#' # is the same as stats::density(), ...
+#' set.seed(123)
+#' x = rbeta(5000, 1, 3)
+#' d = density_bounded(x)
+#' d
+#'
+#' # ... thus, while designed for use with the `density` argument of
+#' # stat_slabinterval(), output from density_bounded() can also be used with
+#' # base::plot():
+#' plot(d)
+#'
+#' # here we'll use the same data as above, but pick either density_bounded()
+#' # or density_unbounded() (which is equivalent to stats::density()). Notice
+#' # how the bounded density (green) is biased near the boundary of the support,
+#' # while the unbounded density is not.
+#' data.frame(x) %>%
+#'   ggplot() +
+#'   stat_slab(
+#'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
+#'     alpha = 0.25
+#'   ) +
+#'   stat_slab(aes(x), density = "bounded", fill = NA, color = "#d95f02", alpha = 0.5) +
+#'   stat_slab(aes(x), density = "unbounded", fill = NA, color = "#1b9e77", alpha = 0.5) +
+#'   theme_ggdist()
 #'
 #' @importFrom rlang as_label enexpr get_expr
 density_bounded = function(
@@ -137,13 +186,14 @@ density_bounded = function(
   limits[limits == Inf] = max(x) + 3 * bandwidth
   x = (x - limits[[1]])/diff(limits)
 
-  # bandwidth parameter per Chen (1999) is not on the standard deviation scale,
-  # so translate sd-scale bandwidth to the parameter used by Chen
-  b = sd_to_beta_bandwidth(bandwidth / abs(diff(limits)))
-
   # determine the grid we will evaluate the density estimator over
   at_limits = if (trim) range(x) else c(0, 1)
   at = seq(at_limits[[1]], at_limits[[2]], length.out = n)
+
+  # bandwidth parameter per Chen (1999) is not on the standard deviation scale,
+  # so translate sd-scale bandwidth to the parameter used by Chen
+  b = sd_to_beta_bandwidth(bandwidth / abs(diff(limits)), at)
+  b = rep(b, length.out = length(at))  # ensure b is length of at in case it is a constant
 
   # determine the alpha and beta parameters of the Beta kernels
   if (corrected) {
@@ -151,9 +201,9 @@ density_bounded = function(
     beta = (1 - at)/b
     # bias corrections per Chen (1999)
     alpha_i = at < 2*b
-    alpha[alpha_i] = rho_Chen(at[alpha_i], b)
+    alpha[alpha_i] = rho_Chen(at[alpha_i], b[alpha_i])
     beta_i = at > 1 - 2*b
-    beta[beta_i] = rho_Chen(1 - at[beta_i], b)
+    beta[beta_i] = rho_Chen(1 - at[beta_i], b[alpha_i])
   } else {
     alpha = at/b + 1
     beta = (1 - at)/b + 1
@@ -208,15 +258,28 @@ rho_Chen = function(x, b) {
 #' standard deviation when centered at roughly 0.15 or 0.85 (i.e. the bandwidth
 #' will be a bit more than this in the middle and less towards the edges).
 #' @noRd
-sd_to_beta_bandwidth = function(s) {
+sd_to_beta_bandwidth_old = function(s, at = .25) {
   # at x = 0.5 (instead of x = 0.25) this would be:
   # 1/(s^(-2) / 4 - 1)
-  # This function has an asymptote at sqrt(3/16), above which the bandwidth
+  # This function has an asymptote at sqrt(at * (1 - at)), above which the bandwidth
   # is so large that it should imply the density should just be flat over the
-  # entire domain (i.e. b = Inf), so cap s at sqrt(3/16).
-  s = min(s, sqrt(3/16))
-  1/(s^(-2) * 3/16 - 1)
+  # entire domain (i.e. b = Inf), so cap s at sqrt(at * (1 - at)).
+  at = .25 # at parameter is currently ignored but may be used for adaptive bandwidth later
+  s = min(s, sqrt(at * (1 - at)))
+  1/(s^(-2) * at * (1 - at) - 1)
 }
+
+# TODO: something adaptive for bandwidth?
+sd_to_beta_bandwidth = function(s, at = .5) {
+  # this ensures bandwidth at 0.5 is requested sd, and bandwidth at 0 roughly corresponds
+  # to bandwidth that would be the requested sd at 0.05 (or 0.95).
+  # sd_to_beta_bandwidth_at(s, 0.5)
+  sd_to_beta_bandwidth_at = function(s, at) 1/(s^(-2) * at * (1 - at) - 1)
+  b_at_0.5 = sd_to_beta_bandwidth_at(s, 0.5)
+  b_at_0.1 = sd_to_beta_bandwidth_at(s, 0.1)
+  (0.1/(at*(1 - at) + 0.1) - 0.1/0.35) / (1 - 0.1/0.35) * abs(b_at_0.1 - b_at_0.5) + b_at_0.5
+}
+
 
 #' Faster version of sapply(seq_len(n), \(i) mean(dbeta(x, alpha[i], beta[i])))
 #'

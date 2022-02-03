@@ -54,6 +54,24 @@ If \code{FALSE}, the uncorrected estimator (\eqn{\hat{f}_1}{f_1} in Chen) is use
 
 \item{...}{Other arguments passed on to other methods (currently ignored).}
 }
+\value{
+An object of class \code{"density"}, mimicking the output format of
+\code{stats:density()}, with the following components:
+
+\describe{
+\item x The grid of points at which the density was estimated.
+\item y The estimated density values.
+\item bw The \code{bandwidth}.
+\item n The sample size of the \code{x} input argument.
+\item call The call used to produce the result, as a quoted expression.
+\item data.name The deparsed name of the \code{x} input argument.
+\item has.na Always \code{FALSE} (for compatibility).
+}
+
+This allows existing methods (like \code{print()} and \code{plot()}) to work if desired.
+This output format (and in particular, the \code{x} and \code{y} components) is also
+the format expected by the \code{density} argument of the \code{\link[=stat_slabinterval]{stat_slabinterval()}}.
+}
 \description{
 Bounded density estimator using Beta kernels, based on Chen (1999), but using
 a different approach to specifying the bandwidth (see \emph{Bandwidth specification}).
@@ -120,6 +138,39 @@ This is derived from the formula for the standard deviation of a Beta
 distribution with \eqn{\alpha_1(0.25)} and \eqn{\beta_1(0.25)}.
 }
 
+\examples{
+
+library(distributional)
+library(dplyr)
+library(ggplot2)
+
+# For compatibility with existing code, the return type of density_bounded()
+# is the same as stats::density(), ...
+set.seed(123)
+x = rbeta(5000, 1, 3)
+d = density_bounded(x)
+d
+
+# ... thus, while designed for use with the `density` argument of
+# stat_slabinterval(), output from density_bounded() can also be used with
+# base::plot():
+plot(d)
+
+# here we'll use the same data as above, but pick either density_bounded()
+# or density_unbounded() (which is equivalent to stats::density()). Notice
+# how the bounded density (green) is biased near the boundary of the support,
+# while the unbounded density is not.
+data.frame(x) \%>\%
+  ggplot() +
+  stat_slab(
+    aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
+    alpha = 0.25
+  ) +
+  stat_slab(aes(x), density = "bounded", fill = NA, color = "#d95f02", alpha = 0.5) +
+  stat_slab(aes(x), density = "unbounded", fill = NA, color = "#1b9e77", alpha = 0.5) +
+  theme_ggdist()
+
+}
 \references{
 Chen, Song Xi. (1999). "Beta kernel estimators for density functions".
 \emph{Computational Statistics and Data Analysis} 31 (2): 131--145.
