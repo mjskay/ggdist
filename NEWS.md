@@ -23,7 +23,8 @@ New features:
     a `.index` column when passed to `point_interval()` functions (#111).
     Based on a suggestion from @mitchelloharawild.
 * New `stat_ribbon()` provided as a shortcut stat for `stat_lineribbon()` with
-  no line (#48).
+  no line (#48). Also, if you supply only an `x` or `y` aesthetic to
+  `geom_lineribbon()`, you will get ribbons without a line (#127).
 * One-sided intervals (i.e. quantiles) can now be calculated using `ul()` (upper
   limit) or `ll()` (lower limit), e.g. with `point_interval()` explicitly or
   via `mean_ll()`, `median_ll()`, `mode_ll()`, `mean_ul()`, `median_ul()`, 

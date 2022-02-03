@@ -504,7 +504,7 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     }
 
     ggname("geom_slabinterval",
-      gTree(children = do.call(gList, c(list(), slab_grobs, point_interval_grobs)))
+      do.call(grobTree, c(list(), slab_grobs, point_interval_grobs))
     )
   }
 )

@@ -17,5 +17,5 @@ skip_if_no_vdiffr = function() {
 #' @noRd
 skip_if_no_linearGradient = function() {
   testthat::skip_if_not(getRversion() >= "4.1")
-  testthat::skip_if_not_installed("svglite", "2.0.0.9000")
+  testthat::skip_if_not_installed("svglite", "2.1.0")
 }

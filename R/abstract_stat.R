@@ -53,6 +53,7 @@ AbstractStat = ggproto("AbstractStat", Stat,
   orientation_options = list(),
 
   setup_params = function(self, data, params) {
+    params = ggproto_parent(Stat, self)$setup_params(data, params)
     params = defaults(params, self$default_params)
 
     # detect orientation
@@ -64,6 +65,8 @@ AbstractStat = ggproto("AbstractStat", Stat,
   },
 
   setup_data = function(self, data, params) {
+    data = ggproto_parent(Geom, self)$setup_data(data, params)
+
     #set up orientation
     data$flipped_aes = params$flipped_aes
 

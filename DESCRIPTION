@@ -38,7 +38,7 @@ Suggests:
     knitr,
     testthat,
     vdiffr (>= 1.0.0),
-    svglite,
+    svglite (>= 2.1.0),
     broom (>= 0.5.6),
     modelr,
     cowplot,
@@ -55,8 +55,6 @@ Suggests:
     posterior,
     pkgdown,
     palmerpenguins
-Remotes:
-    r-lib/svglite
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
