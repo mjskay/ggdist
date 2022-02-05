@@ -157,6 +157,38 @@ define_orientation_variables = function(orientation) {
 }
 
 
+# blending / compositing support ------------------------------------------
+
+#' Check to see if blending (compositing) is supported by the current
+#' graphics device, issuing a warning if it is not
+#' @param blend Blend mode to check for. One of:
+#'  - `NULL`: disable blending
+#'  - A string representing a compositing operator that can be passed to the
+#'    `op` argument of `grid::groupGrob()`
+#' @return `blend` if it is a valid blend mode for the current graphics
+#' device or `NULL` otherwise (if blending is disabled).
+#' @noRd
+check_blend = function(blend) {
+  if (is.null(blend)) {
+    NULL
+  } else if (getRversion() < "4.2") {
+    warning0(
+      "You set blend = ", deparse0(blend), " but blend modes are not supported with R < 4.2.\n",
+      "Falling back to blend = NULL."
+    )
+    NULL
+  } else if (!isTRUE(blend %in% grDevices::dev.capabilities()$compositing)) {
+    warning0(
+      "blend = ", deparse0(blend), " is not supported by your graphics device.\n",
+      "Falling back to blend = NULL."
+    )
+    NULL
+  } else {
+    blend
+  }
+}
+
+
 # ggproto -----------------------------------------------------------------
 
 #' Base ggproto classes for ggdist

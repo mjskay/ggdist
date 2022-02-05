@@ -256,6 +256,19 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
       (for the other two step approaches the ribbons at either the very first or very last x value will not be
       visible).
       '),
+    blend = glue_doc('
+      Blend mode to use when drawing. Requires R > 4.2 and a graphics device that supports compositing
+      (see the `compositing` element of `dev.capabilities()`). Can be one of:
+      \\itemize{
+        \\item `NULL` (default): do not use blend modes for drawing. Ribbons will be interleaved,
+          which improves appearances when drawing ribbons with `alpha` < 1.
+        \\item a string: a blend mode supported by the current graphics device; use `dev.capabilities()$compositing`
+          to get a list of supported modes. The `"multiply"` mode is particularly useful when drawing multiple
+          overlapping lineribbons, because its output does not depend on the order that objects are drawn.
+          When a blend mode is provided, ribbons and lines with the same value of the `blend_group` aesthetic
+          are drawn together and then blended with other blend groups using the specified blend mode.
+      }
+      '),
 
     # SUB_GEOMETRY FLAGS
     show_slab = 'Should the slab portion of the geom be drawn?',

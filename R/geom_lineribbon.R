@@ -85,7 +85,8 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     linetype = 1,
     fill = NULL,
     fill_ramp = NULL,
-    alpha = NA
+    alpha = NA,
+    blend_group = NULL
   ),
 
   default_key_aes = aes(
@@ -107,6 +108,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   default_params = list(
     step = FALSE,
     orientation = NA,
+    blend = NULL,
     na.rm = FALSE
   ),
 
@@ -117,6 +119,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   draw_panel = function(self, data, panel_scales, coord,
     step = self$default_params$step,
     orientation = self$default_params$orientation,
+    blend = self$default_params$blend,
     flipped_aes = FALSE,
     ...
   ) {
@@ -147,9 +150,10 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     if (step == TRUE) step = "mid"
     if (step != FALSE) data = ddply_(data, grouping_columns, stepify, x = y, direction = step)
 
-    # draw all the ribbons
-    ribbon_grobs = data %>%
-      dlply_(grouping_columns, function(d) {
+    # function to draw all the grobs
+    draw_grobs = function(data) {
+      # draw all the ribbons
+      ribbon_grobs = dlply_(data, grouping_columns, function(d) {
         group_grobs = list(GeomRibbon$draw_panel(transform(d, size = NA), panel_scales, coord, flipped_aes = flipped_aes))
         list(
           width = mean(abs(d[[xmax]] - d[[xmin]])),
@@ -157,31 +161,46 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
         )
       })
 
-    # this is a slightly hackish approach to getting the draw order correct for the common
-    # use case of fit lines / curves: draw the ribbons in order from largest mean width to
-    # smallest mean width, so that the widest intervals are on the bottom.
-    ribbon_grobs = ribbon_grobs[order(-map_dbl_(ribbon_grobs, `[[`, "width"))] %>%
-      lapply(`[[`, i = "grobs") %>%
-      unlist(recursive = FALSE) %||%
-      list()
+      # this is a slightly hackish approach to getting the draw order correct for the common
+      # use case of fit lines / curves: draw the ribbons in order from largest mean width to
+      # smallest mean width, so that the widest intervals are on the bottom.
+      ribbon_grobs = ribbon_grobs[order(-map_dbl_(ribbon_grobs, `[[`, "width"))] %>%
+        lapply(`[[`, i = "grobs") %>%
+        unlist(recursive = FALSE) %||%
+        list()
 
-    # now draw all the lines
-    line_grobs = data %>%
-      dlply_(grouping_columns, function(d) {
-        if (!is.null(d[[x]])) {
-          list(GeomLine$draw_panel(d, panel_scales, coord))
-        } else {
-          list()
-        }
-      }) %>%
-      unlist(recursive = FALSE) %||%
-      list()
+      # now draw all the lines
+      line_grobs = data %>%
+        dlply_(grouping_columns, function(d) {
+          if (!is.null(d[[x]])) {
+            list(GeomLine$draw_panel(d, panel_scales, coord))
+          } else {
+            list()
+          }
+        }) %>%
+        unlist(recursive = FALSE) %||%
+        list()
 
-    grobs = c(ribbon_grobs, line_grobs)
+      do.call(grobTree, c(ribbon_grobs, line_grobs))
+    }
 
-    ggname("geom_lineribbon",
-      gTree(children = do.call(gList, grobs))
-    )
+    # create grobs and then blend, if it is supported
+    blend = check_blend("multiply")
+    grob = if (is.null(blend)) {
+      # no blending => just draw all the grobs
+      draw_grobs(data)
+    } else {
+      # draw each blend group separately then blend
+      if (is.null(data$blend_group)) {
+        # if blend group is NULL, just blend everything together
+        grid::groupGrob(draw_grobs(data), blend)
+      } else {
+        grob_list = lapply(dlply_(data, "blend_group", draw_grobs), grid::groupGrob)
+        grid::groupGrob(do.call(grobTree, grob_list), blend)
+      }
+    }
+
+    ggname("geom_lineribbon", grob)
   }
 )
 

@@ -12,6 +12,7 @@ geom_lineribbon(
   ...,
   step = FALSE,
   orientation = NA,
+  blend = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -73,6 +74,18 @@ draw points, intervals, and slabs.
 For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
+
+\item{blend}{Blend mode to use when drawing. Requires R > 4.2 and a graphics device that supports compositing
+(see the \code{compositing} element of \code{dev.capabilities()}). Can be one of:
+\itemize{
+\item \code{NULL} (default): do not use blend modes for drawing. Ribbons will be interleaved,
+which improves appearances when drawing ribbons with \code{alpha} < 1.
+\item a string: a blend mode supported by the current graphics device; use \code{dev.capabilities()$compositing}
+to get a list of supported modes. The \code{"multiply"} mode is particularly useful when drawing multiple
+overlapping lineribbons, because its output does not depend on the order that objects are drawn.
+When a blend mode is provided, ribbons and lines with the same value of the \code{blend_group} aesthetic
+are drawn together and then blended with other blend groups using the specified blend mode.
+}}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
@@ -141,6 +154,16 @@ scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_r
 \itemize{
 \item{\code{size}: Width of \strong{line}.}
 \item{\code{linetype}: Type of \strong{line} (e.g., \code{"solid"}, \code{"dashed"}, etc)}
+}
+
+\strong{Blending aesthetics}
+
+\itemize{
+\item{\code{blend_group}: Group to use for blending with the \code{blend} parameter. Ribbons and lines
+with the same value of \code{blend_group} are drawn together and then blended with other
+blend groups using the blend mode specified by \code{blend}. If the \code{blend} parameter is
+set but the \code{blend_group} aesthetic is not, all ribbons and lines are drawn separately
+and then blended together.}
 }
 
 \strong{Other aesthetics} (these work as in standard \code{geom}s)

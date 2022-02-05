@@ -118,6 +118,15 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
     linetype = 'Type of **line** (e.g., `"solid"`, `"dashed"`, etc)'
   )
 
+  # blending aesthetics
+  geom_aes_sections[["Blending aesthetics"]] = list(
+    blend_group = 'Group to use for blending with the `blend` parameter. Ribbons and lines
+     with the same value of `blend_group` are drawn together and then blended with other
+     blend groups using the blend mode specified by `blend`. If the `blend` parameter is
+     set but the `blend_group` aesthetic is not, all ribbons and lines are drawn separately
+     and then blended together.'
+  )
+
   out = c(out, rd_aesthetics_sections(
     geom_name, stat,
     geom_aes_sections = geom_aes_sections,

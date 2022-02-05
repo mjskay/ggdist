@@ -61,6 +61,17 @@ these include:
 \code{TRUE} is an alias for \code{"mid"} because for a step function with ribbons, \code{"mid"} is probably what you want
 (for the other two step approaches the ribbons at either the very first or very last x value will not be
 visible).}
+\item{\code{blend}}{Blend mode to use when drawing. Requires R > 4.2 and a graphics device that supports compositing
+(see the \code{compositing} element of \code{dev.capabilities()}). Can be one of:
+\itemize{
+\item \code{NULL} (default): do not use blend modes for drawing. Ribbons will be interleaved,
+which improves appearances when drawing ribbons with \code{alpha} < 1.
+\item a string: a blend mode supported by the current graphics device; use \code{dev.capabilities()$compositing}
+to get a list of supported modes. The \code{"multiply"} mode is particularly useful when drawing multiple
+overlapping lineribbons, because its output does not depend on the order that objects are drawn.
+When a blend mode is provided, ribbons and lines with the same value of the \code{blend_group} aesthetic
+are drawn together and then blended with other blend groups using the specified blend mode.
+}}
 }}
 
 \item{.width}{The \code{.width} argument passed to \code{point_interval}: a vector of probabilities to use
@@ -216,6 +227,16 @@ the following aesthetics are supported by the underlying geom:
 \item{\code{alpha}: The opacity of the \strong{line} and \strong{ribbon} sub-geometries.}
 \item{\code{fill_ramp}: A secondary scale that modifies the \code{fill}
 scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.}
+}
+
+\strong{Blending aesthetics}
+
+\itemize{
+\item{\code{blend_group}: Group to use for blending with the \code{blend} parameter. Ribbons and lines
+with the same value of \code{blend_group} are drawn together and then blended with other
+blend groups using the blend mode specified by \code{blend}. If the \code{blend} parameter is
+set but the \code{blend_group} aesthetic is not, all ribbons and lines are drawn separately
+and then blended together.}
 }
 
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
