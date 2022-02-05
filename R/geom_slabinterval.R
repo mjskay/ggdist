@@ -652,9 +652,6 @@ group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha
   )
 }
 
-# avoid NOTE on R < 4.1 for the use of linearGradient below
-if (getRversion() < "4.1") globalVariables("linearGradient")
-
 #' construct a linearGradient() that can be used as a fill based on the fill
 #' and alpha aesthetics of the provided data
 #' @noRd
@@ -680,7 +677,7 @@ make_gradient_fill = function(slab_data, orientation = "horizontal") {
   gradient_args[[y1]] = 0.5
   gradient_args[[y2]] = 0.5
 
-  do.call(linearGradient, gradient_args)
+  do.call(grid::linearGradient, gradient_args)
 }
 
 #' draw a polygon grob --- based on ggplot2::GeomPolygon$draw_panel(), but
