@@ -131,13 +131,17 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
       data[[aesthetic]] = data[[aesthetic]] %||% self$default_key_aes[[aesthetic]]
     }
 
+    # must save the raw fill color prior to doing the ramp, otherwise if two different
+    # colors ramp to the same fill (e.g. both ramp to 100% white) they will get
+    # grouped together erroneously
+    data$fill_raw = data$fill
     data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
 
     # ribbons do not autogroup by color/fill/linetype, so if someone groups by changing the color
     # of the line or by setting fill, the ribbons might give an error. So we will do the
     # grouping ourselves
     grouping_columns = names(data) %>%
-      intersect(c("colour", "fill", "linetype", "group"))
+      intersect(c("colour", "fill", "fill_raw", "linetype", "group"))
 
     # draw as a step function if requested
     if (step == TRUE) step = "mid"
