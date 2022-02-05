@@ -185,7 +185,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     }
 
     # create grobs and then blend, if it is supported
-    blend = check_blend("multiply")
+    blend = check_blend(blend)
     grob = if (is.null(blend)) {
       # no blending => just draw all the grobs
       draw_grobs(data)
