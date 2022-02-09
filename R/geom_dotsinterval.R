@@ -40,13 +40,14 @@ makeContent.dots_grob = function(x) {
   define_orientation_variables(orientation)
 
   font_size_ratio = 1.43  # manual fudge factor for point size in ggplot
-  stackratio = 1.07 * grob_$stackratio
+  dot_size_ratio = 1.07   # historical fudge factor based on old stackratio
+  stackratio = grob_$stackratio
 
   # ratio between width of the bins (binwidth)
   # and the vertical spacing of dots (y_spacing)
   # this is a bit different from a raw stackratio since we want to account
   # for the dotsize
-  heightratio = convertUnit(unit(dotsize * stackratio, "native"),
+  heightratio = convertUnit(unit(dotsize * stackratio * dot_size_ratio, "native"),
     "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
 
   # if bin width was specified as a grid::unit, convert it to native units
@@ -81,8 +82,8 @@ makeContent.dots_grob = function(x) {
     # bin the dots
     dot_positions = bin_dots(
       d$x, d$y,
-      binwidth, heightratio, layout,
-      d$side[[1]], orientation
+      binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
+      layout = layout, side = d$side[[1]], orientation = orientation
     )
 
     # determine size of the dots as a font size

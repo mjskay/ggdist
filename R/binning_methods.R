@@ -15,6 +15,8 @@
 #' @param y numeric vector of y values
 #' @param binwidth bin width
 #' @param heightratio ratio of bin width to dot height
+#' @param stackratio ratio of dot height to vertical distance between dot
+#' centers
 #' @template param-dots-layout
 #' @template param-slab-side
 #' @param orientation Whether the dots are laid out horizontally or vertically.
@@ -62,6 +64,7 @@
 #' @export
 bin_dots = function(x, y, binwidth,
   heightratio = 1,
+  stackratio = 1,
   layout = c("bin", "weave", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x")
@@ -86,8 +89,8 @@ bin_dots = function(x, y, binwidth,
 
   # determine x positions (for bin/weave) or x and y positions (for swarm)
   y_start = switch_side(side, orientation,
-    topright = h$y_spacing / 2,
-    bottomleft = - h$y_spacing / 2,
+    topright = h$y_spacing / stackratio / 2,
+    bottomleft = - h$y_spacing / stackratio / 2,
     both = 0
   )
   switch(layout,
@@ -288,11 +291,12 @@ dot_heap = function(x, nbins = NULL, binwidth = NULL, maxheight = Inf, heightrat
     nbins = max(floor(xspread / binwidth), 1)
   }
   binning = bin_method(x, binwidth)
-  max_bin_count = max(tabulate(binning$bins))
+  bin_counts = tabulate(binning$bins)
+  max_bin_count = max(bin_counts)
 
   y_spacing = binwidth * heightratio
 
-  if (nbins == 1) {
+  if (length(bin_counts) == 1) {
     # if there's only 1 bin, we can scale it to be as large as we want as long as it fits, so
     # let's back out a max bin size based on that...
     max_y_spacing = maxheight / max_bin_count
