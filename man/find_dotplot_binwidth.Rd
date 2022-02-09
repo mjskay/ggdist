@@ -4,7 +4,7 @@
 \alias{find_dotplot_binwidth}
 \title{Dynamically select a good bin width for a dotplot}
 \usage{
-find_dotplot_binwidth(x, maxheight, heightratio = 1)
+find_dotplot_binwidth(x, maxheight, heightratio = 1, stackratio = 1)
 }
 \arguments{
 \item{x}{numeric vector of values}
@@ -12,6 +12,9 @@ find_dotplot_binwidth(x, maxheight, heightratio = 1)
 \item{maxheight}{maximum height of the dotplot}
 
 \item{heightratio}{ratio of bin width to dot height}
+
+\item{stackratio}{ratio of dot height to vertical distance between dot
+centers}
 }
 \value{
 A suitable bin width such that a dotplot created with this bin width

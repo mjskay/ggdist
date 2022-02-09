@@ -9,6 +9,7 @@ bin_dots(
   y,
   binwidth,
   heightratio = 1,
+  stackratio = 1,
   layout = c("bin", "weave", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
     "bottomright", "both"),
@@ -23,6 +24,9 @@ bin_dots(
 \item{binwidth}{bin width}
 
 \item{heightratio}{ratio of bin width to dot height}
+
+\item{stackratio}{ratio of dot height to vertical distance between dot
+centers}
 
 \item{layout}{The layout method used for the dots:
 \itemize{
