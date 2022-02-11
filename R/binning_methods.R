@@ -222,6 +222,7 @@ bin_dots = function(x, y, binwidth,
 #'   coord_fixed()
 #'
 #' @importFrom grDevices nclass.Sturges nclass.FD nclass.scott
+#' @importFrom stats optimize
 #' @export
 find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) {
   # figure out a reasonable minimum number of bins based on histogram binning
