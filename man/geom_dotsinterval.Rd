@@ -131,7 +131,7 @@ or equal to \code{scale}).}
 manually-tuned parameter that tends to work well with the default circular
 shape, preventing gaps between bins from appearing to be too large visually
 (as might arise from dots being \emph{precisely} the \code{binwidth}). If it is desired
-to have dots be precisely the \code{bindwidth}, set \code{dotsize = 1}.}
+to have dots be precisely the \code{binwidth}, set \code{dotsize = 1}.}
 
 \item{stackratio}{The distance between the center of the dots in the same
 stack relative to the dot height. The default, \code{1}, makes dots in the same
@@ -164,7 +164,7 @@ draw points, intervals, and slabs.
 }
 For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
-before base ggplot did, hence the discrepency).}
+before base ggplot did, hence the discrepancy).}
 
 \item{interval_size_domain}{A length-2 numeric vector giving the minimum and maximum of the values of the size aesthetic that will be
 translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the documentation

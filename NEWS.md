@@ -41,7 +41,7 @@ New features and enhancements:
     bit better due to the visual distance between circles, but is (I think) 
     better used as an explicit value than an implicit one, hence the change.
     This may create subtle changes to plots that use the `dotsize` or `stackratio` 
-    parameters, but allows those parmeters to have a more precise 
+    parameters, but allows those parameters to have a more precise 
     geometric interpretation.
 
 Documentation:

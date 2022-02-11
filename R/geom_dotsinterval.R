@@ -238,7 +238,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' manually-tuned parameter that tends to work well with the default circular
 #' shape, preventing gaps between bins from appearing to be too large visually
 #' (as might arise from dots being *precisely* the `binwidth`). If it is desired
-#' to have dots be precisely the `bindwidth`, set `dotsize = 1`.
+#' to have dots be precisely the `binwidth`, set `dotsize = 1`.
 #' @param stackratio The distance between the center of the dots in the same
 #' stack relative to the dot height. The default, `1`, makes dots in the same
 #' stack just touch each other.

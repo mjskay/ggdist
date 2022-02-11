@@ -69,7 +69,7 @@ draw points, intervals, and slabs.
 }
 For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
 for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
-before base ggplot did, hence the discrepency).}
+before base ggplot did, hence the discrepancy).}
 
 \item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. One of:
 \itemize{

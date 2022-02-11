@@ -174,7 +174,7 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
       }
       For compatibility with the base ggplot naming scheme for `orientation`, `"x"` can be used as an alias
       for `"vertical"` and `"y"` as an alias for `"horizontal"` (tidybayes had an `orientation` parameter
-      before base ggplot did, hence the discrepency).
+      before base ggplot did, hence the discrepancy).
       '),
 
     # SLAB PARAMS
