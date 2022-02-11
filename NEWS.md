@@ -31,8 +31,18 @@ New features and enhancements:
   or `mode_ul()` (#49).
 * Constant distributions are now reliably detected in a variety of situations
   and rendered as point masses in both density plots and histograms (#103, #32).
-* Minor improvements to automatic bin width selection in dotplots; the maximum
-  dot stack height should be closer to or equal to `scale` more often.
+* Minor improvements and changes to dotplot layouts that may result in minor
+  changes to the appearance of existing dotplots:
+  * Minor improvements to automatic bin width selection; the maximum
+    dot stack height should be closer to or equal to `scale` more often.
+  * A formerly-internal fudge factor of `1.07` for dot sizes is now exposed as
+    the default value of the `dotsize` parameter instead of being applied
+    internally. This fudge factor tends (in my opinion) to make dotplots look a
+    bit better due to the visual distance between circles, but is (I think) 
+    better used as an explicit value than an implicit one, hence the change.
+    This may create subtle changes to plots that use the `dotsize` or `stackratio` 
+    parameters, but allows those parmeters to have a more precise 
+    geometric interpretation.
 
 Documentation:
 
