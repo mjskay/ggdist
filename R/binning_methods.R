@@ -79,6 +79,14 @@ bin_dots = function(x, y, binwidth,
   # to the orientation
   define_orientation_variables(orientation)
 
+  # Sort the x values, because they must be sorted for bin methods to maintain
+  # the correct connection between input values and output bins.
+  # Because of this (and other later grouping operations that may re-order the
+  # data as well) we need to keep the original data order around so that
+  # we can restore the original order at the end.
+  d$order = seq_len(nrow(d))
+  d = d[order(d[[x]]), ]
+
   # binning from the center (automatic_bin) is only useful in the "bin" layout
   # and can give weird results with "weave" (and is pointless on "swarm")
   bin_method = if (layout == "bin") automatic_bin else wilkinson_bin_to_right
@@ -155,6 +163,10 @@ bin_dots = function(x, y, binwidth,
     })
   }
 
+  # restore the original data order in case it was destroyed
+  d = d[order(d$order), ]
+  d$order = NULL
+
   d
 }
 
@@ -218,11 +230,12 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
   } else{
     min(nclass.scott(x), nclass.FD(x), nclass.Sturges(x))
   }
-  min_h = dot_heap(x, nbins = min_nbins, maxheight = maxheight, heightratio = heightratio, stackratio = stackratio)
+  dot_heap_ = function(...) dot_heap(x, ..., maxheight = maxheight, heightratio = heightratio, stackratio = stackratio)
+  min_h = dot_heap_(nbins = min_nbins)
 
   if (!min_h$is_valid) {
     # figure out a maximum number of bins based on data resolution
-    max_h = dot_heap(x, binwidth = resolution(x), maxheight = maxheight, heightratio = heightratio, stackratio = stackratio)
+    max_h = dot_heap_(binwidth = resolution(x))
 
     if (max_h$nbins <= min_h$nbins) {
       # even at data resolution there aren't enough bins, not much we can do...
@@ -233,7 +246,7 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
     } else {
       # use binary search to find a reasonable number of bins
       repeat {
-        h = dot_heap(x, (min_h$nbins + max_h$nbins) / 2, maxheight = maxheight, heightratio = heightratio, stackratio = stackratio)
+        h = dot_heap_(nbins = (min_h$nbins + max_h$nbins) / 2)
         if (h$is_valid) {
           # heap spec is valid, search downwards
           if (h$nbins - 1 <= min_h$nbins) {
