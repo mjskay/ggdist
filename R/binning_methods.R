@@ -265,6 +265,29 @@ find_dotplot_binwidth = function(x, maxheight, heightratio = 1, stackratio = 1) 
         }
       }
     }
+
+    # attempt to refine binwidth using optimization.
+    # after finding a reasonable candidate based on number of bins, we refine
+    # the binwidth around that number of bins using optimization. We do this
+    # only as a second step because just using optimization on binwidth as a
+    # first step tends to end up in a local minimum, sometimes very far from
+    # maxheight.
+    candidate_binwidths = c(min_h$binwidth, max_h$binwidth, h$binwidth)
+    if (length(unique(candidate_binwidths)) != 1) {
+      binwidth = optimize(
+        function(binwidth) {
+          h = dot_heap_(binwidth = binwidth)
+          (h$max_bin_count * h$max_y_spacing - h$maxheight)^2
+        },
+        candidate_binwidths
+      )$minimum
+      new_h = dot_heap_(binwidth = binwidth)
+
+      # approximate version of new_h$is_valid used here to tolerate approximation with optimize()
+      if (isTRUE(new_h$max_bin_count * new_h$max_y_spacing <= new_h$maxheight + .Machine$double.eps^0.25)) {
+        h = new_h
+      }
+    }
   } else {
     h = min_h
   }
