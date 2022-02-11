@@ -13,9 +13,9 @@ geom_dotsinterval(
   stat = "identity",
   position = "identity",
   ...,
-  dotsize = 1,
-  stackratio = 1,
   binwidth = NA,
+  dotsize = 1.07,
+  stackratio = 1,
   layout = "bin",
   orientation = NA,
   interval_size_domain = c(1, 6),
@@ -35,9 +35,9 @@ geom_dots(
   stat = "identity",
   position = "identity",
   ...,
-  dotsize = 1,
-  stackratio = 1,
   binwidth = NA,
+  dotsize = 1.07,
+  stackratio = 1,
   layout = "bin",
   orientation = NA,
   na.rm = FALSE,
@@ -105,16 +105,12 @@ you have overlapping geometries.}
 to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{dotsize}{The size of the dots relative to the bin width. The default, \code{1}, makes dots be just about as
-wide as the bin width.}
-
-\item{stackratio}{The distance between the center of the dots in the same stack relative to the bin height. The
-default, \code{1}, makes dots in the same stack just touch each other.}
-
-\item{binwidth}{The bin width to use for drawing the dotplots. One of:
+\item{binwidth}{The bin width to use for laying out the dots. One of:
 \itemize{
 \item \code{NA} (the default): Dynamically select the bin width based on the
-size of the plot when drawn.
+size of the plot when drawn. This will pick a \code{binwidth} such that the
+tallest stack of dots is at most \code{scale} in height (ideally exactly \code{scale}
+in height, though this is not guaranteed).
 \item A length-1 (scalar) numeric or \link{unit} object giving the exact bin width.
 \item A length-2 (vector) numeric or \link{unit} object giving the minimum and maximum
 desired bin width. The bin width will be dynamically selected within
@@ -127,7 +123,19 @@ it is desired that the dots be a certain point size or a certain percentage of
 the width/height of the viewport. For example, \code{unit(0.1, "npc")} would make
 dots that are \emph{exactly} 10\% of the viewport size along whichever dimension the
 dotplot is drawn; \code{unit(c(0, 0.1), "npc")} would make dots that are \emph{at most}
-10\% of the viewport size.}
+10\% of the viewport size (while still ensuring the tallest stack is less than
+or equal to \code{scale}).}
+
+\item{dotsize}{The width of the dots relative to the \code{binwidth}. The default,
+\code{1.07}, makes dots be just a bit wider than the bin width, which is a
+manually-tuned parameter that tends to work well with the default circular
+shape, preventing gaps between bins from appearing to be too large visually
+(as might arise from dots being \emph{precisely} the \code{binwidth}). If it is desired
+to have dots be precisely the \code{bindwidth}, set \code{dotsize = 1}.}
+
+\item{stackratio}{The distance between the center of the dots in the same
+stack relative to the dot height. The default, \code{1}, makes dots in the same
+stack just touch each other.}
 
 \item{layout}{The layout method used for the dots:
 \itemize{

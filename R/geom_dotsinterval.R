@@ -11,7 +11,7 @@
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
 dots_grob = function(data, x, y,
   name = NULL, gp = gpar(), vp = NULL,
-  dotsize = 1, stackratio = 1, binwidth = NA, layout = "bin",
+  dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
   orientation = "vertical"
 ) {
   datas = data %>%
@@ -39,15 +39,15 @@ makeContent.dots_grob = function(x) {
 
   define_orientation_variables(orientation)
 
-  font_size_ratio = 1.43  # manual fudge factor for point size in ggplot
-  dot_size_ratio = 1.07   # historical fudge factor based on old stackratio
+  dot_size_ratio = 1.07                  # historical fudge factor based on old stackratio
+  font_size_ratio = 1.43/dot_size_ratio  # manual fudge factor for point size in ggplot
   stackratio = grob_$stackratio
 
   # ratio between width of the bins (binwidth)
   # and the vertical spacing of dots (y_spacing)
   # this is a bit different from a raw stackratio since we want to account
   # for the dotsize
-  heightratio = convertUnit(unit(dotsize * stackratio * dot_size_ratio, "native"),
+  heightratio = convertUnit(unit(dotsize * stackratio, "native"),
     "native", axisFrom = x, axisTo = y, typeFrom = "dimension", valueOnly = TRUE)
 
   # if bin width was specified as a grid::unit, convert it to native units
@@ -215,13 +215,11 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_slabinterval
 #' @author Matthew Kay
-#' @param dotsize The size of the dots relative to the bin width. The default, `1`, makes dots be just about as
-#' wide as the bin width.
-#' @param stackratio The distance between the center of the dots in the same stack relative to the bin height. The
-#' default, `1`, makes dots in the same stack just touch each other.
-#' @param binwidth The bin width to use for drawing the dotplots. One of:
+#' @param binwidth The bin width to use for laying out the dots. One of:
 #'   - `NA` (the default): Dynamically select the bin width based on the
-#'     size of the plot when drawn.
+#'     size of the plot when drawn. This will pick a `binwidth` such that the
+#'     tallest stack of dots is at most `scale` in height (ideally exactly `scale`
+#'     in height, though this is not guaranteed).
 #'   - A length-1 (scalar) numeric or [unit] object giving the exact bin width.
 #'   - A length-2 (vector) numeric or [unit] object giving the minimum and maximum
 #'     desired bin width. The bin width will be dynamically selected within
@@ -233,7 +231,17 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' the width/height of the viewport. For example, `unit(0.1, "npc")` would make
 #' dots that are *exactly* 10% of the viewport size along whichever dimension the
 #' dotplot is drawn; `unit(c(0, 0.1), "npc")` would make dots that are *at most*
-#' 10% of the viewport size.
+#' 10% of the viewport size (while still ensuring the tallest stack is less than
+#' or equal to `scale`).
+#' @param dotsize The width of the dots relative to the `binwidth`. The default,
+#' `1.07`, makes dots be just a bit wider than the bin width, which is a
+#' manually-tuned parameter that tends to work well with the default circular
+#' shape, preventing gaps between bins from appearing to be too large visually
+#' (as might arise from dots being *precisely* the `binwidth`). If it is desired
+#' to have dots be precisely the `bindwidth`, set `dotsize = 1`.
+#' @param stackratio The distance between the center of the dots in the same
+#' stack relative to the dot height. The default, `1`, makes dots in the same
+#' stack just touch each other.
 #' @template param-dots-layout
 #' @param quantiles Setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
@@ -313,9 +321,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
   default_params = defaults(list(
     normalize = "none",
-    dotsize = 1,
-    stackratio = 1,
     binwidth = NA,
+    dotsize = 1.07,
+    stackratio = 1,
     layout = "bin"
   ), GeomSlabinterval$default_params),
 
