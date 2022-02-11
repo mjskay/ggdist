@@ -1,6 +1,6 @@
 # ggdist 3.0.99.9000
 
-New features:
+New features and enhancements:
 
 * The `stat_sample_...` and `stat_dist_...` families of stats have been merged (#83).
   * All `stat_dist_...` stats are deprecated in favor of their `stat_...` counterparts,
@@ -31,7 +31,9 @@ New features:
   or `mode_ul()` (#49).
 * Constant distributions are now reliably detected in a variety of situations
   and rendered as point masses in both density plots and histograms (#103, #32).
-  
+* Minor improvements to automatic bin width selection in dotplots; the maximum
+  dot stack height should be closer to or equal to `scale` more often.
+
 Documentation:
 
 * New vignette for the `stat_dotsinterval()` sub-family: `vignette("dotsinterval")` (#120).
@@ -59,6 +61,12 @@ Deprecations and removals:
 Bug fixes:
 
 * Improved handling of `NA`s for analytical distributions.
+* Fixed bug where within-bin order of dots in dotplots for `"bin"` and `"weave"`
+  layouts could be incorrect with aesthetics mapped at a sub-bin level.
+* `stackratio`s that are not equal to `1` are now accounted for in 
+  `find_dotplot_binwidth()` (i.e. automatic dotplot bin width selection).
+* Ensure distinct fill colors in lineribbons are still treated as distinct for
+  grouping even if the `fill_ramp` aesthetic ramps them to the same color.
 
 
 # ggdist 3.0.1
