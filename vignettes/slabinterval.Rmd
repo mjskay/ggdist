@@ -203,28 +203,30 @@ dists_header_plot + statgeom_header_plot +
 The base `geom_slabinterval()` uses a variety of custom aesthetics to create the composite geometry:
 
 ```{r slabinterval_components, echo=FALSE, fig.height=4.2, fig.width=6.5}
-red_ = "#de2d26"
+red_ = "#d95f02"
+green_ = "#1b9e77"
+blue_ = "#7570b3"
 
-bracket_ = function(..., x, xend = x, y, yend = y) {
+bracket_ = function(..., x, xend = x, y, yend = y, color = red_) {
   annotate("segment",
     arrow = arrow(angle = 90, ends = "both", length = unit(3, "points")),
-    color = red_, size = 0.75,
+    color = color, size = 0.75,
     x = x, xend = xend, y = y, yend = yend,
     ...
   )
 }
 thickness_ = function(x) dnorm(x,4,1) * 0.9 / dnorm(4,4,1)
 thickness_bracket_ = function(x) bracket_(x = x, y = 0, yend = thickness_(x))
-refline_ = function(..., x, xend = x, y, yend = y) {
+refline_ = function(..., x, xend = x, y, yend = y, color = red_, linetype = "solid", alpha = 0.5) {
   annotate("segment",
-    color = red_, linetype = "22", size = 0.75,
+    color = color, linetype = linetype, alpha = alpha, size = 0.75,
     x = x, xend = xend, y = y, yend = yend,
     ...
   )
 }
-label_ = function(..., hjust = 0) {
+label_ = function(..., hjust = 0, color = red_) {
   annotate("text",
-    color = red_, hjust = hjust, lineheight = 1,
+    color = color, hjust = hjust, lineheight = 1,
     size = 3.25,
     ...
   )
@@ -811,7 +813,7 @@ For example, replacing `stat_halfeye()` with `stat_dots()` produces dotplots. Wi
 ```{r dots_dodge_nocolor, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup, color = subgroup)) +
-  stat_dots(position = "dodge") +
+  stat_dots(position = "dodgejust") +
   labs(
     title = "stat_dots()",
     subtitle = "aes(fill = subgroup, color = subgroup))"
@@ -830,7 +832,7 @@ The `quantiles` argument to `stat_dots` constructs a quantile dotplot with the s
 ```{r quantile_dots_dodge, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_dots(position = "dodge", quantiles = 50, color = NA) +
+  stat_dots(position = "dodgejust", quantiles = 50, color = NA) +
   labs(title = "stat_dots(quantiles = 50)")
 ```
 
@@ -1175,7 +1177,11 @@ df %>%
     position = position_dodge(width = 1),
     size = 3.5
   ) +
-  labs(title = 'stat_halfeye(side = "left") + stat_dotsinterval(quantiles = 100) +\nstat_pointinterval(geom = "label")')
+  labs(title = paste0(
+    'stat_halfeye(side = "left") +\n',
+    'stat_dotsinterval(quantiles = 100) +\n',
+    'stat_pointinterval(geom = "label")'
+  ))
 ```
 
 When constructing composite plots it may be useful to position the slab and interval parts of the geometry separately.

@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://mjskay.github.io/ggdist/404.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/articles/dotsinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/articles/freq-uncertainty-vis.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/articles/lineribbon.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/articles/slabinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/authors.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/index.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/news/index.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/bin_dots.html</loc>
@@ -28,13 +55,22 @@
     <loc>http://mjskay.github.io/ggdist/reference/geom_pointinterval.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/geom_slab.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_slabinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/ggdist-deprecated.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/ggdist-ggproto.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/ggdist-package.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/index.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/lkjcorr_marginal.html</loc>
@@ -61,7 +97,22 @@
     <loc>http://mjskay.github.io/ggdist/reference/scale_colour_ramp.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_dist_slabinterval.html</loc>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_ccdfinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_cdfinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_eye.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_gradientinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_halfeye.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_histinterval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/stat_interval.html</loc>
@@ -73,7 +124,10 @@
     <loc>http://mjskay.github.io/ggdist/reference/stat_pointinterval.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggdist/reference/stat_sample_slabinterval.html</loc>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_ribbon.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_slab.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/stat_slabinterval.html</loc>
@@ -86,14 +140,5 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/tidy-format-translators.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/freq-uncertainty-vis.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/lineribbon.html</loc>
-  </url>
-  <url>
-    <loc>http://mjskay.github.io/ggdist/articles/slabinterval.html</loc>
   </url>
 </urlset>
