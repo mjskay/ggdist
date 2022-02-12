@@ -72,28 +72,30 @@ The `dotsinterval` family of geoms and stats is a sub-family of slabinterval (se
 
 The base `geom_dotsinterval()` uses a variety of custom aesthetics to create the composite geometry:
 
-```{r dotsinterval_components, echo=FALSE, fig.height=4.2, fig.width=6.5}
-red_ = "#de2d26"
+```{r dotsinterval_components, echo=FALSE, fig.height=4.15, fig.width=6.5}
+red_ = "#d95f02"
+green_ = "#1b9e77"
+blue_ = "#7570b3"
 
-bracket_ = function(..., x, xend = x, y, yend = y) {
+bracket_ = function(..., x, xend = x, y, yend = y, color = red_) {
   annotate("segment",
     arrow = arrow(angle = 90, ends = "both", length = unit(3, "points")),
-    color = red_, size = 0.75,
+    color = color, size = 0.75,
     x = x, xend = xend, y = y, yend = yend,
     ...
   )
 }
 thickness_ = function(x) dnorm(x,4,1) * 0.9 / dnorm(4,4,1)
-refline_ = function(..., x, xend = x, y, yend = y) {
+refline_ = function(..., x, xend = x, y, yend = y, color = red_, linetype = "solid", alpha = 0.5) {
   annotate("segment",
-    color = red_, linetype = "22", size = 0.75,
+    color = color, linetype = linetype, alpha = alpha, size = 0.75,
     x = x, xend = xend, y = y, yend = yend,
     ...
   )
 }
-label_ = function(..., hjust = 0) {
+label_ = function(..., hjust = 0, color = red_) {
   annotate("text",
-    color = red_, hjust = hjust, lineheight = 1,
+    color = color, hjust = hjust, lineheight = 1,
     size = 3.25,
     ...
   )
@@ -109,6 +111,9 @@ arrow_ = function(..., curvature = 0, x, xend = x, y, yend = y) {
 
 tibble(dist = dist_normal(4, 1.2)) %>%
   ggplot(aes(y = 0, xdist = dist)) +
+
+  geom_hline(yintercept = 0:1, color = "gray95") +
+
   stat_dotsinterval(
     aes(interval_size = NULL),
     slab_color = "gray50", 
@@ -169,7 +174,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
   arrow_(x = 4.55, xend = 4.2, y = -0.18, yend = -0.03, curvature = 0.2) +
   
   coord_cartesian(xlim = c(-1, 10), ylim = c(-0.6, 1)) +
-  labs(subtitle = "Properties of geom_dotsinterval")
+  labs(subtitle = "Properties of geom_dotsinterval", x = NULL, y = NULL)
 ```
 
 Depending on whether you want a horizontal or vertical orientation, you can provide `ymin` and `ymax` instead of `xmin` and `xmax`. By default, some aesthetics (e.g., `fill`, `color`, `size`, `alpha`) set properties of multiple sub-geometries at once. For example, the `color` aesthetic by default sets both the color of the point and the interval, but can also be overridden by `point_color` or `interval_color` to set the color of each sub-geometry separately. 
@@ -179,9 +184,12 @@ to the "dots" sub-geometry are referred to with the prefix `slab_`. When using
 the standalone `geom_dots()` geometry, it is not necessary to use these custom
 aesthetics:
 
-```{r dots_components, echo=FALSE, fig.height=3.0, fig.width=6.5}
+```{r dots_components, echo=FALSE, fig.height=3.04, fig.width=6.5}
 tibble(dist = dist_normal(4, 1.2)) %>%
   ggplot(aes(y = 0, xdist = dist)) +
+
+  geom_hline(yintercept = 0:1, color = "gray95") +
+
   stat_dots(
     aes(interval_size = NULL),
     color = "gray50",
@@ -215,7 +223,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
   arrow_(x = 5.48, xend = 4.81, y = 0.67, yend = thickness_(3.1) + 0.01, curvature = 0.2) +
 
   coord_cartesian(xlim = c(-1, 10), ylim = c(-0.05, 1)) +
-  labs(subtitle = "Properties of geom_dots")
+  labs(subtitle = "Properties of geom_dots", x = NULL, y = NULL)
 ```
 
 `geom_dotsinterval()` is often most useful when paired with `stat_dotsinterval()`, which will automatically calculate points and intervals and map these onto endpoints of the interval sub-geometry.
@@ -227,6 +235,86 @@ tibble(dist = dist_normal(4, 1.2)) %>%
    * **Distribution objects and analytical distributions**. To use the stats on this type of data, you must use the `xdist`, or `ydist` aesthetics, which take [distributional](https://pkg.mitchelloharawild.com/distributional/) objects, `posterior::rvar()` objects, or distribution names (e.g. `"norm"`, which refers to the Normal distribution provided by the `dnorm/pnorm/qnorm` functions). When used on analytical distributions (e.g. `distributional::dist_normal()`), the `quantiles` argument determines the number of quantiles used (and therefore the number of dots shown); the default is `100`.
 
 All `dotsinterval` geoms can be plotted horizontally or vertically. Depending on how aesthetics are mapped, they will attempt to automatically determine the orientation; if this does not produce the correct result, the orientation can be overridden by setting `orientation = "horizontal"` or `orientation = "vertical"`.
+
+
+## Controlling dot layout
+
+Size and layout of dots in the dotplot are controlled by four parameters: 
+`scale`, `binwidth`, `dotsize`, and `stackratio`.
+
+```{r layout_params, echo=FALSE, fig.height=3.7, fig.width=6}
+data.frame(x = c(.4, .7, .7, 1, 1, 1)) %>%
+# data.frame(x = c(.4, rep(.7, 2), rep(1, 3))) %>%
+  ggplot(aes(x = x)) +
+  
+  geom_hline(yintercept = 0:1, color = "gray95") +
+  
+  # binwidth
+  refline_(x = seq(.25, 1.15, by = .3), y = -0.025, yend = 0.9, color = green_) +
+  bracket_(x = .25, xend = .55, y = -0.025, color = green_) +
+  label_(
+    label = "binwidth = NA\n=> binwidth = 0.3\n(auto-selected so that\n the tallest stack is \u2264 scale)",
+    x = 0.55, y = -0.08, vjust = 1, hjust = 1, color = green_
+  ) +
+
+  geom_dots(scale = 0.9, dotsize = 1, alpha = 0.5) +
+  
+  # height
+  refline_(x = 0, xend = 2, y = 1) +
+  bracket_(x = 2, y = 0, yend = 1) +
+  label_(label = "height", x = 2.05, y = 1) +
+  
+  # scale
+  refline_(x = 0.25, xend = 2.1, y = 0.9) +
+  bracket_(x = 2.1, y = 0, yend = 0.9) +
+  label_(label = "scale = 0.9", x = 2.15, y = 0.9) +
+
+  # stackratio
+  refline_(x = 1, xend = 1.3, y = c(.15, .45)) +
+  bracket_(x = 1.3, y = .15, yend = .45) +
+  label_(label = "stackratio = 1", x = 1.35, y = .3) +
+
+  # dotsize
+  refline_(x = c(.85, 1.15), y = 0.15, yend = -0.025, color = blue_, linetype = "22", alpha = 1) +
+  bracket_(x = .85, xend = 1.15, y = -0.025, color = blue_) +
+  label_(
+    label = "dotsize = 1\n(relative to binwidth)",
+    x = 0.85, y = -0.08, vjust = 1, hjust = 0, color = blue_
+  ) +
+  
+  scale_x_continuous(limits = c(-0.1, 2.35)) +
+  scale_y_continuous(limits = c(-0.35, 1)) +
+  coord_fixed() +
+  labs(subtitle = "Layout parameters for dots geoms", x = NULL, y = NULL)
+```
+
+- `scale`: If `binwidth` is not set (is `NA`), then the `binwidth` is determined
+automatically so that the height of the highest stack of dots is less than `scale`.
+The default value of `scale`, 0.9, ensures there is a small gap between dotplots
+when multiple dotplots are drawn.
+
+- `binwidth`: The width of the bins used to lay out the dots:
+  - `NA` (default): Use `scale` to determine bin width.
+  - A single numeric or `unit()`: the exact bin width to use. If it is `numeric`, 
+    the bin width is expressed in data units; use `unit()` to specify the width
+    in terms of screen coordinates (e.g. `unit(0.1, "npc")` would make the bin width
+    0.1 *normalized parent coordinates*, which would be 10% of the plot width.)
+  - A 2-vector of numerics or `unit()`s giving an acceptable minimum and maximum
+    width. The automatic bin width algorithm will attempt to find the largest
+    bin width between these two values that also keeps the tallest stack of dots
+    shorter than `scale`.
+
+- `dotsize`: The size of the dots as a percentage of `binwidth`. The default value
+  is `1.07` rather than `1`. This value was chosen largely by trial and error, to
+  find a value that gives nice-looking layouts with circular dots on continuous
+  distributions, accounting for the fact that a slight overlap of dots tends to 
+  give a nicer apparent visual distance between adjacent stacks than the precise
+  value of `1`.
+  
+- `stackratio`: The distance between the centers of dots in a stack as a proportion
+  of the height of each dot. `stackratio = 1`, the default, mean dots will just
+  touch; `stackratio < 1` means dots will overlap each other, and `stackratio > 1`
+  means dots will have gaps between them.
 
 ## Side and layout
 
@@ -338,7 +426,9 @@ For example, we can vary `shape` and `color` simultaneously:
 ```{r beeswarm_shape_color}
 abcc_df %>%
   ggplot(aes(y = value, x = abc, shape = abc, color = hi)) +
-  geom_dots(side = "both", position = "dodge") +
+  # we'll also increase the `scale` here since we 
+  # have some extra space from the dodging
+  geom_dots(side = "both", position = "dodge", scale = 1.5) +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
     'geom_dots(side = "both", position = "dodge")',
@@ -508,14 +598,14 @@ ab_df = tibble(
 ab_df %>%
   ggplot(aes(
     y = ab, xdist = dist_normal(mean, sd),
-    fill = stat(x < 5), shape = stat(x < 5)
+    fill = stat(x < 6), shape = stat(x < 6)
   )) +
   stat_dots(position = "dodge", color = NA) +
   labs(
     title = "stat_dots()",
-    subtitle = "aes(xdist = dist_normal(mean, sd), fill and shape = stat(x < 5))"
+    subtitle = "aes(xdist = dist_normal(mean, sd), fill and shape = stat(x < 6))"
   ) +
-  geom_vline(xintercept = 5, alpha = 0.25) +
+  geom_vline(xintercept = 6, alpha = 0.25) +
   scale_x_continuous(breaks = 2:10) +
   # we'll use these shapes since they have fill and outlines
   scale_shape_manual(values = c(21,22))
@@ -526,15 +616,15 @@ side of a cutoff when coloring dots within dotplots. Thus it can be useful to us
 `"weave"` or `"swarm"` layouts, which tend to position dots closer to their true
 `x` positions, rather than at bin centers:
 
-```{r dist_dots_swarm, fig.width = med_width, fig.height = large_height}
+```{r dist_dots_weave, fig.width = med_width, fig.height = large_height}
 ab_df %>%
-  ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = stat(x < 5))) +
-  stat_dots(position = "dodge", color = NA, layout = "swarm") +
+  ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = stat(x < 6))) +
+  stat_dots(position = "dodge", color = NA, layout = "weave") +
   labs(
-    title = 'stat_dots(layout = "swarm")',
-    subtitle = "aes(fill = stat(x < 5))"
+    title = 'stat_dots(layout = "weave")',
+    subtitle = "aes(fill = stat(x < 6))"
   ) +
-  geom_vline(xintercept = 5, alpha = 0.25) +
+  geom_vline(xintercept = 6, alpha = 0.25) +
   scale_x_continuous(breaks = 2:10)
 ```
 
