@@ -8,10 +8,9 @@ This version includes various new features, bugfixes, and doc updates (see NEWS.
 * Windows 10 (win-builder), R-devel
 * Windows 10 (win-builder), R-release 4.1.2
 * Windows 10 (win-builder), R-oldrel 4.0.5
-* Solaris (rhub), R-release 4.1.2
 * Linux (Github), R-devel
 * Linux (Github), R-release 4.1.2
-* Linux (Github), R-oldrel 4.0.2
+* Linux (Github), R-oldrel 4.0.5
 * Linux (Github), R 3.6
 * Linux (Github), R 3.5
 
@@ -20,7 +19,7 @@ This version includes various new features, bugfixes, and doc updates (see NEWS.
 
 ## revdepcheck results
 
-We checked 11 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+We checked 12 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 0 new problems
  * We failed to check 0 packages
