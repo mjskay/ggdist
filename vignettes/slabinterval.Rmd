@@ -871,7 +871,7 @@ df %>%
 ```
 
 If this approach were applied to bins in a histogram, where each bin had some uncertainty
-associated with its height, the result would be a so-called *fuzzygram* ([Wilkinson 1992](https://doi.org/10.1177/096228029200100102)).
+associated with its height, the result would be a so-called *fuzzygram* ([Haber and Wilkinson 1982](https://doi.org/10.1109/MCG.1982.1674217)).
 
 ### Highlighting and other combinations
 
