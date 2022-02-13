@@ -1,6 +1,6 @@
 Package: ggdist
 Title: Visualizations of Distributions and Uncertainty
-Version: 3.1.0
+Version: 3.1.0.9000
 Date: 2022-02-12
 Authors@R: c(
         person("Matthew", "Kay", role = c("aut", "cre"), email = "mjskay@northwestern.edu"),
