@@ -29,3 +29,4 @@
 ^man/figures/README$
 ^man-roxygen$
 ^\.github$
+^CRAN-SUBMISSION$
