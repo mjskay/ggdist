@@ -27,6 +27,10 @@ h1 small, .h1 small {
   letter-spacing: 0.5px;
 }
 
+h2 small {
+  margin-left: 1ex;
+}
+
 img#tidybayes_logo {
   width: 80px;
   margin-top: -26px;

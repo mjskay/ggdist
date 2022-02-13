@@ -418,8 +418,8 @@ abcc_df %>%
 The color of the default gray outline can be changed using the `color` aesthetic,
 or you can remove it altogether by setting `size = 0` (or `slab_size = 0` when
 using `stat_dotsinterval()` / `geom_dotsinterval()`), or by changing to solid
-shapes and using the `color` aesthetic (the usual "plotting characters", e.g. 
-numbers from `0:24`, are supported).
+shapes (the usual "plotting characters", e.g. 
+numbers from `0:24`, are supported) and using the `color` aesthetic.
 
 For example, we can vary `shape` and `color` simultaneously:
 
@@ -656,11 +656,11 @@ data.frame(
 ) %>%
   ggplot(aes(y = abc, x = value, fill = abc)) +
   stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +
-  stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
+  stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA) +
   scale_fill_brewer(palette = "Set2") +
   ggtitle(paste0(
       'stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +\n',
-      'stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA)'
+      'stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA)'
     ),
     'aes(fill = abc)'
   )

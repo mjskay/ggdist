@@ -104,7 +104,7 @@
       <h1 data-toc-skip>Dots + interval stats and geoms</h1>
                         <h4 data-toc-skip class="author">Matthew Kay</h4>
             
-            <h4 data-toc-skip class="date">2022-02-12</h4>
+            <h4 data-toc-skip class="date">2022-02-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/dotsinterval.Rmd" class="external-link"><code>vignettes/dotsinterval.Rmd</code></a></small>
       <div class="hidden name"><code>dotsinterval.Rmd</code></div>
@@ -279,7 +279,7 @@ img {
     <span class="st">'aes(fill = hi)'</span>
   <span class="op">)</span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm_dodge-1.png" width="648"></p>
-<p>The color of the default gray outline can be changed using the <code>color</code> aesthetic, or you can remove it altogether by setting <code>size = 0</code> (or <code>slab_size = 0</code> when using <code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> / <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>), or by changing to solid shapes and using the <code>color</code> aesthetic (the usual “plotting characters”, e.g.  numbers from <code>0:24</code>, are supported).</p>
+<p>The color of the default gray outline can be changed using the <code>color</code> aesthetic, or you can remove it altogether by setting <code>size = 0</code> (or <code>slab_size = 0</code> when using <code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> / <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>), or by changing to solid shapes (the usual “plotting characters”, e.g.  numbers from <code>0:24</code>, are supported) and using the <code>color</code> aesthetic.</p>
 <p>For example, we can vary <code>shape</code> and <code>color</code> simultaneously:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">abcc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -460,11 +460,11 @@ img {
 <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">abc</span>, x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">abc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>thickness <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">pdf</span><span class="op">*</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>, scale <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"bottom"</span>, scale <span class="op">=</span> <span class="fl">0.7</span>, slab_color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"bottom"</span>, scale <span class="op">=</span> <span class="fl">0.7</span>, slab_size <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span>
       <span class="st">'stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +\n'</span>,
-      <span class="st">'stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA)'</span>
+      <span class="st">'stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA)'</span>
     <span class="op">)</span>,
     <span class="st">'aes(fill = abc)'</span>
   <span class="op">)</span></code></pre></div>
