@@ -49,9 +49,10 @@ reference:
   - stat_cdfinterval
   - stat_gradientinterval
   - stat_histinterval
-  - stat_lineribbon
   - stat_dotsinterval
   - stat_dots
+  - stat_lineribbon
+  - stat_ribbon
 
 - title: Visualizing already-summarized data
   desc:  Geoms for visualizing data that has already been summarized (e.g.
@@ -61,9 +62,9 @@ reference:
   - geom_pointinterval
   - geom_interval
   - geom_slab
-  - geom_lineribbon
   - geom_dotsinterval
   - geom_dots
+  - geom_lineribbon
 
 - title: Distributions
   desc:  Helper functions for manipulating and visualizing analytical distributions.

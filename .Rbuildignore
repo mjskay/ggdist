@@ -18,6 +18,7 @@
 ^_pkgdown\.yml$
 ^pkgdown/.*$
 ^pkgdown$
+^icons$
 ^codecov\.yml$
 ^\.covrignore$
 ^cran-comments.md$

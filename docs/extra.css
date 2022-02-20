@@ -80,3 +80,8 @@ pre code {
   font-size: 13.5px;
   white-space: pre;
 }
+
+div#ref-usage::before {
+    content: "Usage: ";
+    font-weight: bold;
+}
