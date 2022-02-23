@@ -613,3 +613,19 @@ test_that("rvars work", {
     p + stat_halfeye(n = 20, trim = FALSE, expand = TRUE, slab_color = "black")
   )
 })
+
+
+# without attaching ggdist namespace --------------------------------------
+
+test_that("stats work without attaching the ggdist namespace", {
+  skip_if_no_vdiffr()
+
+  detach("package:ggdist")
+  on.exit(require(ggdist))
+
+  vdiffr::expect_doppelganger("simple halfeye",
+    data.frame(x = dist_normal(0,1)) %>%
+      ggplot(aes(xdist = x)) +
+      ggdist::stat_halfeye()
+  )
+})
