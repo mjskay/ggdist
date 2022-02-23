@@ -249,7 +249,14 @@ compute_panel_intervals = function(
   define_orientation_variables(orientation)
 
   if (!is.null(point_interval)) {
-    point_interval = as_function(point_interval)
+    point_interval = if (is.character(point_interval)) {
+      # ensure we always search the ggdist namespace for point_interval
+      # functions in case ggdist is not in the caller's search path
+      get0(point_interval, mode = "function") %||%
+        get(point_interval, mode = "function", envir = getNamespace("ggdist"))
+    } else {
+      as_function(point_interval)
+    }
   }
 
   i_data = summarise_by(data, c("group", y), self$compute_interval,
