@@ -47,7 +47,7 @@ rd_slabinterval_shortcut_geom = function(
       use on sample data or analytical distributions.
       See [geom_slabinterval()] for the geometry this shortcut is based on.
       '),
-    '@family geom_slabinterval shortcut geoms'
+    '@family slabinterval geoms'
   )
 }
 
@@ -91,7 +91,7 @@ rd_slabinterval_shortcut_stat = function(
       See [geom_<<geom_name>>()] for the geom underlying this stat.
       See [stat_slabinterval()] for the stat this shortcut is based on.
       '),
-    '@family stat_slabinterval shortcut stats',
+    '@family slabinterval stats',
     glue_doc('
       @examples
       library(dplyr)

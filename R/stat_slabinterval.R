@@ -386,7 +386,8 @@ compute_interval_slabinterval = function(
 #' @param n Number of points at which to evaluate the function that defines the slab.
 #' @param point_interval A function from the [point_interval()] family (e.g., `median_qi`,
 #'   `mean_qi`, `mode_hdi`, etc), or a string giving the name of a function from that family
-#'   (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc). This function determines the point summary
+#'   (e.g., `"median_qi"`, `"mean_qi"`, `"mode_hdi"`, etc; if a string, the caller's environment is searched
+#'   for the function, followed by the \pkg{ggdist} environment). This function determines the point summary
 #'   (typically mean, median, or mode) and interval type (quantile interval, `qi`;
 #'   highest-density interval, `hdi`; or highest-density continuous interval, `hdci`). Output will
 #'   be converted to the appropriate `x`- or `y`-based aesthetics depending on the value of `orientation`.

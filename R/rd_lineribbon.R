@@ -49,7 +49,7 @@ rd_lineribbon_shortcut_stat = function(
       @seealso
       See [geom_<<geom_name>>()] for the geom underlying this stat.
       '),
-    '@family stat_lineribbon shortcut stats',
+    '@family lineribbon stats',
     glue_doc('
       @examples
       library(dplyr)

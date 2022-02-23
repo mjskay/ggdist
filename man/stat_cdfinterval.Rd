@@ -141,7 +141,8 @@ bars are also drawn.}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
-(e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc). This function determines the point summary
+(e.g., \code{"median_qi"}, \code{"mean_qi"}, \code{"mode_hdi"}, etc; if a string, the caller's environment is searched
+for the function, followed by the \pkg{ggdist} environment). This function determines the point summary
 (typically mean, median, or mode) and interval type (quantile interval, \code{qi};
 highest-density interval, \code{hdi}; or highest-density continuous interval, \code{hdci}). Output will
 be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
@@ -426,7 +427,7 @@ dist_df \%>\%
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geom underlying this stat.
 See \code{\link[=stat_slabinterval]{stat_slabinterval()}} for the stat this shortcut is based on.
 
-Other stat_slabinterval shortcut stats: 
+Other slabinterval stats: 
 \code{\link{stat_ccdfinterval}()},
 \code{\link{stat_eye}()},
 \code{\link{stat_gradientinterval}()},
@@ -436,4 +437,4 @@ Other stat_slabinterval shortcut stats:
 \code{\link{stat_pointinterval}()},
 \code{\link{stat_slab}()}
 }
-\concept{stat_slabinterval shortcut stats}
+\concept{slabinterval stats}

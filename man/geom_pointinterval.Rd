@@ -244,8 +244,8 @@ See \code{\link[=stat_pointinterval]{stat_pointinterval()}} for the stat version
 use on sample data or analytical distributions.
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geometry this shortcut is based on.
 
-Other geom_slabinterval shortcut geoms: 
+Other slabinterval geoms: 
 \code{\link{geom_interval}()},
 \code{\link{geom_slab}()}
 }
-\concept{geom_slabinterval shortcut geoms}
+\concept{slabinterval geoms}

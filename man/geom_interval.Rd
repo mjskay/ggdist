@@ -228,8 +228,8 @@ See \code{\link[=stat_interval]{stat_interval()}} for the stat version, intended
 use on sample data or analytical distributions.
 See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geometry this shortcut is based on.
 
-Other geom_slabinterval shortcut geoms: 
+Other slabinterval geoms: 
 \code{\link{geom_pointinterval}()},
 \code{\link{geom_slab}()}
 }
-\concept{geom_slabinterval shortcut geoms}
+\concept{slabinterval geoms}
