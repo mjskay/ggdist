@@ -14,7 +14,7 @@ globalVariables(c("prior"))
 #' Parses simple string distribution specifications, like `"normal(0, 1)"`, into two columns of
 #' a data frame, suitable for use with the `dist` and `args` aesthetics of [stat_slabinterval()]
 #' and its shortcut stats (like [stat_halfeye()]). This format is output
-#' by [brms::get_prior()], making it particularly useful for visualizing priors from
+#' by `brms::get_prior`, making it particularly useful for visualizing priors from
 #' brms models.
 #'
 #' [parse_dist()] can be applied to character vectors or to a data frame + bare column name of the
