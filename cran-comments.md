@@ -1,5 +1,5 @@
 ## Submission comments
-This version includes various new features, bugfixes, and doc updates (see NEWS.md).
+This is a bugfix release. It follows unusually quickly after the previous release in order to fix a bug introduced in the previous release that caused issues with dependent packages that use ggdist stats without attaching ggdist to the search path.
 
 ## Test environments
 * MacOS (Github), R-release 4.1.2
@@ -19,7 +19,8 @@ This version includes various new features, bugfixes, and doc updates (see NEWS.
 
 ## revdepcheck results
 
-We checked 12 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+We checked 13 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 0 new problems
  * We failed to check 0 packages
+
