@@ -28,7 +28,7 @@ See Details.'><meta property="og:image" content="http://mjskay.github.io/ggdist/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
       </span>
     </div>
 
@@ -228,7 +228,8 @@ bars are also drawn.</p></dd>
 <dt>point_interval</dt>
 <dd><p>A function from the <code><a href="point_interval.html">point_interval()</a></code> family (e.g., <code>median_qi</code>,
 <code>mean_qi</code>, <code>mode_hdi</code>, etc), or a string giving the name of a function from that family
-(e.g., <code>"median_qi"</code>, <code>"mean_qi"</code>, <code>"mode_hdi"</code>, etc). This function determines the point summary
+(e.g., <code>"median_qi"</code>, <code>"mean_qi"</code>, <code>"mode_hdi"</code>, etc; if a string, the caller's environment is searched
+for the function, followed by the <span class="pkg">ggdist</span> environment). This function determines the point summary
 (typically mean, median, or mode) and interval type (quantile interval, <code>qi</code>;
 highest-density interval, <code>hdi</code>; or highest-density continuous interval, <code>hdci</code>). Output will
 be converted to the appropriate <code>x</code>- or <code>y</code>-based aesthetics depending on the value of <code>orientation</code>.

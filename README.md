@@ -93,6 +93,6 @@ reproduce the issue. Pull requests should be filed against the
 ## Citing `ggdist`
 
 Matthew Kay (2022). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 3.1.0,
+Uncertainty*. R package version 3.1.1,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

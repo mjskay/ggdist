@@ -1,4 +1,7 @@
 # Build icons for pkgdown documentation
+#
+# Author: mjskay
+###############################################################################
 
 library(ggplot2)
 library(dplyr)
@@ -16,7 +19,6 @@ make_icon = function(
   x_expansion = 0,
   y_expansion = 0.4
 ) {
-
   for (name in names) tryCatch({
     agg_png(here::here("icons", paste0(name, ".png")), width = 60, height = 60) #, type = "cairo")
 

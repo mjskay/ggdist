@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
       </span>
     </div>
 
@@ -72,6 +72,11 @@
       <small>Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="3.1.1" id="ggdist-311">ggdist 3.1.1<a class="anchor" aria-label="anchor" href="#ggdist-311"></a></h2>
+<p>Bug fixes:</p>
+<ul><li>If a string is supplied to the <code>point_interval</code> argument of <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>, a function with that name will be searched for in the calling environment and the <code>ggdist</code> package environment. The latter ensures that <code>stat</code>s work when ggdist is loaded but not attached to the search path (<a href="https://github.com/mjskay/ggdist/issues/128" class="external-link">#128</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.1.0" id="ggdist-310">ggdist 3.1.0<small>2022-02-13</small><a class="anchor" aria-label="anchor" href="#ggdist-310"></a></h2>
 <p>New features and enhancements:</p>

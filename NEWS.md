@@ -1,3 +1,13 @@
+# ggdist 3.1.1
+
+Bug fixes:
+
+* If a string is supplied to the `point_interval` argument of `stat_slabinterval()`,
+  a function with that name will be searched for in the calling environment and
+  the `ggdist` package environment. The latter ensures that `stat`s work when
+  ggdist is loaded but not attached to the search path (#128).
+
+
 # ggdist 3.1.0
 
 New features and enhancements:
