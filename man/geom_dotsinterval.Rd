@@ -17,6 +17,7 @@ geom_dotsinterval(
   dotsize = 1.07,
   stackratio = 1,
   layout = "bin",
+  verbose = FALSE,
   orientation = NA,
   interval_size_domain = c(1, 6),
   interval_size_range = c(0.6, 1.4),
@@ -39,6 +40,7 @@ geom_dots(
   dotsize = 1.07,
   stackratio = 1,
   layout = "bin",
+  verbose = FALSE,
   orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
@@ -150,6 +152,14 @@ align dots within columns. Does not work well when \code{side = "both"}.
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).
 }}
+
+\item{verbose}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
+if you want to start from an automatically-selected bin width and then adjust it
+manually. Bin width is printed both as data units and as normalized parent
+coordinates or "npc"s (see \code{\link[=unit]{unit()}}). Note that if you just want to scale the
+selected bin width to fit within a desired area, it is probably easier to use
+\code{scale} than to copy and scale the binwidth manually, and if you just want to
+provide constraints on the bin width, you can pass a length-2 vector to \code{binwidth}.}
 
 \item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
 \itemize{

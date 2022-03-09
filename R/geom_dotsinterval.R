@@ -9,9 +9,10 @@
 
 #' @importFrom ggplot2 .stroke .pt
 #' @importFrom dplyr %>% arrange_at group_by_at group_split
-dots_grob = function(data, x, y,
+dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
+  verbose = FALSE,
   orientation = "vertical"
 ) {
   datas = data %>%
@@ -21,7 +22,9 @@ dots_grob = function(data, x, y,
 
   gTree(
     datas = datas,
+    xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
+    verbose = verbose,
     orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
@@ -32,6 +35,8 @@ dots_grob = function(data, x, y,
 makeContent.dots_grob = function(x) {
   grob_ = x
   datas = grob_$datas
+  xscale = grob_$xscale
+  verbose = grob_$verbose
   orientation = grob_$orientation
   dotsize = grob_$dotsize
   binwidth = grob_$binwidth
@@ -75,6 +80,14 @@ makeContent.dots_grob = function(x) {
     })
 
     binwidth = max(min(binwidths, user_max_binwidth), user_min_binwidth)
+  }
+
+  if (isTRUE(verbose)) {
+    binwidth_npc = convertUnit(unit(binwidth, "native"), "npc", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
+    message(
+      "geom_dots() binwidth = ", binwidth * xscale, " data units\n",
+      "                     = unit(", binwidth_npc, ', "npc")'
+    )
   }
 
   # now, draw all the dotplots using the same bin width
@@ -122,6 +135,7 @@ makeContent.dots_grob = function(x) {
 draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
+  verbose,
   ...
 ) {
   define_orientation_variables(orientation)
@@ -163,19 +177,22 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
   s_data = coord$transform(s_data, panel_params)
 
+  xscale = max(panel_params[[x.range]]) - min(panel_params[[x.range]])
   if (!isTRUE(is.na(binwidth)) && !is.unit(binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space
-    binwidth = binwidth / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
+    binwidth = binwidth / xscale
   }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
   slab_grobs = list(dots_grob(
       s_data,
       x, y,
+      xscale = xscale,
       dotsize = dotsize,
       stackratio = stackratio,
       binwidth = binwidth,
       layout = layout,
+      verbose = verbose,
       orientation = orientation
     ))
 }
@@ -248,6 +265,13 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' (for analytical distributions, the default of `NA` is taken to mean `100` quantiles). The value of
 #' `quantiles` determines the number
 #' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
+#' @param verbose If `TRUE`, print out the bin width of the dotplot. Can be useful
+#' if you want to start from an automatically-selected bin width and then adjust it
+#' manually. Bin width is printed both as data units and as normalized parent
+#' coordinates or "npc"s (see [unit()]). Note that if you just want to scale the
+#' selected bin width to fit within a desired area, it is probably easier to use
+#' `scale` than to copy and scale the binwidth manually, and if you just want to
+#' provide constraints on the bin width, you can pass a length-2 vector to `binwidth`.
 #' @return A [ggplot2::Geom] or [ggplot2::Stat] representing a dotplot or combined dotplot+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @references
@@ -324,7 +348,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     binwidth = NA,
     dotsize = 1.07,
     stackratio = 1,
-    layout = "bin"
+    layout = "bin",
+    verbose = FALSE
   ), GeomSlabinterval$default_params),
 
   hidden_params = union(c(

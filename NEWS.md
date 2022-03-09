@@ -1,3 +1,16 @@
+# ggdist 3.1.1.9000
+
+New features and enhancements:
+
+* Add a `verbose = TRUE` flag to `geom_dotsinterval()` that outputs the selected
+  bin width in both data units and normalized parent coordinates. This may be
+  useful if you want to start with an automatically-selected bin width and then 
+  adjust it manually. Though note: if you just want to scale the selected
+  bin width to fit within a desired area, it is probably better to use `scale`, 
+  and if you want to provide constraints on the bin width, you can pass a 
+  2-vector to `binwidth`.
+
+
 # ggdist 3.1.1
 
 Bug fixes:
