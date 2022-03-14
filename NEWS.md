@@ -10,6 +10,11 @@ New features and enhancements:
   and if you want to provide constraints on the bin width, you can pass a 
   2-vector to `binwidth`.
 
+Bug fixes:
+
+* If there are `NA`s in the `thickness` aesthetic of a slab, these are now
+  rendered as gaps in the slab (#129).
+
 
 # ggdist 3.1.1
 

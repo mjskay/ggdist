@@ -63,9 +63,16 @@ draw_slabs = function(self, s_data, panel_params, coord,
   # avoid giving fill type warnings multiple times
   fill_type = switch_fill_type(fill_type, segments = "segments", gradient = "gradient")
 
+  # handle NAs: NAs in thickness should cause slabs to be broken apart into separate
+  # pieces. We'll do this by creating a column to encode runs of NAs that we can
+  # use in the grouping below.
+  s_data$na_thickness_group = cumsum(is.na(s_data$thickness))
+  # now that we've used them for grouping, we can drop rows with NA values of thickness
+  s_data = s_data[!is.na(s_data$thickness),]
+
   # build groups for the slabs
   # must group within both group and y for the polygon and path drawing functions to work
-  slab_grobs = dlply_(s_data, c("group", y), function(d) {
+  slab_grobs = dlply_(s_data, c("group", "na_thickness_group", y), function(d) {
     d = d[order(d[[x]]),]
 
     slab_grob = if (!is.null(d$fill) && !all(is.na(d$fill))) {
@@ -593,12 +600,25 @@ get_justification = function(justification, side, orientation) {
 
 # gradient helpers --------------------------------------------------------
 
-# groups slab data into contiguous components based on (usually) fill, colour, and alpha aesthetics,
-# interpolating values ymin/ymax values at the cutpoints, then returns the necessary data frame
-# (depending on `side`) that has top, bottom, or both sides to it
+#' groups slab data into contiguous components based on (usually) fill, colour, and alpha aesthetics,
+#' interpolating values ymin/ymax values at the cutpoints, then returns the necessary data frame
+#' (depending on `side`) that has top, bottom, or both sides to it
+#' @param slab_data a data frame containing data for a "slab", which should at
+#' least include `x`, `y`, `thickness`, and either `xmin`/`xmax` or `ymin`/`ymax`,
+#' depending on `orientation`.
+#' @param aesthetics the aesthetics to group the slabs by. Consecutive runs of
+#' equal values of all of these aesthetics are grouped together. At cutpoints
+#' between consecutive runs, the `x`/`ymin`/`ymax` (or `y`/`xmin`/`xmax`,
+#' depending on `orientation`) values are interpolated so that slabs just touch.
+#' @param orientation orientation of the slab
+#' @param side side of the slab
+#' @noRd
 #' @importFrom dplyr lag lead
-group_slab_data_by = function(slab_data, aesthetics = c("fill", "colour", "alpha"),
-  orientation = "horizontal", side = "topright"
+group_slab_data_by = function(
+  slab_data,
+  aesthetics = c("fill", "colour", "alpha"),
+  orientation = "horizontal",
+  side = "topright"
 ) {
   define_orientation_variables(orientation)
 

@@ -8,7 +8,7 @@ library(dplyr)
 
 
 
-# group_slab_data_by_colour -------------------------------------------------
+# group_slab_data_by -------------------------------------------------
 
 test_that("group_slab_data_by works", {
 
@@ -39,7 +39,9 @@ test_that("group_slab_data_by works", {
 })
 
 
-test_that("group_slab works", {
+# geom_slab ---------------------------------------------------------------
+
+test_that("geom_slab works", {
   skip_if_no_vdiffr()
 
 
@@ -215,4 +217,18 @@ test_that("geoms without interval data are valid", {
       ggplot(aes(x = x, xmin = x,xmax = x, datatype = "slab", thickness = x)) +
       geom_slabinterval()
   })
+})
+
+
+# NAs in thickness --------------------------------------------------------
+
+test_that("NAs in thickness produce gaps", {
+  skip_if_no_vdiffr()
+
+  vdiffr::expect_doppelganger("slabinterval with NAs in thickness", {
+    data.frame(y = c(NA, 1:2, NA, 2:1, NA), x = 0:6) %>%
+      ggplot(aes(x, y = 0, thickness = y)) +
+      geom_slab(color = "black")
+  })
+
 })
