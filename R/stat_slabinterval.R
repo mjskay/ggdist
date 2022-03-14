@@ -226,10 +226,12 @@ compute_slab_sample = function(
   cdf_fun = weighted_ecdf(x)
   slab_df$cdf = cdf_fun(trans_input)
 
-  if (expand) {
-    # extend x values to the range of the plot. To do that we have to include
-    # x values requested from the original `input` if they are outside the
-    # range of the slab
+  # extend x values to the range of the plot. To do that we have to include
+  # x values requested from the original `input` if they are outside the
+  # range of the slab
+  expand <- rep_len(expand, 2L)
+
+  if (expand[[1]]) {
     input_below_slab = input[input < min(slab_df$.input)]
     if (length(input_below_slab) > 0) {
       slab_df = rbind(data.frame(
@@ -238,7 +240,8 @@ compute_slab_sample = function(
         cdf = 0
       ), slab_df)
     }
-
+  }
+  if (expand[[2]]) {
     input_above_slab = input[input > max(slab_df$.input)]
     if (length(input_above_slab) > 0) {
       slab_df = rbind(slab_df, data.frame(
