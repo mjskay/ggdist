@@ -9,6 +9,8 @@ New features and enhancements:
   bin width to fit within a desired area, it is probably better to use `scale`, 
   and if you want to provide constraints on the bin width, you can pass a 
   2-vector to `binwidth`.
+* The `expand` argument in `stat_slab()` can now take a length two logical 
+  vector to control expansion to the upper and lower limits respectively (#129).
 
 Bug fixes:
 

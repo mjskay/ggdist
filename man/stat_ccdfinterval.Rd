@@ -113,7 +113,8 @@ group so that the maximum height in each group is \code{1}.
 only be used with functions whose values are in [0,1], such as CDFs).
 }}
 
-\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
+\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
+Can be length two to control expansion to the lower and upper limit respectively.}
 
 \item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
 limits of the slab. E.g., if this is \code{c(.001, .999)}, then a slab is drawn

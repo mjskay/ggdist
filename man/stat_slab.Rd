@@ -107,7 +107,8 @@ is adjusted by multiplying it by this value. See \code{\link[=density]{density()
 \item{trim}{For sample data, should the density estimate be trimmed to the range of the
 input data? Default \code{TRUE}.}
 
-\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.}
+\item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
+Can be length two to control expansion to the lower and upper limit respectively.}
 
 \item{breaks}{If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
 \code{\link[=hist]{hist()}} to determine where to put breaks in the histogram (for sample data).}
