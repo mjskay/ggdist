@@ -226,10 +226,12 @@ compute_slab_sample = function(
   cdf_fun = weighted_ecdf(x)
   slab_df$cdf = cdf_fun(trans_input)
 
-  if (expand) {
-    # extend x values to the range of the plot. To do that we have to include
-    # x values requested from the original `input` if they are outside the
-    # range of the slab
+  # extend x values to the range of the plot. To do that we have to include
+  # x values requested from the original `input` if they are outside the
+  # range of the slab
+  expand = rep_len(expand, 2L)
+
+  if (expand[[1]]) {
     input_below_slab = input[input < min(slab_df$.input)]
     if (length(input_below_slab) > 0) {
       slab_df = rbind(data.frame(
@@ -238,7 +240,8 @@ compute_slab_sample = function(
         cdf = 0
       ), slab_df)
     }
-
+  }
+  if (expand[[2]]) {
     input_above_slab = input[input > max(slab_df$.input)]
     if (length(input_above_slab) > 0) {
       slab_df = rbind(slab_df, data.frame(
@@ -375,6 +378,7 @@ compute_interval_slabinterval = function(
 #' @param trim For sample data, should the density estimate be trimmed to the range of the
 #' input data? Default `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
+#' Can be length two to control expansion to the lower and upper limit respectively.
 #' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to
 #' [hist()] to determine where to put breaks in the histogram (for sample data).
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
