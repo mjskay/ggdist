@@ -194,7 +194,7 @@ compute_panel_slabs = function(
   # data-defined limits we want to obey as minimums
   # (the limits are *at least* these, unless the
   # max_limits are more narrow)
-  min_limits = if (is.null(scales[[x]])) {
+  min_limits = if (is.null(scales[[x]]) || scales[[x]]$is_empty()) {
     c(NA, NA)
   } else {
     trans$inverse(scales[[x]]$dimension())

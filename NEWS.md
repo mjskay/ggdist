@@ -17,6 +17,9 @@ Bug fixes:
 
 * If there are `NA`s in the `thickness` aesthetic of a slab, these are now
   rendered as gaps in the slab (#129).
+* Fixed the check for empty x/y scales to avoid extending the scale to cover 0/1
+  when plotting distributional objects whose bulk lies outside that region
+  (when there is nothing else on the plot).
 
 
 # ggdist 3.1.1
