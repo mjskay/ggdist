@@ -1,5 +1,10 @@
 # ggdist 3.3.0.9000
 
+New features and enhancements:
+
+* Use derivatives supplied by transformations in *scales* >= 1.2.2 to make
+  transformations of densities more reliable (r-lib/scales#341).
+
 Bug fixes:
 
 * Ensure `scale_side_mirrored()` supports `start = "left"` and `start = "right"`

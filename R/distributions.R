@@ -367,18 +367,23 @@ generate.ggdist__wrapped_categorical = function(x, ...) {
 
 # transforming density functions ------------------------------------------
 
-# return the derivative of a transformation function from the scales package at
+# return the derivative of the inverse of a transformation from the scales package at
 # the given y values. First attempts to find that analytical derivative, which
 # works on most pre-defined transformation functions in scales; if that fails,
 # uses numerical derivative
-#' @importFrom stats numericDeriv D
-f_deriv_at_y = function(f, y) {
-  tryCatch({
+#' @importFrom stats D
+inverse_deriv_at_y = function(trans, y) {
+  if (!is.null(trans$d_inverse)) {
+    # use the function for the derivative if it was supplied (it is optional
+    # and so may not be present)
+    trans$d_inverse(y)
+  } else tryCatch({
     # attempt to find analytical derivative by pulling out the expression
-    # for the transformation from the transformation function. Because all
-    # scales functions are defined (currently) as simple wrappers around
+    # for the transformation from the transformation function. Because many
+    # scale functions are defined as simple wrappers around
     # single expressions (with no { ... }), we can be pretty naive here and
     # just try to pull out that single expression
+    f = trans$inverse
     f_list = as.list(f)
     y_name = names(f_list)[[1]]
     f_expr = f_list[[length(f_list)]]
@@ -387,8 +392,7 @@ f_deriv_at_y = function(f, y) {
     # apply the analytical derivative to the y values
     # must do this within the environment of the transformation function b/c
     # some functions are defined as closures with other variables needed to
-    # fully define the transformation (e.g. log10_trans has a `base` variable
-    # equal to 10, which if left undefined this would not work)
+    # fully define the transformation
     args = list(y)
     names(args) = y_name
     eval(f_deriv_expr, args, environment(f))
@@ -397,7 +401,7 @@ f_deriv_at_y = function(f, y) {
     # we use this (slightly less quick) approach instead of numDeriv::grad()
     # because numDeriv::grad() errors out if any data point fails while this
     # will return `NA` for those points
-    vapply(y, numDeriv::jacobian, func = f, numeric(1))
+    vapply(y, numDeriv::jacobian, func = trans$inverse, numeric(1))
   })
 }
 
@@ -407,8 +411,7 @@ transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) 
   # based on the fact that for Y = g(X),
   # f_Y(y) = f_X(g^−1(y)) * | g^-1'(y) |
 
-  g_inverse = trans$inverse
-  g_inverse_deriv_at_y = f_deriv_at_y(g_inverse, y)
+  g_inverse_deriv_at_y = inverse_deriv_at_y(trans, y)
 
   f_X(g_inverse_at_y, ...) * abs(g_inverse_deriv_at_y)
 }
