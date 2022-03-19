@@ -295,10 +295,14 @@ test_that("scale transformation sets appropriate axis limits", {
   expect_equal(limits[[2]], qlnorm(0.999, 10, 0.5))
 
   # with scale transformation, the lower limit is no longer finite, so it
-  # should be set to the 0.001 quantile
+  # should be set to the 0.001 quantile ...
   limits = range(layer_data(p + scale_x_log10())$x)
   expect_equal(limits[[1]], log(qlnorm(0.001, 10, 0.5), base = 10))
   expect_equal(limits[[2]], log(qlnorm(0.999, 10, 0.5), base = 10))
+
+  # ... but if other data is added, it should be extended to cover that point
+  limits = range(layer_data(p + scale_x_log10() + geom_point(aes(x = 2, y = 0)))$x)
+  expect_equal(limits[[1]], log(2, base = 10))
 })
 
 
