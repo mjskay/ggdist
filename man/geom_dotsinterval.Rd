@@ -17,7 +17,6 @@ geom_dotsinterval(
   dotsize = 1.07,
   stackratio = 1,
   layout = "bin",
-  keep_order = FALSE,
   verbose = FALSE,
   orientation = NA,
   interval_size_domain = c(1, 6),
@@ -41,7 +40,6 @@ geom_dots(
   dotsize = 1.07,
   stackratio = 1,
   layout = "bin",
-  keep_order = FALSE,
   verbose = FALSE,
   orientation = NA,
   na.rm = FALSE,
@@ -154,20 +152,6 @@ align dots within columns. Does not work well when \code{side = "both"}.
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).
 }}
-
-\item{keep_order}{If \code{layout == "bin"}, should the original order of the data
-be kept when stacking the dots within each bin?
-\itemize{
-\item If \code{FALSE}, dots within each bin will be stacked from bottom to top in
-the order of the values of each data point.
-\item If \code{TRUE}, dots within each bin will be placed in the original order they
-appear in the data, from bottom to top. This can be used to create the
-appearance of "stacked" groups of dots by sorting your data by the desired
-stacking groups and then setting \code{keep_order} to \code{TRUE}.
-}
-
-Applies only to the \code{"dots"} layout, as the other layouts fully determine
-both the x and y positions of dots.}
 
 \item{verbose}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
 if you want to start from an automatically-selected bin width and then adjust it
@@ -362,6 +346,15 @@ is \code{NULL} (the default), then it is set automatically based on the value of
 indicate which part of the geom a row in the data targets: rows with \code{datatype = "slab"} target the
 slab portion of the geometry and rows with \code{datatype = "interval"} target the interval portion of
 the geometry. This is set automatically when using ggdist \code{stat}s.}
+}
+
+\strong{Binning aesthetics}
+
+\itemize{
+\item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
+"stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
+value of the data points themselves are used to determine stacking order. Only applies when
+\code{layout = "bin"}, as the other layout methods fully determine both \emph{x} and \emph{y} positions.}
 }
 
 \strong{Interval-specific aesthetics}

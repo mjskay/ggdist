@@ -12,7 +12,7 @@
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
-  keep_order = FALSE, verbose = FALSE,
+  verbose = FALSE,
   orientation = "vertical"
 ) {
   datas = data %>%
@@ -23,7 +23,7 @@ dots_grob = function(data, x, y, xscale = 1,
     datas = datas,
     xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    keep_order = keep_order, verbose = verbose,
+    verbose = verbose,
     orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
   )
@@ -35,7 +35,6 @@ makeContent.dots_grob = function(x) {
   grob_ = x
   datas = grob_$datas
   xscale = grob_$xscale
-  keep_order = grob_$keep_order
   verbose = grob_$verbose
   orientation = grob_$orientation
   dotsize = grob_$dotsize
@@ -96,8 +95,7 @@ makeContent.dots_grob = function(x) {
     dot_positions = bin_dots(
       d$x, d$y,
       binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
-      layout = layout, side = d$side[[1]], orientation = orientation,
-      keep_order = keep_order
+      layout = layout, side = d$side[[1]], orientation = orientation
     )
 
     # ensure a consistent spatial drawing order, so that which dot overlaps which
@@ -142,7 +140,7 @@ makeContent.dots_grob = function(x) {
 draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
-  keep_order, verbose,
+  verbose,
   ...
 ) {
   define_orientation_variables(orientation)
@@ -190,7 +188,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     binwidth = binwidth / xscale
   }
 
-  # s_data = s_data[order(s_data$order %||% s_data[[x]]), ]
+  s_data = s_data[order(s_data[["order"]] %||% s_data[[x]]), ]
 
   # draw the dots grob (which will draw dotplots for all the slabs)
   slab_grobs = list(dots_grob(
@@ -201,7 +199,6 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
       stackratio = stackratio,
       binwidth = binwidth,
       layout = layout,
-      keep_order = keep_order,
       verbose = verbose,
       orientation = orientation
     ))
@@ -270,7 +267,6 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' stack relative to the dot height. The default, `1`, makes dots in the same
 #' stack just touch each other.
 #' @template param-dots-layout
-#' @template param-dots-keep_order
 #' @param quantiles Setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
 #' (for analytical distributions, the default of `NA` is taken to mean `100` quantiles). The value of
@@ -363,7 +359,6 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     dotsize = 1.07,
     stackratio = 1,
     layout = "bin",
-    keep_order = FALSE,
     verbose = FALSE
   ), GeomSlabinterval$default_params),
 

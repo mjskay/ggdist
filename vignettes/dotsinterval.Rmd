@@ -459,6 +459,22 @@ abcc_df %>%
   )
 ```
 
+By default, dot positions within bins for the `"bin"` layout are determined
+by their data values (e.g. by the `y` values in the above chart). You can 
+override this by passing a variable to the `order` aesthetic, which will set
+the sort order within bins. This can be used to create "stacked" dotplots by
+setting `order` to a discrete variable:
+
+```{r beeswarm_shape_color_together_stacked}
+abcc_df %>%
+  ggplot(aes(y = value, x = abc, shape = abc, color = hi, group = NA, order = hi)) +
+  geom_dots() +
+  scale_color_brewer(palette = "Dark2") +
+  ggtitle(
+    'geom_dots()',
+    'aes(shape = abc, color = hi, group = NA, order = hi)'
+  )
+```
 
 ### Varying continuous aesthetics within dot groups
 

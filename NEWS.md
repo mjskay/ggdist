@@ -2,6 +2,11 @@
 
 New features and enhancements:
 
+* The stacking order of dots within bins for `geom_dotsinterval(layout = "bin")`
+  can now be set using the `order` aesthetic. This makes it possible to create 
+  "stacked" dotplots by mapping a discrete variable onto the `order` aesthetic
+  (#132). As part of this change, `bin_dots()` now maintains the original data
+  order within bins when `layout = "bin"`.
 * Add a `verbose = TRUE` flag to `geom_dotsinterval()` that outputs the selected
   bin width in both data units and normalized parent coordinates. This may be
   useful if you want to start with an automatically-selected bin width and then 

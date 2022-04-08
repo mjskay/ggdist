@@ -13,8 +13,7 @@ bin_dots(
   layout = c("bin", "weave", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
     "bottomright", "both"),
-  orientation = c("horizontal", "vertical", "y", "x"),
-  keep_order = FALSE
+  orientation = c("horizontal", "vertical", "y", "x")
 )
 }
 \arguments{
@@ -63,20 +62,6 @@ variable and that dots will be stacked up in the \code{x} direction.
 For compatibility with the base ggplot naming scheme for \code{orientation},
 \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
 \code{"horizontal"}.}
-
-\item{keep_order}{If \code{layout == "bin"}, should the original order of the data
-be kept when stacking the dots within each bin?
-\itemize{
-\item If \code{FALSE}, dots within each bin will be stacked from bottom to top in
-the order of the values of each data point.
-\item If \code{TRUE}, dots within each bin will be placed in the original order they
-appear in the data, from bottom to top. This can be used to create the
-appearance of "stacked" groups of dots by sorting your data by the desired
-stacking groups and then setting \code{keep_order} to \code{TRUE}.
-}
-
-Applies only to the \code{"dots"} layout, as the other layouts fully determine
-both the x and y positions of dots.}
 }
 \value{
 A \code{data.frame} with three columns:

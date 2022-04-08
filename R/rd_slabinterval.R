@@ -352,6 +352,15 @@ rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL, v
       the geometry. This is set automatically when using ggdist `stat`s.'
   )
 
+  # binning aesthetics for dots
+  geom_aes_sections[["Binning aesthetics"]] = list(
+    order =
+      'The order in which data points are stacked within bins. Can be used to create the effect of
+      "stacked" dots by ordering dots according to a discrete variable. If omitted (`NULL`), the
+      value of the data points themselves are used to determine stacking order. Only applies when
+      `layout = "bin"`, as the other layout methods fully determine both *x* and *y* positions.'
+  )
+
   # interval-specific aesthetics
   if (isTRUE(geom$default_params$show_interval)) geom_aes_sections[["Interval-specific aesthetics"]] = list(
     xmin = 'Left end of the interval sub-geometry (if `orientation = "horizontal"`).',

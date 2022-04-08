@@ -19,7 +19,6 @@
 #' centers
 #' @template param-dots-layout
 #' @template param-slab-side
-#' @template param-dots-keep_order
 #' @param orientation Whether the dots are laid out horizontally or vertically.
 #' Follows the naming scheme of [geom_slabinterval()]:
 #'
@@ -68,8 +67,7 @@ bin_dots = function(x, y, binwidth,
   stackratio = 1,
   layout = c("bin", "weave", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
-  orientation = c("horizontal", "vertical", "y", "x"),
-  keep_order = FALSE
+  orientation = c("horizontal", "vertical", "y", "x")
 ) {
   layout = match.arg(layout)
   side = match.arg(side)
@@ -108,7 +106,7 @@ bin_dots = function(x, y, binwidth,
       bin_midpoints = nudge_bins(h$binning$bin_midpoints, binwidth)
       d[[x]] = bin_midpoints[h$binning$bins]
       # maintain original data order within each bin when finding y positions
-      if (keep_order) d = d[order(d$bin, d$order), ]
+      d = d[order(d$bin, d$order), ]
     },
     weave = {
       # keep original x positions, but re-order within bins so that overlaps
