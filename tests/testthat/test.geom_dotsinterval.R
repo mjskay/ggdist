@@ -293,18 +293,33 @@ test_that("dotplot layouts work", {
 test_that("dot order is correct", {
   skip_if_no_vdiffr()
 
-  p = data.frame(x = qnorm(ppoints(50))) %>%
-    ggplot(aes(x = x, fill = stat(x < 0)))
+  p = data.frame(x = qnorm(ppoints(50)), g = c("a", "b")) %>%
+    arrange(g) %>%
+    ggplot(aes(x = x, fill = stat(x < 0), color = g, group = NA)) +
+    scale_fill_brewer(palette = "Set1") +
+    scale_color_brewer(palette = "Paired")
+
+  vdiffr::expect_doppelganger("bin dot order",
+    p +
+      geom_dots(layout = "bin", size = 5) +
+      geom_vline(xintercept = 0)
+  )
+
+  vdiffr::expect_doppelganger("bin dot order, kept",
+    p +
+      geom_dots(layout = "bin", size = 5, keep_order = TRUE) +
+      geom_vline(xintercept = 0)
+  )
 
   vdiffr::expect_doppelganger("weave dot order",
     p +
-      geom_dots(layout = "weave") +
+      geom_dots(layout = "weave", size = 5) +
       geom_vline(xintercept = 0)
   )
 
   vdiffr::expect_doppelganger("swarm dot order",
     p +
-      geom_dots(layout = "swarm") +
+      geom_dots(layout = "swarm", size = 5) +
       geom_vline(xintercept = 0)
   )
 
