@@ -31,6 +31,8 @@
 <g clip-path='url(#cpMzguNDh8NjYwLjc1fDIzLjE1fDU0NC41Ng==)'>
 <rect x='38.48' y='23.15' width='622.27' height='521.42' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 </g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
 <defs>
 <linearGradient id='pat-0' gradientUnits='userSpaceOnUse' spreadMethod='pad' x1='491.04' y1='520.86' x2='491.04' y2='46.85'>
   <stop offset='0.00' stop-color='#00BFC4' stop-opacity='0.016'/>
@@ -50,8 +52,12 @@
   <stop offset='1.00' stop-color='#00BFC4' stop-opacity='0.016'/>
 </linearGradient>
 </defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
 <g clip-path='url(#cpMzguNDh8NjYwLjc1fDIzLjE1fDU0NC41Ng==)'>
 <polygon points='618.32,520.86 618.32,487.00 618.32,453.14 618.32,419.29 618.32,385.43 618.32,351.57 618.32,317.71 618.32,283.85 618.32,250.00 618.32,216.14 618.32,182.28 618.32,148.42 618.32,114.56 618.32,80.70 618.32,46.85 363.76,46.85 363.76,80.70 363.76,114.56 363.76,148.42 363.76,182.28 363.76,216.14 363.76,250.00 363.76,283.85 363.76,317.71 363.76,351.57 363.76,385.43 363.76,419.29 363.76,453.14 363.76,487.00 363.76,520.86 ' style='stroke-width: 2.13; stroke: none; fill: url(#pat-0);' />
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
 <linearGradient id='pat-1' gradientUnits='userSpaceOnUse' spreadMethod='pad' x1='208.19' y1='520.86' x2='208.19' y2='46.85'>
@@ -72,6 +78,8 @@
   <stop offset='1.00' stop-color='#F8766D' stop-opacity='0.00'/>
 </linearGradient>
 </defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
 <g clip-path='url(#cpMzguNDh8NjYwLjc1fDIzLjE1fDU0NC41Ng==)'>
 <polygon points='335.47,520.86 335.47,487.00 335.47,453.14 335.47,419.29 335.47,385.43 335.47,351.57 335.47,317.71 335.47,283.85 335.47,250.00 335.47,216.14 335.47,182.28 335.47,148.42 335.47,114.56 335.47,80.70 335.47,46.85 80.91,46.85 80.91,80.70 80.91,114.56 80.91,148.42 80.91,182.28 80.91,216.14 80.91,250.00 80.91,283.85 80.91,317.71 80.91,351.57 80.91,385.43 80.91,419.29 80.91,453.14 80.91,487.00 80.91,520.86 ' style='stroke-width: 2.13; stroke: none; fill: url(#pat-1);' />
 <line x1='491.04' y1='449.97' x2='491.04' y2='117.74' style='stroke-width: 1.28; stroke-linecap: butt;' />

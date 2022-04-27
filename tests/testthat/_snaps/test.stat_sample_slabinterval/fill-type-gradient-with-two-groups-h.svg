@@ -31,6 +31,8 @@
 <g clip-path='url(#cpNDMuMzZ8NzE0LjUyfDIzLjE1fDU0NC41Ng==)'>
 <rect x='43.36' y='23.15' width='671.16' height='521.42' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 </g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
 <defs>
 <linearGradient id='pat-0' gradientUnits='userSpaceOnUse' spreadMethod='pad' x1='73.87' y1='165.35' x2='684.01' y2='165.35'>
   <stop offset='0.00' stop-color='#A6A6A6' stop-opacity='0.027'/>
@@ -50,8 +52,12 @@
   <stop offset='1.00' stop-color='#A6A6A6' stop-opacity='0.027'/>
 </linearGradient>
 </defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
 <g clip-path='url(#cpNDMuMzZ8NzE0LjUyfDIzLjE1fDU0NC41Ng==)'>
 <polygon points='73.87,58.70 117.45,58.70 161.03,58.70 204.62,58.70 248.20,58.70 291.78,58.70 335.36,58.70 378.94,58.70 422.52,58.70 466.11,58.70 509.69,58.70 553.27,58.70 596.85,58.70 640.43,58.70 684.01,58.70 684.01,272.00 640.43,272.00 596.85,272.00 553.27,272.00 509.69,272.00 466.11,272.00 422.52,272.00 378.94,272.00 335.36,272.00 291.78,272.00 248.20,272.00 204.62,272.00 161.03,272.00 117.45,272.00 73.87,272.00 ' style='stroke-width: 2.13; stroke: none; fill: url(#pat-0);' />
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
 <linearGradient id='pat-1' gradientUnits='userSpaceOnUse' spreadMethod='pad' x1='213.37' y1='402.36' x2='518.45' y2='402.36'>
@@ -72,6 +78,8 @@
   <stop offset='1.00' stop-color='#A6A6A6' stop-opacity='0.075'/>
 </linearGradient>
 </defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
 <g clip-path='url(#cpNDMuMzZ8NzE0LjUyfDIzLjE1fDU0NC41Ng==)'>
 <polygon points='213.37,295.70 235.16,295.70 256.95,295.70 278.74,295.70 300.54,295.70 322.33,295.70 344.12,295.70 365.91,295.70 387.70,295.70 409.49,295.70 431.29,295.70 453.08,295.70 474.87,295.70 496.66,295.70 518.45,295.70 518.45,509.01 496.66,509.01 474.87,509.01 453.08,509.01 431.29,509.01 409.49,509.01 387.70,509.01 365.91,509.01 344.12,509.01 322.33,509.01 300.54,509.01 278.74,509.01 256.95,509.01 235.16,509.01 213.37,509.01 ' style='stroke-width: 2.13; stroke: none; fill: url(#pat-1);' />
 <line x1='158.56' y1='165.35' x2='528.59' y2='165.35' style='stroke-width: 1.28; stroke-linecap: butt;' />
