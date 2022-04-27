@@ -19,7 +19,7 @@ the \code{\link[=cdf]{cdf()}} function, or values of the \code{cdf} computed aes
 \item \code{NULL} to use the default labels (\code{.width} converted to a character vector).
 \item A character vector giving labels (must be same length as \code{.width})
 \item A function that takes numeric probabilities as input and returns labels as output
-(a good candidate might be \code{\link[scales:label_percent]{scales::percent_format()}}).
+(a good candidate might be \code{\link[scales:percent_format]{scales::percent_format()}}).
 }}
 }
 \value{

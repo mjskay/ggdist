@@ -124,6 +124,7 @@ makeContent.dots_grob = function(x) {
       gp = gpar(
         col = alpha(d$colour, d$alpha),
         fill = alpha(d$fill, d$alpha),
+        fontfamily = d$family,
         fontsize = dot_fontsize,
         lwd = lwd,
         lty = d$linetype
@@ -235,7 +236,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 #'
 #' @template details-x-y-xdist-ydist
-#' @eval rd_slabinterval_aesthetics("dotsinterval", stat = StatDotsinterval, vignette = "dotsinterval")
+#' @eval rd_slabinterval_aesthetics("dotsinterval", stat = StatDotsinterval, vignette = "dotsinterval", undocumented_aes = NA)
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_slabinterval
 #' @author Matthew Kay
@@ -335,6 +336,7 @@ NULL
 #' @export
 GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   default_aes = defaults(aes(
+    family = "",
     slab_shape = NULL,
     order = NULL
   ), GeomSlabinterval$default_aes),

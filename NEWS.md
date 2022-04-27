@@ -17,6 +17,8 @@ New features and enhancements:
 * The `expand` argument in `stat_slabinterval()` can now take a length-two logical 
   vector to control expansion to the lower and upper limits respectively (#129).
   Thanks to @teunbrand.
+* `geom_dotsinterval()` now supports the `family` aesthetic for setting the font
+  used to display its dots (based on a conversation with @gdbassett).
 
 Bug fixes:
 

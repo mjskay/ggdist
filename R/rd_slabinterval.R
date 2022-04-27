@@ -309,7 +309,12 @@ rd_stat_slabinterval_aes = list(
 
 #' Provides documentation of aesthetics for slabintervals
 #' @noRd
-rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL, vignette = "slabinterval") {
+rd_slabinterval_aesthetics = function(
+  geom_name = "slabinterval",
+  stat = NULL,
+  vignette = "slabinterval",
+  undocumented_aes = c("width", "height", "group")
+) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
   out = glue_doc('
@@ -434,7 +439,7 @@ rd_slabinterval_aesthetics = function(geom_name = "slabinterval", stat = NULL, v
     geom_name, stat,
     geom_aes_sections = geom_aes_sections,
     stat_aes = rd_stat_slabinterval_aes,
-    undocumented_aes = c("width", "height", "group"),
+    undocumented_aes = undocumented_aes,
     vignette = vignette
   ))
 

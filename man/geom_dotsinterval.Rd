@@ -436,6 +436,7 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{
+\item{\code{family}}
 \item{\code{width}}
 \item{\code{height}}
 \item{\code{group}}
