@@ -172,18 +172,21 @@ check_blend = function(blend) {
   if (is.null(blend)) {
     NULL
   } else if (getRversion() < "4.2") {
-    warning0(
-      "You set blend = ", deparse0(blend), " but blend modes are not supported with R < 4.2.\n",
-      "Falling back to blend = NULL."
-    )
-    NULL
-  } else if (!isTRUE(blend %in% grDevices::dev.capabilities()$compositing)) {
-    warning0(
-      "blend = ", deparse0(blend), " is not supported by your graphics device.\n",
-      "Falling back to blend = NULL."
-    )
+    warning0(glue('
+      You set blend = {deparse0(blend)}, but blend modes are not supported with R < 4.2.
+       - Falling back to blend = NULL.
+      '))
     NULL
   } else {
+    if (!isTRUE(blend %in% grDevices::dev.capabilities()$compositing)) {
+      warning0(glue('
+        blend = {deparse0(blend)} does not appear to be supported by your graphics device.
+         - Blending output may not be as expected.
+         - If you believe your current graphics device *does* support
+           blend = {deparse0(blend)} but auto-detection failed,
+           consider reporting a bug.
+        '))
+    }
     blend
   }
 }
