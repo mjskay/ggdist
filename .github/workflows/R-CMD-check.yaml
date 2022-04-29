@@ -24,6 +24,7 @@ jobs:
           - {os: ubuntu-18.04, r: 'devel', suffix: '', not_cran: 'true', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04, r: 'release', suffix: '', not_cran: 'true', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04, r: 'oldrel', suffix: '', not_cran: 'true', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04, r: '4.0', suffix: '', not_cran: 'true', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04, r: '3.6', suffix: '', not_cran: 'true', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04, r: '3.5', suffix: '', not_cran: 'true', vignettes: 'NULL', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
 

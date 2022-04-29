@@ -211,8 +211,21 @@ df %>%
   scale_fill_ramp_continuous(range = c(1, 0))
 ```
 
-If you are using a different background color than `"white"`, pass that color
-to the `from` argument of `scale_fill_ramp_continuous()`.
+The default legend for the `fill_ramp` and `color_ramp` scales is `guide_legend()`,
+which uses discrete legends even for continuous scales. To get a gradient-style
+legend, use `guide_rampbar()`, and if necessary, use the `to = ` argument to
+specify the color to ramp to in the legend (default is `"gray65"`):
+
+```{r stat_lineribbon_gradient_rampbar, fig.width = tiny_width, fig.height = tiny_height}
+df %>%
+  ggplot(aes(x = x, y = y)) +
+  stat_lineribbon(aes(fill_ramp = stat(.width)), .width = ppoints(50), fill = "#2171b5") +
+  scale_fill_ramp_continuous(range = c(1, 0), guide = guide_rampbar(to = "#2171b5"))
+```
+
+If you are using a different background color than `"white"`, you can pass that
+color to the `from` argument of `scale_fill_ramp_continuous()` to ramp from that
+color to the fill color of the lineribbon.
 
 ### Multiple lineribbons on one plot
 
