@@ -19,6 +19,8 @@ New features and enhancements:
   Thanks to @teunbrand.
 * `geom_dotsinterval()` now supports the `family` aesthetic for setting the font
   used to display its dots (based on a conversation with @gdbassett).
+* Experimental `guide_rampbar()` for creating gradient-like legends for
+  continuous color/fill ramp scales, based on `ggplot2::guide_colorbar()`.
 
 Bug fixes:
 
