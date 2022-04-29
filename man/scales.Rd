@@ -47,13 +47,13 @@ scale_point_color_discrete(..., aesthetics = "point_colour")
 scale_point_colour_continuous(
   ...,
   aesthetics = "point_colour",
-  guide = "colourbar2"
+  guide = guide_colourbar2()
 )
 
 scale_point_color_continuous(
   ...,
   aesthetics = "point_colour",
-  guide = "colourbar2"
+  guide = guide_colourbar2()
 )
 
 scale_point_fill_discrete(..., aesthetics = "point_fill")
@@ -61,7 +61,7 @@ scale_point_fill_discrete(..., aesthetics = "point_fill")
 scale_point_fill_continuous(
   ...,
   aesthetics = "point_fill",
-  guide = "colourbar2"
+  guide = guide_colourbar2()
 )
 
 scale_point_alpha_continuous(..., range = c(0.1, 1))
@@ -79,13 +79,13 @@ scale_interval_color_discrete(..., aesthetics = "interval_colour")
 scale_interval_colour_continuous(
   ...,
   aesthetics = "interval_colour",
-  guide = "colourbar2"
+  guide = guide_colourbar2()
 )
 
 scale_interval_color_continuous(
   ...,
   aesthetics = "interval_colour",
-  guide = "colourbar2"
+  guide = guide_colourbar2()
 )
 
 scale_interval_alpha_continuous(..., range = c(0.1, 1))
@@ -107,18 +107,22 @@ scale_slab_color_discrete(..., aesthetics = "slab_colour")
 scale_slab_colour_continuous(
   ...,
   aesthetics = "slab_colour",
-  guide = "colourbar2"
+  guide = guide_colourbar2()
 )
 
 scale_slab_color_continuous(
   ...,
   aesthetics = "slab_colour",
-  guide = "colourbar2"
+  guide = guide_colourbar2()
 )
 
 scale_slab_fill_discrete(..., aesthetics = "slab_fill")
 
-scale_slab_fill_continuous(..., aesthetics = "slab_fill", guide = "colourbar2")
+scale_slab_fill_continuous(
+  ...,
+  aesthetics = "slab_fill",
+  guide = guide_colourbar2()
+)
 
 scale_slab_alpha_continuous(
   ...,

@@ -18,6 +18,9 @@
 #' @param ... Arguments passed to underlying scale or guide functions. E.g. [scale_colour_ramp_discrete()],
 #' passes arguments to [discrete_scale()], [scale_colour_ramp_continuous()] passes arguments
 #' to [continuous_scale()]. See those functions for more details.
+#' @param guide A function used to create a guide or its name. For `scale_colour_ramp_continuous()`
+#' and `scale_fill_ramp_continuous()`, `guide_rampbar()` can be used to create gradient
+#' color bars. See `guides()` for information on other guides.
 #' @param aesthetics Names of aesthetics to set scales for.
 #' @param range a numeric vector of length 2 that specifies the minimum and maximum
 #' values after the scale transformation. These values should be between `0`
@@ -29,6 +32,7 @@
 #' @aliases scale_color_ramp scale_fill_ramp
 #' @author Matthew Kay
 #' @family ggdist scales
+#' @seealso [guide_rampbar()]
 #' @examples
 #'
 #' library(dplyr)
@@ -54,10 +58,10 @@
 #' @export
 scale_colour_ramp_continuous = function(
   from = "white", ..., limits = function(l) c(min(0, l[[1]]), l[[2]]), range = c(0, 1),
-  aesthetics = "colour_ramp"
+  guide = "legend", aesthetics = "colour_ramp"
 ) {
   continuous_scale(
-    aesthetics, "colour_ramp_c", colour_ramp_pal(range, from), limits = limits, ...
+    aesthetics, "colour_ramp_c", colour_ramp_pal(range, from), limits = limits, guide = guide, ...
   )
 }
 #' @rdname scale_colour_ramp

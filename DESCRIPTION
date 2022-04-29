@@ -82,6 +82,7 @@ Collate:
     "geom_lineribbon.R"
     "geom_pointinterval.R"
     "geom_slab.R"
+    "guide_rampbar.R"
     "lkjcorr_marginal.R"
     "parse_dist.R"
     "point_interval.R"

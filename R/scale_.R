@@ -103,7 +103,7 @@ scale_point_colour_discrete =
 scale_point_color_discrete = scale_point_colour_discrete
 #' @rdname scales
 #' @export
-scale_point_colour_continuous = function(..., aesthetics = "point_colour", guide = "colourbar2") {
+scale_point_colour_continuous = function(..., aesthetics = "point_colour", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 #' @rdname scales
@@ -117,7 +117,7 @@ scale_point_fill_discrete =
   function(..., aesthetics = "point_fill") scale_colour_hue(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
-scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = "colourbar2") {
+scale_point_fill_continuous = function(..., aesthetics = "point_fill", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 
@@ -160,7 +160,7 @@ scale_interval_colour_discrete =
 scale_interval_color_discrete = scale_interval_colour_discrete
 #' @rdname scales
 #' @export
-scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = "colourbar2") {
+scale_interval_colour_continuous = function(..., aesthetics = "interval_colour", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 #' @rdname scales
@@ -219,7 +219,7 @@ scale_slab_colour_discrete =
 scale_slab_color_discrete = scale_slab_colour_discrete
 #' @rdname scales
 #' @export
-scale_slab_colour_continuous = function(..., aesthetics = "slab_colour", guide = "colourbar2") {
+scale_slab_colour_continuous = function(..., aesthetics = "slab_colour", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 #' @rdname scales
@@ -233,7 +233,7 @@ scale_slab_fill_discrete =
   function(..., aesthetics = "slab_fill") scale_colour_hue(..., aesthetics = aesthetics)
 #' @rdname scales
 #' @export
-scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = "colourbar2") {
+scale_slab_fill_continuous = function(..., aesthetics = "slab_fill", guide = guide_colourbar2()) {
   scale_colour_continuous(..., aesthetics = aesthetics, guide = guide)
 }
 

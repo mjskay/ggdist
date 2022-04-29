@@ -17,6 +17,7 @@ scale_colour_ramp_continuous(
   ...,
   limits = function(l) c(min(0, l[[1]]), l[[2]]),
   range = c(0, 1),
+  guide = "legend",
   aesthetics = "colour_ramp"
 )
 
@@ -25,6 +26,7 @@ scale_color_ramp_continuous(
   ...,
   limits = function(l) c(min(0, l[[1]]), l[[2]]),
   range = c(0, 1),
+  guide = "legend",
   aesthetics = "colour_ramp"
 )
 
@@ -70,6 +72,10 @@ If the purpose is to zoom, use the limit argument in the coordinate system
 values after the scale transformation. These values should be between \code{0}
 (the \code{from} color) and \code{1} (the color determined by the \code{fill} aesthetic).}
 
+\item{guide}{A function used to create a guide or its name. For \code{scale_colour_ramp_continuous()}
+and \code{scale_fill_ramp_continuous()}, \code{guide_rampbar()} can be used to create gradient
+color bars. See \code{guides()} for information on other guides.}
+
 \item{aesthetics}{Names of aesthetics to set scales for.}
 }
 \value{
@@ -105,6 +111,8 @@ tibble(d = dist_normal(0, 1)) \%>\%
 
 }
 \seealso{
+\code{\link[=guide_rampbar]{guide_rampbar()}}
+
 Other ggdist scales: 
 \code{\link{scales}}
 }
