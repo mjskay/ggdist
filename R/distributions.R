@@ -113,6 +113,19 @@ distr_is_discrete = function(dist) {
   }
 }
 
+#' Is a distribution multivariate?
+#' @noRd
+distr_is_multivariate = function(dist) {
+  if (inherits(dist, "rvar")) {
+    length(dist) > 1
+  } else {
+    withr::with_seed(1, {
+      one_value_from_dist = distr_random(dist)(1)
+      length(one_value_from_dist) > 1
+    })
+  }
+}
+
 #' Is a distribution sample based?
 #' @noRd
 distr_is_sample = function(dist) {

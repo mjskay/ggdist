@@ -15,8 +15,7 @@ compute_slab_dots = function(
   na.rm,
   ...
 ) {
-  dist = check_one_dist(data$dist)
-
+  dist = data$dist
   if (distr_is_missing(dist)) {
     return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
   }

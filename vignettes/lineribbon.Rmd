@@ -194,8 +194,8 @@ a continuous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete on
 
 ```{r stat_lineribbon_gradient, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
-  ggplot(aes(x = x, y = y)) +
-  stat_lineribbon(aes(fill = stat(.width)), .width = ppoints(50)) +
+  ggplot(aes(x = x, y = y, fill = stat(.width))) +
+  stat_lineribbon(.width = ppoints(50)) +
   scale_fill_distiller()
 ```
 
@@ -206,8 +206,8 @@ is dark in the middle (rather than the outside):
 
 ```{r stat_lineribbon_gradient_ramp, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
-  ggplot(aes(x = x, y = y)) +
-  stat_lineribbon(aes(fill_ramp = stat(.width)), .width = ppoints(50), fill = "#2171b5") +
+  ggplot(aes(x = x, y = y, fill_ramp = stat(.width))) +
+  stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
   scale_fill_ramp_continuous(range = c(1, 0))
 ```
 
@@ -218,9 +218,53 @@ specify the color to ramp to in the legend (default is `"gray65"`):
 
 ```{r stat_lineribbon_gradient_rampbar, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
-  ggplot(aes(x = x, y = y)) +
-  stat_lineribbon(aes(fill_ramp = stat(.width)), .width = ppoints(50), fill = "#2171b5") +
+  ggplot(aes(x = x, y = y, fill_ramp = stat(.width))) +
+  stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
   scale_fill_ramp_continuous(range = c(1, 0), guide = guide_rampbar(to = "#2171b5"))
+```
+
+It's worth noting that the use of `.width` as the fill color means these gradients
+are akin to classical "fan" charts; i.e. the fill color is proportional to the
+CDF or the so-called "confidence function". We may instead want the fill color
+to be proportional to the *density*.
+
+### Lineribbon density gradients
+
+Making the fill proportional to density is a bit more complicated to achieve,
+but can be approximated. Internally, 
+ggdist calculates the density of the lower (`pdf_min`) and upper (`pdf_max`)
+ends of the intervals; you can use the average of these (or just their sum,
+since we don't need to care about normalizing constants) as an approximation
+of the density for each interval. These averages must be taken *within* values
+of `.width` so that each strip gets the same fill color, which can be done
+using the `ave()` function, which takes the average of its first argument
+within groups of the second:
+
+```{r stat_lineribbon_density, fig.width = tiny_width, fig.height = tiny_height}
+df %>%
+  ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
+  stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
+  scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
+```
+
+You may notice that the steps in the gradient now look a little "jumpy" near the
+edges of the band: this is because the `ppoints()` function is giving us even
+steps in probability space (i.e. the CDF), which are not even steps in terms of
+*density*. It is not strictly necessary to fix for the correctness of the color,
+but is more visually appealing without the jumpiness.
+
+We can pick some steps that are more likely to be even in density space using 
+evenly-spaced *z* values and translating them into probability levels using `pnorm()`.
+It does not matter if our target distribution is non-Normal, since the actual
+densities are still set using `pdf_min` and `pdf_max` (so colors will still be
+correct), but the closer the distribution is to Normal the less jumpy-looking 
+the gradient will be.
+
+```{r stat_lineribbon_density_smooth}
+df %>%
+  ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
+  stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)), fill = "#2171b5") +
+  scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
 ```
 
 If you are using a different background color than `"white"`, you can pass that

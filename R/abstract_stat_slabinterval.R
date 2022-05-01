@@ -127,7 +127,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     trans = scales[[x]]$trans %||% scales::identity_trans()
 
 
-    # PRE-CALCULATIONS FOR SLAB FUNCTIONS
+    # SLAB FUNCTION PRE-CALCULATIONS
     # determine limits of the slab function
     limits = compute_panel_limits(self, data, scales, trans,
       orientation = orientation, limits = limits,
@@ -139,7 +139,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     input = trans$inverse(seq(trans$transform(limits[[1]]), trans$transform(limits[[2]]), length.out = n))
 
 
-    # PRE-CALCULATIONS FOR POINTS/INTERVALS
+    # POINT/INTERVAL PRE-CALCULATIONS
     if (!is.null(point_interval)) {
       point_interval = if (is.character(point_interval)) {
         # ensure we always search the ggdist namespace for point_interval
@@ -152,25 +152,19 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     }
 
 
-    # SLABS
-    s_data = NULL
-    if (show_slab) {
-      s_data = summarise_by(data, c("group", y), self$compute_slab,
+    results = summarise_by(data, c("group", y), function(d) {
+      dist = check_one_dist(d$dist)
+
+      # we compute *both* the slab functions and intervals first (even if one
+      # or the other will not be shown), since even if a component is not shown,
+      # its values are still available in the other component
+      s_data = self$compute_slab(d,
         trans = trans, input = input,
         orientation = orientation, limits = limits, n = n,
         na.rm = na.rm,
         ...
       )
-      s_data[[x]] = trans$transform(s_data$.input)
-      s_data$.input = NULL
-      if (nrow(s_data) > 0) s_data$datatype = "slab"
-    }
-
-
-    # INTERVALS
-    i_data = NULL
-    if (show_interval) {
-      i_data = summarise_by(data, c("group", y), self$compute_interval,
+      i_data = self$compute_interval(d,
         trans = trans,
         orientation = orientation, point_interval = point_interval,
         show_point = show_point,
@@ -178,6 +172,13 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
         ...
       )
 
+      # SLABS
+      s_data[[x]] = trans$transform(s_data$.input)
+      s_data$.input = NULL
+      if (nrow(s_data) > 0) s_data$datatype = "slab"
+
+
+      # INTERVALS
       i_data[[x]] = i_data$.value
       i_data$.value = NULL
       i_data[[xmin]] = i_data$.lower
@@ -187,10 +188,38 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
 
       i_data$level = fct_rev_(ordered(i_data$.width))
       if (nrow(i_data) > 0) i_data$datatype = "interval"
-    }
+
+      if (show_interval && nrow(s_data) - sum(is.na(s_data$pdf) | is.na(s_data$cdf)) >= 2) {
+        # fill in relevant data from the slab component
+        # this is expensive, so we only do it if we are actually showing the interval
+        pdf_fun = if (distr_is_constant(dist)) {
+          dist_value = distr_quantile(dist)(0.5)
+          function(x) ifelse(x == dist_value, Inf, 0)
+        } else {
+          approxfun(s_data[[x]], s_data$pdf, yleft = 0, yright = 0, ties = max)
+        }
+        i_data$pdf = pdf_fun(i_data[[x]])
+        i_data$pdf_min = pdf_fun(i_data[[xmin]])
+        i_data$pdf_max = pdf_fun(i_data[[xmax]])
+
+        cdf_fun = if (distr_is_constant(dist)) {
+          dist_value = distr_quantile(dist)(0.5)
+          function(x) ifelse(x >= dist_value, 1, 0)
+        } else {
+          approxfun(s_data[[x]], s_data$cdf, yleft = 0, yright = 1, method = "constant", ties = max)
+        }
+        i_data$cdf = cdf_fun(i_data[[x]])
+        i_data$cdf_min = cdf_fun(i_data[[xmin]])
+        i_data$cdf_max = cdf_fun(i_data[[xmax]])
+      }
 
 
-    results = bind_rows(s_data, i_data)
+      bind_rows(
+        if (show_slab) s_data,
+        if (show_interval) i_data
+      )
+    })
+
     # must ensure there's an f and a .width aesthetic produced even if we don't draw
     # the slab or the interval, otherwise the default aesthetic mappings can break.
     if (nrow(results) > 0) {

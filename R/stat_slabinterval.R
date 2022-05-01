@@ -85,8 +85,9 @@ compute_slab_slabinterval = function(
   adjust, trim, expand, breaks, outline_bars,
   ...
 ) {
-  dist = check_one_dist(data$dist)
-  if (distr_is_missing(dist)) {
+  dist = data$dist
+  # TODO: add support for multivariate distributions
+  if (distr_is_missing(dist) || distr_is_multivariate(dist)) {
     return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
   }
 
@@ -303,7 +304,7 @@ compute_interval_slabinterval = function(
   ...
 ) {
   if (is.null(point_interval)) return(data.frame())
-  dist = check_one_dist(data$dist)
+  dist = data$dist
   if (distr_is_missing(dist)) {
     return(data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = .width))
   }
