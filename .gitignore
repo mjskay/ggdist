@@ -12,3 +12,4 @@ README_cache/
 benchmarks.md
 revdep/
 .Rproj.user
+tests/testthat/Rplots.pdf

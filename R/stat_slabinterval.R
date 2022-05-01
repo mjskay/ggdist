@@ -14,41 +14,40 @@ compute_limits_slabinterval = function(
   trim, adjust,
   ...
 ) {
-  map_dfr_(data$dist, function(dist) {
-    if (is.null(dist) || anyNA(dist)) {
-      return(data.frame(.lower = NA, .upper = NA))
-    }
+  dist = check_one_dist(data$dist)
+  if (distr_is_missing(dist)) {
+    return(data.frame(.lower = NA, .upper = NA))
+  }
 
-    if (distr_is_sample(dist)) {
-      sample = distr_get_sample(dist)
-      return(compute_limits_sample(sample, trans, trim, adjust))
-    }
+  if (distr_is_sample(dist)) {
+    sample = distr_get_sample(dist)
+    return(compute_limits_sample(sample, trans, trim, adjust))
+  }
 
-    quantile_fun = distr_quantile(dist)
+  quantile_fun = distr_quantile(dist)
 
-    # if the lower or upper p limit is NA, check to see if the dist has a
-    # finite limit on the transformed drawing scale, otherwise use .001 or
-    # .999 as p limit. This ensures that distributions with finite limits
-    # can be displayed right up to their limits by default.
-    if (is.na(p_limits[[1]])) {
-      lower_limit = trans$transform(quantile_fun(0))
-      p_limits[[1]] = if (all(is.finite(lower_limit))) 0 else .001
-    }
-    if (is.na(p_limits[[2]])) {
-      upper_limit = trans$transform(quantile_fun(1))
-      p_limits[[2]] = if (all(is.finite(upper_limit))) 1 else .999
-    }
+  # if the lower or upper p limit is NA, check to see if the dist has a
+  # finite limit on the transformed drawing scale, otherwise use .001 or
+  # .999 as p limit. This ensures that distributions with finite limits
+  # can be displayed right up to their limits by default.
+  if (is.na(p_limits[[1]])) {
+    lower_limit = trans$transform(quantile_fun(0))
+    p_limits[[1]] = if (all(is.finite(lower_limit))) 0 else .001
+  }
+  if (is.na(p_limits[[2]])) {
+    upper_limit = trans$transform(quantile_fun(1))
+    p_limits[[2]] = if (all(is.finite(upper_limit))) 1 else .999
+  }
 
-    # need to use min / max here in case of multivariate distributions
-    # (e.g. distributional::dist_multivariate_normal())
-    lower_limit = min(quantile_fun(p_limits[[1]]))
-    upper_limit = max(quantile_fun(p_limits[[2]]))
+  # need to use min / max here in case of multivariate distributions
+  # (e.g. distributional::dist_multivariate_normal())
+  lower_limit = min(quantile_fun(p_limits[[1]]))
+  upper_limit = max(quantile_fun(p_limits[[2]]))
 
-    data.frame(
-      .lower = lower_limit,
-      .upper = upper_limit
-    )
-  })
+  data.frame(
+    .lower = lower_limit,
+    .upper = upper_limit
+  )
 }
 
 #' compute limits of the provided sample
@@ -86,90 +85,89 @@ compute_slab_slabinterval = function(
   adjust, trim, expand, breaks, outline_bars,
   ...
 ) {
-  map_dfr_(data$dist, function(dist) {
-    if (is.null(dist) || anyNA(dist)) {
-      return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
+  dist = check_one_dist(data$dist)
+  if (distr_is_missing(dist)) {
+    return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
+  }
+
+  # calculate pdf and cdf
+  cdf_fun = distr_cdf(dist)
+  if (distr_is_constant(dist)) {
+    # for constant distributions, to reliably get the infinite point density
+    # and a constant line in the CDF, need to manually pick input values
+    quantile_fun = distr_quantile(dist)
+    input_2 = quantile_fun(0.5)
+    input_1 = min(input, input_2)
+    input_3 = max(input, input_2)
+    input = c(input_1, input_2, input_2, input_2, input_3)
+    pdf = c(0, 0, Inf, 0, 0)
+    cdf = c(0, 0, 1, 1, 1)
+    if (!expand) {
+      input = input[-c(1,5)]
+      pdf = pdf[-c(1,5)]
+      cdf = cdf[-c(1,5)]
     }
+  } else if (distr_is_sample(dist)) {
+    return(compute_slab_sample(
+      trans$transform(distr_get_sample(dist)), trans, input,
+      slab_type = slab_type, limits = limits, n = n,
+      adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
+    ))
+  } else if (trans$name == "identity") {
+    pdf_fun = distr_pdf(dist)
+    if (distr_is_discrete(dist)) {
+      # for discrete distributions, we have to adjust the positions of the x
+      # values to create bin-like things
+      input_ = unique(round(input))   # center of bin
+      input_1 = input_ - 0.5          # first edge of bin
+      input_2 = input_ + 0.5          # second edge of bin
+      pdf = pdf_fun(input_)
+      cdf = cdf_fun(input_)
+      # we also need the lag of the cdf so we can make it a step function
+      # at the midpoint of each bin
+      lag_cdf_input = c(input_[[1]] - 1, input_[-length(input_)])
+      lag_cdf = cdf_fun(lag_cdf_input)
 
-    # calculate pdf and cdf
-    cdf_fun = distr_cdf(dist)
-    if (distr_is_constant(dist)) {
-      # for constant distributions, to reliably get the infinite point density
-      # and a constant line in the CDF, need to manually pick input values
-      quantile_fun = distr_quantile(dist)
-      input_2 = quantile_fun(0.5)
-      input_1 = min(input, input_2)
-      input_3 = max(input, input_2)
-      input = c(input_1, input_2, input_2, input_2, input_3)
-      pdf = c(0, 0, Inf, 0, 0)
-      cdf = c(0, 0, 1, 1, 1)
-      if (!expand) {
-        input = input[-c(1,5)]
-        pdf = pdf[-c(1,5)]
-        cdf = cdf[-c(1,5)]
-      }
-    } else if (distr_is_sample(dist)) {
-      return(compute_slab_sample(
-        trans$transform(distr_get_sample(dist)), trans, input,
-        slab_type = slab_type, limits = limits, n = n,
-        adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
-      ))
-    } else if (trans$name == "identity") {
-      pdf_fun = distr_pdf(dist)
-      if (distr_is_discrete(dist)) {
-        # for discrete distributions, we have to adjust the positions of the x
-        # values to create bin-like things
-        input_ = unique(round(input))   # center of bin
-        input_1 = input_ - 0.5          # first edge of bin
-        input_2 = input_ + 0.5          # second edge of bin
-        pdf = pdf_fun(input_)
-        cdf = cdf_fun(input_)
-        # we also need the lag of the cdf so we can make it a step function
-        # at the midpoint of each bin
-        lag_cdf_input = c(input_[[1]] - 1, input_[-length(input_)])
-        lag_cdf = cdf_fun(lag_cdf_input)
-
-        if (!outline_bars) {
-          # as.vector(rbind(x, y, z, ...)) interleaves vectors x, y, z, ..., giving
-          # us the bin endpoints and midpoints --- then just need to repeat the same
-          # value of density for both endpoints of the same bin and to make sure the
-          # cdf is a step function that steps at the midpoint of the bin
-          input = as.vector(rbind(input_1, input_, input_, input_2))
-          pdf = rep(pdf, each = 4)
-          cdf = as.vector(rbind(lag_cdf, lag_cdf, cdf, cdf))
-        } else {
-          # have to return to 0 in between each bar so that bar outlines are drawn
-          input = as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))
-          pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, 0))
-          cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
-        }
+      if (!outline_bars) {
+        # as.vector(rbind(x, y, z, ...)) interleaves vectors x, y, z, ..., giving
+        # us the bin endpoints and midpoints --- then just need to repeat the same
+        # value of density for both endpoints of the same bin and to make sure the
+        # cdf is a step function that steps at the midpoint of the bin
+        input = as.vector(rbind(input_1, input_, input_, input_2))
+        pdf = rep(pdf, each = 4)
+        cdf = as.vector(rbind(lag_cdf, lag_cdf, cdf, cdf))
       } else {
-        pdf = pdf_fun(input)
-        cdf = cdf_fun(input)
+        # have to return to 0 in between each bar so that bar outlines are drawn
+        input = as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))
+        pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, 0))
+        cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
       }
     } else {
-      # must transform the density according to the scale transformation
-      pdf_fun = function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
       pdf = pdf_fun(input)
       cdf = cdf_fun(input)
     }
+  } else {
+    # must transform the density according to the scale transformation
+    pdf_fun = function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
+    pdf = pdf_fun(input)
+    cdf = cdf_fun(input)
+  }
 
-    f = switch(slab_type,
-      histogram = ,
-      pdf = pdf,
-      cdf = cdf,
-      ccdf = 1 - cdf,
-      stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
-    )
+  f = switch(slab_type,
+    histogram = ,
+    pdf = pdf,
+    cdf = cdf,
+    ccdf = 1 - cdf,
+    stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
+  )
 
-    data.frame(
-      .input = input,
-      f = f,
-      pdf = pdf,
-      cdf = cdf,
-      n = if (distr_is_sample(dist)) length(distr_get_sample(dist)) else Inf
-    )
-  })
+  data.frame(
+    .input = input,
+    f = f,
+    pdf = pdf,
+    cdf = cdf,
+    n = if (distr_is_sample(dist)) length(distr_get_sample(dist)) else Inf
+  )
 }
 
 #' compute slab functions for the provided sample
@@ -305,14 +303,12 @@ compute_interval_slabinterval = function(
   ...
 ) {
   if (is.null(point_interval)) return(data.frame())
+  dist = check_one_dist(data$dist)
+  if (distr_is_missing(dist)) {
+    return(data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = .width))
+  }
 
-  map_dfr_(data$dist, function(dist) {
-    if (is.null(dist) || anyNA(dist)) {
-      return(data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = .width))
-    }
-
-    distr_point_interval(dist, point_interval, trans = trans, .width = .width, na.rm = na.rm)
-  })
+  distr_point_interval(dist, point_interval, trans = trans, .width = .width, na.rm = na.rm)
 }
 
 

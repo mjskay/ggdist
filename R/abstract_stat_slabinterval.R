@@ -268,3 +268,24 @@ compute_panel_limits = function(
 
   limits
 }
+
+
+# helpers -----------------------------------------------------------------
+
+check_one_dist = function(dist) {
+  if (length(dist) > 1) {
+    stop0(glue('
+      {length(dist)} distributions in `dist` were associated with the same
+      combination of other aesthetics.
+      - Distributions passed to the `dist` aesthetic must be uniquely associated
+        with a combination of levels of the `group` and some other aesthethics
+        (like x, y, color, fill, etc) so that unique intervals, densities, etc.
+        of those distributions are well defined.
+      - Try checking whether you need to adjust the `group` aesthetic or provide
+        some other aesthetic mapping (like color or fill) to differentiate
+        distributions.
+      '
+    ))
+  }
+  dist
+}

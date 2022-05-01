@@ -651,3 +651,26 @@ test_that("stats work without attaching the ggdist namespace", {
       ggdist::stat_halfeye()
   )
 })
+
+
+# multiple dists with unique groups ---------------------------------------
+
+test_that("multiple dists supplied to the same group", {
+  p = data.frame(
+      y = dist_normal(c(0, 10, 20, 0, 10, 20)),
+      x = c(0,0,0,1,1,1)
+    ) %>%
+    ggplot(aes(ydist = y, x = x, group = rep(c("a","a","b"), 2)))
+
+
+  # multiple dists can be supplied to the same group with slabinterval,
+  # since they can be distinguished ...
+  vdiffr::expect_doppelganger("halfeye multiple dists per group",
+    p + stat_halfeye()
+  )
+
+  # but not to lineribbon, since they can't be distinguished
+  expect_warning(ggplot_build(p + stat_lineribbon()),
+    "Distributions passed to the `dist` aesthetic must be uniquely associated"
+  )
+})

@@ -22,6 +22,14 @@ distr_function.default = function(dist, fun) {
   stop0("The `dist` aesthetic does not support objects of type ", deparse0(class(dist)))
 }
 #' @export
+distr_function.list = function(dist, fun) {
+  if (length(dist) > 1) stop(
+    "lists of distributions should never have length > 1 here.\n",
+    "Please report this bug at https://github.com/mjskay/ggdist/issues"
+  )
+  distr_function(dist[[1]], fun)
+}
+#' @export
 distr_function.distribution = function(dist, fun) {
   if (length(dist) > 1) stop(
     "distributional objects should never have length > 1 here.\n",
@@ -62,8 +70,20 @@ distr_point_interval = function(dist, point_interval, trans, ...) {
   UseMethod("distr_point_interval")
 }
 #' @export
+distr_point_interval.NULL = function(dist, point_interval, trans, ...) {
+  data.frame()
+}
+#' @export
 distr_point_interval.numeric = function(dist, point_interval, trans, ...) {
   point_interval(trans$transform(dist), .simple_names = TRUE, ...)
+}
+#' @export
+distr_point_interval.list = function(dist, point_interval, trans, ...) {
+  if (length(dist) > 1) stop(
+    "lists of distributions should never have length > 1 here.\n",
+    "Please report this bug at https://github.com/mjskay/ggdist/issues"
+  )
+  distr_point_interval(dist[[1]], point_interval, trans, ...)
 }
 #' @importFrom distributional dist_transformed
 #' @export
@@ -128,6 +148,12 @@ distr_is_constant = function(dist) {
     upper = quantile_fun(1 - .Machine$double.neg.eps)
     isTRUE(lower == upper)
   }
+}
+
+#' Is a distribution missing / NA (or equivalent)?
+#' @noRd
+distr_is_missing = function(dist) {
+  is.null(dist) || anyNA(dist) || identical(dist, list(NULL))
 }
 
 #' Is x a distribution-like object? i.e. a distributional::distribution or
