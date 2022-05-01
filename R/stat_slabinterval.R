@@ -14,15 +14,13 @@ compute_limits_slabinterval = function(
   trim, adjust,
   ...
 ) {
-  pmap_dfr_(data, function(dist, ...) {
+  map_dfr_(data$dist, function(dist) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.lower = NA, .upper = NA))
     }
 
-    args = args_from_aes(...)
-
-    if (distr_is_sample(dist, args)) {
-      sample = distr_get_sample(dist, args)
+    if (distr_is_sample(dist)) {
+      sample = distr_get_sample(dist)
       return(compute_limits_sample(sample, trans, trim, adjust))
     }
 
@@ -33,18 +31,18 @@ compute_limits_slabinterval = function(
     # .999 as p limit. This ensures that distributions with finite limits
     # can be displayed right up to their limits by default.
     if (is.na(p_limits[[1]])) {
-      lower_limit = trans$transform(do.call(quantile_fun, c(0, args)))
+      lower_limit = trans$transform(quantile_fun(0))
       p_limits[[1]] = if (all(is.finite(lower_limit))) 0 else .001
     }
     if (is.na(p_limits[[2]])) {
-      upper_limit = trans$transform(do.call(quantile_fun, c(1, args)))
+      upper_limit = trans$transform(quantile_fun(1))
       p_limits[[2]] = if (all(is.finite(upper_limit))) 1 else .999
     }
 
     # need to use min / max here in case of multivariate distributions
     # (e.g. distributional::dist_multivariate_normal())
-    lower_limit = min(do.call(quantile_fun, c(list(quote(p_limits[[1]])), args)))
-    upper_limit = max(do.call(quantile_fun, c(list(quote(p_limits[[2]])), args)))
+    lower_limit = min(quantile_fun(p_limits[[1]]))
+    upper_limit = max(quantile_fun(p_limits[[2]]))
 
     data.frame(
       .lower = lower_limit,
@@ -88,20 +86,18 @@ compute_slab_slabinterval = function(
   adjust, trim, expand, breaks, outline_bars,
   ...
 ) {
-  pmap_dfr_(data, function(dist, ...) {
+  map_dfr_(data$dist, function(dist) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
     }
 
-    args = args_from_aes(...)
-
     # calculate pdf and cdf
     cdf_fun = distr_cdf(dist)
-    if (distr_is_constant(dist, args)) {
+    if (distr_is_constant(dist)) {
       # for constant distributions, to reliably get the infinite point density
       # and a constant line in the CDF, need to manually pick input values
       quantile_fun = distr_quantile(dist)
-      input_2 = do.call(quantile_fun, c(list(0.5), args))
+      input_2 = quantile_fun(0.5)
       input_1 = min(input, input_2)
       input_3 = max(input, input_2)
       input = c(input_1, input_2, input_2, input_2, input_3)
@@ -112,26 +108,26 @@ compute_slab_slabinterval = function(
         pdf = pdf[-c(1,5)]
         cdf = cdf[-c(1,5)]
       }
-    } else if (distr_is_sample(dist, args)) {
+    } else if (distr_is_sample(dist)) {
       return(compute_slab_sample(
-        trans$transform(distr_get_sample(dist, args)), trans, input,
+        trans$transform(distr_get_sample(dist)), trans, input,
         slab_type = slab_type, limits = limits, n = n,
         adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
       ))
     } else if (trans$name == "identity") {
       pdf_fun = distr_pdf(dist)
-      if (distr_is_discrete(dist, args)) {
+      if (distr_is_discrete(dist)) {
         # for discrete distributions, we have to adjust the positions of the x
         # values to create bin-like things
         input_ = unique(round(input))   # center of bin
         input_1 = input_ - 0.5          # first edge of bin
         input_2 = input_ + 0.5          # second edge of bin
-        pdf = do.call(pdf_fun, c(list(quote(input_)), args))
-        cdf = do.call(cdf_fun, c(list(quote(input_)), args))
+        pdf = pdf_fun(input_)
+        cdf = cdf_fun(input_)
         # we also need the lag of the cdf so we can make it a step function
         # at the midpoint of each bin
         lag_cdf_input = c(input_[[1]] - 1, input_[-length(input_)])
-        lag_cdf = do.call(cdf_fun, c(list(quote(lag_cdf_input)), args))
+        lag_cdf = cdf_fun(lag_cdf_input)
 
         if (!outline_bars) {
           # as.vector(rbind(x, y, z, ...)) interleaves vectors x, y, z, ..., giving
@@ -148,14 +144,14 @@ compute_slab_slabinterval = function(
           cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
         }
       } else {
-        pdf = do.call(pdf_fun, c(list(quote(input)), args))
-        cdf = do.call(cdf_fun, c(list(quote(input)), args))
+        pdf = pdf_fun(input)
+        cdf = cdf_fun(input)
       }
     } else {
       # must transform the density according to the scale transformation
       pdf_fun = function(x, ...) transform_pdf(distr_pdf(dist), trans$transform(x), trans, g_inverse_at_y = x, ...)
-      pdf = do.call(pdf_fun, c(list(quote(input)), args))
-      cdf = do.call(cdf_fun, c(list(quote(input)), args))
+      pdf = pdf_fun(input)
+      cdf = cdf_fun(input)
     }
 
     f = switch(slab_type,
@@ -171,7 +167,7 @@ compute_slab_slabinterval = function(
       f = f,
       pdf = pdf,
       cdf = cdf,
-      n = if (distr_is_sample(dist, args)) length(distr_get_sample(dist, args)) else Inf
+      n = if (distr_is_sample(dist)) length(distr_get_sample(dist)) else Inf
     )
   })
 }
@@ -310,14 +306,12 @@ compute_interval_slabinterval = function(
 ) {
   if (is.null(point_interval)) return(data.frame())
 
-  intervals = pmap_dfr_(data, function(dist, ...) {
+  map_dfr_(data$dist, function(dist) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = .width))
     }
 
-    args = args_from_aes(...)
-
-    distr_point_interval(dist, args, point_interval, trans = trans, .width = .width, na.rm = na.rm)
+    distr_point_interval(dist, point_interval, trans = trans, .width = .width, na.rm = na.rm)
   })
 }
 
@@ -556,21 +550,20 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       data$dist = data[[xdist]]
     }
 
-    # ignore unknown distributions (with a warning)
     if (is.character(data$dist) || is.factor(data$dist)) {
+      # ignore unknown distributions (with a warning)
       data$dist = check_dist_name(data$dist)
-      # TODO (#112): convert dist aesthetic into distributional objects
-      # Need to wait until dist_wrap can search the user's path
-      #
-      # arg_cols = names(data)[startsWith(names(data), "arg")]
-      # data$dist = pmap_(data[,c("dist", arg_cols)], function(dist, ...) {
-      #   if (is.na(dist)) {
-      #     dist_missing()
-      #   } else {
-      #     args = args_from_aes(...)
-      #     do.call(dist_wrap, c(list(dist), args))
-      #   }
-      # })
+
+      # convert character/factor dist aesthetic into distributional objects
+      arg_cols = names(data)[startsWith(names(data), "arg")]
+      data$dist = pmap_(data[, c("dist", arg_cols)], function(dist, ...) {
+        if (is.na(dist)) {
+          dist_missing()
+        } else {
+          args = args_from_aes(...)
+          do.call(dist_wrap, c(list(dist), args))
+        }
+      })
     }
 
     if (!is.null(data$dist) && self$group_by_dist) {

@@ -20,15 +20,13 @@ compute_slab_dots = function(
   dist_quantiles = if (quantiles_provided) quantiles else 100
   probs = ppoints(dist_quantiles, a = 1/2)
 
-  pmap_dfr_(data, function(dist, ...) {
+  map_dfr_(data$dist, function(dist) {
     if (is.null(dist) || anyNA(dist)) {
       return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
     }
 
-    args = args_from_aes(...)
-
-    if (distr_is_sample(dist, args)) {
-      input = distr_get_sample(dist, args)
+    if (distr_is_sample(dist)) {
+      input = distr_get_sample(dist)
       if (quantiles_provided) {
         # ppoints() with a = 1/2 corresponds to quantile() with type = 5
         # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
@@ -36,7 +34,7 @@ compute_slab_dots = function(
       }
     } else {
       quantile_fun = distr_quantile(dist)
-      input = do.call(quantile_fun, c(list(probs), args))
+      input = quantile_fun(probs)
     }
 
     data.frame(

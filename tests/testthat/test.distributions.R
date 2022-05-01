@@ -10,12 +10,12 @@ library(distributional)
 
 # factor distributions ----------------------------------------------------
 
-test_that("distribution functions work on factors", {
-  expect_equal(distr_pdf(factor("norm"))(-2:2, 1, 2), dnorm(-2:2, 1, 2))
-  expect_equal(distr_cdf(factor("norm"))(-2:2, 1, 2), pnorm(-2:2, 1, 2))
-  expect_equal(distr_quantile(factor("norm"))(ppoints(5), 1, 2), qnorm(ppoints(5), 1, 2))
+test_that("distribution functions work on wrapped distributions", {
+  expect_equal(distr_pdf(dist_wrap("norm", 1, 2))(-2:2), dnorm(-2:2, 1, 2))
+  expect_equal(distr_cdf(dist_wrap("norm", 1, 2))(-2:2), pnorm(-2:2, 1, 2))
+  expect_equal(distr_quantile(dist_wrap("norm", 1, 2))(ppoints(5)), qnorm(ppoints(5), 1, 2))
   expect_equal(
-    distr_point_interval(factor("norm"), args = list(1, 2), median_qi, trans = scales::identity_trans()),
+    distr_point_interval(dist_wrap("norm", 1, 2), median_qi, trans = scales::identity_trans()),
     tibble(
       .value = 1,
       .lower = qnorm(0.025, 1, 2),

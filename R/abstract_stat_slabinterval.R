@@ -6,6 +6,7 @@
 
 
 #' @importFrom dplyr bind_rows
+#' @importFrom rlang as_function
 #' @rdname ggdist-ggproto
 #' @format NULL
 #' @usage NULL
@@ -215,7 +216,7 @@ na_ = function(m_, ...) {
 
 #' Compute the limits and the input x values for slab functions
 #' @param ... stat parameters
-#' @value length 2 vector giving the limits
+#' @return length 2 vector giving the limits
 #' @noRd
 compute_panel_limits = function(
   self, data, scales, trans,
