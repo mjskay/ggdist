@@ -412,6 +412,9 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
+  if (isTRUE(.width == 1)) {
+    return(matrix(range(x), ncol = 2))
+  }
 
   intervals = HDInterval::hdi(density(x, cut = 0, na.rm = na.rm), credMass = .width, allowSplit = TRUE)
   if (nrow(intervals) == 1) {
@@ -517,6 +520,9 @@ hdci_ = function(x, ...) {
 hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+  if (isTRUE(.width == 1)) {
+    return(matrix(range(x), ncol = 2))
   }
 
   intervals = HDInterval::hdi(x, credMass = .width)

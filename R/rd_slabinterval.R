@@ -137,12 +137,18 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
       - `xmin` or `ymin`: For intervals, the lower end of the interval from the interval function.
       - `xmax` or `ymax`: For intervals, the upper end of the interval from the interval function.
       - `.width`: For intervals, the interval width as a numeric value in `[0, 1]`.
-      - `level`: For intervals, the interval width as an ordered factor.',
+        For slabs, the width of the smallest interval containing that value of the slab.
+      - `level`: For intervals, the interval width as an ordered factor.
+        For slabs, the level of the smallest interval containing that value of the slab.
+      - `pdf`: For slabs, the probability density function (PDF).
+        For intervals, the PDF at the point summary; intervals also have `pdf_min` and `pdf_max`
+        for the PDF at the lower and upper ends of the interval.
+      - `cdf`: For slabs, the cumulative distribution function.
+        For intervals, the CDF at the point summary; intervals also have `cdf_min` and `cdf_max`
+        for the CDF at the lower and upper ends of the interval.',
     if (isTRUE(stat$default_params$show_slab)) {'
       -  `f`: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
         determined by `slab_type`.
-      - `pdf`: For slabs, the probability density function.
-      - `cdf`: For slabs, the cumulative distribution function.
       - `n`: For slabs, the number of data points summarized into that slab. If the slab was created from
         an analytical distribution via the `xdist`, `ydist`, or `dist` aesthetic, `n` will be `Inf`.
       '

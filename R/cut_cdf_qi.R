@@ -9,8 +9,10 @@
 #' Given a vector of probabilities from a cumulative distribution function (CDF)
 #' and a list of desired quantile intervals, return a vector categorizing each
 #' element of the input vector according to which quantile interval it falls into.
-#' Useful for drawing slabs with intervals overlaid on the density, e.g. using
-#' [stat_halfeye()].
+#' **NOTE:** While this function can be used for (and was originally designed for)
+#' drawing slabs with intervals overlaid on the density, this is can now be
+#' done more easily by mapping the `.width` or `level` computed variable to
+#' slab fill or color. See **Examples**.
 #'
 #' @param p A numeric vector of values from a cumulative distribution function,
 #' such as values returned by `p`-prefixed distribution functions in base R (e.g. [pnorm()]),
@@ -39,13 +41,27 @@
 #'
 #' theme_set(theme_ggdist())
 #'
-#' # with a slab
+#' # NOTE: cut_cdf_qi() used to be the recommended way to do intervals overlaid
+#' # on densities, like this...
 #' tibble(x = dist_normal(0, 1)) %>%
 #'   ggplot(aes(xdist = x)) +
-#'   stat_slab(aes(
-#'     fill = stat(cut_cdf_qi(cdf))
-#'   )) +
-#'   scale_fill_brewer(direction = -1, na.value = "gray90")
+#'   stat_slab(
+#'     aes(fill = stat(cut_cdf_qi(cdf)))
+#'   ) +
+#'   scale_fill_brewer(direction = -1)
+#'
+#' # ... however this is now more easily and flexibly accomplished by directly
+#' # mapping .width or level onto fill:
+#' tibble(x = dist_normal(0, 1)) %>%
+#'   ggplot(aes(xdist = x)) +
+#'   stat_slab(
+#'     aes(fill = stat(level)),
+#'     .width = c(.66, .95, 1)
+#'   ) +
+#'   scale_fill_brewer()
+#'
+#' # See vignette("slabinterval") for more examples. The remaining examples
+#' # below using cut_cdf_qi() are kept for posterity.
 #'
 #' # With a halfeye (or other geom with slab and interval), NA values will
 #' # show up in the fill scale from the CDF function applied to the internal

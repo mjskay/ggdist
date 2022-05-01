@@ -970,46 +970,48 @@ that inspired the idea.
 ### Densities filled according to intervals
 
 Another common chart type involves filling in the interior of a halfeye plot
-according to some intervals. We can again use the fact that slabinterval stats
-auto-calculate both the PDF and CDF of a distribution as statistics. We can then
-use the `cut_cdf_qi()` function, which labels points in a CDF according to
-which quantile interval they fall into, to determine the fill color:
+according to some intervals. Here, we can use the fact that computed variables
+from the interval sub-geometry are made available to the slab sub-geometry and
+vice versa. 
+
+For example, within the slab sub-geometry, the `.width` and `level`
+computed variables correspond to the smallest intervals that contain the `x`
+value at that portion of the slab. Thus, we can map `.width` or `level` onto
+the slab fill:
 
 ```{r halfeye_filled_intervals, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(y = group, x = value)) +
-  stat_halfeye(aes(fill = stat(cut_cdf_qi(cdf)))) +
-  scale_fill_brewer(direction = -1) +
+  stat_halfeye(aes(fill = stat(level))) +
+  # na.translate = FALSE drops the unnecessary NA from the legend, which covers
+  # slab values outside the intervals. An alternative would be to use 
+  # na.value = ... to set the color for values outside the intervals.
+  scale_fill_brewer(na.translate = FALSE) +
   labs(
     title = "stat_halfeye()", 
-    subtitle = "aes(fill = stat(cut_cdf_qi(cdf)))",
+    subtitle = "aes(fill = stat(level))",
     fill = "Interval"
   )
 ```
 
-Like `point_interval()`, `cut_cdf_qi()` takes a `.width` parameter to define the intervals,
-with a default of `c(.66, .95, 1)`. The final `1` is necessary to show the full
-density; to cut off the tails of the density you can omit it.
+(**Note:** in previous versions of ggdist, using `cut_cdf_qi()` was the recommended
+way to achieve this affect. That function still exists for backwards compatibility, 
+but mapping `level` or `.width` is now the recommended approach, as it generalizes
+to other interval types, such as highest-density intervals.)
 
-Like ggplot scales, `cut_cdf_qi()` also takes a `labels` parameter to define the labels of
-the intervals (or to provide a function to define the labels, such as a
-formatting function like `scales::percent_format()`). Let's modify the intervals to 
-show the 50%, 80%, and 95% intervals, omitting the tails of the density and
-reformatting the interval labels to use percentages. We can also use
-`na.translate = FALSE` to drop the unnecessary `NA` level from the fill scale:
+To apply the color scale to all values outside the intervals, one option is to
+split `stat_halfeye()` into its constituent parts (`stat_slab()` and 
+`stat_pointinterval()`), then include a "100%" interval in `.width`:
 
 ```{r halfeye_filled_intervals_2, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(y = group, x = value)) +
-  stat_halfeye(aes(fill = stat(cut_cdf_qi(
-    cdf, 
-    .width = c(.5, .8, .95),
-    labels = scales::percent_format()
-  )))) +
-  scale_fill_brewer(direction = -1, na.translate = FALSE) +
+  stat_slab(aes(fill = stat(level)), .width = c(.66, .95, 1)) +
+  stat_pointinterval() +
+  scale_fill_brewer() +
   labs(
-    title = "stat_halfeye()", 
-    subtitle = "aes(fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95))))",
+    title = "stat_slab()", 
+    subtitle = "aes(fill = stat(level), .width = c(.66, .95, 1))",
     fill = "Interval"
   )
 ```
@@ -1021,7 +1023,7 @@ which can be used to vary ("ramp") the outline or fill colors smoothly from a
 base color (default `"white"`) to whatever color the geometry would otherwise 
 have.
 
-Taking the above example with `cut_cdf_qi()`, we could use the `fill_ramp` aesthetic
+Taking the above example with interval-filled slabs, we could use the `fill_ramp` aesthetic
 instead of the `fill` aesthetic to set the slab color based on the interval it is in.
 We could then vary the base fill color separately from the interval based on 
 another column in the original data table, such as the `subgroup` column:
@@ -1030,14 +1032,8 @@ another column in the original data table, such as the `subgroup` column:
 df %>%
   ggplot(aes(y = group, x = value)) +
   stat_halfeye(
-    aes(
-      fill = subgroup,
-      fill_ramp = stat(cut_cdf_qi(
-        cdf, 
-        .width = c(.5, .8, .95),
-        labels = scales::percent_format()
-      ))
-    ),
+    aes(fill = subgroup, fill_ramp = stat(level)),
+    .width = c(.50, .80, .95),
     # NOTE: we use position = "dodgejust" (a dodge that respects the 
     # justification of intervals relative to slabs) instead of 
     # position = "dodge" here because it ensures the topmost slab does
@@ -1046,10 +1042,10 @@ df %>%
   ) +
   # a range from 1 down to 0.2 ensures the fill goes dark to light inside-out
   # and doesn't get all the way down to white (0) on the lightest color
-  scale_fill_ramp_discrete(range = c(1, 0.2), na.translate = FALSE) +
+  scale_fill_ramp_discrete(na.translate = FALSE) +
   labs(
     title = "stat_halfeye(position = 'dodgejust')", 
-    subtitle = "aes(fill = subgroup, fill_ramp = stat(cut_cdf_qi(cdf)))",
+    subtitle = "aes(fill = subgroup, fill_ramp = stat(level))",
     fill_ramp = "Interval"
   )
 ```

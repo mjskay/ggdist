@@ -560,6 +560,23 @@ This example also shows the use of `point_interval` to plot the mode and
 highest-density continuous intervals (instead of the default median and quantile
 intervals). For more, see `point_interval()`.
 
+Like with the `stat_slabinterval()` family, computed variables from the interval
+sub-geometry (`level` and `.width`) are available to the dots/slab sub-geometry,
+and correspond to the smallest interval containing that dot. We can use these
+to color dots according to the interval containing them (we'll also use the
+`"weave"` layout since it maintains x positions better than the `"bin"` layout):
+
+```{r dotsinterval_dist_1000_level_color}
+dist_df %>%
+  ggplot(aes(y = dist_name, xdist = dist, slab_color = stat(level))) +
+  stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave") +
+  scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "slab_color") +
+  ggtitle(
+    "stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)",
+    "aes(y = dist_name, xdist = dist, slab_color = stat(level))"
+  )
+```
+
 When summarizing sample distributions
 with `stat_dots()`/`stat_dotsinterval()` (e.g. samples from Bayesian posteriors),
 one can also use the `quantiles` argument, though it is not on by default.

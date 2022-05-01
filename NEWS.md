@@ -2,6 +2,22 @@
 
 New features and enhancements:
 
+* Several computed variables in `stat_slabinterval()` are now shared across
+  sub-geometries:
+  * The `pdf` and `cdf` computed variables can now be used in interval 
+    sub-geometries to get the PDF and CDF at the point summary. `pdf_min`,
+    `pdf_max`, `cdf_min`, and `cdf_max` also give the PDF and CDF at the lower
+    and upper ends of the interval. An example in `vignette("lineribbon")`
+    shows how to use this to make lineribbon gradients whose color approximates
+    density (as opposed to the classic gradient fan chart examples already
+    in that vignette, where color approximates the CDF).
+  * The `.width` and `level` computed variables can now be used in slab 
+    sub-geometries. These values correspond to the smallest interval computed
+    in the interval sub-geometry containing that portion of the slab. This
+    gives a more flexible alternative to using `cut_cdf_qi()` to create densities
+    filled according to a set of intervals (this approach which also works on
+    highest-density intervals, which `cut_cdf_qi()` does not). Examples in
+    `vignette("slabinterval")` have been updated to use the new approach.
 * The stacking order of dots within bins for `geom_dotsinterval(layout = "bin")`
   can now be set using the `order` aesthetic. This makes it possible to create 
   "stacked" dotplots by mapping a discrete variable onto the `order` aesthetic

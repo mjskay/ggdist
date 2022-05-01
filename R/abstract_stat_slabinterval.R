@@ -189,6 +189,27 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
       i_data$level = fct_rev_(ordered(i_data$.width))
       if (nrow(i_data) > 0) i_data$datatype = "interval"
 
+
+      # INTERVAL INFO ADDED TO SLAB COMPONENT
+      if (show_slab) {
+        # fill in relevant data from the interval component
+        # this is expensive, so we only do it if we are actually showing the interval
+
+        # find the smallest interval that contains each x value
+        contains_x = outer(i_data[[xmin]], s_data[[x]], `<=`) & outer(i_data[[xmax]], s_data[[x]], `>=`)
+        # need a fake interval guaranteed to contain all points (for NAs, points out of range...)
+        contains_x = rbind(TRUE, contains_x)
+        width = c(Inf, i_data$.width)
+        smallest_interval = apply(ifelse(contains_x, width, NA), 2, which.min)
+
+        # fill in the .width and level of the smallest interval containing x
+        # (or NA if no such interval)
+        s_data$.width = c(NA_real_, i_data$.width)[smallest_interval]
+        s_data$level = vctrs::vec_c(NA, i_data$level)[smallest_interval]
+      }
+
+
+      # SLAB INFO ADDED TO INTERVAL COMPONENT
       if (show_interval && nrow(s_data) - sum(is.na(s_data$pdf) | is.na(s_data$cdf)) >= 2) {
         # fill in relevant data from the slab component
         # this is expensive, so we only do it if we are actually showing the interval
