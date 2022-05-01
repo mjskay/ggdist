@@ -34,18 +34,21 @@ compute_limits_slabinterval = function(
     # can be displayed right up to their limits by default.
     if (is.na(p_limits[[1]])) {
       lower_limit = trans$transform(do.call(quantile_fun, c(0, args)))
-      p_limits[[1]] = if (is.finite(lower_limit)) 0 else .001
+      p_limits[[1]] = if (all(is.finite(lower_limit))) 0 else .001
     }
     if (is.na(p_limits[[2]])) {
       upper_limit = trans$transform(do.call(quantile_fun, c(1, args)))
-      p_limits[[2]] = if (is.finite(upper_limit)) 1 else .999
+      p_limits[[2]] = if (all(is.finite(upper_limit))) 1 else .999
     }
 
-    limits = do.call(quantile_fun, c(list(quote(p_limits)), args))
+    # need to use min / max here in case of multivariate distributions
+    # (e.g. distributional::dist_multivariate_normal())
+    lower_limit = min(do.call(quantile_fun, c(list(quote(p_limits[[1]])), args)))
+    upper_limit = max(do.call(quantile_fun, c(list(quote(p_limits[[2]])), args)))
 
     data.frame(
-      .lower = limits[[1]],
-      .upper = limits[[2]]
+      .lower = lower_limit,
+      .upper = upper_limit
     )
   })
 }
@@ -87,7 +90,7 @@ compute_slab_slabinterval = function(
 ) {
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
-      return(data.frame(.input = NA, .value = NA))
+      return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
     }
 
     args = args_from_aes(...)
@@ -155,7 +158,7 @@ compute_slab_slabinterval = function(
       cdf = do.call(cdf_fun, c(list(quote(input)), args))
     }
 
-    value = switch(slab_type,
+    f = switch(slab_type,
       histogram = ,
       pdf = pdf,
       cdf = cdf,
@@ -165,7 +168,7 @@ compute_slab_slabinterval = function(
 
     data.frame(
       .input = input,
-      .value = value,
+      f = f,
       pdf = pdf,
       cdf = cdf,
       n = if (distr_is_sample(dist, args)) length(distr_get_sample(dist, args)) else Inf
@@ -200,15 +203,15 @@ compute_slab_sample = function(
       # us the bin endpoints --- then just need to repeat the same value of density
       # for both endpoints of the same bin
       .input = trans$inverse(as.vector(rbind(input_1, input_2)))
-      .value = rep(h$density, each = 2)
+      pdf = rep(h$density, each = 2)
     } else {
       # have to return to 0 in between each bar so that bar outlines are drawn
       .input = trans$inverse(as.vector(rbind(input_1, input_1, input_2, input_2)))
-      .value = as.vector(rbind(0, h$density, h$density, 0))
+      pdf = as.vector(rbind(0, h$density, h$density, 0))
     }
     data.frame(
       .input = .input,
-      pdf = .value
+      pdf = pdf
     )
   } else {
     # all other slab types use the density function as the pdf
@@ -252,7 +255,7 @@ compute_slab_sample = function(
     }
   }
 
-  slab_df[[".value"]] = switch(slab_type,
+  slab_df[["f"]] = switch(slab_type,
     histogram = ,
     pdf = slab_df$pdf,
     cdf = slab_df$cdf,
@@ -309,7 +312,7 @@ compute_interval_slabinterval = function(
 
   intervals = pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
-      return(data.frame(.value = NA, .lower = NA, .upper = NA, .width = .width))
+      return(data.frame(.value = NA_real_, .lower = NA_real_, .upper = NA_real_, .width = .width))
     }
 
     args = args_from_aes(...)

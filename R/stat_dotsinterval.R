@@ -22,7 +22,7 @@ compute_slab_dots = function(
 
   pmap_dfr_(data, function(dist, ...) {
     if (is.null(dist) || anyNA(dist)) {
-      return(data.frame(.input = NA, .value = NA))
+      return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
     }
 
     args = args_from_aes(...)
@@ -41,7 +41,7 @@ compute_slab_dots = function(
 
     data.frame(
       .input = input,
-      .value = 1,
+      f = 1,
       n = length(input)
     )
   })

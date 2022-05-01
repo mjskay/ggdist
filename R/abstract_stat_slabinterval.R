@@ -73,7 +73,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
 
   # Compute the function that defines the slab. That takes a data frame of
   # aesthetic values and a vector of function inputs and returns a data frame
-  # with columns `.input` (from the `input` vector) and `.value` (the result of
+  # with columns `.input` (from the `input` vector) and `f` (the result of
   # applying the function to each value of input).
   # @param data The data frame of aesthetic values
   # @param input Input values for the function (may be ignored in some cases
@@ -107,6 +107,9 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
   },
 
   compute_panel = function(self, data, scales,
+    limits = self$default_params$limits,
+    n = self$default_params$n,
+    point_interval = self$default_params$point_interval,
     orientation = self$default_params$orientation,
     show_slab = self$default_params$show_slab,
     show_point = self$default_params$show_point,
@@ -122,31 +125,76 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     # figure out coordinate transformation
     trans = scales[[x]]$trans %||% scales::identity_trans()
 
+
+    # PRE-CALCULATIONS FOR SLAB FUNCTIONS
+    # determine limits of the slab function
+    limits = compute_panel_limits(self, data, scales, trans,
+      orientation = orientation, limits = limits,
+      ...
+    )
+
+    # figure out the points at which values the slab functions should be evaluated
+    # we set up the grid in the transformed space
+    input = trans$inverse(seq(trans$transform(limits[[1]]), trans$transform(limits[[2]]), length.out = n))
+
+
+    # PRE-CALCULATIONS FOR POINTS/INTERVALS
+    if (!is.null(point_interval)) {
+      point_interval = if (is.character(point_interval)) {
+        # ensure we always search the ggdist namespace for point_interval
+        # functions in case ggdist is not in the caller's search path
+        get0(point_interval, mode = "function") %||%
+          get(point_interval, mode = "function", envir = getNamespace("ggdist"))
+      } else {
+        as_function(point_interval)
+      }
+    }
+
+
     # SLABS
-    s_data = if (show_slab) {
-      compute_panel_slabs(self, data, scales, trans,
-        orientation = orientation,
+    s_data = NULL
+    if (show_slab) {
+      s_data = summarise_by(data, c("group", y), self$compute_slab,
+        trans = trans, input = input,
+        orientation = orientation, limits = limits, n = n,
         na.rm = na.rm,
         ...
       )
+      s_data[[x]] = trans$transform(s_data$.input)
+      s_data$.input = NULL
+      if (nrow(s_data) > 0) s_data$datatype = "slab"
     }
 
+
     # INTERVALS
-    i_data = if (show_interval) {
-      compute_panel_intervals(self, data, scales, trans,
-        orientation = orientation,
+    i_data = NULL
+    if (show_interval) {
+      i_data = summarise_by(data, c("group", y), self$compute_interval,
+        trans = trans,
+        orientation = orientation, point_interval = point_interval,
         show_point = show_point,
         na.rm = na.rm,
         ...
       )
+
+      i_data[[x]] = i_data$.value
+      i_data$.value = NULL
+      i_data[[xmin]] = i_data$.lower
+      i_data$.lower = NULL
+      i_data[[xmax]] = i_data$.upper
+      i_data$.upper = NULL
+
+      i_data$level = fct_rev_(ordered(i_data$.width))
+      if (nrow(i_data) > 0) i_data$datatype = "interval"
     }
+
 
     results = bind_rows(s_data, i_data)
     # must ensure there's an f and a .width aesthetic produced even if we don't draw
     # the slab or the interval, otherwise the default aesthetic mappings can break.
     if (nrow(results) > 0) {
-      results$f = results[["f"]] %||% NA
-      results$.width = results[[".width"]] %||% NA
+      results$f = results[["f"]] %||% NA_real_
+      results$.width = results[[".width"]] %||% NA_real_
     }
     results
   }
@@ -165,17 +213,17 @@ na_ = function(m_, ...) {
   else m_(values, na.rm = TRUE)
 }
 
-
+#' Compute the limits and the input x values for slab functions
 #' @param ... stat parameters
+#' @value length 2 vector giving the limits
 #' @noRd
-compute_panel_slabs = function(
+compute_panel_limits = function(
   self, data, scales, trans,
-  orientation, limits, n,
+  orientation, limits,
   ...
 ) {
   define_orientation_variables(orientation)
 
-  # LIMITS
   # determine limits of the slab function
   # we do this first so we can figure out the overall limits
   # based on the min/max limits over the entire input data
@@ -185,7 +233,7 @@ compute_panel_slabs = function(
   max_limits = limits
   if (is.null(max_limits)) {
     if (is.null(scales[[x]]$limits)) {
-      max_limits = c(NA, NA)
+      max_limits = c(NA_real_, NA_real_)
     } else{
       max_limits = trans$inverse(scales[[x]]$limits)
     }
@@ -195,7 +243,7 @@ compute_panel_slabs = function(
   # (the limits are *at least* these, unless the
   # max_limits are more narrow)
   min_limits = if (is.null(scales[[x]]) || scales[[x]]$is_empty()) {
-    c(NA, NA)
+    c(NA_real_, NA_real_)
   } else {
     trans$inverse(scales[[x]]$dimension())
   }
@@ -217,62 +265,5 @@ compute_panel_slabs = function(
   #default to 0 (min) and 1 (max) for unknown limits
   limits = ifelse(is.na(limits), c(0,1), limits)
 
-
-  # SLABS
-  # now, figure out the points at which values the slab functions should be evaluated
-  # we set up the grid in the transformed space
-  input = trans$inverse(seq(trans$transform(limits[[1]]), trans$transform(limits[[2]]), length.out = n))
-
-  # evaluate the slab function
-  s_data = summarise_by(data, c("group", y), self$compute_slab,
-    trans = trans, input = input,
-    orientation = orientation, limits = limits, n = n,
-    ...
-  )
-
-  names(s_data)[names(s_data) == ".value"] = "f"
-  s_data[[x]] = trans$transform(s_data$.input)
-  s_data$.input = NULL
-
-  if (nrow(s_data) > 0) s_data$datatype = "slab"
-  s_data
-}
-
-#' @importFrom rlang as_function
-#' @param ... stat parameters
-#' @noRd
-compute_panel_intervals = function(
-  self, data, scales, trans,
-  orientation, point_interval,
-  ...
-) {
-  define_orientation_variables(orientation)
-
-  if (!is.null(point_interval)) {
-    point_interval = if (is.character(point_interval)) {
-      # ensure we always search the ggdist namespace for point_interval
-      # functions in case ggdist is not in the caller's search path
-      get0(point_interval, mode = "function") %||%
-        get(point_interval, mode = "function", envir = getNamespace("ggdist"))
-    } else {
-      as_function(point_interval)
-    }
-  }
-
-  i_data = summarise_by(data, c("group", y), self$compute_interval,
-    trans = trans,
-    orientation = orientation, point_interval = point_interval,
-    ...
-  )
-
-  i_data[[x]] = i_data$.value
-  i_data$.value = NULL
-  i_data[[xmin]] = i_data$.lower
-  i_data$.lower = NULL
-  i_data[[xmax]] = i_data$.upper
-  i_data$.upper = NULL
-
-  i_data$level = fct_rev_(ordered(i_data$.width))
-  if (nrow(i_data) > 0) i_data$datatype = "interval"
-  i_data
+  limits
 }
