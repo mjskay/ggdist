@@ -237,8 +237,8 @@ ends of the intervals; you can use the average of these (or just their sum,
 since we don't need to care about normalizing constants) as an approximation
 of the density for each interval. These averages must be taken *within* values
 of `.width` so that each strip gets the same fill color, which can be done
-using the `ave()` function, which takes the average of its first argument
-within groups of the second:
+using the `ave()` function, which applies a summary function (here, `min()`)
+to its first argument within groups of the remaining arguments:
 
 ```{r stat_lineribbon_density, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
@@ -247,7 +247,39 @@ df %>%
   scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
 ```
 
-You may notice that the steps in the gradient now look a little "jumpy" near the
+So, why `ave(pdf_min + pdf_max, .width)`? 
+
+1. The most visible points on each interval will be the endpoints, at `ymin` and
+`ymax`, because the other points are covered by smaller intervals drawn on top of
+it. So we ideally would set the color ramp at `ymin` to `pdf_min` (the density at
+`ymin`) and the color ramp at `ymax` to `pdf_max` (the density at `ymax`), but we
+can't set different colors to these different points. However, we can rely on
+the fact that the distributions above are symmetrical, so the densities at `ymin`
+and `ymax` should be equal (on non-symmetrical distributions, highest-density
+intervals --- `hdi()` or `hdci()` --- should probably be used to retain this 
+property). Thus, we could set the density to either `pdf_min` or `pdf_max`. Or
+we could use their average, `(pdf_min + pdf_max)/2`. Since these values are
+rescaled anyway, a multiplicative factor like `1/2` has no impact on the scale,
+so we can just use `pdf_min + pdf_max`.
+
+2. We group within `.width` so that each single uncertainty band is colored the
+same color (e.g. this keeps all rows associated with the 90% interval together
+as one color).
+
+**Note:** Two other important potential modifications to this formula are:
+
+- *If you have multiple lines* and you want the densities to be of each line to
+be scaled independently of each other, add `group` so that the same uncertainty
+level in each line will get a different density associated with it (something
+like `ave(pdf_min + pdf_max, .width, group)`).
+
+- *If your ribbons become very narrow*, as can happen with non-linear scales for
+example, consider using `ave(..., FUN = "min")`. When the ribbons become too narrow, densities
+will go to infinity, which will cause `mean()` to give every ribbon the same color.
+Using `min()` instead of `mean()` essentially takes the density associated with
+the ribbon at its widest point.
+
+You may notice that the steps in the gradient look a little "jumpy" near the
 edges of the band: this is because the `ppoints()` function is giving us even
 steps in probability space (i.e. the CDF), which are not even steps in terms of
 *density*. It is not strictly necessary to fix for the correctness of the color,
@@ -263,7 +295,7 @@ the gradient will be.
 ```{r stat_lineribbon_density_smooth}
 df %>%
   ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
-  stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)), fill = "#2171b5") +
+  stat_lineribbon(.width = pnorm(seq(-3, 3, length.out = 50)), fill = "#2171b5") +
   scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
 ```
 
@@ -301,14 +333,81 @@ df_2groups %>%
   stat_lineribbon(alpha = 1/4)
 ```
 
+### Blending lineribbons
+
 We could also use the `fill_ramp` aesthetic provided by `ggdist` to similar
-effect (see `help("scale_fill_ramp")`), though this tends to work best when
-the lines do not overlap:
+effect (see `help("scale_fill_ramp")`), though this does not work well when 
+the ribbons overlap:
 
 ```{r stat_lineribbon_2groups_ramp, fig.width = tiny_width, fig.height = tiny_height}
 df_2groups %>%
   ggplot(aes(x = x, y = y, fill = g)) +
   stat_lineribbon(aes(fill_ramp = stat(level)))
+```
+
+As you can see, some of the intervals are not fully visible. The alpha blending
+approach used above can correct for this, but a more robust solution is to use
+a so-called *commutative* blend mode: that is, one where the output does not
+depend on the order the elements are drawn in.
+
+In R 4.2, different blend modes are supported by the graphics engine, and the
+*multiply* blend mode is one that is commutative. You can use it with some graphics
+engines (including PDF, SVG, and Cairo-backed PNG output).
+
+To use blend modes with *ggdist* geoms, you must:
+
+1. Set the `blend_group` aesthetic to indicate which objects are grouped together
+prior to blending. Everything in the same group is composited using the "normal"
+or "over" blend mode (simply drawn on top of each other).
+
+2. Set the `blend` parameter of the geom to the desired blend mode. A list of
+blend modes supporting by your active graphics device can be obtained via
+`dev.capabilities()$compositing`.
+
+```{r stat_lineribbon_2groups_multiply, fig.width = tiny_width, fig.height = tiny_height}
+df_2groups %>%
+  ggplot(aes(x = x, y = y, fill = g, blend_group = g)) +
+  stat_lineribbon(aes(fill_ramp = stat(level)), blend = "multiply")
+```
+
+We can combine multiply blending with either the fan chart style (CDF) gradient
+or the density style gradients from above. Let's do the gradient style fan chart,
+but set the sequence of probabilities to be such that the widest interval is 
+a 95% interval (so the gradients do not ramp all the way to white and retain
+something of a border). We can do this be setting widths between `pnorm(-1.65)`
+(approximately 0.05) and `pnorm(1.65)` (approximately 0.95):
+
+```{r stat_lineribbon_2groups_multiply_gradient, fig.width = tiny_width, fig.height = tiny_height}
+df_2groups %>%
+  ggplot(aes(x = x, y = y, fill = g, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
+  stat_lineribbon(
+    aes(blend_group = g), blend = "multiply",
+    .width = pnorm(seq(-1.65, 1.65, length.out = 50))
+  ) +
+  scale_fill_ramp_continuous(guide = guide_rampbar()) +
+  labs(
+    title = "95% uncertainty bands with density gradients and multiply blending",
+    subtitle = "aes(fill_ramp = stat(ave(pdf_min + pdf_max, .width)))",
+    fill_ramp = "density"
+  )
+```
+
+You can also scale densities within groups by using `ave(..., .width, group)`,
+which will make the wider intervals on group `a` lighter than group `b`:
+
+```{r stat_lineribbon_2groups_multiply_gradient_grouped, fig.width = tiny_width, fig.height = tiny_height}
+df_2groups %>%
+  ggplot(aes(x = x, y = y, fill = g, fill_ramp = stat(ave(pdf_min + pdf_max, .width, group)))) +
+  stat_lineribbon(
+    aes(blend_group = g), blend = "multiply",
+    .width = pnorm(seq(-1.65, 1.65, length.out = 50))
+  ) +
+  scale_fill_ramp_continuous(guide = guide_rampbar()) +
+  labs(
+    title = "95% uncertainty bands with density gradients and multiply blending",
+    subtitle = "aes(fill_ramp = stat(ave(pdf_min + pdf_max, .width, group)))",
+    fill_ramp = "density"
+  )
 ```
 
 ## Lineribbons on analytical distributions
