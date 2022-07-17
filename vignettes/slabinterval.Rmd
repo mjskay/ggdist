@@ -997,7 +997,7 @@ df %>%
 (**Note:** in previous versions of ggdist, using `cut_cdf_qi()` was the recommended
 way to achieve this affect. That function still exists for backwards compatibility, 
 but mapping `level` or `.width` is now the recommended approach, as it generalizes
-to other interval types, such as highest-density intervals.)
+to other interval types, such as highest-density intervals --- see later.)
 
 To apply the color scale to all values outside the intervals, one option is to
 split `stat_halfeye()` into its constituent parts (`stat_slab()` and 
@@ -1015,6 +1015,28 @@ df %>%
     fill = "interval"
   )
 ```
+
+If we change the interval type used, the resulting `.width` and `level` computed
+variables change correspondingly, allowing us to highlight other types of intervals
+besides quantile intervals; for example, highest-density intervals:
+
+```{r halfeye_qi_vs_hdi, fig.width = med_width, fig.height = small_height}
+qi_plot = data.frame(dist = dist_beta(10, 2)) %>%
+  ggplot(aes(xdist = dist, fill = stat(level))) + 
+  stat_halfeye(point_interval = median_qi, .width = c(.5, .8, .95)) + 
+  scale_fill_brewer(na.value = "gray95") +
+  labs(subtitle = "stat_halfeye(aes(fill = stat(level)), point_interval = median_qi)")
+
+hdi_plot = data.frame(dist = dist_beta(10, 2)) %>%
+  ggplot(aes(xdist = dist, fill = stat(level))) + 
+  stat_halfeye(point_interval = mode_hdci, .width = c(.5, .8, .95)) + 
+  scale_fill_brewer(na.value = "gray95") +
+  labs(subtitle = "stat_halfeye(aes(fill = stat(level)), point_interval = mode_hdci)")
+
+qi_plot /
+  hdi_plot
+```
+
 
 ### Using color ramps for `fill` and `color` aesthetics
 
