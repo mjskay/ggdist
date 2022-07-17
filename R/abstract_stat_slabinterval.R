@@ -158,12 +158,24 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
       # we compute *both* the slab functions and intervals first (even if one
       # or the other will not be shown), since even if a component is not shown,
       # its values are still available in the other component
-      s_data = self$compute_slab(d,
-        trans = trans, input = input,
-        orientation = orientation, limits = limits, n = n,
-        na.rm = na.rm,
-        ...
-      )
+      #
+      # TODO: currently we skip s_data if ggdist.experimental.slab_data_in_intervals
+      # is FALSE and we aren't showing the slab because otherwise we can get a
+      # bunch of spurious warnings when visualizing only intervals on a dist
+      # where the slab functions can't be reliably computed (see e.g. the
+      # logit dotplot example at the end of vignette("dotsinterval")); eventually
+      # I'd like this to be reliable enough that we can compute it for that
+      # example without warnings and remove this guard.
+      s_data = if (getOption("ggdist.experimental.slab_data_in_intervals", FALSE) || show_slab) {
+        self$compute_slab(d,
+          trans = trans, input = input,
+          orientation = orientation, limits = limits, n = n,
+          na.rm = na.rm,
+          ...
+        )
+      } else {
+        data.frame()
+      }
       i_data = self$compute_interval(d,
         trans = trans,
         orientation = orientation, point_interval = point_interval,
@@ -189,7 +201,6 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
       i_data$level = fct_rev_(ordered(i_data$.width))
       if (nrow(i_data) > 0) i_data$datatype = "interval"
 
-
       # INTERVAL INFO ADDED TO SLAB COMPONENT
       if (show_slab) {
         # fill in relevant data from the interval component
@@ -210,7 +221,10 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
 
 
       # SLAB INFO ADDED TO INTERVAL COMPONENT
-      if (show_interval && nrow(s_data) - sum(is.na(s_data$pdf) | is.na(s_data$cdf)) >= 2) {
+      if (
+        getOption("ggdist.experimental.slab_data_in_intervals", FALSE) &&
+        show_interval && nrow(s_data) - sum(is.na(s_data$pdf) | is.na(s_data$cdf)) >= 2
+      ) {
         # fill in relevant data from the slab component
         # this is expensive, so we only do it if we are actually showing the interval
         pdf_fun = if (distr_is_constant(dist)) {

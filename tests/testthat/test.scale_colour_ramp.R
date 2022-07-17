@@ -115,18 +115,15 @@ test_that("fill_ramp works with stat_slab and NAs", {
       stat_dist_halfeye(
         aes(
           fill = subgroup,
-          fill_ramp = stat(cut_cdf_qi(
-            cdf,
-            .width = c(.5, .8, .95),
-            labels = scales::percent_format()
-          ))
+          fill_ramp = stat(level)
         ),
         position = "dodgejust",
         n = 50
       ) +
-      scale_fill_ramp_discrete(range = c(1, 0.2), na.translate = FALSE) +
+      scale_fill_ramp_discrete(na.translate = FALSE) +
       labs(fill_ramp = "level")
   )
+
 })
 
 

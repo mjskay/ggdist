@@ -216,9 +216,11 @@ For slabs, the width of the smallest interval containing that value of the slab.
 \item \code{level}: For intervals, the interval width as an ordered factor.
 For slabs, the level of the smallest interval containing that value of the slab.
 \item \code{pdf}: For slabs, the probability density function (PDF).
+If \code{options("ggdist.experimental.slab_data_in_intervals")} is \code{TRUE}:
 For intervals, the PDF at the point summary; intervals also have \code{pdf_min} and \code{pdf_max}
 for the PDF at the lower and upper ends of the interval.
 \item \code{cdf}: For slabs, the cumulative distribution function.
+If \code{options("ggdist.experimental.slab_data_in_intervals")} is \code{TRUE}:
 For intervals, the CDF at the point summary; intervals also have \code{cdf_min} and \code{cdf_max}
 for the CDF at the lower and upper ends of the interval.
 \item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),

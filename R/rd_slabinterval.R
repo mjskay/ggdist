@@ -141,9 +141,11 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
       - `level`: For intervals, the interval width as an ordered factor.
         For slabs, the level of the smallest interval containing that value of the slab.
       - `pdf`: For slabs, the probability density function (PDF).
+        If `options("ggdist.experimental.slab_data_in_intervals")` is `TRUE`:
         For intervals, the PDF at the point summary; intervals also have `pdf_min` and `pdf_max`
         for the PDF at the lower and upper ends of the interval.
       - `cdf`: For slabs, the cumulative distribution function.
+        If `options("ggdist.experimental.slab_data_in_intervals")` is `TRUE`:
         For intervals, the CDF at the point summary; intervals also have `cdf_min` and `cdf_max`
         for the CDF at the lower and upper ends of the interval.',
     if (isTRUE(stat$default_params$show_slab)) {'

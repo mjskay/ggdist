@@ -990,7 +990,7 @@ df %>%
   labs(
     title = "stat_halfeye()", 
     subtitle = "aes(fill = stat(level))",
-    fill = "Interval"
+    fill = "interval"
   )
 ```
 
@@ -1012,7 +1012,7 @@ df %>%
   labs(
     title = "stat_slab()", 
     subtitle = "aes(fill = stat(level), .width = c(.66, .95, 1))",
-    fill = "Interval"
+    fill = "interval"
   )
 ```
 
@@ -1046,7 +1046,7 @@ df %>%
   labs(
     title = "stat_halfeye(position = 'dodgejust')", 
     subtitle = "aes(fill = subgroup, fill_ramp = stat(level))",
-    fill_ramp = "Interval"
+    fill_ramp = "interval"
   )
 ```
 

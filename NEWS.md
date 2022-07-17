@@ -2,29 +2,33 @@
 
 New features and enhancements:
 
-* Several computed variables in `stat_slabinterval()` are now shared across
+* Several computed variables in `stat_slabinterval()` can now be shared across
   sub-geometries:
-  * The `pdf` and `cdf` computed variables can now be used in interval 
+  * The `.width` and `level` computed variables can now be used in slab / dots
+    sub-geometries. These values correspond to the smallest interval computed
+    in the interval sub-geometry containing that portion of the slab. This
+    gives a more flexible alternative to using `cut_cdf_qi()` to create densities
+    filled according to a set of intervals (this approach which also works on
+    highest-density intervals, which `cut_cdf_qi()` does not). Examples in
+    `vignette("slabinterval")` have been updated to use the new approach, and
+    an example has been added to `vignette("dotsinterval")` showing how to 
+    color dots by intervals.
+  * As an experimental feature (currently a bit fragile) enabled via
+    `options(ggdist.experimental.slab_data_in_intervals = TRUE)`,
+    the `pdf` and `cdf` computed variables can now be used in interval 
     sub-geometries to get the PDF and CDF at the point summary. `pdf_min`,
     `pdf_max`, `cdf_min`, and `cdf_max` also give the PDF and CDF at the lower
     and upper ends of the interval. An example in `vignette("lineribbon")`
     shows how to use this to make lineribbon gradients whose color approximates
     density (as opposed to the classic gradient fan chart examples already
     in that vignette, where color approximates the CDF).
-  * The `.width` and `level` computed variables can now be used in slab 
-    sub-geometries. These values correspond to the smallest interval computed
-    in the interval sub-geometry containing that portion of the slab. This
-    gives a more flexible alternative to using `cut_cdf_qi()` to create densities
-    filled according to a set of intervals (this approach which also works on
-    highest-density intervals, which `cut_cdf_qi()` does not). Examples in
-    `vignette("slabinterval")` have been updated to use the new approach.
 * The stacking order of dots within bins for `geom_dotsinterval(layout = "bin")`
   can now be set using the `order` aesthetic. This makes it possible to create 
   "stacked" dotplots by mapping a discrete variable onto the `order` aesthetic
   (#132). As part of this change, `bin_dots()` now maintains the original data
   order within bins when `layout = "bin"`.
-* Add a `verbose = TRUE` flag to `geom_dotsinterval()` that outputs the selected
-  bin width in both data units and normalized parent coordinates. This may be
+* A new `verbose = TRUE` flag in `geom_dotsinterval()` outputs the selected
+  `binwidth` in both data units and normalized parent coordinates. This may be
   useful if you want to start with an automatically-selected bin width and then 
   adjust it manually. Though note: if you just want to scale the selected
   bin width to fit within a desired area, it is probably better to use `scale`, 

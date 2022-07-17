@@ -272,6 +272,12 @@ mtcars %>%
   )
 ```
 
+One way to avoid problems created by overlapping ribbons (besides using `alpha`, 
+as above) is to use commutative blending modes available in R > 4.2. The 
+[ggblend](https://mjskay.github.io/ggblend/) package enables support for such
+blending modes, and its documentation includes examples of their use with 
+`stat_lineribbon()`.
+
 For more examples of using lineribbons, see `vignette("lineribbon")`.
 
 

@@ -231,7 +231,13 @@ to be proportional to the *density*.
 ### Lineribbon density gradients
 
 Making the fill proportional to density is a bit more complicated to achieve,
-but can be approximated. Internally, 
+but can be approximated using an **experimental** feature in the latest version 
+of ggdist. This feature exposes density and CDF information to interval 
+sub-geometries. As this feature is fragile and not fully supported across all
+scenarios of use, it must be enabled by setting 
+`options(ggdist.experimental.slab_data_in_intervals = TRUE)`.
+
+Internally, with this feature enabled,
 ggdist calculates the density of the lower (`pdf_min`) and upper (`pdf_max`)
 ends of the intervals; you can use the average of these (or just their sum,
 since we don't need to care about normalizing constants) as an approximation
@@ -241,10 +247,12 @@ using the `ave()` function, which takes the average of its first argument
 within groups of the second:
 
 ```{r stat_lineribbon_density, fig.width = tiny_width, fig.height = tiny_height}
-df %>%
-  ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
-  stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
-  scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
+withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
+  df %>%
+    ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
+    stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
+    scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
+))
 ```
 
 You may notice that the steps in the gradient now look a little "jumpy" near the
@@ -261,10 +269,12 @@ correct), but the closer the distribution is to Normal the less jumpy-looking
 the gradient will be.
 
 ```{r stat_lineribbon_density_smooth}
-df %>%
-  ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
-  stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)), fill = "#2171b5") +
-  scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
+withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
+  df %>%
+    ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
+    stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)), fill = "#2171b5") +
+    scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
+))
 ```
 
 If you are using a different background color than `"white"`, you can pass that
@@ -310,6 +320,12 @@ df_2groups %>%
   ggplot(aes(x = x, y = y, fill = g)) +
   stat_lineribbon(aes(fill_ramp = stat(level)))
 ```
+
+One way to avoid problems created by overlapping ribbons (besides using `alpha`, 
+as above) is to use commutative blending modes available in R > 4.2. The 
+[ggblend](https://mjskay.github.io/ggblend/) package enables support for such
+blending modes, and its documentation includes examples of their use with 
+`stat_lineribbon()`.
 
 ## Lineribbons on analytical distributions
 
