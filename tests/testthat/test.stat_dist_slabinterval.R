@@ -73,6 +73,61 @@ test_that("args and arg1...n work with named args", {
 
 })
 
+test_that("layer data is correct", {
+  p = data.frame(dist = dist_normal(0, 1)) %>%
+    ggplot(aes(xdist = dist)) +
+    stat_halfeye(n = 5, p_limits = c(0.01, 0.99))
+
+  x = seq(qnorm(0.01), qnorm(0.99), length.out = 5)
+  ref =
+    data.frame(
+      size = c(NA_real_, 1, 6, 1, NA_real_),
+      thickness = dnorm(x) / dnorm(0),
+      f = dnorm(x),
+      pdf = dnorm(x),
+      cdf = pnorm(x),
+      n = Inf,
+      x = x,
+      datatype = "slab",
+      .width = c(NA_real_, 0.95, 0.66, 0.95, NA_real_),
+      level = ordered(c(NA, 0.95, 0.66, 0.95, NA), levels = c(0.95, 0.66)),
+      .point = NA_character_,
+      .interval = NA_character_,
+      xmin = NA_real_,
+      xmax = NA_real_,
+      stringsAsFactors = FALSE
+    ) %>%
+    rbind(data.frame(
+      size = c(6, 1),
+      thickness = NA_real_,
+      f = NA_real_,
+      pdf = NA_real_,
+      cdf = NA_real_,
+      n = NA_real_,
+      x = 0,
+      datatype = "interval",
+      .width = c(0.66, 0.95),
+      level = ordered(c(0.66, 0.95), levels = c(0.95, 0.66)),
+      .point = "median",
+      .interval = "qi",
+      xmin = qnorm(c(0.17, 0.025)),
+      xmax = qnorm(c(0.83, 0.975)),
+      stringsAsFactors = FALSE
+    )) %>%
+    cbind(data.frame(
+      y = 0,
+      height = 1,
+      ymin = 0,
+      ymax = 1,
+      side = "topright",
+      scale = 0.9,
+      stringsAsFactors = FALSE
+    ))
+  ref$xdist = rep(list(dist_normal(0, 1)), 7)
+
+  expect_equal(layer_data(p)[, names(ref)], ref)
+})
+
 test_that("xdist and ydist aesthetics work", {
   skip_if_no_vdiffr()
 
