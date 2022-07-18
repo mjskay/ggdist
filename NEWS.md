@@ -22,6 +22,14 @@ New features and enhancements:
     shows how to use this to make lineribbon gradients whose color approximates
     density (as opposed to the classic gradient fan chart examples already
     in that vignette, where color approximates the CDF).
+* `scale_thickness_shared()` is now provided to allow the thickness scale to be
+  easily shared across geometries, making certain plot types easier to create
+  (e.g. plots of prior and posterior densities together). See
+  `vignette("slabinterval")` for an example.
+* If `thickness` is less than 0 it is normalized to have a minimum of zero when
+  normalization is turned on; this makes it easier to use slab functions that
+  go below zero. A new example in `vignette("slabinterval")` shows how to use
+  this to create [raindrop plots](https://doi.org/10.1198/0003130032369). 
 * The stacking order of dots within bins for `geom_dotsinterval(layout = "bin")`
   can now be set using the `order` aesthetic. This makes it possible to create 
   "stacked" dotplots by mapping a discrete variable onto the `order` aesthetic

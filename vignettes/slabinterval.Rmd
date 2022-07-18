@@ -561,6 +561,48 @@ priors %>%
   )
 ```
 
+### Sharing thickness scaling across geometries
+
+In some cases, such as visualizing priors and posteriors, it can be helpful to
+use multiple geometries (e.g. one for prior and one for posterior). By default,
+normalization/scaling of slab thicknesses is controlled by geometries,
+not by a scale function. This allows various functionality not
+otherwise possible, such as (1) allowing different geometries to have different
+thickness scales and (2) allowing the user to control at what level of aggregation
+(panels, groups, the entire plot, etc) thickness scaling is done via the `normalize`
+parameter to [geom_slabinterval()].
+
+To override this default behavior and make separate geometries use a shared thickness
+scale, add `scale_thickness_shared()` to the plot. The difference is illustrated below:
+
+```{r prior_post, fig.width = med_width, fig.height = small_height}
+prior_post = data.frame(
+ prior = dist_normal(0, 1),
+ posterior = dist_normal(0.1, 0.5)
+)
+
+separate_scale_plot = prior_post %>%
+  ggplot() +
+  stat_halfeye(aes(xdist = posterior)) +
+  stat_slab(aes(xdist = prior), fill = NA, color = "red") +
+  labs(
+    title = "stat_halfeye() + stat_eye()",
+    subtitle = "default: no shared thickness scale"
+  )
+
+shared_scale_plot = prior_post %>%
+  ggplot() +
+  stat_halfeye(aes(xdist = posterior)) +
+  stat_slab(aes(xdist = prior), fill = NA, color = "#e41a1c") +
+  scale_thickness_shared() +
+  labs(subtitle = "with scale_thickness_shared()")
+
+separate_scale_plot + shared_scale_plot
+```
+
+With `scale_thickness_shared()` applied, both densities have the same area under
+their curves.
+
 ### Scale transformations of densities
 
 The `stat_slabinterval()` family also adjusts densities appropriately when scale transformations are applied. For example, here is a log-Normal distribution plotted on a log scale:
@@ -1037,7 +1079,6 @@ qi_plot /
   hdi_plot
 ```
 
-
 ### Using color ramps for `fill` and `color` aesthetics
 
 `ggdist` supplies `color_ramp` (or `colour_ramp`) and `fill_ramp` aesthetics
@@ -1089,6 +1130,36 @@ dist_df %>%
 ```
 
 See `help("scale_color_ramp")` for more information on the color ramp aesthetics/scales.
+
+### Raindrop plots
+
+[Barrowman and Myers](https://doi.org/10.1198/0003130032369) proposed an alternative to density-based eye plots (such
+as created by `stat_eye()` by default) called *raindrop plots*.
+In these, the thickness of the slab is proportional to `log(pdf)` instead of `pdf`, and
+is bounded within the 95% interval. We can construct a function that uses the `pdf` 
+and `.width` computed variables to give a thickness proportional to `log(pdf)` 
+within the 95% interval, and use it to create raindrop plots.
+
+Barrowman and Myers apply this technique with a 95% raindrop superimposed on
+a 99% raindrop, which we can replicate:
+
+```{r raindrop, fig.width = med_width, fig.height = small_height}
+priors %>%
+  ggplot(aes(y = dist, xdist = dist, args = args)) +
+  # must also use normalize = "groups" because min(log(pdf)) will be different for each dist
+  stat_slab(
+    aes(thickness = stat(ifelse(.width <= 0.99, log(pdf), NA))), 
+    normalize = "groups", fill = "gray85", .width = .99, side = "both"
+  ) +
+  stat_eye(
+    aes(thickness = stat(ifelse(.width <= 0.95, log(pdf), NA))), 
+    normalize = "groups"
+  ) +
+  ggtitle(
+    'stat_eye(normalize = "groups")',
+    "with aes(thickness = stat(ifelse(.width <= 0.95, log(pdf), NA)))\nand aes(thickness = stat(ifelse(.width <= 0.99, log(pdf), NA)))"
+  )
+```
 
 ### Creating ridge plots
 

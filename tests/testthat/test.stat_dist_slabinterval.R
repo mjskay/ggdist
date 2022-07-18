@@ -82,7 +82,7 @@ test_that("layer data is correct", {
   ref =
     data.frame(
       size = c(NA_real_, 1, 6, 1, NA_real_),
-      thickness = dnorm(x) / dnorm(0),
+      thickness = dnorm(x),
       f = dnorm(x),
       pdf = dnorm(x),
       cdf = pnorm(x),

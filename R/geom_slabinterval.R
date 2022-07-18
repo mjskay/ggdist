@@ -4,16 +4,57 @@
 ###############################################################################
 
 
-# drawing functions -------------------------------------------------------
+# thickness handling functions -------------------------------------------------------
 
+#' normalize thickness values to between 0 and 1
+#' @noRd
+normalize_thickness = function(x) UseMethod("normalize_thickness")
+
+#' @export
+normalize_thickness.default = function(x) {
+  finite_thickness = x[is.finite(x)]
+  if (length(finite_thickness) > 0) {
+    max_finite_thickness = max(finite_thickness)
+    min_finite_thickness = min(finite_thickness, 0)
+    if (max_finite_thickness > min_finite_thickness) {
+      x = (x - min_finite_thickness) / (max_finite_thickness - min_finite_thickness)
+    }
+  }
+  # infinite values get plotted at the max height (e.g. for point masses)
+  if (length(x) > 0) {
+    x[x == Inf] = 1
+  }
+  x
+}
+
+#' @export
+normalize_thickness.ggdist_thickness = function(x) {
+  # thickness values passed directly into the geom (e.g. by
+  # scale_thickness_shared()) are not normalized again.
+  x = as.double(x)
+  # infinite values get plotted at the max height (e.g. for point masses)
+  if (length(x) > 0) {
+    x[x == Inf] = 1
+  }
+  x
+}
+
+#' @export
+normalize_thickness.data.frame = function(x) {
+  x$thickness = normalize_thickness(x$thickness)
+  x
+}
+
+
+#' rescale the slab data (ymin / ymax) to be within the confines of the bounding box
+#' we do this *again* here (rather than in setup_data) because
+#' position_dodge doesn't work if we only do it up there:
+#' positions (like dodge) might change the heights so they aren't
+#' all the same, and we want to preserve our normalization settings.
+#' so we scale things based on the min height to ensure everything
+#' is the same height
+#' @noRd
 rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymin, ymax) {
-  # rescale the slab data to be within the confines of the bounding box
-  # we do this *again* here (rather than in setup_data) because
-  # position_dodge doesn't work if we only do it up there:
-  # positions (like dodge) might change the heights so they aren't
-  # all the same, and we want to preserve our normalization settings.
-  # so we scale things based on the min height to ensure everything
-  # is the same height
   min_height = min(s_data[[height]])
 
   # must do this within groups so that `side` can vary by slab
@@ -49,6 +90,9 @@ rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymi
     d
   })
 }
+
+
+# drawing functions -------------------------------------------------------
 
 draw_slabs = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
@@ -398,42 +442,6 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
 
     data$datatype = data[["datatype"]] %||% self$default_aes[["datatype"]]
 
-    # normalize thickness according to what groups the user wants to scale it within
-    normalize_thickness = function(data) {
-      finite_thickness = data$thickness[is.finite(data$thickness)]
-      if (length(finite_thickness) > 0) {
-        max_finite_thickness = max(finite_thickness)
-        if (max_finite_thickness != 0) {
-          data$thickness = data$thickness / max_finite_thickness
-        }
-      }
-      # infinite values get plotted at the max height (e.g. for point masses)
-      if (length(data$thickness) > 0) {
-        data$thickness[data$thickness == Inf] = 1
-      }
-      data
-    }
-    switch(params$normalize,
-      all = {
-        # normalize so max height across all data is 1
-        # this preserves slabs across groups in slab plots
-        data = normalize_thickness(data)
-      },
-      panels = ,
-      xy = ,
-      groups = {
-        # normalize so height in each group or panel is 1
-        normalization_groups = switch(params$normalize,
-          panels = "PANEL",
-          xy = c("PANEL", y),
-          groups = c("PANEL", y, "group")
-        )
-        data = ddply_(data, normalization_groups, normalize_thickness)
-      },
-      none = {},
-      stop('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
-    )
-
     # figure out the bounding rectangles for each group
     # this is necessary so that the bounding box is correct for
     # positions to work (e.g. position_dodge, etc)
@@ -463,6 +471,40 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
   # workaround (#84)
   draw_slabs = function(self, ...) draw_slabs(self, ...),
   draw_pointintervals = function(self, ...) draw_pointintervals(self, ...),
+
+  draw_layer = function(self, data, params, layout, coord) {
+    define_orientation_variables(params$orientation)
+
+    # normalize thickness according to what groups the user wants to scale it within
+    # must do this here: not setup_data, so it happens after the thickness scale
+    # has been applied; and not draw_panel, because normalization may be applied
+    # across panels.
+    switch(params$normalize,
+      all = {
+        # normalize so max height across all data is 1
+        # this preserves slabs across groups in slab plots
+        data = normalize_thickness(data)
+      },
+      panels = ,
+      xy = ,
+      groups = {
+        # normalize so height in each group or panel is 1
+        normalization_groups = switch(params$normalize,
+          panels = "PANEL",
+          xy = c("PANEL", y),
+          groups = c("PANEL", y, "group")
+        )
+        data = ddply_(data, normalization_groups, normalize_thickness)
+      },
+      none = {
+        # ensure thickness is a thickness-type vector so it is not normalized again
+        data$thickness = normalize_thickness(as_thickness(data$thickness))
+      },
+      stop('`normalize` must be "all", "panels", "xy", groups", or "none", not "', params$normalize, '"')
+    )
+
+    ggproto_parent(AbstractGeom, self)$draw_layer(data, params, layout, coord)
+  },
 
   draw_panel = function(self, data, panel_params, coord,
       orientation = self$default_params$orientation,

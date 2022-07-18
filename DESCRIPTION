@@ -90,6 +90,7 @@ Collate:
     "rd_slabinterval.R"
     "rd_lineribbon.R"
     "scale_colour_ramp.R"
+    "scale_thickness.R"
     "scale_.R"
     "stat.R"
     "stat_slabinterval.R"
@@ -101,5 +102,6 @@ Collate:
     "testthat.R"
     "theme_ggdist.R"
     "tidy_format_translators.R"
+    "vctrs.R"
     "deprecated.R"
 Roxygen: list(markdown = TRUE)
