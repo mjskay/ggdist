@@ -180,7 +180,7 @@ vec_ptype_abbr.ggdist_thickness = function(x, ...) "thk"
 
 #' @export
 format.ggdist_thickness = function(x, ...) {
-  paste0(format(vec_data(x)), "thk", recycle0 = TRUE)
+  sprintf("%sthk", vec_data(x))
 }
 
 
