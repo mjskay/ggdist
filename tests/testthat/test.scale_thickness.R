@@ -8,6 +8,8 @@ library(distributional)
 
 
 
+# scale_thickness ---------------------------------------------------------
+
 test_that("basic scale_thickness_shared works", {
   skip_if_no_vdiffr()
 
@@ -29,4 +31,44 @@ test_that("basic scale_thickness_shared works", {
   vdiffr::expect_doppelganger("basic scale_thickness_shared",
     p + scale_thickness_shared()
   )
+})
+
+
+# scale_type --------------------------------------------------------------
+
+test_that("scale_type works", {
+  expect_equal(scale_type(thickness(1)), "continuous")
+})
+
+
+# thickness type ----------------------------------------------------------
+
+test_that("thickness formatting works", {
+  expect_equal(vec_ptype_full(thickness()), "thickness")
+  expect_equal(vec_ptype_abbr(thickness()), "thk")
+  expect_equal(format(thickness(1:2)), c("1thk", "2thk"))
+})
+
+test_that("thickness casting works", {
+  expect_equal(vec_cast(thickness(2), double()), 2.0)
+  expect_equal(vec_cast(2.0, thickness()), thickness(2))
+
+  expect_equal(c(thickness(1), 2), thickness(c(1, 2)))
+
+  expect_error(thickness(1) + character())
+
+  expect_equal(thickness(1) + thickness(2), thickness(3))
+  expect_equal(thickness(1) - thickness(2), thickness(-1))
+  expect_equal(thickness(1) / thickness(2), 0.5)
+  expect_error(thickness(1) * thickness(2))
+
+  expect_equal(thickness(2) * 3, thickness(6))
+  expect_equal(thickness(1) / 2, thickness(0.5))
+  expect_error(thickness(1) - 2)
+  expect_error(thickness(1) + 2)
+
+  expect_equal(2 * thickness(3), thickness(6))
+  expect_error(1 / thickness(2))
+  expect_error(1 - thickness(2))
+  expect_error(1 + thickness(2))
 })
