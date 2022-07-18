@@ -4,6 +4,7 @@
 \alias{scale_thickness}
 \alias{scale_thickness_shared}
 \alias{scale_thickness_identity}
+\alias{thickness}
 \title{Scale for slab thickness}
 \usage{
 scale_thickness_shared(
@@ -16,6 +17,8 @@ scale_thickness_shared(
 )
 
 scale_thickness_identity(..., guide = "none")
+
+thickness(x = double())
 }
 \arguments{
 \item{name}{The name of the scale. Used as the axis or legend title. If
@@ -70,6 +73,9 @@ Set this to \code{TRUE} to allow geoms to also apply their own normalization.}
 
 \item{...}{Arguments passed to the underlying scale or guide functions. E.g. \code{\link[=scale_thickness_identity]{scale_thickness_identity()}}
 passes arguments to \code{\link[=continuous_scale]{continuous_scale()}}. See that function for more details.}
+
+\item{x}{An object (typically a \code{numeric()}) to be converted to a \code{thickness()}
+object.}
 }
 \value{
 A \link[ggplot2:ggplot2-ggproto]{ggplot2::Scale} representing a scale for the \code{thickness}
@@ -96,6 +102,12 @@ alternative approach: when added to a chart, all geoms will use the same
 is ignored. This is achieved by "marking" thickness values as already
 normalized by wrapping them in the \code{\link[=thickness]{thickness()}} data type (this can be
 disabled by setting \code{renormalize = TRUE}).
+
+\code{\link[=thickness]{thickness()}} is used by \code{\link[=scale_thickness_shared]{scale_thickness_shared()}} to create \code{numeric()}-like
+objects marked as being in units of slab "thickness". In most cases it is not
+useful directly; though it can be used to mark values as already being in
+units of \code{\link[=thickness]{thickness()}} (and therefore values that should not be rescaled
+by \code{\link[=scale_thickness_shared]{scale_thickness_shared()}} or \code{\link[=geom_slabinterval]{geom_slabinterval()}}).
 
 Note: while a slightly more typical name for \code{scale_thickness_shared()} might
 be \code{scale_thickness_continuous()}, the latter name would cause this scale

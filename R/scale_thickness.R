@@ -28,6 +28,8 @@ scale_type.ggdist_thickness = function(x) {
 #' Set this to `TRUE` to allow geoms to also apply their own normalization.
 #' @param ... Arguments passed to the underlying scale or guide functions. E.g. [scale_thickness_identity()]
 #' passes arguments to [continuous_scale()]. See that function for more details.
+#' @param x An object (typically a `numeric()`) to be converted to a `thickness()`
+#' object.
 #' @details
 #' By default, normalization/scaling of slab thicknesses is controlled by geometries,
 #' not by a \pkg{ggplot2} scale function. This allows various functionality not
@@ -43,6 +45,12 @@ scale_type.ggdist_thickness = function(x) {
 #' is ignored. This is achieved by "marking" thickness values as already
 #' normalized by wrapping them in the [thickness()] data type (this can be
 #' disabled by setting `renormalize = TRUE`).
+#'
+#' [thickness()] is used by [scale_thickness_shared()] to create `numeric()`-like
+#' objects marked as being in units of slab "thickness". In most cases it is not
+#' useful directly; though it can be used to mark values as already being in
+#' units of [thickness()] (and therefore values that should not be rescaled
+#' by [scale_thickness_shared()] or [geom_slabinterval()]).
 #'
 #' Note: while a slightly more typical name for `scale_thickness_shared()` might
 #' be `scale_thickness_continuous()`, the latter name would cause this scale
@@ -148,6 +156,7 @@ new_thickness = function(x = double()) {
   new_vctr(x, class = "ggdist_thickness")
 }
 
+#' @rdname scale_thickness
 #' @export
 thickness = function(x = double()) {
   x = vec_cast(x, double())
