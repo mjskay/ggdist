@@ -103,11 +103,11 @@ Shortcut version of \code{\link[=geom_slabinterval]{geom_slabinterval()}} for cr
 
 Roughly equivalent to:
 
-\preformatted{geom_slabinterval(
+\if{html}{\out{<div class="sourceCode">}}\preformatted{geom_slabinterval(
   aes(datatype = "interval", side = "both"),
   interval_size_range = c(1, 6), show_slab = FALSE, show_point = FALSE
 )
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 This geom wraps \code{\link[=geom_slabinterval]{geom_slabinterval()}} with defaults designed to produce

@@ -121,11 +121,11 @@ creating point + multiple-interval plots.
 
 Roughly equivalent to:
 
-\preformatted{stat_slabinterval(
+\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
   geom = "pointinterval",
   show_slab = FALSE
 )
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

@@ -165,12 +165,12 @@ creating slab (ridge) plots.
 
 Roughly equivalent to:
 
-\preformatted{stat_slabinterval(
+\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
   aes(size = NULL),
   geom = "slab",
   show.legend = NA
 )
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

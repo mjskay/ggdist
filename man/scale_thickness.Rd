@@ -104,14 +104,19 @@ normalized by wrapping them in the \code{\link[=thickness]{thickness()}} data ty
 disabled by setting \code{renormalize = TRUE}).
 
 \code{\link[=thickness]{thickness()}} is used by \code{\link[=scale_thickness_shared]{scale_thickness_shared()}} to create \code{numeric()}-like
-objects marked as being in units of slab "thickness". In most cases it is not
-useful directly; though it can be used to mark values as already being in
-units of \code{\link[=thickness]{thickness()}} (and therefore values that should not be rescaled
-by \code{\link[=scale_thickness_shared]{scale_thickness_shared()}} or \code{\link[=geom_slabinterval]{geom_slabinterval()}}).
+objects marked as being in units of slab "thickness". Unlike regular \code{numeric()}s,
+\code{thickness()} values mapped onto the \code{thickness} aesthetic are not rescaled by
+\code{\link[=scale_thickness_shared]{scale_thickness_shared()}} or \code{\link[=geom_slabinterval]{geom_slabinterval()}}. In most cases \code{thickness()}
+is not useful directly; though it can be used to mark values that should not be
+rescaled---see the definitions of \code{\link[=stat_ccdfinterval]{stat_ccdfinterval()}} and \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}
+for some usages.
 
 Note: while a slightly more typical name for \code{scale_thickness_shared()} might
 be \code{scale_thickness_continuous()}, the latter name would cause this scale
-to be applied to \code{thickness} aesthetics by \pkg{ggplot2} by default.
+to be applied to all \code{thickness} aesthetics by default according to the rules
+\pkg{ggplot2} uses to find default scales. Thus, to retain the usual behavior
+of \code{\link[=stat_slabinterval]{stat_slabinterval()}} (per-geom normalization of \code{thickness}), this scale
+is called \code{scale_thickness_shared()}.
 }
 \examples{
 library(distributional)

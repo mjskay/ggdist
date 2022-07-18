@@ -117,13 +117,13 @@ creating multiple-interval plots.
 
 Roughly equivalent to:
 
-\preformatted{stat_slabinterval(
+\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
   aes(colour = stat(level), size = NULL),
   geom = "interval",
   .width = c(0.5, 0.8, 0.95), show_slab = FALSE,
   show.legend = NA
 )
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

@@ -4,13 +4,8 @@
 ###############################################################################
 
 
-#' @export
-scale_type.ggdist_thickness = function(x) {
-  "continuous"
-}
 
-
-# linear scale ------------------------------------------------------------
+# shared scale ------------------------------------------------------------
 
 #' Scale for slab thickness
 #'
@@ -47,14 +42,19 @@ scale_type.ggdist_thickness = function(x) {
 #' disabled by setting `renormalize = TRUE`).
 #'
 #' [thickness()] is used by [scale_thickness_shared()] to create `numeric()`-like
-#' objects marked as being in units of slab "thickness". In most cases it is not
-#' useful directly; though it can be used to mark values as already being in
-#' units of [thickness()] (and therefore values that should not be rescaled
-#' by [scale_thickness_shared()] or [geom_slabinterval()]).
+#' objects marked as being in units of slab "thickness". Unlike regular `numeric()`s,
+#' `thickness()` values mapped onto the `thickness` aesthetic are not rescaled by
+#' [scale_thickness_shared()] or [geom_slabinterval()]. In most cases `thickness()`
+#' is not useful directly; though it can be used to mark values that should not be
+#' rescaled---see the definitions of [stat_ccdfinterval()] and [stat_gradientinterval()]
+#' for some usages.
 #'
 #' Note: while a slightly more typical name for `scale_thickness_shared()` might
 #' be `scale_thickness_continuous()`, the latter name would cause this scale
-#' to be applied to `thickness` aesthetics by \pkg{ggplot2} by default.
+#' to be applied to all `thickness` aesthetics by default according to the rules
+#' \pkg{ggplot2} uses to find default scales. Thus, to retain the usual behavior
+#' of [stat_slabinterval()] (per-geom normalization of `thickness`), this scale
+#' is called `scale_thickness_shared()`.
 #'
 #' @return
 #' A [ggplot2::Scale] representing a scale for the `thickness`
@@ -146,6 +146,14 @@ scale_thickness_identity = function (..., guide = "none") {
     ...,
     guide = guide, super = ScaleContinuousIdentity
   )
+}
+
+
+# scale_type --------------------------------------------------------------
+
+#' @export
+scale_type.ggdist_thickness = function(x) {
+  "continuous"
 }
 
 

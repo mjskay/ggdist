@@ -200,12 +200,12 @@ creating gradient + interval plots.
 
 Roughly equivalent to:
 
-\preformatted{stat_slabinterval(
-  aes(justification = stat(0.5), thickness = stat(1), slab_alpha = stat(f)),
+\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
+  aes(justification = stat(0.5), thickness = stat(thickness(1)), slab_alpha = stat(f)),
   fill_type = "auto",
   show.legend = c(size = FALSE, slab_alpha = FALSE)
 )
-}
+}\if{html}{\out{</div>}}
 
 If your graphics device supports it, it is recommended to use this stat
 with \code{fill_type = "gradient"} (see the description of that parameter). On R >= 4.2,

@@ -17,20 +17,16 @@ qlkjcorr_marginal(p, K, eta, lower.tail = TRUE, log.p = FALSE)
 rlkjcorr_marginal(n, K, eta)
 }
 \arguments{
-\item{x}{vector of quantiles.}
+\item{x, q}{vector of quantiles.}
 
 \item{K}{Dimension of the correlation matrix. Must be greater than or equal to 2.}
 
 \item{eta}{Parameter controlling the shape of the distribution}
 
-\item{log}{logical; if TRUE, probabilities p are given as log(p).}
-
-\item{q}{vector of quantiles.}
+\item{log, log.p}{logical; if TRUE, probabilities p are given as log(p).}
 
 \item{lower.tail}{logical; if TRUE (default), probabilities are
     \eqn{P[X \le x]} otherwise, \eqn{P[X > x]}.}
-
-\item{log.p}{logical; if TRUE, probabilities p are given as log(p).}
 
 \item{p}{vector of probabilities.}
 

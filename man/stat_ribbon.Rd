@@ -118,10 +118,10 @@ function.
 
 Roughly equivalent to:
 
-\preformatted{stat_lineribbon(
+\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_lineribbon(
   aes(colour = stat(I(NA)))
 )
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

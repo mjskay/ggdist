@@ -643,6 +643,7 @@ stat_eye = make_stat(StatEye, geom = "slabinterval")
 
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
   default_aes = defaults(aes(
+    thickness = stat(thickness(1 - cdf)),
     justification = stat(0.5),
     side = stat("topleft"),
   ), StatSlabinterval$default_aes),
@@ -658,6 +659,10 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
 stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 
 StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
+  default_aes = defaults(aes(
+    thickness = stat(thickness(cdf)),
+  ), StatCcdfinterval$default_aes),
+
   default_params = defaults(list(
     slab_type = "cdf"
   ), StatCcdfinterval$default_params)
@@ -669,7 +674,7 @@ stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
 StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
   default_aes = defaults(aes(
     justification = stat(0.5),
-    thickness = stat(1),
+    thickness = stat(thickness(1)),
     slab_alpha = stat(f)
   ), StatSlabinterval$default_aes),
 

@@ -200,11 +200,11 @@ creating CDF bar plots.
 
 Roughly equivalent to:
 
-\preformatted{stat_slabinterval(
-  aes(justification = stat(0.5), side = stat("topleft")),
+\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
+  aes(thickness = stat(thickness(cdf)), justification = stat(0.5), side = stat("topleft")),
   slab_type = "cdf", normalize = "none", expand = TRUE
 )
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

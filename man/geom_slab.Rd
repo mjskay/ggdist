@@ -119,10 +119,10 @@ Shortcut version of \code{\link[=geom_slabinterval]{geom_slabinterval()}} for cr
 
 Roughly equivalent to:
 
-\preformatted{geom_slabinterval(
+\if{html}{\out{<div class="sourceCode">}}\preformatted{geom_slabinterval(
   show_point = FALSE, show_interval = FALSE
 )
-}
+}\if{html}{\out{</div>}}
 }
 \section{Aesthetics}{
 

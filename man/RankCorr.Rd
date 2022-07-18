@@ -16,9 +16,11 @@ is described in Harrison \emph{et al.} (2014).
 \code{data("RankCorr")} is a substantially thinned version of the original posterior sample and has omitted several
 parameters in order for it to be a more manageable size.
 
-\code{data("RankCorr_u_tau")} is used for testing and examples and is roughly the equivalent of the following:\preformatted{data("RankCorr")
+\code{data("RankCorr_u_tau")} is used for testing and examples and is roughly the equivalent of the following:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{data("RankCorr")
 RankCorr_u_tau = tidybayes::spread_draws(RankCorr, u_tau[i]))
-}
+}\if{html}{\out{</div>}}
 }
 \references{
 Kay, Matthew, and Jeffrey Heer. (2016).

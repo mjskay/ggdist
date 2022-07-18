@@ -198,10 +198,10 @@ creating histogram + interval plots.
 
 Roughly equivalent to:
 
-\preformatted{stat_slabinterval(
+\if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
   slab_type = "histogram"
 )
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 \strong{To visualize sample data}, such as a data distribution, samples from a

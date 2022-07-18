@@ -22,7 +22,7 @@ specified in \code{\link[ggplot2:labs]{labs()}} is used for the title.}
 title. One of "top" (default for a vertical guide), "bottom", "left"
 (default for a horizontal guide), or "right."}
     \item{\code{title.theme}}{A theme object for rendering the title text. Usually the
-object of \code{\link[ggplot2:element]{element_text()}} is expected. By default, the theme is
+object of \code{\link[ggplot2:element_text]{element_text()}} is expected. By default, the theme is
 specified by \code{legend.title} in \code{\link[ggplot2:theme]{theme()}} or theme.}
     \item{\code{title.hjust}}{A number specifying horizontal justification of the
 title text.}
@@ -34,7 +34,7 @@ text.}
 label. One of "top", "bottom" (default for horizontal guide), "left", or
 "right" (default for vertical guide).}
     \item{\code{label.theme}}{A theme object for rendering the label text. Usually the
-object of \code{\link[ggplot2:element]{element_text()}} is expected. By default, the theme is
+object of \code{\link[ggplot2:element_text]{element_text()}} is expected. By default, the theme is
 specified by \code{legend.text} in \code{\link[ggplot2:theme]{theme()}}.}
     \item{\code{label.hjust}}{A numeric specifying horizontal justification of the
 label text.}
