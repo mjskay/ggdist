@@ -85,6 +85,7 @@ Collate:
     "geom_lineribbon.R"
     "geom_pointinterval.R"
     "geom_slab.R"
+    "geom_spike.R"
     "geom_swarm.R"
     "guide_rampbar.R"
     "lkjcorr_marginal.R"
