@@ -52,8 +52,13 @@ test_that("thickness formatting works", {
 test_that("thickness casting works", {
   expect_equal(vec_cast(thickness(2), double()), 2.0)
   expect_equal(vec_cast(2.0, thickness()), thickness(2))
+  expect_equal(vec_cast(2L, thickness()), thickness(2))
 
   expect_equal(c(thickness(1), 2), thickness(c(1, 2)))
+  expect_equal(c(thickness(1), 2L), thickness(c(1, 2)))
+
+  expect_equal(vec_c(2, thickness(1)), thickness(c(2, 1)))
+  expect_equal(vec_c(2L, thickness(1)), thickness(c(2, 1)))
 
   expect_error(thickness(1) + character())
 
