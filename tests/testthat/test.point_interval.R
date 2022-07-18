@@ -613,3 +613,66 @@ test_that("flattened indices retain index order", {
   )
 
 })
+
+
+# 100% intervals ----------------------------------------------------------
+
+test_that("100% intervals work on sample data", {
+  x = seq(0, 1, length.out = 10)
+
+  ref = data.frame(
+    .value = 0.5,
+    .lower = 0,
+    .upper = 1,
+    .width = 1,
+    .point = "median",
+    .interval = "qi",
+    stringsAsFactors = FALSE
+  )
+
+  expect_equal(median_qi(x, .width = 1, .simple_names = TRUE), ref)
+  expect_equal(median_hdi(x, .width = 1, .simple_names = TRUE), mutate(ref, .interval = "hdi"))
+  expect_equal(median_hdci(x, .width = 1, .simple_names = TRUE), mutate(ref, .interval = "hdci"))
+  expect_equal(median_ll(x, .width = 1, .simple_names = TRUE), mutate(ref, .interval = "ll"))
+  expect_equal(median_ul(x, .width = 1, .simple_names = TRUE), mutate(ref, .interval = "ul"))
+})
+
+test_that("100% intervals work on distributions", {
+  x = dist_exponential(1)
+
+  ref = tibble(
+    .value = 1,
+    .lower = 0,
+    .upper = Inf,
+    .width = 1,
+    .point = "mean",
+    .interval = "qi"
+  )
+
+  expect_equal(mean_qi(x, .width = 1), ref)
+  expect_equal(mean_hdi(x, .width = 1), mutate(ref, .interval = "hdi"))
+  expect_equal(mean_hdci(x, .width = 1), mutate(ref, .interval = "hdci"))
+  expect_equal(mean_ll(x, .width = 1), mutate(ref, .interval = "ll"))
+  expect_equal(mean_ul(x, .width = 1), mutate(ref, .interval = "ul"))
+})
+
+test_that("100% intervals work on rvars", {
+  skip_if_not_installed("posterior")
+
+  x = posterior::rvar(seq(0, 1, length.out = 10))
+
+  ref = tibble(
+    .value = 0.5,
+    .lower = 0,
+    .upper = 1,
+    .width = 1,
+    .point = "median",
+    .interval = "qi"
+  )
+
+  expect_equal(median_qi(x, .width = 1), ref)
+  expect_equal(median_hdi(x, .width = 1), mutate(ref, .interval = "hdi"))
+  expect_equal(median_hdci(x, .width = 1), mutate(ref, .interval = "hdci"))
+  expect_equal(median_ll(x, .width = 1), mutate(ref, .interval = "ll"))
+  expect_equal(median_ul(x, .width = 1), mutate(ref, .interval = "ul"))
+})

@@ -443,6 +443,9 @@ hdi_.distribution = function(x, .width = .95, ...) {
   if (anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
+  if (isTRUE(.width == 1)) {
+    return(matrix(quantile(x, c(0, 1))[[1]], ncol = 2))
+  }
 
   hilos = hdr(x, .width * 100, ...)
   matrix(c(unlist(vctrs::field(hilos, "lower")), unlist(vctrs::field(hilos, "upper"))), ncol = 2)
@@ -546,6 +549,9 @@ hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
   }
   if (anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
+  }
+  if (isTRUE(.width == 1)) {
+    return(matrix(quantile(x, c(0, 1))[[1]], ncol = 2))
   }
 
   #TODO: after #114, pass na.rm to quantile here
