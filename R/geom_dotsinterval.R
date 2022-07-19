@@ -276,9 +276,9 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @param verbose If `TRUE`, print out the bin width of the dotplot. Can be useful
 #' if you want to start from an automatically-selected bin width and then adjust it
 #' manually. Bin width is printed both as data units and as normalized parent
-#' coordinates or "npc"s (see [unit()]). Note that if you just want to scale the
+#' coordinates or `"npc"`s (see [unit()]). Note that if you just want to scale the
 #' selected bin width to fit within a desired area, it is probably easier to use
-#' `scale` than to copy and scale the binwidth manually, and if you just want to
+#' `scale` than to copy and scale `binwidth` manually, and if you just want to
 #' provide constraints on the bin width, you can pass a length-2 vector to `binwidth`.
 #' @return A [ggplot2::Geom] or [ggplot2::Stat] representing a dotplot or combined dotplot+interval geometry which can
 #' be added to a [ggplot()] object.

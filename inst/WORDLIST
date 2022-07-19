@@ -1,6 +1,7 @@
 al
 amongst
 arXiv
+Barrowman
 beeswarm
 behaviour
 brm
@@ -8,6 +9,9 @@ brms
 CCDF
 CCDFs
 cdot
+Christiansen
+colour
+colourbar
 composable
 conf
 configurability
@@ -24,6 +28,7 @@ dotplots
 dplyr
 ECDFs
 emmeans
+Engbo
 equi
 et
 fda
@@ -37,12 +42,14 @@ ge
 geoms
 Genton
 Ghement
+ggblend
 ggplot
 ggproto
 ggridges
 github
 Github
 Gleicher
+Græsbøll
 Hadley
 halfeye
 halfspace
@@ -61,6 +68,7 @@ ish
 jagsUI
 Juul
 kable
+Kaare
 Kesar
 knitr
 Kruschke
@@ -68,12 +76,15 @@ Kurowicka
 Kurz
 Kurz's
 Ladislas
+Lasse
 lceil
 le
+Lehmann
 Lewandowski
 lfloor
 lineribbon
 lineribbons
+linetype
 LKJ
 LOESS
 lsmeans
@@ -95,6 +106,8 @@ pre
 qi
 rceil
 Remco
+renormalized
+rescaled
 resid
 rfloor
 rjags
@@ -114,6 +127,7 @@ stanreg
 subclass
 summarise
 summarization
+Sune
 textrm
 tibble
 tidybayes

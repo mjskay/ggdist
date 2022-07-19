@@ -92,6 +92,7 @@
 #'   scale_thickness_shared()
 #'
 #' @importFrom scales identity_pal
+#' @import vctrs
 #' @export
 scale_thickness_shared = function(
   name = waiver(), breaks = waiver(), labels = waiver(),

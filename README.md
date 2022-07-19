@@ -37,13 +37,13 @@ The `geom_dotsinterval()` / `stat_dotsinterval()` family (see
 plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and
 combined with half-eyes, composite plots like rain cloud plots):
 
-![](man/figures/README/halfeye_dotplot-1.png)<!-- -->
+<img src="man/figures/README/halfeye_dotplot-1.png" width="672" />
 
 The `geom_lineribbon()` / `stat_lineribbon()` family (see
 `vignette("lineribbon")`) makes it easy to visualize fit lines with an
 arbitrary number of uncertainty bands:
 
-![](man/figures/README/lineribbon-1.png)<!-- -->
+<img src="man/figures/README/lineribbon-1.png" width="672" />
 
 All stat in `ggdist` also support visualizing analytical distributions
 and vectorized distribution data types like
@@ -84,8 +84,10 @@ devtools::install_github("mjskay/ggdist")
 
 ## Feedback, issues, and contributions
 
-I welcome feedback, suggestions, issues, and contributions! Contact me
-at <mjskay@northwestern.edu>. If you have found a bug, please file it
+I welcome feedback, suggestions, issues, and contributions! I am not
+particularly reliable over email, though you can contact me at
+<mjskay@northwestern.edu>. On [Twitter](https://twitter.com/mjskay) I am
+more reliable. If you have found a bug, please file it
 [here](https://github.com/mjskay/ggdist/issues/new) with minimal code to
 reproduce the issue. Pull requests should be filed against the
 [`dev`](https://github.com/mjskay/ggdist/tree/dev) branch.
@@ -93,6 +95,6 @@ reproduce the issue. Pull requests should be filed against the
 ## Citing `ggdist`
 
 Matthew Kay (2022). *ggdist: Visualizations of Distributions and
-Uncertainty*. R package version 3.1.1,
+Uncertainty*. R package version 3.2.0,
 <https://mjskay.github.io/ggdist/>. DOI:
 [10.5281/zenodo.3879620](https://doi.org/10.5281/zenodo.3879620).

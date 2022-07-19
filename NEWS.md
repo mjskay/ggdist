@@ -1,4 +1,4 @@
-# ggdist 3.1.1.9000
+# ggdist 3.2.0
 
 New features and enhancements:
 
@@ -23,7 +23,7 @@ New features and enhancements:
     density (as opposed to the classic gradient fan chart examples already
     in that vignette, where color approximates the CDF).
 * `scale_thickness_shared()` is now provided to allow the thickness scale to be
-  easily shared across geometries, making certain plot types easier to create
+  shared across geometries, making certain plot types easier to create
   (e.g. plots of prior and posterior densities together). See
   `vignette("slabinterval")` for an example.
 * If `thickness` is less than 0 it is normalized to have a minimum of zero when
@@ -34,7 +34,8 @@ New features and enhancements:
   can now be set using the `order` aesthetic. This makes it possible to create 
   "stacked" dotplots by mapping a discrete variable onto the `order` aesthetic
   (#132). As part of this change, `bin_dots()` now maintains the original data
-  order within bins when `layout = "bin"`.
+  order within bins when `layout = "bin"`. See an example in 
+  `vignette("dotsinterval")`.
 * A new `verbose = TRUE` flag in `geom_dotsinterval()` outputs the selected
   `binwidth` in both data units and normalized parent coordinates. This may be
   useful if you want to start with an automatically-selected bin width and then 
@@ -49,6 +50,7 @@ New features and enhancements:
   used to display its dots (based on a conversation with @gdbassett).
 * Experimental `guide_rampbar()` for creating gradient-like legends for
   continuous color/fill ramp scales, based on `ggplot2::guide_colorbar()`.
+  See an example in `vignette("lineribbon")`.
 
 Bug fixes:
 
