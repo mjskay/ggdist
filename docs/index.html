@@ -24,7 +24,7 @@
     frequentist confidence distributions or Bayesian priors) and distributions represented as samples (such as 
     bootstrap distributions or Bayesian posterior samples) are easily visualized. Visualization primitives include
     but are not limited to: points with multiple uncertainty intervals, 
-    eye plots (Spiegelhalter D., 1999) &lt;doi:10.1111/1467-985X.00120&gt;,
+    eye plots (Spiegelhalter D., 1999) &lt;https://ideas.repec.org/a/bla/jorssa/v162y1999i1p45-58.html&gt;,
     density plots, gradient plots, dot plots (Wilkinson L., 1999) &lt;doi:10.1080/00031305.1999.10474474&gt;,
     quantile dot plots (Kay M., Kola T., Hullman J., Munson S., 2016) &lt;doi:10.1145/2858036.2858558&gt;,
     complementary cumulative distribution function 
@@ -57,7 +57,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
       </span>
     </div>
 
@@ -67,7 +67,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -123,9 +123,9 @@
 <img src="reference/figures/slabinterval_family.png" alt=""><p class="caption">The slabinterval family of geoms and stats</p>
 </div>
 <p>The <code><a href="reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> / <code><a href="reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> family (see <code><a href="articles/dotsinterval.html">vignette("dotsinterval")</a></code>) makes it easy to visualize dot+interval plots, Wilkinson dotplots, beeswarm plots, and quantile dotplots (and combined with half-eyes, composite plots like rain cloud plots):</p>
-<p><img src="reference/figures/README/halfeye_dotplot-1.png"><!-- --></p>
+<p><img src="reference/figures/README/halfeye_dotplot-1.png" width="672"></p>
 <p>The <code><a href="reference/geom_lineribbon.html">geom_lineribbon()</a></code> / <code><a href="reference/stat_lineribbon.html">stat_lineribbon()</a></code> family (see <code><a href="articles/lineribbon.html">vignette("lineribbon")</a></code>) makes it easy to visualize fit lines with an arbitrary number of uncertainty bands:</p>
-<p><img src="reference/figures/README/lineribbon-1.png"><!-- --></p>
+<p><img src="reference/figures/README/lineribbon-1.png" width="672"></p>
 <p>All stat in <code>ggdist</code> also support visualizing analytical distributions and vectorized distribution data types like <a href="https://pkg.mitchelloharawild.com/distributional/" class="external-link">distributional</a> objects or <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar()</a></code> objects. This is particularly useful when visualizing uncertainty in frequentist models (see <code><a href="articles/freq-uncertainty-vis.html">vignette("freq-uncertainty-vis")</a></code>) or when visualizing priors in a Bayesian analysis.</p>
 <p>The <code>ggdist</code> geoms and stats also form a core part of the <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> package (in fact, they originally were part of <code>tidybayes</code>). For examples of the use of <code>ggdist</code> geoms and stats for visualizing uncertainty in Bayesian models, see the vignettes in tidybayes, such as <code><a href="http://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">vignette("tidybayes", package = "tidybayes")</a></code> or <code><a href="http://mjskay.github.io/tidybayes/articles/tidy-brms.html" class="external-link">vignette("tidy-brms", package = "tidybayes")</a></code>.</p>
 <div class="section level2">
@@ -138,22 +138,22 @@
 </h2>
 <p>You can install the currently-released version from CRAN with this R command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ggdist"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ggdist"</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can install the latest development version from GitHub with these R commands:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mjskay/ggdist"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mjskay/ggdist"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="feedback-issues-and-contributions">Feedback, issues, and contributions<a class="anchor" aria-label="anchor" href="#feedback-issues-and-contributions"></a>
 </h2>
-<p>I welcome feedback, suggestions, issues, and contributions! Contact me at <a href="mailto:mjskay@northwestern.edu" class="email">mjskay@northwestern.edu</a>. If you have found a bug, please file it <a href="https://github.com/mjskay/ggdist/issues/new" class="external-link">here</a> with minimal code to reproduce the issue. Pull requests should be filed against the <a href="https://github.com/mjskay/ggdist/tree/dev" class="external-link"><code>dev</code></a> branch.</p>
+<p>I welcome feedback, suggestions, issues, and contributions! I am not particularly reliable over email, though you can contact me at <a href="mailto:mjskay@northwestern.edu" class="email">mjskay@northwestern.edu</a>. On <a href="https://twitter.com/mjskay" class="external-link">Twitter</a> I am more reliable. If you have found a bug, please file it <a href="https://github.com/mjskay/ggdist/issues/new" class="external-link">here</a> with minimal code to reproduce the issue. Pull requests should be filed against the <a href="https://github.com/mjskay/ggdist/tree/dev" class="external-link"><code>dev</code></a> branch.</p>
 </div>
 <div class="section level2">
 <h2 id="citing-ggdist">Citing <code>ggdist</code>
 <a class="anchor" aria-label="anchor" href="#citing-ggdist"></a>
 </h2>
-<p>Matthew Kay (2022). <em>ggdist: Visualizations of Distributions and Uncertainty</em>. R package version 3.1.1, <a href="https://mjskay.github.io/ggdist/" class="external-link uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620" class="external-link">10.5281/zenodo.3879620</a>.</p>
+<p>Matthew Kay (2022). <em>ggdist: Visualizations of Distributions and Uncertainty</em>. R package version 3.2.0, <a href="https://mjskay.github.io/ggdist/" class="external-link uri">https://mjskay.github.io/ggdist/</a>. DOI: <a href="https://doi.org/10.5281/zenodo.3879620" class="external-link">10.5281/zenodo.3879620</a>.</p>
 </div>
 </div>
   </div>
@@ -213,7 +213,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

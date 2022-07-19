@@ -575,7 +575,7 @@ parameter to [geom_slabinterval()].
 To override this default behavior and make separate geometries use a shared thickness
 scale, add `scale_thickness_shared()` to the plot. The difference is illustrated below:
 
-```{r prior_post, fig.width = med_width, fig.height = small_height}
+```{r prior_post, fig.width = med_width, fig.height = small_height * 2/3}
 prior_post = data.frame(
  prior = dist_normal(0, 1),
  posterior = dist_normal(0.1, 0.5)
@@ -586,7 +586,7 @@ separate_scale_plot = prior_post %>%
   stat_halfeye(aes(xdist = posterior)) +
   stat_slab(aes(xdist = prior), fill = NA, color = "red") +
   labs(
-    title = "stat_halfeye() + stat_eye()",
+    title = "prior (slab) + posterior (halfeye)",
     subtitle = "default: no shared thickness scale"
   )
 

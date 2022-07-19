@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -85,21 +85,20 @@
 is described in Harrison <em>et al.</em> (2014).</p>
 <p><code>data("RankCorr")</code> is a substantially thinned version of the original posterior sample and has omitted several
 parameters in order for it to be a more manageable size.</p>
-<p><code>data("RankCorr_u_tau")</code> is used for testing and examples and is roughly the equivalent of the following:</p><div class="sourceCode"><pre><code>data("RankCorr")
-RankCorr_u_tau = tidybayes::spread_draws(RankCorr, u_tau[i]))
-</code></pre></div>
-
+<p><code>data("RankCorr_u_tau")</code> is used for testing and examples and is roughly the equivalent of the following:</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"RankCorr"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>RankCorr_u_tau <span class="ot">=</span> tidybayes<span class="sc">::</span><span class="fu">spread_draws</span>(RankCorr, u_tau[i])<span class="er">)</span></span></code></pre><p></p></div>
     </div>
     <div id="references">
     <h2>References</h2>
     <p>Kay, Matthew, and Jeffrey Heer. (2016).
 "Beyond Weber's law: A second look at ranking visualizations of correlation."
 <em>IEEE transactions on visualization and computer graphics</em> 22(1): 469-478.
-doi: <a href="https://doi.org/10.1109/TVCG.2015.2467671" class="external-link">10.1109/TVCG.2015.2467671</a></p>
+<a href="https://doi.org/10.1109/TVCG.2015.2467671" class="external-link">doi:10.1109/TVCG.2015.2467671</a></p>
 <p>Harrison, Lane, Fumeng Yang, Steven Franconeri, and Remco Chang. (2014).
 "Ranking visualizations of correlation using Weber's law."
 <em>IEEE transactions on visualization and computer graphics</em> 20(12): 1943-1952.
-doi: <a href="https://doi.org/10.1109/TVCG.2014.2346979" class="external-link">10.1109/TVCG.2014.2346979</a></p>
+<a href="https://doi.org/10.1109/TVCG.2014.2346979" class="external-link">doi:10.1109/TVCG.2014.2346979</a></p>
     </div>
 
   </div>
@@ -114,7 +113,7 @@ doi: <a href="https://doi.org/10.1109/TVCG.2014.2346979" class="external-link">1
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

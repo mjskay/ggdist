@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -73,7 +73,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="3.1.1" id="ggdist-311">ggdist 3.1.1<a class="anchor" aria-label="anchor" href="#ggdist-311"></a></h2>
+<h2 class="page-header" data-toc-text="3.2.0" id="ggdist-320">ggdist 3.2.0<a class="anchor" aria-label="anchor" href="#ggdist-320"></a></h2>
+<p>New features and enhancements:</p>
+<ul><li>Several computed variables in <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> can now be shared across sub-geometries:
+<ul><li>The <code>.width</code> and <code>level</code> computed variables can now be used in slab / dots sub-geometries. These values correspond to the smallest interval computed in the interval sub-geometry containing that portion of the slab. This gives a more flexible alternative to using <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> to create densities filled according to a set of intervals (this approach which also works on highest-density intervals, which <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> does not). Examples in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> have been updated to use the new approach, and an example has been added to <code><a href="../articles/dotsinterval.html">vignette("dotsinterval")</a></code> showing how to color dots by intervals.</li>
+<li>As an experimental feature (currently a bit fragile) enabled via <code>options(ggdist.experimental.slab_data_in_intervals = TRUE)</code>, the <code>pdf</code> and <code>cdf</code> computed variables can now be used in interval sub-geometries to get the PDF and CDF at the point summary. <code>pdf_min</code>, <code>pdf_max</code>, <code>cdf_min</code>, and <code>cdf_max</code> also give the PDF and CDF at the lower and upper ends of the interval. An example in <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code> shows how to use this to make lineribbon gradients whose color approximates density (as opposed to the classic gradient fan chart examples already in that vignette, where color approximates the CDF).</li>
+</ul></li>
+<li>
+<code><a href="../reference/scale_thickness.html">scale_thickness_shared()</a></code> is now provided to allow the thickness scale to be shared across geometries, making certain plot types easier to create (e.g. plots of prior and posterior densities together). See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> for an example.</li>
+<li>If <code>thickness</code> is less than 0 it is normalized to have a minimum of zero when normalization is turned on; this makes it easier to use slab functions that go below zero. A new example in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> shows how to use this to create <a href="https://doi.org/10.1198/0003130032369" class="external-link">raindrop plots</a>.</li>
+<li>The stacking order of dots within bins for <code>geom_dotsinterval(layout = "bin")</code> can now be set using the <code>order</code> aesthetic. This makes it possible to create “stacked” dotplots by mapping a discrete variable onto the <code>order</code> aesthetic (<a href="https://github.com/mjskay/ggdist/issues/132" class="external-link">#132</a>). As part of this change, <code><a href="../reference/bin_dots.html">bin_dots()</a></code> now maintains the original data order within bins when <code>layout = "bin"</code>. See an example in <code><a href="../articles/dotsinterval.html">vignette("dotsinterval")</a></code>.</li>
+<li>A new <code>verbose = TRUE</code> flag in <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> outputs the selected <code>binwidth</code> in both data units and normalized parent coordinates. This may be useful if you want to start with an automatically-selected bin width and then adjust it manually. Though note: if you just want to scale the selected bin width to fit within a desired area, it is probably better to use <code>scale</code>, and if you want to provide constraints on the bin width, you can pass a 2-vector to <code>binwidth</code>.</li>
+<li>The <code>expand</code> argument in <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> can now take a length-two logical vector to control expansion to the lower and upper limits respectively (<a href="https://github.com/mjskay/ggdist/issues/129" class="external-link">#129</a>). Thanks to <a href="https://github.com/teunbrand" class="external-link">@teunbrand</a>.</li>
+<li>
+<code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> now supports the <code>family</code> aesthetic for setting the font used to display its dots (based on a conversation with <a href="https://github.com/gdbassett" class="external-link">@gdbassett</a>).</li>
+<li>Experimental <code><a href="../reference/guide_rampbar.html">guide_rampbar()</a></code> for creating gradient-like legends for continuous color/fill ramp scales, based on <code><a href="https://ggplot2.tidyverse.org/reference/guide_colourbar.html" class="external-link">ggplot2::guide_colorbar()</a></code>. See an example in <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code>.</li>
+</ul><p>Bug fixes:</p>
+<ul><li>If there are <code>NA</code>s in the <code>thickness</code> aesthetic of a slab, these are now rendered as gaps in the slab (<a href="https://github.com/mjskay/ggdist/issues/129" class="external-link">#129</a>).</li>
+<li>Fixed the check for empty x/y scales to avoid extending the scale to cover 0/1 when plotting distributional objects whose bulk lies outside that region (when there is nothing else on the plot).</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="3.1.1" id="ggdist-311">ggdist 3.1.1<small>2022-02-27</small><a class="anchor" aria-label="anchor" href="#ggdist-311"></a></h2>
 <p>Bug fixes:</p>
 <ul><li>If a string is supplied to the <code>point_interval</code> argument of <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code>, a function with that name will be searched for in the calling environment and the <code>ggdist</code> package environment. The latter ensures that <code>stat</code>s work when ggdist is loaded but not attached to the search path (<a href="https://github.com/mjskay/ggdist/issues/128" class="external-link">#128</a>).</li>
 </ul></div>
@@ -229,7 +249,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

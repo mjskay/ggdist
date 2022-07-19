@@ -70,6 +70,9 @@
     <loc>http://mjskay.github.io/ggdist/reference/ggdist-package.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/guide_rampbar.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/index.html</loc>
   </url>
   <url>
@@ -95,6 +98,9 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/scale_colour_ramp.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/scale_thickness.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/stat_ccdfinterval.html</loc>

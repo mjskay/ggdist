@@ -24,7 +24,7 @@ and stats/geoms based on it (like eye plots)."><meta property="og:image" content
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
       </span>
     </div>
 
@@ -33,7 +33,7 @@ and stats/geoms based on it (like eye plots)."><meta property="og:image" content
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -80,109 +80,113 @@ and stats/geoms based on it (like eye plots).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">scale_point_colour_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"point_colour"</span><span class="op">)</span>
-
-<span class="fu">scale_point_color_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"point_colour"</span><span class="op">)</span>
-
-<span class="fu">scale_point_colour_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  aesthetics <span class="op">=</span> <span class="st">"point_colour"</span>,
-  guide <span class="op">=</span> <span class="st">"colourbar2"</span>
-<span class="op">)</span>
-
-<span class="fu">scale_point_color_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  aesthetics <span class="op">=</span> <span class="st">"point_colour"</span>,
-  guide <span class="op">=</span> <span class="st">"colourbar2"</span>
-<span class="op">)</span>
-
-<span class="fu">scale_point_fill_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"point_fill"</span><span class="op">)</span>
-
-<span class="fu">scale_point_fill_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  aesthetics <span class="op">=</span> <span class="st">"point_fill"</span>,
-  guide <span class="op">=</span> <span class="st">"colourbar2"</span>
-<span class="op">)</span>
-
-<span class="fu">scale_point_alpha_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_point_alpha_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_point_size_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_point_size_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">scale_interval_colour_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span><span class="op">)</span>
-
-<span class="fu">scale_interval_color_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span><span class="op">)</span>
-
-<span class="fu">scale_interval_colour_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span>,
-  guide <span class="op">=</span> <span class="st">"colourbar2"</span>
-<span class="op">)</span>
-
-<span class="fu">scale_interval_color_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span>,
-  guide <span class="op">=</span> <span class="st">"colourbar2"</span>
-<span class="op">)</span>
-
-<span class="fu">scale_interval_alpha_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_interval_alpha_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_interval_size_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_interval_size_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">scale_interval_linetype_discrete</span><span class="op">(</span><span class="va">...</span>, na.value <span class="op">=</span> <span class="st">"blank"</span><span class="op">)</span>
-
-<span class="fu">scale_interval_linetype_continuous</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-
-<span class="fu">scale_slab_colour_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span><span class="op">)</span>
-
-<span class="fu">scale_slab_color_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span><span class="op">)</span>
-
-<span class="fu">scale_slab_colour_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span>,
-  guide <span class="op">=</span> <span class="st">"colourbar2"</span>
-<span class="op">)</span>
-
-<span class="fu">scale_slab_color_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span>,
-  guide <span class="op">=</span> <span class="st">"colourbar2"</span>
-<span class="op">)</span>
-
-<span class="fu">scale_slab_fill_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"slab_fill"</span><span class="op">)</span>
-
-<span class="fu">scale_slab_fill_continuous</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"slab_fill"</span>, guide <span class="op">=</span> <span class="st">"colourbar2"</span><span class="op">)</span>
-
-<span class="fu">scale_slab_alpha_continuous</span><span class="op">(</span>
-  <span class="va">...</span>,
-  limits <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">l</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, <span class="va">l</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
-  range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">scale_slab_alpha_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_slab_size_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">scale_slab_size_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">scale_slab_linetype_discrete</span><span class="op">(</span><span class="va">...</span>, na.value <span class="op">=</span> <span class="st">"blank"</span><span class="op">)</span>
-
-<span class="fu">scale_slab_linetype_continuous</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-
-<span class="fu">scale_slab_shape_discrete</span><span class="op">(</span><span class="va">...</span>, solid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu">scale_slab_shape_continuous</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-
-<span class="fu">guide_colourbar2</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-
-<span class="fu">guide_colorbar2</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">scale_point_colour_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"point_colour"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_color_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"point_colour"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_colour_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"point_colour"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_color_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"point_colour"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_fill_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"point_fill"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_fill_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"point_fill"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_alpha_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_alpha_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_size_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_point_size_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_colour_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_color_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_colour_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_color_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"interval_colour"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_alpha_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_alpha_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_size_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_size_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_linetype_discrete</span><span class="op">(</span><span class="va">...</span>, na.value <span class="op">=</span> <span class="st">"blank"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_interval_linetype_continuous</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_colour_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_color_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_colour_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_color_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"slab_colour"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_fill_discrete</span><span class="op">(</span><span class="va">...</span>, aesthetics <span class="op">=</span> <span class="st">"slab_fill"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_fill_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  aesthetics <span class="op">=</span> <span class="st">"slab_fill"</span>,</span>
+<span>  guide <span class="op">=</span> <span class="fu">guide_colourbar2</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_alpha_continuous</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  limits <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">l</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, <span class="va">l</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_alpha_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_size_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_size_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_linetype_discrete</span><span class="op">(</span><span class="va">...</span>, na.value <span class="op">=</span> <span class="st">"blank"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_linetype_continuous</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_shape_discrete</span><span class="op">(</span><span class="va">...</span>, solid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_shape_continuous</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">guide_colourbar2</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">guide_colorbar2</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -190,17 +194,29 @@ and stats/geoms based on it (like eye plots).</p>
     <dl><dt>...</dt>
 <dd><p>Arguments passed to underlying scale or guide functions. E.g. <code>scale_point_color_discrete</code>
 passes arguments to <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete()</a></code>. See those functions for more details.</p></dd>
+
+
 <dt>aesthetics</dt>
 <dd><p>Names of aesthetics to set scales for.</p></dd>
+
+
 <dt>guide</dt>
 <dd><p>Guide to use for legends for an aesthetic.</p></dd>
+
+
 <dt>range</dt>
 <dd><p>a numeric vector of length 2 that specifies the minimum and maximum size of the plotting symbol
 after transformation.</p></dd>
+
+
 <dt>na.translate</dt>
 <dd><p>In discrete scales, should we show missing values?</p></dd>
+
+
 <dt>na.value</dt>
 <dd><p>When <code>na.translate</code> is true, what value should be shown?</p></dd>
+
+
 <dt>limits</dt>
 <dd><p>One of:</p><ul><li><p><code>NULL</code> to use the default scale range</p></li>
 <li><p>A numeric vector of length two providing limits of the scale.
@@ -212,13 +228,18 @@ Note that setting limits on positional scales will <strong>remove</strong> data 
 If the purpose is to zoom, use the limit argument in the coordinate system
 (see <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code>).</p></li>
 </ul></dd>
+
+
 <dt>solid</dt>
 <dd><p>Should the shapes be solid, <code>TRUE</code>, or hollow,
 <code>FALSE</code>?</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">ggplot2::Scale</a> representing one of the aesthetics used to target the appearance of specific parts of composite
+    
+
+<p>A <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">ggplot2::Scale</a> representing one of the aesthetics used to target the appearance of specific parts of composite
 <code>ggdist</code> geoms. Can be added to a <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code> object.</p>
     </div>
     <div id="details">
@@ -255,7 +276,8 @@ this is what <code>guide_colorbar2</code> is for:</p>
     <h2>See also</h2>
     <div class="dont-index"><p>Other ggplot2 scales: <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html" class="external-link">scale_color_continuous()</a></code>, etc.</p>
 <p>Other ggdist scales: 
-<code><a href="scale_colour_ramp.html">scale_colour_ramp</a></code></p></div>
+<code><a href="scale_colour_ramp.html">scale_colour_ramp</a></code>,
+<code><a href="scale_thickness.html">scale_thickness</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -264,37 +286,37 @@ this is what <code>guide_colorbar2</code> is for:</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># This plot shows how to set multiple specific aesthetics</span></span>
-<span class="r-in"><span class="co"># NB it is very ugly and is only for demo purposes.</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="st">"Normal(1,2)"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="parse_dist.html">parse_dist</a></span><span class="op">(</span><span class="va">distribution</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">distribution</span>, xdist <span class="op">=</span> <span class="va">.dist</span>, args <span class="op">=</span> <span class="va">.args</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="stat_halfeye.html">stat_halfeye</a></span><span class="op">(</span></span>
-<span class="r-in">    shape <span class="op">=</span> <span class="fl">21</span>,  <span class="co"># this point shape has a fill and outline</span></span>
-<span class="r-in">    point_color <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span class="r-in">    point_fill <span class="op">=</span> <span class="st">"black"</span>,</span>
-<span class="r-in">    point_alpha <span class="op">=</span> <span class="fl">.1</span>,</span>
-<span class="r-in">    point_size <span class="op">=</span> <span class="fl">6</span>,</span>
-<span class="r-in">    stroke <span class="op">=</span> <span class="fl">2</span>,</span>
-<span class="r-in">    interval_color <span class="op">=</span> <span class="st">"blue"</span>,</span>
-<span class="r-in">    <span class="co"># interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default</span></span>
-<span class="r-in">    <span class="co"># see the interval_size_range parameter in help("geom_slabinterval")</span></span>
-<span class="r-in">    interval_size <span class="op">=</span> <span class="fl">8</span>,</span>
-<span class="r-in">    interval_linetype <span class="op">=</span> <span class="st">"dashed"</span>,</span>
-<span class="r-in">    interval_alpha <span class="op">=</span> <span class="fl">.25</span>,</span>
-<span class="r-in">    <span class="co"># fill sets the fill color of the slab (here the density)</span></span>
-<span class="r-in">    slab_color <span class="op">=</span> <span class="st">"green"</span>,</span>
-<span class="r-in">    slab_fill <span class="op">=</span> <span class="st">"purple"</span>,</span>
-<span class="r-in">    slab_size <span class="op">=</span> <span class="fl">3</span>,</span>
-<span class="r-in">    slab_linetype <span class="op">=</span> <span class="st">"dotted"</span>,</span>
-<span class="r-in">    slab_alpha <span class="op">=</span> <span class="fl">.5</span></span>
-<span class="r-in">  <span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This plot shows how to set multiple specific aesthetics</span></span></span>
+<span class="r-in"><span><span class="co"># NB it is very ugly and is only for demo purposes.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="st">"Normal(1,2)"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="parse_dist.html">parse_dist</a></span><span class="op">(</span><span class="va">distribution</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">distribution</span>, xdist <span class="op">=</span> <span class="va">.dist</span>, args <span class="op">=</span> <span class="va">.args</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="stat_halfeye.html">stat_halfeye</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    shape <span class="op">=</span> <span class="fl">21</span>,  <span class="co"># this point shape has a fill and outline</span></span></span>
+<span class="r-in"><span>    point_color <span class="op">=</span> <span class="st">"red"</span>,</span></span>
+<span class="r-in"><span>    point_fill <span class="op">=</span> <span class="st">"black"</span>,</span></span>
+<span class="r-in"><span>    point_alpha <span class="op">=</span> <span class="fl">.1</span>,</span></span>
+<span class="r-in"><span>    point_size <span class="op">=</span> <span class="fl">6</span>,</span></span>
+<span class="r-in"><span>    stroke <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>    interval_color <span class="op">=</span> <span class="st">"blue"</span>,</span></span>
+<span class="r-in"><span>    <span class="co"># interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default</span></span></span>
+<span class="r-in"><span>    <span class="co"># see the interval_size_range parameter in help("geom_slabinterval")</span></span></span>
+<span class="r-in"><span>    interval_size <span class="op">=</span> <span class="fl">8</span>,</span></span>
+<span class="r-in"><span>    interval_linetype <span class="op">=</span> <span class="st">"dashed"</span>,</span></span>
+<span class="r-in"><span>    interval_alpha <span class="op">=</span> <span class="fl">.25</span>,</span></span>
+<span class="r-in"><span>    <span class="co"># fill sets the fill color of the slab (here the density)</span></span></span>
+<span class="r-in"><span>    slab_color <span class="op">=</span> <span class="st">"green"</span>,</span></span>
+<span class="r-in"><span>    slab_fill <span class="op">=</span> <span class="st">"purple"</span>,</span></span>
+<span class="r-in"><span>    slab_size <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>    slab_linetype <span class="op">=</span> <span class="st">"dotted"</span>,</span></span>
+<span class="r-in"><span>    slab_alpha <span class="op">=</span> <span class="fl">.5</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-plt img"><img src="scales-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -309,7 +331,7 @@ this is what <code>guide_colorbar2</code> is for:</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

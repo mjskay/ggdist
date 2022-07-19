@@ -27,7 +27,7 @@ brms models.'><meta property="og:image" content="http://mjskay.github.io/ggdist/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
       </span>
     </div>
 
@@ -36,7 +36,7 @@ brms models.'><meta property="og:image" content="http://mjskay.github.io/ggdist/
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -86,38 +86,38 @@ brms models.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">parse_dist</span><span class="op">(</span>
-  <span class="va">object</span>,
-  <span class="va">dist_col</span>,
-  <span class="va">...</span>,
-  dist <span class="op">=</span> <span class="st">".dist"</span>,
-  args <span class="op">=</span> <span class="st">".args"</span>,
-  to_r_names <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for character</span>
-<span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="co"># S3 method for factor</span>
-<span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="co"># S3 method for brmsprior</span>
-<span class="fu">parse_dist</span><span class="op">(</span>
-  <span class="va">object</span>,
-  dist_col <span class="op">=</span> <span class="va">prior</span>,
-  <span class="va">...</span>,
-  dist <span class="op">=</span> <span class="st">".dist"</span>,
-  args <span class="op">=</span> <span class="st">".args"</span>,
-  to_r_names <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">r_dist_name</span><span class="op">(</span><span class="va">dist_name</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">parse_dist</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">dist_col</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dist <span class="op">=</span> <span class="st">".dist"</span>,</span>
+<span>  args <span class="op">=</span> <span class="st">".args"</span>,</span>
+<span>  to_r_names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for character</span></span>
+<span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for factor</span></span>
+<span><span class="fu">parse_dist</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, dist <span class="op">=</span> <span class="st">".dist"</span>, args <span class="op">=</span> <span class="st">".args"</span>, to_r_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for brmsprior</span></span>
+<span><span class="fu">parse_dist</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  dist_col <span class="op">=</span> <span class="va">prior</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dist <span class="op">=</span> <span class="st">".dist"</span>,</span>
+<span>  args <span class="op">=</span> <span class="st">".args"</span>,</span>
+<span>  to_r_names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">r_dist_name</span><span class="op">(</span><span class="va">dist_name</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -125,28 +125,43 @@ brms models.</p>
     <dl><dt>object</dt>
 <dd><p>A character vector containing distribution specifications or a data frame with a column
 containing distribution specifications.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments passed to other implementations of <code>parse_dist</code>.</p></dd>
+
+
 <dt>dist</dt>
 <dd><p>The name of the output column to contain the distribution name</p></dd>
+
+
 <dt>args</dt>
 <dd><p>The name of the output column to contain the arguments to the distribution</p></dd>
+
+
 <dt>to_r_names</dt>
 <dd><p>If <code>TRUE</code> (the default), certain common aliases for distribution names are
 automatically translated into names that R can recognize (i.e., names which have functions starting
 with <code>r</code>, <code>p</code>, <code>q</code>, and <code>d</code> representing random number generators, distribution
 functions, etc. for that distribution), using the <code>r_dist_name</code> function. For example,
 <code>"normal"</code> is translated into <code>"norm"</code> and <code>"lognormal"</code> is translated into <code>"lnorm"</code>.</p></dd>
+
+
 <dt>dist_col</dt>
 <dd><p>A bare (unquoted) column or column expression that resolves to a character vector
 of distribution specifications.</p></dd>
+
+
 <dt>dist_name</dt>
 <dd><p>For <code>r_dist_name</code>, a character vector of distribution names to be translated into
 distribution names R recognizes. Unrecognized names are left as-is.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <ul><li><p><code>parse_dist</code> returns a data frame containing at least two columns named after the <code>dist</code> and <code>args</code>
+    
+
+<ul><li><p><code>parse_dist</code> returns a data frame containing at least two columns named after the <code>dist</code> and <code>args</code>
 parameters. If the input is a data frame, the output is a data frame of the same length with those
 two columns added. If the input is a character vector or factor, the output is a two-column data frame
 with the same number of rows as the length of the input.</p></li>
@@ -173,28 +188,28 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># parse dist can operate on strings directly...</span></span>
-<span class="r-in"><span class="fu">parse_dist</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal(0,1)"</span>, <span class="st">"student_t(3,0,1)"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 x 2</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># parse dist can operate on strings directly...</span></span></span>
+<span class="r-in"><span><span class="fu">parse_dist</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal(0,1)"</span>, <span class="st">"student_t(3,0,1)"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .dist     .args     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> norm      <span style="color: #949494;">&lt;list [2]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> student_t <span style="color: #949494;">&lt;list [3]&gt;</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># ... or on columns of a data frame, where it adds the</span></span>
-<span class="r-in"><span class="co"># parsed specs back on as columns</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal(0,1)"</span>, <span class="st">"student_t(3,0,1)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">parse_dist</span><span class="op">(</span><span class="va">prior</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># ... or on columns of a data frame, where it adds the</span></span></span>
+<span class="r-in"><span><span class="co"># parsed specs back on as columns</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal(0,1)"</span>, <span class="st">"student_t(3,0,1)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">parse_dist</span><span class="op">(</span><span class="va">prior</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              prior     .dist   .args</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      normal(0,1)      norm    0, 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 student_t(3,0,1) student_t 3, 0, 1</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># parse_dist is particularly useful with the output of brms::prior(),</span></span>
-<span class="r-in"><span class="co"># which follow the same format as above</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># parse_dist is particularly useful with the output of brms::prior(),</span></span></span>
+<span class="r-in"><span><span class="co"># which follow the same format as above</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -209,7 +224,7 @@ the output of this function using the <code>dist</code> and <code>args</code> ae
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

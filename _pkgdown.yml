@@ -79,6 +79,8 @@ reference:
   contents:
   - scales
   - scale_colour_ramp
+  - guide_rampbar
+  - scale_thickness
 
 - title: GGplot positions
   desc:  Positions for dodging geoms and stats
