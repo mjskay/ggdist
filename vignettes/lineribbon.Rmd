@@ -131,7 +131,7 @@ df %>%
   group_by(x) %>%
   median_qi(y) %>%
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
-  geom_lineribbon(fill = "gray65")
+  geom_lineribbon(fill = "gray65") 
 ```
 
 `geom_lineribbon()` automatically pulls in the `.width` column and maps it onto the
@@ -151,7 +151,7 @@ df %>%
   median_qi(y, .width = c(.50, .80, .95)) %>%
   ggplot(aes(x = x, y = y, ymin = .lower, ymax = .upper)) +
   geom_lineribbon() +
-  scale_fill_brewer()
+  scale_fill_brewer() 
 ```
 
 ## Lineribbons on sample data
@@ -196,7 +196,8 @@ a continuous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete on
 df %>%
   ggplot(aes(x = x, y = y, fill = stat(.width))) +
   stat_lineribbon(.width = ppoints(50)) +
-  scale_fill_distiller()
+  scale_fill_distiller() +
+  labs(title = "stat_lineribbon(.width = ppoints(50))")
 ```
 
 To get a gradient that ramps down to the background color, you could also use
@@ -208,7 +209,11 @@ is dark in the middle (rather than the outside):
 df %>%
   ggplot(aes(x = x, y = y, fill_ramp = stat(.width))) +
   stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
-  scale_fill_ramp_continuous(range = c(1, 0))
+  scale_fill_ramp_continuous(range = c(1, 0)) +
+  labs(
+    title = "stat_lineribbon(.width = ppoints(50))",
+    subtitle = "aes(fill_ramp = stat(.width))"
+  )
 ```
 
 The default legend for the `fill_ramp` and `color_ramp` scales is `guide_legend()`,
@@ -220,7 +225,11 @@ specify the color to ramp to in the legend (default is `"gray65"`):
 df %>%
   ggplot(aes(x = x, y = y, fill_ramp = stat(.width))) +
   stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
-  scale_fill_ramp_continuous(range = c(1, 0), guide = guide_rampbar(to = "#2171b5"))
+  scale_fill_ramp_continuous(range = c(1, 0), guide = guide_rampbar(to = "#2171b5")) +
+  labs(
+    title = "stat_lineribbon(.width = ppoints(50))",
+    subtitle = 'aes(fill_ramp = stat(.width)) +\nscale_fill_ramp_continuous(guide = "rampbar")'
+  )
 ```
 
 It's worth noting that the use of `.width` as the fill color means these gradients
@@ -251,7 +260,11 @@ withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), pri
   df %>%
     ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
     stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
-    scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
+    scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5")) +
+    labs(
+      title = "stat_lineribbon(.width = ppoints(50))",
+      subtitle = 'aes(fill_ramp = stat(ave(pdf_min + pdf_max, .width)))'
+    )
 ))
 ```
 
@@ -268,12 +281,16 @@ densities are still set using `pdf_min` and `pdf_max` (so colors will still be
 correct), but the closer the distribution is to Normal the less jumpy-looking 
 the gradient will be.
 
-```{r stat_lineribbon_density_smooth}
+```{r stat_lineribbon_density_smooth, fig.width = tiny_width, fig.height = tiny_height}
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
   df %>%
     ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
     stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)), fill = "#2171b5") +
-    scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5"))
+    scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5")) +
+    labs(
+      title = "stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)))",
+      subtitle = 'aes(fill_ramp = stat(ave(pdf_min + pdf_max, .width)))'
+    )
 ))
 ```
 
@@ -308,7 +325,8 @@ Instead, we could change the fill color and allow the lines the be semi-transpar
 ```{r stat_lineribbon_2groups_alpha, fig.width = tiny_width, fig.height = tiny_height}
 df_2groups %>%
   ggplot(aes(x = x, y = y, fill = g)) +
-  stat_lineribbon(alpha = 1/4)
+  stat_lineribbon(alpha = 1/4) +
+  labs(title = "stat_lineribbon(aes(fill = g), alpha = 1/4)")
 ```
 
 We could also use the `fill_ramp` aesthetic provided by `ggdist` to similar
@@ -318,7 +336,8 @@ the lines do not overlap:
 ```{r stat_lineribbon_2groups_ramp, fig.width = tiny_width, fig.height = tiny_height}
 df_2groups %>%
   ggplot(aes(x = x, y = y, fill = g)) +
-  stat_lineribbon(aes(fill_ramp = stat(level)))
+  stat_lineribbon(aes(fill_ramp = stat(level))) +
+  labs(title = "stat_lineribbon(aes(fill = g, fill_ramp = stat_level))")
 ```
 
 One way to avoid problems created by overlapping ribbons (besides using `alpha`, 
