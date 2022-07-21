@@ -139,17 +139,23 @@ makeContent.dots_grob = function(x) {
     )
 
     # generate grob for this dotplot
-    pointsGrob(
-      dot_positions$x, dot_positions$y, pch = d$shape,
-      gp = gpar(
-        col = alpha(d$colour, d$alpha),
-        fill = alpha(d$fill, d$alpha),
-        fontfamily = d$family,
-        fontsize = dot_fontsize,
-        lwd = lwd,
-        lty = d$linetype
-      )
+    blur_dot(
+      dot_positions$x, dot_positions$y,
+      r = unit(dot_pointsize / 2, "points"),
+      sd = unit(dot_pointsize / 4 * 1.5, "points"),
+      fill = alpha(d$fill, d$alpha)
     )
+    # pointsGrob(
+    #   dot_positions$x, dot_positions$y, pch = d$shape,
+    #   gp = gpar(
+    #     col = alpha(d$colour, d$alpha),
+    #     fill = alpha(d$fill, d$alpha),
+    #     fontfamily = d$family,
+    #     fontsize = dot_fontsize,
+    #     lwd = lwd,
+    #     lty = d$linetype
+    #   )
+    # )
   }))
 
   setChildren(grob_, children)
