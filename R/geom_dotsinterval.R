@@ -142,8 +142,11 @@ makeContent.dots_grob = function(x) {
     blur_dot(
       dot_positions$x, dot_positions$y,
       r = unit(dot_pointsize / 2, "points"),
-      sd = unit(dot_pointsize / 4 * 1.5, "points"),
-      fill = alpha(d$fill, d$alpha)
+      sd = convertUnit(unit(d$sd, "native"), "points", axisFrom = x, axisTo = x, typeFrom = "dimension"),
+      fill = alpha(d$fill, d$alpha),
+      col = alpha(d$colour, d$alpha),
+      lwd = lwd,
+      lty = d$linetype
     )
     # pointsGrob(
     #   dot_positions$x, dot_positions$y, pch = d$shape,
@@ -217,6 +220,14 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   }
 
   s_data = s_data[order(s_data[["order"]] %||% s_data[[x]]), ]
+
+  if (is.null(s_data[["sd"]])) {
+    s_data[["sd"]] = 0
+  } else {
+    #sd is expressed in terms of data coordinates, need to translate into standardized space
+    s_data$sd = s_data$sd / (max(panel_params[[x.range]]) - min(panel_params[[x.range]]))
+    s_data$sd[is.na(s_data$sd)] = 0
+  }
 
   # draw the dots grob (which will draw dotplots for all the slabs)
   slab_grobs = list(dots_grob(
@@ -329,13 +340,15 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   default_aes = defaults(aes(
     family = "",
     slab_shape = NULL,
-    order = NULL
+    order = NULL,
+    sd = NULL
   ), GeomSlabinterval$default_aes),
 
   default_key_aes = defaults(aes(
     slab_shape = 21,
     slab_size = 0.75,
-    slab_colour = "gray65"
+    slab_colour = "gray65",
+    sd = NA
   ), GeomSlabinterval$default_key_aes),
 
   optional_aes = union("order", GeomSlabinterval$optional_aes),
@@ -467,6 +480,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   ## other methods -----------------------------------------------------------
 
   setup_data = function(self, data, params) {
+    define_orientation_variables(params$orientation)
+
     data = ggproto_parent(GeomSlabinterval, self)$setup_data(data, params)
     define_orientation_variables(params$orientation)
 
@@ -479,6 +494,13 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     smooth = match_function(params$smooth %||% "none", prefix = "smooth_")
     s_data = data[data$datatype == "slab", c("group", x, y)]
     data[data$datatype == "slab", x] = ave(s_data[[x]], s_data[, c("group", y)], FUN = smooth)
+
+    # add an xmin/xmax to dots based on sd so that the full extent of
+    # blurred dots is drawn
+    if (!is.null(data[["sd"]])) {
+      data[data$datatype == "slab", xmin] = data[data$datatype == "slab", x] - 2 * data[data$datatype == "slab", "sd"]
+      data[data$datatype == "slab", xmax] = data[data$datatype == "slab", x] + 2 * data[data$datatype == "slab", "sd"]
+    }
 
     data
   },
