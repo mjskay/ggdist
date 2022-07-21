@@ -437,6 +437,7 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 
 \itemize{
 \item{\code{family}}
+\item{\code{sd}}
 \item{\code{width}}
 \item{\code{height}}
 \item{\code{group}}
