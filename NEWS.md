@@ -6,6 +6,7 @@ Bug fixes:
 * Ensure `geom_spike()` draws the point on the correct end of the line depending on `side`.
 * Future-proof `guide_rampbar()` for ggplot2 > 3.4.2 (#186). Thanks to @teunbrand.
 * Future-proof some minor tests for ggplot2 > 3.4.2 (#187).
+* `theme_ggdist()` now passes through theme arguments like `base_size`.
 
 
 # ggdist 3.3.0

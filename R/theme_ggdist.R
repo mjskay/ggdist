@@ -25,8 +25,18 @@
 #'
 #' @import ggplot2
 #' @export
-theme_ggdist = function() {
-  theme_light() + theme(
+theme_ggdist = function(
+  base_size = 11,
+  base_family = "",
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22
+) {
+  theme_light(
+    base_size = base_size,
+    base_family = base_family,
+    base_line_size = base_line_size,
+    base_rect_size = base_rect_size
+  ) + theme(
     axis.line.x = element_line(color = "gray70", linewidth = rel(0.5)),
     axis.line.y = element_line(color = "gray70", linewidth = rel(0.5)),
     axis.title.x = element_text(margin = margin(t = 7)),
