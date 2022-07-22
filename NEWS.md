@@ -1,3 +1,12 @@
+# ggdist 3.2.0.9000
+
+New features and enhancements:
+
+Bug fixes:
+
+* `theme_ggdist()` now passes through theme arguments like `base_size`.
+
+
 # ggdist 3.2.0
 
 New features and enhancements:
