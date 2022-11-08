@@ -15,8 +15,8 @@ position_dodgejust(
 elements. This is useful when you want to align narrow geoms with wider
 geoms. See the examples.}
 
-\item{preserve}{Should dodging preserve the total width of all elements
-at a position, or the width of a single element?}
+\item{preserve}{Should dodging preserve the \code{"total"} width of all elements
+at a position, or the width of a \code{"single"} element?}
 
 \item{justification}{Justification of the point position (\code{x}/\code{y}) relative
 to its bounds (\code{xmin}/\code{xmax} or \code{ymin}/\code{ymax}), where \code{0} indicates

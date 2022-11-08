@@ -19,10 +19,10 @@ stat_lineribbon(
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
-\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply \code{mapping} if there is no plot mapping.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
+\code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply \code{mapping} if there is no plot
+mapping.}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -226,7 +226,7 @@ scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_r
 \strong{Line aesthetics}
 
 \itemize{
-\item{\code{size}: Width of \strong{line}.}
+\item{\code{linewidth}: Width of \strong{line}. In \pkg{ggplot2} < 3.4, was called \code{size}.}
 \item{\code{linetype}: Type of \strong{line} (e.g., \code{"solid"}, \code{"dashed"}, etc)}
 }
 

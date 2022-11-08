@@ -114,7 +114,7 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
 
   # line aesthetics
   if (line) geom_aes_sections[["Line aesthetics"]] = list(
-    size = 'Width of **line**.',
+    linewidth = 'Width of **line**. In \\pkg{ggplot2} < 3.4, was called `size`.',
     linetype = 'Type of **line** (e.g., `"solid"`, `"dashed"`, etc)'
   )
 

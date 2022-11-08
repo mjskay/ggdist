@@ -30,7 +30,7 @@ test_that("shortcut stat documentation generator works", {
   stat_output = paste0(rd_lineribbon_shortcut_stat(
     "lineribbon", geom_name = "lineribbon", chart_type = "line+ribbon"
   ), collapse = "\n")
-  expect_match(stat_output, "`size`: Width", fixed = TRUE)
+  expect_match(stat_output, "`linewidth`: Width", fixed = TRUE)
   expect_match(stat_output, "stat_lineribbon()", fixed = TRUE)
 
 })

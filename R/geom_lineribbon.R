@@ -27,7 +27,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' @eval rd_lineribbon_aesthetics("lineribbon")
 #' @inheritParams ggplot2::geom_line
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+#' to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
 #' parameters to the paired geom/stat.
 #' @return A [ggplot2::Geom] representing a combined line + multiple-ribbon geometry which can
 #' be added to a [ggplot()] object.
@@ -60,9 +60,14 @@ draw_key_lineribbon = function(self, data, params, size) {
   if (is.null(data[["fill"]]) &&
     (!is.null(data[["fill_ramp"]]) || !all(is.na(data[["alpha"]])))
   ) {
-    data$fill = "gray65"
+    data$fill = self$default_key_aes$fill
   }
   data$fill = apply_colour_ramp(data$fill, data$fill_ramp)
+
+  if (!is.null(data[["colour"]]) || !is.null(data[["linewidth"]])) {
+    data$colour = data[["colour"]] %||% self$default_key_aes$colour
+    data$linewidth = data[["linewidth"]] %||% self$default_key_aes$linewidth
+  }
 
   fill_grob = if (!is.null(data$fill)) {
     draw_key_rect(data, params, size)
@@ -81,7 +86,7 @@ draw_key_lineribbon = function(self, data, params, size) {
 GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   default_aes = aes(
     colour = NULL,
-    size = 1.25,
+    linewidth = NULL,
     linetype = 1,
     fill = NULL,
     fill_ramp = NULL,
@@ -90,12 +95,17 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
 
   default_key_aes = aes(
     colour = "black",
-    fill = "gray65"
+    fill = "gray65",
+    linewidth = 1.25
   ),
 
   default_computed_aes = aes(
     fill = fct_rev_(ordered(.width))
   ),
+
+  # support for `size` in place of `linewidth` aes in ggplot2 < 3.4
+  rename_size = TRUE,
+  non_missing_aes = union("size", AbstractGeom$non_missing_aes),
 
   # workaround (#84)
   draw_key = function(self, ...) draw_key_lineribbon(self, ...),
@@ -150,7 +160,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     # draw all the ribbons
     ribbon_grobs = data %>%
       dlply_(grouping_columns, function(d) {
-        group_grobs = list(GeomRibbon$draw_panel(transform(d, size = NA), panel_scales, coord, flipped_aes = flipped_aes))
+        group_grobs = list(GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes))
         list(
           width = mean(abs(d[[xmax]] - d[[xmin]])),
           grobs = group_grobs

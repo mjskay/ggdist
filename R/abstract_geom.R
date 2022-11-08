@@ -89,6 +89,22 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
     # we ignore the `extra` argument and just always include the "extra"
     # parameters (based on default_params instead of extra_params as in ggplot2::Geom)
     union(params, names(self$default_params))
+  },
+
+  use_defaults = function(self, data, params = list(), modifiers = aes()) {
+    # we must provide our own check for Geom$rename_size because our fallbacks
+    # from default_aes to default_key_aes require us to be able to have a non-missing
+    # (but NULL) linewidth aesthetic in default_aes, which ggplot2::Geom$use_defaults
+    # with rename_size = TRUE treats as a *missing* aesthetic and generates a warning for
+    if (self$rename_size && is.null(data$linewidth) && is.null(params$linewidth)) {
+      data$linewidth = data$size
+      params$linewidth = params$size
+    }
+    rename_size = self$rename_size
+    self$rename_size = FALSE
+    out = ggproto_parent(Geom, self)$use_defaults(data, params, modifiers)
+    self$rename_size = rename_size
+    out
   }
 )
 
