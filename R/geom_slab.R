@@ -65,7 +65,7 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
     s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
     s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
     s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
-    s_data$linewidth = s_data[["slab_size"]] %||% s_data[["slab_linewidth"]] %||% s_data[["size"]]
+    s_data$linewidth = s_data[["slab_size"]] %||% s_data[["slab_linewidth"]] %||% s_data[["linewidth"]] %||% s_data[["size"]]
     s_data$linetype = s_data[["slab_linetype"]] %||% s_data[["linetype"]]
     s_data
   },

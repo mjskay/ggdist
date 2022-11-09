@@ -83,9 +83,9 @@
 <rect x='671.71' y='259.00' width='42.81' height='49.89' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='671.71' y='267.71' style='font-size: 11.00px; font-family: sans;' textLength='17.12px' lengthAdjust='spacingAndGlyphs'>dist</text>
 <rect x='671.71' y='274.33' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='673.12' y='275.75' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #F8766D;' />
+<rect x='673.12' y='275.75' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
 <rect x='671.71' y='291.61' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='673.12' y='293.03' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #00BFC4;' />
+<rect x='673.12' y='293.03' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
 <text x='694.47' y='286.00' style='font-size: 8.80px; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>norm</text>
 <text x='694.47' y='303.28' style='font-size: 8.80px; font-family: sans;' textLength='2.44px' lengthAdjust='spacingAndGlyphs'>t</text>
 <text x='43.06' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='220.87px' lengthAdjust='spacingAndGlyphs'>dist_gradientintervalh with two groups</text>

@@ -60,13 +60,13 @@
 <rect x='681.49' y='241.72' width='33.03' height='84.45' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='681.49' y='250.43' style='font-size: 11.00px; font-family: sans;' textLength='33.03px' lengthAdjust='spacingAndGlyphs'>x_num</text>
 <rect x='681.49' y='257.05' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.91' y='258.47' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter;' />
+<rect x='682.91' y='258.47' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: butt; stroke-linejoin: miter;' />
 <rect x='681.49' y='274.33' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.91' y='275.75' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #A6A6A6; fill-opacity: 0.33;' />
+<rect x='682.91' y='275.75' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #A6A6A6; fill-opacity: 0.33;' />
 <rect x='681.49' y='291.61' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.91' y='293.03' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #A6A6A6; fill-opacity: 0.67;' />
+<rect x='682.91' y='293.03' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #A6A6A6; fill-opacity: 0.67;' />
 <rect x='681.49' y='308.89' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.91' y='310.31' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #A6A6A6;' />
+<rect x='682.91' y='310.31' width='14.45' height='14.45' style='stroke-width: 2.13; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #A6A6A6;' />
 <text x='704.25' y='268.72' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='704.25' y='286.00' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='704.25' y='303.28' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>2</text>

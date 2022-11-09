@@ -238,7 +238,7 @@ override_point_aesthetics = function(self, p_data, size_domain, size_range, fatt
   p_data$fill = p_data[["point_fill"]] %||% p_data[["fill"]]
   p_data$alpha = p_data[["point_alpha"]] %||% p_data[["alpha"]]
   # TODO: insert fatten_point deprecation warning
-  p_data$size = p_data[["point_size"]] %||% (fatten_point * transform_size(p_data[["size"]], size_domain, size_range))
+  p_data$size = p_data[["point_size"]] %||% (fatten_point * transform_size(p_data[["interval_size"]] %||% p_data[["size"]], size_domain, size_range))
   p_data
 }
 

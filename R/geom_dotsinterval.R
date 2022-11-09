@@ -109,7 +109,7 @@ makeContent.dots_grob = function(x) {
     # the font size in points needed to draw that dot (dot_fontsize); need a fudge
     # factor based on how big the circle glyph is as a ratio of font size
     # (font_size_ratio) plus need to account for stroke width
-    lwd = d$size * .stroke/2
+    lwd = d$linewidth * .stroke/2
     lwd[is.na(lwd)] = 0
     dot_pointsize = convertUnit(unit(binwidth * dotsize, "native"),
       "points", axisFrom = x, axisTo = "y", typeFrom = "dimension", valueOnly = TRUE)
@@ -388,14 +388,15 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     if (
       params$show_slab &&
       any(!is.na(data[,c(
-        "fill","alpha","slab_fill","slab_colour","slab_size",
+        "fill","alpha","slab_fill","slab_colour","slab_linewidth","slab_size",
         "slab_linetype","slab_alpha","slab_shape"
       )]))
     ) {
       s_key_data = self$override_slab_aesthetics(key_data)
 
-      # what point calls "stroke" is what we call "size", since "size" is determined automatically
-      s_key_data$stroke = s_key_data$size
+      # what point calls "stroke" is what we call "linewidth", since "linewidth" is determined automatically
+      s_key_data$stroke = s_key_data$linewidth
+      # TODO: allow size of points in the key to be modified
       s_key_data$size = 2
       draw_key_point(s_key_data, params, size)
     }
@@ -420,9 +421,11 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
   # geom_dotsinterval do not
   default_key_aes = defaults(aes(
     shape = 21,
-    size = 0.75,
+    linewidth = 0.75,
     colour = "gray65"
   ), GeomSlabinterval$default_key_aes),
+
+  rename_size = TRUE,
 
   override_slab_aesthetics = function(self, s_data) {
     # we define these differently from geom_dotsinterval to make this easier to use on its own
@@ -431,7 +434,7 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
     s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
     s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
     s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
-    s_data$size = s_data[["slab_size"]] %||% s_data[["size"]]
+    s_data$linewidth = s_data[["slab_linewidth"]] %||% s_data[["slab_size"]] %||% s_data[["linewidth"]] %||% s_data[["size"]]
     s_data$shape = s_data[["slab_shape"]] %||% s_data[["shape"]]
     s_data
   },
@@ -450,8 +453,9 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
     # can drop all the complicated checks from this key since it's just one geom
     s_key_data = self$override_slab_aesthetics(key_data)
 
-    # what point calls "stroke" is what we call "size", since "size" is determined automatically
-    s_key_data$stroke = s_key_data$size
+    # what point calls "stroke" is what we call "linewidth", since "linewidth" is determined automatically
+    s_key_data$stroke = s_key_data$linewidth
+    # TODO: allow size of points in the key to be modified
     s_key_data$size = 2
     draw_key_point(s_key_data, params, size)
   }
