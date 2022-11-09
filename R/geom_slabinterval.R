@@ -142,7 +142,7 @@ draw_slabs = function(self, s_data, panel_params, coord,
     if (!is.null(d$colour) && !all(is.na(d$colour))) {
       # we have an outline to draw around the outside of the slab:
       # the definition of "outside" depends on the value of `side`:
-      outline_data = group_slab_data_by(d, c("colour", "alpha", "size", "linetype"), orientation, d$side[[1]])
+      outline_data = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, d$side[[1]])
       gList(slab_grob, draw_path(outline_data, panel_params, coord))
     } else {
       slab_grob
@@ -208,7 +208,7 @@ draw_path = function(data, panel_params, coord) {
       default.units = "native",
       gp = grid::gpar(
         col = alpha(munched_path$colour, munched_path$alpha),
-        lwd = munched_path$size * .pt,
+        lwd = munched_path$linewidth * .pt,
         lty = munched_path$linetype,
         lineend = "butt",
         linejoin = "round",
@@ -226,7 +226,8 @@ override_slab_aesthetics = function(self, s_data) {
   s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
   s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
   s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
-  s_data$size = s_data[["slab_size"]]
+  #TODO: insert slab_size deprecation warning
+  s_data$linewidth = s_data[["slab_linewidth"]] %||% s_data[["slab_size"]]
   s_data$linetype = s_data[["slab_linetype"]] %||% s_data[["linetype"]]
   s_data
 }
@@ -236,7 +237,8 @@ override_point_aesthetics = function(self, p_data, size_domain, size_range, fatt
   p_data$colour = apply_colour_ramp(p_data[["colour"]], p_data[["colour_ramp"]])
   p_data$fill = p_data[["point_fill"]] %||% p_data[["fill"]]
   p_data$alpha = p_data[["point_alpha"]] %||% p_data[["alpha"]]
-  p_data$size = p_data[["point_size"]] %||% (fatten_point * get_line_size(p_data, size_domain, size_range))
+  # TODO: insert fatten_point deprecation warning
+  p_data$size = p_data[["point_size"]] %||% (fatten_point * transform_size(p_data[["size"]], size_domain, size_range))
   p_data
 }
 
@@ -244,13 +246,13 @@ override_interval_aesthetics = function(self, i_data, size_domain, size_range) {
   i_data$colour = i_data[["interval_colour"]] %||% i_data[["colour"]]
   i_data$colour = apply_colour_ramp(i_data[["colour"]], i_data[["colour_ramp"]])
   i_data$alpha = i_data[["interval_alpha"]] %||% i_data[["alpha"]]
-  i_data$size = get_line_size(i_data, size_domain, size_range)
+  # TODO: insert interval_size deprecation warning
+  i_data$linewidth = transform_size(i_data[["linewidth"]] %||% i_data[["interval_size"]] %||% i_data[["size"]], size_domain, size_range)
   i_data$linetype = i_data[["interval_linetype"]] %||% i_data[["linetype"]]
   i_data
 }
 
-get_line_size = function(i_data, size_domain, size_range) {
-  size = i_data[["interval_size"]] %||% i_data[["size"]]
+transform_size = function(size, size_domain, size_range) {
   pmax(
     (size - size_domain[[1]]) / (size_domain[[2]] - size_domain[[1]]) *
       (size_range[[2]] - size_range[[1]]) + size_range[[1]],
@@ -309,7 +311,7 @@ get_line_size = function(i_data, size_domain, size_range) {
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-#' to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+#' to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
 #' parameters to the paired geom/stat.
 #' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
 #' Setting this equal to `"dodge"` ([position_dodge()]) or `"dodgejust"` ([position_dodgejust()]) can be useful if
@@ -359,20 +361,22 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
     # point aesthetics
     shape = NULL,
     stroke = NULL,
+    size = NULL,
     point_colour = NULL,      # falls back to colour
     point_fill = NULL,        # falls back to fill
     point_alpha = NULL,       # falls back to alpha
     point_size = NULL,        # falls back to size
 
     # interval aesthetics
-    size = NULL,
+    linewidth = NULL,         # falls back to interval_size (dep) then size
     interval_colour = NULL,   # falls back to colour
     interval_alpha = NULL,    # falls back to alpha
-    interval_size = NULL,     # falls back to size
+    interval_size = NULL,     # deprecated (use linewidth)
     interval_linetype = NULL, # falls back to linetype
 
     # slab aesthetics
-    slab_size = NULL,         # no fallback
+    slab_size = NULL,         # deprecated
+    slab_linewidth = NULL,    # falls back to slab_size (dep)
     slab_colour = NULL,       # no fallback
     slab_fill = NULL,         # falls back to fill
     slab_alpha = NULL,        # falls back to alpha
@@ -775,7 +779,7 @@ draw_polygon = function(data, panel_params, coord, fill = NULL) {
       gp = gpar(
         col = first_rows$colour,
         fill = fill %||% alpha(first_rows[["fill"]], first_rows[["alpha"]]),
-        lwd = first_rows$size * .pt,
+        lwd = first_rows$linewidth * .pt,
         lty = first_rows$linetype
       )
     )
