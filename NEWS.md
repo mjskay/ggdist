@@ -1,3 +1,19 @@
+# ggdist 3.2.0.9000
+
+New features and enhancements:
+
+* Following the split between `size` and `linewidth` aesthetics in *ggplot2* 3.4,
+  the following aesthetics have been updated:
+  * `interval_size` is now `linewidth`
+  * `slab_size` is now `slab_linewidth`
+  * in `geom_slab()` and `geom_dots()`, `size` is now `linewidth`
+
+Documentation:
+
+* Uses of `stat()` have been replaced with `after_stat()` to be consistent with
+  the deprecation of `stat()` in *ggplot2* 3.4.
+
+
 # ggdist 3.2.0
 
 New features and enhancements:

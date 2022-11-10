@@ -47,7 +47,7 @@ Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodg
 you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
-to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat. When paired with the default geom, \code{\link[=geom_lineribbon]{geom_lineribbon()}},
 these include:
 \describe{

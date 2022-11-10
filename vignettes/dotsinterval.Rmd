@@ -80,7 +80,7 @@ blue_ = "#7570b3"
 bracket_ = function(..., x, xend = x, y, yend = y, color = red_) {
   annotate("segment",
     arrow = arrow(angle = 90, ends = "both", length = unit(3, "points")),
-    color = color, size = 0.75,
+    color = color, linewidth = 0.75,
     x = x, xend = xend, y = y, yend = yend,
     ...
   )
@@ -88,7 +88,7 @@ bracket_ = function(..., x, xend = x, y, yend = y, color = red_) {
 thickness_ = function(x) dnorm(x,4,1) * 0.9 / dnorm(4,4,1)
 refline_ = function(..., x, xend = x, y, yend = y, color = red_, linetype = "solid", alpha = 0.5) {
   annotate("segment",
-    color = color, linetype = linetype, alpha = alpha, size = 0.75,
+    color = color, linetype = linetype, alpha = alpha, linewidth = 0.75,
     x = x, xend = xend, y = y, yend = yend,
     ...
   )
@@ -161,7 +161,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
   
   # interval properties
   label_(x = 3.5, y = -0.2,
-    label = 'interval_color = color = "black"\ninterval_alpha = alpha = 1\ninterval_linetype = linetype = "solid"\ninterval_size = size = 5',
+    label = 'interval_color = color = "black"\ninterval_alpha = alpha = 1\ninterval_linetype = linetype = "solid"\nlinewidth = size = 5',
     vjust = 1, hjust = 1
   ) +
   arrow_(x = 3.3, xend = 3.4, y = -0.18, yend = -0.015, curvature = -0.1) +
@@ -194,7 +194,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
     aes(interval_size = NULL),
     color = "gray50",
     fill = "gray75",
-    size = 1.5,
+    linewidth = 1.5,
     shape = 21
   ) +
   
@@ -389,9 +389,9 @@ abc_df %>%
   ggtitle('stat_dots(side = "both", layout = "swarm")')
 ```
 
-## Varying `color`, `fill`, `shape`, and `size`
+## Varying `color`, `fill`, `shape`, and `linewidth`
 
-Aesthetics like `color`, `fill`, `shape`, and `size` can be varied over the dots.
+Aesthetics like `color`, `fill`, `shape`, and `linewidth` can be varied over the dots.
 For example, we can vary the `fill` aesthetic to create two
 subgroups, and use `position = "dodge"` to dodge entire "swarms" at once so
 the subgroups do not overlap:
@@ -406,7 +406,7 @@ abcc_df = data.frame(
 )
 
 abcc_df %>%
-  ggplot(aes(y = value, x = abc, fill = hi)) +
+  ggplot(aes(y = value, x = abc, fill = hi, linewidth = hi)) +
   geom_dots(side = "both", position = "dodge") +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
@@ -416,7 +416,7 @@ abcc_df %>%
 ```
 
 The color of the default gray outline can be changed using the `color` aesthetic,
-or you can remove it altogether by setting `size = 0` (or `slab_size = 0` when
+or you can remove it altogether by setting `linewidth = 0` (or `slab_linewidth = 0` when
 using `stat_dotsinterval()` / `geom_dotsinterval()`), or by changing to solid
 shapes (the usual "plotting characters", e.g. 
 numbers from `0:24`, are supported) and using the `color` aesthetic.

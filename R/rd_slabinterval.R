@@ -287,7 +287,7 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
     if (as_dots) {
       glue_doc('
         @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-          to a fixed value, like `colour = "red"` or `size = 3` (see **Aesthetics**, below). They may also be
+          to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
           parameters to the paired geom/stat. When paired with the default geom, [geom_<<geom_name>>()],
           these include:
           <<rd_describe_list(params)>>
@@ -404,13 +404,18 @@ rd_slabinterval_aesthetics = function(
 
   # line aesthetics
   geom_aes_sections[["Line aesthetics"]] = list(
-    size = 'Width of the outline around the **slab** (if visible). Also determines the width of
-     the line used to draw the **interval** and the size of the **point**, but raw
+    linewidth = 'Width of the line used to draw the **interval** (except with [geom_slab()]: then
+     it is the width of the **slab**). With composite geometries including an interval and slab,
+     use `slab_linewidth` to set the line width of the **slab** (see below). For **interval**, raw
+     `linewidth` values are transformed according to the `interval_size_domain` and `interval_size_range`
+     parameters of the `geom` (see above).',
+    size = 'Determines the size of the **point**. If `linewidth` is not provided, `size` will
+     also determines the width of the line used to draw the **interval** (this allows line width and
+     point size to be modified together by setting only `size` and not `linewidth`). Raw
      `size` values are transformed according to the `interval_size_domain`, `interval_size_range`,
-     and `fatten_point` parameters of the `geom` (see above). Use the `slab_size`,
-     `interval_size`, or `point_size` aesthetics (below) to set sub-geometry line widths separately
-     (note that when size is set directly using the override aesthetics, interval and point
-     sizes are not affected by `interval_size_domain`, `interval_size_range`, and `fatten_point`).',
+     and `fatten_point` parameters of the `geom` (see above). Use the `point_size` aesthetic
+     (below) to set sub-geometry size directly without applying the effects of
+     `interval_size_domain`, `interval_size_range`, and `fatten_point`.',
     stroke = 'Width of the outline around the **point** sub-geometry.',
     linetype = 'Type of line (e.g., `"solid"`, `"dashed"`, etc) used to draw the **interval**
      and the outline of the **slab** (if it is visible). Use the `slab_linetype` or
@@ -422,7 +427,7 @@ rd_slabinterval_aesthetics = function(
     slab_fill = 'Override for `fill`: the fill color of the slab.',
     slab_colour = '(or `slab_color`) Override for `colour`/`color`: the outline color of the slab.',
     slab_alpha = 'Override for `alpha`: the opacity of the slab.',
-    slab_size = 'Override for `size`: the width of the outline of the slab.',
+    slab_linewidth = 'Override for `linwidth`: the width of the outline of the slab.',
     slab_linetype = 'Override for `linetype`: the line type of the outline of the slab.',
     slab_shape = 'Override for `shape`: the shape of the dots used to draw the dotplot slab.'
   )
@@ -431,7 +436,6 @@ rd_slabinterval_aesthetics = function(
   if (isTRUE(geom$default_params$show_interval)) geom_aes_sections[["Interval-specific color/line override aesthetics"]] = list(
     interval_colour = '(or `interval_color`) Override for `colour`/`color`: the color of the interval.',
     interval_alpha = 'Override for `alpha`: the opacity of the interval.',
-    interval_size = 'Override for `size`: the line width of the interval.',
     interval_linetype = 'Override for `linetype`: the line type of the interval.'
   )
 

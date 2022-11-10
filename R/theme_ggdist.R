@@ -27,8 +27,8 @@
 #' @export
 theme_ggdist = function() {
   theme_light() + theme(
-    axis.line.x = element_line(color = "gray70", size = rel(0.5)),
-    axis.line.y = element_line(color = "gray70", size = rel(0.5)),
+    axis.line.x = element_line(color = "gray70", linewidth = rel(0.5)),
+    axis.line.y = element_line(color = "gray70", linewidth = rel(0.5)),
     axis.title.x = element_text(margin = margin(t = 7)),
     axis.title.y = element_text(margin = margin(r = 7)),
     panel.grid.major = element_blank(),
