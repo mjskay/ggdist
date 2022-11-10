@@ -188,10 +188,10 @@ scale_interval_alpha_discrete = function(..., range = c(0.1, 1)) {
 
 
 #' @rdname scales
-#' @importFrom scales rescale_pal
+#' @importFrom scales area_pal
 #' @export
 scale_interval_size_continuous =
-  function(..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", rescale_pal(range), ...)
+  function(..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", area_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
