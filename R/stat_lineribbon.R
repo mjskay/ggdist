@@ -7,8 +7,8 @@
 StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
   default_aes = defaults(aes(
     datatype = "interval",
-    group = stat(level),
-    fill = stat(level)
+    group = after_stat(level),
+    fill = after_stat(level)
   ), StatPointinterval$default_aes),
 
   default_params = defaults(list(
@@ -40,7 +40,7 @@ stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")
 
 StatRibbon = ggproto("StatRibbon", StatLineribbon,
   default_aes = defaults(aes(
-    color = stat(I(NA))
+    color = after_stat(I(NA))
   ), StatLineribbon$default_aes)
 )
 

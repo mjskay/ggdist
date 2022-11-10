@@ -129,8 +129,8 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
   out = glue_doc('
       @section Computed Variables:
       The following variables are computed by this stat and made available for
-      use in aesthetic specifications ([aes()]) using the [stat()] or [after_stat()]
-      functions:
+      use in aesthetic specifications ([aes()]) using the [after_stat()]
+      function or the `after_stat` argument of [stage()]:
 
       - `x` or `y`: For slabs, the input values to the slab function.
         For intervals, the point summary from the interval function. Whether it is `x` or `y` depends on `orientation`

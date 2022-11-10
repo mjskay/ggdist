@@ -106,7 +106,7 @@ Setting this equal to \code{"dodge"} (\code{\link[=position_dodge]{position_dodg
 you have overlapping geometries.}
 
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
-to a fixed value, like \code{colour = "red"} or \code{size = 3} (see \strong{Aesthetics}, below). They may also be
+to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
 \item{binwidth}{The bin width to use for laying out the dots. One of:
@@ -439,6 +439,8 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 
 \itemize{
 \item{\code{family}}
+\item{\code{linewidth}}
+\item{\code{slab_linewidth}}
 \item{\code{width}}
 \item{\code{height}}
 \item{\code{group}}
@@ -478,7 +480,7 @@ RankCorr_u_tau \%>\%
 # dotsinterval adds an interval
 
 RankCorr_u_tau \%>\%
-  ggplot(aes(x = u_tau, y = factor(i), fill = stat(x > 6))) +
+  ggplot(aes(x = u_tau, y = factor(i), fill = after_stat(x > 6))) +
   stat_dotsinterval(quantiles = 100)
 
 }

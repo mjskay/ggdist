@@ -673,11 +673,11 @@ tibble(
   lambda = c(13,7,4,3,2)
 ) %>%
   ggplot(aes(x = group)) +
-  stat_slab(aes(ydist = dist_poisson(lambda), fill = stat(pdf))) +
+  stat_slab(aes(ydist = dist_poisson(lambda), fill = after_stat(pdf))) +
   geom_line(aes(y = lambda, group = NA), size = 1) +
   geom_point(aes(y = lambda), size = 2.5) +
   labs(fill = "Pr(y)") +
-  ggtitle("stat_slab()", "aes(ydist = dist_poisson(lambda), fill = stat(pdf))")
+  ggtitle("stat_slab()", "aes(ydist = dist_poisson(lambda), fill = after_stat(pdf))")
 ```
 
 This was inspired by an example from Isabella Ghement.
@@ -791,7 +791,7 @@ All of the stats in this section follow the naming scheme `stat_[c]cdfinterval`:
 
 An alternative approach to mapping density onto the `thickness` aesthetic of the slab is to instead map it onto its `alpha` value (i.e., opacity). This is what the `stat_gradientinterval` family does (actually, it uses `slab_alpha`, a variant of the `alpha` aesthetic, described below). 
 
-It is roughly equivalent to `stat_slabinterval(aes(slab_alpha = stat(f)), thickness = 1, justification = 0.5)`.
+It is roughly equivalent to `stat_slabinterval(aes(slab_alpha = after_stat(f)), thickness = 1, justification = 0.5)`.
 
 ### On sample data
 
@@ -898,18 +898,18 @@ not look as nice.
 
 ### CCDF Gradients
 
-By default, `stat_ccdfinterval()` maps the output of the evaluated function (in its case, the CCDF) onto the `thickness` aesthetic of the `slabinterval` geom, which determines how thick the slab is. This is the equivalent of setting `aes(thickness = stat(f))`. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping `stat(f)` onto the `slab_alpha` aesthetic instead, and setting `thickness` to a constant (1):
+By default, `stat_ccdfinterval()` maps the output of the evaluated function (in its case, the CCDF) onto the `thickness` aesthetic of the `slabinterval` geom, which determines how thick the slab is. This is the equivalent of setting `aes(thickness = after_stat(f))`. However, we could instead create a CCDF gradient plot, a sort of mashup of a CCDF barplot and a density gradient plot, by mapping `after_stat(f)` onto the `slab_alpha` aesthetic instead, and setting `thickness` to a constant (1):
 
 ```{r ccdf_gradient, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(x = group, y = value, fill = subgroup)) +
-  stat_ccdfinterval(aes(slab_alpha = stat(f)), 
+  stat_ccdfinterval(aes(slab_alpha = after_stat(f)), 
     thickness = 1, position = "dodge", fill_type = "gradient"
   ) +
   expand_limits(y = 0) +
   # plus coord_cartesian so there is no space between bars and axis
   coord_cartesian(expand = FALSE) +
-  ggtitle("stat_ccdfinterval(thickness = 1)", "aes(slab_alpha = stat(f))")
+  ggtitle("stat_ccdfinterval(thickness = 1)", "aes(slab_alpha = after_stat(f))")
 ```
 
 If this approach were applied to bins in a histogram, where each bin had some uncertainty
@@ -929,8 +929,8 @@ priors = tribble(
 
 priors %>%
   ggplot(aes(y = dist, xdist = dist, args = args)) +
-  stat_halfeye(aes(fill = stat(abs(x) < 1.5))) +
-  ggtitle("stat_halfeye()", "aes(fill = stat(abs(x) < 1.5)))") +
+  stat_halfeye(aes(fill = after_stat(abs(x) < 1.5))) +
+  ggtitle("stat_halfeye()", "aes(fill = after_stat(abs(x) < 1.5)))") +
   # we'll use a nicer palette than the default for highlighting:
   scale_fill_manual(values = c("gray85", "skyblue"))
 ```
@@ -940,10 +940,10 @@ We could also combine these aesthetics arbitrarily. Here is a (probably not very
 ```{r norm_vs_t_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, xdist = dist, args = args)) +
-  stat_eye(aes(slab_alpha = stat(f), fill = stat(x > 1)), fill_type = "gradient") +
+  stat_eye(aes(slab_alpha = after_stat(f), fill = after_stat(x > 1)), fill_type = "gradient") +
   ggtitle(
     "stat_eye(fill_type = 'gradient')", 
-    "aes(slab_alpha = stat(f), fill = stat(x > 1)))"
+    "aes(slab_alpha = after_stat(f), fill = after_stat(x > 1)))"
   ) +
   # we'll use a nicer palette than the default for highlighting:
   scale_fill_manual(values = c("gray75", "skyblue"))
@@ -956,13 +956,13 @@ We can also take advantage of the fact that all slabinterval stats also supply `
 ```{r correll_gradient, fig.width = small_width, fig.height = small_height/2}
 priors %>%
   ggplot(aes(y = dist, xdist = dist, args = args)) +
-  stat_gradientinterval(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95))),
+  stat_gradientinterval(aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95))),
     fill_type = "gradient"
   ) +
   scale_slab_alpha_continuous(guide = "none") +
   ggtitle(
     "stat_gradientinterval(fill_type = 'gradient')",
-    "aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))"
+    "aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95)))"
   )
 ```
 
@@ -971,11 +971,11 @@ We could also do a mashup of faded-tail gradients with violin plots by starting 
 ```{r helske_gradient_eye, fig.width = med_width, fig.height = small_height}
 priors %>%
   ggplot(aes(y = dist, xdist = dist, args = args)) +
-  stat_eye(aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95))), fill_type = "gradient") +
+  stat_eye(aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95))), fill_type = "gradient") +
   scale_slab_alpha_continuous(guide = "none") +
   ggtitle(
     "stat_eye(fill_type = 'gradient')",
-    "aes(slab_alpha = stat(-pmax(abs(1 - 2*cdf), .95)))"
+    "aes(slab_alpha = after_stat(-pmax(abs(1 - 2*cdf), .95)))"
   )
 ```
 
@@ -990,8 +990,8 @@ dist_df %>%
   ggplot(aes(x = group, ydist = dist_normal(mean, sd), fill = subgroup)) +
   stat_slab(
     aes(
-      thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)), 
-      fill_ramp = stat(pmax(0, abs(1 - 2*cdf) - .95))
+      thickness = after_stat(pmax(0, abs(1 - 2*cdf) - .95)), 
+      fill_ramp = after_stat(pmax(0, abs(1 - 2*cdf) - .95))
     ),
     side = "both", position = "dodge", fill_type = "gradient"
   ) +
@@ -999,7 +999,7 @@ dist_df %>%
     title = 'stat_slab(side = "both")', 
     subtitle = paste0(
       "aes(fill = subgroup,\n       ",
-      "fill_ramp and thickness = stat(pmax(0, abs(1 - 2*cdf) - .95)))"
+      "fill_ramp and thickness = after_stat(pmax(0, abs(1 - 2*cdf) - .95)))"
     )
   ) +
   guides(fill_ramp = "none") +
@@ -1024,14 +1024,14 @@ the slab fill:
 ```{r halfeye_filled_intervals, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(y = group, x = value)) +
-  stat_halfeye(aes(fill = stat(level))) +
+  stat_halfeye(aes(fill = after_stat(level))) +
   # na.translate = FALSE drops the unnecessary NA from the legend, which covers
   # slab values outside the intervals. An alternative would be to use 
   # na.value = ... to set the color for values outside the intervals.
   scale_fill_brewer(na.translate = FALSE) +
   labs(
     title = "stat_halfeye()", 
-    subtitle = "aes(fill = stat(level))",
+    subtitle = "aes(fill = after_stat(level))",
     fill = "interval"
   )
 ```
@@ -1048,12 +1048,12 @@ split `stat_halfeye()` into its constituent parts (`stat_slab()` and
 ```{r halfeye_filled_intervals_2, fig.width = med_width, fig.height = small_height}
 df %>%
   ggplot(aes(y = group, x = value)) +
-  stat_slab(aes(fill = stat(level)), .width = c(.66, .95, 1)) +
+  stat_slab(aes(fill = after_stat(level)), .width = c(.66, .95, 1)) +
   stat_pointinterval() +
   scale_fill_brewer() +
   labs(
     title = "stat_slab()", 
-    subtitle = "aes(fill = stat(level), .width = c(.66, .95, 1))",
+    subtitle = "aes(fill = after_stat(level), .width = c(.66, .95, 1))",
     fill = "interval"
   )
 ```
@@ -1064,16 +1064,16 @@ besides quantile intervals; for example, highest-density intervals:
 
 ```{r halfeye_qi_vs_hdi, fig.width = med_width, fig.height = small_height}
 qi_plot = data.frame(dist = dist_beta(10, 2)) %>%
-  ggplot(aes(xdist = dist, fill = stat(level))) + 
+  ggplot(aes(xdist = dist, fill = after_stat(level))) + 
   stat_halfeye(point_interval = median_qi, .width = c(.5, .8, .95)) + 
   scale_fill_brewer(na.value = "gray95") +
-  labs(subtitle = "stat_halfeye(aes(fill = stat(level)), point_interval = median_qi)")
+  labs(subtitle = "stat_halfeye(aes(fill = after_stat(level)), point_interval = median_qi)")
 
 hdi_plot = data.frame(dist = dist_beta(10, 2)) %>%
-  ggplot(aes(xdist = dist, fill = stat(level))) + 
+  ggplot(aes(xdist = dist, fill = after_stat(level))) + 
   stat_halfeye(point_interval = mode_hdci, .width = c(.5, .8, .95)) + 
   scale_fill_brewer(na.value = "gray95") +
-  labs(subtitle = "stat_halfeye(aes(fill = stat(level)), point_interval = mode_hdci)")
+  labs(subtitle = "stat_halfeye(aes(fill = after_stat(level)), point_interval = mode_hdci)")
 
 qi_plot /
   hdi_plot
@@ -1095,7 +1095,7 @@ another column in the original data table, such as the `subgroup` column:
 df %>%
   ggplot(aes(y = group, x = value)) +
   stat_halfeye(
-    aes(fill = subgroup, fill_ramp = stat(level)),
+    aes(fill = subgroup, fill_ramp = after_stat(level)),
     .width = c(.50, .80, .95),
     # NOTE: we use position = "dodgejust" (a dodge that respects the 
     # justification of intervals relative to slabs) instead of 
@@ -1108,7 +1108,7 @@ df %>%
   scale_fill_ramp_discrete(na.translate = FALSE) +
   labs(
     title = "stat_halfeye(position = 'dodgejust')", 
-    subtitle = "aes(fill = subgroup, fill_ramp = stat(level))",
+    subtitle = "aes(fill = subgroup, fill_ramp = after_stat(level))",
     fill_ramp = "interval"
   )
 ```
@@ -1122,10 +1122,10 @@ as an ordered factor.
 ```{r dist_interval_color_ramp, fig.width = med_width, fig.height = small_height}
 dist_df %>%
   ggplot(aes(x = group, ydist = dist_normal(mean, sd), color = subgroup)) +
-  stat_interval(aes(color_ramp = stat(level)), position = "dodge") +
+  stat_interval(aes(color_ramp = after_stat(level)), position = "dodge") +
   labs(
     title = "stat_interval()", 
-    subtitle = "aes(color = subgroup, color_ramp = stat(level))"
+    subtitle = "aes(color = subgroup, color_ramp = after_stat(level))"
   )
 ```
 
@@ -1148,16 +1148,16 @@ priors %>%
   ggplot(aes(y = dist, xdist = dist, args = args)) +
   # must also use normalize = "groups" because min(log(pdf)) will be different for each dist
   stat_slab(
-    aes(thickness = stat(ifelse(.width <= 0.99, log(pdf), NA))), 
+    aes(thickness = after_stat(ifelse(.width <= 0.99, log(pdf), NA))), 
     normalize = "groups", fill = "gray85", .width = .99, side = "both"
   ) +
   stat_eye(
-    aes(thickness = stat(ifelse(.width <= 0.95, log(pdf), NA))), 
+    aes(thickness = after_stat(ifelse(.width <= 0.95, log(pdf), NA))), 
     normalize = "groups"
   ) +
   ggtitle(
     'stat_eye(normalize = "groups")',
-    "with aes(thickness = stat(ifelse(.width <= 0.95, log(pdf), NA)))\nand aes(thickness = stat(ifelse(.width <= 0.99, log(pdf), NA)))"
+    "with aes(thickness = after_stat(ifelse(.width <= 0.95, log(pdf), NA)))\nand aes(thickness = after_stat(ifelse(.width <= 0.99, log(pdf), NA)))"
   )
 ```
 
@@ -1199,8 +1199,8 @@ the `x` axis in a way that provides a "softer" form of region of practical equiv
 ridges_df %>%
   ggplot(aes(
     y = group, x = x, 
-    fill = group, fill_ramp = stat(abs(x)), 
-    color_ramp = stat(-dnorm(x, 0, 2))
+    fill = group, fill_ramp = after_stat(abs(x)), 
+    color_ramp = after_stat(-dnorm(x, 0, 2))
   )) +
   stat_slab(
     height = 2, color = "gray15", 
@@ -1211,7 +1211,7 @@ ridges_df %>%
   geom_vline(xintercept = 0, color = "gray85", linetype = "dashed") +
   ggtitle(
     'stat_slab(height = 2, color = "black", expand = TRUE, trim = FALSE)',
-    'aes(fill = group, fill_ramp = stat(abs(x)), color_ramp = stat(-dnorm(x, 0, 2)))'
+    'aes(fill = group, fill_ramp = after_stat(abs(x)), color_ramp = after_stat(-dnorm(x, 0, 2)))'
   ) +
   scale_fill_viridis_d()
 ```

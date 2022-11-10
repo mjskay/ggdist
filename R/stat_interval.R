@@ -10,7 +10,7 @@
 #' @export
 StatInterval = ggproto("StatInterval", StatPointinterval,
   default_aes = defaults(aes(
-    color = stat(level)
+    color = after_stat(level)
   ), StatPointinterval$default_aes),
 
   default_params = defaults(list(

@@ -174,7 +174,7 @@ test_that("stat fill aesthetic on halfeye works", {
 
   vdiffr::expect_doppelganger("gradient fill/color halfeye",
     data.frame(dist = "norm", mean = 0, sd = 1) %>%
-      ggplot(aes(y = 1, dist = dist, arg1 = mean, arg2 = sd, slab_color = stat(x > 0), fill = stat(f), slab_linetype = stat(x > -1), slab_size = stat(x > 1))) +
+      ggplot(aes(y = 1, dist = dist, arg1 = mean, arg2 = sd, slab_color = after_stat(x > 0), fill = after_stat(f), slab_linetype = after_stat(x > -1), slab_size = after_stat(x > 1))) +
       stat_dist_halfeye(n = 10)
   )
 })
@@ -405,7 +405,7 @@ test_that("pdf and cdf aesthetics work", {
     "norm", list(0, 1),
     "t", list(3)
   ) %>%
-    ggplot(aes(dist = dist, args = args, fill = dist, thickness = stat(pdf), slab_alpha = stat(cdf))) +
+    ggplot(aes(dist = dist, args = args, fill = dist, thickness = after_stat(pdf), slab_alpha = after_stat(cdf))) +
     scale_slab_alpha_continuous(range = c(0,1))
 
   vdiffr::expect_doppelganger("pdf and cdf on a slabinterval",
@@ -684,7 +684,7 @@ test_that("rvars work", {
       mu = 1:2,
       x = posterior::rvar_rng(rnorm, 2, mu, 1:2)
     ) %>%
-    ggplot(aes(y = mu, xdist = x, fill = stat(cdf)))
+    ggplot(aes(y = mu, xdist = x, fill = after_stat(cdf)))
 
   vdiffr::expect_doppelganger("halfeye with rvar and cdf",
     p + stat_halfeye(n = 20, trim = FALSE, expand = TRUE, slab_color = "black")

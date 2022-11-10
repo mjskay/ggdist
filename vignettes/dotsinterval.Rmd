@@ -568,12 +568,12 @@ to color dots according to the interval containing them (we'll also use the
 
 ```{r dotsinterval_dist_1000_level_color}
 dist_df %>%
-  ggplot(aes(y = dist_name, xdist = dist, slab_color = stat(level))) +
+  ggplot(aes(y = dist_name, xdist = dist, slab_color = after_stat(level))) +
   stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci, layout = "weave") +
   scale_color_manual(values = scales::brewer_pal()(3)[-1], aesthetics = "slab_color") +
   ggtitle(
     "stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)",
-    "aes(y = dist_name, xdist = dist, slab_color = stat(level))"
+    "aes(y = dist_name, xdist = dist, slab_color = after_stat(level))"
   )
 ```
 
@@ -592,16 +592,16 @@ first generate the quantiles before properties of those quantiles can be mapped 
 aesthetics.
 
 Thus, because it relies upon generated variables from the stat, you can use the
-`stat()` or `stage()` functions from `ggplot2` to map those variables. For example:
+`after_stat()` or `stage()` functions from `ggplot2` to map those variables. For example:
 
 ```{r dotsinterval_dist_color}
 dist_df %>%
-  ggplot(aes(y = dist_name, xdist = dist, slab_color = stat(x))) +
+  ggplot(aes(y = dist_name, xdist = dist, slab_color = after_stat(x))) +
   stat_dotsinterval(slab_shape = 19, quantiles = 500) +
   scale_color_distiller(aesthetics = "slab_color", guide = "colorbar2") +
   ggtitle(
     "stat_dotsinterval(slab_shape = 19, quantiles = 500)",
-    'aes(slab_color = stat(x)) +\nscale_color_distiller(aesthetics = "slab_color", guide = "colorbar2")'
+    'aes(slab_color = after_stat(x)) +\nscale_color_distiller(aesthetics = "slab_color", guide = "colorbar2")'
   )
 ```
 
@@ -631,12 +631,12 @@ ab_df = tibble(
 ab_df %>%
   ggplot(aes(
     y = ab, xdist = dist_normal(mean, sd),
-    fill = stat(x < 6), shape = stat(x < 6)
+    fill = after_stat(x < 6), shape = after_stat(x < 6)
   )) +
   stat_dots(position = "dodge", color = NA) +
   labs(
     title = "stat_dots()",
-    subtitle = "aes(xdist = dist_normal(mean, sd), fill and shape = stat(x < 6))"
+    subtitle = "aes(xdist = dist_normal(mean, sd), fill and shape = after_stat(x < 6))"
   ) +
   geom_vline(xintercept = 6, alpha = 0.25) +
   scale_x_continuous(breaks = 2:10) +
@@ -651,11 +651,11 @@ side of a cutoff when coloring dots within dotplots. Thus it can be useful to us
 
 ```{r dist_dots_weave, fig.width = med_width, fig.height = large_height}
 ab_df %>%
-  ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = stat(x < 6))) +
+  ggplot(aes(y = ab, xdist = dist_normal(mean, sd), fill = after_stat(x < 6))) +
   stat_dots(position = "dodge", color = NA, layout = "weave") +
   labs(
     title = 'stat_dots(layout = "weave")',
-    subtitle = "aes(fill = stat(x < 6))"
+    subtitle = "aes(fill = after_stat(x < 6))"
   ) +
   geom_vline(xintercept = 6, alpha = 0.25) +
   scale_x_continuous(breaks = 2:10)
@@ -688,11 +688,11 @@ data.frame(
   value = rnorm(200, c(1, 8, 8, 3), c(1, 1.5, 1.5, 1))
 ) %>%
   ggplot(aes(y = abc, x = value, fill = abc)) +
-  stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +
+  stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +
   stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA) +
   scale_fill_brewer(palette = "Set2") +
   ggtitle(paste0(
-      'stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +\n',
+      'stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +\n',
       'stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA)'
     ),
     'aes(fill = abc)'

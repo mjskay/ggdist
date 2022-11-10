@@ -46,7 +46,7 @@
 #' tibble(x = dist_normal(0, 1)) %>%
 #'   ggplot(aes(xdist = x)) +
 #'   stat_slab(
-#'     aes(fill = stat(cut_cdf_qi(cdf)))
+#'     aes(fill = after_stat(cut_cdf_qi(cdf)))
 #'   ) +
 #'   scale_fill_brewer(direction = -1)
 #'
@@ -55,7 +55,7 @@
 #' tibble(x = dist_normal(0, 1)) %>%
 #'   ggplot(aes(xdist = x)) +
 #'   stat_slab(
-#'     aes(fill = stat(level)),
+#'     aes(fill = after_stat(level)),
 #'     .width = c(.66, .95, 1)
 #'   ) +
 #'   scale_fill_brewer()
@@ -69,7 +69,7 @@
 #' tibble(x = dist_normal(0, 1)) %>%
 #'   ggplot(aes(xdist = x)) +
 #'   stat_halfeye(aes(
-#'     fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95, 1)))
+#'     fill = after_stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95, 1)))
 #'   )) +
 #'   scale_fill_brewer(direction = -1, na.translate = FALSE)
 #'
@@ -79,7 +79,7 @@
 #' tibble(x = dist_normal(0, 1)) %>%
 #'   ggplot(aes(xdist = x)) +
 #'   stat_halfeye(aes(
-#'     fill = stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95), labels = percent_format(accuracy = 1)))
+#'     fill = after_stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95), labels = percent_format(accuracy = 1)))
 #'   )) +
 #'   labs(fill = "Interval") +
 #'   scale_fill_brewer(direction = -1, na.translate = FALSE)

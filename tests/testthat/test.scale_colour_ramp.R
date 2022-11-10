@@ -19,20 +19,20 @@ test_that("basic fill_ramp works", {
   vdiffr::expect_doppelganger("basic fill_ramp",
     tibble(d = dist_uniform(0, 1)) %>%
       ggplot(aes(y = 0, dist = d)) +
-      stat_dist_slab(aes(fill_ramp = stat(x)), n = 20, fill = "red")
+      stat_dist_slab(aes(fill_ramp = after_stat(x)), n = 20, fill = "red")
   )
 
   vdiffr::expect_doppelganger("basic fill_ramp from red",
     tibble(d = dist_uniform(0, 1)) %>%
       ggplot(aes(y = 0, dist = d)) +
-      stat_dist_slab(aes(fill_ramp = stat(x)), fill = "blue", n = 20) +
+      stat_dist_slab(aes(fill_ramp = after_stat(x)), fill = "blue", n = 20) +
       scale_fill_ramp_continuous(from = "red")
   )
 
   vdiffr::expect_doppelganger("basic discrete fill_ramp",
     tibble(d = dist_uniform(0, 1)) %>%
       ggplot(aes(y = 0, dist = d)) +
-      stat_dist_slab(aes(fill_ramp = stat(cut(x, c(-Inf, 0.25, 0.75, Inf)))), fill = "blue", n = 20) +
+      stat_dist_slab(aes(fill_ramp = after_stat(cut(x, c(-Inf, 0.25, 0.75, Inf)))), fill = "blue", n = 20) +
       scale_fill_ramp_discrete(from = "red")
   )
 })
@@ -46,28 +46,28 @@ test_that("basic color_ramp works", {
   vdiffr::expect_doppelganger("basic colour_ramp",
     tibble(d = dist_uniform(0, 1)) %>%
       ggplot(aes(y = 0, dist = d)) +
-      stat_dist_slab(aes(colour_ramp = stat(x)), n = 20, color = "red", size = 5) +
+      stat_dist_slab(aes(colour_ramp = after_stat(x)), n = 20, color = "red", size = 5) +
       scale_colour_ramp_continuous(from = "blue")
   )
 
   vdiffr::expect_doppelganger("basic color_ramp",
     tibble(d = dist_uniform(0, 1)) %>%
       ggplot(aes(y = 0, dist = d)) +
-      stat_dist_slab(aes(color_ramp = stat(x)), n = 20, color = "red", size = 5) +
+      stat_dist_slab(aes(color_ramp = after_stat(x)), n = 20, color = "red", size = 5) +
       scale_color_ramp_continuous(from = "blue")
   )
 
   vdiffr::expect_doppelganger("basic discrete colour_ramp",
     tibble(d = dist_uniform(0, 1)) %>%
       ggplot(aes(y = 0, dist = d)) +
-      stat_dist_slab(aes(colour_ramp = stat(cut(x, c(-Inf, 0.25, 0.75, Inf)))), n = 20, color = "red", size = 5) +
+      stat_dist_slab(aes(colour_ramp = after_stat(cut(x, c(-Inf, 0.25, 0.75, Inf)))), n = 20, color = "red", size = 5) +
       scale_colour_ramp_discrete(from = "blue")
   )
 
   vdiffr::expect_doppelganger("basic discrete color_ramp",
     tibble(d = dist_uniform(0, 1)) %>%
       ggplot(aes(y = 0, dist = d)) +
-      stat_dist_slab(aes(color_ramp = stat(cut(x, c(-Inf, 0.25, 0.75, Inf)))), n = 20, color = "red", size = 5) +
+      stat_dist_slab(aes(color_ramp = after_stat(cut(x, c(-Inf, 0.25, 0.75, Inf)))), n = 20, color = "red", size = 5) +
       scale_color_ramp_discrete(from = "blue")
   )
 })
@@ -90,7 +90,7 @@ test_that("color_ramp works with stat_interval", {
   vdiffr::expect_doppelganger("color_ramp with interval and subgroups",
     dist_df %>%
       ggplot(aes(x = group, dist = dist_normal(mean, sd), color = subgroup)) +
-      stat_dist_interval(aes(color_ramp = stat(level)), position = "dodge")
+      stat_dist_interval(aes(color_ramp = after_stat(level)), position = "dodge")
   )
 })
 
@@ -115,7 +115,7 @@ test_that("fill_ramp works with stat_slab and NAs", {
       stat_dist_halfeye(
         aes(
           fill = subgroup,
-          fill_ramp = stat(level)
+          fill_ramp = after_stat(level)
         ),
         position = "dodgejust",
         n = 50
@@ -152,6 +152,6 @@ test_that("fill_ramp works on lineribbons", {
   vdiffr::expect_doppelganger("fill_ramp with lineribbon",
     df_2groups %>%
       ggplot(aes(x = x, y = y, fill = g)) +
-      stat_lineribbon(aes(fill_ramp = stat(level)))
+      stat_lineribbon(aes(fill_ramp = after_stat(level)))
   )
 })

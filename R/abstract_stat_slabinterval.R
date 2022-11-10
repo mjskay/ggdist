@@ -14,8 +14,8 @@
 AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
   default_aes = aes(
     datatype = "slab",
-    thickness = stat(f),
-    size = stat(-.width),
+    thickness = after_stat(f),
+    size = after_stat(-.width),
     x = NULL,
     y = NULL
   ),

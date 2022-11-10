@@ -118,7 +118,7 @@ creating multiple-interval plots.
 Roughly equivalent to:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  aes(colour = stat(level), size = NULL),
+  aes(colour = after_stat(level), size = NULL),
   geom = "interval",
   .width = c(0.5, 0.8, 0.95), show_slab = FALSE,
   show.legend = NA
@@ -157,8 +157,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
-functions:
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[=stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}

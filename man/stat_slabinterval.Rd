@@ -253,8 +253,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
-functions:
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[=stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}
@@ -444,10 +444,10 @@ df \%>\%
 # a reference (e.g. a prior distribution).
 # But you may wish to account for sample size if using these geoms
 # for something other than visualizing posteriors; in which case
-# you can use stat(f*n):
+# you can use after_stat(f*n):
 df \%>\%
   ggplot(aes(x = group, y = value)) +
-  stat_eye(aes(thickness = stat(pdf*n)))
+  stat_eye(aes(thickness = after_stat(pdf*n)))
 
 
 # EXAMPLES ON ANALYTICAL DISTRIBUTIONS

@@ -199,7 +199,7 @@ creating eye (violin + interval) plots.
 Roughly equivalent to:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  aes(side = stat("both"))
+  aes(side = after_stat("both"))
 )
 }\if{html}{\out{</div>}}
 }
@@ -235,8 +235,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
-functions:
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[=stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}

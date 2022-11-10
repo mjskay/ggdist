@@ -201,7 +201,7 @@ creating CDF bar plots.
 Roughly equivalent to:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  aes(thickness = stat(thickness(cdf)), justification = stat(0.5), side = stat("topleft")),
+  aes(thickness = after_stat(thickness(cdf)), justification = after_stat(0.5), side = after_stat("topleft")),
   slab_type = "cdf", normalize = "none", expand = TRUE
 )
 }\if{html}{\out{</div>}}
@@ -238,8 +238,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
-functions:
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[=stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}

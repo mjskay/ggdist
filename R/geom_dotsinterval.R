@@ -321,7 +321,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' # dotsinterval adds an interval
 #'
 #' RankCorr_u_tau %>%
-#'   ggplot(aes(x = u_tau, y = factor(i), fill = stat(x > 6))) +
+#'   ggplot(aes(x = u_tau, y = factor(i), fill = after_stat(x > 6))) +
 #'   stat_dotsinterval(quantiles = 100)
 #'
 #' @importFrom rlang %||%

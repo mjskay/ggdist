@@ -41,17 +41,17 @@
 #'
 #' tibble(d = dist_uniform(0, 1)) %>%
 #'   ggplot(aes(y = 0, xdist = d)) +
-#'   stat_slab(aes(fill_ramp = stat(x)))
+#'   stat_slab(aes(fill_ramp = after_stat(x)))
 #'
 #' tibble(d = dist_uniform(0, 1)) %>%
 #'   ggplot(aes(y = 0, xdist = d)) +
-#'   stat_slab(aes(fill_ramp = stat(x)), fill = "blue") +
+#'   stat_slab(aes(fill_ramp = after_stat(x)), fill = "blue") +
 #'   scale_fill_ramp_continuous(from = "red")
 #'
 #' # you can invert the order of `range` to change the order of the blend
 #' tibble(d = dist_normal(0, 1)) %>%
 #'   ggplot(aes(y = 0, xdist = d)) +
-#'   stat_slab(aes(fill_ramp = stat(cut_cdf_qi(cdf))), fill = "blue") +
+#'   stat_slab(aes(fill_ramp = after_stat(cut_cdf_qi(cdf))), fill = "blue") +
 #'   scale_fill_ramp_discrete(from = "red", range = c(1, 0))
 #'
 #' @importFrom scales rescale_pal

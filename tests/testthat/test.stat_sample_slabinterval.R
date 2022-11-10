@@ -130,7 +130,7 @@ test_that("pdf and cdf aesthetics work", {
     ggplot(aes(x = x, y = y))
 
   vdiffr::expect_doppelganger("pdf and cdf on a sample slabinterval",
-    p + stat_sample_slabinterval(aes(fill = x, thickness = stat(pdf), slab_alpha = stat(cdf)), n = 15)
+    p + stat_sample_slabinterval(aes(fill = x, thickness = after_stat(pdf), slab_alpha = after_stat(cdf)), n = 15)
   )
 
   expect_error(weighted_ecdf(NULL), "Need at least 1 or more values")
@@ -201,7 +201,7 @@ test_that("n is calculated correctly", {
 
   vdiffr::expect_doppelganger("pdf*n for different-sized groups",
     df %>%
-      ggplot(aes(x = x, y = g, thickness = stat(pdf*n), fill = stat(n))) +
+      ggplot(aes(x = x, y = g, thickness = after_stat(pdf*n), fill = after_stat(n))) +
       stat_sample_slabinterval(n = 15)
   )
 })

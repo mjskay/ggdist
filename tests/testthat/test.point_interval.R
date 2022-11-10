@@ -608,7 +608,7 @@ test_that("flattened indices retain index order", {
       ),
       y = c("a","b")
     )  %>%
-    ggplot(aes(xdist = x, y = y, group = stat(.index))) +
+    ggplot(aes(xdist = x, y = y, group = after_stat(.index))) +
     stat_pointinterval(position = "dodge")
   )
 

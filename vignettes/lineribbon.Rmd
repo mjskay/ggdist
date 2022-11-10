@@ -194,7 +194,7 @@ a continuous fill scale (e.g. `scale_fill_distiller()`) instead of a discrete on
 
 ```{r stat_lineribbon_gradient, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
-  ggplot(aes(x = x, y = y, fill = stat(.width))) +
+  ggplot(aes(x = x, y = y, fill = after_stat(.width))) +
   stat_lineribbon(.width = ppoints(50)) +
   scale_fill_distiller() +
   labs(title = "stat_lineribbon(.width = ppoints(50))")
@@ -207,12 +207,12 @@ is dark in the middle (rather than the outside):
 
 ```{r stat_lineribbon_gradient_ramp, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
-  ggplot(aes(x = x, y = y, fill_ramp = stat(.width))) +
+  ggplot(aes(x = x, y = y, fill_ramp = after_stat(.width))) +
   stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
   scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
     title = "stat_lineribbon(.width = ppoints(50))",
-    subtitle = "aes(fill_ramp = stat(.width))"
+    subtitle = "aes(fill_ramp = after_stat(.width))"
   )
 ```
 
@@ -223,12 +223,12 @@ specify the color to ramp to in the legend (default is `"gray65"`):
 
 ```{r stat_lineribbon_gradient_rampbar, fig.width = tiny_width, fig.height = tiny_height}
 df %>%
-  ggplot(aes(x = x, y = y, fill_ramp = stat(.width))) +
+  ggplot(aes(x = x, y = y, fill_ramp = after_stat(.width))) +
   stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
   scale_fill_ramp_continuous(range = c(1, 0), guide = guide_rampbar(to = "#2171b5")) +
   labs(
     title = "stat_lineribbon(.width = ppoints(50))",
-    subtitle = 'aes(fill_ramp = stat(.width)) +\nscale_fill_ramp_continuous(guide = "rampbar")'
+    subtitle = 'aes(fill_ramp = after_stat(.width)) +\nscale_fill_ramp_continuous(guide = "rampbar")'
   )
 ```
 
@@ -258,12 +258,12 @@ within groups of the second:
 ```{r stat_lineribbon_density, fig.width = tiny_width, fig.height = tiny_height}
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
   df %>%
-    ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
+    ggplot(aes(x = x, y = y, fill_ramp = after_stat(ave(pdf_min + pdf_max, .width)))) +
     stat_lineribbon(.width = ppoints(50), fill = "#2171b5") +
     scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5")) +
     labs(
       title = "stat_lineribbon(.width = ppoints(50))",
-      subtitle = 'aes(fill_ramp = stat(ave(pdf_min + pdf_max, .width)))'
+      subtitle = 'aes(fill_ramp = after_stat(ave(pdf_min + pdf_max, .width)))'
     )
 ))
 ```
@@ -284,12 +284,12 @@ the gradient will be.
 ```{r stat_lineribbon_density_smooth, fig.width = tiny_width, fig.height = tiny_height}
 withr::with_options(list(ggdist.experimental.slab_data_in_intervals = TRUE), print(
   df %>%
-    ggplot(aes(x = x, y = y, fill_ramp = stat(ave(pdf_min + pdf_max, .width)))) +
+    ggplot(aes(x = x, y = y, fill_ramp = after_stat(ave(pdf_min + pdf_max, .width)))) +
     stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)), fill = "#2171b5") +
     scale_fill_ramp_continuous(name = "density", guide = guide_rampbar(to = "#2171b5")) +
     labs(
       title = "stat_lineribbon(.width = pnorm(seq(-2.5, 2.5, length.out = 50)))",
-      subtitle = 'aes(fill_ramp = stat(ave(pdf_min + pdf_max, .width)))'
+      subtitle = 'aes(fill_ramp = after_stat(ave(pdf_min + pdf_max, .width)))'
     )
 ))
 ```
@@ -336,8 +336,8 @@ the lines do not overlap:
 ```{r stat_lineribbon_2groups_ramp, fig.width = tiny_width, fig.height = tiny_height}
 df_2groups %>%
   ggplot(aes(x = x, y = y, fill = g)) +
-  stat_lineribbon(aes(fill_ramp = stat(level))) +
-  labs(title = "stat_lineribbon(aes(fill = g, fill_ramp = stat_level))")
+  stat_lineribbon(aes(fill_ramp = after_stat(level))) +
+  labs(title = "stat_lineribbon(aes(fill = g, fill_ramp = after_stat(level)))")
 ```
 
 One way to avoid problems created by overlapping ribbons (besides using `alpha`, 

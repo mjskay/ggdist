@@ -294,7 +294,7 @@ test_that("dot order is correct", {
   skip_if_no_vdiffr()
 
   p = data.frame(x = qnorm(ppoints(50)), g = c("a", "b")) %>%
-    ggplot(aes(x = x, fill = stat(x < 0), color = g, group = NA)) +
+    ggplot(aes(x = x, fill = after_stat(x < 0), color = g, group = NA)) +
     scale_fill_brewer(palette = "Set1") +
     scale_color_brewer(palette = "Paired")
 

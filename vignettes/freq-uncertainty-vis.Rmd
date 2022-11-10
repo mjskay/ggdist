@@ -259,7 +259,7 @@ mtcars %>%
   stat_lineribbon(aes(
     ydist = dist_student_t(df = df.residual(m_mpg), mu = .fitted, sigma = .se.fit),
     fill = ordered(cyl),
-    fill_ramp = stat(level)
+    fill_ramp = after_stat(level)
   )) +
   geom_point(aes(y = mpg), data = mtcars) +
   

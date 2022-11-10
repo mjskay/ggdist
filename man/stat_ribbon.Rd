@@ -119,7 +119,7 @@ function.
 Roughly equivalent to:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{stat_lineribbon(
-  aes(colour = stat(I(NA)))
+  aes(colour = after_stat(I(NA)))
 )
 }\if{html}{\out{</div>}}
 }
@@ -155,8 +155,8 @@ of those functions.
 \section{Computed Variables}{
 
 The following variables are computed by this stat and made available for
-use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=stat]{stat()}} or \code{\link[=after_stat]{after_stat()}}
-functions:
+use in aesthetic specifications (\code{\link[=aes]{aes()}}) using the \code{\link[=after_stat]{after_stat()}}
+function or the \code{after_stat} argument of \code{\link[=stage]{stage()}}:
 \itemize{
 \item \code{x} or \code{y}: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is \code{x} or \code{y} depends on \code{orientation}

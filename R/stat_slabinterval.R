@@ -428,10 +428,10 @@ compute_interval_slabinterval = function(
 #' # a reference (e.g. a prior distribution).
 #' # But you may wish to account for sample size if using these geoms
 #' # for something other than visualizing posteriors; in which case
-#' # you can use stat(f*n):
+#' # you can use after_stat(f*n):
 #' df %>%
 #'   ggplot(aes(x = group, y = value)) +
-#'   stat_eye(aes(thickness = stat(pdf*n)))
+#'   stat_eye(aes(thickness = after_stat(pdf*n)))
 #'
 #'
 #' # EXAMPLES ON ANALYTICAL DISTRIBUTIONS
@@ -634,7 +634,7 @@ stat_halfeye = stat_slabinterval
 
 StatEye = ggproto("StatEye", StatSlabinterval,
   default_aes = defaults(aes(
-    side = stat("both"),
+    side = after_stat("both"),
   ), StatSlabinterval$default_aes)
 )
 #' @eval rd_slabinterval_shortcut_stat("eye", "eye (violin + interval)", geom_name = "slabinterval")
@@ -643,9 +643,9 @@ stat_eye = make_stat(StatEye, geom = "slabinterval")
 
 StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
   default_aes = defaults(aes(
-    thickness = stat(thickness(1 - cdf)),
-    justification = stat(0.5),
-    side = stat("topleft"),
+    thickness = after_stat(thickness(1 - cdf)),
+    justification = after_stat(0.5),
+    side = after_stat("topleft"),
   ), StatSlabinterval$default_aes),
 
   default_params = defaults(list(
@@ -660,7 +660,7 @@ stat_ccdfinterval = make_stat(StatCcdfinterval, geom = "slabinterval")
 
 StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
   default_aes = defaults(aes(
-    thickness = stat(thickness(cdf)),
+    thickness = after_stat(thickness(cdf)),
   ), StatCcdfinterval$default_aes),
 
   default_params = defaults(list(
@@ -673,9 +673,9 @@ stat_cdfinterval = make_stat(StatCdfinterval, geom = "slabinterval")
 
 StatGradientinterval = ggproto("StatGradientinterval", StatSlabinterval,
   default_aes = defaults(aes(
-    justification = stat(0.5),
-    thickness = stat(thickness(1)),
-    slab_alpha = stat(f)
+    justification = after_stat(0.5),
+    thickness = after_stat(thickness(1)),
+    slab_alpha = after_stat(f)
   ), StatSlabinterval$default_aes),
 
   default_params = defaults(list(
