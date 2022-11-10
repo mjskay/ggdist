@@ -55,7 +55,7 @@ data.frame(
 ) %>%
   ggplot(aes(y = abc, x = value, fill = abc)) +
   stat_slab() +
-  stat_dotsinterval(side = "bottom", slab_size = NA) +
+  stat_dotsinterval(side = "bottom", slab_linewidth = NA) +
   scale_fill_brewer(palette = "Set2") +
   theme_ggdist()
 ```

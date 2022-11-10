@@ -222,7 +222,7 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
 
     # INTERVAL PARAMS
     interval_size_domain = glue_doc('
-      A length-2 numeric vector giving the minimum and maximum of the values of the size aesthetic that will be
+      A length-2 numeric vector giving the minimum and maximum of the values of the `size` and `linewidth` aesthetics that will be
       translated into actual sizes for intervals drawn according to `interval_size_range` (see the documentation
       for that argument.)
       '),
@@ -235,7 +235,7 @@ rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_do
       the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
       argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
       that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-      size of the interval or points separately, you can instead use the `interval_size` or `point_size`
+      size of the interval or points separately, you can also use the `linewidth` or `point_size`
       aesthetics; see [scales].
       '),
     fatten_point = glue_doc('

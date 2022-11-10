@@ -59,9 +59,9 @@ function), and \code{interval_size_range} indicates the desired output range of 
 the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
 argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
 that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-size of the interval or points separately, you can instead use the \code{interval_size} or \code{point_size}
+size of the interval or points separately, you can also use the \code{linewidth} or \code{point_size}
 aesthetics; see \link{scales}.}
-\item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the size aesthetic that will be
+\item{\code{interval_size_domain}}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics that will be
 translated into actual sizes for intervals drawn according to \code{interval_size_range} (see the documentation
 for that argument.)}
 }}

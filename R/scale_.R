@@ -21,7 +21,6 @@
 #'   \item{`scale_point_size_* `}{Point size}
 #'   \item{`scale_interval_color_* `}{Interval line color}
 #'   \item{`scale_interval_alpha_* `}{Interval alpha level / opacity}
-#'   \item{`scale_interval_size_* `}{Interval line width}
 #'   \item{`scale_interval_linetype_* `}{Interval line type}
 #'   \item{`scale_slab_color_* `}{Slab outline color}
 #'   \item{`scale_slab_fill_* `}{Slab fill color}
@@ -29,7 +28,7 @@
 #'   `scale_slab_alpha_continuous` differ from [scale_alpha_continuous()] and
 #'   are designed for gradient plots (e.g. [stat_gradientinterval()]) by ensuring that
 #'   densities of 0 get mapped to 0 in the output.}
-#'   \item{`scale_slab_size_* `}{Slab outline line width}
+#'   \item{`scale_slab_linewidth_* `}{Slab outline line width}
 #'   \item{`scale_slab_linetype_* `}{Slab outline line type}
 #'   \item{`scale_slab_shape_* `}{Slab dot shape (for [geom_dotsinterval()])}
 #' }
@@ -46,6 +45,13 @@
 #' this is what `guide_colorbar2` is for:
 #'
 #' `scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")`
+#'
+#' These scales have been deprecated:
+#'
+#' \enumerate{
+#'   \item{`scale_interval_size_* `}{Use `scale_linewidth_*`}
+#'   \item{`scale_slab_size_* `}{Slab `scale_size_linewidth_*`}
+#' }
 #'
 #' @inheritParams ggplot2::continuous_scale
 #' @inheritParams ggplot2::scale_shape
@@ -82,15 +88,15 @@
 #'     point_size = 6,
 #'     stroke = 2,
 #'     interval_color = "blue",
-#'     # interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default
+#'     # interval line widths are scaled from [1, 6] onto [0.6, 1.4] by default
 #'     # see the interval_size_range parameter in help("geom_slabinterval")
-#'     interval_size = 8,
+#'     linewidth = 8,
 #'     interval_linetype = "dashed",
 #'     interval_alpha = .25,
 #'     # fill sets the fill color of the slab (here the density)
 #'     slab_color = "green",
 #'     slab_fill = "purple",
-#'     slab_size = 3,
+#'     slab_linewidth = 3,
 #'     slab_linetype = "dotted",
 #'     slab_alpha = .5
 #'   )
@@ -182,10 +188,10 @@ scale_interval_alpha_discrete = function(..., range = c(0.1, 1)) {
 
 
 #' @rdname scales
-#' @importFrom scales area_pal
+#' @importFrom scales rescale_pal
 #' @export
 scale_interval_size_continuous =
-  function(..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", area_pal(range), ...)
+  function(..., range = c(1, 6)) continuous_scale("interval_size", "interval_size_c", rescale_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_interval_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
@@ -252,15 +258,29 @@ scale_slab_alpha_discrete = function(..., range = c(0.1, 1)) {
 
 
 #' @rdname scales
-#' @importFrom scales area_pal
+#' @importFrom scales rescale_pal
 #' @export
 scale_slab_size_continuous =
-  function(..., range = c(1, 6)) continuous_scale("slab_size", "slab_size_c", area_pal(range), ...)
+  function(..., range = c(1, 6)) continuous_scale("slab_size", "slab_size_c", rescale_pal(range), ...)
 #' @rdname scales
 #' @export
 scale_slab_size_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
   force(range)
   discrete_scale("slab_size", "slab_size_d", function(n) seq(range[1], range[2], length.out = n),
+    na.translate = na.translate, ...)
+}
+
+
+#' @rdname scales
+#' @importFrom scales rescale_pal
+#' @export
+scale_slab_linewidth_continuous =
+  function(..., range = c(1, 6)) continuous_scale("slab_linewidth", "slab_linewidth_c", rescale_pal(range), ...)
+#' @rdname scales
+#' @export
+scale_slab_linewidth_discrete = function(..., range = c(1, 6), na.translate = FALSE) {
+  force(range)
+  discrete_scale("slab_linewidth", "slab_linewidth_d", function(n) seq(range[1], range[2], length.out = n),
     na.translate = na.translate, ...)
 }
 

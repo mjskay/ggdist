@@ -226,7 +226,7 @@ override_slab_aesthetics = function(self, s_data) {
   s_data$fill = s_data[["slab_fill"]] %||% s_data[["fill"]]
   s_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
   s_data$alpha = s_data[["slab_alpha"]] %||% s_data[["alpha"]]
-  #TODO: insert slab_size deprecation warning
+  #TODO: insert slab_size deprecation warning?
   s_data$linewidth = s_data[["slab_linewidth"]] %||% s_data[["slab_size"]]
   s_data$linetype = s_data[["slab_linetype"]] %||% s_data[["linetype"]]
   s_data

@@ -174,7 +174,7 @@ test_that("stat fill aesthetic on halfeye works", {
 
   vdiffr::expect_doppelganger("gradient fill/color halfeye",
     data.frame(dist = "norm", mean = 0, sd = 1) %>%
-      ggplot(aes(y = 1, dist = dist, arg1 = mean, arg2 = sd, slab_color = after_stat(x > 0), fill = after_stat(f), slab_linetype = after_stat(x > -1), slab_size = after_stat(x > 1))) +
+      ggplot(aes(y = 1, dist = dist, arg1 = mean, arg2 = sd, slab_color = after_stat(x > 0), fill = after_stat(f), slab_linetype = after_stat(x > -1), slab_linewidth = after_stat(x > 1))) +
       stat_dist_halfeye(n = 10)
   )
 })

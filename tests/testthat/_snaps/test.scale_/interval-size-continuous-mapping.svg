@@ -31,10 +31,10 @@
 <polygon points='334.11,462.01 334.11,343.30 318.35,343.30 318.35,462.01 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
 <polygon points='159.00,462.01 159.00,343.30 143.24,343.30 143.24,462.01 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
 <line x1='143.24' y1='521.37' x2='143.24' y2='46.53' style='stroke-width: 1.28; stroke-linecap: butt;' />
-<line x1='318.35' y1='521.37' x2='318.35' y2='46.53' style='stroke-width: 2.49; stroke-linecap: butt;' />
+<line x1='318.35' y1='521.37' x2='318.35' y2='46.53' style='stroke-width: 2.13; stroke-linecap: butt;' />
 <line x1='493.46' y1='521.37' x2='493.46' y2='46.53' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <circle cx='143.24' cy='283.95' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='318.35' cy='283.95' r='2.77' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='318.35' cy='283.95' r='2.45' style='stroke-width: 1.06; fill: #000000;' />
 <circle cx='493.46' cy='283.95' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
 <rect x='38.17' y='22.78' width='630.40' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
@@ -62,11 +62,11 @@
 <rect x='679.53' y='248.41' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='688.17' y1='263.97' x2='688.17' y2='250.14' style='stroke-width: 1.28; stroke-linecap: butt;' />
 <rect x='679.53' y='265.69' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<line x1='688.17' y1='281.25' x2='688.17' y2='267.42' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<line x1='688.17' y1='281.25' x2='688.17' y2='267.42' style='stroke-width: 1.71; stroke-linecap: butt;' />
 <rect x='679.53' y='282.97' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<line x1='688.17' y1='298.53' x2='688.17' y2='284.70' style='stroke-width: 2.49; stroke-linecap: butt;' />
+<line x1='688.17' y1='298.53' x2='688.17' y2='284.70' style='stroke-width: 2.13; stroke-linecap: butt;' />
 <rect x='679.53' y='300.25' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<line x1='688.17' y1='315.81' x2='688.17' y2='301.98' style='stroke-width: 2.76; stroke-linecap: butt;' />
+<line x1='688.17' y1='315.81' x2='688.17' y2='301.98' style='stroke-width: 2.56; stroke-linecap: butt;' />
 <rect x='679.53' y='317.53' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='688.17' y1='333.09' x2='688.17' y2='319.26' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <text x='702.29' y='260.08' style='font-size: 8.80px; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>1.0</text>

@@ -32,6 +32,8 @@
 \alias{scale_slab_alpha_discrete}
 \alias{scale_slab_size_continuous}
 \alias{scale_slab_size_discrete}
+\alias{scale_slab_linewidth_continuous}
+\alias{scale_slab_linewidth_discrete}
 \alias{scale_slab_linetype_discrete}
 \alias{scale_slab_linetype_continuous}
 \alias{scale_slab_shape_discrete}
@@ -136,6 +138,10 @@ scale_slab_size_continuous(..., range = c(1, 6))
 
 scale_slab_size_discrete(..., range = c(1, 6), na.translate = FALSE)
 
+scale_slab_linewidth_continuous(..., range = c(1, 6))
+
+scale_slab_linewidth_discrete(..., range = c(1, 6), na.translate = FALSE)
+
 scale_slab_linetype_discrete(..., na.value = "blank")
 
 scale_slab_linetype_continuous(...)
@@ -198,7 +204,6 @@ related geoms:
 \item{\verb{scale_point_size_* }}{Point size}
 \item{\verb{scale_interval_color_* }}{Interval line color}
 \item{\verb{scale_interval_alpha_* }}{Interval alpha level / opacity}
-\item{\verb{scale_interval_size_* }}{Interval line width}
 \item{\verb{scale_interval_linetype_* }}{Interval line type}
 \item{\verb{scale_slab_color_* }}{Slab outline color}
 \item{\verb{scale_slab_fill_* }}{Slab fill color}
@@ -206,7 +211,7 @@ related geoms:
 \code{scale_slab_alpha_continuous} differ from \code{\link[=scale_alpha_continuous]{scale_alpha_continuous()}} and
 are designed for gradient plots (e.g. \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}) by ensuring that
 densities of 0 get mapped to 0 in the output.}
-\item{\verb{scale_slab_size_* }}{Slab outline line width}
+\item{\verb{scale_slab_linewidth_* }}{Slab outline line width}
 \item{\verb{scale_slab_linetype_* }}{Slab outline line type}
 \item{\verb{scale_slab_shape_* }}{Slab dot shape (for \code{\link[=geom_dotsinterval]{geom_dotsinterval()}})}
 }
@@ -223,6 +228,13 @@ With continuous color scales, you may also need to provide a guide as the defaul
 this is what \code{guide_colorbar2} is for:
 
 \code{scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")}
+
+These scales have been deprecated:
+
+\enumerate{
+\item{\verb{scale_interval_size_* }}{Use \verb{scale_linewidth_*}}
+\item{\verb{scale_slab_size_* }}{Slab \verb{scale_size_linewidth_*}}
+}
 }
 \examples{
 
@@ -242,15 +254,15 @@ data.frame(distribution = "Normal(1,2)") \%>\%
     point_size = 6,
     stroke = 2,
     interval_color = "blue",
-    # interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default
+    # interval line widths are scaled from [1, 6] onto [0.6, 1.4] by default
     # see the interval_size_range parameter in help("geom_slabinterval")
-    interval_size = 8,
+    linewidth = 8,
     interval_linetype = "dashed",
     interval_alpha = .25,
     # fill sets the fill color of the slab (here the density)
     slab_color = "green",
     slab_fill = "purple",
-    slab_size = 3,
+    slab_linewidth = 3,
     slab_linetype = "dotted",
     slab_alpha = .5
   )

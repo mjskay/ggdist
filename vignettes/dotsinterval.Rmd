@@ -115,7 +115,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
   geom_hline(yintercept = 0:1, color = "gray95") +
 
   stat_dotsinterval(
-    aes(interval_size = NULL),
+    aes(linewidth = NULL),
     slab_color = "gray50", 
     .width = 1 - 2*pnorm(-1, sd = 1.2),
     fill = "gray75",
@@ -123,8 +123,8 @@ tibble(dist = dist_normal(4, 1.2)) %>%
     shape = 22,
     slab_shape = 21,
     stroke = 1.5,
-    interval_size = 5,
-    slab_size = 1.5
+    linewidth = 5,
+    slab_linewidth = 1.5
   ) +
   
   # height
@@ -139,7 +139,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
   
   # slab line properties
   label_(x = 2.5, y = 0.7, 
-    label = 'slab_color = "gray50"\nslab_size = 1.5',
+    label = 'slab_color = "gray50"\nslab_linewidth = 1.5',
     vjust = 1, hjust = 1
   ) +
   arrow_(x = 2.52, xend = 3, y = 0.67, yend = thickness_(3.1) + 0.03, curvature = -0.2) +
@@ -191,7 +191,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
   geom_hline(yintercept = 0:1, color = "gray95") +
 
   stat_dots(
-    aes(interval_size = NULL),
+    aes(linewidth = NULL),
     color = "gray50",
     fill = "gray75",
     linewidth = 1.5,
@@ -210,7 +210,7 @@ tibble(dist = dist_normal(4, 1.2)) %>%
   
   # slab line properties
   label_(x = 2.5, y = 0.7, 
-    label = 'color = "gray50"\nsize = 1.5',
+    label = 'color = "gray50"\nlinewidth = 1.5',
     vjust = 1, hjust = 1
   ) +
   arrow_(x = 2.52, xend = 3, y = 0.67, yend = thickness_(3.1) + 0.03, curvature = -0.2) +
@@ -689,11 +689,11 @@ data.frame(
 ) %>%
   ggplot(aes(y = abc, x = value, fill = abc)) +
   stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +
-  stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA) +
+  stat_dotsinterval(side = "bottom", scale = 0.7, slab_linewidth = NA) +
   scale_fill_brewer(palette = "Set2") +
   ggtitle(paste0(
       'stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +\n',
-      'stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA)'
+      'stat_dotsinterval(side = "bottom", scale = 0.7, slab_linewidth = NA)'
     ),
     'aes(fill = abc)'
   )
