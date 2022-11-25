@@ -692,6 +692,43 @@ test_that("rvars work", {
 })
 
 
+# missing rvars and dists -------------------------------------------------
+
+test_that("missing distributions work", {
+  expect_warning(
+    expect_equal(
+      layer_data(ggplot() + stat_slabinterval(aes(xdist = dist_missing()))),
+      data.frame()
+    ),
+    "Removed 1 rows containing missing values"
+  )
+})
+
+test_that("missing rvars work", {
+  skip_if_not_installed("posterior")
+
+  expect_warning(
+    expect_equal(
+      layer_data(ggplot() + stat_slabinterval(aes(xdist = posterior::rvar(c(1,NA))))),
+      data.frame()
+    ),
+    "Removed 1 rows containing missing values"
+  )
+
+  expect_warning(
+    expect_equal(
+      layer_data(
+        ggplot() +
+          stat_slabinterval(aes(xdist = posterior::rvar(c("a","b")))) +
+          scale_x_discrete(limits = "a")
+        ),
+      data.frame()
+    ),
+    "Removed 1 rows containing missing values"
+  )
+})
+
+
 # without attaching ggdist namespace --------------------------------------
 
 test_that("stats work without attaching the ggdist namespace", {

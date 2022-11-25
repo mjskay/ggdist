@@ -122,6 +122,17 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
 
     # remove missing values
     data = ggplot2::remove_missing(data, na.rm, c(x, y), name = "stat_slabinterval")
+    # remove any missing dists: we can't use remove_missing since it does not
+    # detect rvar or distribution missingness correctly, so we do the removal
+    # manually and then generate a call to remove_missing on a dummy data frame
+    # that will create the appropriate warning message, if needed
+    missing = is.na(data$dist)
+    if (any(missing)) {
+      data = data[!missing, ]
+      remove_missing(data.frame(dist = ifelse(missing, NA_real_, 0)), na.rm, "dist", name = "stat_slabinterval")
+    }
+    if (nrow(data) == 0) return(data.frame())
+
 
     # figure out coordinate transformation
     trans = scales[[x]]$trans %||% scales::identity_trans()
