@@ -552,6 +552,31 @@ test_that("stat_dist_ detects discrete distributions", {
 
 })
 
+test_that("rvar_factor works", {
+  skip_if_not_installed("posterior")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_slab(aes(xdist = posterior::rvar(c("a","a","a","b","b","c"))))
+  )
+
+  data_ref = data.frame(
+    thickness = c(3, 3, 2, 2, 1, 1)/6,
+    pdf = c(3, 3, 2, 2, 1, 1)/6,
+    cdf = c(0, 3, 3, 5, 5, 6)/6,
+    f = c(3, 3, 2, 2, 1, 1)/6,
+    n = 6,
+    datatype = "slab",
+    .width = c(NA, 0.66, 0.66, 0.95, 0.95, NA)
+  )
+  data_ref$x = ggplot2:::mapped_discrete(c(1, 2, 2, 3, 3, 4) - 0.5)
+  expect_equal(p$data[[1]][, names(data_ref)], data_ref)
+
+  x_scale = p$plot$scales$get_scales("x")
+  expect_true(x_scale$is_discrete())
+  expect_equal(x_scale$get_limits(), c("a","b","c"))
+})
+
 
 # grouping order ----------------------------------------------------------
 
@@ -680,6 +705,7 @@ test_that("rvars work", {
   skip_if_not_installed("posterior")
 
 
+  set.seed(1234)
   p = tibble(
       mu = 1:2,
       x = posterior::rvar_rng(rnorm, 2, mu, 1:2)
