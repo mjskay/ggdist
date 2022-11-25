@@ -297,10 +297,10 @@ compute_panel_limits = function(
   # (the limits are *at most* these)
   max_limits = limits
   if (is.null(max_limits)) {
-    if (is.null(scales[[x]]$limits)) {
+    if (is.null(scales[[x]]$limits) || scales[[x]]$is_discrete()) {
       max_limits = c(NA_real_, NA_real_)
-    } else{
-      max_limits = trans$inverse(scales[[x]]$limits)
+    } else {
+      max_limits = trans$inverse(scales[[x]]$get_limits())
     }
   }
 

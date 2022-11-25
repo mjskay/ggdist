@@ -113,6 +113,12 @@ distr_is_discrete = function(dist) {
   }
 }
 
+#' Is a distribution a non-numeric discrete dist? e.g. character, factor
+#' @noRd
+distr_is_factor = function(dist) {
+  inherits(dist, "rvar_factor")
+}
+
 #' Is a distribution multivariate?
 #' @noRd
 distr_is_multivariate = function(dist) {

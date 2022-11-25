@@ -183,6 +183,12 @@ compute_slab_sample = function(
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars
 ) {
+  if (is.integer(x) || inherits(x, "mapped_discrete")) {
+    # discrete variables are always displayed as histograms
+    slab_type = "histogram"
+    breaks = seq(min(x, na.rm = TRUE), max(x, na.rm = TRUE) + 1) - 0.5
+  }
+
   # calculate the density first, since we'll use the x values from it
   # to calculate the cdf
   slab_df = if (slab_type == "histogram") {
@@ -519,6 +525,8 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     point_interval = "median_qi"
   ), AbstractStatSlabinterval$default_params),
 
+  layer_function = "layer_slabinterval",
+
   # orientation auto-detection here is different from base AbstractStatSlabinterval
   # (main_is_orthogonal needs to be FALSE)
   orientation_options = defaults(list(
@@ -599,9 +607,21 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
       # this means we need to wrap it as a dist_sample
       data = summarise_by(data, c("PANEL", y, "group"), function(d) {
-        data.frame(dist = dist_sample(list(trans$inverse(as.numeric(d[[x]])))))
+        data.frame(dist = dist_sample(list(trans$inverse(d[[x]]))))
       })
       data[[x]] = median(data$dist)
+    }
+
+    # handle rvar factors: our modified version of Layer$compute_aesthetics will
+    # already have ensured the scale is discrete with appropriate limits, we
+    # just need to turn the draws into integer values here
+    if (distr_is_factor(data$dist)) {
+      draws = posterior::draws_of(data$dist)
+      .dim = dim(draws)
+      dim(draws) = NULL
+      mapped_draws = as.integer(scales[[x]]$map(draws))
+      dim(mapped_draws) = .dim
+      posterior::draws_of(data$dist) = mapped_draws
     }
 
     ggproto_parent(AbstractStatSlabinterval, self)$compute_panel(
@@ -621,6 +641,39 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
 #' @export
 #' @rdname stat_slabinterval
 stat_slabinterval = make_stat(StatSlabinterval, geom = "slabinterval")
+
+
+# layer for slabinterval --------------------------------------------------
+
+#' Alternative to ggplot2::layer() which adds necessary hooks to the Layer for
+#' stat_slabinterval. See the layer_function property of StatSlabinterval
+layer_slabinterval = function(...) {
+  l = layer(...)
+  ggproto(NULL, l,
+    compute_aesthetics = function(self, data, plot) {
+      data = ggproto_parent(l, self)$compute_aesthetics(data, plot)
+
+      # handle rvar factors: must be handled in a two-step process: first, here
+      # we have to ensure the x/y scale is setup correctly as a discrete scale
+      # with levels from the rvar factor. Then, in compute_panel, we will convert
+      # factor rvars to integers using the x/y scale.
+      for (xy in c("x", "y")) {
+        dist = paste0(xy, "dist")
+        if (distr_is_factor(data[[dist]])) {
+          # ensure a discrete scale has been added to the plot with appropriate limits
+          scale = plot$scales$get_scales(xy)
+          if (is.null(scale)) {
+            scale = getFromNamespace(paste0("scale_", xy, "_discrete"), "ggplot2")()
+            plot$scales$add(scale)
+          }
+          scale$limits = scale$limits %||% levels(data[[dist]])
+          scale$train(posterior::draws_of(data[[dist]]))
+        }
+      }
+      data
+    }
+  )
+}
 
 
 # shortcut stats ----------------------------------------------------------

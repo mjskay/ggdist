@@ -37,6 +37,9 @@ AbstractStat = ggproto("AbstractStat", Stat,
     na.rm = FALSE
   ),
 
+  # layer function to use to construct the layer --- default is ggplot2::layer()
+  layer_function = "layer",
+
   # arguments passed to the stat_XXX() constructor and the underlying layer() call
   layer_args = list(
     show.legend = NA,
@@ -104,6 +107,7 @@ make_stat = function(stat, geom,
   names(params_to_syms) = names(params_to_defaults)
 
   # layer arguments
+  layer_function = stat$layer_function %||% "layer"
   args_to_defaults = lapply(stat$layer_args, to_expression)
   args_to_syms = syms(names(args_to_defaults))
   names(args_to_syms) = names(args_to_defaults)
@@ -123,7 +127,7 @@ make_stat = function(stat, geom,
     expr({
       .Deprecated_arguments(!!stat$deprecated_params, ...)
 
-      layer(
+      (!!layer_function)(
         data = data,
         mapping = mapping,
         stat = !!stat_name,
