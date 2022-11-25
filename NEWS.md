@@ -13,6 +13,10 @@ Documentation:
 * Uses of `stat()` have been replaced with `after_stat()` to be consistent with
   the deprecation of `stat()` in *ggplot2* 3.4.
 
+Bug fixes:
+
+* Use a max binwidth of 1 for discrete variables in `geom_dots()` (#159).
+
 
 # ggdist 3.2.0
 

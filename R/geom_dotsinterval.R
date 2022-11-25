@@ -184,6 +184,11 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
   s_data = coord$transform(s_data, panel_params)
 
   xscale = max(panel_params[[x.range]]) - min(panel_params[[x.range]])
+  if (isTRUE(is.na(binwidth)) && inherits(s_data[[x]], "mapped_discrete")) {
+    # no user-supplied binwidth and x is discrete:
+    # use a max binwidth of 1
+    binwidth = c(0, 1)
+  }
   if (!isTRUE(is.na(binwidth)) && !is.unit(binwidth)) {
     #binwidth is expressed in terms of data coordinates, need to translate into standardized space
     binwidth = binwidth / xscale
