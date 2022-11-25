@@ -114,6 +114,9 @@ draw_slabs = function(self, s_data, panel_params, coord,
   # now that we've used them for grouping, we can drop rows with NA values of thickness
   s_data = s_data[!is.na(s_data$thickness),]
 
+  # if dropping NAs caused this slab to be empty, return early
+  if (nrow(s_data) == 0) return(list())
+
   # build groups for the slabs
   # must group within both group and y for the polygon and path drawing functions to work
   slab_grobs = dlply_(s_data, c("group", "na_thickness_group", y), function(d) {

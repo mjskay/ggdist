@@ -226,8 +226,11 @@ test_that("NAs in thickness produce gaps", {
   skip_if_no_vdiffr()
 
   vdiffr::expect_doppelganger("slabinterval with NAs in thickness", {
-    data.frame(y = c(NA, 1:2, NA, 2:1, NA), x = 0:6) %>%
-      ggplot(aes(x, y = 0, thickness = y)) +
+    rbind(
+      data.frame(y = "gaps", t = c(NA, 1:2, NA, 2:1, NA), x = 0:6),
+      data.frame(y = "blank", t = NA, x = 0:6)
+    ) %>%
+      ggplot(aes(x, y, thickness = t)) +
       geom_slab(color = "black")
   })
 
