@@ -104,13 +104,24 @@ distr_point_interval.rvar = distr_point_interval.distribution
 #' @noRd
 distr_is_discrete = function(dist) {
   if (inherits(dist, "rvar")) {
-    is.integer(posterior::draws_of(dist))
-  } else {
-    withr::with_seed(1, {
-      one_value_from_dist = distr_random(dist)(1)
-      is.integer(one_value_from_dist) || is.logical(one_value_from_dist)
-    })
+    return(is.integer(posterior::draws_of(dist)))
   }
+  if (is_distribution(dist) && inherits(vec_data(dist)[[1]], "dist_mixture")) {
+    if (length(dist) > 1) stop(
+      "lists of distributions should never have length > 1 here.\n",
+      "Please report this bug at https://github.com/mjskay/ggdist/issues"
+    )
+    # special case: discrete mixtures can't be reliably detected by the
+    # method below, so we do it by asking if all components of the mixture are discrete
+    dists = vec_restore(vec_data(dist)[[1]]$dist, dist_missing())
+    is_discrete = map_lgl_(dists, distr_is_discrete)
+    return(all(is_discrete))
+  }
+
+  withr::with_seed(1, {
+    one_value_from_dist = distr_random(dist)(1)
+    is.integer(one_value_from_dist) || is.logical(one_value_from_dist)
+  })
 }
 
 #' Is a distribution a non-numeric discrete dist? e.g. character, factor
@@ -133,7 +144,7 @@ distr_levels = function(dist) {
   } else if (inherits(dist, "distribution")) {
     .support = vctrs::field(support(dist), "x")
     support_types = vapply(.support, typeof, character(1))
-    levels = .mapply(list(unclass(dist), support_types), MoreArgs = list(), FUN = function(d, support_type) {
+    levels = .mapply(list(vec_data(dist), support_types), MoreArgs = list(), FUN = function(d, support_type) {
       if (support_type == "character" && inherits(d, "dist_categorical")) {
         d$x
       } else {
@@ -188,13 +199,29 @@ distr_get_sample = function(dist) {
 distr_is_constant = function(dist) {
   if (distr_is_sample(dist)) {
     x = distr_get_sample(dist)
-    length(unique(x)) == 1
-  } else {
-    quantile_fun = distr_quantile(dist)
-    lower = quantile_fun(.Machine$double.eps)
-    upper = quantile_fun(1 - .Machine$double.neg.eps)
-    isTRUE(lower == upper)
+    return(length(unique(x)) == 1)
   }
+  if (is_distribution(dist) && inherits(vec_data(dist)[[1]], "dist_mixture")) {
+    if (length(dist) > 1) stop(
+      "lists of distributions should never have length > 1 here.\n",
+      "Please report this bug at https://github.com/mjskay/ggdist/issues"
+    )
+    # special case: discrete constant distributions can't be reliably detected by the
+    # method below, so we do it by asking if all components of the mixture are constant
+    # and equal
+    dists = vec_restore(vec_data(dist)[[1]]$dist, dist_missing())
+    is_constant = map_lgl_(dists, distr_is_constant)
+    if (all(is_constant)) {
+      means = mean(dists)
+      return(all(means == means[[1]]))
+    }
+    return(FALSE)
+  }
+
+  quantile_fun = distr_quantile(dist)
+  lower = quantile_fun(.Machine$double.eps)
+  upper = quantile_fun(1 - .Machine$double.neg.eps)
+  isTRUE(lower == upper)
 }
 
 #' Is a distribution missing / NA (or equivalent)?
@@ -208,6 +235,16 @@ distr_is_missing = function(dist) {
 #' @noRd
 is_dist_like = function(x) {
   inherits(x, c("distribution", "rvar"))
+}
+
+
+# custom distributions ----------------------------------------------------
+
+#' An ordinal, discrete distribution. Used for converting categorical
+#' distributions to something we can visualize
+#' @noRd
+.dist_ordinal = function(x, prob) {
+  do.call(dist_mixture, c(lapply(x, dist_degenerate), list(weights = prob)))
 }
 
 
