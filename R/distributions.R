@@ -108,15 +108,43 @@ distr_is_discrete = function(dist) {
   } else {
     withr::with_seed(1, {
       one_value_from_dist = distr_random(dist)(1)
-      is.integer(one_value_from_dist)
+      is.integer(one_value_from_dist) || is.logical(one_value_from_dist)
     })
   }
 }
 
 #' Is a distribution a non-numeric discrete dist? e.g. character, factor
 #' @noRd
-distr_is_factor = function(dist) {
-  inherits(dist, "rvar_factor")
+distr_is_factor_like = function(dist) {
+  inherits(dist, "rvar_factor") || if (inherits(dist, "distribution")) {
+    .support = vctrs::field(support(dist), "x")
+    support_types = vapply(.support, typeof, character(1))
+    all(support_types == "character")
+  } else {
+    FALSE
+  }
+}
+
+#' For factor-like distributions, get their levels
+#' @noRd
+distr_levels = function(dist) {
+  if (inherits(dist, "rvar_factor")) {
+    levels(dist)
+  } else if (inherits(dist, "distribution")) {
+    .support = vctrs::field(support(dist), "x")
+    support_types = vapply(.support, typeof, character(1))
+    levels = .mapply(list(unclass(dist), support_types), MoreArgs = list(), FUN = function(d, support_type) {
+      if (support_type == "character" && inherits(d, "dist_categorical")) {
+        d$x
+      } else {
+        warning("Don't know how to determine the levels of distribution: ", format(d))
+        NULL
+      }
+    })
+    unique(do.call(c, levels))
+  } else {
+    FALSE
+  }
 }
 
 #' Is a distribution multivariate?

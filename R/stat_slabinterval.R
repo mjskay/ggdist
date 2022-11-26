@@ -482,7 +482,7 @@ compute_interval_slabinterval = function(
 #' # see vignette("slabinterval") for many more examples.
 #'
 #' @name stat_slabinterval
-#' @importFrom distributional dist_wrap dist_missing dist_sample
+#' @importFrom distributional dist_wrap dist_missing dist_sample is_distribution
 NULL
 
 #' @rdname ggdist-ggproto
@@ -612,10 +612,18 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       data[[x]] = median(data$dist)
     }
 
+    # handle logical distributions: logical distributions don't play well with
+    # numeric scales, so we use a bit of a hack and convert them to integers
+    # by adding 0L to them
+    if (is_distribution(data$dist)) {
+      is_logical = map_lgl_(vctrs::field(support(data$dist), "x"), is.logical)
+      data$dist[is_logical] = data$dist[is_logical] + 0L
+    }
+
     # handle rvar factors: our modified version of Layer$compute_aesthetics will
     # already have ensured the scale is discrete with appropriate limits, we
     # just need to turn the draws into integer values here
-    if (distr_is_factor(data$dist)) {
+    if (distr_is_factor_like(data$dist)) {
       draws = posterior::draws_of(data$dist)
       .dim = dim(draws)
       dim(draws) = NULL
@@ -647,26 +655,27 @@ stat_slabinterval = make_stat(StatSlabinterval, geom = "slabinterval")
 
 #' Alternative to ggplot2::layer() which adds necessary hooks to the Layer for
 #' stat_slabinterval. See the layer_function property of StatSlabinterval
+#' @noRd
 layer_slabinterval = function(...) {
   l = layer(...)
   ggproto(NULL, l,
     compute_aesthetics = function(self, data, plot) {
       data = ggproto_parent(l, self)$compute_aesthetics(data, plot)
 
-      # handle rvar factors: must be handled in a two-step process: first, here
+      # factor-like dists: must be handled in a two-step process: first, here
       # we have to ensure the x/y scale is setup correctly as a discrete scale
-      # with levels from the rvar factor. Then, in compute_panel, we will convert
-      # factor rvars to integers using the x/y scale.
+      # with levels from the distribution. Then, in compute_panel, we will convert
+      # factor-like dists and rvars to integers using the x/y scale.
       for (xy in c("x", "y")) {
         dist = paste0(xy, "dist")
-        if (distr_is_factor(data[[dist]])) {
+        if (distr_is_factor_like(data[[dist]])) {
           # ensure a discrete scale has been added to the plot with appropriate limits
           scale = plot$scales$get_scales(xy)
           if (is.null(scale)) {
             scale = getFromNamespace(paste0("scale_", xy, "_discrete"), "ggplot2")()
             plot$scales$add(scale)
           }
-          scale$limits = scale$limits %||% levels(data[[dist]])
+          scale$limits = scale$limits %||% distr_levels(data[[dist]])
           scale$train(posterior::draws_of(data[[dist]]))
         }
       }
