@@ -86,6 +86,7 @@ Collate:
     "parse_dist.R"
     "point_interval.R"
     "position_dodgejust.R"
+    "pr_.R"
     "rd.R"
     "rd_slabinterval.R"
     "rd_lineribbon.R"
