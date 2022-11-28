@@ -19,6 +19,13 @@ compute_limits_slabinterval = function(
     return(data.frame(.lower = NA, .upper = NA))
   }
 
+  if (distr_is_factor_like(dist)) {
+    # limits on factor-like dists are determined by the scale, which will
+    # have been set earlier (in layer_slabinterval()), so we don't have to
+    # do it here
+    return(data.frame(.lower = NA, .upper = NA))
+  }
+
   if (distr_is_sample(dist)) {
     sample = distr_get_sample(dist)
     return(compute_limits_sample(sample, trans, trim, adjust))
@@ -108,7 +115,7 @@ compute_slab_slabinterval = function(
       pdf = pdf[-c(1,5)]
       cdf = cdf[-c(1,5)]
     }
-  } else if (distr_is_sample(dist)) {
+  } else if (!distr_is_factor_like(dist) && distr_is_sample(dist)) {
     return(compute_slab_sample(
       trans$transform(distr_get_sample(dist)), trans, input,
       slab_type = slab_type, limits = limits, n = n,
@@ -622,14 +629,14 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
 
     # handle rvar factors: our modified version of Layer$compute_aesthetics will
     # already have ensured the scale is discrete with appropriate limits, we
-    # just need to turn the draws into integer values here
-    if (distr_is_factor_like(data$dist)) {
-      draws = posterior::draws_of(data$dist)
-      .dim = dim(draws)
-      dim(draws) = NULL
-      mapped_draws = as.integer(scales[[x]]$map(draws))
-      dim(mapped_draws) = .dim
-      posterior::draws_of(data$dist) = mapped_draws
+    # just need to adjust the rvar to have the same levels as the scale limits
+    # (in case levels have been re-ordered / added / removed)
+    if (inherits(data$dist, "rvar_factor")) {
+      data$dist = posterior::rvar_factor(
+        data$dist,
+        levels = scales[[x]]$get_limits(),
+        ordered = posterior::is_rvar_ordered(data$dist)
+      )
     }
 
     ggproto_parent(AbstractStatSlabinterval, self)$compute_panel(

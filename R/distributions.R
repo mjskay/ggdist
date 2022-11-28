@@ -27,6 +27,7 @@ distr_function.list = function(dist, fun) {
     "lists of distributions should never have length > 1 here.\n",
     "Please report this bug at https://github.com/mjskay/ggdist/issues"
   )
+  fun = match.fun(fun)
   distr_function(dist[[1]], fun)
 }
 #' @export
@@ -38,27 +39,51 @@ distr_function.distribution = function(dist, fun) {
   # eat up extra args as they are ignored anyway
   # (and can cause problems, e.g. with cdf())
   # TODO: at least until #114 / distributional/#72
+  fun = match.fun(fun)
   function(x, ...) unlist(fun(dist[[1]], x))
 }
 #' @export
 distr_function.rvar = distr_function.distribution
+#' @export
+distr_function.rvar_factor = function(dist, fun) {
+  if (!posterior::is_rvar_ordered(dist) && fun %in% c("cdf", "quantile")) {
+    # cdf and quantile are undefined on unordered dists, so just return NA
+    function(x, ...) {
+      rep_len(NA_real_, length(x))
+    }
+  } else if (fun %in% c("density", "cdf")) {
+    # for density and cdf we must translate numeric input to factor levels
+    f = force(NextMethod())
+    levels = levels(dist)
+    function(x, ...) {
+      # only x values > 0 are valid; values <= 0 are 0s
+      gt_0 = x > 0
+      x_gt_0_levels = levels[x[gt_0]]
+      f = numeric(length(x))
+      f[gt_0] = f(x_gt_0_levels, ...)
+      f
+    }
+  } else {
+    NextMethod()
+  }
+}
 
 distr_pdf = function(dist) {
-  distr_function(dist, density)
+  distr_function(dist, "density")
 }
 
 #' @importFrom distributional cdf
 distr_cdf = function(dist) {
-  distr_function(dist, cdf)
+  distr_function(dist, "cdf")
 }
 
 distr_quantile = function(dist) {
-  distr_function(dist, quantile)
+  distr_function(dist, "quantile")
 }
 
 #' @importFrom distributional generate
 distr_random = function(dist) {
-  distr_function(dist, generate)
+  distr_function(dist, "generate")
 }
 
 
@@ -76,6 +101,15 @@ distr_point_interval.NULL = function(dist, point_interval, trans, ...) {
 #' @export
 distr_point_interval.numeric = function(dist, point_interval, trans, ...) {
   point_interval(trans$transform(dist), .simple_names = TRUE, ...)
+}
+#' @export
+distr_point_interval.factor = function(dist, point_interval, trans, ...) {
+  # cannot calculate intervals on categorical distributions
+  distr_point_interval(NA_real_, point_interval, trans, ...)
+}
+#' @export
+distr_point_interval.ordered = function(dist, point_interval, trans, ...) {
+  distr_point_interval(as.numeric(dist), point_interval, trans, ...)
 }
 #' @export
 distr_point_interval.list = function(dist, point_interval, trans, ...) {
@@ -103,6 +137,9 @@ distr_point_interval.rvar = distr_point_interval.distribution
 #' Is a distribution discrete?
 #' @noRd
 distr_is_discrete = function(dist) {
+  if (inherits(dist, "rvar_factor")) {
+    return(TRUE)
+  }
   if (inherits(dist, "rvar")) {
     return(is.integer(posterior::draws_of(dist)))
   }

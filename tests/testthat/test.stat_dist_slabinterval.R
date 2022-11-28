@@ -561,15 +561,50 @@ test_that("rvar_factor works", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3, 3, 2, 2, 1, 1)/6,
-    pdf = c(3, 3, 2, 2, 1, 1)/6,
-    cdf = c(0, 3, 3, 5, 5, 6)/6,
-    f = c(3, 3, 2, 2, 1, 1)/6,
+    thickness = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    pdf = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    cdf = NA_real_,
+    f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
     n = 6,
     datatype = "slab",
-    .width = c(NA, 0.66, 0.66, 0.95, 0.95, NA)
+    .width = NA_real_
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(1, 2, 2, 3, 3, 4) - 0.5)
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+
+  interval_ref = data.frame(
+    datatype = "interval",
+    .width = c(0.66, 0.95)
+  )
+  interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$x = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  attr(interval_ref, "row.names") = c(13L, 14L)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+
+  x_scale = p$plot$scales$get_scales("x")
+  expect_true(x_scale$is_discrete())
+  expect_equal(x_scale$get_limits(), c("a","b","c"))
+})
+
+test_that("rvar_ordered works", {
+  skip_if_not_installed("posterior")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_slabinterval(aes(xdist = posterior::rvar_ordered(c("a","a","a","b","b","c"))))
+  )
+
+  slab_ref = data.frame(
+    thickness = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    pdf = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    cdf = c(0,0, 3,3,3,3, 5,5,5,5, 6,6)/6,
+    f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    n = 6,
+    datatype = "slab",
+    .width = c(NA, .66,.66,.66,.66,.66,.66, .95,.95, NA,NA,NA)
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
@@ -579,12 +614,34 @@ test_that("rvar_factor works", {
   interval_ref$xmin = ggplot2:::mapped_discrete(c(1, 1))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(2.15, 2.875))
   interval_ref$x = ggplot2:::mapped_discrete(c(1.5, 1.5))
-  attr(interval_ref, "row.names") = c(7L, 8L)
+  attr(interval_ref, "row.names") = c(13L, 14L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 
   x_scale = p$plot$scales$get_scales("x")
   expect_true(x_scale$is_discrete())
   expect_equal(x_scale$get_limits(), c("a","b","c"))
+})
+
+test_that("rvar_ordered works with modified scale limits", {
+  skip_if_not_installed("posterior")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_slab(aes(xdist = posterior::rvar_ordered(c("a","a","a","c")))) +
+      scale_x_discrete(limits = c("a","b","c"))
+  )
+
+  slab_ref = data.frame(
+    thickness = c(3,3,3,3, 0,0,0,0, 1,1,1,1)/4,
+    pdf = c(3,3,3,3, 0,0,0,0, 1,1,1,1)/4,
+    cdf = c(0,0, 3,3,3,3, 3,3,3,3, 4,4)/4,
+    f = c(3,3,3,3, 0,0,0,0, 1,1,1,1)/4,
+    n = 4,
+    datatype = "slab",
+    .width = c(NA, .66,.66,.66,.66, .95,.95,.95,.95, NA,NA,NA)
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
 })
 
 test_that("dist_bernoulli works", {

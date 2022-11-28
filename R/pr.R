@@ -100,6 +100,7 @@
 #'   scale_fill_brewer(direction = -1)
 #'
 #' @export
+#' @importFrom rlang as_label as_name
 Pr_ = function(x) {
   expr = substitute(x)
   label = paste0("Pr_(", as_label(expr), ")")
