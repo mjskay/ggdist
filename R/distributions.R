@@ -157,7 +157,7 @@ distr_is_discrete = function(dist) {
 
   withr::with_seed(1, {
     one_value_from_dist = distr_random(dist)(1)
-    is.integer(one_value_from_dist) || is.logical(one_value_from_dist)
+    is.integer(one_value_from_dist) || is.logical(one_value_from_dist) || is.character(one_value_from_dist)
   })
 }
 
@@ -277,12 +277,36 @@ is_dist_like = function(x) {
 
 # custom distributions ----------------------------------------------------
 
-#' An ordinal, discrete distribution. Used for converting categorical
-#' distributions to something we can visualize
+#' A wrapped categorical distribution with a different level set
 #' @noRd
-.dist_ordinal = function(x, prob) {
-  do.call(dist_mixture, c(lapply(x, dist_degenerate), list(weights = prob)))
+.dist_wrapped_categorical = function(wrapped_dist, new_levels) {
+  new_dist(wrapped_dist = unclass(wrapped_dist), new_levels = list(new_levels), class = "ggdist__wrapped_categorical")
 }
+
+#' @export
+density.ggdist__wrapped_categorical = function(x, at, ...) {
+  gt_0 = at > 0
+  at_gt_0_levels = x[["new_levels"]][at[gt_0]]
+  f = numeric(length(at))
+  f[gt_0] = density(x[["wrapped_dist"]], at_gt_0_levels, ...)
+  f
+}
+
+#' @export
+cdf.ggdist__wrapped_categorical = function(x, q, ...) {
+  rep_len(NA_real_, length(q))
+}
+
+#' @export
+quantile.ggdist__wrapped_categorical = function(x, p, ...) {
+  rep_len(NA_real_, length(p))
+}
+
+#' @export
+generate.ggdist__wrapped_categorical = function(x, ...) {
+  generate(x[["wrapped_dist"]], ...)
+}
+
 
 
 # transforming density functions ------------------------------------------

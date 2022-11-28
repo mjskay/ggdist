@@ -677,6 +677,64 @@ test_that("dist_bernoulli works", {
   expect_equal(x_scale$get_limits(), c(0, 1))
 })
 
+test_that("dist_categorical works", {
+  skip_if_not_installed("posterior")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_slabinterval(aes(xdist = dist_categorical(list(3:1/6), list(c("a","b","c")))))
+  )
+
+  slab_ref = data.frame(
+    thickness = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    pdf = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    cdf = NA_real_,
+    f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    n = Inf,
+    datatype = "slab",
+    .width = NA_real_
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+
+  interval_ref = data.frame(
+    datatype = "interval",
+    .width = c(0.66, 0.95)
+  )
+  interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$x = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  attr(interval_ref, "row.names") = c(13L, 14L)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+
+  x_scale = p$plot$scales$get_scales("x")
+  expect_true(x_scale$is_discrete())
+  expect_equal(x_scale$get_limits(), c("a","b","c"))
+})
+
+test_that("dist_categorical works with modified scale limits", {
+  skip_if_not_installed("posterior")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_dots(aes(xdist = dist_categorical(list(c(3,1)/4), list(c("a","c"))))) +
+      scale_x_discrete(limits = c("a","b","c"))
+  )
+
+  slab_ref = data.frame(
+    thickness = c(3,3,3,3, NA,NA,NA,NA, 1,1,1,1)/4,
+    pdf = c(3,3,3,3, NA,NA,NA,NA, 1,1,1,1)/4,
+    cdf = NA_real_,
+    f = c(3,3,3,3, NA,NA,NA,NA, 1,1,1,1)/4,
+    n = Inf,
+    datatype = "slab",
+    .width = NA_real_
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
+})
+
+
 # grouping order ----------------------------------------------------------
 
 test_that("stat_dist_ preserves existing grouping order", {

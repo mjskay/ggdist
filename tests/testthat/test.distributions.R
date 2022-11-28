@@ -84,12 +84,3 @@ test_that("constant distributions are detected correctly", {
   expect_equal(distr_is_constant(posterior::rvar(c(3,3,3))), TRUE)
   expect_equal(distr_is_constant(posterior::rvar(c(1,2,3))), FALSE)
 })
-
-
-# discrete distributions --------------------------------------------------
-
-test_that("discrete distributions are detected correctly", {
-  expect_true(distr_is_discrete(dist_mixture(dist_degenerate(1L), dist_degenerate(2L), weights = c(0.3, 0.7))))
-  expect_true(distr_is_discrete(.dist_ordinal(c(1L,2L,4L), 1:3/6)))
-  expect_false(distr_is_discrete(dist_mixture(dist_degenerate(1L), dist_normal(), weights = c(0.3, 0.7))))
-})

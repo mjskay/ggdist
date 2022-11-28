@@ -627,15 +627,20 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       data$dist[is_logical] = data$dist[is_logical] + 0L
     }
 
-    # handle rvar factors: our modified version of Layer$compute_aesthetics will
+    # handle rvar factors / categorical dists: our modified version of Layer$compute_aesthetics will
     # already have ensured the scale is discrete with appropriate limits, we
-    # just need to adjust the rvar to have the same levels as the scale limits
+    # just need to adjust the rvar (or wrap the distribution) to have the same levels as the scale limits
     # (in case levels have been re-ordered / added / removed)
     if (inherits(data$dist, "rvar_factor")) {
       data$dist = posterior::rvar_factor(
         data$dist,
         levels = scales[[x]]$get_limits(),
         ordered = posterior::is_rvar_ordered(data$dist)
+      )
+    } else if (distr_is_factor_like(data$dist)) {
+      data$dist = .dist_wrapped_categorical(
+        data$dist,
+        new_levels = scales[[x]]$get_limits()
       )
     }
 
