@@ -717,7 +717,7 @@ test_that("dist_categorical works with modified scale limits", {
 
   p = ggplot_build(
     ggplot() +
-      stat_dots(aes(xdist = dist_categorical(list(c(3,1)/4), list(c("a","c"))))) +
+      stat_slab(aes(xdist = dist_categorical(list(c(3,1)/4), list(c("a","c"))))) +
       scale_x_discrete(limits = c("a","b","c"))
   )
 

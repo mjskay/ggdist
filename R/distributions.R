@@ -183,7 +183,7 @@ distr_levels = function(dist) {
     support_types = vapply(.support, typeof, character(1))
     levels = .mapply(list(vec_data(dist), support_types), MoreArgs = list(), FUN = function(d, support_type) {
       if (support_type == "character" && inherits(d, "dist_categorical")) {
-        d$x
+        d[["x"]]
       } else {
         warning("Don't know how to determine the levels of distribution: ", format(d))
         NULL
