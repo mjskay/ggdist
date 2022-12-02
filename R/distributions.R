@@ -165,10 +165,12 @@ distr_is_discrete = function(dist) {
 #' @noRd
 distr_is_factor_like = function(dist) {
   inherits(dist, "rvar_factor") || if (inherits(dist, "distribution")) {
-    .support = vctrs::field(support(dist), "x")
-    support_types = vapply(.support, typeof, character(1))
-    is_categorical = vapply(vctrs::vec_data(dist), inherits, logical(1), "dist_categorical")
-    all(support_types == "character" | is_categorical)
+    is_factor_like = map_lgl_(vctrs::vec_data(dist), function(d) {
+      inherits(d, "dist_categorical") ||
+        (inherits(d, "dist_sample") && inherits(distr_get_sample(d), c("character", "factor"))) ||
+        is.character(vctrs::field(support(vec_restore(list(d), dist_missing())), "x")[[1]])
+    })
+    all(is_factor_like)
   } else {
     FALSE
   }
@@ -183,6 +185,13 @@ distr_levels = function(dist) {
     levels = lapply(vec_data(dist), function(d) {
       if (inherits(d, "dist_categorical")) {
         as.character(d[["x"]] %||% seq_along(d[["p"]]))
+      } else if (inherits(d, "dist_sample")) {
+        s = distr_get_sample(d)
+        if (is.factor(s)) {
+          levels(s)
+        } else {
+          unique(s)
+        }
       } else {
         warning("Don't know how to determine the levels of distribution: ", format(d))
         NULL
@@ -190,7 +199,7 @@ distr_levels = function(dist) {
     })
     unique(do.call(c, levels))
   } else {
-    FALSE
+    NULL
   }
 }
 
