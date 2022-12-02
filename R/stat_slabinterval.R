@@ -190,7 +190,7 @@ compute_slab_sample = function(
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars
 ) {
-  if (is.integer(x)) {
+  if (is.integer(x) || inherits(x, "mapped_discrete")) {
     # discrete variables are always displayed as histograms
     slab_type = "histogram"
     breaks = seq(min(x, na.rm = TRUE), max(x, na.rm = TRUE) + 1) - 0.5
