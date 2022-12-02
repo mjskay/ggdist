@@ -167,7 +167,8 @@ distr_is_factor_like = function(dist) {
   inherits(dist, "rvar_factor") || if (inherits(dist, "distribution")) {
     .support = vctrs::field(support(dist), "x")
     support_types = vapply(.support, typeof, character(1))
-    all(support_types == "character")
+    is_categorical = vapply(vctrs::vec_data(dist), inherits, logical(1), "dist_categorical")
+    all(support_types == "character" | is_categorical)
   } else {
     FALSE
   }
@@ -179,11 +180,9 @@ distr_levels = function(dist) {
   if (inherits(dist, "rvar_factor")) {
     levels(dist)
   } else if (inherits(dist, "distribution")) {
-    .support = vctrs::field(support(dist), "x")
-    support_types = vapply(.support, typeof, character(1))
-    levels = .mapply(list(vec_data(dist), support_types), MoreArgs = list(), FUN = function(d, support_type) {
-      if (support_type == "character" && inherits(d, "dist_categorical")) {
-        d[["x"]]
+    levels = lapply(vec_data(dist), function(d) {
+      if (inherits(d, "dist_categorical")) {
+        as.character(d[["x"]] %||% seq_along(d[["p"]]))
       } else {
         warning("Don't know how to determine the levels of distribution: ", format(d))
         NULL
@@ -287,6 +286,12 @@ is_dist_like = function(x) {
 density.ggdist__wrapped_categorical = function(x, at, ...) {
   gt_0 = at > 0
   at_gt_0_levels = x[["new_levels"]][at[gt_0]]
+  if (is.null(x[["wrapped_dist"]]$x)) {
+    # TODO: hack: when x (levels) are missing from the wrapped dist, then the levels are
+    # actually the numeric indices of the probability vector, so convert
+    # to numeric
+    at_gt_0_levels = as.numeric(at_gt_0_levels)
+  }
   f = numeric(length(at))
   f[gt_0] = density(x[["wrapped_dist"]], at_gt_0_levels, ...)
   f

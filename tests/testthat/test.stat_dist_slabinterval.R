@@ -587,7 +587,7 @@ test_that("rvar_factor works", {
   expect_equal(x_scale$get_limits(), c("a","b","c"))
 })
 
-test_that("rvar_ordered works", {
+test_that("rvar_ordered works and integer dist_sample works", {
   skip_if_not_installed("posterior")
 
   p = ggplot_build(
@@ -620,6 +620,19 @@ test_that("rvar_ordered works", {
   x_scale = p$plot$scales$get_scales("x")
   expect_true(x_scale$is_discrete())
   expect_equal(x_scale$get_limits(), c("a","b","c"))
+
+
+  # integer dist_sample
+  p = ggplot_build(
+    ggplot() +
+      stat_slabinterval(aes(xdist = dist_sample(list(c(1L,1L,1L,2L,2L,3L)))))
+  )
+  slab_ref$x = as.numeric(slab_ref$x)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+  interval_ref$x = as.numeric(interval_ref$x)
+  interval_ref$xmin = as.numeric(interval_ref$xmin)
+  interval_ref$xmax = as.numeric(interval_ref$xmax)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 })
 
 test_that("rvar_ordered works with modified scale limits", {
@@ -678,8 +691,6 @@ test_that("dist_bernoulli works", {
 })
 
 test_that("dist_categorical works", {
-  skip_if_not_installed("posterior")
-
   p = ggplot_build(
     ggplot() +
       stat_slabinterval(aes(xdist = dist_categorical(list(3:1/6), list(c("a","b","c")))))
@@ -710,11 +721,17 @@ test_that("dist_categorical works", {
   x_scale = p$plot$scales$get_scales("x")
   expect_true(x_scale$is_discrete())
   expect_equal(x_scale$get_limits(), c("a","b","c"))
+
+  # with integer categorical distribution
+  p = ggplot_build(
+    ggplot() +
+      stat_slabinterval(aes(xdist = dist_categorical(list(3:1/6))))
+  )
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 })
 
 test_that("dist_categorical works with modified scale limits", {
-  skip_if_not_installed("posterior")
-
   p = ggplot_build(
     ggplot() +
       stat_slab(aes(xdist = dist_categorical(list(c(3,1)/4), list(c("a","c"))))) +
@@ -731,6 +748,26 @@ test_that("dist_categorical works with modified scale limits", {
     .width = NA_real_
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
+
+})
+
+test_that("dist_categorical works with explicit integer levels", {
+  p = ggplot_build(
+    ggplot() +
+      stat_slab(aes(xdist = dist_categorical(list(c(3,1)/4), list(c(1L,3L)))))
+  )
+
+  slab_ref = data.frame(
+    thickness = c(3,3,3,3, 1,1,1,1)/4,
+    pdf = c(3,3,3,3, 1,1,1,1)/4,
+    cdf = NA_real_,
+    f = c(3,3,3,3, 1,1,1,1)/4,
+    n = Inf,
+    datatype = "slab",
+    .width = NA_real_
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
 })
 

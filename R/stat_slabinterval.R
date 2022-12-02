@@ -190,14 +190,14 @@ compute_slab_sample = function(
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars
 ) {
-  if (is.integer(x) || inherits(x, "mapped_discrete")) {
+  if (is.integer(x)) {
     # discrete variables are always displayed as histograms
     slab_type = "histogram"
     breaks = seq(min(x, na.rm = TRUE), max(x, na.rm = TRUE) + 1) - 0.5
   }
 
-  # calculate the density first, since we'll use the x values from it
-  # to calculate the cdf
+  # calculate pdf and cdf
+  cdf_fun = weighted_ecdf(x)
   slab_df = if (slab_type == "histogram") {
     # when using a histogram slab, that becomes the density function value
     # TODO: this is a hack for now until we make it so that density estimators
@@ -205,37 +205,41 @@ compute_slab_sample = function(
     h = hist(x, breaks = breaks, plot = FALSE)
     input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
     input_2 = h$breaks[-1]                 # second edge of bin
+    input_ = (input_1 + input_2)/2   # center of bin
+    cdf_1 = cdf_fun(input_1)
+    cdf_2 = cdf_fun(input_2)
+    cdf_ = cdf_fun(input_)
 
     if (!outline_bars) {
       # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
       # us the bin endpoints --- then just need to repeat the same value of density
       # for both endpoints of the same bin
-      .input = trans$inverse(as.vector(rbind(input_1, input_2)))
-      pdf = rep(h$density, each = 2)
+      data.frame(
+        .input = trans$inverse(as.vector(rbind(input_1, input_, input_, input_2))),
+        pdf = rep(h$density, each = 4),
+        cdf = as.vector(rbind(cdf_1, cdf_1, cdf_, cdf_2))
+      )
     } else {
       # have to return to 0 in between each bar so that bar outlines are drawn
-      .input = trans$inverse(as.vector(rbind(input_1, input_1, input_2, input_2)))
-      pdf = as.vector(rbind(0, h$density, h$density, 0))
+      data.frame(
+        .input = trans$inverse(as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))),
+        pdf = as.vector(rbind(0, h$density, h$density, h$density, h$density, 0)),
+        cdf = as.vector(rbind(cdf_1, cdf_1, cdf_1, cdf_, cdf_2, cdf_2))
+      )
     }
-    data.frame(
-      .input = .input,
-      pdf = pdf
-    )
   } else {
     # all other slab types use the density function as the pdf
+    # calculate the density first, since we'll use the x values from it
+    # to calculate the cdf
     cut = if (trim) 0 else 3
     # calculate on the transformed scale to ensure density is correct
     d = density(x, n = n, adjust = adjust, cut = cut)
     data.frame(
       .input = trans$inverse(d$x),
-      pdf = d$y
+      pdf = d$y,
+      cdf = cdf_fun(d$x)
     )
   }
-
-  # calculate cdf
-  trans_input = trans$transform(slab_df$.input)
-  cdf_fun = weighted_ecdf(x)
-  slab_df$cdf = cdf_fun(trans_input)
 
   # extend x values to the range of the plot. To do that we have to include
   # x values requested from the original `input` if they are outside the
