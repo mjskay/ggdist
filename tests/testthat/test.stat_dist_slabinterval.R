@@ -671,7 +671,8 @@ test_that("dist_bernoulli works", {
     n = Inf,
     datatype = "slab",
     .width = c(NA, 0.66, 0.66, 0.66, 0.66, 0.66, 0.66, NA),
-    x = c(-0.5, 0, 0, 0.5, 0.5, 1, 1, 1.5)
+    x = c(-0.5, 0, 0, 0.5, 0.5, 1, 1, 1.5),
+    stringsAsFactors = FALSE
   )
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
@@ -680,7 +681,8 @@ test_that("dist_bernoulli works", {
     .width = c(0.66, 0.95),
     xmin = c(0, 0),
     xmax = c(1, 1),
-    x = c(1, 1)
+    x = c(1, 1),
+    stringsAsFactors = FALSE
   )
   attr(interval_ref, "row.names") = c(9L, 10L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
@@ -703,14 +705,16 @@ test_that("dist_categorical works", {
     f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
     n = Inf,
     datatype = "slab",
-    .width = NA_real_
+    .width = NA_real_,
+    stringsAsFactors = FALSE
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
     datatype = "interval",
-    .width = c(0.66, 0.95)
+    .width = c(0.66, 0.95),
+    stringsAsFactors = FALSE
   )
   interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
@@ -745,7 +749,8 @@ test_that("dist_categorical works with modified scale limits", {
     f = c(3,3,3,3, NA,NA,NA,NA, 1,1,1,1)/4,
     n = Inf,
     datatype = "slab",
-    .width = NA_real_
+    .width = NA_real_,
+    stringsAsFactors = FALSE
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
@@ -765,7 +770,8 @@ test_that("dist_categorical works with explicit integer levels", {
     f = c(3,3,3,3, 1,1,1,1)/4,
     n = Inf,
     datatype = "slab",
-    .width = NA_real_
+    .width = NA_real_,
+    stringsAsFactors = FALSE
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
