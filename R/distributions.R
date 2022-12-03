@@ -46,7 +46,7 @@ distr_function.distribution = function(dist, fun) {
 distr_function.rvar = distr_function.distribution
 #' @export
 distr_function.rvar_factor = function(dist, fun) {
-  if (!posterior::is_rvar_ordered(dist) && fun %in% c("cdf", "quantile")) {
+  if (!inherits(dist, "rvar_ordered") && fun %in% c("cdf", "quantile")) {
     # cdf and quantile are undefined on unordered dists, so just return NA
     function(x, ...) {
       rep_len(NA_real_, length(x))
@@ -288,7 +288,11 @@ is_dist_like = function(x) {
 #' A wrapped categorical distribution with a different level set
 #' @noRd
 .dist_wrapped_categorical = function(wrapped_dist, new_levels) {
-  new_dist(wrapped_dist = unclass(wrapped_dist), new_levels = list(new_levels), class = "ggdist__wrapped_categorical")
+  distributional::new_dist(
+    wrapped_dist = unclass(wrapped_dist),
+    new_levels = list(new_levels),
+    class = "ggdist__wrapped_categorical"
+  )
 }
 
 #' @export

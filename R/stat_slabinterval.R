@@ -639,7 +639,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
       data$dist = posterior::rvar_factor(
         data$dist,
         levels = scales[[x]]$get_limits(),
-        ordered = posterior::is_rvar_ordered(data$dist)
+        ordered = inherits(data$dist, "rvar_ordered")
       )
     } else if (distr_is_factor_like(data$dist)) {
       data$dist = .dist_wrapped_categorical(
@@ -688,7 +688,7 @@ layer_slabinterval = function(...) {
           # ensure a discrete scale has been added to the plot with appropriate limits
           scale = plot$scales$get_scales(xy)
           if (is.null(scale)) {
-            scale = getFromNamespace(paste0("scale_", xy, "_discrete"), "ggplot2")()
+            scale = utils::getFromNamespace(paste0("scale_", xy, "_discrete"), "ggplot2")()
             plot$scales$add(scale)
           }
           scale$limits = scale$limits %||% distr_levels(data[[dist]])

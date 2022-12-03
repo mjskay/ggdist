@@ -29,8 +29,10 @@ compute_slab_dots = function(
     input = distr_get_sample(dist)
     if (quantiles_provided) {
       # ppoints() with a = 1/2 corresponds to quantile() with type = 5
+      # (on continuous samples --- on discrete, we use type = 1)
       # and ensures that if quantiles == length(data[[x]]) then input == data[[x]]
-      input = quantile(input, ppoints(quantiles, a = 1/2), type = 5, na.rm = na.rm)
+      quantile_type = if (distr_is_discrete(dist)) 1 else 5
+      input = quantile(input, ppoints(quantiles, a = 1/2), type = quantile_type, na.rm = na.rm)
     }
   } else {
     quantile_fun = distr_quantile(dist)

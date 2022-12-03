@@ -79,7 +79,11 @@
 #' tibble(x = dist_normal(0, 1)) %>%
 #'   ggplot(aes(xdist = x)) +
 #'   stat_halfeye(aes(
-#'     fill = after_stat(cut_cdf_qi(cdf, .width = c(.5, .8, .95), labels = percent_format(accuracy = 1)))
+#'     fill = after_stat(cut_cdf_qi(
+#'       cdf,
+#'       .width = c(.5, .8, .95),
+#'       labels = percent_format(accuracy = 1)
+#'     ))
 #'   )) +
 #'   labs(fill = "Interval") +
 #'   scale_fill_brewer(direction = -1, na.translate = FALSE)
