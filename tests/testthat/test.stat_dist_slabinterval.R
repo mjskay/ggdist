@@ -553,7 +553,7 @@ test_that("stat_dist_ detects discrete distributions", {
 })
 
 test_that("rvar_factor works", {
-  skip_if_not_installed("posterior")
+  skip_if_not_installed("posterior", "1.3.1.9000")
 
   p = ggplot_build(
     ggplot() +
@@ -588,7 +588,7 @@ test_that("rvar_factor works", {
 })
 
 test_that("rvar_ordered works and integer dist_sample works", {
-  skip_if_not_installed("posterior")
+  skip_if_not_installed("posterior", "1.3.1.9000")
 
   p = ggplot_build(
     ggplot() +
@@ -636,7 +636,7 @@ test_that("rvar_ordered works and integer dist_sample works", {
 })
 
 test_that("rvar_ordered works with modified scale limits", {
-  skip_if_not_installed("posterior")
+  skip_if_not_installed("posterior", "1.3.1.9000")
 
   p = ggplot_build(
     ggplot() +
@@ -935,6 +935,7 @@ test_that("missing rvars work", {
     "Removed 1 rows containing missing values"
   )
 
+  skip_if_not_installed("posterior", "1.3.1.9000")
   expect_warning(
     expect_equal(
       layer_data(
