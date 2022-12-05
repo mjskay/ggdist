@@ -44,7 +44,7 @@ compute_slab_dots = function(
   } else {
     dist_quantiles = if (quantiles_provided) quantiles else 100
     dist_probs = ppoints(dist_quantiles, a = 1/2)
-    quantile_fun = distr_quantile(dist)
+    quantile_fun = distr_quantile(dist, categorical_okay = TRUE)
     input = map_character(quantile_fun(dist_probs))
   }
 

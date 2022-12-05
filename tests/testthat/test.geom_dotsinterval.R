@@ -368,7 +368,7 @@ test_that("empty slab from NA removal works", {
 })
 
 
-# discrete distributions --------------------------------------------------
+# discrete distributions (raw) ---------------------------------------------
 
 test_that("geom_dots works on discrete distributions", {
   skip_if_no_vdiffr()
@@ -403,6 +403,245 @@ test_that("geom_dots works on discrete distributions", {
 
 })
 
+# discrete dist/rvar --------------------------------------------------
+
+test_that("rvar_factor works", {
+  skip_if_not_installed("posterior", "1.3.1.9000")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = posterior::rvar(c("a","a","a","b","b","c"))))
+  )
+
+  slab_ref = data.frame(
+    thickness = rep(1, 6),
+    n = 6,
+    datatype = "slab",
+    .width = NA_real_,
+    stringsAsFactors = FALSE
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(1, 1, 1, 2, 2, 3))
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+
+  interval_ref = data.frame(
+    datatype = "interval",
+    .width = c(0.66, 0.95),
+    stringsAsFactors = FALSE
+  )
+  interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$x = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  attr(interval_ref, "row.names") = c(7L, 8L)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+
+  x_scale = p$plot$scales$get_scales("x")
+  expect_true(x_scale$is_discrete())
+  expect_equal(x_scale$get_limits(), c("a","b","c"))
+
+
+  # quantiles works
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = posterior::rvar(c("a","a","a","b","b","c"))), quantiles = 12)
+  )
+  expect_equal(p$data[[1]]$x, ggplot2:::mapped_discrete(c(1,1,1,1,1,1,2,2,2,2,3,3,NA,NA)))
+})
+
+test_that("rvar_ordered works and integer dist_sample works", {
+  skip_if_not_installed("posterior", "1.3.1.9000")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = posterior::rvar_ordered(c("a","a","a","b","b","c"))))
+  )
+
+  slab_ref = data.frame(
+    thickness = 1,
+    n = 6,
+    datatype = "slab",
+    .width = c(.66, .66, .66, .66, .66, NA),
+    stringsAsFactors = FALSE
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(1, 1, 1, 2, 2, 3))
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+
+  interval_ref = data.frame(
+    datatype = "interval",
+    .width = c(0.66, 0.95),
+    stringsAsFactors = FALSE
+  )
+  interval_ref$xmin = ggplot2:::mapped_discrete(c(1, 1))
+  interval_ref$xmax = ggplot2:::mapped_discrete(c(2.15, 2.875))
+  interval_ref$x = ggplot2:::mapped_discrete(c(1.5, 1.5))
+  attr(interval_ref, "row.names") = c(7L, 8L)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+
+  x_scale = p$plot$scales$get_scales("x")
+  expect_true(x_scale$is_discrete())
+  expect_equal(x_scale$get_limits(), c("a","b","c"))
+
+
+  # integer dist_sample
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = dist_sample(list(c(1L,1L,1L,2L,2L,3L)))))
+  )
+  slab_ref$x = as.numeric(slab_ref$x)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+  interval_ref$x = as.numeric(interval_ref$x)
+  interval_ref$xmin = as.numeric(interval_ref$xmin)
+  interval_ref$xmax = as.numeric(interval_ref$xmax)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+
+
+  # quantiles works
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = posterior::rvar_ordered(c("a","a","a","b","b","c"))), quantiles = 12)
+  )
+  expect_equal(p$data[[1]]$x, ggplot2:::mapped_discrete(c(1,1,1,1,1,1,2,2,2,2,3,3, 1.5,1.5)))
+
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = dist_sample(list(c(1L,1L,1L,2L,2L,3L)))), quantiles = 12)
+  )
+  expect_equal(p$data[[1]]$x, c(1,1,1,1,1,1,2,2,2,2,3,3, 1.5,1.5))
+
+
+  # raw ordered
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(x = ordered(c("a","a","a","b","b","c")), group = NA), quantiles = 12)
+  )
+  expect_equal(p$data[[1]]$x, ggplot2:::mapped_discrete(c(1,1,1,1,1,1,2,2,2,2,3,3, 1.5,1.5)))
+})
+
+test_that("rvar_ordered works with modified scale limits", {
+  skip_if_not_installed("posterior", "1.3.1.9000")
+
+  p = ggplot_build(
+    ggplot() +
+      stat_dots(aes(xdist = posterior::rvar_ordered(c("a","a","a","c")))) +
+      scale_x_discrete(limits = c("a","b","c"))
+  )
+
+  slab_ref = data.frame(
+    thickness = 1,
+    n = 4,
+    datatype = "slab",
+    .width = c(.66,.66,.66, NA),
+    stringsAsFactors = FALSE
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(1, 1, 1, 3))
+  expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
+})
+
+test_that("dist_bernoulli works", {
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = dist_bernoulli(0.8)), quantiles = 5)
+  )
+
+  slab_ref = data.frame(
+    thickness = 1,
+    n = 5,
+    datatype = "slab",
+    .width = .66,
+    x = c(0, 1, 1, 1, 1),
+    stringsAsFactors = FALSE
+  )
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+
+  interval_ref = data.frame(
+    datatype = "interval",
+    .width = c(0.66, 0.95),
+    xmin = c(0, 0),
+    xmax = c(1, 1),
+    x = c(1, 1),
+    stringsAsFactors = FALSE
+  )
+  attr(interval_ref, "row.names") = c(6L, 7L)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+
+  x_scale = p$plot$scales$get_scales("x")
+  expect_true(!x_scale$is_discrete())
+  expect_equal(x_scale$get_limits(), c(0, 1))
+})
+
+test_that("dist_categorical works", {
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = dist_categorical(list(3:1/6), list(c("a","b","c")))), quantiles = 6)
+  )
+
+  slab_ref = data.frame(
+    thickness = rep(1, 6),
+    n = 6,
+    datatype = "slab",
+    .width = NA_real_,
+    stringsAsFactors = FALSE
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(1, 1, 1, 2, 2, 3))
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+
+  interval_ref = data.frame(
+    datatype = "interval",
+    .width = c(0.66, 0.95),
+    stringsAsFactors = FALSE
+  )
+  interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  interval_ref$x = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
+  attr(interval_ref, "row.names") = c(7L, 8L)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+
+  x_scale = p$plot$scales$get_scales("x")
+  expect_true(x_scale$is_discrete())
+  expect_equal(x_scale$get_limits(), c("a","b","c"))
+
+  # with integer categorical distribution
+  p = ggplot_build(
+    ggplot() +
+      stat_dotsinterval(aes(xdist = dist_categorical(list(3:1/6))), quantiles = 6)
+  )
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
+  expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
+})
+
+test_that("dist_categorical works with modified scale limits", {
+  p = ggplot_build(
+    ggplot() +
+      stat_dots(aes(xdist = dist_categorical(list(c(3,1)/4), list(c("a","c")))), quantiles = 4) +
+      scale_x_discrete(limits = c("a","b","c"))
+  )
+
+  slab_ref = data.frame(
+    thickness = rep(1, 4),
+    n = 4,
+    datatype = "slab",
+    .width = NA_real_,
+    stringsAsFactors = FALSE
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(1,1,1, 3))
+  expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
+})
+
+test_that("dist_categorical works with explicit integer levels", {
+  p = ggplot_build(
+    ggplot() +
+      stat_dots(aes(xdist = dist_categorical(list(c(3,1)/4), list(c(1L,3L)))), quantiles = 4)
+  )
+
+  slab_ref = data.frame(
+    thickness = rep(1, 4),
+    n = 4,
+    datatype = "slab",
+    .width = NA_real_,
+    stringsAsFactors = FALSE
+  )
+  slab_ref$x = ggplot2:::mapped_discrete(c(1,1,1, 2))
+  expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
+})
 
 
 # dot stroke --------------------------------------------------------------

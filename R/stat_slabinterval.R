@@ -615,6 +615,13 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
 
       data = remove_missing(data, na.rm, x, name = "stat_slabinterval")
 
+      if (inherits(data[[x]], "mapped_discrete") && is_integerish(data[[x]])) {
+        # integer-like mapped discrete data needs to be converted to integer here
+        # so that it will be treated as a discrete distribution later
+        # (e.g. by distr_is_discrete())
+        data[[x]] = as.integer(data[[x]])
+      }
+
       # dist aesthetic is not provided but x aesthetic is, and x is not a dist
       # this means we need to wrap it as a dist_sample
       data = summarise_by(data, c("PANEL", y, "group"), function(d) {
@@ -627,7 +634,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     # numeric scales, so we use a bit of a hack and convert them to integers
     # by adding 0L to them
     if (is_distribution(data$dist)) {
-      is_logical = map_lgl_(vctrs::field(support(data$dist), "x"), is.logical)
+      is_logical = map_lgl_(data$dist, distr_is_logical)
       data$dist[is_logical] = data$dist[is_logical] + 0L
     }
 
@@ -642,9 +649,10 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
         ordered = inherits(data$dist, "rvar_ordered")
       )
     } else if (distr_is_factor_like(data$dist)) {
+      new_levels = scales[[x]]$get_limits()
       data$dist = .dist_wrapped_categorical(
         data$dist,
-        new_levels = scales[[x]]$get_limits()
+        new_levels = new_levels
       )
     }
 
