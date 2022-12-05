@@ -42,7 +42,7 @@ distr_function.distribution = function(dist, fun, ..., categorical_okay = FALSE)
     # for stat_dots to put dots in bins approximately proportional to bin probs.
     levels = distr_levels(dist)
     probs = distr_probs(dist)
-    Finv = stepfun(c(0, cumsum(probs)), c(1, seq_along(probs), length(probs)))
+    Finv = stats::stepfun(c(0, cumsum(probs)), c(1, seq_along(probs), length(probs)))
     return(function(x, ...) levels[Finv(x)])
   }
   # eat up extra args as they are ignored anyway
