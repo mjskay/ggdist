@@ -7,6 +7,8 @@ New features and enhancements:
   * `interval_size` is now `linewidth`
   * `slab_size` is now `slab_linewidth`
   * in `geom_slab()` and `geom_dots()`, `size` is now `linewidth`
+* Support for non-numeric distributions in `stat_slabinterval()` and 
+  `stat_dotsinterval()` (#108).
 
 Documentation:
 
