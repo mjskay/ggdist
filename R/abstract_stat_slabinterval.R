@@ -79,9 +79,10 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
   # @param data The data frame of aesthetic values
   # @param input Input values for the function (may be ignored in some cases
   # where compute_slab() needs to determine its own input values)
+  # @param scales the scales associated with the plot
   # @param trans the scale transformation object applied to the coordinate space
   # @param ... other stat parameters created by children of stat_slabinterval
-  compute_slab = function(self, data, trans, input, ...) {
+  compute_slab = function(self, data, scales, trans, input, ...) {
     data.frame()
   },
 
@@ -179,7 +180,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
       # example without warnings and remove this guard.
       s_data = if (getOption("ggdist.experimental.slab_data_in_intervals", FALSE) || show_slab) {
         self$compute_slab(d,
-          trans = trans, input = input,
+          scales = scales, trans = trans, input = input,
           orientation = orientation, limits = limits, n = n,
           na.rm = na.rm,
           ...

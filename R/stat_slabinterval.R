@@ -87,7 +87,7 @@ compute_limits_sample = function(x, trans, trim, adjust) {
 #' StatSlabinterval$compute_slab()
 #' @noRd
 compute_slab_slabinterval = function(
-  self, data, trans, input, orientation,
+  self, data, scales, trans, input, orientation,
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars,
   ...
@@ -117,7 +117,7 @@ compute_slab_slabinterval = function(
     }
   } else if (!distr_is_factor_like(dist) && distr_is_sample(dist)) {
     return(compute_slab_sample(
-      trans$transform(distr_get_sample(dist)), trans, input,
+      trans$transform(distr_get_sample(dist)), scales, trans, input,
       slab_type = slab_type, limits = limits, n = n,
       adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
     ))
@@ -186,7 +186,7 @@ compute_slab_slabinterval = function(
 #' @importFrom graphics hist
 #' @noRd
 compute_slab_sample = function(
-  x, trans, input,
+  x, scales, trans, input,
   slab_type, limits, n,
   adjust, trim, expand, breaks, outline_bars
 ) {

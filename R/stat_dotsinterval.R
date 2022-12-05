@@ -10,11 +10,13 @@
 #' @importFrom stats ppoints
 #' @noRd
 compute_slab_dots = function(
-  self, data, trans, input, orientation,
+  self, data, scales, trans, input, orientation,
   quantiles,
   na.rm,
   ...
 ) {
+  define_orientation_variables(orientation)
+
   dist = data$dist
   if (distr_is_missing(dist)) {
     return(data.frame(.input = NA_real_, f = NA_real_, n = NA_integer_))
@@ -22,11 +24,16 @@ compute_slab_dots = function(
 
   quantiles = quantiles %||% NA
   quantiles_provided = !isTRUE(is.na(quantiles))
-  dist_quantiles = if (quantiles_provided) quantiles else 100
-  probs = ppoints(dist_quantiles, a = 1/2)
+
+  map_character = if (distr_is_factor_like(dist) && !is.null(scales[[x]]) && scales[[x]]$is_discrete()) {
+    # character or factor-like values need to be mapped back through the scale
+    scales[[x]]$map
+  } else {
+    identity
+  }
 
   if (distr_is_sample(dist)) {
-    input = distr_get_sample(dist)
+    input = map_character(distr_get_sample(dist))
     if (quantiles_provided) {
       # ppoints() with a = 1/2 corresponds to quantile() with type = 5
       # (on continuous samples --- on discrete, we use type = 1)
@@ -35,8 +42,10 @@ compute_slab_dots = function(
       input = quantile(input, ppoints(quantiles, a = 1/2), type = quantile_type, na.rm = na.rm)
     }
   } else {
+    dist_quantiles = if (quantiles_provided) quantiles else 100
+    dist_probs = ppoints(dist_quantiles, a = 1/2)
     quantile_fun = distr_quantile(dist)
-    input = quantile_fun(probs)
+    input = map_character(quantile_fun(dist_probs))
   }
 
   data.frame(
