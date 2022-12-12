@@ -316,7 +316,7 @@ when multiple dotplots are drawn.
   touch; `stackratio < 1` means dots will overlap each other, and `stackratio > 1`
   means dots will have gaps between them.
 
-## Side and layout
+## Side
 
 The `side` aesthetic allows you to adjust the positioning and
 direction of the dots:
@@ -327,42 +327,84 @@ direction of the dots:
 * `"bottomright"`: draw the dots on the bottom or on the right, depending on `orientation`
 * `"both"`: draw the dots mirrored, as in a "beeswarm" plot.
 
-The `layout` parameter allows you to adjust the algorithm used to place dots:
+When `orientation = "horizontal"`, this yields:
 
-* `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot. This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if the input data are symmetrical it will return a symmetrical layout.
-* `"weave"`: uses the same basic binning approach of "bin", but places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not align dots within columns. Does not work well when `side = "both"`.
-* "swarm": uses the `"compactswarm"` layout from `beeswarm::beeswarm()`. Does not maintain alignment of rows or columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile dotplots of theoretical distributions, which may look better with `"bin"` or `"weave"`).
-
-That yields these combinations (amongst many others):
-
-```{r side_layout, fig.width = small_width, fig.height = small_width * 3/2}
+```{r horizontal_side, fig.width = small_width, fig.height = small_width/2}
 set.seed(1234)
 x = rnorm(100)
 
-make_plot = function(layout) {
+side_plot = function(...) {
   expand.grid(
     x = x,
     side = c("topright", "both", "bottomleft"),
     stringsAsFactors = FALSE
   ) %>%
-    ggplot(aes(side = side, x = x)) +
-    stat_dotsinterval(layout = layout) +
+    ggplot(aes(side = side, ...)) +
+    geom_dots() +
     facet_grid(~ side, labeller = "label_both") +
+    labs(x = NULL, y = NULL) +
+    theme(panel.border = element_rect(color = "gray75", fill = NA))
+}
+side_plot(x = x) +
+  labs(title = "Horizontal geom_dots() with different values of side") +
+  scale_y_continuous(breaks = NULL)
+```
+
+When `orientation = "vertical"`, this yields:
+
+```{r vertical_side, fig.width = small_width, fig.height = small_width/2}
+side_plot(y = x) +
+  labs(title = "Vertical geom_dots() with different values of side") +
+  scale_x_continuous(breaks = NULL)
+```
+
+## Layout
+
+The `layout` parameter allows you to adjust the algorithm used to place dots:
+
+* `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot. This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if the input data are symmetrical it will return a symmetrical layout.
+* `"weave"`: uses the same basic binning approach of "bin", but places dots in the off-axis at their actual positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not align dots within columns.
+* `"hex"`: uses the same basic binning approach of "bin", but alternates placing dots `+binwidth/4` or `-binwidth/4` in the off-axis from the bin center. This allows hexagonal packing by setting a `stackratio` less than `1` (something like `0.9` tends to work).
+* "swarm": uses the `"compactswarm"` layout from `beeswarm::beeswarm()`. Does not maintain alignment of rows or columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile dotplots of theoretical distributions, which may look better with `"bin"`, `"weave"`, or `"hex"`).
+
+When `side` is `"top"`, these layouts look like this:
+
+```{r layout_top, fig.width = small_width, fig.height = small_height}
+layout_plot = function(layout, side, ...) {
+  data.frame(
+    x = x
+  ) %>%
+    ggplot(aes(x = x)) +
+    geom_dots(layout = layout, side = side, stackratio = if (layout == "hex") 0.9 else 1) +
     labs(
-      subtitle = paste0("stat_dotsinterval(layout = '", layout, "')"),
+      subtitle = paste0("layout = ", deparse(layout), if (layout == "hex") " with stackratio = 0.9"),
       x = NULL,
       y = NULL
-    )
+    ) +
+    scale_y_continuous(breaks = NULL) +
+    theme(panel.border = element_rect(color = "gray75", fill = NA))
 }
 
-make_plot("bin") /
-  make_plot("weave") /
-  make_plot("swarm")
+(layout_plot("bin", side = "top") +
+  layout_plot("hex", side = "top")) /
+  (layout_plot("weave", side = "top") +
+  layout_plot("swarm", side = "top")) +
+  plot_annotation(title = 'geom_dots() layouts with side = "top"')
+```
+
+When `side` is `"both"`, these layouts look like this:
+
+```{r layout_both, fig.width = small_width, fig.height = small_height}
+(layout_plot("bin", side = "both") +
+  layout_plot("hex", side = "both")) /
+  (layout_plot("weave", side = "both") +
+  layout_plot("swarm", side = "both")) +
+  plot_annotation(title = 'geom_dots() layouts with side = "both"')
 ```
 
 ### Beeswarm plots
 
-Thus, it is possible to create the beeswarm plots by using `stat_dots()`
+Thus, it is possible to create beeswarm plots by using `geom_dots()`
 with `side = "both"`:
 
 ```{r beeswarm_bin}
@@ -375,18 +417,27 @@ abc_df = data.frame(
 
 abc_df %>%
   ggplot(aes(x = abc, y = value)) +
-  stat_dots(side = "both") +
-  ggtitle('stat_dots(side = "both")')
+  geom_dots(side = "both") +
+  ggtitle('geom_dots(side = "both")')
 ```
 
-`side = "both"` also tends to work well with the `"swarm"` layout for a more
-classic-looking "beeswarm" plot:
+`side = "both"` also tends to work well with the `"hex"` and `"swarm"` layouts for 
+more classic-looking "beeswarm" plots:
+
+```{r beeswarm_hex}
+abc_df %>%
+  ggplot(aes(x = abc, y = value)) +
+  geom_dots(side = "both", layout = "hex") +
+  ggtitle('geom_dots(side = "both", layout = "hex")')
+```
+
+And with `"swarm"`:
 
 ```{r beeswarm}
 abc_df %>%
   ggplot(aes(x = abc, y = value)) +
-  stat_dots(side = "both", layout = "swarm") +
-  ggtitle('stat_dots(side = "both", layout = "swarm")')
+  geom_dots(side = "both", layout = "swarm") +
+  ggtitle('geom_dots(side = "both", layout = "swarm")')
 ```
 
 ## Varying `color`, `fill`, `shape`, and `linewidth`
@@ -505,6 +556,52 @@ abcc_df %>%
     'geom_dots(side = "both", layout = "swarm")',
     'aes(color = value, alpha = abs(value))'
   )
+```
+
+## On large samples: "density" dotplots
+
+When applied to large samples where you do not care too much about individual dot positions,
+you may want to apply some smoothing to make the layout more appealing. For example,
+a dotplot on a sample of size 2000 can be quite noisy:
+
+```{r large_sample, fig.width = small_width, fig.height = small_width/2}
+set.seed(1234)
+x_large = rnorm(2000)
+
+ggplot() +
+  geom_dots(aes(x = x_large)) +
+  labs(
+    title = "geom_dots(aes(x = x_large))",
+    subtitle = "where length(x_large) = 2000",
+    x = NULL
+  ) +
+  scale_y_continuous(breaks = NULL)
+```
+
+The `smooth_dots()` function can be applied directly to the variable to smooth it:
+
+```{r large_sample_smooth, fig.width = small_width, fig.height = small_width/2}
+ggplot() +
+  geom_dots(aes(x = smooth_dots(x_large))) +
+  labs(
+    title = "geom_dots(aes(x = smooth_dots(x_large)))",
+    subtitle = "where length(x_large) = 2000",
+    x = NULL
+  ) +
+  scale_y_continuous(breaks = NULL)
+```
+
+This works particularly well with the `"hex"` layout:
+
+```{r large_sample_smooth_hex, fig.width = small_width, fig.height = small_width/2}
+ggplot() +
+  geom_dots(aes(x = smooth_dots(x_large)), layout = "hex", stackratio = 0.9) +
+  labs(
+    title = 'geom_dots(aes(x = x_large), layout = "hex", stackratio = 0.9)',
+    subtitle = "where length(x_large) = 2000",
+    x = NULL
+  ) +
+  scale_y_continuous(breaks = NULL)
 ```
 
 ## On analytical distributions
