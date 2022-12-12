@@ -9,7 +9,7 @@
 #' A variation of [quantile()] that can be applied to weighted samples.
 #'
 #' @param x numeric vector: sample values
-#' @param probs numeric vector: probabilities in $[0, 1]$
+#' @param probs numeric vector: probabilities in \eqn{[0, 1]}
 #' @param weights Weights for the sample. One of:
 #'  - numeric vector of length `x`: weights for corresponding values in `x`,
 #'    which will be normalized to sum to 1.
@@ -78,14 +78,15 @@
 #' a vector of probabilities, which itself returns the corresponding quantile
 #' estimates. It may be useful when `weighted_quantile()` needs to be called
 #' repeatedly for the same sample, re-using some pre-computation.
+#' @importFrom stats stepfun approxfun
 #' @export
-weighted_quantile = function(x, probs = seq(0, 1, 0.25), weights = NULL, n = NULL, na.rm = FALSE, type = 7, ...) {
-  weighted_quantile_fun(x, weights = weights, n = n, na.rm = na.rm, type = type, ...)(probs)
+weighted_quantile = function(x, probs = seq(0, 1, 0.25), weights = NULL, n = NULL, na.rm = FALSE, type = 7) {
+  weighted_quantile_fun(x, weights = weights, n = n, na.rm = na.rm, type = type)(probs)
 }
 
 #' @rdname weighted_quantile
 #' @export
-weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, type = 7, ...) {
+weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, type = 7) {
   weights = weights %||% rep(1, length(x))
   if (!type %in% 1:9) {
     stop0("Quantile type `", deparse0(type), "` is invalid. It must be in 1:9.")
@@ -136,8 +137,8 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
       stepfun(F_x, c(x, x[length(x)]), right = TRUE),
       # type 2
       {
-        inverse_cdf_type2_left = stepfun(F_x, c(x, tail(x, 1)), right = FALSE)
-        inverse_cdf_type2_right = stepfun(F_x, c(x, tail(x, 1)), right = TRUE)
+        inverse_cdf_type2_left = stepfun(F_x, c(x, x[length(x)]), right = FALSE)
+        inverse_cdf_type2_right = stepfun(F_x, c(x, x[length(x)]), right = TRUE)
         function(x) (inverse_cdf_type2_left(x) + inverse_cdf_type2_right(x))/2
       },
       # type 3

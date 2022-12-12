@@ -11,23 +11,15 @@ weighted_quantile(
   weights = NULL,
   n = NULL,
   na.rm = FALSE,
-  type = 7,
-  ...
+  type = 7
 )
 
-weighted_quantile_fun(
-  x,
-  weights = NULL,
-  n = NULL,
-  na.rm = FALSE,
-  type = 7,
-  ...
-)
+weighted_quantile_fun(x, weights = NULL, n = NULL, na.rm = FALSE, type = 7)
 }
 \arguments{
 \item{x}{numeric vector: sample values}
 
-\item{probs}{numeric vector: probabilities in $\link{0, 1}$}
+\item{probs}{numeric vector: probabilities in \eqn{[0, 1]}}
 
 \item{weights}{Weights for the sample. One of:
 \itemize{
