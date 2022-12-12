@@ -150,6 +150,9 @@ the input data are symmetrical it will return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
 positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
 align dots within columns. Does not work well when \code{side = "both"}.
+\item \code{"hex"}: uses the same basic binning approach of \code{"bin"}, but alternates placing dots \code{+binwidth/4} or
+\code{-binwidth/4} in the off-axis from the bin center. This allows hexagonal packing by setting a \code{stackratio}
+less than 1 (something like \code{0.9} tends to work).
 \item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"} or \code{"weave"}).

@@ -65,7 +65,7 @@
 bin_dots = function(x, y, binwidth,
   heightratio = 1,
   stackratio = 1,
-  layout = c("bin", "weave", "swarm"),
+  layout = c("bin", "weave", "hex", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x")
 ) {
@@ -102,7 +102,7 @@ bin_dots = function(x, y, binwidth,
     both = 0
   )
   switch(layout,
-    bin = {
+    bin =, hex = {
       bin_midpoints = nudge_bins(h$binning$bin_midpoints, binwidth)
       d[[x]] = bin_midpoints[h$binning$bins]
       # maintain original data order within each bin when finding y positions
@@ -115,18 +115,15 @@ bin_dots = function(x, y, binwidth,
         seq_fun = if (side == "both") seq_interleaved_centered else seq_interleaved
         bin_df = bin_df[seq_fun(nrow(bin_df)),]
         bin_df$row = seq_len(nrow(bin_df))
+        if (side == "both") bin_df$row = bin_df$row - round((nrow(bin_df) - 1) / 2)
         bin_df
       })
 
       # nudge values within each row to ensure there are no overlaps
-      # (rows are not well-defined in side = "both" for this to work,
-      # so we skip this step in that case)
-      if (side != "both") {
-        d = ddply_(d, "row", function(row_df) {
-          row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
-          row_df
-        })
-      }
+      d = ddply_(d, "row", function(row_df) {
+        row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
+        row_df
+      })
 
       d$row = NULL
     },
@@ -147,20 +144,35 @@ bin_dots = function(x, y, binwidth,
     }
   )
 
-  # determine y positions (for bin/weave)
-  if (layout %in% c("bin", "weave")) {
+  # determine y positions (for bin/weave) and also x offsets (for hex)
+  if (layout %in% c("bin", "weave", "hex")) {
     d = ddply_(d, "bin", function(bin_df) {
       y_offset = seq(0, h$y_spacing * (nrow(bin_df) - 1), length.out = nrow(bin_df))
+      row_offset = 0
       switch_side(side, orientation,
         topright = {},
         bottomleft = {
           y_offset = - y_offset
         },
         both = {
-          y_offset = y_offset - h$y_spacing * (nrow(bin_df) - 1) / 2
+          row_offset = (nrow(bin_df) - 1) / 2
+          if (layout %in% c("weave", "hex")) {
+            # weave and hex require rows to be aligned exactly so that x offsets
+            # can be applied within rows
+            row_offset = round(row_offset)
+          }
+          y_offset = y_offset - h$y_spacing * row_offset
         }
       )
       bin_df[[y]] = bin_df[[y]] + y_start + y_offset
+
+      if (layout == "hex") {
+        # depending on whether this is an even or odd row, need to start the
+        # x offset to the left or to the right
+        x_offset_start = if (row_offset %% 2 == 0) 1 else -1
+        bin_df[[x]] = bin_df[[x]] + rep_len(c(-0.25, 0.25) * x_offset_start, nrow(bin_df)) * binwidth
+      }
+
       bin_df
     })
   }
