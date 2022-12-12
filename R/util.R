@@ -38,6 +38,15 @@ defaults = function(x, defaults) {
   c(x, defaults[setdiff(names(defaults), names(x))])
 }
 
+#' Get a function that was passed by name.
+#' Ensures we always fall back to searching the ggdist namespace for the function
+#' in case ggdist is not in the caller's search path.
+#' @noRd
+get_function_by_name = function(f) {
+  get0(f, mode = "function") %||%
+    get(f, mode = "function", envir = getNamespace("ggdist"))
+}
+
 
 # deprecations and warnings -----------------------------------------------
 

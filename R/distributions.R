@@ -96,6 +96,7 @@ distr_cdf = function(dist, ...) {
 
 #' @param categorical_okay if TRUE, categorical dists are treated as ordinal
 #' in order to generate values in bins (e.g. for use with stat_dots)
+#' @noRd
 distr_quantile = function(dist, ..., categorical_okay = FALSE) {
   distr_function(dist, "quantile", ..., categorical_okay = categorical_okay)
 }

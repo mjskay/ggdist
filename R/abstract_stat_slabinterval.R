@@ -154,10 +154,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
     # POINT/INTERVAL PRE-CALCULATIONS
     if (!is.null(point_interval)) {
       point_interval = if (is.character(point_interval)) {
-        # ensure we always search the ggdist namespace for point_interval
-        # functions in case ggdist is not in the caller's search path
-        get0(point_interval, mode = "function") %||%
-          get(point_interval, mode = "function", envir = getNamespace("ggdist"))
+        get_function_by_name(point_interval)
       } else {
         as_function(point_interval)
       }
