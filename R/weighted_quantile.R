@@ -91,7 +91,7 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
     stop0("Quantile type `", deparse0(type), "` is invalid. It must be in 1:9.")
   }
   if (isTRUE(na.rm)) {
-    keep = !is.na(x) && !is.na(weights)
+    keep = !is.na(x) & !is.na(weights)
     x = x[keep]
     weights = weights[keep]
   }
