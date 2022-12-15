@@ -12,6 +12,7 @@
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
+  nudge_overlaps = TRUE,
   verbose = FALSE,
   orientation = "vertical"
 ) {
@@ -23,6 +24,7 @@ dots_grob = function(data, x, y, xscale = 1,
     datas = datas,
     xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
+    nudge_overlaps = nudge_overlaps,
     verbose = verbose,
     orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
@@ -40,6 +42,7 @@ makeContent.dots_grob = function(x) {
   dotsize = grob_$dotsize
   binwidth = grob_$binwidth
   layout = grob_$layout
+  nudge_overlaps = grob_$nudge_overlaps
 
   define_orientation_variables(orientation)
 
@@ -95,6 +98,7 @@ makeContent.dots_grob = function(x) {
     dot_positions = bin_dots(
       d$x, d$y,
       binwidth = binwidth, heightratio = heightratio, stackratio = stackratio,
+      nudge_overlaps = nudge_overlaps,
       layout = layout, side = d$side[[1]], orientation = orientation
     )
 
@@ -141,6 +145,7 @@ makeContent.dots_grob = function(x) {
 draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
+  nudge_overlaps,
   verbose,
   ...
 ) {
@@ -205,6 +210,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
       stackratio = stackratio,
       binwidth = binwidth,
       layout = layout,
+      nudge_overlaps = nudge_overlaps,
       verbose = verbose,
       orientation = orientation
     ))
@@ -273,6 +279,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' stack relative to the dot height. The default, `1`, makes dots in the same
 #' stack just touch each other.
 #' @template param-dots-layout
+#' @template param-dots-nudge
 #' @param quantiles Setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
 #' (for analytical distributions, the default of `NA` is taken to mean `100` quantiles). The value of
@@ -366,6 +373,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     dotsize = 1.07,
     stackratio = 1,
     layout = "bin",
+    nudge_overlaps = TRUE,
     verbose = FALSE
   ), GeomSlabinterval$default_params),
 

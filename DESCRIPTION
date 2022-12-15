@@ -32,7 +32,8 @@ Imports:
     withr,
     distributional (>= 0.3.0),
     numDeriv,
-    glue
+    glue,
+    quadprog
 Suggests:
     knitr,
     testthat,

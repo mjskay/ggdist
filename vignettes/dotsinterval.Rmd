@@ -601,7 +601,7 @@ Density smoothing works particularly well with the `"hex"` layout and `side = "b
 ggplot() +
   geom_dots(aes(x = smooth_dots(x_large)), layout = "hex", stackratio = 0.9, side = "both") +
   labs(
-    title = 'geom_dots(aes(x = x_large), layout = "hex", stackratio = 0.9, side = "both")',
+    title = 'geom_dots(aes(x = smooth_dots(x_large)), layout = "hex", stackratio = 0.9, side = "both")',
     subtitle = "where length(x_large) = 2000",
     x = NULL
   ) +

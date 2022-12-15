@@ -18,6 +18,7 @@
 #' @param stackratio ratio of dot height to vertical distance between dot
 #' centers
 #' @template param-dots-layout
+#' @template param-dots-nudge
 #' @template param-slab-side
 #' @param orientation Whether the dots are laid out horizontally or vertically.
 #' Follows the naming scheme of [geom_slabinterval()]:
@@ -67,7 +68,8 @@ bin_dots = function(x, y, binwidth,
   stackratio = 1,
   layout = c("bin", "weave", "hex", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
-  orientation = c("horizontal", "vertical", "y", "x")
+  orientation = c("horizontal", "vertical", "y", "x"),
+  nudge_overlaps = TRUE
 ) {
   layout = match.arg(layout)
   side = match.arg(side)
@@ -103,7 +105,8 @@ bin_dots = function(x, y, binwidth,
   )
   switch(layout,
     bin =, hex = {
-      bin_midpoints = nudge_bins(h$binning$bin_midpoints, binwidth)
+      bin_midpoints = h$binning$bin_midpoints
+      if (nudge_overlaps) bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
       d[[x]] = bin_midpoints[h$binning$bins]
       # maintain original data order within each bin when finding y positions
       d = d[order(d$bin, d$order), ]
@@ -119,11 +122,13 @@ bin_dots = function(x, y, binwidth,
         bin_df
       })
 
-      # nudge values within each row to ensure there are no overlaps
-      d = ddply_(d, "row", function(row_df) {
-        row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
-        row_df
-      })
+      if (nudge_overlaps) {
+        # nudge values within each row to ensure there are no overlaps
+        d = ddply_(d, "row", function(row_df) {
+          row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
+          row_df
+        })
+      }
 
       d$row = NULL
     },
@@ -512,38 +517,36 @@ automatic_bin = function(x, width) {
 
 # bin nudging for overlaps ------------------------------------------------
 
-# given a binning produced by one of the binning methods, nudge
-# bin midpoints to ensure they are at least `width` apart
-nudge_bins = function(bin_midpoints, width) {
-  if (length(bin_midpoints) >= 2) {
-    if (length(bin_midpoints) %% 2 == 0) {
-      # even number of bins => ensure the two center bins are proper width apart
-      left_center_bin = length(bin_midpoints) / 2
-      right_center_bin = left_center_bin + 1
+#' given a binning produced by one of the binning methods, nudge
+#' bin midpoints to ensure they are at least `width` apart. Nudging is done
+#' by constrained optimization, minimizing the sum of squares of distances of
+#' new bin midpoints to old (weighted by number of items in each bin), subject
+#' to adjacent bins being at least `width` apart.
+#' @param bin_midpoints vector: midpoints of each bin
+#' @param width scalar: width of bins
+#' @param count vector of length(bin_midpoints): number of items in each bin
+#' @returns vector of length(bin_midpoints) giving new bin midpoints
+#' @noRd
+nudge_bins = function(bin_midpoints, width, count = rep(1, length(bin_midpoints))) {
+  n = length(bin_midpoints)
+  if (n < 2) return(bin_midpoints)
 
-      # ensure the two center bins are proper width apart
-      center_bin_nudge = max((width - abs(bin_midpoints[[left_center_bin]] - bin_midpoints[[right_center_bin]]))/2, 0)
-      bin_midpoints[[left_center_bin]] = bin_midpoints[[left_center_bin]] - center_bin_nudge
-      bin_midpoints[[right_center_bin]] = bin_midpoints[[right_center_bin]] + center_bin_nudge
-    } else {
-      # odd number of bins => don't need to adjust the center
-      left_center_bin = floor(length(bin_midpoints) / 2)
-      right_center_bin = left_center_bin + 2
-    }
+  # make coefs minimize squared distance to bin centers, weighted
+  # by the number of elements in each bin
+  d = count^2 * bin_midpoints
+  # equivalent to D = diag(count^2) when factorized = FALSE
+  R_inv = diag(1/count)
 
-    # nudge the left bins (those below the center) apart as necessary
-    # can't use lag here since we're changing the values as we go
-    for (i in left_center_bin:1) {
-      bin_midpoints[[i]] = bin_midpoints[[i]] -
-        max(width - abs(bin_midpoints[[i]] - bin_midpoints[[i + 1]]), 0)
-    }
+  # constrain difference between adjacent bin centers to be greater than bin width
+  # equivalent to A = matrix(rep_len(c(-1, 1, rep(0, n - 1)), n * (n - 1)), nrow = n)
+  # when using solve.QP()
+  Amat = matrix(rep(c(-1, 1), n - 1), nrow = 2)
+  Aind = matrix(
+    c(rep(2, n - 1), seq_len(n - 1), seq(2, n)),
+    nrow = 3,
+    byrow = TRUE
+  )
+  b = rep(width, n - 1)
 
-    # nudge the right bins (those above the center) apart as necessary
-    for (i in right_center_bin:length(bin_midpoints)) {
-      bin_midpoints[[i]] = bin_midpoints[[i]] +
-        max(width - abs(bin_midpoints[[i]] - bin_midpoints[[i - 1]]), 0)
-    }
-  }
-
-  bin_midpoints
+  quadprog::solve.QP.compact(R_inv, d, Amat, Aind, b, factorized = TRUE)$solution
 }

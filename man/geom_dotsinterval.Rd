@@ -17,6 +17,7 @@ geom_dotsinterval(
   dotsize = 1.07,
   stackratio = 1,
   layout = "bin",
+  nudge_overlaps = TRUE,
   verbose = FALSE,
   orientation = NA,
   interval_size_domain = c(1, 6),
@@ -40,6 +41,7 @@ geom_dots(
   dotsize = 1.07,
   stackratio = 1,
   layout = "bin",
+  nudge_overlaps = TRUE,
   verbose = FALSE,
   orientation = NA,
   na.rm = FALSE,
@@ -148,15 +150,20 @@ This maintains the alignment of rows and columns in the dotplot. This layout is 
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
 the input data are symmetrical it will return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
-positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
-align dots within columns.
-\item \code{"hex"}: uses the same basic binning approach of \code{"bin"}, but alternates placing dots \code{+binwidth/4} or
-\code{-binwidth/4} in the off-axis from the bin center. This allows hexagonal packing by setting a \code{stackratio}
+positions (unless \code{nudge_overlaps = TRUE}, in which case overlaps may be nudged out of the way). This maintains
+the alignment of rows but does not align dots within columns.
+\item \code{"hex"}: uses the same basic binning approach of \code{"bin"}, but alternates placing dots \code{+ binwidth/4} or
+\code{- binwidth/4} in the off-axis from the bin center. This allows hexagonal packing by setting a \code{stackratio}
 less than 1 (something like \code{0.9} tends to work).
 \item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
 dotplots of theoretical distributions, which may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
 }}
+
+\item{nudge_overlaps}{logical: Should overlapping dots be nudged out of the way? When \code{FALSE}, dots may overlap
+(usually only slightly) in the \code{"bin"}, \code{"weave"}, and \code{"hex"} layouts. When \code{TRUE}, overlaps are avoided by
+using a constrained optimization which minimizes the squared distance of dots to their desired positions, subject
+to the constraint that adjacent dots do not overlap.}
 
 \item{verbose}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
 if you want to start from an automatically-selected bin width and then adjust it
