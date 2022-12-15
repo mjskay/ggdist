@@ -222,13 +222,31 @@ seq_interleaved = function(n) {
   i
 }
 
+#' seq_interleaved that starts at n instead of 1
+#' @noRd
+seq_interleaved_rev = function(n) {
+  n + 1 - seq_interleaved(n)
+}
+
 #' a variant of seq_interleaved that proceeds outwards from the middle,
-#' for use with side = "both" in dots geoms
+#' for use with layout = "weave" when side = "both" in dots geoms
 #' @noRd
 seq_interleaved_centered = function(n) {
-  is_odd = n %% 2
-  head = rev(seq_interleaved(floor(n/2))) * 2 - 1 + is_odd
-  center = if (is_odd) 1
-  tail = seq_interleaved(floor(n/2)) * 2 + is_odd
-  c(head, center, tail)
+  half_n = floor(n/2)
+  if (n %% 2 == 1) {
+    # odd n should have 1 in the middle
+    head = rev(seq_interleaved_rev(half_n)) * 2
+    tail = seq_interleaved_rev(half_n) * 2 + 1
+    c(head, 1, tail)
+  } else if (half_n %% 2 == 0) {
+    # even n with even halves should have 1 just above half way
+    head = rev(seq_interleaved_rev(half_n)) * 2
+    tail = seq_interleaved(half_n) * 2 - 1
+    c(head, tail)
+  } else {
+    # even n with odd halves should have 1 just below half way
+    head = rev(seq_interleaved(half_n)) * 2 - 1
+    tail = seq_interleaved_rev(half_n) * 2
+    c(head, tail)
+  }
 }
