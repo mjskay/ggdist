@@ -99,7 +99,7 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
 
   # determine effective sample size
   if (is.character(n)) {
-    n = get_function_by_name(n)
+    n = match_function(n)
   }
   if (is.function(n)) {
     n = n(weights)
@@ -137,9 +137,10 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
       stepfun(F_x, c(x, x[length(x)]), right = TRUE),
       # type 2
       {
-        inverse_cdf_type2_left = stepfun(F_x, c(x, x[length(x)]), right = FALSE)
-        inverse_cdf_type2_right = stepfun(F_x, c(x, x[length(x)]), right = TRUE)
-        function(x) (inverse_cdf_type2_left(x) + inverse_cdf_type2_right(x))/2
+        x_over_2 = c(x, x[length(x)])/2
+        inverse_cdf_type2_left = stepfun(F_x, x_over_2, right = FALSE)
+        inverse_cdf_type2_right = stepfun(F_x, x_over_2, right = TRUE)
+        function(x) inverse_cdf_type2_left(x) + inverse_cdf_type2_right(x)
       },
       # type 3
       stepfun(F_x - f_x/2, c(x[[1]], x), right = TRUE)
@@ -164,6 +165,6 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
       # type 9
       (F_x - f_x*3/8) / (1 + f_x/4)
     )
-    approxfun(p_k, x, rule = 2)
+    approxfun(p_k, x, rule = 2, ties = "ordered")
   }
 }

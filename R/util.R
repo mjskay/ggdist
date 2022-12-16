@@ -38,13 +38,38 @@ defaults = function(x, defaults) {
   c(x, defaults[setdiff(names(defaults), names(x))])
 }
 
-#' Get a function that was passed by name.
-#' Ensures we always fall back to searching the ggdist namespace for the function
+#' A variation of match.fun() that allows prefixes to be supplied to strings
+#' to determine the function to be used, and which ensures we always fall back
+#' to searching the ggdist namespace for the function
 #' in case ggdist is not in the caller's search path.
 #' @noRd
-get_function_by_name = function(f) {
-  get0(f, mode = "function") %||%
+match_function = function(f, prefix = "", env = globalenv()) {
+  if (is.function(f)) return(f)
+
+  f = paste0(prefix, f)
+  get0(f, mode = "function", envir = env) %||%
     get(f, mode = "function", envir = getNamespace("ggdist"))
+}
+
+#' A simpler, faster version of table() that does not mangle values into
+#' character strings as names, but preserves them as their original type
+#' @param x a vector (numeric, factor, character, etc)
+#' @returns a list with two components of the same length
+#'  - `x`: unique values from the input `x`
+#'  - `count`: count of occurrences of `x`
+#' @noRd
+simple_table <- function(x) {
+  if (is.factor(x)) {
+    values <- levels(x)
+    x_int <- as.integer(x)
+  } else {
+    values <- unique(x)
+    x_int <- match(x, values)
+  }
+  list(
+    x = values,
+    count = tabulate(x_int, nbins = length(values))
+  )
 }
 
 

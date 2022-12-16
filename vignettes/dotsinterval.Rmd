@@ -427,7 +427,7 @@ more classic-looking "beeswarm" plots:
 ```{r beeswarm_hex}
 abc_df %>%
   ggplot(aes(x = abc, y = value)) +
-  geom_dots(side = "both", layout = "hex") +
+  geom_dots(side = "both", layout = "hex", stackratio = 0.92) +
   ggtitle('geom_dots(side = "both", layout = "hex")')
 ```
 
@@ -451,13 +451,13 @@ the subgroups do not overlap:
 set.seed(12345)
 
 abcc_df = data.frame(
-  value = rnorm(300, mean = c(1,2,3,4), sd = c(1,2,2,1)),
+  value = rnorm(200, mean = c(1,2,3,4), sd = c(1,2,2,1)),
   abc = c("a", "b", "c", "c"),
   hi = c("h", "h", "h", "i")
 )
 
 abcc_df %>%
-  ggplot(aes(y = value, x = abc, fill = hi, linewidth = hi)) +
+  ggplot(aes(y = value, x = abc, fill = hi)) +
   geom_dots(side = "both", position = "dodge") +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(

@@ -203,17 +203,17 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 
   # draw the dots grob (which will draw dotplots for all the slabs)
   slab_grobs = list(dots_grob(
-      s_data,
-      x, y,
-      xscale = xscale,
-      dotsize = dotsize,
-      stackratio = stackratio,
-      binwidth = binwidth,
-      layout = layout,
-      nudge_overlaps = nudge_overlaps,
-      verbose = verbose,
-      orientation = orientation
-    ))
+    s_data,
+    x, y,
+    xscale = xscale,
+    dotsize = dotsize,
+    stackratio = stackratio,
+    binwidth = binwidth,
+    layout = layout,
+    nudge_overlaps = nudge_overlaps,
+    verbose = verbose,
+    orientation = orientation
+  ))
 }
 
 
@@ -337,6 +337,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   stat_dotsinterval(quantiles = 100)
 #'
 #' @importFrom rlang %||%
+#' @importFrom stats ave
 #' @import grid
 #' @name geom_dotsinterval
 NULL
@@ -374,6 +375,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     stackratio = 1,
     layout = "bin",
     nudge_overlaps = TRUE,
+    smooth = "none",
     verbose = FALSE
   ), GeomSlabinterval$default_params),
 
@@ -383,10 +385,17 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(GeomSlabinterval, self)$setup_data(data, params)
+    define_orientation_variables(params$orientation)
 
     # override any thickness values --- all thicknesses must be == 1 since we
     # don't actually show a function (for this geom it is just used to determine positioning)
     data$thickness = 1
+
+    # apply smooths --- must do this here in case resulting data exceeds boundaries of
+    # original data, meaning scales must be adjusted
+    smooth = match_function(params$smooth %||% "none", prefix = "smooth_")
+    s_data = data[data$datatype == "slab", c("group", x, y)]
+    data[data$datatype == "slab", x] = ave(s_data[[x]], s_data[, c("group", y)], FUN = smooth)
 
     data
   },
