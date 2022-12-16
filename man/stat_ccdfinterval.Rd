@@ -14,6 +14,7 @@ stat_ccdfinterval(
   normalize = "none",
   expand = TRUE,
   p_limits = c(NA, NA),
+  density = "unbounded",
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
@@ -124,6 +125,17 @@ distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is
 \code{p_limits} is \code{c(NA, NA)} on a gamma distribution the effective value of \code{p_limits} would be
 \code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
 it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
+
+\item{density}{Density estimator for sample data. One of:
+\itemize{
+\item A function which takes a numeric vector and returns a list with elements
+\code{x} (giving grid points for the density estimator) and \code{y} (the
+corresponding densities). \pkg{ggdist} provides a family of functions
+following this format, including \code{\link[=density_unbounded]{density_unbounded()}} and
+\code{\link[=density_bounded]{density_bounded()}}. This format is also compatible with \code{\link[stats:density]{stats::density()}}.
+\item A string giving the suffix of a function name that starts with \code{"density_"};
+e.g. \code{"bounded"} for \verb{[density_bounded()]}.
+}}
 
 \item{adjust}{If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator for sample data
 is adjusted by multiplying it by this value. See \code{\link[=density]{density()}} for more information.}

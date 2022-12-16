@@ -18,7 +18,7 @@ smooth_bar(x, width = 0.7, ...)
 \arguments{
 \item{x}{a numeric vector}
 
-\item{width}{width of the bars as a fraction of data \code{\link[=resolution]{resolution()}}.}
+\item{width}{approximate width of the bars as a fraction of data \code{\link[=resolution]{resolution()}}.}
 
 \item{...}{additional parameters; \code{\link[=smooth_discrete]{smooth_discrete()}} passes these to
 \code{\link[=smooth_density]{smooth_density()}} and thereby to \code{\link[=density]{density()}}; \code{\link[=smooth_bar]{smooth_bar()}} ignores them.}
@@ -36,6 +36,7 @@ of the same length. Both \code{smooth_discrete()} and \code{smooth_bar()} use th
 dataset; \code{smooth_discrete()} uses a kernel density estimator and \code{smooth_bar()}
 places values in an evenly-spaced grid. Can be used with a dotplot
 (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create "bar dotplots".
+Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{
 \code{smooth_discrete()} applies a kernel density estimator (default: rectangular)

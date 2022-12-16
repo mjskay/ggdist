@@ -58,6 +58,7 @@ stat_dotsinterval(
   position = "identity",
   ...,
   quantiles = NA,
+  density = "unbounded",
   point_interval = "median_qi",
   .width = c(0.66, 0.95),
   orientation = NA,
@@ -73,6 +74,7 @@ stat_dots(
   position = "identity",
   ...,
   quantiles = NA,
+  density = "unbounded",
   orientation = NA,
   na.rm = FALSE,
   show.legend = NA,
@@ -238,6 +240,17 @@ will produce a quantile dotplot: that is, a dotplot of quantiles from the sample
 (for analytical distributions, the default of \code{NA} is taken to mean \code{100} quantiles). The value of
 \code{quantiles} determines the number
 of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.}
+
+\item{density}{Density estimator for sample data. One of:
+\itemize{
+\item A function which takes a numeric vector and returns a list with elements
+\code{x} (giving grid points for the density estimator) and \code{y} (the
+corresponding densities). \pkg{ggdist} provides a family of functions
+following this format, including \code{\link[=density_unbounded]{density_unbounded()}} and
+\code{\link[=density_bounded]{density_bounded()}}. This format is also compatible with \code{\link[stats:density]{stats::density()}}.
+\item A string giving the suffix of a function name that starts with \code{"density_"};
+e.g. \code{"bounded"} for \verb{[density_bounded()]}.
+}}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family

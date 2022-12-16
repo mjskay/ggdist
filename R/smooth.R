@@ -9,12 +9,19 @@
 #' Smooths `x` values using a density estimator, returning new `x` of the same
 #' length. Can be used with a dotplot (e.g. [`geom_dots`]`(smooth = ...)`) to create
 #' "density dotplots".
+#' Supports [automatic partial function application][automatic-partial-functions].
 #'
 #' @param x a numeric vector
-#' @param trim if `TRUE`, density is trimmed to `range(x)`, and
-#' `range(smooth_density(x))` is guaranteed to contain (and usually
-#' will equal) `range(x)`.
-#' @inheritDotParams stats::density
+#' @param density Density estimator to use for smoothing. One of:
+#'  - A function which takes a numeric vector and returns a list with elements
+#'    `x` (giving grid points for the density estimator) and `y` (the
+#'    corresponding densities). \pkg{ggdist} provides a family of functions
+#'    following this format, including [density_unbounded()] and
+#'    [density_bounded()]. This format is also compatible with [stats::density()].
+#'  - A string giving the suffix of a function name that starts with `"density_"`;
+#'    e.g. `"bounded"` for `[density_bounded()]`.
+#' @param ... Arguments passed to the density estimator.
+#' @inheritParams density_bounded
 #'
 #' @details
 #' Applies a kernel density estimator (KDE) to `x`, then uses weighted quantiles
@@ -27,6 +34,16 @@
 #' large sample sizes where precise positions of individual values are not
 #' particularly meaningful. In small samples, normal dotplots should generally
 #' be used.
+#'
+#' Two variants are suppied by default:
+#'
+#' - `smooth_bounded()`, which uses [density_bounded()]. `smooth_density()` is
+#'   an alias for this. Passes the `bounds` arguments to the estimator.
+#' - `smooth_unbounded()`, which uses [density_unbounded()].
+#'
+#' In most cases, the bounded estimator is recommended, as it does a better job
+#' at dotplot smoothing, even for unbounded distributions (hence why
+#' `smooth_density()` is an alias for `smooth_bounded()`).
 #'
 #' @returns
 #' A numeric vector of `length(x)`, where each entry is a smoothed version of
@@ -55,35 +72,42 @@
 #' ggplot(data.frame(x), aes(x)) +
 #'   geom_dots(smooth = "density")
 #'
-#' # adjust the kernel and bandwidth...
+#' # you can adjust the kernel and bandwidth...
 #' ggplot(data.frame(x), aes(x)) +
 #'   geom_dots(smooth = smooth_density(kernel = "triangular", adjust = 0.5))
 #'
 #' @export
-smooth_density = function(x, trim = TRUE, ...) {
+smooth_density = function(x, density = "bounded", ...) {
   if (missing(x)) return(partial_self("smooth_density"))
   if (length(x) < 2) return(x)
 
-  cut = if (trim) 0 else 3
-  d = density(x, cut = cut, ...)
+  density = match_function(density, prefix = "density_")
+
+  d = density(x, ...)
   n = length(x)
 
   # take quantiles from the KDE
   x_dens = weighted_quantile(d$x, ppoints(n, a = 0.5), d$y, type = 7)
 
-  if (trim) {
-    # when using trim = TRUE, we want the first and last points in the smoothed
-    # estimate to exactly equal the original first and last point --- they
-    # may not quite do that if the density was particularly low at the edges,
-    # so we'll pull those two points out if necessary
-    x_dens[[1]] = min(x, x_dens[[1]])
-    x_dens[[n]] = max(x, x_dens[[n]])
-  }
-
   # match up each smoothed value to a close value from `x` using the order of x
   x_dens[rank(x, ties.method = "first")]
 }
 
+#' @rdname smooth_density
+#' @export
+smooth_unbounded = function(x, ...) {
+  if (missing(x)) return(partial_self("smooth_unbounded"))
+
+  smooth_density(x, density = "unbounded", ...)
+}
+
+#' @rdname smooth_density
+#' @export
+smooth_bounded = function(x, bounds = c(NA, NA), ...) {
+  if (missing(x)) return(partial_self("smooth_bounded"))
+
+  smooth_density(x, density = density_bounded(bounds = bounds), ...)
+}
 
 # discrete smooths --------------------------------------------------------
 
@@ -95,9 +119,10 @@ smooth_density = function(x, trim = TRUE, ...) {
 #' dataset; `smooth_discrete()` uses a kernel density estimator and `smooth_bar()`
 #' places values in an evenly-spaced grid. Can be used with a dotplot
 #' (e.g. [`geom_dots`]`(smooth = ...)`) to create "bar dotplots".
+#' Supports [automatic partial function application][automatic-partial-functions].
 #'
 #' @param x a numeric vector
-#' @param width width of the bars as a fraction of data [resolution()].
+#' @param width approximate width of the bars as a fraction of data [resolution()].
 #' @param ... additional parameters; [smooth_discrete()] passes these to
 #' [smooth_density()] and thereby to [density()]; [smooth_bar()] ignores them.
 #'
@@ -167,7 +192,7 @@ smooth_discrete = function(
     optcosine = 0.20
   )
   bw = resolution(x, zero = FALSE) * bw_mult * width
-  smooth_density(x, kernel = kernel, bw = bw, trim = FALSE, ...)
+  smooth_unbounded(x, kernel = kernel, bw = bw, ...)
 }
 
 #' @rdname smooth_discrete
@@ -186,6 +211,7 @@ smooth_bar = function(x, width = 0.7, ...) {
 #' Apply no smooth to a dotplot
 #'
 #' Default smooth for dotplots: no smooth. Simply returns the input values.
+#' Supports [automatic partial function application][automatic-partial-functions].
 #'
 #' @param x a numeric vector
 #' @param ... ignored

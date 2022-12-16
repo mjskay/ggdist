@@ -2,22 +2,35 @@
 % Please edit documentation in R/smooth.R
 \name{smooth_density}
 \alias{smooth_density}
+\alias{smooth_unbounded}
+\alias{smooth_bounded}
 \title{Smooth dot positions in a dotplot using a kernel density estimator ("density dotplots")}
 \usage{
-smooth_density(x, trim = TRUE, ...)
+smooth_density(x, density = "bounded", ...)
+
+smooth_unbounded(x, ...)
+
+smooth_bounded(x, bounds = c(NA, NA), ...)
 }
 \arguments{
 \item{x}{a numeric vector}
 
-\item{trim}{if \code{TRUE}, density is trimmed to \code{range(x)}, and
-\code{range(smooth_density(x))} is guaranteed to contain (and usually
-will equal) \code{range(x)}.}
+\item{density}{Density estimator to use for smoothing. One of:
+\itemize{
+\item A function which takes a numeric vector and returns a list with elements
+\code{x} (giving grid points for the density estimator) and \code{y} (the
+corresponding densities). \pkg{ggdist} provides a family of functions
+following this format, including \code{\link[=density_unbounded]{density_unbounded()}} and
+\code{\link[=density_bounded]{density_bounded()}}. This format is also compatible with \code{\link[stats:density]{stats::density()}}.
+\item A string giving the suffix of a function name that starts with \code{"density_"};
+e.g. \code{"bounded"} for \verb{[density_bounded()]}.
+}}
 
-\item{...}{
-  Arguments passed on to \code{\link[stats:density]{stats::density}}
-  \describe{
-    \item{\code{}}{}
-  }}
+\item{...}{Arguments passed to the density estimator.}
+
+\item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
+that bound is replaced with \code{min(x)} or \code{max(x)}. Thus, the default,
+\code{c(NA, NA)}, means that the bounds used are \code{range(x)}.}
 }
 \value{
 A numeric vector of \code{length(x)}, where each entry is a smoothed version of
@@ -29,6 +42,7 @@ If \code{x} is missing, returns a partial application of itself. See \link{autom
 Smooths \code{x} values using a density estimator, returning new \code{x} of the same
 length. Can be used with a dotplot (e.g. \code{\link{geom_dots}}\code{(smooth = ...)}) to create
 "density dotplots".
+Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \details{
 Applies a kernel density estimator (KDE) to \code{x}, then uses weighted quantiles
@@ -41,6 +55,17 @@ Such plots are recommended only in very
 large sample sizes where precise positions of individual values are not
 particularly meaningful. In small samples, normal dotplots should generally
 be used.
+
+Two variants are suppied by default:
+\itemize{
+\item \code{smooth_bounded()}, which uses \code{\link[=density_bounded]{density_bounded()}}. \code{smooth_density()} is
+an alias for this. Passes the \code{bounds} arguments to the estimator.
+\item \code{smooth_unbounded()}, which uses \code{\link[=density_unbounded]{density_unbounded()}}.
+}
+
+In most cases, the bounded estimator is recommended, as it does a better job
+at dotplot smoothing, even for unbounded distributions (hence why
+\code{smooth_density()} is an alias for \code{smooth_bounded()}).
 }
 \examples{
 
@@ -58,7 +83,7 @@ ggplot(data.frame(x), aes(x)) +
 ggplot(data.frame(x), aes(x)) +
   geom_dots(smooth = "density")
 
-# adjust the kernel and bandwidth...
+# you can adjust the kernel and bandwidth...
 ggplot(data.frame(x), aes(x)) +
   geom_dots(smooth = smooth_density(kernel = "triangular", adjust = 0.5))
 

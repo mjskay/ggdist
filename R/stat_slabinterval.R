@@ -119,7 +119,8 @@ compute_slab_slabinterval = function(
     return(compute_slab_sample(
       trans$transform(distr_get_sample(dist)), scales, trans, input,
       slab_type = slab_type, limits = limits, n = n,
-      adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars
+      adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars,
+      ...
     ))
   } else if (trans$name == "identity") {
     pdf_fun = distr_pdf(dist)
@@ -188,8 +189,12 @@ compute_slab_slabinterval = function(
 compute_slab_sample = function(
   x, scales, trans, input,
   slab_type, limits, n,
-  adjust, trim, expand, breaks, outline_bars
+  adjust, trim, expand, breaks, outline_bars,
+  density,
+  ...
 ) {
+  density = match_function(density, prefix = "density_")
+
   if (is.integer(x) || inherits(x, "mapped_discrete")) {
     # discrete variables are always displayed as histograms
     slab_type = "histogram"
@@ -231,9 +236,8 @@ compute_slab_sample = function(
     # all other slab types use the density function as the pdf
     # calculate the density first, since we'll use the x values from it
     # to calculate the cdf
-    cut = if (trim) 0 else 3
     # calculate on the transformed scale to ensure density is correct
-    d = density(x, n = n, adjust = adjust, cut = cut)
+    d = density(x, n = n, adjust = adjust, trim = trim)
     data.frame(
       .input = trans$inverse(d$x),
       pdf = d$y,
@@ -384,6 +388,14 @@ compute_interval_slabinterval = function(
 #' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
 #' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
 #' bars are also drawn.
+#' @param density Density estimator for sample data. One of:
+#'  - A function which takes a numeric vector and returns a list with elements
+#'    `x` (giving grid points for the density estimator) and `y` (the
+#'    corresponding densities). \pkg{ggdist} provides a family of functions
+#'    following this format, including [density_unbounded()] and
+#'    [density_bounded()]. This format is also compatible with [stats::density()].
+#'  - A string giving the suffix of a function name that starts with `"density_"`;
+#'    e.g. `"bounded"` for `[density_bounded()]`.
 #' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator for sample data
 #' is adjusted by multiplying it by this value. See [density()] for more information.
 #' @param trim For sample data, should the density estimate be trimmed to the range of the
@@ -527,6 +539,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
   default_params = defaults(list(
     slab_type = "pdf",
     p_limits = c(NA, NA),
+    density = "unbounded",
     adjust = 1,
     trim = TRUE,
     expand = FALSE,
