@@ -57,24 +57,28 @@ test_that("binning works on symmetric distributions", {
   expect_equal(automatic_bin(c(1,2), width = 1),
     list(bins = c(1, 2), bin_midpoints = c(1, 2))
   )
+
+  expect_equal(automatic_bin(c(1:5, 5.5), width = 4),
+    list(bins = c(1, 1, 1, 2, 2, 2), bin_midpoints = c(2, 4.75))
+  )
 })
 
 test_that("binning works on empty data", {
 
   expect_equal(automatic_bin(NULL, width = 1),
-    list(bins = integer(0), bin_midpoints = NULL)
+    list(bins = integer(0), bin_midpoints = numeric(0))
   )
 
   expect_equal(wilkinson_bin_from_center(NULL, width = 1),
-    list(bins = integer(0), bin_midpoints = NULL)
+    list(bins = integer(0), bin_midpoints = numeric(0))
   )
 
   expect_equal(wilkinson_bin_to_right(NULL, width = 1),
-    list(bins = integer(0), bin_midpoints = NULL)
+    list(bins = integer(0), bin_midpoints = numeric(0), bin_left = numeric(0), bin_right = numeric(0))
   )
 
   expect_equal(wilkinson_bin_to_left(NULL, width = 1),
-    list(bins = integer(0), bin_midpoints = NULL)
+    list(bins = integer(0), bin_midpoints = numeric(0))
   )
 })
 
@@ -130,16 +134,16 @@ test_that("bin layouts work", {
   expect_equal(as.data.frame(bin_dots(1:5, 0, binwidth = 2, layout = "bin")), ref)
 
   ref = data.frame(
-    x = c(1, 2, 3, 4, 5),
+    x = c(1, 2, 3, 4, 5.1),
     y = c(1, 3, 1, 3, 1),
     bin = c(1L,  1L, 2L, 2L, 3L)
   )
-  expect_equal(as.data.frame(bin_dots(1:5, 0, binwidth = 2, layout = "weave")), ref)
+  expect_equal(as.data.frame(bin_dots(c(1:4, 5.1), 0, binwidth = 2, layout = "weave")), ref)
 
   ref = data.frame(
     x = 1:5,
     y = c(1, 2.73205080756888, 1, 2.73205080756888,  1),
-    bin = c(1, 1, 2, 2, 3)
+    bin = c(1, 1, 2, 3, 3)
   )
   expect_equal(bin_dots(1:5, 0, binwidth = 2, layout = "swarm"), ref)
 
