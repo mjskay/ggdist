@@ -566,47 +566,132 @@ a dotplot on a sample of size 2000 can be quite noisy:
 
 ```{r large_sample, fig.width = small_width, fig.height = small_width/2}
 set.seed(1234)
-x_large = rnorm(2000)
+x = rnorm(2000)
 
 ggplot() +
-  geom_dots(aes(x = x_large)) +
+  geom_dots(aes(x)) +
   labs(
-    title = "geom_dots(aes(x = x_large))",
-    subtitle = "where length(x_large) = 2000",
+    title = "geom_dots()",
+    subtitle = "with 2000 dots",
     x = NULL
   ) +
   scale_y_continuous(breaks = NULL)
 ```
 
-The `smooth_dots()` function can be applied directly to the variable to smooth it:
+`geom_dots()` supports a handful of *smoothers* which can be applied using the
+`smooth = ` parameter. These all correspond to functions that start with `smooth_`,
+like `smooth_density()`, `smooth_discrete()`, and `smooth_bar()`, and can be
+applied either by passing the suffix as a string (e.g. `smooth = "density"`)
+or by passing the function itself, to set specific options on it (e.g. 
+`smooth = smooth_density(adjust = 0.5)`). For continuous distributions,
+the default smooth, `smooth_density()`, applies a bounded kernel density estimator
+(see `density_bounded()`) and should work well in most cases:
+
 
 ```{r large_sample_smooth, fig.width = small_width, fig.height = small_width/2}
 ggplot() +
-  geom_dots(aes(x = smooth_dots(x_large))) +
+  geom_dots(aes(x), smooth = "density") +
   labs(
-    title = "geom_dots(aes(x = smooth_dots(x_large)))",
-    subtitle = "where length(x_large) = 2000",
+    title = 'geom_dots(smooth = "density")',
+    subtitle = "with 2000 dots",
     x = NULL
   ) +
   scale_y_continuous(breaks = NULL)
 ```
 
 Note that dot positions in the resulting plot will no longer be as accurate as before.
-With a large sample this may be an acceptable compromise. With a small sample, I *do
-not* recommend using this technique.
+With a large sample this may be an acceptable compromise. With a small sample, I **do
+not** recommend using this technique.
 
 Density smoothing works particularly well with the `"hex"` layout and `side = "both"`:
 
 ```{r large_sample_smooth_hex, fig.width = small_width, fig.height = small_width/2}
 ggplot() +
-  geom_dots(aes(x = smooth_dots(x_large)), layout = "hex", stackratio = 0.9, side = "both") +
+  geom_dots(aes(x), smooth = "density", layout = "hex", stackratio = 0.9, side = "both") +
   labs(
-    title = 'geom_dots(aes(x = smooth_dots(x_large)), layout = "hex", stackratio = 0.9, side = "both")',
-    subtitle = "where length(x_large) = 2000",
+    title = 'geom_dots(smooth = "density", layout = "hex", stackratio = 0.9, side = "both")',
+    subtitle = "with 2000 dots",
     x = NULL
   ) +
   scale_y_continuous(breaks = NULL)
 ```
+
+## On discrete distributions
+
+The dots family includes a variety of features to make visualizing discrete and categorical
+distributions easier. Dotplot smoothing can be particularly useful in for these distributions,
+particularly when bin counts are very high. For example, these distributions are hard to
+visualize under the default settings, because the dots become very small:
+
+```{r discrete_dots_too_small, fig.width = small_width, fig.height = small_height}
+set.seed(1234)
+abcd_df = data.frame(
+  x = sample(c("a", "b", "c", "d"), 1000, replace = TRUE, prob = c(0.27, 0.6, 0.03, 0.005)),
+  g = c("a","b")
+)
+
+abcd_df %>%
+  ggplot(aes(x = x)) +
+  geom_dots() +
+  scale_y_continuous(breaks = NULL) +
+  labs(
+    title = "geom_dots()",
+    subtitle = "on a large discrete sample"
+  )
+```
+
+The automatic binwidth algorithm selects a dot size that is very small in order to ensure
+the tallest bin fits in the plot, but this means the dots are hard to see.
+
+Using the `smooth_discrete()` smoother, we can spread the dots in each bin out into
+rectangular shapes:
+
+```{r discrete_dots_rect, fig.width = small_width, fig.height = small_height}
+abcd_df %>%
+  ggplot(aes(x = x)) +
+  geom_dots(smooth = "discrete") +
+  scale_y_continuous(breaks = NULL) +
+  labs(
+    title = 'geom_dots(smooth = "discrete")',
+    subtitle = "on a large discrete sample"
+  )
+```
+
+More regular bar-like shapes can be achieved by using `smooth = "bar"`, so long
+as you override the default `ggplot2` behavior of grouping data by all discrete
+variables. This allows the layout to be calculated taking all groups into account:
+
+```{r discrete_dots_bar, fig.width = small_width, fig.height = small_height}
+abcd_df %>%
+  ggplot(aes(x = x)) +
+  geom_dots(smooth = "bar", group = NA) +
+  scale_y_continuous(breaks = NULL) +
+  labs(
+    title = 'geom_dots(smooth = "bar", group = NA)',
+    subtitle = "on a large discrete sample"
+  )
+```
+
+`smooth_discrete()` applies a kernel density smoother whose default bandwidth is 
+less than the distances between bins. We can use the `kernel` argument (passed to
+`density_bounded()`; the same kernels from `stats::density()` are available)
+to change the shape of the bins. 
+
+For example, using the `"epanechnikov"` (parabolic) kernel along with `side = "both"`,
+we can create lozenge-like shapes. We'll abbreviate the kernel `"ep"` to save typing
+out `"epanechnikov"` (partial matching is allowed):
+
+```{r discrete_dots_ep, fig.width = small_width, fig.height = small_height}
+abcd_df %>%
+  ggplot(aes(x = x)) +
+  geom_dots(smooth = smooth_discrete(kernel = "ep"), side = "both") +
+  scale_y_continuous(breaks = NULL) +
+  labs(
+    title = 'geom_dots(smooth = smooth_discrete(kernel = "ep"), side = "both")',
+    subtitle = "on a large discrete sample"
+  )
+```
+
 
 ## On analytical distributions
 
