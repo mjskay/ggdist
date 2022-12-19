@@ -67,6 +67,19 @@ test_that("binning works on symmetric distributions", {
   )
 })
 
+test_that("bin sweeping fixes edge effects", {
+  x = sort(round(-qexp(ppoints(20), 1/4)))
+  automatic_bin(x, 2)
+
+  expect_equal(
+    automatic_bin(x, 2),
+    list(
+      bins = c(1,2,3,3,4,4,5,5,5,5,5,5,5,5,6,6,6,6,6,6),
+      bin_midpoints = c(-15,-10,-7.5,-5.5,-3,-0.5)
+    )
+  )
+})
+
 test_that("binning works on empty data", {
 
   expect_equal(automatic_bin(NULL, width = 1),
@@ -138,11 +151,11 @@ test_that("bin layouts work", {
   expect_equal(as.data.frame(bin_dots(1:5, 0, binwidth = 2, layout = "bin")), ref)
 
   ref = data.frame(
-    x = c(1, 2, 3, 4, 5.1),
-    y = c(1, 3, 1, 3, 1),
-    bin = c(1L,  1L, 2L, 2L, 3L)
+    x = c(1, 2, 3, 4.5, 5.1),
+    y = c(0.75, 2.25, 0.75, 0.75, 2.25),
+    bin = c(1L,  1L, 2L, 3L, 3L)
   )
-  expect_equal(as.data.frame(bin_dots(c(1:4, 5.1), 0, binwidth = 2, layout = "weave")), ref)
+  expect_equal(as.data.frame(bin_dots(c(1:3, 4.5, 5.1), 0, binwidth = 1.5, layout = "weave")), ref)
 
   ref = data.frame(
     x = 1:5,

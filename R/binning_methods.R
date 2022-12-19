@@ -471,9 +471,14 @@ wilkinson_sweep_back = function(x, b, width, first_slack = Inf) {
   x_changed = x[changed_x_is]
   bins_changed = findInterval(x_changed, b$bin_left[changed_bin_is]) + min_changed_bin - 1
   b$bins[changed_x_is] = bins_changed
-  b$bin_left[changed_bin_is] = tapply(x_changed, bins_changed, min)
-  b$bin_right[changed_bin_is] = tapply(x_changed, bins_changed, max)
-  b$bin_midpoints[changed_bin_is] = (b$bin_left[changed_bin_is] + b$bin_right[changed_bin_is]) / 2
+
+  # re-number bins to be consecutive in case some bins got removed completely
+  b$bins = cumsum(c(b$bins[[1]], pmin(diff(b$bins), 1)))
+
+  # determine new bin positions
+  b$bin_left = as.vector(tapply(x, b$bins, min))
+  b$bin_right = as.vector(tapply(x, b$bins, max))
+  b$bin_midpoints = (b$bin_left + b$bin_right) / 2
 
   b
 }
