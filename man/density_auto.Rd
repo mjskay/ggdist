@@ -4,7 +4,7 @@
 \alias{density_auto}
 \title{Automatic density estimator}
 \usage{
-density_auto(x, n = 512, adjust = 1, trim = TRUE, ...)
+density_auto(x, n = 512, adjust = 1, trim = FALSE, kernel = "gaussian", ...)
 }
 \arguments{
 \item{x}{numeric vector containing a sample to compute a density estimate for.}
@@ -17,7 +17,11 @@ by this value. See \code{\link[stats:density]{stats::density()}}.}
 \item{trim}{Should the density estimate be trimmed to the bounds of the data?
 If \code{TRUE}, uses \code{\link[=density_bounded]{density_bounded()}}, if \code{FALSE}, uses \code{\link[=density_unbounded]{density_unbounded()}}.}
 
-\item{...}{Additional arguments passed to \code{\link[stats:density]{stats::density()}}.}
+\item{kernel}{string: the smoothing kernel to be used. This must partially
+match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
+\code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
+
+\item{...}{Additional arguments passed to \code{\link[=density_bounded]{density_bounded()}} or \code{\link[=density_unbounded]{density_unbounded()}}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
@@ -43,7 +47,6 @@ depending on \code{trim}.
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \examples{
-
 library(distributional)
 library(dplyr)
 library(ggplot2)
@@ -65,7 +68,6 @@ data.frame(x) \%>\%
   stat_slab(aes(x), density = "auto", trim = FALSE, fill = NA, color = "#1b9e77", alpha = 0.5) +
   scale_thickness_shared() +
   theme_ggdist()
-
 }
 \seealso{
 Other density estimators: 

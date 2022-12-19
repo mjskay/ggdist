@@ -20,7 +20,7 @@
 #'    [density_bounded()]. This format is also compatible with [stats::density()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
 #'    e.g. `"bounded"` for `[density_bounded()]`.
-#' @param ... Arguments passed to the density estimator.
+#' @param ... Arguments passed to the density estimator (by default, `density_bounded()`).
 #' @inheritParams density_bounded
 #'
 #' @details
@@ -125,6 +125,7 @@ smooth_bounded = function(x, bounds = c(NA, NA), ...) {
 #' @param width approximate width of the bars as a fraction of data [resolution()].
 #' @param ... additional parameters; [smooth_discrete()] passes these to
 #' [smooth_density()] and thereby to [density()]; [smooth_bar()] ignores them.
+#' @inheritParams density_unbounded
 #'
 #' @details
 #' `smooth_discrete()` applies a kernel density estimator (default: rectangular)

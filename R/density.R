@@ -11,34 +11,13 @@
 #' depending on `trim`.
 #' Supports [automatic partial function application][automatic-partial-functions].
 #'
-#' @param x numeric vector containing a sample to compute a density estimate for.
-#' @param n numeric: the number of grid points to evaluate the density estimator at.
-#' @param adjust numeric: the bandwidth for the density estimator is multiplied
-#' by this value. See [stats::density()].
+#' @inheritParams density_unbounded
 #' @param trim Should the density estimate be trimmed to the bounds of the data?
 #' If `TRUE`, uses [density_bounded()], if `FALSE`, uses [density_unbounded()].
-#' @param ... Additional arguments passed to [stats::density()].
-#'
-#' @returns
-#' An object of class `"density"`, mimicking the output format of
-#' `stats:density()`, with the following components:
-#'
-#'   - `x`: The grid of points at which the density was estimated.
-#'   - `y`: The estimated density values.
-#'   - `bw`: The bandwidth.
-#'   - `n`: The sample size of the `x` input argument.
-#'   - `call`: The call used to produce the result, as a quoted expression.
-#'   - `data.name`: The deparsed name of the `x` input argument.
-#'   - `has.na`: Always `FALSE` (for compatibility).
-#'
-#' This allows existing methods (like `print()` and `plot()`) to work if desired.
-#' This output format (and in particular, the `x` and `y` components) is also
-#' the format expected by the `density` argument of the [stat_slabinterval()]
-#' and the `smooth_` family of functions.
-#'
+#' @param ... Additional arguments passed to [density_bounded()] or [density_unbounded()].
+#' @template returns-density
 #' @family density estimators
 #' @examples
-#'
 #' library(distributional)
 #' library(dplyr)
 #' library(ggplot2)
@@ -60,16 +39,19 @@
 #'   stat_slab(aes(x), density = "auto", trim = FALSE, fill = NA, color = "#1b9e77", alpha = 0.5) +
 #'   scale_thickness_shared() +
 #'   theme_ggdist()
-#'
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_auto = function(x, n = 512, adjust = 1, trim = TRUE, ...) {
+density_auto = function(
+  x, n = 512, adjust = 1, trim = FALSE,
+  kernel = "gaussian",
+  ...
+) {
   if (missing(x)) return(partial_self("density_auto"))
 
   x_label = as_label(enexpr(x))
 
   density = if (trim) density_bounded else density_unbounded
-  d = density(x, n = n, adjust = adjust, trim = trim, ...)
+  d = density(x, n = n, adjust = adjust, trim = trim, kernel = kernel, ...)
 
   d$data.name = x_label
   d$call = as.call(lapply(match.call(), get_expr))
@@ -87,28 +69,13 @@ density_auto = function(x, n = 512, adjust = 1, trim = TRUE, ...) {
 #' @param adjust numeric: the bandwidth for the density estimator is multiplied
 #' by this value. See [stats::density()].
 #' @param trim Should the density estimate be trimmed to the bounds of the data?
+#' @param kernel string: the smoothing kernel to be used. This must partially
+#' match one of `"gaussian"`, `"rectangular"`, `"triangular"`, `"epanechnikov"`,
+#' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
 #' @param ... Additional arguments passed to [stats::density()].
-#'
-#' @returns
-#' An object of class `"density"`, mimicking the output format of
-#' `stats:density()`, with the following components:
-#'
-#'   - `x`: The grid of points at which the density was estimated.
-#'   - `y`: The estimated density values.
-#'   - `bw`: The bandwidth.
-#'   - `n`: The sample size of the `x` input argument.
-#'   - `call`: The call used to produce the result, as a quoted expression.
-#'   - `data.name`: The deparsed name of the `x` input argument.
-#'   - `has.na`: Always `FALSE` (for compatibility).
-#'
-#' This allows existing methods (like `print()` and `plot()`) to work if desired.
-#' This output format (and in particular, the `x` and `y` components) is also
-#' the format expected by the `density` argument of the [stat_slabinterval()]
-#' and the `smooth_` family of functions.
-#'
+#' @template returns-density
 #' @family density estimators
 #' @examples
-#'
 #' library(distributional)
 #' library(dplyr)
 #' library(ggplot2)
@@ -139,16 +106,19 @@ density_auto = function(x, n = 512, adjust = 1, trim = TRUE, ...) {
 #'   stat_slab(aes(x), density = "unbounded", fill = NA, color = "#1b9e77", alpha = 0.5) +
 #'   scale_thickness_shared() +
 #'   theme_ggdist()
-#'
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_unbounded = function(x, n = 512, adjust = 1, trim = FALSE, ...) {
+density_unbounded = function(
+  x, n = 512, adjust = 1, trim = FALSE,
+  kernel = "gaussian",
+  ...
+) {
   if (missing(x)) return(partial_self("density_unbounded"))
 
   x_label = as_label(enexpr(x))
 
   cut = if (trim) 0 else 3
-  d = density(x, n = n, adjust = adjust, cut = cut, ...)
+  d = density(x, n = n, adjust = adjust, kernel = kernel, cut = cut, ...)
 
   d$data.name = x_label
   # need to apply get_expr over match.call() instead of just using match.call()
@@ -164,33 +134,15 @@ density_unbounded = function(x, n = 512, adjust = 1, trim = FALSE, ...) {
 #' Supports [automatic partial function application][automatic-partial-functions].
 #'
 #' @inheritParams density_unbounded
-#' @param x numeric vector containing a sample to compute a density estimate for.
 #' @param bounds length-2 vector of min and max bounds. If a bound is `NA`, then
 #' that bound is replaced with `min(x)` or `max(x)`. Thus, the default,
 #' `c(NA, NA)`, means that the bounds used are `range(x)`.
 #' @param trim ignored; the unbounded density estimator always uses `trim = FALSE`
 #' internally before trimming to `bounds`.
-#'
-#' @returns
-#' An object of class `"density"`, mimicking the output format of
-#' `stats:density()`, with the following components:
-#'
-#'   - `x`: The grid of points at which the density was estimated.
-#'   - `y`: The estimated density values.
-#'   - `bw`: The bandwidth.
-#'   - `n`: The sample size of the `x` input argument.
-#'   - `call`: The call used to produce the result, as a quoted expression.
-#'   - `data.name`: The deparsed name of the `x` input argument.
-#'   - `has.na`: Always `FALSE` (for compatibility).
-#'
-#' This allows existing methods (like `print()` and `plot()`) to work if desired.
-#' This output format (and in particular, the `x` and `y` components) is also
-#' the format expected by the `density` argument of the [stat_slabinterval()]
-#' and the `smooth_` family of functions.
-#'
+#' @param ... Additional arguments passed to [density_unbounded()].
+#' @template returns-density
 #' @family density estimators
 #' @examples
-#'
 #' library(distributional)
 #' library(dplyr)
 #' library(ggplot2)
@@ -231,20 +183,25 @@ density_unbounded = function(x, n = 512, adjust = 1, trim = FALSE, ...) {
 #'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
 #'     alpha = 0.25
 #'   ) +
-#'   stat_slab(aes(x), density = density_bounded(bounds = c(0,1)), fill = NA, color = "#d95f02", alpha = 0.5) +
+#'   stat_slab(
+#'     aes(x), fill = NA, color = "#d95f02", alpha = 0.5,
+#'     density = density_bounded(bounds = c(0,1))
+#'   ) +
 #'   scale_thickness_shared() +
 #'   theme_ggdist()
-#'
-#'
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
-density_bounded = function(x, n = 512, adjust = 1, trim = FALSE, bounds = c(NA, NA), ...) {
+density_bounded = function(
+  x, n = 512, adjust = 1, trim = FALSE, bounds = c(NA, NA),
+  kernel = "gaussian",
+  ...
+) {
   if (missing(x)) return(partial_self("density_bounded"))
 
   if (is.na(bounds[[1]])) bounds[[1]] = min(x)
   if (is.na(bounds[[2]])) bounds[[2]] = max(x)
 
-  d = density_unbounded(x, n = n, adjust = adjust, trim = FALSE, ...)
+  d = density_unbounded(x, n = n, adjust = adjust, kernel = kernel, trim = FALSE, ...)
 
   x = d$x
   y = d$y

@@ -26,7 +26,7 @@ following this format, including \code{\link[=density_unbounded]{density_unbound
 e.g. \code{"bounded"} for \verb{[density_bounded()]}.
 }}
 
-\item{...}{Arguments passed to the density estimator.}
+\item{...}{Arguments passed to the density estimator (by default, \code{density_bounded()}).}
 
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
 that bound is replaced with \code{min(x)} or \code{max(x)}. Thus, the default,

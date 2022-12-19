@@ -4,7 +4,15 @@
 \alias{density_bounded}
 \title{Bounded density estimator using the reflection method}
 \usage{
-density_bounded(x, n = 512, adjust = 1, trim = FALSE, bounds = c(NA, NA), ...)
+density_bounded(
+  x,
+  n = 512,
+  adjust = 1,
+  trim = FALSE,
+  bounds = c(NA, NA),
+  kernel = "gaussian",
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector containing a sample to compute a density estimate for.}
@@ -21,7 +29,11 @@ internally before trimming to \code{bounds}.}
 that bound is replaced with \code{min(x)} or \code{max(x)}. Thus, the default,
 \code{c(NA, NA)}, means that the bounds used are \code{range(x)}.}
 
-\item{...}{Additional arguments passed to \code{\link[stats:density]{stats::density()}}.}
+\item{kernel}{string: the smoothing kernel to be used. This must partially
+match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
+\code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
+
+\item{...}{Additional arguments passed to \code{\link[=density_unbounded]{density_unbounded()}}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
@@ -46,7 +58,6 @@ Bounded density estimator using the reflection method.
 Supports \link[=automatic-partial-functions]{automatic partial function application}.
 }
 \examples{
-
 library(distributional)
 library(dplyr)
 library(ggplot2)
@@ -87,11 +98,12 @@ data.frame(x) \%>\%
     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
     alpha = 0.25
   ) +
-  stat_slab(aes(x), density = density_bounded(bounds = c(0,1)), fill = NA, color = "#d95f02", alpha = 0.5) +
+  stat_slab(
+    aes(x), fill = NA, color = "#d95f02", alpha = 0.5,
+    density = density_bounded(bounds = c(0,1))
+  ) +
   scale_thickness_shared() +
   theme_ggdist()
-
-
 }
 \seealso{
 Other density estimators: 

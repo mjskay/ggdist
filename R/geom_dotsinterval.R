@@ -278,6 +278,14 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @param stackratio The distance between the center of the dots in the same
 #' stack relative to the dot height. The default, `1`, makes dots in the same
 #' stack just touch each other.
+#' @param smooth Smoother to apply to dot positions. One of:
+#'   - A function that takes a numeric vector of dot positions and returns a
+#'     smoothed version of that vector, such as `smooth_density()`,
+#'     `smooth_discrete()`, or `smooth_bar()`.
+#'   - A string indicating what smoother to use, as the suffix to a function
+#'     name starting with `smooth_`; e.g. `"none"` (the default) applies
+#'     `smooth_none()`, which simply returns the given vector without
+#'     applying smoothing.
 #' @template param-dots-layout
 #' @template param-dots-nudge
 #' @param quantiles Setting this to a value other than `NA`

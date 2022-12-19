@@ -169,6 +169,17 @@ dotplots of theoretical distributions, which may look better with \code{"bin"}, 
 using a constrained optimization which minimizes the squared distance of dots to their desired positions, subject
 to the constraint that adjacent dots do not overlap.}
 
+\item{smooth}{Smoother to apply to dot positions. One of:
+\itemize{
+\item A function that takes a numeric vector of dot positions and returns a
+smoothed version of that vector, such as \code{smooth_density()},
+\code{smooth_discrete()}, or \code{smooth_bar()}.
+\item A string indicating what smoother to use, as the suffix to a function
+name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
+\code{smooth_none()}, which simply returns the given vector without
+applying smoothing.
+}}
+
 \item{verbose}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
 if you want to start from an automatically-selected bin width and then adjust it
 manually. Bin width is printed both as data units and as normalized parent

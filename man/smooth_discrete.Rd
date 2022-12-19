@@ -18,6 +18,10 @@ smooth_bar(x, width = 0.7, ...)
 \arguments{
 \item{x}{a numeric vector}
 
+\item{kernel}{string: the smoothing kernel to be used. This must partially
+match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
+\code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
+
 \item{width}{approximate width of the bars as a fraction of data \code{\link[=resolution]{resolution()}}.}
 
 \item{...}{additional parameters; \code{\link[=smooth_discrete]{smooth_discrete()}} passes these to
