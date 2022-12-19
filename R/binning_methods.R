@@ -376,9 +376,10 @@ dot_heap = function(x, nbins = NULL, binwidth = NULL, maxheight = Inf, heightrat
 
 # modified wilkinson methods ----------------------------------------------
 
-# this implements a variant of the basic wilkinson binning method, a single
-# left-to-right sweep.
-# x must be sorted
+#' a variant of the basic wilkinson binning method, a single left-to-right sweep
+#' @param x sorted numeric vector
+#' @param width bin width
+#' @noRd
 wilkinson_bin_to_right = function(x, width) {
   if (length(x) == 0) {
     return(list(
@@ -429,9 +430,10 @@ wilkinson_bin_to_right = function(x, width) {
 #' bins
 #' @param x sorted numeric vector
 #' @param b a binning returned by wilkinson_bin_to_right
-#' @param width binwidth
+#' @param width bin width
+#' @param first_slack max amount of slack on the first bin
 #' @noRd
-wilkinson_sweep_back = function(x, b, width) {
+wilkinson_sweep_back = function(x, b, width, first_slack = Inf) {
   n_bin = length(b$bin_left)
   if (n_bin < 2) return(b)
 
@@ -442,13 +444,14 @@ wilkinson_sweep_back = function(x, b, width) {
   # slack is the distance between bins
   slack = b$bin_left[-1] - (b$bin_left[-n_bin] + width)
 
-  # slack on first bin is half the move_left amount; this makes it so that
+  # slack on first bin is at most half the move_left amount; this makes it so that
   # in the worst case we are compromising between first and last bins being
   # optimal
-  slack = c(move_left/2, slack)
+  first_slack = min(first_slack, move_left/2)
+  slack = c(first_slack, slack)
 
   # the sum of all slack is the max amount we can move bins left by
-  total_slack = sum(slack[-n_bin])
+  total_slack = sum(slack)
   move_left = min(move_left, total_slack)
 
   # move bins left, using up slack until we have achieved our desired
@@ -475,16 +478,14 @@ wilkinson_sweep_back = function(x, b, width) {
   b
 }
 
-# a rightward wilkinson binning followed by a leftwards sweep back to
-# reduce edge effects by taking up slack in the binning in the middle
-wilkinson_bin = function(x, width) {
-  b = wilkinson_bin_to_right(x, width)
-  wilkinson_sweep_back(x, b, width)
-}
-
-# the basic wilkinson method, but sweeping right-to-left
-# x must be sorted
-wilkinson_bin_to_left = function(x, width) {
+#' a rightward or leftward wilkinson binning followed by a backwards sweep to
+#' reduce edge effects by taking up slack in the binning (spaces between bins)
+#' @param x numeric vector
+#' @param width bin width
+#' @param right bin left-to-right (TRUE) or right-to-left (FALSE)?
+#' @param first_slack maximum slack on the first bin (passed to wilkinson_sweep_back)
+#' @noRd
+wilkinson_bin = function(x, width, right = TRUE, first_slack = Inf) {
   if (length(x) == 0) {
     return(list(
       bins = integer(0),
@@ -492,17 +493,27 @@ wilkinson_bin_to_left = function(x, width) {
     ))
   }
 
-  binning = wilkinson_bin_to_right(rev(x), width)
-  list(
-    # renumber bins so 1,2,3,3 => 3,2,1,1 (then reverse so it matches original vector order)
-    bins = rev(max(binning$bins) + 1 - binning$bins),
-    bin_midpoints = rev(binning$bin_midpoints)
-  )
+  if (right) {
+    b = wilkinson_bin_to_right(x, width)
+    wilkinson_sweep_back(x, b, width, first_slack = first_slack)
+  } else {
+    rev_x = -rev(x)
+    b = wilkinson_bin_to_right(rev_x, width)
+    b = wilkinson_sweep_back(rev_x, b, width, first_slack = first_slack)
+    list(
+      # renumber bins so 1,2,3,3 => 3,2,1,1 (then reverse so it matches original vector order)
+      bins = rev(max(b$bins) + 1 - b$bins),
+      bin_midpoints = -rev(b$bin_midpoints)
+    )
+  }
 }
 
-# a modified wilkinson-style binning that expands outward from the center of the data
-# works best on symmetric data.
-# x must be sorted
+#' A modified wilkinson-style binning that expands outward from the center of
+#' the data. Works best on symmetric data.
+#'  x must be sorted
+#' @param x numeric vector
+#' @param width bin width
+#' @noRd
 wilkinson_bin_from_center = function(x, width) {
   if (length(x) == 0) {
     list(
@@ -522,8 +533,9 @@ wilkinson_bin_from_center = function(x, width) {
       if (x[[length(x)/2]] != x[[length(x)/2 + 1]]) {
         # even number of items and items in middle not equal => even number of bins and
         # we bin out from center on either side of the middle
-        left = wilkinson_bin_to_left(x[1:(length(x)/2)], width)
-        right = wilkinson_bin_to_right(x[(length(x)/2 + 1):length(x)], width)
+        first_slack = (x[[length(x)/2 + 1]] - x[[length(x)/2]])/2
+        left = wilkinson_bin(x[1:(length(x)/2)], width, right = FALSE, first_slack = first_slack)
+        right = wilkinson_bin(x[(length(x)/2 + 1):length(x)], width, first_slack = first_slack)
         return(list(
           bins = c(left$bins, length(left$bin_midpoints) + right$bins),
           bin_midpoints = c(left$bin_midpoints, right$bin_midpoints)
@@ -554,8 +566,14 @@ wilkinson_bin_from_center = function(x, width) {
     center_midpoint = (x[[center_i - edge_offset_from_center]] + x[[center_i + edge_offset_from_center]])/2
 
     # construct bins for regions left / right of center
-    left = wilkinson_bin_to_left(x[1:(center_i - edge_offset_from_center - 1)], width)
-    right = wilkinson_bin_to_right(x[(center_i + edge_offset_from_center + 1):length(x)], width)
+    left = wilkinson_bin(
+      x[1:(center_i - edge_offset_from_center - 1)], width, right = FALSE,
+      first_slack = x[[center_i - edge_offset_from_center]] - x[[center_i - edge_offset_from_center - 1]]
+    )
+    right = wilkinson_bin(
+      x[(center_i + edge_offset_from_center + 1):length(x)], width,
+      first_slack = x[[center_i + edge_offset_from_center + 1]] - x[[center_i + edge_offset_from_center]]
+    )
 
     center_bin_i = length(left$bin_midpoints) + 1
     list(

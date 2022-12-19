@@ -61,6 +61,10 @@ test_that("binning works on symmetric distributions", {
   expect_equal(automatic_bin(c(1:5, 5.5), width = 4),
     list(bins = c(1, 1, 1, 2, 2, 2), bin_midpoints = c(2, 4.75))
   )
+
+  expect_equal(automatic_bin(1:8, width = 2.1),
+    list(bins = c(1, 1, 2, 2, 3, 3, 4, 4), bin_midpoints = c(1.5, 3.5, 5.5, 7.5))
+  )
 })
 
 test_that("binning works on empty data", {
@@ -77,7 +81,7 @@ test_that("binning works on empty data", {
     list(bins = integer(0), bin_midpoints = numeric(0), bin_left = numeric(0), bin_right = numeric(0))
   )
 
-  expect_equal(wilkinson_bin_to_left(NULL, width = 1),
+  expect_equal(wilkinson_bin(NULL, width = 1),
     list(bins = integer(0), bin_midpoints = numeric(0))
   )
 })
