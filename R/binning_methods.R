@@ -391,30 +391,26 @@ wilkinson_bin_to_right = function(x, width) {
   }
 
   # determine bins and midpoints of bins
-  bins = c(1L, rep(NA_integer_, length(x) - 1))
-  bin_left = numeric()
-  bin_right = numeric()
+  bins = rep(NA_integer_, length(x))
+  bins[[1]] = 1L
   current_bin = 1L
   first_x = x[[1]]
   n = 1
   for (i in seq_along(x)[-1]) {
-    x_first_x_diff = abs(x[[i]] - first_x)
-    # This is equivalent to x_first_x_diff >= width but it accounts for machine precision.
+    # This is equivalent to x[[i]] - first_x >= width but it accounts for machine precision.
     # If we instead used `>=` directly some things that should be symmetric will not be
-    if (x_first_x_diff > width || abs(x_first_x_diff - width) < .Machine$double.eps) {
-      bin_left[[current_bin]] = first_x
-      bin_right[[current_bin]] = x[[i - 1]]
+    if (x[[i]] - first_x - width >= -.Machine$double.eps) {
       current_bin = current_bin + 1L
       first_x = x[[i]]
     }
     bins[[i]] = current_bin
   }
-  if (length(bin_left) < current_bin) {
-    # calculate endpoints of last bin
-    bin_left[[current_bin]] = first_x
-    bin_right[[current_bin]] = x[[length(x)]]
-  }
 
+  # determine bin positions
+  # can take advantage of the fact that bins is sorted runs of numbers to
+  # get the first and last entry from each bin
+  bin_left = x[!duplicated(bins)]
+  bin_right = x[!duplicated(bins, fromLast = TRUE)]
   bin_midpoints = (bin_left + bin_right) / 2
 
   list(
@@ -473,11 +469,13 @@ wilkinson_sweep_back = function(x, b, width, first_slack = Inf) {
   b$bins[changed_x_is] = bins_changed
 
   # re-number bins to be consecutive in case some bins got removed completely
-  b$bins = cumsum(c(b$bins[[1]], pmin(diff(b$bins), 1)))
+  first_x_in_bin = !duplicated(b$bins)
+  b$bins = cumsum(first_x_in_bin)
 
-  # determine new bin positions
-  b$bin_left = as.vector(tapply(x, b$bins, min))
-  b$bin_right = as.vector(tapply(x, b$bins, max))
+  # can take advantage of the fact that b$bins is sorted runs of numbers to
+  # get the first and last entry from each bin
+  b$bin_left = x[first_x_in_bin]
+  b$bin_right = x[!duplicated(b$bins, fromLast = TRUE)]
   b$bin_midpoints = (b$bin_left + b$bin_right) / 2
 
   b
