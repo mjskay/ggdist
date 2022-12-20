@@ -6,9 +6,26 @@ New features and enhancements:
   the following aesthetics have been updated:
   * `interval_size` is now `linewidth`
   * `slab_size` is now `slab_linewidth`
-  * in `geom_slab()` and `geom_dots()`, `size` is now `linewidth`
+  * in `geom_slab()`, `geom_dots()`, and `geom_lineribbon()`, `size` is now `linewidth`
 * Support for non-numeric distributions in `stat_slabinterval()` and 
-  `stat_dotsinterval()` (#108).
+  `stat_dotsinterval()`, including `dist_categorical()`, `dist_bernoulli()`,
+  and the upcoming `posterior::rvar_factor()` type. (#108)
+* Various improvements to dotplot layout in `geom_dotsinterval()`:
+  * new `layout = "hex"` allows a hexagonal circle-packing style layout.
+  * new mechanism for smoothing dotplots using the `smooth` parameter, including 
+    `smooth = "density"` (for "density dotplots") and `smooth = "discrete"`
+    (for improved layout of large-n discrete distributions). See `smooth_density()`
+    and `smooth_discrete()` (#161)
+  * a better bin-nudging algorithm (#163) and the option to disable bin nudging
+  * fixed binning artifacts when there is high density on the edges, particularly
+    right edges (#144)
+  * use a max binwidth of 1 for discrete distributions (#159)
+* A new **experimental** mini domain-specific language for probability expressions
+  in *ggdist* `stat`s: the `Pr()` and `p_()` functions can be used to generate
+  `after_stat()` expressions in terms of *ggdist* computed variables; e.g.
+  `aes(thickness = !!Pr_(X <= x))` maps the CDF of the distribution onto the 
+  `thickness` aesthetic; `aes(thickness = !!p_(x))` maps the PDF onto the
+  `thickness` aesthetic. (#160)
 
 Documentation:
 
@@ -17,7 +34,6 @@ Documentation:
 
 Bug fixes:
 
-* Use a max binwidth of 1 for discrete variables in `geom_dots()` (#159).
 
 
 # ggdist 3.2.0
