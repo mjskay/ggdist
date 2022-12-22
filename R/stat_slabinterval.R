@@ -283,36 +283,6 @@ compute_slab_sample = function(
   slab_df
 }
 
-#' @importFrom stats approxfun
-weighted_ecdf = function(x, weights = NULL) {
-  n = length(x)
-  if (n < 1) stop("Need at least 1 or more values to calculate an ECDF")
-
-  #sort x
-  sort_order = order(x)
-  x = x[sort_order]
-
-  # calculate weighted cumulative probabilities
-  weights = if (is.null(weights)) rep(1, n) else weights
-  weights = weights[sort_order]
-  p = cumsum(weights) / sum(weights)
-
-  # need to manually do tie removal before passing to approxfun, otherwise it
-  # will fail when all x values are equal
-  unique_x = unique(x)
-  if (length(unique_x) < length(x)) {
-    # if x[i] ... x[i + k] are all equal ("tied"), collapse to a single x
-    # value and let corresponding value in p = max(p[i] ... p[i + k])
-    p = as.vector(tapply(p, match(x, x), max))
-    x = unique_x
-    stopifnot(length(p) == length(x))
-  }
-
-  method = "constant"
-
-  approxfun(x, p, yleft = 0, yright = 1, ties = "ordered", method = method)
-}
-
 
 # compute_interval --------------------------------------------------------
 

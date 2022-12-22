@@ -107,6 +107,7 @@ Collate:
     "testthat.R"
     "theme_ggdist.R"
     "tidy_format_translators.R"
+    "weighted_ecdf.R"
     "weighted_quantile.R"
     "deprecated.R"
 Roxygen: list(markdown = TRUE)
