@@ -148,6 +148,8 @@ globalVariables(c("y", "ymin", "ymax"))
 point_interval = function(.data, ..., .width = .95, .point = median, .interval = qi, .simple_names = TRUE,
   na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row"), .prob
 ) {
+  if (missing(.data)) return(partial_self("point_interval"))
+
   UseMethod("point_interval")
 }
 
@@ -220,6 +222,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         map_dfr_(seq_len(nrow(row)), function(j) {
           # get row of `data` with grouping factors
           row_j = row[j, , drop = FALSE]
+          row.names(row_j) = NULL
           draws_j = draws[[j]]
 
           # calculate point estimate --- usually a scalar

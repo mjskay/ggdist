@@ -10,22 +10,56 @@
 #' @description
 #'
 #' Several \pkg{ggdist} functions support *automatic partial application*: when called,
-#' if their first (primary) argument is not provided, the function returns a
-#' modified version of itself that uses the arguments passed to it as defaults.
+#' if all of their required arguments have not been provided, the function returns a
+#' modified version of itself that uses the arguments passed to it so far as defaults.
+#' Technically speaking, these functions are essentially "Curried" with respect to
+#' their required arguments, but I think "automatic partial application" gets
+#' the idea across more clearly.
 #'
-#' Functions supporting partial application include:
+#' Functions supporting automatic partial application include:
 #'
 #' - The [point_interval()] family, such as [median_qi()], [mean_qi()],
 #'   [mode_hdi()], etc.
 #'
-#' - The *smooth* family, such as [smooth_density()], [smooth_discrete()],
-#'   [smooth_bar()].
+#' - The `smooth_` family, such as [smooth_density()], [smooth_discrete()],
+#'   and [smooth_bar()].
+#'
+#' - The `density_` family, such as [density_auto()], [density_bounded()] and
+#'   [density_unbounded()].
 #'
 #' Partial application makes it easier to supply custom parameters to these
 #' functions when using them inside other functions, such as geoms and stats.
+#' For example, smoothers for [geom_dots()] can be supplied in one of three
+#' ways:
+#'
+#' - as a suffix: `geom_dots(smooth = "density")`
+#' - as a function: `geom_dots(smooth = smooth_density)`
+#' - as a partially-applied function with options:
+#'   `geom_dots(smooth = smooth_density(kernel = "cosine"))`
+#'
+#' The `density` argument to [stat_slabinterval()] works similarly with the
+#' `density_` family of functions.
 #'
 #' @examples
-#' # TODO
+#' set.seed(1234)
+#' x = rnorm(100)
+#'
+#' # the first required argument, `x`, of the density_ family is the vector
+#' # to calculate a kernel density estimate from. If it is not provided, the
+#' # function is partially applied and returned as-is
+#' density_auto()
+#'
+#' # we could create a new function that uses half the default bandwidth
+#' density_half_bw = density_auto(adjust = 0.5)
+#' density_half_bw
+#'
+#' # we can overwrite partially-applied arguments
+#' density_quarter_bw_trimmed = density_half_bw(adjust = 0.25, trim = TRUE)
+#' density_quarter_bw_trimmed
+#'
+#' # when we eventually call the function and provide the required argument
+#' # `x`, it is applied using the arguments we have "saved up" so far
+#' density_quarter_bw_trimmed(x)
 #'
 #' @name automatic-partial-functions
 NULL

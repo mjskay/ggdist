@@ -2,11 +2,6 @@
 
 New features and enhancements:
 
-* Following the split between `size` and `linewidth` aesthetics in *ggplot2* 3.4,
-  the following aesthetics have been updated:
-  * `interval_size` is now `linewidth`
-  * `slab_size` is now `slab_linewidth`
-  * in `geom_slab()`, `geom_dots()`, and `geom_lineribbon()`, `size` is now `linewidth`
 * Support for non-numeric distributions in `stat_slabinterval()` and 
   `stat_dotsinterval()`, including `dist_categorical()`, `dist_bernoulli()`,
   and the upcoming `posterior::rvar_factor()` type. (#108)
@@ -20,12 +15,24 @@ New features and enhancements:
   * fixed binning artifacts when there is high density on the edges, particularly
     right edges (#144)
   * use a max binwidth of 1 for discrete distributions (#159)
+* Custom density estimators can now be used with `stat_slabinterval()` via the
+  `density` argument, including a new bounded density estimator (`density_bounded()`).
+  (#113)
+* Following the split between `size` and `linewidth` aesthetics in *ggplot2* 3.4,
+  the following aesthetics have been updated:
+  * `interval_size` is now `linewidth`
+  * `slab_size` is now `slab_linewidth`
+  * in `geom_slab()`, `geom_dots()`, and `geom_lineribbon()`, `size` is now `linewidth`
 * A new **experimental** mini domain-specific language for probability expressions
   in *ggdist* `stat`s: the `Pr()` and `p_()` functions can be used to generate
   `after_stat()` expressions in terms of *ggdist* computed variables; e.g.
   `aes(thickness = !!Pr_(X <= x))` maps the CDF of the distribution onto the 
   `thickness` aesthetic; `aes(thickness = !!p_(x))` maps the PDF onto the
   `thickness` aesthetic. (#160)
+* Several function famlilies in *ggdist* now use "Currying" (automatic partial
+  function application). These function families partially apply themselves until all
+  non-optional arguments have been supplied: `point_interval()`, `smooth_...`,
+  and `density_...`. See `help("automatic-partial-functions")`.
 
 Documentation:
 

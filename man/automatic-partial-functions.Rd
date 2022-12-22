@@ -5,21 +5,55 @@
 \title{Automatic partial function application in ggdist}
 \description{
 Several \pkg{ggdist} functions support \emph{automatic partial application}: when called,
-if their first (primary) argument is not provided, the function returns a
-modified version of itself that uses the arguments passed to it as defaults.
+if all of their required arguments have not been provided, the function returns a
+modified version of itself that uses the arguments passed to it so far as defaults.
+Technically speaking, these functions are essentially "Curried" with respect to
+their required arguments, but I think "automatic partial application" gets
+the idea across more clearly.
 
-Functions supporting partial application include:
+Functions supporting automatic partial application include:
 \itemize{
 \item The \code{\link[=point_interval]{point_interval()}} family, such as \code{\link[=median_qi]{median_qi()}}, \code{\link[=mean_qi]{mean_qi()}},
 \code{\link[=mode_hdi]{mode_hdi()}}, etc.
-\item The \emph{smooth} family, such as \code{\link[=smooth_density]{smooth_density()}}, \code{\link[=smooth_discrete]{smooth_discrete()}},
-\code{\link[=smooth_bar]{smooth_bar()}}.
+\item The \code{smooth_} family, such as \code{\link[=smooth_density]{smooth_density()}}, \code{\link[=smooth_discrete]{smooth_discrete()}},
+and \code{\link[=smooth_bar]{smooth_bar()}}.
+\item The \code{density_} family, such as \code{\link[=density_auto]{density_auto()}}, \code{\link[=density_bounded]{density_bounded()}} and
+\code{\link[=density_unbounded]{density_unbounded()}}.
 }
 
 Partial application makes it easier to supply custom parameters to these
 functions when using them inside other functions, such as geoms and stats.
+For example, smoothers for \code{\link[=geom_dots]{geom_dots()}} can be supplied in one of three
+ways:
+\itemize{
+\item as a suffix: \code{geom_dots(smooth = "density")}
+\item as a function: \code{geom_dots(smooth = smooth_density)}
+\item as a partially-applied function with options:
+\code{geom_dots(smooth = smooth_density(kernel = "cosine"))}
+}
+
+The \code{density} argument to \code{\link[=stat_slabinterval]{stat_slabinterval()}} works similarly with the
+\code{density_} family of functions.
 }
 \examples{
-# TODO
+set.seed(1234)
+x = rnorm(100)
+
+# the first required argument, `x`, of the density_ family is the vector
+# to calculate a kernel density estimate from. If it is not provided, the
+# function is partially applied and returned as-is
+density_auto()
+
+# we could create a new function that uses half the default bandwidth
+density_half_bw = density_auto(adjust = 0.5)
+density_half_bw
+
+# we can overwrite partially-applied arguments
+density_quarter_bw_trimmed = density_half_bw(adjust = 0.25, trim = TRUE)
+density_quarter_bw_trimmed
+
+# when we eventually call the function and provide the required argument
+# `x`, it is applied using the arguments we have "saved up" so far
+density_quarter_bw_trimmed(x)
 
 }
