@@ -19,6 +19,7 @@ geom_dotsinterval(
   layout = "bin",
   nudge_overlaps = TRUE,
   smooth = "none",
+  overflow = "keep",
   verbose = FALSE,
   orientation = NA,
   interval_size_domain = c(1, 6),
@@ -44,6 +45,7 @@ geom_dots(
   layout = "bin",
   nudge_overlaps = TRUE,
   smooth = "none",
+  overflow = "keep",
   verbose = FALSE,
   orientation = NA,
   na.rm = FALSE,
@@ -178,6 +180,17 @@ smoothed version of that vector, such as \code{smooth_density()},
 name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
 \code{smooth_none()}, which simply returns the given vector without
 applying smoothing.
+}}
+
+\item{overflow}{How to handle overflow of dots beyond the extent of the geom
+when a minimum \code{binwidth} (or an exact \code{binwidth}) is supplied.
+One of:
+\itemize{
+\item \code{"keep"}: Keep the overflow, drawing dots outside the geom bounds.
+\item \code{"compress"}: Compress the layout. Reduces the \code{binwidth} to the size necessary
+to keep the dots within bounds, then adjusts \code{stackratio} and \code{dotsize} so that
+the apparent dot size is the user-specified minimum \code{binwidth} times the
+user-specified \code{dotsize}.
 }}
 
 \item{verbose}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful

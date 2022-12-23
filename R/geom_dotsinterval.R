@@ -12,7 +12,7 @@
 dots_grob = function(data, x, y, xscale = 1,
   name = NULL, gp = gpar(), vp = NULL,
   dotsize = 1.07, stackratio = 1, binwidth = NA, layout = "bin",
-  nudge_overlaps = TRUE,
+  nudge_overlaps = TRUE, overflow = "keep",
   verbose = FALSE,
   orientation = "vertical"
 ) {
@@ -24,7 +24,7 @@ dots_grob = function(data, x, y, xscale = 1,
     datas = datas,
     xscale = xscale,
     dotsize = dotsize, stackratio = stackratio, binwidth = binwidth, layout = layout,
-    nudge_overlaps = nudge_overlaps,
+    nudge_overlaps = nudge_overlaps, overflow = overflow,
     verbose = verbose,
     orientation = orientation,
     name = name, gp = gp, vp = vp, cl = "dots_grob"
@@ -43,6 +43,7 @@ makeContent.dots_grob = function(x) {
   binwidth = grob_$binwidth
   layout = grob_$layout
   nudge_overlaps = grob_$nudge_overlaps
+  overflow = grob_$overflow
 
   define_orientation_variables(orientation)
 
@@ -62,26 +63,41 @@ makeContent.dots_grob = function(x) {
     binwidth = convertUnit(binwidth, "native", axisFrom = x, typeFrom = "dimension", valueOnly = TRUE)
   }
 
-  # if bin width has length 2, it specifies a desired bin width range
   if (length(binwidth) == 2) {
+    # if bin width has length 2, it specifies a desired bin width range
     user_min_binwidth = min(binwidth)
     user_max_binwidth = max(binwidth)
     # set to NA so that a prospective bin width is found dynamically first
     # before user-specified constraints are applied
     binwidth = NA
-  } else {
+  } else if (isTRUE(is.na(binwidth))) {
     user_min_binwidth = 0
     user_max_binwidth = Inf
+  } else {
+    user_min_binwidth = binwidth
+    user_max_binwidth = binwidth
   }
 
-  if (isTRUE(is.na(binwidth))) {
+  if (isTRUE(is.na(binwidth)) || overflow == "compress") {
     # find the best bin widths across all the dotplots we are going to draw
     binwidths = map_dbl_(datas, function(d) {
       maxheight = max(d[[ymax]] - d[[ymin]])
       find_dotplot_binwidth(d[[x]], maxheight, heightratio, stackratio)
     })
 
-    binwidth = max(min(binwidths, user_max_binwidth), user_min_binwidth)
+    binwidth = min(binwidths, user_max_binwidth)
+    if (binwidth < user_min_binwidth) {
+      switch(overflow,
+        compress = {
+          s = user_min_binwidth / binwidth
+          dotsize = dotsize * s
+          stackratio = stackratio / s
+        },
+        keep = {
+          binwidth = user_min_binwidth
+        }
+      )
+    }
   }
 
   if (isTRUE(verbose)) {
@@ -145,7 +161,7 @@ makeContent.dots_grob = function(x) {
 draw_slabs_dots = function(self, s_data, panel_params, coord,
   orientation, normalize, fill_type, na.rm,
   dotsize, stackratio, binwidth, layout,
-  nudge_overlaps,
+  nudge_overlaps, overflow,
   verbose,
   ...
 ) {
@@ -211,6 +227,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
     binwidth = binwidth,
     layout = layout,
     nudge_overlaps = nudge_overlaps,
+    overflow = overflow,
     verbose = verbose,
     orientation = orientation
   ))
@@ -286,6 +303,14 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'     name starting with `smooth_`; e.g. `"none"` (the default) applies
 #'     `smooth_none()`, which simply returns the given vector without
 #'     applying smoothing.
+#' @param overflow How to handle overflow of dots beyond the extent of the geom
+#' when a minimum `binwidth` (or an exact `binwidth`) is supplied.
+#' One of:
+#'   - `"keep"`: Keep the overflow, drawing dots outside the geom bounds.
+#'   - `"compress"`: Compress the layout. Reduces the `binwidth` to the size necessary
+#'     to keep the dots within bounds, then adjusts `stackratio` and `dotsize` so that
+#'     the apparent dot size is the user-specified minimum `binwidth` times the
+#'     user-specified `dotsize`.
 #' @template param-dots-layout
 #' @template param-dots-nudge
 #' @param quantiles Setting this to a value other than `NA`
@@ -384,6 +409,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     layout = "bin",
     nudge_overlaps = TRUE,
     smooth = "none",
+    overflow = "keep",
     verbose = FALSE
   ), GeomSlabinterval$default_params),
 
