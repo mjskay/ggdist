@@ -163,7 +163,7 @@ parse_Pr_element = function(e, label = NULL) {
     value = "value",
     dist = "dist",
     interval = "interval",
-    stop0("Unknown probability expression element in `", label, "`: ", e)
+    stop0("Unrecognized probability expression element in `", label, "`: ", e)
   )
 }
 
@@ -182,6 +182,6 @@ check_Pr_cdf_element_combination = function(e1, e2, label = NULL) {
       c("dist", "value")
     )
   ) {
-    stop0("Invalid combination of expression elements in `", label, "`: ", e1, " and ", e2)
+    stop0("Invalid combination of probability expression elements in `", label, "`: ", e1, " and ", e2)
   }
 }

@@ -51,27 +51,6 @@ match_function = function(f, prefix = "", env = globalenv()) {
     get(f, mode = "function", envir = getNamespace("ggdist"))
 }
 
-#' A simpler, faster version of table() that does not mangle values into
-#' character strings as names, but preserves them as their original type
-#' @param x a vector (numeric, factor, character, etc)
-#' @returns a list with two components of the same length
-#'  - `x`: unique values from the input `x`
-#'  - `count`: count of occurrences of `x`
-#' @noRd
-simple_table <- function(x) {
-  if (is.factor(x)) {
-    values <- levels(x)
-    x_int <- as.integer(x)
-  } else {
-    values <- unique(x)
-    x_int <- match(x, values)
-  }
-  list(
-    x = values,
-    count = tabulate(x_int, nbins = length(values))
-  )
-}
-
 
 # deprecations and warnings -----------------------------------------------
 

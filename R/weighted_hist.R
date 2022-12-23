@@ -85,6 +85,7 @@ breaks_FD = function(x, weights, digits = 5) {
   if (h > 0) ceiling(diff(range(x))/h * length(x)^(1/3)) else 1L
 }
 
+#' @importFrom stats weighted.mean
 weighted_var = function(x, weights) {
   sum(weights * (x - weighted.mean(x, weights))^2) / sum(weights)
 }

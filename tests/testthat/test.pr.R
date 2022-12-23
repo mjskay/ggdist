@@ -38,3 +38,10 @@ test_that("p_(...) works", {
   expect_equal(p_(y), quote(after_stat(pdf)))
   expect_equal(p_(value), quote(after_stat(pdf)))
 })
+
+test_that("incorrect probability expressions are caught", {
+  expect_error(Pr_(y %in% dist), "Unrecognized probability expression")
+  expect_error(Pr_(X > interval), "Invalid combination")
+  expect_error(p_(interval), "Unrecognized probability expression")
+  expect_error(Pr_(g), "Unrecognized probability expression")
+})

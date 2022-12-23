@@ -246,40 +246,31 @@ test_that("geom_dots allows constraints on binwidth", {
 test_that("dotplot layouts work", {
   skip_if_no_vdiffr()
 
-  vdiffr::expect_doppelganger("weave top",
-    mtcars %>%
-      ggplot(aes(x = mpg)) +
-      geom_dots(layout = "weave", side = "top")
+  df = rbind(
+    cbind(mtcars, side = "top"),
+    cbind(mtcars, side = "both"),
+    cbind(mtcars, side = "bottom")
   )
 
-  vdiffr::expect_doppelganger("weave bottom",
-    mtcars %>%
+  vdiffr::expect_doppelganger("weave",
+    df %>%
       ggplot(aes(x = mpg)) +
-      geom_dots(layout = "weave", side = "bottom")
+      geom_dots(aes(side = side), layout = "weave") +
+      facet_grid(~ side)
   )
 
-  vdiffr::expect_doppelganger("weave both",
-    mtcars %>%
+  vdiffr::expect_doppelganger("swarm",
+    df %>%
       ggplot(aes(x = mpg)) +
-      geom_dots(layout = "weave", side = "both")
+      geom_dots(aes(side = side), layout = "swarm") +
+      facet_grid(~ side)
   )
 
-  vdiffr::expect_doppelganger("swarm top",
-    mtcars %>%
+  vdiffr::expect_doppelganger("hex",
+    df %>%
       ggplot(aes(x = mpg)) +
-      geom_dots(layout = "swarm")
-  )
-
-  vdiffr::expect_doppelganger("swarm bottom",
-    mtcars %>%
-      ggplot(aes(x = mpg)) +
-      geom_dots(layout = "swarm", side = "bottom")
-  )
-
-  vdiffr::expect_doppelganger("swarm both",
-    mtcars %>%
-      ggplot(aes(x = mpg)) +
-      geom_dots(layout = "swarm", side = "both")
+      geom_dots(aes(side = side), layout = "hex", stackratio = 0.92) +
+      facet_grid(~ side)
   )
 
   vdiffr::expect_doppelganger("swarm vertical",

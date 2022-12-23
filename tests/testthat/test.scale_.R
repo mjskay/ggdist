@@ -34,7 +34,7 @@ test_that("direct scale setting works", {
         # fill sets the fill color of the slab (here the density)
         slab_color = "green",
         slab_fill = "purple",
-        slab_size = 3,
+        slab_linewidth = 3,
         slab_linetype = "dotted",
         slab_alpha = .5
       )
@@ -151,6 +151,13 @@ test_that("mapping custom aesthetics works", {
   )
   vdiffr::expect_doppelganger("slab_size continuous mapping",
     p + geom_slabinterval(aes(slab_size = x_num), normalize = "none", slab_color = "black")
+  )
+
+  vdiffr::expect_doppelganger("slab_linewidth discrete mapping",
+    p + geom_slabinterval(aes(slab_linewidth = x), normalize = "none", slab_color = "black")
+  )
+  vdiffr::expect_doppelganger("slab_linewidth continuous mapping",
+    p + geom_slabinterval(aes(slab_linewidth = x_num), normalize = "none", slab_color = "black")
   )
 
   vdiffr::expect_doppelganger("slab_linetype discrete mapping",
