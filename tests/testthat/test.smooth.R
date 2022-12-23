@@ -4,6 +4,15 @@
 ###############################################################################
 
 
+test_that("smooths on scalars work", {
+  smooths = list(smooth_bounded, smooth_unbounded, smooth_density, smooth_discrete, smooth_bar, smooth_none)
+  for (smooth in smooths) {
+    expect_equal(!!(smooth)(numeric()), numeric())
+    expect_equal(!!(smooth)(1.1), 1.1)
+    expect_equal(!!(smooth)()(1.1), 1.1)
+  }
+})
+
 test_that("smooth_bar works", {
   x = rep(1:4, times = 4:1)
 

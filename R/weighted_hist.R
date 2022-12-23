@@ -34,7 +34,7 @@ weighted_hist = function(x, weights = NULL, breaks = "Sturges") {
   }
 
   # bin x values
-  bin = findInterval(x, breaks, rightmost.closed = TRUE)
+  bin = findInterval(x, breaks, rightmost.closed = TRUE, left.open = TRUE)
 
   # sum up weights in each bin
   counts = rep(0, length(breaks) - 1)
@@ -76,7 +76,7 @@ breaks_FD = function(x, weights, digits = 5) {
     al = 1/4
     al_min = 1/512
     while (h == 0 && (al <- al/2) >= al_min) {
-      h = diff(weighted_quantile(.x, c(al, 1 - al), weights = .weights))/(1 - 2 * al)
+      h = diff(weighted_quantile(.x, c(al, 1 - al), weights = .weights), n = "sum") / (1 - 2 * al)
     }
   }
 
@@ -91,5 +91,5 @@ weighted_var = function(x, weights) {
 }
 
 weighted_iqr = function(x, weights) {
-  diff(weighted_quantile(as.numeric(x), c(0.25, 0.75), weights = weights))
+  diff(weighted_quantile(as.numeric(x), c(0.25, 0.75), weights = weights, n = "sum"))
 }

@@ -232,19 +232,3 @@ density_bounded = function(
   d$call = as.call(lapply(match.call(), get_expr))
   d
 }
-
-density_histogram = function(x, breaks = "Sturges", ...) {
-  h = hist(x, breaks = breaks, plot = FALSE)
-
-  x_1 = h$breaks[-length(h$breaks)]
-  x_mid = h$mids
-  x_2 = h$breaks[-1]
-
-  cdf = cumsum(h$density) / sum(h$density)
-
-  list(
-    x = c(x_1[[1]],  rbind(x_1, x_mid, x_2), x_2[[length(x_2)]]),
-    y = c(       0, rep(h$density, each = 3),                0),
-    F_x = c(x_1[[1]], rbind(x_1, x_mid, x_2), x_2[[length(x_2)]])
-  )
-}

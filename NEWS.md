@@ -6,7 +6,7 @@ New features and enhancements:
   `stat_dotsinterval()`, including `dist_categorical()`, `dist_bernoulli()`,
   and the upcoming `posterior::rvar_factor()` type. (#108)
 * Various improvements to dotplot layout in `geom_dotsinterval()`:
-  * new `layout = "hex"` allows a hexagonal circle-packing style layout.
+  * new `layout = "hex"` allows a hexagonal circle-packing style layout (#161).
   * new mechanism for smoothing dotplots using the `smooth` parameter, including 
     `smooth = "density"` (for "density dotplots") and `smooth = "discrete"`
     (for improved layout of large-n discrete distributions). See `smooth_density()`
@@ -15,11 +15,17 @@ New features and enhancements:
   * fixed binning artifacts when there is high density on the edges, particularly
     right edges (#144)
   * use a max binwidth of 1 for discrete distributions (#159)
+  * new `overlaps = "keep"` option disables bin/dot nudging in `"bin"`, `"hex"`,
+    and `"weave"` layouts. This means `layout = "weave", overlaps = "keep"` will
+    yield exact dot positions. (#161)
+  * new `overflow = "compress"` allows layouts to be compressed to fit into the
+    geom bounds if a user-specified `binwidth` would otherwise cause the dots
+    to exceed the geom bounds. (#162)
 * Custom density estimators can now be used with `stat_slabinterval()` via the
   `density` argument, including a new bounded density estimator (`density_bounded()`).
   (#113)
 * Following the split between `size` and `linewidth` aesthetics in *ggplot2* 3.4,
-  the following aesthetics have been updated:
+  the following aesthetics have been updated (#138):
   * `interval_size` is now `linewidth`
   * `slab_size` is now `slab_linewidth`
   * in `geom_slab()`, `geom_dots()`, and `geom_lineribbon()`, `size` is now `linewidth`
@@ -38,9 +44,6 @@ Documentation:
 
 * Uses of `stat()` have been replaced with `after_stat()` to be consistent with
   the deprecation of `stat()` in *ggplot2* 3.4.
-
-Bug fixes:
-
 
 
 # ggdist 3.2.0
