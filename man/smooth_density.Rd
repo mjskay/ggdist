@@ -21,7 +21,7 @@ smooth_bounded(x, bounds = c(NA, NA), ...)
 \code{x} (giving grid points for the density estimator) and \code{y} (the
 corresponding densities). \pkg{ggdist} provides a family of functions
 following this format, including \code{\link[=density_unbounded]{density_unbounded()}} and
-\code{\link[=density_bounded]{density_bounded()}}. This format is also compatible with \code{\link[stats:density]{stats::density()}}.
+\code{\link[=density_bounded]{density_bounded()}}.
 \item A string giving the suffix of a function name that starts with \code{"density_"};
 e.g. \code{"bounded"} for \verb{[density_bounded()]}.
 }}
@@ -56,7 +56,7 @@ large sample sizes where precise positions of individual values are not
 particularly meaningful. In small samples, normal dotplots should generally
 be used.
 
-Two variants are suppied by default:
+Two variants are supplied by default:
 \itemize{
 \item \code{smooth_bounded()}, which uses \code{\link[=density_bounded]{density_bounded()}}. \code{smooth_density()} is
 an alias for this. Passes the \code{bounds} arguments to the estimator.

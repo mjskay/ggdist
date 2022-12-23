@@ -6,28 +6,37 @@
 \usage{
 density_unbounded(
   x,
+  weights = NULL,
   n = 512,
+  bandwidth = "nrd0",
   adjust = 1,
-  trim = FALSE,
   kernel = "gaussian",
-  ...
+  trim = FALSE
 )
 }
 \arguments{
 \item{x}{numeric vector containing a sample to compute a density estimate for.}
 
+\item{weights}{optional numeric vector of weights to apply to \code{x}.}
+
 \item{n}{numeric: the number of grid points to evaluate the density estimator at.}
+
+\item{bandwidth}{bandwidth of the density estimator. One of:
+\itemize{
+\item a numeric: the bandwidth, as the standard deviation of the kernel
+\item a function: a function taking \code{x} (the sample) and returning the bandwidth
+\item a string: the suffix of the name of a function starting with \code{"bw."} that
+will be used to determine the bandwidth. See \code{\link[=bw.nrd0]{bw.nrd0()}} for a list.
+}}
 
 \item{adjust}{numeric: the bandwidth for the density estimator is multiplied
 by this value. See \code{\link[stats:density]{stats::density()}}.}
-
-\item{trim}{Should the density estimate be trimmed to the bounds of the data?}
 
 \item{kernel}{string: the smoothing kernel to be used. This must partially
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
-\item{...}{Additional arguments passed to \code{\link[stats:density]{stats::density()}}.}
+\item{trim}{Should the density estimate be trimmed to the bounds of the data?}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of

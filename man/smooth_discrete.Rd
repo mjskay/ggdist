@@ -25,7 +25,8 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 \item{width}{approximate width of the bars as a fraction of data \code{\link[=resolution]{resolution()}}.}
 
 \item{...}{additional parameters; \code{\link[=smooth_discrete]{smooth_discrete()}} passes these to
-\code{\link[=smooth_density]{smooth_density()}} and thereby to \code{\link[=density]{density()}}; \code{\link[=smooth_bar]{smooth_bar()}} ignores them.}
+\code{\link[=smooth_unbounded]{smooth_unbounded()}} and thereby to \code{\link[=density_unbounded]{density_unbounded()}}; \code{\link[=smooth_bar]{smooth_bar()}}
+ignores them.}
 }
 \value{
 A numeric vector of \code{length(x)}, where each entry is a smoothed version of

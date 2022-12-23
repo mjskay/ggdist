@@ -17,7 +17,7 @@
 #'    `x` (giving grid points for the density estimator) and `y` (the
 #'    corresponding densities). \pkg{ggdist} provides a family of functions
 #'    following this format, including [density_unbounded()] and
-#'    [density_bounded()]. This format is also compatible with [stats::density()].
+#'    [density_bounded()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
 #'    e.g. `"bounded"` for `[density_bounded()]`.
 #' @param ... Arguments passed to the density estimator (by default, `density_bounded()`).
@@ -35,7 +35,7 @@
 #' particularly meaningful. In small samples, normal dotplots should generally
 #' be used.
 #'
-#' Two variants are suppied by default:
+#' Two variants are supplied by default:
 #'
 #' - `smooth_bounded()`, which uses [density_bounded()]. `smooth_density()` is
 #'   an alias for this. Passes the `bounds` arguments to the estimator.
@@ -124,7 +124,8 @@ smooth_bounded = function(x, bounds = c(NA, NA), ...) {
 #' @param x a numeric vector
 #' @param width approximate width of the bars as a fraction of data [resolution()].
 #' @param ... additional parameters; [smooth_discrete()] passes these to
-#' [smooth_density()] and thereby to [density()]; [smooth_bar()] ignores them.
+#' [smooth_unbounded()] and thereby to [density_unbounded()]; [smooth_bar()]
+#' ignores them.
 #' @inheritParams density_unbounded
 #'
 #' @details
@@ -180,7 +181,7 @@ smooth_discrete = function(
   if (missing(x)) return(partial_self("smooth_discrete"))
   if (length(x) < 2) return(x)
 
-  # magic numbers below ensure that the range of the kernel with bw = 1 is a
+  # magic numbers below ensure that the range of the kernel with bandwidth = 1 is a
   # little less than 1 (i.e. +/- 0.5 around a bin)
   kernel = match.arg(kernel)
   bw_mult = switch(kernel,
@@ -192,8 +193,8 @@ smooth_discrete = function(
     cosine = 0.18,
     optcosine = 0.20
   )
-  bw = resolution(x, zero = FALSE) * bw_mult * width
-  smooth_unbounded(x, kernel = kernel, bw = bw, ...)
+  bandwidth = resolution(x, zero = FALSE) * bw_mult * width
+  smooth_unbounded(x, kernel = kernel, bandwidth = bandwidth, ...)
 }
 
 #' @rdname smooth_discrete

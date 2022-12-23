@@ -42,8 +42,9 @@
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
 density_auto = function(
-  x, n = 512, adjust = 1, trim = FALSE,
-  kernel = "gaussian",
+  x, weights = NULL,
+  n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
+  trim = FALSE,
   ...
 ) {
   if (missing(x)) return(partial_self("density_auto"))
@@ -51,7 +52,12 @@ density_auto = function(
   x_label = as_label(enexpr(x))
 
   density = if (trim) density_bounded else density_unbounded
-  d = density(x, n = n, adjust = adjust, trim = trim, kernel = kernel, ...)
+  d = density(
+    x, weights = weights,
+    n = n, bandwidth = bandwidth, adjust = adjust, kernel = kernel,
+    trim = trim,
+    ...
+  )
 
   d$data.name = x_label
   d$call = as.call(lapply(match.call(), get_expr))
@@ -65,14 +71,19 @@ density_auto = function(
 #' Supports [automatic partial function application][automatic-partial-functions].
 #'
 #' @param x numeric vector containing a sample to compute a density estimate for.
+#' @param weights optional numeric vector of weights to apply to `x`.
 #' @param n numeric: the number of grid points to evaluate the density estimator at.
+#' @param bandwidth bandwidth of the density estimator. One of:
+#'   - a numeric: the bandwidth, as the standard deviation of the kernel
+#'   - a function: a function taking `x` (the sample) and returning the bandwidth
+#'   - a string: the suffix of the name of a function starting with `"bw."` that
+#'     will be used to determine the bandwidth. See [bw.nrd0()] for a list.
 #' @param adjust numeric: the bandwidth for the density estimator is multiplied
 #' by this value. See [stats::density()].
-#' @param trim Should the density estimate be trimmed to the bounds of the data?
 #' @param kernel string: the smoothing kernel to be used. This must partially
 #' match one of `"gaussian"`, `"rectangular"`, `"triangular"`, `"epanechnikov"`,
 #' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
-#' @param ... Additional arguments passed to [stats::density()].
+#' @param trim Should the density estimate be trimmed to the bounds of the data?
 #' @template returns-density
 #' @family density estimators
 #' @examples
@@ -109,16 +120,21 @@ density_auto = function(
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
 density_unbounded = function(
-  x, n = 512, adjust = 1, trim = FALSE,
-  kernel = "gaussian",
-  ...
+  x, weights = NULL,
+  n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
+  trim = FALSE
 ) {
   if (missing(x)) return(partial_self("density_unbounded"))
 
   x_label = as_label(enexpr(x))
 
+  bw = get_bandwidth(x, bandwidth)
   cut = if (trim) 0 else 3
-  d = density(x, n = n, adjust = adjust, kernel = kernel, cut = cut, ...)
+  d = density(
+    x, weights = weights,
+    n = n, bw = bw, adjust = adjust, kernel = kernel,
+    cut = cut
+  )
 
   d$data.name = x_label
   # need to apply get_expr over match.call() instead of just using match.call()
@@ -192,8 +208,9 @@ density_unbounded = function(
 #' @importFrom rlang as_label enexpr get_expr
 #' @export
 density_bounded = function(
-  x, n = 512, adjust = 1, trim = FALSE, bounds = c(NA, NA),
-  kernel = "gaussian",
+  x, weights = NULL,
+  n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
+  trim = FALSE, bounds = c(NA, NA),
   ...
 ) {
   if (missing(x)) return(partial_self("density_bounded"))
@@ -201,7 +218,12 @@ density_bounded = function(
   if (is.na(bounds[[1]])) bounds[[1]] = min(x)
   if (is.na(bounds[[2]])) bounds[[2]] = max(x)
 
-  d = density_unbounded(x, n = n, adjust = adjust, kernel = kernel, trim = FALSE, ...)
+  d = density_unbounded(
+    x, weights = weights,
+    n = n, bandwidth = bandwidth, adjust = adjust, kernel = kernel,
+    trim = FALSE,
+    ...
+  )
 
   x = d$x
   y = d$y
@@ -231,4 +253,14 @@ density_bounded = function(
   d$y = y
   d$call = as.call(lapply(match.call(), get_expr))
   d
+}
+
+
+# helpers -----------------------------------------------------------------
+
+get_bandwidth = function(x, bandwidth) {
+  if (!is.numeric(bandwidth)) {
+    bandwidth = match_function(bandwidth, prefix = "bw.")(x)
+  }
+  bandwidth
 }
