@@ -39,6 +39,9 @@ test_that("type is in 1:9", {
 })
 
 test_that("0- and 1-length vectors work", {
+  # these fail in R < 4.0.3 because of a bug in quantile()
+  skip_if_not(getRversion() >= "4.0.3")
+
   expect_equal(weighted_quantile(1, c(0, 0.5, 1, NA)), c(1, 1, 1, NA))
   expect_equal(weighted_quantile(c(1,1), c(0, 0.5, 1, NA)), c(1, 1, 1, NA))
   expect_equal(weighted_quantile(c(1,2), weights = c(1,0), c(0, 0.5, 1, NA)), c(1, 1, 1, NA))
