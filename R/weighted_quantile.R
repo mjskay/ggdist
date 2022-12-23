@@ -105,6 +105,17 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
     n = n(weights)
   }
 
+  # drop 0 weights
+  non_zero = weights != 0
+  x = x[non_zero]
+  weights = weights[non_zero]
+
+  # if there is only 0 or 1 unique x values, we don't need the weighted version
+  unique_x = unique(x)
+  if (length(unique_x) <= 1) {
+    return(function(p) quantile(unique_x, p, names = FALSE))
+  }
+
   # normalize weights (must be done after calculating n, as n is calculated
   # in terms of unnormalized weights)
   weights = weights / sum(weights)

@@ -26,6 +26,12 @@ test_that("weighted_hist is equivalent to hist on non-weighted samples", {
   for (breaks in list("Sturges", "Scott", "FD", c(1,3,6,10))) {
     expect_equal(weighted_hist(x, breaks = !!breaks), hist(x, breaks = !!breaks, plot = FALSE))
   }
+
+  for (breaks in list("Sturges", "Scott", "FD")) {
+    # hist with some values of breaks fails on length(x) == 1, but all these should
+    # be the same so we just test against hist without setting breaks
+    expect_equal(weighted_hist(1, breaks = !!breaks), hist(1, plot = FALSE))
+  }
 })
 
 test_that("weighted_hist is equivalent to hist on weighted samples", {
