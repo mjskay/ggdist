@@ -14,7 +14,7 @@ bin_dots(
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft",
     "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  nudge_overlaps = TRUE
+  overlaps = "nudge"
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ This maintains the alignment of rows and columns in the dotplot. This layout is 
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
 the input data are symmetrical it will return a symmetrical layout.
 \item \code{"weave"}: uses the same basic binning approach of \code{"bin"}, but places dots in the off-axis at their actual
-positions (unless \code{nudge_overlaps = TRUE}, in which case overlaps may be nudged out of the way). This maintains
+positions (unless \code{overlaps = "nudge"}, in which case overlaps may be nudged out of the way). This maintains
 the alignment of rows but does not align dots within columns.
 \item \code{"hex"}: uses the same basic binning approach of \code{"bin"}, but alternates placing dots \code{+ binwidth/4} or
 \code{- binwidth/4} in the off-axis from the bin center. This allows hexagonal packing by setting a \code{stackratio}
@@ -67,10 +67,20 @@ For compatibility with the base ggplot naming scheme for \code{orientation},
 \code{"x"} can be used as an alias for \code{"vertical"} and \code{"y"} as an alias for
 \code{"horizontal"}.}
 
-\item{nudge_overlaps}{logical: Should overlapping dots be nudged out of the way? When \code{FALSE}, dots may overlap
-(usually only slightly) in the \code{"bin"}, \code{"weave"}, and \code{"hex"} layouts. When \code{TRUE}, overlaps are avoided by
-using a constrained optimization which minimizes the squared distance of dots to their desired positions, subject
-to the constraint that adjacent dots do not overlap.}
+\item{overlaps}{How to handle overlapping dots or bins in the \code{"bin"},
+\code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} layout).
+For the purposes of this argument, dots are only considered to be overlapping
+if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
+if you set those arguments to other values, overlaps may still occur.
+One of:
+\itemize{
+\item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
+(usually only slightly) in the \code{"bin"}, \code{"weave"}, and \code{"hex"} layouts.
+\item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided
+using a constrained optimization which minimizes the squared distance of
+dots to their desired positions, subject to the constraint that adjacent
+dots do not overlap.
+}}
 }
 \value{
 A \code{data.frame} with three columns:

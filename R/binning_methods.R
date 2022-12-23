@@ -18,7 +18,7 @@
 #' @param stackratio ratio of dot height to vertical distance between dot
 #' centers
 #' @template param-dots-layout
-#' @template param-dots-nudge
+#' @template param-dots-overlaps
 #' @template param-slab-side
 #' @param orientation Whether the dots are laid out horizontally or vertically.
 #' Follows the naming scheme of [geom_slabinterval()]:
@@ -69,7 +69,7 @@ bin_dots = function(x, y, binwidth,
   layout = c("bin", "weave", "hex", "swarm"),
   side = c("topright", "top", "right", "bottomleft", "bottom", "left", "topleft", "bottomright", "both"),
   orientation = c("horizontal", "vertical", "y", "x"),
-  nudge_overlaps = TRUE
+  overlaps = "nudge"
 ) {
   layout = match.arg(layout)
   side = match.arg(side)
@@ -103,7 +103,7 @@ bin_dots = function(x, y, binwidth,
   switch(layout,
     bin =, hex = {
       bin_midpoints = h$binning$bin_midpoints
-      if (nudge_overlaps) bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
+      if (overlaps == "nudge") bin_midpoints = nudge_bins(bin_midpoints, binwidth, h$bin_counts)
       d[[x]] = bin_midpoints[h$binning$bins]
       # maintain original data order within each bin when finding y positions
       d = d[order(d$bin, d$order), ]
@@ -119,7 +119,7 @@ bin_dots = function(x, y, binwidth,
         bin_df
       })
 
-      if (nudge_overlaps) {
+      if (overlaps == "nudge") {
         # nudge values within each row to ensure there are no overlaps
         d = ddply_(d, "row", function(row_df) {
           row_df[[x]] = nudge_bins(row_df[[x]], binwidth)
