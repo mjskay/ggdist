@@ -247,9 +247,10 @@ test_that("dotplot layouts work", {
   skip_if_no_vdiffr()
 
   df = rbind(
-    cbind(mtcars, side = "top"),
-    cbind(mtcars, side = "both"),
-    cbind(mtcars, side = "bottom")
+    cbind(mtcars, side = "top", stringsAsFactors = FALSE),
+    cbind(mtcars, side = "both", stringsAsFactors = FALSE),
+    cbind(mtcars, side = "bottom", stringsAsFactors = FALSE),
+    stringsAsFactors = FALSE
   )
 
   vdiffr::expect_doppelganger("weave",
