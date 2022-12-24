@@ -44,7 +44,6 @@ Suggests:
     cowplot,
     patchwork,
     covr,
-    gdtools,
     rmarkdown,
     png,
     fda,
