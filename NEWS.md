@@ -11,13 +11,14 @@ New features and enhancements:
     `smooth = "density"` (for "density dotplots") and `smooth = "discrete"`
     (for improved layout of large-n discrete distributions). See `smooth_density()`
     and `smooth_discrete()` (#161)
-  * a better bin-nudging algorithm (#163) and the option to disable bin nudging
+  * a better bin/dot-nudging algorithm using constrained optimization (#163)
+  * new `overlaps = "keep"` option disables bin/dot nudging in `"bin"`, `"hex"`,
+    and `"weave"` layouts. This means `layout = "weave"` with `overlaps = "keep"`
+    will yield exact dot positions. (#161)
+  * The `"weave"` layout now works properly with `side = "both"`
   * fixed binning artifacts when there is high density on the edges, particularly
     right edges (#144)
   * use a max binwidth of 1 for discrete distributions (#159)
-  * new `overlaps = "keep"` option disables bin/dot nudging in `"bin"`, `"hex"`,
-    and `"weave"` layouts. This means `layout = "weave", overlaps = "keep"` will
-    yield exact dot positions. (#161)
   * new `overflow = "compress"` allows layouts to be compressed to fit into the
     geom bounds if a user-specified `binwidth` would otherwise cause the dots
     to exceed the geom bounds. (#162)
@@ -35,7 +36,7 @@ New features and enhancements:
   `aes(thickness = !!Pr_(X <= x))` maps the CDF of the distribution onto the 
   `thickness` aesthetic; `aes(thickness = !!p_(x))` maps the PDF onto the
   `thickness` aesthetic. (#160)
-* Several function famlilies in *ggdist* now use "Currying" (automatic partial
+* Several function families in *ggdist* now use "currying" (automatic partial
   function application). These function families partially apply themselves until all
   non-optional arguments have been supplied: `point_interval()`, `smooth_...`,
   and `density_...`. See `help("automatic-partial-functions")`.
