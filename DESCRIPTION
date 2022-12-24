@@ -55,6 +55,8 @@ Suggests:
     posterior,
     pkgdown,
     palmerpenguins
+Remotes:
+    stan-dev/posterior
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new

@@ -44,4 +44,5 @@ test_that("incorrect probability expressions are caught", {
   expect_error(Pr_(X > interval), "Invalid combination")
   expect_error(p_(interval), "Unrecognized probability expression")
   expect_error(Pr_(g), "Unrecognized probability expression")
+  expect_error(p_(g), "Unrecognized probability expression")
 })

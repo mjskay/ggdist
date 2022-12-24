@@ -235,3 +235,10 @@ test_that("NAs in thickness produce gaps", {
   })
 
 })
+
+test_that("all-NA thickness produces no slab", {
+  grob = layer_grob(ggplot() + geom_slab(aes(x = 1, thickness = NA)))
+  expect_length(grob, 1)
+  expect_is(grob[[1]], "gTree")
+  expect_equal(grob[[1]]$children, gList())
+})

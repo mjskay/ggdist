@@ -345,6 +345,10 @@ test_that("NAs are handled correctly in point_interval", {
 
 })
 
+test_that("automatic partial evaluation works", {
+  expect_equal(point_interval(.point = mean)(1:10), point_interval(1:10, .point = mean))
+})
+
 
 # upper/lower limits (ul/ll) ----------------------------------------------
 

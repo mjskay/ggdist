@@ -316,6 +316,14 @@ test_that("dot order is correct", {
 
 })
 
+test_that("overflow = compress works", {
+  skip_if_no_vdiffr()
+
+  vdiffr::expect_doppelganger("overflow = compress",
+    ggplot(mtcars) + geom_dots(aes(x = mpg), binwidth = 4, overflow = "compress", alpha = 0.5)
+  )
+})
+
 
 # NAs -------------------------------------------------------------------
 

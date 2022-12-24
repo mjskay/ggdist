@@ -461,8 +461,6 @@ wilkinson_sweep_back = function(x, b, width, first_slack = Inf) {
   changed_bin_is = min_changed_bin:n_bin
   changed_x_is = which(b$bin_left[[min_changed_bin]] <= x)
 
-  if (length(changed_x_is) == 0) return(b)
-
   # re-bin xs in the changed region into new bins
   x_changed = x[changed_x_is]
   bins_changed = findInterval(x_changed, b$bin_left[changed_bin_is]) + min_changed_bin - 1
