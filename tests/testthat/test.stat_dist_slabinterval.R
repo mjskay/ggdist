@@ -567,14 +567,16 @@ test_that("rvar_factor works", {
     f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
     n = 6,
     datatype = "slab",
-    .width = NA_real_
+    .width = NA_real_,
+    stringsAsFactors = FALSE
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
     datatype = "interval",
-    .width = c(0.66, 0.95)
+    .width = c(0.66, 0.95),
+    stringsAsFactors = FALSE
   )
   interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
@@ -602,14 +604,16 @@ test_that("rvar_ordered works and integer dist_sample works", {
     f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
     n = 6,
     datatype = "slab",
-    .width = c(NA, .66,.66,.66,.66,.66,.66, .95,.95, NA,NA,NA)
+    .width = c(NA, .66,.66,.66,.66,.66,.66, .95,.95, NA,NA,NA),
+    stringsAsFactors = FALSE
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
     datatype = "interval",
-    .width = c(0.66, 0.95)
+    .width = c(0.66, 0.95),
+    stringsAsFactors = FALSE
   )
   interval_ref$xmin = ggplot2:::mapped_discrete(c(1, 1))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(2.15, 2.875))
@@ -651,7 +655,8 @@ test_that("rvar_ordered works with modified scale limits", {
     f = c(3,3,3,3, 0,0,0,0, 1,1,1,1)/4,
     n = 4,
     datatype = "slab",
-    .width = c(NA, .66,.66,.66,.66, .95,.95,.95,.95, NA,NA,NA)
+    .width = c(NA, .66,.66,.66,.66, .95,.95,.95,.95, NA,NA,NA),
+    stringsAsFactors = FALSE
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)

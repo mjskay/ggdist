@@ -17,7 +17,7 @@ test_that("weighted_hist works", {
   wh = weighted_hist(xw, w)
   expect_equal(wh$xname, "[xw, w]")
   wh$xname = "x"
-  expect_equal(wh, hist(x))
+  expect_equal(wh, hist(x, plot = FALSE))
 })
 
 test_that("weighted_hist is equivalent to hist on non-weighted samples", {
