@@ -11,9 +11,8 @@ density_bounded(
   bandwidth = "nrd0",
   adjust = 1,
   kernel = "gaussian",
-  trim = FALSE,
-  bounds = c(NA, NA),
-  ...
+  trim = TRUE,
+  bounds = c(NA, NA)
 )
 }
 \arguments{
@@ -44,8 +43,6 @@ internally before trimming to \code{bounds}.}
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
 that bound is replaced with \code{min(x)} or \code{max(x)}. Thus, the default,
 \code{c(NA, NA)}, means that the bounds used are \code{range(x)}.}
-
-\item{...}{Additional arguments passed to \code{\link[=density_unbounded]{density_unbounded()}}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of

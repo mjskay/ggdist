@@ -155,7 +155,6 @@ density_unbounded = function(
 #' `c(NA, NA)`, means that the bounds used are `range(x)`.
 #' @param trim ignored; the unbounded density estimator always uses `trim = FALSE`
 #' internally before trimming to `bounds`.
-#' @param ... Additional arguments passed to [density_unbounded()].
 #' @template returns-density
 #' @family density estimators
 #' @examples
@@ -210,44 +209,49 @@ density_unbounded = function(
 density_bounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
-  trim = FALSE, bounds = c(NA, NA),
-  ...
+  trim = TRUE, bounds = c(NA, NA)
 ) {
   if (missing(x)) return(partial_self("density_bounded"))
 
-  if (is.na(bounds[[1]])) bounds[[1]] = min(x)
-  if (is.na(bounds[[2]])) bounds[[2]] = max(x)
+  if (n < 1) stop0("density_bounded() must have an n of at least 1")
 
-  d = density_unbounded(
+  # determine bounds
+  min_x = min(x)
+  max_x = max(x)
+  if (is.na(bounds[[1]])) bounds[[1]] = min_x
+  if (is.na(bounds[[2]])) bounds[[2]] = max_x
+  left_bounded = is.finite(bounds[[1]])
+  right_bounded = is.finite(bounds[[2]])
+
+  if (min_x < bounds[[1]] || max_x > bounds[[2]]) {
+    stop0("All `x` must be inside `bounds` in density_bounded()")
+  }
+
+  # to get final n = requested n, if a bound is supplied, must add n - 1 values
+  # beyond that bound, which will be reflected back
+  n_unbounded = n + (left_bounded + right_bounded) * (n - 1)
+
+  # determine limits of underlying unbounded density estimator
+  bw = get_bandwidth(x, bandwidth) * adjust
+  from = if (left_bounded) bounds[[1]] else min_x - 3 * bw
+  to = if (right_bounded) bounds[[2]] else max_x + 3 * bw
+  width = to - from
+  if (left_bounded) from = from - width
+  if (right_bounded) to = to + width
+
+  # get unbounded estimate
+  d = density(
     x, weights = weights,
-    n = n, bandwidth = bandwidth, adjust = adjust, kernel = kernel,
-    trim = FALSE,
-    ...
+    n = n_unbounded, bw = bw, adjust = 1, kernel = kernel,
+    from = from, to = to
   )
 
-  x = d$x
-  y = d$y
-
-  left = min(bounds)
-  is_left = x < left
-  y_left = y[is_left]
-
-  right = max(bounds)
-  is_right = x > right
-  y_right = y[is_right]
-
-  is_mid = !is_left & !is_right
-  x = x[!is_left & !is_right]
-  y = y[!is_left & !is_right]
-
-  left_len = min(length(y), length(y_left))
-  left_i = seq_len(left_len)
-  y[left_i] = y[left_i] + rev(y_left)[left_i]
-
-  right_len = min(length(y), length(y_right))
-  right_i = seq_len(right_len)
-  right_i_y = length(y) + 1 - right_i
-  y[right_i_y] = y[right_i_y] + y_right[right_i]
+  # reflect tails back into middle, if needed
+  mid = seq(1 + left_bounded * (n - 1), length.out = n)
+  x = d$x[mid]
+  y = d$y[mid]
+  if (left_bounded) y = y + d$y[n:1]
+  if (right_bounded) y = y + d$y[seq(length(d$y), by = -1, length.out = n)]
 
   d$x = x
   d$y = y
