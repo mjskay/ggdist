@@ -234,6 +234,12 @@ test_that("NAs in thickness produce gaps", {
       geom_slab(color = "black")
   })
 
+  # when side = "both", should not see outlines wrap around
+  vdiffr::expect_doppelganger("side = both with NAs in thickness", {
+    data.frame(y = "gaps", t = c(NA, 1:2, NA, 2:1, NA), x = 0:6) %>%
+      ggplot(aes(x, y, thickness = t)) +
+      geom_slab(color = "black", side = "both")
+  })
 })
 
 test_that("all-NA thickness produces no slab", {
@@ -244,7 +250,7 @@ test_that("all-NA thickness produces no slab", {
 })
 
 
-# Inf height --------------------------------------------------------------
+# NA width / xmax -----------------------------------------------------------
 
 test_that("NA width works", {
   skip_if_no_vdiffr()

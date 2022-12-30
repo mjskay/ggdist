@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' data-engine-version='2.0' width='720.00pt' height='576.00pt' viewBox='0 0 720.00 576.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA='>
+    <rect x='0.00' y='0.00' width='720.00' height='576.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<rect x='0.00' y='0.00' width='720.00' height='576.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNDIuMDl8NzE0LjUyfDIyLjc4fDU0NS4xMQ=='>
+    <rect x='42.09' y='22.78' width='672.43' height='522.33' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNDIuMDl8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
+<rect x='42.09' y='22.78' width='672.43' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<polygon points='174.54,186.01 276.42,88.07 276.42,479.82 174.54,381.88 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polyline points='174.54,186.01 276.42,88.07 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='276.42,479.82 174.54,381.88 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polygon points='480.19,88.07 582.07,186.01 582.07,381.88 480.19,479.82 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<polyline points='480.19,88.07 582.07,186.01 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='582.07,381.88 480.19,479.82 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<rect x='42.09' y='22.78' width='672.43' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<text x='37.16' y='286.98' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='19.09px' lengthAdjust='spacingAndGlyphs'>gaps</text>
+<polyline points='39.35,283.95 42.09,283.95 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='72.66,547.85 72.66,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='276.42,547.85 276.42,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='480.19,547.85 480.19,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='683.96,547.85 683.96,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='72.66' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='276.42' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='480.19' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='683.96' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>6</text>
+<text x='378.31' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>x</text>
+<text transform='translate(13.05,283.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>y</text>
+<text x='42.09' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='193.37px' lengthAdjust='spacingAndGlyphs'>side = both with NAs in thickness</text>
+</g>
+</svg>

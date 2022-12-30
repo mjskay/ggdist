@@ -150,8 +150,15 @@ draw_slabs = function(self, s_data, panel_params, coord,
     if (!is.null(d$colour) && !all(is.na(d$colour))) {
       # we have an outline to draw around the outside of the slab:
       # the definition of "outside" depends on the value of `side`:
-      outline_data = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, d$side[[1]])
-      gList(slab_grob, draw_path(outline_data, panel_params, coord))
+      side = d$side[[1]]
+      if (side == "both") {
+        outline_data_top = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, "top")
+        outline_data_bottom = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, "bottom")
+        gList(slab_grob, draw_path(outline_data_top, panel_params, coord), draw_path(outline_data_bottom, panel_params, coord))
+      } else {
+        outline_data = group_slab_data_by(d, c("colour", "alpha", "linewidth", "linetype"), orientation, side)
+        gList(slab_grob, draw_path(outline_data, panel_params, coord))
+      }
     } else {
       slab_grob
     }
