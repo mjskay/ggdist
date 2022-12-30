@@ -242,3 +242,22 @@ test_that("all-NA thickness produces no slab", {
   expect_is(grob[[1]], "gTree")
   expect_equal(grob[[1]]$children, gList())
 })
+
+
+# Inf height --------------------------------------------------------------
+
+test_that("NA width works", {
+  skip_if_no_vdiffr()
+
+  expect_warning(
+    vdiffr::expect_doppelganger("missing width",
+      data.frame(
+        y = 1:6, f = c(0,1,0,0,Inf,0),
+        g = rep(c("a","b"), each = 3),
+        w = rep(c(1, NA), each = 3)
+      ) |> ggplot(aes(x = g, y = y, thickness = f, width = w)) +
+        geom_slab(color = "red")
+    ),
+    "Removed 3 rows"
+  )
+})
