@@ -261,7 +261,7 @@ test_that("NA width works", {
         y = 1:6, f = c(0,1,0,0,Inf,0),
         g = rep(c("a","b"), each = 3),
         w = rep(c(1, NA), each = 3)
-      ) |> ggplot(aes(x = g, y = y, thickness = f, width = w)) +
+      ) %>% ggplot(aes(x = g, y = y, thickness = f, width = w)) +
         geom_slab(color = "red")
     ),
     "Removed 3 rows"
