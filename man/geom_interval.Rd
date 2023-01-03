@@ -188,6 +188,12 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 \item{\code{interval_linetype}: Override for \code{linetype}: the line type of the interval.}
 }
 
+\strong{Deprecated aesthetics}
+
+\itemize{
+\item{\code{interval_size}: Use \code{interval_linewidth}.}
+}
+
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{

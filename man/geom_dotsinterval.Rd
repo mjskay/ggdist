@@ -409,13 +409,14 @@ slab portion of the geometry and rows with \code{datatype = "interval"} target t
 the geometry. This is set automatically when using ggdist \code{stat}s.}
 }
 
-\strong{Binning aesthetics}
+\strong{Dots-specific aesthetics}
 
 \itemize{
+\item{\code{family}: The font family used to draw the dots.}
 \item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
 "stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
 value of the data points themselves are used to determine stacking order. Only applies when
-\code{layout = "bin"}, as the other layout methods fully determine both \emph{x} and \emph{y} positions.}
+\code{layout} is \code{"bin"} or \code{"hex"}, as the other layout methods fully determine both \emph{x} and \emph{y} positions.}
 }
 
 \strong{Interval-specific aesthetics}
@@ -498,12 +499,16 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 \item{\code{point_size}: Override for \code{size}: the size of the point.}
 }
 
+\strong{Deprecated aesthetics}
+
+\itemize{
+\item{\code{slab_size}: Use \code{slab_linewidth}.}
+\item{\code{interval_size}: Use \code{interval_linewidth}.}
+}
+
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{
-\item{\code{family}}
-\item{\code{interval_size}}
-\item{\code{slab_size}}
 \item{\code{width}}
 \item{\code{height}}
 \item{\code{group}}

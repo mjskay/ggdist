@@ -420,6 +420,13 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 \item{\code{point_size}: Override for \code{size}: the size of the point.}
 }
 
+\strong{Deprecated aesthetics}
+
+\itemize{
+\item{\code{slab_size}: Use \code{slab_linewidth}.}
+\item{\code{interval_size}: Use \code{interval_linewidth}.}
+}
+
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{

@@ -211,6 +211,12 @@ and the outline of the \strong{slab} (if it is visible). Use the \code{slab_line
 \item{\code{slab_linetype}: Override for \code{linetype}: the line type of the outline of the slab.}
 }
 
+\strong{Deprecated aesthetics}
+
+\itemize{
+\item{\code{slab_size}: Use \code{slab_linewidth}.}
+}
+
 \strong{Other aesthetics} (these work as in standard \code{geom}s)
 
 \itemize{

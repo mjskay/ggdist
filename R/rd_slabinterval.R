@@ -365,13 +365,15 @@ rd_slabinterval_aesthetics = function(
       the geometry. This is set automatically when using ggdist `stat`s.'
   )
 
-  # binning aesthetics for dots
-  geom_aes_sections[["Binning aesthetics"]] = list(
+  # aesthetics for dots
+  geom_aes_sections[["Dots-specific aesthetics"]] = list(
+    family =
+      'The font family used to draw the dots.',
     order =
       'The order in which data points are stacked within bins. Can be used to create the effect of
       "stacked" dots by ordering dots according to a discrete variable. If omitted (`NULL`), the
       value of the data points themselves are used to determine stacking order. Only applies when
-      `layout = "bin"`, as the other layout methods fully determine both *x* and *y* positions.'
+      `layout` is `"bin"` or `"hex"`, as the other layout methods fully determine both *x* and *y* positions.'
   )
 
   # interval-specific aesthetics
@@ -445,6 +447,12 @@ rd_slabinterval_aesthetics = function(
     point_colour = '(or `point_color`) Override for `colour`/`color`: the outline color of the point.',
     point_alpha = 'Override for `alpha`: the opacity of the point.',
     point_size = 'Override for `size`: the size of the point.'
+  )
+
+  # deprecated aesthetics
+  if (isTRUE(geom$default_params$show_slab) || isTRUE(geom$default_params$show_interval)) geom_aes_sections[["Deprecated aesthetics"]] = c(
+    if (isTRUE(geom$default_params$show_slab)) list(slab_size = 'Use `slab_linewidth`.'),
+    if (isTRUE(geom$default_params$show_interval)) list(interval_size = 'Use `interval_linewidth`.')
   )
 
   out = c(out, rd_aesthetics_sections(
