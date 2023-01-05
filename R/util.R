@@ -96,6 +96,20 @@ map_dfr_ = function(data, fun, ...) {
   bind_rows(lapply(data, fun, ...))
 }
 
+#' faster version of a map over rows of a data frame, like:
+#' map_dfr(seq_len(nrow(data)), function(i) {
+#'   row = data[i, , drop = FALSE]
+#'   ...
+#' })
+#' @noRd
+row_map_dfr_ = function(data, fun, ...) {
+  map_dfr_(seq_len(nrow(data)), function(row_i) {
+    # faster version of row_df = data[row_i, , drop = FALSE]
+    row_df = tibble::new_tibble(lapply(data, vctrs::vec_slice, row_i), nrow = 1)
+    fun(row_df, ...)
+  })
+}
+
 pmap_ = function(data, fun) {
   # this is roughly equivalent to purrr::pmap
   lapply(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
@@ -136,8 +150,8 @@ dlply_ = function(data, groups, fun, ...) {
     group_is = unname(split(seq_len(nrow(data)), group_vars, drop = TRUE, lex.order = TRUE))
 
     lapply(group_is, function(group_i) {
-      # faster version of row_df = data[group_i, ]
-      row_df = tibble::new_tibble(lapply(data, `[`, group_i), nrow = length(group_i))
+      # faster version of row_df = data[group_i, , drop = FALSE]
+      row_df = tibble::new_tibble(lapply(data, vctrs::vec_slice, group_i), nrow = length(group_i))
       fun(row_df, ...)
     })
   } else {

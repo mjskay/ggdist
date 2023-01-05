@@ -40,6 +40,7 @@ New features and enhancements:
   function application). These function families partially apply themselves until all
   non-optional arguments have been supplied: `point_interval()`, `smooth_...`,
   and `density_...`. See `help("automatic-partial-functions")`.
+* Performance improvements for `point_interval()` on grouped data frames. (#154)
 
 Documentation:
 

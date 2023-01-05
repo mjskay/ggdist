@@ -140,7 +140,7 @@ globalVariables(c("y", "ymin", "ymax"))
 #'   ggplot(aes(x = x, y = 0)) +
 #'   stat_halfeye(point_interval = mode_hdi, .width = c(.66, .95))
 #'
-#' @importFrom dplyr do bind_cols group_vars summarise_at %>%
+#' @importFrom dplyr bind_cols group_vars summarise_at %>%
 #' @importFrom rlang quos quos_auto_name eval_tidy syms
 #' @importFrom stats median
 #' @importFrom tibble as_tibble
@@ -203,8 +203,7 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
       # and construct a tibble with grouping factors (if any), point estimate,
       # lower and upper values, and width
       # - equivalent to unnest_legacy()
-      data = map_dfr_(seq_len(nrow(data)), function(i) {
-        row = data[i, , drop = FALSE]
+      data = row_map_dfr_(data, function(row) {
         draws = row[[col_name]]
 
         # if multivariate rvar => flatten it first
@@ -221,7 +220,8 @@ point_interval.default = function(.data, ..., .width = .95, .point = median, .in
         # unless draws is multivariate this will usually be just one iteration
         map_dfr_(seq_len(nrow(row)), function(j) {
           # get row of `data` with grouping factors
-          row_j = row[j, , drop = FALSE]
+          # faster version of row_j = row[j, , drop = FALSE]
+          row_j = tibble::new_tibble(lapply(row, vctrs::vec_slice, j), nrow = 1)
           row.names(row_j) = NULL
           draws_j = draws[[j]]
 
