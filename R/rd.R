@@ -119,7 +119,7 @@ rd_aesthetics_sections = function(
   # undocumented aesthetics
   if (isTRUE(is.na(undocumented_aes))) {
     documented_aes = c(unlist(lapply(geom_aes_sections, names)), names(pos_aes))
-    undocumented_aes = setdiff(geom$aesthetics(), documented_aes)
+    undocumented_aes = setdiff(geom$aesthetics(), c(documented_aes, geom$hidden_aes))
   }
   if (length(undocumented_aes) > 0) {
     out = c(out, glue_doc('

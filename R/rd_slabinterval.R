@@ -165,8 +165,7 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
 rd_slabinterval_aesthetics = function(
   geom_name = "slabinterval",
   stat = NULL,
-  vignette = "slabinterval",
-  undocumented_aes = c("width", "height", "group")
+  vignette = "slabinterval"
 ) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
@@ -185,7 +184,6 @@ rd_slabinterval_aesthetics = function(
     geom_name, stat,
     geom_aes_sections = geom_aes_sections,
     stat_aes = stat_aes,
-    undocumented_aes = undocumented_aes,
     vignette = vignette
   ))
 

@@ -82,7 +82,12 @@ rd_lineribbon_shortcut_stat = function(
 
 #' Provides documentation of aesthetics for lineribbons
 #' @noRd
-rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vignette = "lineribbon", line = TRUE) {
+rd_lineribbon_aesthetics = function(
+  geom_name = "lineribbon",
+  stat = NULL,
+  vignette = "lineribbon",
+  line = TRUE
+) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
   out = glue_doc('

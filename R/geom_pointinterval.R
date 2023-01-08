@@ -58,6 +58,12 @@ GeomPointinterval = ggproto("GeomPointinterval", GeomSlabinterval,
     size = -.width
   ), GeomSlabinterval$default_computed_aes),
 
+  hidden_aes = union(c(
+    "datatype",
+    "side", "scale", "justification", "thickness",
+    "slab_size", "slab_linewidth", "slab_colour", "slab_fill", "slab_alpha", "slab_linetype"
+  ), GeomSlabinterval$hidden_aes),
+
   default_params = defaults(list(
     orientation = NA,
     show_slab = FALSE

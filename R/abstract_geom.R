@@ -41,11 +41,15 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
 
   default_computed_aes = aes(),
 
+  # named list of named lists: section title => aesthetic => doc string
   aes_docs = list(),
 
   get_aes_docs = function(self, ...) {
     self$aes_docs
   },
+
+  # aesthetics to hide from documentation
+  hidden_aes = character(),
 
 
   ## layer arguments ---------------------------------------------------------

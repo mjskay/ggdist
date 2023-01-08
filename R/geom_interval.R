@@ -60,6 +60,13 @@ GeomInterval = ggproto("GeomInterval", GeomSlabinterval,
     color = fct_rev_(ordered(.width))
   ), GeomSlabinterval$default_computed_aes),
 
+  hidden_aes = union(c(
+    "datatype",
+    "side", "scale", "justification", "thickness",
+    "slab_size", "slab_linewidth", "slab_colour", "slab_fill", "slab_alpha", "slab_linetype",
+    "point_colour", "point_fill", "point_alpha", "point_size", "shape"
+  ), GeomSlabinterval$hidden_aes),
+
   default_params = defaults(list(
     orientation = NA,
     interval_size_range = c(1, 6),

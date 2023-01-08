@@ -56,6 +56,13 @@ GeomSlab = ggproto("GeomSlab", GeomSlabinterval,
     colour = NA
   ), GeomSlabinterval$default_key_aes),
 
+  hidden_aes = union(c(
+    "datatype",
+    "point_colour", "point_fill", "point_alpha", "point_size", "shape",
+    "xmin", "xmax", "ymin", "ymax",
+    "interval_colour", "interval_alpha", "interval_size", "interval_linetype"
+  ), GeomSlabinterval$hidden_aes),
+
   rename_size = TRUE,
 
   override_slab_aesthetics = function(self, s_data) {
