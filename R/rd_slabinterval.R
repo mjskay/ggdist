@@ -76,7 +76,7 @@ rd_slabinterval_shortcut_stat = function(
     rd_shortcut_stat(stat_name, geom_name),
     '@inheritParams stat_slabinterval',
     '@inheritParams geom_slabinterval',
-    rd_geom_params(geom_name, stat, as_dots = TRUE),
+    rd_layer_params(geom_name, stat, as_dots = TRUE),
     glue_doc('
       @param geom Use to override the default connection between
       [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
@@ -158,40 +158,6 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
   )
 
   out
-}
-
-#' Provides documentation of params for AbstractGeoms
-#' @noRd
-rd_geom_params = function(geom_name = "slabinterval", stat = NULL, as_dots = FALSE) {
-  geom = get(paste0("Geom", title_case(geom_name)))
-
-  params = geom$get_param_docs()
-
-  # filter out hidden params or ones defined in the stat
-  param_names = setdiff(
-    names(geom$default_params),
-    c(names(stat$default_params), geom$hidden_params, stat$hidden_params)
-  )
-  params = params[param_names]
-
-  missing_docs = sapply(params, is.null)
-  if (any(missing_docs)) {
-    stop("Missing docs for params: ", paste0(param_names[missing_docs], collapse = ", "))
-  }
-
-  if (length(params)) {
-    if (as_dots) {
-      glue_doc('
-        @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
-          to a fixed value, like `colour = "red"` or `linewidth = 3` (see **Aesthetics**, below). They may also be
-          parameters to the paired geom/stat. When paired with the default geom, [geom_<<geom_name>>()],
-          these include:
-          <<rd_describe_list(params)>>
-        ')
-    } else {
-      glue_doc('@param <<names(params)>> <<params>>')
-    }
-  }
 }
 
 #' docstrings for the stat_slabinterval aesthetics

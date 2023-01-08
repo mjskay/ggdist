@@ -31,7 +31,7 @@ rd_lineribbon_shortcut_stat = function(
     rd_shortcut_stat(stat_name, geom_name, from_name = from_name),
     '@inheritParams stat_pointinterval',
     '@inheritParams geom_lineribbon',
-    rd_geom_params(geom_name, stat, as_dots = TRUE),
+    rd_layer_params(geom_name, stat, as_dots = TRUE),
     glue_doc('
       @param geom Use to override the default connection between
       [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),

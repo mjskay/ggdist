@@ -25,7 +25,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' Specifically, [geom_lineribbon()] acts as if its default aesthetics are
 #' `aes(fill = forcats::fct_rev(ordered(.width)))`.
 #'
-#' @eval rd_geom_params("lineribbon")
+#' @eval rd_layer_params("lineribbon")
 #' @eval rd_lineribbon_aesthetics("lineribbon")
 #' @inheritParams ggplot2::geom_line
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
