@@ -186,7 +186,7 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
     stop0(glue('
       You did not specify {xmin} or {xmax} aesthetics, which are needed to
       draw intervals with {snake_case(class(self)[[1]])}.
-       - If you were using \\pkg{ggdist} or \\pkg{tidybayes} prior to version 2.1,
+       - If you were using ggdist or tidybayes prior to version 2.1,
          these aesthetics were automatically set to ".lower" and ".upper" if
          those columns were in your data, in which case you may need to set
          aes({xmin} = .lower, {xmax} = .upper) explicitly.
