@@ -64,7 +64,7 @@ groups. For each group, uses the \code{y}, \code{ymin}, \code{ymax}, and \code{t
 draw points, intervals, and slabs.
 }
 For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
-for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
+for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
 \item{interval_size_range}{A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point

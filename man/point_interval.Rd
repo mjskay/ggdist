@@ -172,7 +172,7 @@ point and interval summaries equal to \code{NA}.}
 
 \item{.exclude}{A character vector of names of columns to be excluded from summarization
 if no column names are specified to be summarized. Default ignores several meta-data column
-names used in tidybayes.}
+names used in \pkg{ggdist} and \pkg{tidybayes}.}
 
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 

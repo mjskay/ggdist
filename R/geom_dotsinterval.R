@@ -236,16 +236,18 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 
 # geom_dotsinterval ---------------------------------------------------------------
 
-#' Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)
+#' Automatic dotplot + point + interval meta-geom
 #'
-#' Geoms and stats for creating dotplots that automatically determines a bin width that
-#' ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-#' generation of quantile dotplots using the `quantiles` argument to [stat_dotsinterval()]/[stat_dots()].
+#' This meta-geom supports drawing combinations of dotplots, points, and intervals.
+#' Geoms and stats based on [geom_dotsinterval()] create dotplots that automatically determine a bin width that
+#' ensures the plot fits within the available space. They also ensure dots do not overlap, and allow
+#' the generation of quantile dotplots using the `quantiles` argument to [stat_dotsinterval()]/[stat_dots()].
 #' Generally follows the naming scheme and
 #' arguments of the [geom_slabinterval()] and [stat_slabinterval()] family of
 #' geoms and stats.
 #'
-#' The dots geoms are similar to [geom_dotplot()] but with a number of differences:
+#' @details
+#' The *dots* family of stats and geoms are similar to [geom_dotplot()] but with a number of differences:
 #'
 #' \itemize{
 #'   \item Dots geoms act like slabs in [geom_slabinterval()] and can be given x positions (or y positions when
@@ -258,6 +260,15 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   \item The shape of the dots in these geoms can be changed using the `slab_shape` aesthetic (when using the
 #'   `dotsinterval` family) or the `shape` or `slab_shape` aesthetic (when using the `dots` family)
 #' }
+#'
+#' Stat and geoms include in this family include:
+#'
+#'  - [geom_dots()]: dotplots on raw data
+#'  - [stat_dots()]: dotplots on raw data, \pkg{distributional} objects, and [posterior::rvar()]s
+#'  - [geom_dotsinterval()]: dotplot + interval plots on raw data with already-calculated
+#'    intervals (rarely useful directly)
+#'  - [stat_dotsinterval()]: dotplot + interval plots on raw data, \pkg{distributional} objects,
+#'    and [posterior::rvar()]s (will calculate intervals for you)
 #'
 #' [stat_dots()] and [stat_dotsinterval()], when used with the `quantiles` argument,
 #' are particularly useful for constructing quantile dotplots, which can be an effective way to communicate uncertainty

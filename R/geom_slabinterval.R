@@ -186,7 +186,7 @@ draw_pointintervals = function(self, i_data, panel_params, coord,
     stop0(glue('
       You did not specify {xmin} or {xmax} aesthetics, which are needed to
       draw intervals with {snake_case(class(self)[[1]])}.
-       - If you were using ggdist or tidybayes prior to version 2.1,
+       - If you were using \\pkg{ggdist} or \\pkg{tidybayes} prior to version 2.1,
          these aesthetics were automatically set to ".lower" and ".upper" if
          those columns were in your data, in which case you may need to set
          aes({xmin} = .lower, {xmax} = .upper) explicitly.
@@ -280,7 +280,7 @@ transform_size = function(size, size_domain, size_range) {
 #' Slab + point + interval meta-geom
 #'
 #' This meta-geom supports drawing combinations of functions (as slabs, aka ridge plots or joy plots), points, and
-#' intervals. It acts as a meta-geom for many other tidybayes geoms that are wrappers around this geom, including
+#' intervals. It acts as a meta-geom for many other \pkg{ggdist} geoms that are wrappers around this geom, including
 #' eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots, and supports both horizontal and
 #' vertical orientations, dodging (via the `position` argument), and relative justification of slabs with their
 #' corresponding intervals.

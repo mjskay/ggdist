@@ -67,7 +67,7 @@ are missing!}
 
 \item{.exclude}{A character vector of names of columns to be excluded from summarization
 if no column names are specified to be summarized. Default ignores several meta-data column
-names used in tidybayes.}
+names used in \pkg{ggdist} and \pkg{tidybayes}.}
 }
 \value{
 A data frame containing point summaries and intervals, with at least one column corresponding

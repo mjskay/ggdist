@@ -70,7 +70,7 @@ groups. For each group, uses the \code{y}, \code{ymin}, \code{ymax}, and \code{t
 draw points, intervals, and slabs.
 }
 For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
-for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
+for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
 \item{normalize}{How to normalize heights of functions input to the \code{thickness} aesthetic. One of:
@@ -150,7 +150,7 @@ be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
 This meta-geom supports drawing combinations of functions (as slabs, aka ridge plots or joy plots), points, and
-intervals. It acts as a meta-geom for many other tidybayes geoms that are wrappers around this geom, including
+intervals. It acts as a meta-geom for many other \pkg{ggdist} geoms that are wrappers around this geom, including
 eye plots, half-eye plots, CCDF barplots, and point+multiple interval plots, and supports both horizontal and
 vertical orientations, dodging (via the \code{position} argument), and relative justification of slabs with their
 corresponding intervals.

@@ -24,12 +24,12 @@ A data frame with (possibly) new names in some columns, according to the
 translation scheme described in \strong{Details}.
 }
 \description{
-These functions translate ggdist/tidybayes-style data frames to/from different data frame
+These functions translate \pkg{ggdist}/\pkg{tidybayes}-style data frames to/from different data frame
 formats (each format using a different naming scheme for its columns).
 }
 \details{
-Function prefixed with \code{to_} translate from the ggdist/tidybayes format to another format, functions
-prefixed with \code{from_} translate from that format back to the ggdist/tidybayes format. Formats include:
+Function prefixed with \code{to_} translate from the \pkg{ggdist}/\pkg{tidybayes} format to another format, functions
+prefixed with \code{from_} translate from that format back to the \pkg{ggdist}/\pkg{tidybayes} format. Formats include:
 
 \code{\link[=to_broom_names]{to_broom_names()}} / \code{\link[=from_broom_names]{from_broom_names()}}:
 

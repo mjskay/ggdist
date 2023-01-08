@@ -77,7 +77,7 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
           draw points, intervals, and slabs.
       }
       For compatibility with the base ggplot naming scheme for `orientation`, `"x"` can be used as an alias
-      for `"vertical"` and `"y"` as an alias for `"horizontal"` (tidybayes had an `orientation` parameter
+      for `"vertical"` and `"y"` as an alias for `"horizontal"` (\\pkg{ggdist} had an `orientation` parameter
       before base ggplot did, hence the discrepancy).
       '),
 

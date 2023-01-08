@@ -5,7 +5,7 @@
 \alias{geom_dots}
 \alias{stat_dotsinterval}
 \alias{stat_dots}
-\title{Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)}
+\title{Automatic dotplot + point + interval meta-geom}
 \usage{
 geom_dotsinterval(
   mapping = NULL,
@@ -226,7 +226,7 @@ groups. For each group, uses the \code{y}, \code{ymin}, \code{ymax}, and \code{t
 draw points, intervals, and slabs.
 }
 For compatibility with the base ggplot naming scheme for \code{orientation}, \code{"x"} can be used as an alias
-for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (tidybayes had an \code{orientation} parameter
+for \code{"vertical"} and \code{"y"} as an alias for \code{"horizontal"} (\pkg{ggdist} had an \code{orientation} parameter
 before base ggplot did, hence the discrepancy).}
 
 \item{interval_size_domain}{A length-2 numeric vector giving the minimum and maximum of the values of the \code{size} and \code{linewidth} aesthetics that will be
@@ -308,15 +308,16 @@ A \link[ggplot2:ggplot2-ggproto]{ggplot2::Geom} or \link[ggplot2:ggplot2-ggproto
 be added to a \code{\link[=ggplot]{ggplot()}} object.
 }
 \description{
-Geoms and stats for creating dotplots that automatically determines a bin width that
-ensures the plot fits within the available space. Also ensures dots do not overlap, and allows
-generation of quantile dotplots using the \code{quantiles} argument to \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}/\code{\link[=stat_dots]{stat_dots()}}.
+This meta-geom supports drawing combinations of dotplots, points, and intervals.
+Geoms and stats based on \code{\link[=geom_dotsinterval]{geom_dotsinterval()}} create dotplots that automatically determine a bin width that
+ensures the plot fits within the available space. They also ensure dots do not overlap, and allow
+the generation of quantile dotplots using the \code{quantiles} argument to \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}/\code{\link[=stat_dots]{stat_dots()}}.
 Generally follows the naming scheme and
 arguments of the \code{\link[=geom_slabinterval]{geom_slabinterval()}} and \code{\link[=stat_slabinterval]{stat_slabinterval()}} family of
 geoms and stats.
 }
 \details{
-The dots geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
+The \emph{dots} family of stats and geoms are similar to \code{\link[=geom_dotplot]{geom_dotplot()}} but with a number of differences:
 
 \itemize{
 \item Dots geoms act like slabs in \code{\link[=geom_slabinterval]{geom_slabinterval()}} and can be given x positions (or y positions when
@@ -328,6 +329,16 @@ symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. T
 dots from overlapping each other.
 \item The shape of the dots in these geoms can be changed using the \code{slab_shape} aesthetic (when using the
 \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
+}
+
+Stat and geoms include in this family include:
+\itemize{
+\item \code{\link[=geom_dots]{geom_dots()}}: dotplots on raw data
+\item \code{\link[=stat_dots]{stat_dots()}}: dotplots on raw data, \pkg{distributional} objects, and \code{\link[posterior:rvar]{posterior::rvar()}}s
+\item \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}: dotplot + interval plots on raw data with already-calculated
+intervals (rarely useful directly)
+\item \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}: dotplot + interval plots on raw data, \pkg{distributional} objects,
+and \code{\link[posterior:rvar]{posterior::rvar()}}s (will calculate intervals for you)
 }
 
 \code{\link[=stat_dots]{stat_dots()}} and \code{\link[=stat_dotsinterval]{stat_dotsinterval()}}, when used with the \code{quantiles} argument,

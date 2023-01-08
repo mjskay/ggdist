@@ -53,7 +53,7 @@
 #' and `ymax` (for use with ggplot).
 #' @param .exclude A character vector of names of columns to be excluded from summarization
 #' if no column names are specified to be summarized. Default ignores several meta-data column
-#' names used in tidybayes.
+#' names used in \pkg{ggdist} and \pkg{tidybayes}.
 #' @param na.rm logical value indicating whether `NA` values should be stripped before the computation proceeds.
 #' If `FALSE` (the default), the presence of `NA` values in the columns to be summarized will generally
 #' result in an error. If `TRUE`, `NA` values will be removed in the calculation of intervals so long
