@@ -483,6 +483,20 @@ NULL
 #' @usage NULL
 #' @export
 StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
+  aes_docs = defaults(list(
+    x = 'x position of the geometry (when orientation = `"vertical"`); or sample data to be summarized
+    (when `orientation = "horizontal"` with sample data).',
+    y = 'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
+    (when `orientation = "vertical"` with sample data).',
+    xdist = 'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional}
+    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
+    ydist = 'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional}
+    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
+    dist = 'When using analytical distributions, a name of a distribution (e.g. `"norm"`), a
+    \\pkg{distributional} object (e.g. [dist_normal()]), or a [posterior::rvar()] object. See **Details**.',
+    args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
+  ), AbstractStatSlabinterval$aes_docs),
+
   default_aes = defaults(aes(
     xdist = NULL,
     ydist = NULL,

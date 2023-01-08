@@ -5,6 +5,8 @@
 
 
 
+# AbstractStat ------------------------------------------------------------
+
 #' Stat base class designed to reduce boilerplate
 #'
 #' A base class for orientation-aware stats that handles boilerplate generation
@@ -32,10 +34,17 @@
 #' @keywords internal
 #' @noRd
 AbstractStat = ggproto("AbstractStat", Stat,
-  default_params = list(
-    orientation = NA,
-    na.rm = FALSE
-  ),
+
+  ## aesthetics --------------------------------------------------------------
+
+  aes_docs = list(),
+
+  get_aes_docs = function(self, ...) {
+    self$aes_docs
+  },
+
+
+  ## layer function ----------------------------------------------------------
 
   # layer function to use to construct the layer --- default is ggplot2::layer()
   layer_function = "layer",
@@ -44,6 +53,14 @@ AbstractStat = ggproto("AbstractStat", Stat,
   layer_args = list(
     show.legend = NA,
     inherit.aes = TRUE
+  ),
+
+
+  ## params ------------------------------------------------------------------
+
+  default_params = list(
+    orientation = NA,
+    na.rm = FALSE
   ),
 
   # parameters to hide from user input in the stat_XXX() constructor
@@ -90,6 +107,9 @@ AbstractStat = ggproto("AbstractStat", Stat,
     union(params, names(self$default_params))
   }
 )
+
+
+# make_stat ---------------------------------------------------------------
 
 #' @importFrom rlang syms new_function pairlist2 expr
 make_stat = function(stat, geom,

@@ -93,7 +93,8 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
     ')
 
   # Build sections for the geom-specific aesthetics ...
-  geom_aes_sections = geom$get_aes_docs()
+  geom_aes_sections = (geom$get_aes_docs %||% list)()
+  stat_aes = (stat$get_aes_docs %||% list)()
 
   # TODO: add a show_line parameter to GeomLineribbon and use that in
   # GeomLineribbon$get_aes_docs() to drop line aesthetics for StatRibbon
@@ -104,7 +105,7 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
   out = c(out, rd_aesthetics_sections(
     geom_name, stat,
     geom_aes_sections = geom_aes_sections,
-    stat_aes = rd_stat_slabinterval_aes,
+    stat_aes = stat_aes,
     undocumented_aes = c("group"),
     vignette = vignette
   ))

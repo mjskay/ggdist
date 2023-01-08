@@ -160,23 +160,6 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
   out
 }
 
-#' docstrings for the stat_slabinterval aesthetics
-#' @noRd
-rd_stat_slabinterval_aes = list(
-  x = 'x position of the geometry (when orientation = `"vertical"`); or sample data to be summarized
-    (when `orientation = "horizontal"` with sample data).',
-  y = 'y position of the geometry (when orientation = `"horizontal"`); or sample data to be summarized
-    (when `orientation = "vertical"` with sample data).',
-  xdist = 'When using analytical distributions, distribution to map on the x axis: a \\pkg{distributional}
-    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
-  ydist = 'When using analytical distributions, distribution to map on the y axis: a \\pkg{distributional}
-    object (e.g. [dist_normal()]) or a [posterior::rvar()] object.',
-  dist = 'When using analytical distributions, a name of a distribution (e.g. `"norm"`), a
-    \\pkg{distributional} object (e.g. [dist_normal()]), or a [posterior::rvar()] object. See **Details**.',
-  args = 'Distribution arguments (`args` or `arg1`, ... `arg9`). See **Details**.'
-)
-
-
 #' Provides documentation of aesthetics for slabintervals
 #' @noRd
 rd_slabinterval_aesthetics = function(
@@ -195,12 +178,13 @@ rd_slabinterval_aesthetics = function(
 
     ')
 
-  geom_aes_sections = geom$get_aes_docs()
+  geom_aes_sections = (geom$get_aes_docs %||% list)()
+  stat_aes = (stat$get_aes_docs %||% list)()
 
   out = c(out, rd_aesthetics_sections(
     geom_name, stat,
     geom_aes_sections = geom_aes_sections,
-    stat_aes = rd_stat_slabinterval_aes,
+    stat_aes = stat_aes,
     undocumented_aes = undocumented_aes,
     vignette = vignette
   ))
