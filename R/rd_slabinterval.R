@@ -167,7 +167,6 @@ rd_slabinterval_aesthetics = function(
   stat = NULL,
   vignette = "slabinterval"
 ) {
-  geom = get(paste0("Geom", title_case(geom_name)))
 
   out = glue_doc('
     @section Aesthetics:
@@ -177,15 +176,7 @@ rd_slabinterval_aesthetics = function(
 
     ')
 
-  geom_aes_sections = (geom$get_aes_docs %||% list)()
-  stat_aes = (stat$get_aes_docs %||% list)()
-
-  out = c(out, rd_aesthetics_sections(
-    geom_name, stat,
-    geom_aes_sections = geom_aes_sections,
-    stat_aes = stat_aes,
-    vignette = vignette
-  ))
+  out = c(out, rd_aesthetics_sections(geom_name, stat, vignette = vignette))
 
   glue_collapse(out, "\n")
 }

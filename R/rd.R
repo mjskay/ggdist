@@ -64,21 +64,22 @@ rd_shortcut_stat = function(stat_name, geom_name = stat_name, from_name = "slabi
 #' Provides documentation aesthetics sections of a stat/geom.
 #' @param geom_name lowercase base name of geom
 #' @param stat `ggplot2::Stat` object
-#' @param stat_aes named list of aesthetics and their docstrings for the stat
-#' @param geom_aes_sections named list of sections of geom aesthetics, where
-#'   each entry is a named list of aesthetics and their docstrings.
-#' @param undocumented_aes a character vector of names of undocumented aesthetics,
-#'   or NA if it should be determined automatically
 #' @param vignette vignette to refer readers to for more information on this family
 #' @noRd
 rd_aesthetics_sections = function(
-  geom_name = "slabinterval", stat = NULL, vignette = geom_name,
-  stat_aes = NULL, geom_aes_sections,
-  undocumented_aes = NA
+  geom_name = "slabinterval", stat = NULL, vignette = geom_name
 ) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
+  hidden_aes = union(geom$hidden_aes, stat$hidden_aes)
+
+  filter_aes = function(aes_list, include, exclude = hidden_aes) {
+    names_to_keep = setdiff(intersect(names(aes_list), include), exclude)
+    aes_list[names_to_keep]
+  }
+
   # stat aesthetics
+  stat_aes = (stat$get_aes_docs %||% list)()
   pos_aes = list(
     x = 'x position of the geometry',
     y = 'y position of the geometry'
@@ -87,7 +88,7 @@ rd_aesthetics_sections = function(
     out = glue_doc('
       These `stat`s support the following aesthetics:
 
-      <<rd_aesthetics_list(stat_aes, stat$aesthetics())>>
+      <<rd_named_list(filter_aes(stat_aes, stat$aesthetics()))>>
 
       In addition, in their default configuration (paired with [geom_<<geom_name>>()])
       the following aesthetics are supported by the underlying geom:
@@ -98,28 +99,28 @@ rd_aesthetics_sections = function(
     out = glue_doc('
       **Positional aesthetics**
 
-      <<rd_aesthetics_list(pos_aes, geom$aesthetics())>>
+      <<rd_named_list(filter_aes(pos_aes, geom$aesthetics()))>>
 
       ')
   }
 
   # geom aesthetics
+  geom_aes_sections = (geom$get_aes_docs %||% list)()
   for (i in seq_along(geom_aes_sections)) {
     section = names(geom_aes_sections)[[i]]
-    geom_aes = geom_aes_sections[[i]]
+    geom_aes = filter_aes(geom_aes_sections[[i]], geom$aesthetics())
+    if (length(geom_aes) == 0) next;
     out = c(out, glue_doc('
       **<<section>>**
 
-      <<rd_aesthetics_list(geom_aes, geom$aesthetics())>>
+      <<rd_named_list(geom_aes)>>
 
       '))
   }
 
   # undocumented aesthetics
-  if (isTRUE(is.na(undocumented_aes))) {
-    documented_aes = c(unlist(lapply(geom_aes_sections, names)), names(pos_aes))
-    undocumented_aes = setdiff(geom$aesthetics(), c(documented_aes, geom$hidden_aes))
-  }
+  documented_aes = c(unlist(lapply(geom_aes_sections, names)), names(pos_aes))
+  undocumented_aes = setdiff(geom$aesthetics(), c(documented_aes, hidden_aes))
   if (length(undocumented_aes) > 0) {
     out = c(out, glue_doc('
       **Other aesthetics** (these work as in standard `geom`s)
@@ -137,14 +138,6 @@ rd_aesthetics_sections = function(
     '))
 
   glue_collapse(out, "\n")
-}
-
-#' Given a named list of aesthetic / aesthetic doc pairs, output a list of them
-#' for use in docs. Used by rd_aesthetics_sections
-#' @noRd
-rd_aesthetics_list = function(aes_docs, include_only) {
-  aes_docs = aes_docs[intersect(names(aes_docs), include_only)]
-  rd_named_list(aes_docs)
 }
 
 

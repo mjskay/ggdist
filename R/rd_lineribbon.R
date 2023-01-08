@@ -10,8 +10,7 @@
 rd_lineribbon_shortcut_stat = function(
   stat_name, chart_type,
   geom_name = stat_name,
-  from_name = "slabinterval",
-  line = TRUE
+  from_name = "slabinterval"
 ) {
   stat = get(paste0("Stat", title_case(stat_name)))
   geom = get(paste0("Geom", title_case(geom_name)))
@@ -44,7 +43,7 @@ rd_lineribbon_shortcut_stat = function(
       @return A [ggplot2::Stat] representing a <<chart_type>> geometry which can
       be added to a [ggplot()] object.'),
     rd_slabinterval_computed_variables(stat),
-    rd_lineribbon_aesthetics(geom_name, stat, line = line),
+    rd_lineribbon_aesthetics(geom_name, stat),
     glue_doc('
       @seealso
       See [geom_<<geom_name>>()] for the geom underlying this stat.
@@ -85,10 +84,8 @@ rd_lineribbon_shortcut_stat = function(
 rd_lineribbon_aesthetics = function(
   geom_name = "lineribbon",
   stat = NULL,
-  vignette = "lineribbon",
-  line = TRUE
+  vignette = "lineribbon"
 ) {
-  geom = get(paste0("Geom", title_case(geom_name)))
 
   out = glue_doc('
     @section Aesthetics:
@@ -97,23 +94,7 @@ rd_lineribbon_aesthetics = function(
 
     ')
 
-  # Build sections for the geom-specific aesthetics ...
-  geom_aes_sections = (geom$get_aes_docs %||% list)()
-  stat_aes = (stat$get_aes_docs %||% list)()
-
-  # TODO: add a show_line parameter to GeomLineribbon and use that in
-  # GeomLineribbon$get_aes_docs() to drop line aesthetics for StatRibbon
-  if (!line) {
-    geom_aes_sections[["Line aesthetics"]] = NULL
-  }
-
-  out = c(out, rd_aesthetics_sections(
-    geom_name, stat,
-    geom_aes_sections = geom_aes_sections,
-    stat_aes = stat_aes,
-    undocumented_aes = c("group"),
-    vignette = vignette
-  ))
+  out = c(out, rd_aesthetics_sections(geom_name, stat, vignette = vignette))
 
   glue_collapse(out, "\n")
 }

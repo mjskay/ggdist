@@ -37,11 +37,15 @@ AbstractStat = ggproto("AbstractStat", Stat,
 
   ## aesthetics --------------------------------------------------------------
 
+  # named list: aesthetic => doc string
   aes_docs = list(),
 
   get_aes_docs = function(self, ...) {
     self$aes_docs
   },
+
+  # aesthetics to hide from documentation
+  hidden_aes = character(),
 
 
   ## layer function ----------------------------------------------------------
