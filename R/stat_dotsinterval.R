@@ -72,7 +72,8 @@ StatDotsinterval = ggproto("StatDotsinterval", StatSlabinterval,
   # workaround (#84)
   compute_slab = function(self, ...) compute_slab_dots(self, ...)
 )
-#' @rdname geom_dotsinterval
+
+#' @eval rd_dotsinterval_shortcut_stat("dotsinterval", "dots + point + interval")
 #' @export
 stat_dotsinterval = make_stat(StatDotsinterval, geom = "dotsinterval")
 
@@ -95,6 +96,7 @@ StatDots = ggproto("StatDots", StatDotsinterval,
   ), StatDotsinterval$hidden_params)
 )
 StatDots$default_aes$size = NULL
-#' @rdname geom_dotsinterval
+
+#' @eval rd_dotsinterval_shortcut_stat("dots", "dot")
 #' @export
 stat_dots = make_stat(StatDots, geom = "dots")

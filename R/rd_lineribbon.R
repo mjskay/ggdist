@@ -10,7 +10,7 @@
 rd_lineribbon_shortcut_stat = function(
   stat_name, chart_type,
   geom_name = stat_name,
-  from_name = "slabinterval"
+  from_name = "lineribbon"
 ) {
   stat = get(paste0("Stat", title_case(stat_name)))
   geom = get(paste0("Geom", title_case(geom_name)))
@@ -78,6 +78,9 @@ rd_lineribbon_shortcut_stat = function(
       ')
   )
 }
+
+
+# aesthetics --------------------------------------------------------------
 
 #' Provides documentation of aesthetics for lineribbons
 #' @noRd

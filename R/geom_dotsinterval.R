@@ -250,9 +250,8 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @template references-quantile-dotplots
 #' @template details-x-y-xdist-ydist
 #' @eval rd_layer_params("dotsinterval")
-#' @eval rd_slabinterval_aesthetics("dotsinterval", stat = StatDotsinterval, vignette = "dotsinterval")
+#' @eval rd_dotsinterval_aesthetics(stat = StatDotsinterval)
 #' @inheritParams geom_slabinterval
-#' @inheritParams stat_slabinterval
 #' @author Matthew Kay
 #' @param quantiles Setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
@@ -562,6 +561,6 @@ GeomDots = ggproto("GeomDots", GeomDotsinterval,
 GeomDots$default_key_aes$slab_colour = NULL
 GeomDots$default_key_aes$slab_size = NULL
 
-#' @rdname geom_dotsinterval
+#' @eval rd_dotsinterval_shortcut_geom("dots", "dot")
 #' @export
 geom_dots = make_geom(GeomDots)

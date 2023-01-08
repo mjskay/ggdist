@@ -125,6 +125,9 @@ rd_slabinterval_shortcut_stat = function(
   )
 }
 
+
+# computed variables ------------------------------------------------------
+
 rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
   out = glue_doc('
       @section Computed Variables:
@@ -159,6 +162,9 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
 
   out
 }
+
+
+# aesthetics --------------------------------------------------------------
 
 #' Provides documentation of aesthetics for slabintervals
 #' @noRd

@@ -30,7 +30,7 @@ StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
 # instead of being removed
 StatLineribbon$default_aes$size = NULL
 
-#' @eval rd_lineribbon_shortcut_stat("lineribbon", "line + multiple-ribbon")
+#' @eval rd_lineribbon_shortcut_stat("lineribbon", "line + multiple-ribbon", from_name = "slabinterval")
 #' @export
 stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")
 
@@ -48,6 +48,6 @@ StatRibbon = ggproto("StatRibbon", StatLineribbon,
   ), StatLineribbon$default_params)
 )
 
-#' @eval rd_lineribbon_shortcut_stat("ribbon", "multiple-ribbon", geom_name = "lineribbon", from_name = "lineribbon")
+#' @eval rd_lineribbon_shortcut_stat("ribbon", "multiple-ribbon", geom_name = "lineribbon")
 #' @export
 stat_ribbon = make_stat(StatRibbon, geom = "lineribbon")
