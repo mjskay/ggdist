@@ -387,11 +387,14 @@ object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posteri
 In addition, in their default configuration (paired with \code{\link[=geom_dotsinterval]{geom_dotsinterval()}})
 the following aesthetics are supported by the underlying geom:
 
-\strong{Slab-specific aesthetics}
+\strong{Dots-specific (aka Slab-specific) aesthetics}
 
 \itemize{
-\item{\code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
-\code{y} value (if \code{orientation = "vertical"}) of the slab.}
+\item{\code{family}: The font family used to draw the dots.}
+\item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
+"stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
+value of the data points themselves are used to determine stacking order. Only applies when
+\code{layout} is \code{"bin"} or \code{"hex"}, as the other layout methods fully determine both \emph{x} and \emph{y} positions.}
 \item{\code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
 which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
 or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
@@ -410,16 +413,6 @@ is \code{NULL} (the default), then it is set automatically based on the value of
 indicate which part of the geom a row in the data targets: rows with \code{datatype = "slab"} target the
 slab portion of the geometry and rows with \code{datatype = "interval"} target the interval portion of
 the geometry. This is set automatically when using ggdist \code{stat}s.}
-}
-
-\strong{Dots-specific aesthetics}
-
-\itemize{
-\item{\code{family}: The font family used to draw the dots.}
-\item{\code{order}: The order in which data points are stacked within bins. Can be used to create the effect of
-"stacked" dots by ordering dots according to a discrete variable. If omitted (\code{NULL}), the
-value of the data points themselves are used to determine stacking order. Only applies when
-\code{layout} is \code{"bin"} or \code{"hex"}, as the other layout methods fully determine both \emph{x} and \emph{y} positions.}
 }
 
 \strong{Interval-specific aesthetics}

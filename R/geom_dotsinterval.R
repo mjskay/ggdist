@@ -333,6 +333,26 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
 
   ## aesthetics --------------------------------------------------------------
 
+  aes_docs = {
+    aes_docs = GeomSlabinterval$aes_docs
+    dots_aes_i = which(names(aes_docs) == "Slab-specific aesthetics")
+    names(aes_docs)[[dots_aes_i]] = "Dots-specific (aka Slab-specific) aesthetics"
+    aes_docs[[dots_aes_i]] = defaults(list(
+      family =
+        'The font family used to draw the dots.',
+      order =
+        'The order in which data points are stacked within bins. Can be used to create the effect of
+      "stacked" dots by ordering dots according to a discrete variable. If omitted (`NULL`), the
+      value of the data points themselves are used to determine stacking order. Only applies when
+      `layout` is `"bin"` or `"hex"`, as the other layout methods fully determine both *x* and *y* positions.'
+    ), aes_docs[[dots_aes_i]])
+    aes_docs
+  },
+
+  hidden_aes = union(c(
+    "thickness"
+  ), GeomSlabinterval$hidden_aes),
+
   default_aes = defaults(aes(
     family = "",
     slab_shape = NULL,

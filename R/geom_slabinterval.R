@@ -359,11 +359,8 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
 
   ## aesthetics --------------------------------------------------------------
 
-  get_aes_docs = function(self, ...) {
-    geom_aes_sections = ggproto_parent(AbstractGeom, self)$get_aes_docs(...)
-
-    # slab-specific aesthetics
-    if (isTRUE(self$default_params$show_slab)) geom_aes_sections[["Slab-specific aesthetics"]] = list(
+  aes_docs = list(
+    "Slab-specific aesthetics" = list(
       thickness =
         'The thickness of the slab at each `x` value (if `orientation = "horizontal"`) or
       `y` value (if `orientation = "vertical"`) of the slab.',
@@ -389,34 +386,20 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       indicate which part of the geom a row in the data targets: rows with `datatype = "slab"` target the
       slab portion of the geometry and rows with `datatype = "interval"` target the interval portion of
       the geometry. This is set automatically when using ggdist `stat`s.'
-    )
+    ),
 
-    # aesthetics for dots
-    geom_aes_sections[["Dots-specific aesthetics"]] = list(
-      family =
-        'The font family used to draw the dots.',
-      order =
-        'The order in which data points are stacked within bins. Can be used to create the effect of
-      "stacked" dots by ordering dots according to a discrete variable. If omitted (`NULL`), the
-      value of the data points themselves are used to determine stacking order. Only applies when
-      `layout` is `"bin"` or `"hex"`, as the other layout methods fully determine both *x* and *y* positions.'
-    )
-
-    # interval-specific aesthetics
-    if (isTRUE(self$default_params$show_interval)) geom_aes_sections[["Interval-specific aesthetics"]] = list(
+    "Interval-specific aesthetics" = list(
       xmin = 'Left end of the interval sub-geometry (if `orientation = "horizontal"`).',
       xmax = 'Right end of the interval sub-geometry (if `orientation = "horizontal"`).',
       ymin = 'Lower end of the interval sub-geometry (if `orientation = "vertical"`).',
       ymax = 'Upper end of the interval sub-geometry (if `orientation = "vertical"`).'
-    )
+    ),
 
-    # point-specific aesthetics
-    if (isTRUE(self$default_params$show_point)) geom_aes_sections[["Point-specific aesthetics"]] = list(
+    "Point-specific aesthetics" = list(
       shape = 'Shape type used to draw the **point** sub-geometry.'
-    )
+    ),
 
-    # color aesthetics
-    geom_aes_sections[["Color aesthetics"]] = list(
+    "Color aesthetics" = list(
       colour = '(or `color`) The color of the **interval** and **point** sub-geometries.
      Use the `slab_color`, `interval_color`, or `point_color` aesthetics (below) to
      set sub-geometry colors separately.',
@@ -428,10 +411,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
      scale to "ramp" to another color. See [scale_colour_ramp()] for examples.',
       fill_ramp = 'A secondary scale that modifies the `fill`
      scale to "ramp" to another color. See [scale_fill_ramp()] for examples.'
-    )
+    ),
 
-    # line aesthetics
-    geom_aes_sections[["Line aesthetics"]] = list(
+    "Line aesthetics" = list(
       linewidth = 'Width of the line used to draw the **interval** (except with [geom_slab()]: then
      it is the width of the **slab**). With composite geometries including an interval and slab,
      use `slab_linewidth` to set the line width of the **slab** (see below). For **interval**, raw
@@ -448,41 +430,35 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
       linetype = 'Type of line (e.g., `"solid"`, `"dashed"`, etc) used to draw the **interval**
      and the outline of the **slab** (if it is visible). Use the `slab_linetype` or
      `interval_linetype` aesthetics (below) to set sub-geometry line types separately.'
-    )
+    ),
 
-    # slab override aesthetics
-    if (isTRUE(self$default_params$show_slab)) geom_aes_sections[["Slab-specific color/line override aesthetics"]] = list(
+    "Slab-specific color/line override aesthetics" = list(
       slab_fill = 'Override for `fill`: the fill color of the slab.',
       slab_colour = '(or `slab_color`) Override for `colour`/`color`: the outline color of the slab.',
       slab_alpha = 'Override for `alpha`: the opacity of the slab.',
       slab_linewidth = 'Override for `linwidth`: the width of the outline of the slab.',
       slab_linetype = 'Override for `linetype`: the line type of the outline of the slab.',
       slab_shape = 'Override for `shape`: the shape of the dots used to draw the dotplot slab.'
-    )
+    ),
 
-    # interval override aesthetics
-    if (isTRUE(self$default_params$show_interval)) geom_aes_sections[["Interval-specific color/line override aesthetics"]] = list(
+    "Interval-specific color/line override aesthetics" = list(
       interval_colour = '(or `interval_color`) Override for `colour`/`color`: the color of the interval.',
       interval_alpha = 'Override for `alpha`: the opacity of the interval.',
       interval_linetype = 'Override for `linetype`: the line type of the interval.'
-    )
+    ),
 
-    # point override aesthetics
-    if (isTRUE(self$default_params$show_point)) geom_aes_sections[["Point-specific color/line override aesthetics"]] = list(
+    "Point-specific color/line override aesthetics" = list(
       point_fill = 'Override for `fill`: the fill color of the point.',
       point_colour = '(or `point_color`) Override for `colour`/`color`: the outline color of the point.',
       point_alpha = 'Override for `alpha`: the opacity of the point.',
       point_size = 'Override for `size`: the size of the point.'
-    )
+    ),
 
-    # deprecated aesthetics
-    if (isTRUE(self$default_params$show_slab) || isTRUE(self$default_params$show_interval)) geom_aes_sections[["Deprecated aesthetics"]] = c(
-      if (isTRUE(self$default_params$show_slab)) list(slab_size = 'Use `slab_linewidth`.'),
-      if (isTRUE(self$default_params$show_interval)) list(interval_size = 'Use `interval_linewidth`.')
+    "Deprecated aesthetics" = list(
+      slab_size = 'Use `slab_linewidth`.',
+      interval_size = 'Use `interval_linewidth`.'
     )
-
-    geom_aes_sections
-  },
+  ),
 
   default_aes = aes(
     # default datatype is slab (other valid value is "interval" for points/intervals)
