@@ -93,30 +93,13 @@ rd_lineribbon_aesthetics = function(geom_name = "lineribbon", stat = NULL, vigne
     ')
 
   # Build sections for the geom-specific aesthetics ...
-  geom_aes_sections = list()
+  geom_aes_sections = geom$get_aes_docs()
 
-  # ribbon-specific aesthetics
-  geom_aes_sections[["Ribbon-specific aesthetics"]] = list(
-    xmin = 'Left edge of the ribbon sub-geometry (if `orientation = "horizontal"`).',
-    xmax = 'Right edge of the ribbon sub-geometry (if `orientation = "horizontal"`).',
-    ymin = 'Lower edge of the ribbon sub-geometry (if `orientation = "vertical"`).',
-    ymax = 'Upper edge of the ribbon sub-geometry (if `orientation = "vertical"`).'
-  )
-
-  # color aesthetics
-  geom_aes_sections[["Color aesthetics"]] = list(
-    colour = '(or `color`) The color of the **line** sub-geometry.',
-    fill = 'The fill color of the **ribbon** sub-geometry.',
-    alpha = 'The opacity of the **line** and **ribbon** sub-geometries.',
-    fill_ramp = 'A secondary scale that modifies the `fill`
-     scale to "ramp" to another color. See [scale_fill_ramp()] for examples.'
-  )
-
-  # line aesthetics
-  if (line) geom_aes_sections[["Line aesthetics"]] = list(
-    linewidth = 'Width of **line**. In \\pkg{ggplot2} < 3.4, was called `size`.',
-    linetype = 'Type of **line** (e.g., `"solid"`, `"dashed"`, etc)'
-  )
+  # TODO: add a show_line parameter to GeomLineribbon and use that in
+  # GeomLineribbon$get_aes_docs() to drop line aesthetics for StatRibbon
+  if (!line) {
+    geom_aes_sections[["Line aesthetics"]] = NULL
+  }
 
   out = c(out, rd_aesthetics_sections(
     geom_name, stat,

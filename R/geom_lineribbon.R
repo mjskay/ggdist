@@ -89,6 +89,28 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
 
   ## aesthetics --------------------------------------------------------------
 
+  aes_docs = modifyList(AbstractGeom$aes_docs, list(
+    "Ribbon-specific aesthetics" = list(
+      xmin = 'Left edge of the ribbon sub-geometry (if `orientation = "horizontal"`).',
+      xmax = 'Right edge of the ribbon sub-geometry (if `orientation = "horizontal"`).',
+      ymin = 'Lower edge of the ribbon sub-geometry (if `orientation = "vertical"`).',
+      ymax = 'Upper edge of the ribbon sub-geometry (if `orientation = "vertical"`).'
+    ),
+
+    "Color aesthetics" = list(
+      colour = '(or `color`) The color of the **line** sub-geometry.',
+      fill = 'The fill color of the **ribbon** sub-geometry.',
+      alpha = 'The opacity of the **line** and **ribbon** sub-geometries.',
+      fill_ramp = 'A secondary scale that modifies the `fill`
+       scale to "ramp" to another color. See [scale_fill_ramp()] for examples.'
+    ),
+
+    "Line aesthetics" = list(
+      linewidth = 'Width of **line**. In \\pkg{ggplot2} < 3.4, was called `size`.',
+      linetype = 'Type of **line** (e.g., `"solid"`, `"dashed"`, etc)'
+    )
+  )),
+
   default_aes = aes(
     colour = NULL,
     linewidth = NULL,

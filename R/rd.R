@@ -60,7 +60,7 @@ rd_shortcut_stat = function(stat_name, geom_name = stat_name, from_name = "slabi
 }
 
 
-# aesthetics sections -----------------------------------------------------
+# aesthetics -----------------------------------------------------
 
 #' Provides documentation aesthetics sections of a stat/geom.
 #' @param geom_name lowercase base name of geom
@@ -88,7 +88,7 @@ rd_aesthetics_sections = function(
     out = glue_doc('
       These `stat`s support the following aesthetics:
 
-      <<rd_aesthetics(stat_aes, stat$aesthetics())>>
+      <<rd_aesthetics_list(stat_aes, stat$aesthetics())>>
 
       In addition, in their default configuration (paired with [geom_<<geom_name>>()])
       the following aesthetics are supported by the underlying geom:
@@ -99,19 +99,19 @@ rd_aesthetics_sections = function(
     out = glue_doc('
       **Positional aesthetics**
 
-      <<rd_aesthetics(pos_aes, geom$aesthetics())>>
+      <<rd_aesthetics_list(pos_aes, geom$aesthetics())>>
 
       ')
   }
 
-  # slab aesthetics
+  # geom aesthetics
   for (i in seq_along(geom_aes_sections)) {
     section = names(geom_aes_sections)[[i]]
     geom_aes = geom_aes_sections[[i]]
     out = c(out, glue_doc('
       **<<section>>**
 
-      <<rd_aesthetics(geom_aes, geom$aesthetics())>>
+      <<rd_aesthetics_list(geom_aes, geom$aesthetics())>>
 
       '))
   }
@@ -143,7 +143,7 @@ rd_aesthetics_sections = function(
 #' Given a named list of aesthetic / aesthetic doc pairs, output a list of them
 #' for use in docs. Used by rd_aesthetics_sections
 #' @noRd
-rd_aesthetics = function(aes_docs, include_only) {
+rd_aesthetics_list = function(aes_docs, include_only) {
   aes_docs = aes_docs[intersect(names(aes_docs), include_only)]
   rd_named_list(aes_docs)
 }

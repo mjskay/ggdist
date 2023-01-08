@@ -41,6 +41,12 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
 
   default_computed_aes = aes(),
 
+  aes_docs = list(),
+
+  get_aes_docs = function(self) {
+    self$aes_docs
+  },
+
 
   ## layer arguments ---------------------------------------------------------
 
