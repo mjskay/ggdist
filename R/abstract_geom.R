@@ -43,7 +43,7 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
 
   aes_docs = list(),
 
-  get_aes_docs = function(self) {
+  get_aes_docs = function(self, ...) {
     self$aes_docs
   },
 
@@ -83,7 +83,7 @@ AbstractGeom = ggproto("AbstractGeom", Geom,
       ')
   ),
 
-  get_param_docs = function(self) {
+  get_param_docs = function(self, ...) {
     self$param_docs
   },
 
