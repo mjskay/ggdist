@@ -101,6 +101,35 @@ reference:
   contents:
   - find_dotplot_binwidth
   - bin_dots
+  - smooth_density
+  - smooth_discrete
+  - smooth_none
+
+- title: Density functions
+  desc: Density functions used by `stat_slabinterval()` and by the density
+    smoothers for dotplot layout.
+  contents:
+  - density_auto
+  - density_bounded
+  - density_unbounded
+
+- title: Automatic partial functions
+  desc: Overview of automatic partial function application (currying) used by
+    several ggdist function families
+  contents:
+  - automatic-partial-functions
+
+- title: Probability expressions
+  desc: Experimental mini-domain-specific language for probability expressions
+    in `stat_slabinterval()` aesthetics.
+  contents:
+  - Pr_
+  - p_
+
+- title: Weighted quantiles
+  desc: Weighted generalization of `quantile()` used internally by several algorithms.
+  contents:
+  - weighted_quantile
 
 - title: Compatibility with other packages
   desc:  Functions to convert the ggdist naming scheme (for `point_interval()`) to
