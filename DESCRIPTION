@@ -92,6 +92,7 @@ Collate:
     "point_interval.R"
     "position_dodgejust.R"
     "pr.R"
+    "rd_dotsinterval.R"
     "rd_slabinterval.R"
     "rd_lineribbon.R"
     "scale_colour_ramp.R"

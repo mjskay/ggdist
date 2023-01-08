@@ -117,7 +117,8 @@ you have overlapping geometries.}
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
 
-\item{binwidth}{The bin width to use for laying out the dots. One of:
+\item{binwidth}{The bin width to use for laying out the dots.
+One of:
 \itemize{
 \item \code{NA} (the default): Dynamically select the bin width based on the
 size of the plot when drawn. This will pick a \code{binwidth} such that the
@@ -149,7 +150,8 @@ to have dots be precisely the \code{binwidth}, set \code{dotsize = 1}.}
 stack relative to the dot height. The default, \code{1}, makes dots in the same
 stack just touch each other.}
 
-\item{layout}{The layout method used for the dots:
+\item{layout}{The layout method used
+for the dots:
 \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
@@ -181,7 +183,8 @@ dots to their desired positions, subject to the constraint that adjacent
 dots do not overlap.
 }}
 
-\item{smooth}{Smoother to apply to dot positions. One of:
+\item{smooth}{Smoother to apply to dot positions.
+One of:
 \itemize{
 \item A function that takes a numeric vector of dot positions and returns a
 smoothed version of that vector, such as \code{smooth_density()},
@@ -323,7 +326,7 @@ use to fit the available space.
 \item Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
 symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
 dots from overlapping each other.
-\item The shape of the dots in a in these geoms can be changed using the \code{slab_shape} aesthetic (when using the
+\item The shape of the dots in these geoms can be changed using the \code{slab_shape} aesthetic (when using the
 \code{dotsinterval} family) or the \code{shape} or \code{slab_shape} aesthetic (when using the \code{dots} family)
 }
 

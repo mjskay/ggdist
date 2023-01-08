@@ -145,7 +145,7 @@ rd_aesthetics_sections = function(
 
 #' Provides documentation of params for layers containing AbstractGeoms
 #' @noRd
-rd_layer_params = function(geom_name = "slabinterval", stat = NULL, as_dots = FALSE) {
+rd_layer_params = function(geom_name, stat = NULL, as_dots = FALSE) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
   params = geom$get_param_docs()

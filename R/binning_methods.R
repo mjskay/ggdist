@@ -17,9 +17,9 @@
 #' @param heightratio ratio of bin width to dot height
 #' @param stackratio ratio of dot height to vertical distance between dot
 #' centers
-#' @template param-dots-layout
-#' @template param-dots-overlaps
-#' @template param-slab-side
+#' @eval rd_param_dots_layout()
+#' @eval rd_param_dots_overlaps()
+#' @eval rd_param_slab_side()
 #' @param orientation Whether the dots are laid out horizontally or vertically.
 #' Follows the naming scheme of [geom_slabinterval()]:
 #'

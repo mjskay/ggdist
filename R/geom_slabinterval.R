@@ -322,7 +322,7 @@ transform_size = function(size, size_domain, size_range) {
 #' directly. Typically, the `geom_*` versions are meant for use with already-summarized data (such as intervals) and the
 #' `stat_*` versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
 #'
-#' @eval rd_layer_params()
+#' @eval rd_layer_params("slabinterval")
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic

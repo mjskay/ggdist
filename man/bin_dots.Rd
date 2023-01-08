@@ -29,7 +29,8 @@ bin_dots(
 \item{stackratio}{ratio of dot height to vertical distance between dot
 centers}
 
-\item{layout}{The layout method used for the dots:
+\item{layout}{The layout method used
+for the dots:
 \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the

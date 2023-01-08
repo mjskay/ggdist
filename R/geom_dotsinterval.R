@@ -255,7 +255,7 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #'   \item Dots geoms use a dynamic layout algorithm that lays out dots from the center out if the input data are
 #'   symmetrical, guaranteeing that symmetrical data results in a symmetrical plot. The layout algorithm also prevents
 #'   dots from overlapping each other.
-#'   \item The shape of the dots in a in these geoms can be changed using the `slab_shape` aesthetic (when using the
+#'   \item The shape of the dots in these geoms can be changed using the `slab_shape` aesthetic (when using the
 #'   `dotsinterval` family) or the `shape` or `slab_shape` aesthetic (when using the `dots` family)
 #' }
 #'
@@ -264,67 +264,16 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' using a frequency framing that may be easier for laypeople to understand (Kay et al. 2016, Fernandes et al. 2018).
 #'
 #' @template details-x-y-xdist-ydist
+#' @eval rd_layer_params("dotsinterval", stat = StatDotsinterval)
 #' @eval rd_slabinterval_aesthetics("dotsinterval", stat = StatDotsinterval, vignette = "dotsinterval")
 #' @inheritParams geom_slabinterval
 #' @inheritParams stat_slabinterval
 #' @author Matthew Kay
-#' @param binwidth The bin width to use for laying out the dots. One of:
-#'   - `NA` (the default): Dynamically select the bin width based on the
-#'     size of the plot when drawn. This will pick a `binwidth` such that the
-#'     tallest stack of dots is at most `scale` in height (ideally exactly `scale`
-#'     in height, though this is not guaranteed).
-#'   - A length-1 (scalar) numeric or [unit] object giving the exact bin width.
-#'   - A length-2 (vector) numeric or [unit] object giving the minimum and maximum
-#'     desired bin width. The bin width will be dynamically selected within
-#'     these bounds.
-#'
-#' If the value is numeric, it is assumed to be in units of data. The bin width
-#' (or its bounds) can also be specified using [unit()], which may be useful if
-#' it is desired that the dots be a certain point size or a certain percentage of
-#' the width/height of the viewport. For example, `unit(0.1, "npc")` would make
-#' dots that are *exactly* 10% of the viewport size along whichever dimension the
-#' dotplot is drawn; `unit(c(0, 0.1), "npc")` would make dots that are *at most*
-#' 10% of the viewport size (while still ensuring the tallest stack is less than
-#' or equal to `scale`).
-#' @param dotsize The width of the dots relative to the `binwidth`. The default,
-#' `1.07`, makes dots be just a bit wider than the bin width, which is a
-#' manually-tuned parameter that tends to work well with the default circular
-#' shape, preventing gaps between bins from appearing to be too large visually
-#' (as might arise from dots being *precisely* the `binwidth`). If it is desired
-#' to have dots be precisely the `binwidth`, set `dotsize = 1`.
-#' @param stackratio The distance between the center of the dots in the same
-#' stack relative to the dot height. The default, `1`, makes dots in the same
-#' stack just touch each other.
-#' @param smooth Smoother to apply to dot positions. One of:
-#'   - A function that takes a numeric vector of dot positions and returns a
-#'     smoothed version of that vector, such as `smooth_density()`,
-#'     `smooth_discrete()`, or `smooth_bar()`.
-#'   - A string indicating what smoother to use, as the suffix to a function
-#'     name starting with `smooth_`; e.g. `"none"` (the default) applies
-#'     `smooth_none()`, which simply returns the given vector without
-#'     applying smoothing.
-#' @param overflow How to handle overflow of dots beyond the extent of the geom
-#' when a minimum `binwidth` (or an exact `binwidth`) is supplied.
-#' One of:
-#'   - `"keep"`: Keep the overflow, drawing dots outside the geom bounds.
-#'   - `"compress"`: Compress the layout. Reduces the `binwidth` to the size necessary
-#'     to keep the dots within bounds, then adjusts `stackratio` and `dotsize` so that
-#'     the apparent dot size is the user-specified minimum `binwidth` times the
-#'     user-specified `dotsize`.
-#' @template param-dots-layout
-#' @template param-dots-overlaps
 #' @param quantiles Setting this to a value other than `NA`
 #' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
 #' (for analytical distributions, the default of `NA` is taken to mean `100` quantiles). The value of
 #' `quantiles` determines the number
 #' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
-#' @param verbose If `TRUE`, print out the bin width of the dotplot. Can be useful
-#' if you want to start from an automatically-selected bin width and then adjust it
-#' manually. Bin width is printed both as data units and as normalized parent
-#' coordinates or `"npc"`s (see [unit()]). Note that if you just want to scale the
-#' selected bin width to fit within a desired area, it is probably easier to use
-#' `scale` than to copy and scale `binwidth` manually, and if you just want to
-#' provide constraints on the bin width, you can pass a length-2 vector to `binwidth`.
 #' @return A [ggplot2::Geom] or [ggplot2::Stat] representing a dotplot or combined dotplot+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @references
@@ -381,6 +330,9 @@ NULL
 #' @import ggplot2
 #' @export
 GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
+
+  ## aesthetics --------------------------------------------------------------
+
   default_aes = defaults(aes(
     family = "",
     slab_shape = NULL,
@@ -401,6 +353,96 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     s_data
   },
 
+
+  ## parameters --------------------------------------------------------------
+
+  param_docs = defaults(list(
+    binwidth = glue_doc('The bin width to use for laying out the dots.
+      One of:
+        - `NA` (the default): Dynamically select the bin width based on the
+          size of the plot when drawn. This will pick a `binwidth` such that the
+          tallest stack of dots is at most `scale` in height (ideally exactly `scale`
+          in height, though this is not guaranteed).
+        - A length-1 (scalar) numeric or [unit] object giving the exact bin width.
+        - A length-2 (vector) numeric or [unit] object giving the minimum and maximum
+          desired bin width. The bin width will be dynamically selected within
+          these bounds.
+
+      If the value is numeric, it is assumed to be in units of data. The bin width
+      (or its bounds) can also be specified using [unit()], which may be useful if
+      it is desired that the dots be a certain point size or a certain percentage of
+      the width/height of the viewport. For example, `unit(0.1, "npc")` would make
+      dots that are *exactly* 10% of the viewport size along whichever dimension the
+      dotplot is drawn; `unit(c(0, 0.1), "npc")` would make dots that are *at most*
+      10% of the viewport size (while still ensuring the tallest stack is less than
+      or equal to `scale`).
+      '),
+    dotsize = glue_doc('The width of the dots relative to the `binwidth`. The default,
+      `1.07`, makes dots be just a bit wider than the bin width, which is a
+      manually-tuned parameter that tends to work well with the default circular
+      shape, preventing gaps between bins from appearing to be too large visually
+      (as might arise from dots being *precisely* the `binwidth`). If it is desired
+      to have dots be precisely the `binwidth`, set `dotsize = 1`.'),
+    stackratio = glue_doc('The distance between the center of the dots in the same
+      stack relative to the dot height. The default, `1`, makes dots in the same
+      stack just touch each other.'),
+    smooth = glue_doc('Smoother to apply to dot positions.
+      One of:
+        - A function that takes a numeric vector of dot positions and returns a
+          smoothed version of that vector, such as `smooth_density()`,
+          `smooth_discrete()`, or `smooth_bar()`.
+        - A string indicating what smoother to use, as the suffix to a function
+          name starting with `smooth_`; e.g. `"none"` (the default) applies
+          `smooth_none()`, which simply returns the given vector without
+          applying smoothing.
+      '),
+    overflow = glue_doc('How to handle overflow of dots beyond the extent of the geom
+      when a minimum `binwidth` (or an exact `binwidth`) is supplied.
+      One of:
+        - `"keep"`: Keep the overflow, drawing dots outside the geom bounds.
+        - `"compress"`: Compress the layout. Reduces the `binwidth` to the size necessary
+          to keep the dots within bounds, then adjusts `stackratio` and `dotsize` so that
+          the apparent dot size is the user-specified minimum `binwidth` times the
+          user-specified `dotsize`.
+      '),
+    layout = glue_doc('The layout method used
+      for the dots:
+        - `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
+          This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
+          classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
+          the input data are symmetrical it will return a symmetrical layout.
+        - `"weave"`: uses the same basic binning approach of `"bin"`, but places dots in the off-axis at their actual
+          positions (unless `overlaps = "nudge"`, in which case overlaps may be nudged out of the way). This maintains
+          the alignment of rows but does not align dots within columns.
+        - `"hex"`: uses the same basic binning approach of `"bin"`, but alternates placing dots `+ binwidth/4` or
+          `- binwidth/4` in the off-axis from the bin center. This allows hexagonal packing by setting a `stackratio`
+          less than 1 (something like `0.9` tends to work).
+        - `"swarm"`: uses the `"compactswarm"` layout from [beeswarm::beeswarm()]. Does not maintain alignment of rows or
+          columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
+          dotplots of theoretical distributions, which may look better with `"bin"`, `"weave"`, or `"hex"`).
+      '),
+    overlaps = glue_doc('How to handle overlapping dots or bins in the `"bin"`,
+      `"weave"`, and `"hex"` layouts (dots never overlap in the `"swarm"` layout).
+      For the purposes of this argument, dots are only considered to be overlapping
+      if they would be overlapping when `dotsize = 1` and `stackratio = 1`; i.e.
+      if you set those arguments to other values, overlaps may still occur.
+      One of:
+        - `"keep"`: leave overlapping dots as they are. Dots may overlap
+          (usually only slightly) in the `"bin"`, `"weave"`, and `"hex"` layouts.
+        - `"nudge"`: nudge overlapping dots out of the way. Overlaps are avoided
+          using a constrained optimization which minimizes the squared distance of
+          dots to their desired positions, subject to the constraint that adjacent
+          dots do not overlap.
+      '),
+    verbose = glue_doc('If `TRUE`, print out the bin width of the dotplot. Can be useful
+      if you want to start from an automatically-selected bin width and then adjust it
+      manually. Bin width is printed both as data units and as normalized parent
+      coordinates or `"npc"`s (see [unit()]). Note that if you just want to scale the
+      selected bin width to fit within a desired area, it is probably easier to use
+      `scale` than to copy and scale `binwidth` manually, and if you just want to
+      provide constraints on the bin width, you can pass a length-2 vector to `binwidth`.')
+  ), GeomSlabinterval$param_docs),
+
   default_params = defaults(list(
     normalize = "none",
     binwidth = NA,
@@ -416,6 +458,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
   hidden_params = union(c(
     "normalize", "fill_type"
   ), GeomSlabinterval$hidden_params),
+
+
+  ## other methods -----------------------------------------------------------
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(GeomSlabinterval, self)$setup_data(data, params)
