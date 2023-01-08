@@ -9,6 +9,8 @@
 globalVariables(c(".lower", ".upper", ".width"))
 
 
+# geom_lineribbon ---------------------------------------------------------
+
 #' Line + multiple-ribbon plots (ggplot geom)
 #'
 #' A combination of [geom_line()] and [geom_ribbon()] with default aesthetics
@@ -23,7 +25,7 @@ globalVariables(c(".lower", ".upper", ".width"))
 #' Specifically, [geom_lineribbon()] acts as if its default aesthetics are
 #' `aes(fill = forcats::fct_rev(ordered(.width)))`.
 #'
-#' @eval rd_slabinterval_params("lineribbon")
+#' @eval rd_geom_params("lineribbon")
 #' @eval rd_lineribbon_aesthetics("lineribbon")
 #' @inheritParams ggplot2::geom_line
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
@@ -84,6 +86,9 @@ draw_key_lineribbon = function(self, data, params, size) {
 #' @import ggplot2
 #' @export
 GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
+
+  ## aesthetics --------------------------------------------------------------
+
   default_aes = aes(
     colour = NULL,
     linewidth = NULL,
@@ -107,12 +112,27 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   rename_size = TRUE,
   non_missing_aes = union("size", AbstractGeom$non_missing_aes),
 
-  # workaround (#84)
-  draw_key = function(self, ...) draw_key_lineribbon(self, ...),
-
   required_aes = c("x|y"),
 
   optional_aes = c("ymin", "ymax", "xmin", "xmax", "fill_ramp"),
+
+
+  ## params ------------------------------------------------------------------
+
+  param_docs = defaults(list(
+    step = glue_doc('
+      Should the line/ribbon be drawn as a step function? One of:
+      \\itemize{
+        \\item `FALSE` (default): do not draw as a step function.
+        \\item `"mid"` (or `TRUE`): draw steps midway between adjacent x values.
+        \\item `"hv"`: draw horizontal-then-vertical steps.
+        \\item `"vh"`: draw as vertical-then-horizontal steps.
+      }
+      `TRUE` is an alias for `"mid"` because for a step function with ribbons, `"mid"` is probably what you want
+      (for the other two step approaches the ribbons at either the very first or very last x value will not be
+      visible).
+      ')
+  ), AbstractGeom$param_docs),
 
   default_params = list(
     step = FALSE,
@@ -123,6 +143,12 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
   orientation_options = defaults(list(
     range_is_orthogonal = TRUE, ambiguous = TRUE, group_has_equal = TRUE
   ), AbstractGeom$orientation_options),
+
+
+  ## other methods -----------------------------------------------------------
+
+  # workaround (#84)
+  draw_key = function(self, ...) draw_key_lineribbon(self, ...),
 
   draw_panel = function(self, data, panel_scales, coord,
     step = self$default_params$step,

@@ -25,7 +25,7 @@ test_that("slabinterval aesthetic documention generator works", {
 
 test_that("slabinterval parameter documention generator works", {
 
-  geom_output = paste0(rd_slabinterval_params("slabinterval"), collapse = "\n")
+  geom_output = paste0(rd_geom_params("slabinterval"), collapse = "\n")
   expect_match(geom_output, "@param na.rm", fixed = TRUE)
 
   # parameters without documentation raise a warning
@@ -34,7 +34,7 @@ test_that("slabinterval parameter documention generator works", {
       foo = "bar"
     ), GeomSlabinterval$default_params)
   )
-  expect_error(rd_slabinterval_params("test"), "Missing docs for params: foo")
+  expect_error(rd_geom_params("test"), "Missing docs for params: foo")
 
 })
 

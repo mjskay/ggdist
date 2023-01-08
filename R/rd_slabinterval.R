@@ -76,7 +76,7 @@ rd_slabinterval_shortcut_stat = function(
     rd_shortcut_stat(stat_name, geom_name),
     '@inheritParams stat_slabinterval',
     '@inheritParams geom_slabinterval',
-    rd_slabinterval_params(geom_name, stat, as_dots = TRUE),
+    rd_geom_params(geom_name, stat, as_dots = TRUE),
     glue_doc('
       @param geom Use to override the default connection between
       [stat_<<stat_name>>()] and [geom_<<geom_name>>()]'),
@@ -160,116 +160,12 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
   out
 }
 
-#' Provides documentation of params for slabinterval geoms
+#' Provides documentation of params for AbstractGeoms
 #' @noRd
-rd_slabinterval_params = function(geom_name = "slabinterval", stat = NULL, as_dots = FALSE) {
+rd_geom_params = function(geom_name = "slabinterval", stat = NULL, as_dots = FALSE) {
   geom = get(paste0("Geom", title_case(geom_name)))
 
-  params = list(
-
-    # BASE PARAMS
-    orientation = glue_doc('
-      Whether this geom is drawn horizontally or vertically. One of:
-      \\itemize{
-        \\item `NA` (default): automatically detect the orientation based on how the aesthetics
-          are assigned. Automatic detection works most of the time.
-        \\item `"horizontal"` (or `"y"`): draw horizontally, using the `y` aesthetic to identify different
-          groups. For each group, uses the `x`, `xmin`, `xmax`, and `thickness` aesthetics to
-          draw points, intervals, and slabs.
-        \\item `"vertical"` (or `"x"`): draw vertically, using the `x` aesthetic to identify different
-          groups. For each group, uses the `y`, `ymin`, `ymax`, and `thickness` aesthetics to
-          draw points, intervals, and slabs.
-      }
-      For compatibility with the base ggplot naming scheme for `orientation`, `"x"` can be used as an alias
-      for `"vertical"` and `"y"` as an alias for `"horizontal"` (tidybayes had an `orientation` parameter
-      before base ggplot did, hence the discrepancy).
-      '),
-
-    # SLAB PARAMS
-    normalize = glue_doc('
-      How to normalize heights of functions input to the `thickness` aesthetic. One of:
-      \\itemize{
-        \\item `"all"`: normalize so that the maximum height across all data is `1`.
-        \\item `"panels"`: normalize within panels so that the maximum height in each panel is `1`.
-        \\item `"xy"`: normalize within the x/y axis opposite the `orientation` of this geom so
-          that the maximum height at each value of the opposite axis is `1`.
-        \\item `"groups"`: normalize within values of the opposite axis and within each
-          group so that the maximum height in each group is `1`.
-        \\item `"none"`: values are taken as is with no normalization (this should probably
-          only be used with functions whose values are in \\[0,1\\], such as CDFs).
-      }
-      '),
-    fill_type = glue_doc('
-      What type of fill to use when the fill color or alpha varies within a slab. One of:
-      \\itemize{
-        \\item `"segments"`: breaks up the slab geometry into segments for each unique combination of fill color and
-          alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
-          but can give ugly results if a large number of unique fill colors are being used (as in gradients,
-          like in [stat_gradientinterval()]).
-        \\item `"gradient"`: a `grid::linearGradient()` is used to create a smooth gradient fill. This works well for
-          large numbers of unique fill colors, but requires R >= 4.1 and is not yet supported on all graphics devices.
-          As of this writing, the `png()` graphics device with `type = "cairo"`, the `svg()` device, the `pdf()`
-          device, and the `ragg::agg_png()` devices are known to support this option. On R < 4.1, this option
-          will fall back to `fill_type = "segment"` with a message.
-        \\item `"auto"`: attempts to use `fill_type = "gradient"` if support for it can be auto-detected. On R >= 4.2,
-          support for gradients can be auto-detected on some graphics devices; if support is not detected, this
-          option will fall back to `fill_type = "segments"` (in case of a false negative, `fill_type = "gradient"`
-          can be set explicitly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
-          fall back to `fill_type = "segments"`, in which case you can set `fill_type = "gradient"` explicitly
-          if you are using a graphics device that support gradients.
-      }
-      '),
-
-    # INTERVAL PARAMS
-    interval_size_domain = glue_doc('
-      A length-2 numeric vector giving the minimum and maximum of the values of the `size` and `linewidth` aesthetics that will be
-      translated into actual sizes for intervals drawn according to `interval_size_range` (see the documentation
-      for that argument.)
-      '),
-    interval_size_range = glue_doc('
-      A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point
-      sizes, as they tend to be too thick when using the default settings of [scale_size_continuous()], which give
-      sizes with a range of `c(1, 6)`. The `interval_size_domain` value indicates the input domain of raw size
-      values (typically this should be equal to the value of the `range` argument of the [scale_size_continuous()]
-      function), and `interval_size_range` indicates the desired output range of the size values (the min and max of
-      the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
-      argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
-      that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-      size of the interval or points separately, you can also use the `linewidth` or `point_size`
-      aesthetics; see [scales].
-      '),
-    fatten_point = glue_doc('
-      A multiplicative factor used to adjust the size of the point relative to the size of the
-      thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
-      aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
-      specified with that aesthetic will not be adjusted using `fatten_point`.
-      '),
-
-    # LINERIBBON PARAMS
-    step = glue_doc('
-      Should the line/ribbon be drawn as a step function? One of:
-      \\itemize{
-        \\item `FALSE` (default): do not draw as a step function.
-        \\item `"mid"` (or `TRUE`): draw steps midway between adjacent x values.
-        \\item `"hv"`: draw horizontal-then-vertical steps.
-        \\item `"vh"`: draw as vertical-then-horizontal steps.
-      }
-      `TRUE` is an alias for `"mid"` because for a step function with ribbons, `"mid"` is probably what you want
-      (for the other two step approaches the ribbons at either the very first or very last x value will not be
-      visible).
-      '),
-
-    # SUB_GEOMETRY FLAGS
-    show_slab = 'Should the slab portion of the geom be drawn?',
-    show_point = 'Should the point portion of the geom be drawn?',
-    show_interval = 'Should the interval portion of the geom be drawn?',
-
-    # BASE PARAMS
-    na.rm = glue_doc('
-      If `FALSE`, the default, missing values are removed with a warning. If `TRUE`, missing
-      values are silently removed.
-      ')
-  )
+  params = geom$get_param_docs()
 
   # filter out hidden params or ones defined in the stat
   param_names = setdiff(

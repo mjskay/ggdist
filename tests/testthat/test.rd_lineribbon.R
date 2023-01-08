@@ -23,7 +23,7 @@ test_that("lineribbon aesthetic documention generator works", {
 
 test_that("shortcut stat documentation generator works", {
 
-  stat_output = paste0(rd_lineribbon_shortcut_stat("ribbon", chart_type = "multiple-ribbon"), collapse = "\n")
+  stat_output = paste0(rd_lineribbon_shortcut_stat("lineribbon", chart_type = "multiple-ribbon"), collapse = "\n")
   expect_match(stat_output, "@title Multiple-ribbon plot (shortcut stat)", fixed = TRUE)
   expect_match(stat_output, ".width = c(0.5, 0.8, 0.95)", fixed = TRUE)
 

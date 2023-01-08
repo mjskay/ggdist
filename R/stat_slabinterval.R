@@ -338,7 +338,7 @@ compute_interval_slabinterval = function(
 #' @template details-x-y-xdist-ydist
 #' @eval rd_slabinterval_computed_variables(stat = StatSlabinterval)
 #' @eval rd_slabinterval_aesthetics(stat = StatSlabinterval)
-#' @eval rd_slabinterval_params(stat = StatSlabinterval, as_dots = TRUE)
+#' @eval rd_geom_params(stat = StatSlabinterval, as_dots = TRUE)
 #'
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between

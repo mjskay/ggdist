@@ -322,7 +322,7 @@ transform_size = function(size, size_domain, size_range) {
 #' directly. Typically, the `geom_*` versions are meant for use with already-summarized data (such as intervals) and the
 #' `stat_*` versions are summarize the data themselves (usually draws from a distribution) to produce the geom.
 #'
-#' @eval rd_slabinterval_params()
+#' @eval rd_geom_params()
 #' @eval rd_slabinterval_aesthetics()
 #' @inheritParams ggplot2::layer
 #' @param ...  Other arguments passed to [layer()]. These are often aesthetics, used to set an aesthetic
@@ -356,6 +356,9 @@ NULL
 #' @usage NULL
 #' @export
 GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
+
+  ## aesthetics --------------------------------------------------------------
+
   default_aes = aes(
     # default datatype is slab (other valid value is "interval" for points/intervals)
     datatype = "slab",
@@ -430,6 +433,77 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
   override_point_aesthetics = function(self, ...) override_point_aesthetics(self, ...),
   override_interval_aesthetics = function(self, ...) override_interval_aesthetics(self, ...),
 
+
+
+  ## params ------------------------------------------------------------------
+
+  param_docs = defaults(list(
+    # SLAB PARAMS
+    normalize = glue_doc('
+      How to normalize heights of functions input to the `thickness` aesthetic. One of:
+      \\itemize{
+        \\item `"all"`: normalize so that the maximum height across all data is `1`.
+        \\item `"panels"`: normalize within panels so that the maximum height in each panel is `1`.
+        \\item `"xy"`: normalize within the x/y axis opposite the `orientation` of this geom so
+          that the maximum height at each value of the opposite axis is `1`.
+        \\item `"groups"`: normalize within values of the opposite axis and within each
+          group so that the maximum height in each group is `1`.
+        \\item `"none"`: values are taken as is with no normalization (this should probably
+          only be used with functions whose values are in \\[0,1\\], such as CDFs).
+      }
+      '),
+    fill_type = glue_doc('
+      What type of fill to use when the fill color or alpha varies within a slab. One of:
+      \\itemize{
+        \\item `"segments"`: breaks up the slab geometry into segments for each unique combination of fill color and
+          alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
+          but can give ugly results if a large number of unique fill colors are being used (as in gradients,
+          like in [stat_gradientinterval()]).
+        \\item `"gradient"`: a `grid::linearGradient()` is used to create a smooth gradient fill. This works well for
+          large numbers of unique fill colors, but requires R >= 4.1 and is not yet supported on all graphics devices.
+          As of this writing, the `png()` graphics device with `type = "cairo"`, the `svg()` device, the `pdf()`
+          device, and the `ragg::agg_png()` devices are known to support this option. On R < 4.1, this option
+          will fall back to `fill_type = "segment"` with a message.
+        \\item `"auto"`: attempts to use `fill_type = "gradient"` if support for it can be auto-detected. On R >= 4.2,
+          support for gradients can be auto-detected on some graphics devices; if support is not detected, this
+          option will fall back to `fill_type = "segments"` (in case of a false negative, `fill_type = "gradient"`
+          can be set explicitly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
+          fall back to `fill_type = "segments"`, in which case you can set `fill_type = "gradient"` explicitly
+          if you are using a graphics device that support gradients.
+      }
+      '),
+
+    # INTERVAL PARAMS
+    interval_size_domain = glue_doc('
+      A length-2 numeric vector giving the minimum and maximum of the values of the `size` and `linewidth` aesthetics that will be
+      translated into actual sizes for intervals drawn according to `interval_size_range` (see the documentation
+      for that argument.)
+      '),
+    interval_size_range = glue_doc('
+      A length-2 numeric vector. This geom scales the raw size aesthetic values when drawing interval and point
+      sizes, as they tend to be too thick when using the default settings of [scale_size_continuous()], which give
+      sizes with a range of `c(1, 6)`. The `interval_size_domain` value indicates the input domain of raw size
+      values (typically this should be equal to the value of the `range` argument of the [scale_size_continuous()]
+      function), and `interval_size_range` indicates the desired output range of the size values (the min and max of
+      the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
+      argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
+      that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
+      size of the interval or points separately, you can also use the `linewidth` or `point_size`
+      aesthetics; see [scales].
+      '),
+    fatten_point = glue_doc('
+      A multiplicative factor used to adjust the size of the point relative to the size of the
+      thickest interval line. If you wish to specify point sizes directly, you can also use the `point_size`
+      aesthetic and [scale_point_size_continuous()] or [scale_point_size_discrete()]; sizes
+      specified with that aesthetic will not be adjusted using `fatten_point`.
+      '),
+
+    # SUB_GEOMETRY FLAGS
+    show_slab = 'Should the slab portion of the geom be drawn?',
+    show_point = 'Should the point portion of the geom be drawn?',
+    show_interval = 'Should the interval portion of the geom be drawn?'
+  ), AbstractGeom$param_docs),
+
   default_params = list(
     orientation = NA,
     normalize = "all",
@@ -450,6 +524,9 @@ GeomSlabinterval = ggproto("GeomSlabinterval", AbstractGeom,
   orientation_options = defaults(list(
     main_is_orthogonal = TRUE, range_is_orthogonal = TRUE, group_has_equal = TRUE, main_is_optional = TRUE
   ), AbstractGeom$orientation_options),
+
+
+  ## other methods -----------------------------------------------------------
 
   setup_data = function(self, data, params) {
     data = ggproto_parent(AbstractGeom, self)$setup_data(data, params)
