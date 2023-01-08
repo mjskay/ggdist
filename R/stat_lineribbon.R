@@ -39,9 +39,9 @@ stat_lineribbon = make_stat(StatLineribbon, geom = "lineribbon")
 # shortcut stats ----------------------------------------------------------
 
 StatRibbon = ggproto("StatRibbon", StatLineribbon,
-  default_aes = defaults(aes(
-    color = after_stat(I(NA))
-  ), StatLineribbon$default_aes)
+  default_params = defaults(list(
+    show_point = FALSE
+  ), StatLineribbon$default_params)
 )
 
 #' @eval rd_lineribbon_shortcut_stat("ribbon", "multiple-ribbon", geom_name = "lineribbon", from_name = "lineribbon", line = FALSE)

@@ -202,8 +202,8 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
       intersect(c("colour", "fill", "fill_raw", "linetype", "group"))
 
     # draw as a step function if requested
-    if (step == TRUE) step = "mid"
-    if (step != FALSE) data = ddply_(data, grouping_columns, stepify, x = y, direction = step)
+    if (isTRUE(step)) step = "mid"
+    if (!isFALSE(step)) data = ddply_(data, grouping_columns, stepify, x = y, direction = step)
 
     # draw all the ribbons
     ribbon_grobs = data %>%

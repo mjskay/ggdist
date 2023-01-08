@@ -180,6 +180,7 @@ Roughly equivalent to:
 \if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
   aes(size = NULL),
   geom = "slab",
+  show_point = FALSE, show_interval = FALSE,
   show.legend = NA
 )
 }\if{html}{\out{</div>}}

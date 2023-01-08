@@ -119,7 +119,7 @@ function.
 Roughly equivalent to:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{stat_lineribbon(
-  aes(colour = after_stat(I(NA)))
+  show_point = FALSE
 )
 }\if{html}{\out{</div>}}
 }

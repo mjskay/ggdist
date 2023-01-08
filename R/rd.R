@@ -37,8 +37,7 @@ rd_shortcut_stat = function(stat_name, geom_name = stat_name, from_name = "slabi
 
   changed = changed_geom_values(
     from = from, to = stat,
-    exclude_aes = "datatype",
-    exclude_params = c("show_point", "show_interval")
+    exclude_aes = "datatype"
   )
 
   stat_args = glue_collapse(c(

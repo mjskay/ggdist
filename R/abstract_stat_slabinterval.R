@@ -257,6 +257,8 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
         i_data$cdf_max = cdf_fun(i_data[[xmax]])
       }
 
+      # remove point data if it is not being shown
+      if (!show_point) i_data[[x]] = NA_real_
 
       bind_rows(
         if (show_slab) s_data,
