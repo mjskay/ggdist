@@ -208,7 +208,11 @@ dots from overlapping each other.
 
 Stat and geoms include in this family include:
 \itemize{
-\item \code{\link[=geom_dots]{geom_dots()}}: dotplots on raw data
+\item \code{\link[=geom_dots]{geom_dots()}}: dotplots on raw data. Ensures the dotplot fits within available space by reducing the size
+of the dots automatically (may result in very small dots).
+\item \code{\link[=geom_swarm]{geom_swarm()}} and \code{\link[=geom_weave]{geom_weave()}}: dotplots on raw data with defaults intended to create "beeswarm" plots.
+Used \code{side = "both"} by default, and sets the default dot size to the same size as \code{\link[=geom_point]{geom_point()}}
+(\code{binwidth = unit(1.5, "mm")}), allowing dots to overlap instead of getting very small.
 \item \code{\link[=stat_dots]{stat_dots()}}: dotplots on raw data, \pkg{distributional} objects, and \code{\link[posterior:rvar]{posterior::rvar()}}s
 \item \code{\link[=geom_dotsinterval]{geom_dotsinterval()}}: dotplot + interval plots on raw data with already-calculated
 intervals (rarely useful directly)

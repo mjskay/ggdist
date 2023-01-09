@@ -15,7 +15,11 @@
 #'
 #' Stat and geoms include in this family include:
 #'
-#'  - [geom_dots()]: dotplots on raw data
+#'  - [geom_dots()]: dotplots on raw data. Ensures the dotplot fits within available space by reducing the size
+#'    of the dots automatically (may result in very small dots).
+#'  - [geom_swarm()] and [geom_weave()]: dotplots on raw data with defaults intended to create "beeswarm" plots.
+#'    Used `side = "both"` by default, and sets the default dot size to the same size as [geom_point()]
+#'    (`binwidth = unit(1.5, "mm")`), allowing dots to overlap instead of getting very small.
 #'  - [stat_dots()]: dotplots on raw data, \pkg{distributional} objects, and [posterior::rvar()]s
 #'  - [geom_dotsinterval()]: dotplot + interval plots on raw data with already-calculated
 #'    intervals (rarely useful directly)
