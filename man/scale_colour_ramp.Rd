@@ -114,6 +114,7 @@ tibble(d = dist_normal(0, 1)) \%>\%
 \code{\link[=guide_rampbar]{guide_rampbar()}}
 
 Other ggdist scales: 
+\code{\link{scale_side_mirrored}()},
 \code{\link{scale_thickness}},
 \code{\link{scales}}
 }

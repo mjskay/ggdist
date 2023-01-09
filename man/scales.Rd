@@ -273,6 +273,7 @@ Other ggplot2 scales: \code{\link[=scale_color_discrete]{scale_color_discrete()}
 
 Other ggdist scales: 
 \code{\link{scale_colour_ramp}},
+\code{\link{scale_side_mirrored}()},
 \code{\link{scale_thickness}}
 }
 \author{

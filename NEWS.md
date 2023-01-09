@@ -22,6 +22,10 @@ New features and enhancements:
   * new `overflow = "compress"` allows layouts to be compressed to fit into the
     geom bounds if a user-specified `binwidth` would otherwise cause the dots
     to exceed the geom bounds. (#162)
+* Two new shortcut geoms for `geom_dotsinterval()`: `geom_swarm()` and `geom_weave()`.
+  Both can be used to quickly create "beeswarm"-like plots.
+* A new "mirrored" scale for the `side` aesthetic, `scale_side_mirrored()`, makes it
+  easier to create mirrored slabs and dotplots. (#142)
 * Custom density estimators can now be used with `stat_slabinterval()` via the
   `density` argument, including a new bounded density estimator (`density_bounded()`).
   (#113)

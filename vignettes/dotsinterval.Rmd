@@ -891,20 +891,26 @@ To demonstrate another useful plot type, the *logit dotplot* (courtesy [Ladislas
 logistic regression to some data on the sex and body mass of Gentoo penguins.
 
 First, we'll demo varying the `side` aesthetic to create two dotplots that are
-"facing" each other. We also adjust the `scale` so that the dots don't overlap:
+"facing" each other: `scale_side_mirrored()` will set the `side` aesthetic to 
+`"top"` or `"bottom"` if two categories are assigned to `side`". We also adjust 
+the `scale` so that the dots don't overlap:
 
 ```{r gentoo_raw}
 gentoo = penguins %>%
   filter(species == "Gentoo", !is.na(sex))
 
 gentoo %>%
-  ggplot(aes(x = body_mass_g, y = sex, side = ifelse(sex == "male", "bottom", "top"))) +
+  ggplot(aes(x = body_mass_g, y = sex, side = sex)) +
   geom_dots(scale = 0.5) +
+  scale_side_mirrored(guide = "none") +
   ggtitle(
     "geom_dots(scale = 0.5)",
-    'aes(side = ifelse(sex == "male", "bottom", "top"))'
+    'aes(side = sex) + scale_side_mirrored()'
   ) 
 ```
+
+This can also be accomplished by setting side directly and omitting
+`scale_side_mirrored()`; e.g. via `aes(side = ifelse(sex == "male", "bottom", "top"))`.
 
 Now we fit a logistic regression predicting sex based on body mass:
 
@@ -933,16 +939,18 @@ prediction_grid %>%
   ) %>%
   ggplot(aes(x = body_mass_g)) +
   geom_dots(
-    aes(y = as.numeric(sex == "male"), side = ifelse(sex == "male", "bottom", "top")),
+    aes(y = as.numeric(sex == "male"), side = sex),
     scale = 0.4,
     data = gentoo
   ) +
   stat_lineribbon(
     aes(ydist = p_male), alpha = 1/4, fill = "#08306b"
   ) +
+  scale_side_mirrored(guide = "none") +
+  coord_cartesian(ylim = c(0, 1)) +
   labs(
     title = "logit dotplot: stat_dots() with stat_lineribbon()",
-    subtitle = 'aes(side = ifelse(sex == "male", "bottom", "top"))',
+    subtitle = 'aes(side = sex) + scale_side_mirrored()',
     x = "Body mass (g) of Gentoo penguins",
     y = "Pr(sex = male)"
   )

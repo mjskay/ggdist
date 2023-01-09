@@ -98,6 +98,7 @@ Collate:
     "rd_lineribbon.R"
     "scale_colour_ramp.R"
     "scale_thickness.R"
+    "scale_side_mirrored.R"
     "scale_.R"
     "smooth.R"
     "stat.R"
