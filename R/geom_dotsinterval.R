@@ -250,14 +250,9 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 #' @template references-quantile-dotplots
 #' @template details-x-y-xdist-ydist
 #' @eval rd_layer_params("dotsinterval")
-#' @eval rd_dotsinterval_aesthetics(stat = StatDotsinterval)
+#' @eval rd_dotsinterval_aesthetics()
 #' @inheritParams geom_slabinterval
 #' @author Matthew Kay
-#' @param quantiles Setting this to a value other than `NA`
-#' will produce a quantile dotplot: that is, a dotplot of quantiles from the sample or distribution
-#' (for analytical distributions, the default of `NA` is taken to mean `100` quantiles). The value of
-#' `quantiles` determines the number
-#' of quantiles to plot. See Kay et al. (2016) and Fernandes et al. (2018) for more information on quantile dotplots.
 #' @return A [ggplot2::Geom] or [ggplot2::Stat] representing a dotplot or combined dotplot+interval geometry which can
 #' be added to a [ggplot()] object.
 #' @seealso See the [stat_slabinterval()] family for other
@@ -379,10 +374,12 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
       manually-tuned parameter that tends to work well with the default circular
       shape, preventing gaps between bins from appearing to be too large visually
       (as might arise from dots being *precisely* the `binwidth`). If it is desired
-      to have dots be precisely the `binwidth`, set `dotsize = 1`.'),
+      to have dots be precisely the `binwidth`, set `dotsize = 1`.
+      '),
     stackratio = glue_doc('The distance between the center of the dots in the same
       stack relative to the dot height. The default, `1`, makes dots in the same
-      stack just touch each other.'),
+      stack just touch each other.
+      '),
     smooth = glue_doc('Smoother to apply to dot positions.
       One of:
         - A function that takes a numeric vector of dot positions and returns a
@@ -392,6 +389,9 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           name starting with `smooth_`; e.g. `"none"` (the default) applies
           `smooth_none()`, which simply returns the given vector without
           applying smoothing.
+
+      Smoothin is most effective when the smoother is matched to the support of
+      the distribution; e.g. using `smooth_bounded(bounds = ...)`.
       '),
     overflow = glue_doc('How to handle overflow of dots beyond the extent of the geom
       when a minimum `binwidth` (or an exact `binwidth`) is supplied.
@@ -401,43 +401,49 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           to keep the dots within bounds, then adjusts `stackratio` and `dotsize` so that
           the apparent dot size is the user-specified minimum `binwidth` times the
           user-specified `dotsize`.
+
+      If you find the default layout has dots that are too small, and you are okay
+      with dots overlapping, consider setting `overflow = "compress"` and supplying
+      an exact or minimum dot size using `binwidth`.
       '),
     layout = glue_doc('The layout method used
-      for the dots:
-        - `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
+      for the dots: \\itemize{
+        \\item `"bin"` (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
           This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
           classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
           the input data are symmetrical it will return a symmetrical layout.
-        - `"weave"`: uses the same basic binning approach of `"bin"`, but places dots in the off-axis at their actual
+        \\item `"weave"`: uses the same basic binning approach of `"bin"`, but places dots in the off-axis at their actual
           positions (unless `overlaps = "nudge"`, in which case overlaps may be nudged out of the way). This maintains
           the alignment of rows but does not align dots within columns.
-        - `"hex"`: uses the same basic binning approach of `"bin"`, but alternates placing dots `+ binwidth/4` or
+        \\item `"hex"`: uses the same basic binning approach of `"bin"`, but alternates placing dots `+ binwidth/4` or
           `- binwidth/4` in the off-axis from the bin center. This allows hexagonal packing by setting a `stackratio`
           less than 1 (something like `0.9` tends to work).
-        - `"swarm"`: uses the `"compactswarm"` layout from [beeswarm::beeswarm()]. Does not maintain alignment of rows or
+        \\item `"swarm"`: uses the `"compactswarm"` layout from [beeswarm::beeswarm()]. Does not maintain alignment of rows or
           columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
           dotplots of theoretical distributions, which may look better with `"bin"`, `"weave"`, or `"hex"`).
-      '),
+      }'),
     overlaps = glue_doc('How to handle overlapping dots or bins in the `"bin"`,
       `"weave"`, and `"hex"` layouts (dots never overlap in the `"swarm"` layout).
       For the purposes of this argument, dots are only considered to be overlapping
       if they would be overlapping when `dotsize = 1` and `stackratio = 1`; i.e.
       if you set those arguments to other values, overlaps may still occur.
-      One of:
-        - `"keep"`: leave overlapping dots as they are. Dots may overlap
+      One of: \\itemize{
+        \\item `"keep"`: leave overlapping dots as they are. Dots may overlap
           (usually only slightly) in the `"bin"`, `"weave"`, and `"hex"` layouts.
-        - `"nudge"`: nudge overlapping dots out of the way. Overlaps are avoided
+        \\item `"nudge"`: nudge overlapping dots out of the way. Overlaps are avoided
           using a constrained optimization which minimizes the squared distance of
           dots to their desired positions, subject to the constraint that adjacent
           dots do not overlap.
-      '),
+      }'),
     verbose = glue_doc('If `TRUE`, print out the bin width of the dotplot. Can be useful
       if you want to start from an automatically-selected bin width and then adjust it
       manually. Bin width is printed both as data units and as normalized parent
       coordinates or `"npc"`s (see [unit()]). Note that if you just want to scale the
       selected bin width to fit within a desired area, it is probably easier to use
       `scale` than to copy and scale `binwidth` manually, and if you just want to
-      provide constraints on the bin width, you can pass a length-2 vector to `binwidth`.')
+      provide constraints on the bin width, you can pass a length-2 vector to `binwidth`.
+
+      ')
   ), GeomSlabinterval$param_docs),
 
   default_params = defaults(list(

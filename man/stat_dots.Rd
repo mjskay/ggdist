@@ -81,8 +81,7 @@ to have dots be precisely the \code{binwidth}, set \code{dotsize = 1}.}
 stack relative to the dot height. The default, \code{1}, makes dots in the same
 stack just touch each other.}
 \item{\code{layout}}{The layout method used
-for the dots:
-\itemize{
+for the dots: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
@@ -95,43 +94,56 @@ the alignment of rows but does not align dots within columns.
 less than 1 (something like \code{0.9} tends to work).
 \item \code{"swarm"}: uses the \code{"compactswarm"} layout from \code{\link[beeswarm:beeswarm]{beeswarm::beeswarm()}}. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
-dotplots of theoretical distributions, which may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).}
+dotplots of theoretical distributions, which may look better with \code{"bin"}, \code{"weave"}, or \code{"hex"}).
+}}
 \item{\code{overlaps}}{How to handle overlapping dots or bins in the \code{"bin"},
 \code{"weave"}, and \code{"hex"} layouts (dots never overlap in the \code{"swarm"} layout).
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
 if you set those arguments to other values, overlaps may still occur.
-One of:
+One of: \itemize{
 \item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
 (usually only slightly) in the \code{"bin"}, \code{"weave"}, and \code{"hex"} layouts.
 \item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided
 using a constrained optimization which minimizes the squared distance of
 dots to their desired positions, subject to the constraint that adjacent
-dots do not overlap.}
+dots do not overlap.
+}}
 \item{\code{smooth}}{Smoother to apply to dot positions.
 One of:
+\itemize{
 \item A function that takes a numeric vector of dot positions and returns a
 smoothed version of that vector, such as \code{smooth_density()},
 \code{smooth_discrete()}, or \code{smooth_bar()}.
 \item A string indicating what smoother to use, as the suffix to a function
 name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
 \code{smooth_none()}, which simply returns the given vector without
-applying smoothing.}
+applying smoothing.
+}
+
+Smoothin is most effective when the smoother is matched to the support of
+the distribution; e.g. using \code{smooth_bounded(bounds = ...)}.}
 \item{\code{overflow}}{How to handle overflow of dots beyond the extent of the geom
 when a minimum \code{binwidth} (or an exact \code{binwidth}) is supplied.
 One of:
+\itemize{
 \item \code{"keep"}: Keep the overflow, drawing dots outside the geom bounds.
 \item \code{"compress"}: Compress the layout. Reduces the \code{binwidth} to the size necessary
 to keep the dots within bounds, then adjusts \code{stackratio} and \code{dotsize} so that
 the apparent dot size is the user-specified minimum \code{binwidth} times the
-user-specified \code{dotsize}.}
+user-specified \code{dotsize}.
+}
+
+If you find the default layout has dots that are too small, and you are okay
+with dots overlapping, consider setting \code{overflow = "compress"} and supplying
+an exact or minimum dot size using \code{binwidth}.}
 \item{\code{verbose}}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
 if you want to start from an automatically-selected bin width and then adjust it
 manually. Bin width is printed both as data units and as normalized parent
 coordinates or \code{"npc"}s (see \code{\link[=unit]{unit()}}). Note that if you just want to scale the
 selected bin width to fit within a desired area, it is probably easier to use
 \code{scale} than to copy and scale \code{binwidth} manually, and if you just want to
-provide constraints on the bin width, you can pass a length-2 vector to \code{binwidth}.}
+provide constraints on the bin width, you can pass a length-2 vector to \code{binwidth}.
 }
 }}
 
@@ -159,9 +171,11 @@ before base ggplot did, hence the discrepancy).}
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
 
-\item{show.legend}{Should this layer be included in the legends? Default is \code{c(size = FALSE)}, unlike most geoms,
-to match its common use cases. \code{FALSE} hides all legends, \code{TRUE} shows all legends, and \code{NA} shows only
-those that are mapped (the default for most geoms).}
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions

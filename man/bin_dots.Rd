@@ -30,8 +30,7 @@ bin_dots(
 centers}
 
 \item{layout}{The layout method used
-for the dots:
-\itemize{
+for the dots: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
@@ -73,8 +72,7 @@ For compatibility with the base ggplot naming scheme for \code{orientation},
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
 if you set those arguments to other values, overlaps may still occur.
-One of:
-\itemize{
+One of: \itemize{
 \item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
 (usually only slightly) in the \code{"bin"}, \code{"weave"}, and \code{"hex"} layouts.
 \item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided

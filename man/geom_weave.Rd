@@ -59,8 +59,7 @@ to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \stron
 parameters to the paired geom/stat.}
 
 \item{layout}{The layout method used
-for the dots:
-\itemize{
+for the dots: \itemize{
 \item \code{"bin"} (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
@@ -85,7 +84,11 @@ One of:
 to keep the dots within bounds, then adjusts \code{stackratio} and \code{dotsize} so that
 the apparent dot size is the user-specified minimum \code{binwidth} times the
 user-specified \code{dotsize}.
-}}
+}
+
+If you find the default layout has dots that are too small, and you are okay
+with dots overlapping, consider setting \code{overflow = "compress"} and supplying
+an exact or minimum dot size using \code{binwidth}.}
 
 \item{binwidth}{The bin width to use for laying out the dots.
 One of:
@@ -125,8 +128,7 @@ stack just touch each other.}
 For the purposes of this argument, dots are only considered to be overlapping
 if they would be overlapping when \code{dotsize = 1} and \code{stackratio = 1}; i.e.
 if you set those arguments to other values, overlaps may still occur.
-One of:
-\itemize{
+One of: \itemize{
 \item \code{"keep"}: leave overlapping dots as they are. Dots may overlap
 (usually only slightly) in the \code{"bin"}, \code{"weave"}, and \code{"hex"} layouts.
 \item \code{"nudge"}: nudge overlapping dots out of the way. Overlaps are avoided
@@ -145,7 +147,10 @@ smoothed version of that vector, such as \code{smooth_density()},
 name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
 \code{smooth_none()}, which simply returns the given vector without
 applying smoothing.
-}}
+}
+
+Smoothin is most effective when the smoother is matched to the support of
+the distribution; e.g. using \code{smooth_bounded(bounds = ...)}.}
 
 \item{verbose}{If \code{TRUE}, print out the bin width of the dotplot. Can be useful
 if you want to start from an automatically-selected bin width and then adjust it

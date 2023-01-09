@@ -79,7 +79,7 @@ rd_dotsinterval_shortcut_stat = function(
       '@description\n Roughly equivalent to:',
       rd_shortcut_stat(stat_name, geom_name, from_name = "dotsinterval")
     ),
-    '@inheritParams stat_slabinterval',
+    if (stat_name != "dotsinterval") '@inheritParams stat_dotsinterval',
     '@inheritParams geom_dotsinterval',
     rd_layer_params(geom_name, stat, as_dots = TRUE),
     glue_doc('
