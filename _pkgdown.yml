@@ -64,6 +64,8 @@ reference:
   - geom_slab
   - geom_dotsinterval
   - geom_dots
+  - geom_weave
+  - geom_swarm
   - geom_lineribbon
 
 - title: Distributions
@@ -81,6 +83,7 @@ reference:
   - scale_colour_ramp
   - guide_rampbar
   - scale_thickness
+  - scale_side_mirrored
 
 - title: GGplot positions
   desc:  Positions for dodging geoms and stats
