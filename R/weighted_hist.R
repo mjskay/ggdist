@@ -60,10 +60,13 @@ breaks_Sturges = function(x, weights) {
 }
 
 breaks_Scott = function(x, weights) {
-  h <- 3.5 * sqrt(weighted_var(x, weights)) * length(x)^(-1/3)
-  if (h > 0)
+  n = max(length(x), sum(weights))
+  h = 3.5 * sqrt(weighted_var(x, weights)) * n^(-1/3)
+  if (h > 0) {
     max(1, ceiling(diff(range(x))/h))
-  else 1L
+  } else {
+    1L
+  }
 }
 
 breaks_FD = function(x, weights, digits = 5) {
@@ -75,14 +78,23 @@ breaks_FD = function(x, weights, digits = 5) {
     .weights = weights[.x_order]
     al = 1/4
     al_min = 1/512
+
+    quantile_fun = weighted_quantile_fun(.x, weights = .weights, n = "sum")
     while (h == 0 && (al <- al/2) >= al_min) {
-      h = diff(weighted_quantile(.x, c(al, 1 - al), weights = .weights), n = "sum") / (1 - 2 * al)
+      h = diff(quantile_fun(c(al, 1 - al))) / (1 - 2 * al)
     }
   }
 
-  if (h == 0) h <- 3.5 * sqrt(weighted_var(x, weights))
+  if (h == 0) {
+    h = 3.5 * sqrt(weighted_var(x, weights))
+  }
 
-  if (h > 0) ceiling(diff(range(x))/h * length(x)^(1/3)) else 1L
+  n = max(length(x), sum(weights))
+  if (h > 0) {
+    ceiling(diff(range(x))/h * n^(1/3))
+  } else {
+    1L
+  }
 }
 
 #' @importFrom stats weighted.mean

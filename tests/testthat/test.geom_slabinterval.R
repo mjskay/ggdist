@@ -250,6 +250,18 @@ test_that("all-NA thickness produces no slab", {
   expect_equal(grob[[1]]$children, gList())
 })
 
+test_that("NAs and Infs in x work", {
+  skip_if_no_vdiffr()
+
+  expect_warning(
+    vdiffr::expect_doppelganger("Inf and NA in x works",
+      ggplot() +
+        geom_slab(aes(y = "NA", x = c(NA,2:4,NA), thickness = c(0,1,2,0.5,0.25)), color = "black") +
+        geom_slab(aes(y = "Inf", x = c(-Inf,2:4,Inf), thickness = c(0,1,2,0.5,0.25)), color = "black")
+    ),
+    "Removed 2 rows containing missing values"
+  )
+})
 
 # NA width / xmax -----------------------------------------------------------
 
