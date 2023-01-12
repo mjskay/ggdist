@@ -35,3 +35,8 @@ test_that("shortcut geom_dotsinterval documentation generator works", {
   expect_match(geom_output, "show_point = FALSE", fixed = TRUE)
 
 })
+
+test_that("param docs work", {
+  expect_match(rd_param_dots_layout(), "@param layout")
+  expect_match(rd_param_dots_overlaps(), "@param overlaps")
+})

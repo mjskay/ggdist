@@ -186,3 +186,10 @@ rd_slabinterval_aesthetics = function(
 
   glue_collapse(out, "\n")
 }
+
+
+# shared parameter docs ---------------------------------------------------
+
+rd_param_slab_side = function() {
+  paste0("@param side ", GeomSlabinterval$get_aes_docs()[["Slab-specific aesthetics"]]$side)
+}

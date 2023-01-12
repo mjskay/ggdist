@@ -56,3 +56,7 @@ test_that("shortcut geom_slabinterval documentation generator works", {
   expect_match(geom_output, "interval_size_range = c(1, 6)", fixed = TRUE)
 
 })
+
+test_that("param docs work", {
+  expect_match(rd_param_slab_side(), "@param side")
+})
