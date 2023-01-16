@@ -23,7 +23,7 @@ weighted_quantile_fun(x, weights = NULL, n = NULL, na.rm = FALSE, type = 7)
 
 \item{weights}{Weights for the sample. One of:
 \itemize{
-\item numeric vector of length \code{x}: weights for corresponding values in \code{x},
+\item numeric vector of same length as \code{x}: weights for corresponding values in \code{x},
 which will be normalized to sum to 1.
 \item \code{NULL}: indicates no weights are provided, so unweighted sample quantiles
 (equivalent to \code{\link[=quantile]{quantile()}}) are returned.
@@ -82,7 +82,7 @@ sum of the normalized weights.
 
 Type 4--9 (continuous) quantiles require some translation from the definitions
 in \code{\link[=quantile]{quantile()}}. \code{\link[=quantile]{quantile()}} defines continuous estimators in terms of
-\eqn{x_k}, the \eqn{k}th order statistic and \eqn{p_k}, which is a function of \eqn{k}
+\eqn{x_k}, which is the \eqn{k}th order statistic, and \eqn{p_k}, which is a function of \eqn{k}
 and \eqn{n} (the sample size). In the weighted case, we instead take \eqn{x_k} as the \eqn{k}th
 smallest value of \eqn{x} in the weighted sample (not necessarily an order statistic,
 because of the weights). Then we can re-write the formulas for \eqn{p_k} in terms of

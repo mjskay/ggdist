@@ -11,7 +11,7 @@
 #' @param x numeric vector: sample values
 #' @param probs numeric vector: probabilities in \eqn{[0, 1]}
 #' @param weights Weights for the sample. One of:
-#'  - numeric vector of length `x`: weights for corresponding values in `x`,
+#'  - numeric vector of same length as `x`: weights for corresponding values in `x`,
 #'    which will be normalized to sum to 1.
 #'  - `NULL`: indicates no weights are provided, so unweighted sample quantiles
 #'    (equivalent to [quantile()]) are returned.
@@ -50,7 +50,7 @@
 #'
 #' Type 4--9 (continuous) quantiles require some translation from the definitions
 #' in [quantile()]. [quantile()] defines continuous estimators in terms of
-#' \eqn{x_k}, the \eqn{k}th order statistic and \eqn{p_k}, which is a function of \eqn{k}
+#' \eqn{x_k}, which is the \eqn{k}th order statistic, and \eqn{p_k}, which is a function of \eqn{k}
 #' and \eqn{n} (the sample size). In the weighted case, we instead take \eqn{x_k} as the \eqn{k}th
 #' smallest value of \eqn{x} in the weighted sample (not necessarily an order statistic,
 #' because of the weights). Then we can re-write the formulas for \eqn{p_k} in terms of
@@ -110,10 +110,10 @@ weighted_quantile_fun = function(x, weights = NULL, n = NULL, na.rm = FALSE, typ
   x = x[non_zero]
   weights = weights[non_zero]
 
-  # if there is only 0 or 1 unique x values, we don't need the weighted version
-  unique_x = unique(x)
-  if (length(unique_x) <= 1) {
-    return(function(p) quantile(unique_x, p, names = FALSE))
+  # if there is only 0 or 1 x values, we don't need the weighted version (and
+  # we couldn't calculate it anyway as we need > 2 points for the interpolation)
+  if (length(x) <= 1) {
+    return(function(p) quantile(x, p, names = FALSE))
   }
 
   # normalize weights (must be done after calculating n, as n is calculated
