@@ -140,7 +140,7 @@ name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
 applying smoothing.
 }
 
-Smoothin is most effective when the smoother is matched to the support of
+Smoothing is most effective when the smoother is matched to the support of
 the distribution; e.g. using \code{smooth_bounded(bounds = ...)}.}
 
 \item{overflow}{How to handle overflow of dots beyond the extent of the geom

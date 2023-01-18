@@ -390,7 +390,7 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
           `smooth_none()`, which simply returns the given vector without
           applying smoothing.
 
-      Smoothin is most effective when the smoother is matched to the support of
+      Smoothing is most effective when the smoother is matched to the support of
       the distribution; e.g. using `smooth_bounded(bounds = ...)`.
       '),
     overflow = glue_doc('How to handle overflow of dots beyond the extent of the geom

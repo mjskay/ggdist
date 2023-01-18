@@ -690,7 +690,7 @@ abcd_df %>%
   )
 ```
 
-The automatic binwidth algorithm selects a dot size that is very small in order to ensure
+The automatic bin width algorithm selects a dot size that is very small in order to ensure
 the tallest bin fits in the plot, but this means the dots are hard to see.
 
 Using the `smooth_discrete()` smoother, we can spread the dots in each bin out into

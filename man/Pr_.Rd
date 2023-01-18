@@ -46,7 +46,7 @@ more information, see \link{quasiquotation}.
 
 
 Probability expressions consist of a call to \code{Pr_()} or \code{p_()} containing
-a small numer of valid combinations of operators and variable names.
+a small number of valid combinations of operators and variable names.
 
 Valid variables in probability expressions include:
 \itemize{

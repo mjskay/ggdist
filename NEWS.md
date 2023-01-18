@@ -18,7 +18,7 @@ New features and enhancements:
   * The `"weave"` layout now works properly with `side = "both"`
   * fixed binning artifacts when there is high density on the edges, particularly
     right edges (#144)
-  * use a max binwidth of 1 for discrete distributions (#159)
+  * use a max `binwidth` of 1 for discrete distributions (#159)
   * new `overflow = "compress"` allows layouts to be compressed to fit into the
     geom bounds if a user-specified `binwidth` would otherwise cause the dots
     to exceed the geom bounds. (#162)

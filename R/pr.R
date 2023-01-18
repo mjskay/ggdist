@@ -41,7 +41,7 @@
 #' @section Probability expressions:
 #'
 #' Probability expressions consist of a call to `Pr_()` or `p_()` containing
-#' a small numer of valid combinations of operators and variable names.
+#' a small number of valid combinations of operators and variable names.
 #'
 #' Valid variables in probability expressions include:
 #'

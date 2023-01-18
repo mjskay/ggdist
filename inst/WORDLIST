@@ -25,7 +25,9 @@ DOI
 doi
 dotplot
 dotplots
+dotsinterval
 dplyr
+ECDF
 ECDFs
 emmeans
 Engbo
@@ -69,6 +71,7 @@ jagsUI
 Juul
 kable
 Kaare
+KDE
 Kesar
 knitr
 Kruschke
@@ -92,6 +95,7 @@ Mahsa
 mathbf
 mcmc
 MCMCglmm
+millimetres
 Mirzargar
 mjskay
 multimodality
@@ -102,8 +106,10 @@ Nalborczyk
 opacities
 overplot
 overplotted
+plotmath
 pre
 qi
+quasiquotation
 rceil
 Remco
 renormalized
@@ -133,6 +139,7 @@ tibble
 tidybayes
 tidyselect
 tidyverse
+th
 toc
 Trimble
 unevaluated
@@ -146,3 +153,4 @@ Wiernik
 Xie
 Ying
 zenodo
+Zvinca
