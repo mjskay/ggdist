@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
                         <h4 data-toc-skip class="author">Matthew
 Kay</h4>
             
-            <h4 data-toc-skip class="date">2022-07-19</h4>
+            <h4 data-toc-skip class="date">2023-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mjskay/ggdist/blob/HEAD/vignettes/dotsinterval.Rmd" class="external-link"><code>vignettes/dotsinterval.Rmd</code></a></small>
       <div class="hidden name"><code>dotsinterval.Rmd</code></div>
@@ -171,14 +171,14 @@ of each sub-geometry separately.</p>
 <p>Due to its relationship to the <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code>
 family, aesthetics specific to the “dots” sub-geometry are referred to
 with the prefix <code>slab_</code>. When using the standalone
-<code><a href="../reference/geom_dotsinterval.html">geom_dots()</a></code> geometry, it is not necessary to use these
+<code><a href="../reference/geom_dots.html">geom_dots()</a></code> geometry, it is not necessary to use these
 custom aesthetics:</p>
 <p><img src="dotsinterval_files/figure-html/dots_components-1.png" width="624"></p>
 <p><code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> is often most useful when paired
-with <code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code>, which will automatically
+with <code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code>, which will automatically
 calculate points and intervals and map these onto endpoints of the
 interval sub-geometry.</p>
-<p><code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> and <code><a href="../reference/geom_dotsinterval.html">stat_dots()</a></code> can be
+<p><code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> and <code><a href="../reference/stat_dots.html">stat_dots()</a></code> can be
 used on two types of data, depending on what aesthetic mappings you
 provide:</p>
 <ul>
@@ -256,7 +256,7 @@ them.</p></li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="side-and-layout">Side and layout<a class="anchor" aria-label="anchor" href="#side-and-layout"></a>
+<h2 id="side">Side<a class="anchor" aria-label="anchor" href="#side"></a>
 </h2>
 <p>The <code>side</code> aesthetic allows you to adjust the positioning
 and direction of the dots:</p>
@@ -283,6 +283,37 @@ right, depending on <code>orientation</code>
 <code>"both"</code>: draw the dots mirrored, as in a “beeswarm”
 plot.</li>
 </ul>
+<p>When <code>orientation = "horizontal"</code>, this yields:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">side_plot</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="va">x</span>,</span>
+<span>    side <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"both"</span>, <span class="st">"bottomleft"</span><span class="op">)</span>,</span>
+<span>    stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>side <span class="op">=</span> <span class="va">side</span>, <span class="va">...</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">side</span>, labeller <span class="op">=</span> <span class="st">"label_both"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"gray75"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="fu">side_plot</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Horizontal geom_dots() with different values of side"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/horizontal_side-1.png" width="648"></p>
+<p>When <code>orientation = "vertical"</code>, this yields:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">side_plot</span><span class="op">(</span>y <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Vertical geom_dots() with different values of side"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/vertical_side-1.png" width="648"></p>
+</div>
+<div class="section level2">
+<h2 id="layout">Layout<a class="anchor" aria-label="anchor" href="#layout"></a>
+</h2>
 <p>The <code>layout</code> parameter allows you to adjust the algorithm
 used to place dots:</p>
 <ul>
@@ -297,46 +328,59 @@ data are symmetrical it will return a symmetrical layout.</li>
 <code>"weave"</code>: uses the same basic binning approach of “bin”,
 but places dots in the off-axis at their actual positions (modulo
 overlaps, which are nudged out of the way). This maintains the alignment
-of rows but does not align dots within columns. Does not work well when
-<code>side = "both"</code>.</li>
+of rows but does not align dots within columns.</li>
+<li>
+<code>"hex"</code>: uses the same basic binning approach of “bin”,
+but alternates placing dots <code>+binwidth/4</code> or
+<code>-binwidth/4</code> in the off-axis from the bin center. This
+allows hexagonal packing by setting a <code>stackratio</code> less than
+<code>1</code> (something like <code>0.9</code> tends to work).</li>
 <li>“swarm”: uses the <code>"compactswarm"</code> layout from
 <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html" class="external-link">beeswarm::beeswarm()</a></code>. Does not maintain alignment of rows
 or columns, but can be more compact and neat looking, especially for
 sample data (as opposed to quantile dotplots of theoretical
-distributions, which may look better with <code>"bin"</code> or
-<code>"weave"</code>).</li>
+distributions, which may look better with <code>"bin"</code>,
+<code>"weave"</code>, or <code>"hex"</code>).</li>
 </ul>
-<p>That yields these combinations (amongst many others):</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">make_plot</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">layout</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">x</span>,</span>
-<span>    side <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"both"</span>, <span class="st">"bottomleft"</span><span class="op">)</span>,</span>
-<span>    stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<p>When <code>side</code> is <code>"top"</code>, these layouts look like
+this:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">layout_plot</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">layout</span>, <span class="va">side</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="va">x</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>side <span class="op">=</span> <span class="va">side</span>, x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>layout <span class="op">=</span> <span class="va">layout</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">side</span>, labeller <span class="op">=</span> <span class="st">"label_both"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>layout <span class="op">=</span> <span class="va">layout</span>, side <span class="op">=</span> <span class="va">side</span>, stackratio <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="va">layout</span> <span class="op">==</span> <span class="st">"hex"</span><span class="op">)</span> <span class="fl">0.9</span> <span class="kw">else</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>      subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"stat_dotsinterval(layout = '"</span>, <span class="va">layout</span>, <span class="st">"')"</span><span class="op">)</span>,</span>
+<span>      subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"layout = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/deparse.html" class="external-link">deparse</a></span><span class="op">(</span><span class="va">layout</span><span class="op">)</span>, <span class="kw">if</span> <span class="op">(</span><span class="va">layout</span> <span class="op">==</span> <span class="st">"hex"</span><span class="op">)</span> <span class="st">" with stackratio = 0.9"</span><span class="op">)</span>,</span>
 <span>      x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>      y <span class="op">=</span> <span class="cn">NULL</span></span>
-<span>    <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"gray75"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu">make_plot</span><span class="op">(</span><span class="st">"bin"</span><span class="op">)</span> <span class="op">/</span></span>
-<span>  <span class="fu">make_plot</span><span class="op">(</span><span class="st">"weave"</span><span class="op">)</span> <span class="op">/</span></span>
-<span>  <span class="fu">make_plot</span><span class="op">(</span><span class="st">"swarm"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/side_layout-1.png" width="648"></p>
+<span><span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"bin"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"hex"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span></span>
+<span>  <span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"weave"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"swarm"</span>, side <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'geom_dots() layouts with side = "top"'</span><span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/layout_top-1.png" width="648"></p>
+<p>When <code>side</code> is <code>"both"</code>, these layouts look
+like this:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"bin"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"hex"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span></span>
+<span>  <span class="op">(</span><span class="fu">layout_plot</span><span class="op">(</span><span class="st">"weave"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">layout_plot</span><span class="op">(</span><span class="st">"swarm"</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'geom_dots() layouts with side = "both"'</span><span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/layout_both-1.png" width="648"></p>
 <div class="section level3">
 <h3 id="beeswarm-plots">Beeswarm plots<a class="anchor" aria-label="anchor" href="#beeswarm-plots"></a>
 </h3>
-<p>Thus, it is possible to create the beeswarm plots by using
-<code><a href="../reference/geom_dotsinterval.html">stat_dots()</a></code> with <code>side = "both"</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>Thus, it is possible to create beeswarm plots by using
+<code><a href="../reference/geom_dots.html">geom_dots()</a></code> with <code>side = "both"</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">abc_df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -346,30 +390,67 @@ distributions, which may look better with <code>"bin"</code> or
 <span></span>
 <span><span class="va">abc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">abc</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'stat_dots(side = "both")'</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'geom_dots(side = "both")'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm_bin-1.png" width="648"></p>
 <p><code>side = "both"</code> also tends to work well with the
-<code>"swarm"</code> layout for a more classic-looking “beeswarm”
-plot:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code>"hex"</code> and <code>"swarm"</code> layouts for more
+classic-looking “beeswarm” plots:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">abc</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span>, layout <span class="op">=</span> <span class="st">"swarm"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'stat_dots(side = "both", layout = "swarm")'</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span>, layout <span class="op">=</span> <span class="st">"hex"</span>, stackratio <span class="op">=</span> <span class="fl">0.92</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'geom_dots(side = "both", layout = "hex")'</span><span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/beeswarm_hex-1.png" width="648"></p>
+<p>And with <code>"swarm"</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">abc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">abc</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span>, layout <span class="op">=</span> <span class="st">"swarm"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'geom_dots(side = "both", layout = "swarm")'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm-1.png" width="648"></p>
+<p>The combination of <code>binwidth = unit(1.5, "mm")</code> and
+<code>overflow = "compress"</code> (see the section on large samples,
+below) can be used to set the dot size to a specific size while
+guaranteeing the layout stays within the bounds of the geom. This
+combination is used by two shortcut geoms, <code><a href="../reference/geom_swarm.html">geom_swarm()</a></code> and
+<code><a href="../reference/geom_weave.html">geom_weave()</a></code>, which use the <code>"swarm"</code> and
+<code>"weave"</code> layouts respectively. These also use
+<code>side = "both"</code>, and are intended to make it easy to create
+good-looking beeswarm plots <em>without</em> manually tweaking
+settings:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">swarm_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  g <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">swarm_plot</span> <span class="op">=</span> <span class="va">swarm_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">g</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_swarm.html">geom_swarm</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"geom_swarm()"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">weave_plot</span> <span class="op">=</span> <span class="va">swarm_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">g</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_weave.html">geom_weave</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"geom_weave()"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">swarm_plot</span> <span class="op">+</span> <span class="va">weave_plot</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/geom_weave-1.png" width="648"></p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="varying-color-fill-shape-and-size">Varying <code>color</code>, <code>fill</code>, <code>shape</code>,
-and <code>size</code><a class="anchor" aria-label="anchor" href="#varying-color-fill-shape-and-size"></a>
+<h2 id="varying-color-fill-shape-and-linewidth">Varying <code>color</code>, <code>fill</code>, <code>shape</code>,
+and <code>linewidth</code><a class="anchor" aria-label="anchor" href="#varying-color-fill-shape-and-linewidth"></a>
 </h2>
 <p>Aesthetics like <code>color</code>, <code>fill</code>,
-<code>shape</code>, and <code>size</code> can be varied over the dots.
-For example, we can vary the <code>fill</code> aesthetic to create two
-subgroups, and use <code>position = "dodge"</code> to dodge entire
+<code>shape</code>, and <code>linewidth</code> can be varied over the
+dots. For example, we can vary the <code>fill</code> aesthetic to create
+two subgroups, and use <code>position = "dodge"</code> to dodge entire
 “swarms” at once so the subgroups do not overlap:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">abcc_df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -380,31 +461,29 @@ subgroups, and use <code>position = "dodge"</code> to dodge entire
 <span></span>
 <span><span class="va">abcc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, fill <span class="op">=</span> <span class="va">hi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_weave.html">geom_weave</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span>, linewidth <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
-<span>    <span class="st">'geom_dots(side = "both", position = "dodge")'</span>,</span>
+<span>    <span class="st">'geom_weave(position = "dodge")'</span>,</span>
 <span>    <span class="st">'aes(fill = hi)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm_dodge-1.png" width="648"></p>
 <p>The color of the default gray outline can be changed using the
 <code>color</code> aesthetic, or you can remove it altogether by setting
-<code>size = 0</code> (or <code>slab_size = 0</code> when using
-<code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> / <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>), or
-by changing to solid shapes (the usual “plotting characters”, e.g. 
-numbers from <code>0:24</code>, are supported) and using the
-<code>color</code> aesthetic.</p>
+<code>linewidth = 0</code> (or <code>slab_linewidth = 0</code> when
+using <code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> /
+<code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>), or by changing to solid shapes (the
+usual “plotting characters”, e.g.  numbers from <code>0:24</code>, are
+supported) and using the <code>color</code> aesthetic.</p>
 <p>For example, we can vary <code>shape</code> and <code>color</code>
 simultaneously:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abcc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, shape <span class="op">=</span> <span class="va">abc</span>, color <span class="op">=</span> <span class="va">hi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># we'll also increase the `scale` here since we </span></span>
-<span>  <span class="co"># have some extra space from the dodging</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"both"</span>, position <span class="op">=</span> <span class="st">"dodge"</span>, scale <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_weave.html">geom_weave</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
-<span>    <span class="st">'geom_dots(side = "both", position = "dodge")'</span>,</span>
+<span>    <span class="st">'geom_weave(position = "dodge")'</span>,</span>
 <span>    <span class="st">'aes(shape = abc, fill = hi)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm_shape_color-1.png" width="648"></p>
@@ -420,14 +499,14 @@ be dodged separately, as above).</p>
 by), <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> will leave dots in data order
 within the layout but allow aesthetics to vary across them.</p>
 <p>For example:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abcc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, shape <span class="op">=</span> <span class="va">abc</span>, color <span class="op">=</span> <span class="va">hi</span>, group <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, fill <span class="op">=</span> <span class="va">hi</span>, group <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">'geom_dots()'</span>,</span>
-<span>    <span class="st">'aes(shape = abc, color = hi, group = NA)'</span></span>
+<span>    <span class="st">'aes(fill = hi, group = NA)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_together-1.png" width="648"></p>
 <p>By default, dot positions within bins for the <code>"bin"</code>
@@ -436,14 +515,14 @@ values in the above chart). You can override this by passing a variable
 to the <code>order</code> aesthetic, which will set the sort order
 within bins. This can be used to create “stacked” dotplots by setting
 <code>order</code> to a discrete variable:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abcc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, shape <span class="op">=</span> <span class="va">abc</span>, color <span class="op">=</span> <span class="va">hi</span>, group <span class="op">=</span> <span class="cn">NA</span>, order <span class="op">=</span> <span class="va">hi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, fill <span class="op">=</span> <span class="va">hi</span>, group <span class="op">=</span> <span class="cn">NA</span>, order <span class="op">=</span> <span class="va">hi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">'geom_dots()'</span>,</span>
-<span>    <span class="st">'aes(shape = abc, color = hi, group = NA, order = hi)'</span></span>
+<span>    <span class="st">'aes(fill = hi, group = NA, order = hi)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_together_stacked-1.png" width="648"></p>
 </div>
@@ -454,37 +533,199 @@ within bins. This can be used to create “stacked” dotplots by setting
 continuous variables will not automatically set the <code>group</code>
 aesthetic, we can simply assign them to the desired aesthetic we want to
 vary:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abcc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">hi</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, shape <span class="op">=</span> <span class="va">abc</span>, color <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">'geom_dots()'</span>,</span>
 <span>    <span class="st">'aes(color = value)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_continuous-1.png" width="648"></p>
-<p>This can be particularly useful with the <code>color</code>,
-<code>fill</code>, <code>color_ramp</code>, <code>fill_ramp</code>, and
-<code>alpha</code> aesthetics. For example, encoding distance from 0 on
-<code>alpha</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">abcc_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">hi</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, x <span class="op">=</span> <span class="va">abc</span>, shape <span class="op">=</span> <span class="va">abc</span>, color <span class="op">=</span> <span class="va">abc</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
-<span>    <span class="st">'geom_dots(side = "both", layout = "swarm")'</span>,</span>
-<span>    <span class="st">'aes(color = value, alpha = abs(value))'</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="dotsinterval_files/figure-html/beeswarm_shape_color_alpha-1.png" width="648"></p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="on-large-samples">On large samples<a class="anchor" aria-label="anchor" href="#on-large-samples"></a>
+</h2>
+<div class="section level3">
+<h3 id="setting-a-minimum-dot-size">Setting a minimum dot size<a class="anchor" aria-label="anchor" href="#setting-a-minimum-dot-size"></a>
+</h3>
+<p>On very large samples, the dots may become smaller than desired. To
+avoid this, you can set a desired dot size / bin width using the
+<code>binwidth</code> argument. To set a specific bin width, pass a
+1-element vector; to set a minimum bin width, pass a 2-element vector,
+where the first element is the min and the second the max. The bin width
+can be in data units (if <code>numeric</code>) or in plotting units
+(using <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code>).</p>
+<p>For example, we could set the minimum dot size to
+<code>unit(1.5, "mm")</code>, which is the default size of points in
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">ggplot2::geom_point()</a></code>. We’ll also set
+<code>overflow = "compress"</code>, which allows dots to overlap if
+necessary to maintain the specified dot size (rather than having the
+tallest stacks of dots leave the top of the screen):</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, binwidth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="cn">Inf</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span>, overflow <span class="op">=</span> <span class="st">"compress"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">'geom_dots()'</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">'binwidth = unit(c(1.5, Inf), "mm"), overflow = "compress")'</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/large_sample_min_binwidth-1.png" width="648"></p>
+</div>
+<div class="section level3">
+<h3 id="density-dotplots">“density” dotplots<a class="anchor" aria-label="anchor" href="#density-dotplots"></a>
+</h3>
+<p>The dotplot above on a sample of size 2000 is quite noisy. When
+applied to large samples where you do not care too much about individual
+dot positions, you may want to apply some smoothing to make the layout
+more appealing.</p>
+<p><code><a href="../reference/geom_dots.html">geom_dots()</a></code> supports a handful of <em>smoothers</em>
+which can be applied using the <code>smooth =</code> parameter. These
+all correspond to functions that start with <code>smooth_</code>, like
+<code><a href="../reference/smooth_density.html">smooth_bounded()</a></code>, <code><a href="../reference/smooth_density.html">smooth_unbounded()</a></code>,
+<code><a href="../reference/smooth_discrete.html">smooth_discrete()</a></code>, and <code><a href="../reference/smooth_discrete.html">smooth_bar()</a></code>, and can
+be applied either by passing the suffix as a string
+(e.g. <code>smooth = "bounded"</code>) or by passing the function
+itself, to set specific options on it (e.g. 
+<code>smooth = smooth_bonuded(adjust = 0.5)</code>). For continuous
+distributions with unbounded support, <code><a href="../reference/smooth_density.html">smooth_unbounded()</a></code> is
+a good choice; it applies a kernel density estimator the assumes
+infinite bounds (see <code><a href="../reference/density_unbounded.html">density_unbounded()</a></code>):</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, smooth <span class="op">=</span> <span class="st">"unbounded"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">'geom_dots() with 2000 dots'</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">'smooth = "unbounded"'</span>,</span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/large_sample_smooth-1.png" width="648"></p>
+<p>Note that dot positions in the resulting plot will no longer be as
+accurate as before. With a large sample this may be an acceptable
+compromise. With a small sample, I <strong>do not</strong> recommend
+using this technique.</p>
+<p>Density smoothing works particularly well with the <code>"hex"</code>
+layout and <code>side = "both"</code>:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, smooth <span class="op">=</span> <span class="st">"unbounded"</span>, layout <span class="op">=</span> <span class="st">"hex"</span>, stackratio <span class="op">=</span> <span class="fl">0.9</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">'geom_dots() with 2000 dots'</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">'smooth = "unbounded", layout = "hex", stackratio = 0.9, side = "both")'</span>,</span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/large_sample_smooth_hex-1.png" width="648"></p>
+<p>On bounded distributions, you should use
+<code><a href="../reference/smooth_density.html">smooth_bounded()</a></code>, providing the bounds of the distribution.
+Otherwise, the dotplot will be smoothed incorrectly. For example, on a
+Beta(0.5, 0.5) distribution, which is bounded between 0 and 1, we should
+use <code>smooth = smooth_bounded(bounds = c(0, 1))</code>:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"bounded"</span><span class="op">)</span>, smooth <span class="op">=</span> <span class="fu"><a href="../reference/smooth_density.html">smooth_bounded</a></span><span class="op">(</span>bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"unbounded"</span><span class="op">)</span>, smooth <span class="op">=</span> <span class="st">"unbounded"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"geom_dots(smooth = ...) on x ~ Beta(0.5, 0.5)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"smooth ="</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/smooth_bounded_versus_unbounded-1.png" width="648"></p>
+<p>Notice how <code>smooth = "unbounded"</code> incorrectly smooths data
+points to be outside the range of the data when the data are
+bounded.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="on-discrete-distributions">On discrete distributions<a class="anchor" aria-label="anchor" href="#on-discrete-distributions"></a>
+</h2>
+<p>The dots family includes a variety of features to make visualizing
+discrete and categorical distributions easier. Dotplot smoothing can be
+particularly useful in for these distributions, particularly when bin
+counts are very high. For example, these distributions are hard to
+visualize under the default settings, because the dots become very
+small:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">abcd_df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span>, <span class="fl">1000</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.27</span>, <span class="fl">0.6</span>, <span class="fl">0.03</span>, <span class="fl">0.005</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  g <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">abcd_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"geom_dots()"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"on a large discrete sample"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/discrete_dots_too_small-1.png" width="648"></p>
+<p>The automatic bin width algorithm selects a dot size that is very
+small in order to ensure the tallest bin fits in the plot, but this
+means the dots are hard to see.</p>
+<p>Using the <code><a href="../reference/smooth_discrete.html">smooth_discrete()</a></code> smoother, we can spread the
+dots in each bin out into rectangular shapes:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">abcd_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>smooth <span class="op">=</span> <span class="st">"discrete"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">'geom_dots(smooth = "discrete")'</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"on a large discrete sample"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/discrete_dots_rect-1.png" width="648"></p>
+<p>More regular bar-like shapes can be achieved by using
+<code>smooth = "bar"</code>, so long as you override the default
+<code>ggplot2</code> behavior of grouping data by all discrete
+variables. This allows the layout to be calculated taking all groups
+into account:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">abcd_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>smooth <span class="op">=</span> <span class="st">"bar"</span>, group <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">'geom_dots(smooth = "bar", group = NA)'</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"on a large discrete sample"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/discrete_dots_bar-1.png" width="648"></p>
+<p><code><a href="../reference/smooth_discrete.html">smooth_discrete()</a></code> applies a kernel density smoother
+whose default bandwidth is less than the distances between bins. We can
+use the <code>kernel</code> argument (passed to
+<code><a href="../reference/density_bounded.html">density_bounded()</a></code>; the same kernels from
+<code><a href="https://rdrr.io/r/stats/density.html" class="external-link">stats::density()</a></code> are available) to change the shape of the
+bins.</p>
+<p>For example, using the <code>"epanechnikov"</code> (parabolic) kernel
+along with <code>side = "both"</code>, we can create lozenge-like
+shapes. We’ll abbreviate the kernel <code>"ep"</code> to save typing out
+<code>"epanechnikov"</code> (partial matching is allowed):</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">abcd_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>smooth <span class="op">=</span> <span class="fu"><a href="../reference/smooth_discrete.html">smooth_discrete</a></span><span class="op">(</span>kernel <span class="op">=</span> <span class="st">"ep"</span><span class="op">)</span>, side <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">'geom_dots(smooth = smooth_discrete(kernel = "ep"), side = "both")'</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"on a large discrete sample"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="dotsinterval_files/figure-html/discrete_dots_ep-1.png" width="648"></p>
 </div>
 <div class="section level2">
 <h2 id="on-analytical-distributions">On analytical distributions<a class="anchor" aria-label="anchor" href="#on-analytical-distributions"></a>
 </h2>
 <p>Like the <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> family,
-<code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> and <code><a href="../reference/geom_dotsinterval.html">stat_dots()</a></code> support
+<code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> and <code><a href="../reference/stat_dots.html">stat_dots()</a></code> support
 using both sample data (via <code>x</code> and <code>y</code>
 aesthetics) or analytical distributions (via the <code>xdist</code> and
 <code>ydist</code> aesthetics). For analytical distributions, these
@@ -525,7 +766,7 @@ functions such as <code><a href="https://pkg.mitchelloharawild.com/distributiona
 </li>
 </ol>
 <p>For example, here are a variety of distributions:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dist_df</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0.25</span><span class="op">)</span>, <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_beta.html" class="external-link">dist_beta</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html" class="external-link">dist_gamma</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  dist_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span></span>
@@ -533,7 +774,7 @@ functions such as <code><a href="https://pkg.mitchelloharawild.com/distributiona
 <span></span>
 <span><span class="va">dist_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"stat_dotsinterval()"</span>,</span>
 <span>    <span class="st">"aes(y = dist_name, xdist = dist)"</span></span>
@@ -545,10 +786,10 @@ people make better decisions under uncertainty (<a href="https://doi.org/10.1145
 <p>This can be changed using the <code>quantiles</code> argument. For
 example, we can plot the same distributions again, now with 1000
 quantiles:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dist_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>quantiles <span class="op">=</span> <span class="fl">1000</span>, point_interval <span class="op">=</span> <span class="va">mode_hdci</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>quantiles <span class="op">=</span> <span class="fl">1000</span>, point_interval <span class="op">=</span> <span class="va">mode_hdci</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)"</span>,</span>
 <span>    <span class="st">"aes(y = dist_name, xdist = dist)"</span></span>
@@ -565,51 +806,51 @@ correspond to the smallest interval containing that dot. We can use
 these to color dots according to the interval containing them (we’ll
 also use the <code>"weave"</code> layout since it maintains x positions
 better than the <code>"bin"</code> layout):</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dist_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span>, slab_color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>quantiles <span class="op">=</span> <span class="fl">1000</span>, point_interval <span class="op">=</span> <span class="va">mode_hdci</span>, layout <span class="op">=</span> <span class="st">"weave"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span>, slab_color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>quantiles <span class="op">=</span> <span class="fl">1000</span>, point_interval <span class="op">=</span> <span class="va">mode_hdci</span>, layout <span class="op">=</span> <span class="st">"weave"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html" class="external-link">brewer_pal</a></span><span class="op">(</span><span class="op">)</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, aesthetics <span class="op">=</span> <span class="st">"slab_color"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"stat_dotsinterval(quantiles = 1000, point_interval = mode_hdci)"</span>,</span>
-<span>    <span class="st">"aes(y = dist_name, xdist = dist, slab_color = stat(level))"</span></span>
+<span>    <span class="st">"aes(y = dist_name, xdist = dist, slab_color = after_stat(level))"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/dotsinterval_dist_1000_level_color-1.png" width="648"></p>
 <p>When summarizing sample distributions with
-<code><a href="../reference/geom_dotsinterval.html">stat_dots()</a></code>/<code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> (e.g. samples
+<code><a href="../reference/stat_dots.html">stat_dots()</a></code>/<code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> (e.g. samples
 from Bayesian posteriors), one can also use the <code>quantiles</code>
 argument, though it is not on by default.</p>
 <div class="section level3">
 <h3 id="varying-continuous-aesthetics-with-analytical-distributions">Varying continuous aesthetics with analytical distributions<a class="anchor" aria-label="anchor" href="#varying-continuous-aesthetics-with-analytical-distributions"></a>
 </h3>
 <p>While varying discrete aesthetics works similarly with
-<code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code>/<code><a href="../reference/geom_dotsinterval.html">stat_dots()</a></code> as it does
-with <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>/<code><a href="../reference/geom_dotsinterval.html">geom_dots()</a></code>, varying
+<code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code>/<code><a href="../reference/stat_dots.html">stat_dots()</a></code> as it does
+with <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>/<code><a href="../reference/geom_dots.html">geom_dots()</a></code>, varying
 continuous aesthetics within dot groups typically requires mapping the
 continuous aesthetic <em>after</em> the stats are computed. This is
 because the stat (at least for analytical distributions) must first
 generate the quantiles before properties of those quantiles can be
 mapped to aesthetics.</p>
 <p>Thus, because it relies upon generated variables from the stat, you
-can use the <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat()</a></code> or <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stage()</a></code> functions from
-<code>ggplot2</code> to map those variables. For example:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+can use the <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code> or <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stage()</a></code> functions
+from <code>ggplot2</code> to map those variables. For example:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dist_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span>, slab_color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>slab_shape <span class="op">=</span> <span class="fl">19</span>, quantiles <span class="op">=</span> <span class="fl">500</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dist_name</span>, xdist <span class="op">=</span> <span class="va">dist</span>, slab_color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>slab_shape <span class="op">=</span> <span class="fl">19</span>, quantiles <span class="op">=</span> <span class="fl">500</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_distiller</a></span><span class="op">(</span>aesthetics <span class="op">=</span> <span class="st">"slab_color"</span>, guide <span class="op">=</span> <span class="st">"colorbar2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"stat_dotsinterval(slab_shape = 19, quantiles = 500)"</span>,</span>
-<span>    <span class="st">'aes(slab_color = stat(x)) +\nscale_color_distiller(aesthetics = "slab_color", guide = "colorbar2")'</span></span>
+<span>    <span class="st">'aes(slab_color = after_stat(x)) +\nscale_color_distiller(aesthetics = "slab_color", guide = "colorbar2")'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/dotsinterval_dist_color-1.png" width="648"></p>
 <p>This example also demonstrates the use of sub-geometry scales: the
 <code>slab_</code>-prefixed aesthetics <code>slab_color</code> and
 <code>slab_shape</code> must be used to target the color and shape of
 the slab (“slab” here refers to the stack of dots) when using
-<code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> and <code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> to
+<code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code> and <code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> to
 disambiguate between the point/interval and the dot stack. When using
-<code><a href="../reference/geom_dotsinterval.html">stat_dots()</a></code>/<code><a href="../reference/geom_dotsinterval.html">geom_dots()</a></code> this is not
+<code><a href="../reference/stat_dots.html">stat_dots()</a></code>/<code><a href="../reference/geom_dots.html">geom_dots()</a></code> this is not
 necessary.</p>
 <p>Also note the use of <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_distiller()</a></code>, a base
 ggplot2 color scale, with the <code>slab_color</code> aesthetic by
@@ -624,7 +865,7 @@ aesthetics).</p>
 <p>Another potentially useful application of post-stat aesthetic
 computation is to apply thresholds on a dotplot, coloring points on one
 side of a line differently:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ab_df</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  ab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
 <span>  mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">7</span><span class="op">)</span>,</span>
@@ -634,12 +875,12 @@ side of a line differently:</p>
 <span><span class="va">ab_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
 <span>    y <span class="op">=</span> <span class="va">ab</span>, xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="va">mean</span>, <span class="va">sd</span><span class="op">)</span>,</span>
-<span>    fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span></span>
+<span>    fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dots.html">stat_dots</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"stat_dots()"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"aes(xdist = dist_normal(mean, sd), fill and shape = stat(x &lt; 6))"</span></span>
+<span>    subtitle <span class="op">=</span> <span class="st">"aes(xdist = dist_normal(mean, sd), fill and shape = after_stat(x &lt; 6))"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">6</span>, alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
@@ -651,13 +892,13 @@ to be on the wrong side of a cutoff when coloring dots within dotplots.
 Thus it can be useful to use the <code>"weave"</code> or
 <code>"swarm"</code> layouts, which tend to position dots closer to
 their true <code>x</code> positions, rather than at bin centers:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ab_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">ab</span>, xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="va">mean</span>, <span class="va">sd</span><span class="op">)</span>, fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dots</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span>, color <span class="op">=</span> <span class="cn">NA</span>, layout <span class="op">=</span> <span class="st">"weave"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">ab</span>, xdist <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="va">mean</span>, <span class="va">sd</span><span class="op">)</span>, fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dots.html">stat_dots</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span>, color <span class="op">=</span> <span class="cn">NA</span>, layout <span class="op">=</span> <span class="st">"weave"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">'stat_dots(layout = "weave")'</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"aes(fill = stat(x &lt; 6))"</span></span>
+<span>    subtitle <span class="op">=</span> <span class="st">"aes(fill = after_stat(x &lt; 6))"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">6</span>, alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
@@ -682,7 +923,7 @@ area of each slab represents sample size (and looks similar to the total
 area of its corresponding dotplot).</p>
 <p>We’ll use a subsample of of the data to show how it might look on a
 reasonably-sized dataset.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span> <span class="co"># for reproducibility</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -690,12 +931,12 @@ reasonably-sized dataset.</p>
 <span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span>, <span class="fl">8</span>, <span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">abc</span>, x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">abc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>thickness <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">pdf</span><span class="op">*</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>, scale <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"bottom"</span>, scale <span class="op">=</span> <span class="fl">0.7</span>, slab_size <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_slab.html">stat_slab</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>thickness <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">pdf</span><span class="op">*</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>, scale <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/stat_dotsinterval.html">stat_dotsinterval</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"bottom"</span>, scale <span class="op">=</span> <span class="fl">0.7</span>, slab_linewidth <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>      <span class="st">'stat_slab(aes(thickness = stat(pdf*n)), scale = 0.7) +\n'</span>,</span>
-<span>      <span class="st">'stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA)'</span></span>
+<span>      <span class="st">'stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +\n'</span>,</span>
+<span>      <span class="st">'stat_dotsinterval(side = "bottom", scale = 0.7, slab_linewidth = NA)'</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="st">'aes(fill = abc)'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -709,23 +950,30 @@ reasonably-sized dataset.</p>
 Nalborczyk</a>), we’ll fit a logistic regression to some data on the sex
 and body mass of Gentoo penguins.</p>
 <p>First, we’ll demo varying the <code>side</code> aesthetic to create
-two dotplots that are “facing” each other. We also adjust the
+two dotplots that are “facing” each other:
+<code><a href="../reference/scale_side_mirrored.html">scale_side_mirrored()</a></code> will set the <code>side</code>
+aesthetic to <code>"top"</code> or <code>"bottom"</code> if two
+categories are assigned to <code>side</code>“. We also adjust the
 <code>scale</code> so that the dots don’t overlap:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gentoo</span> <span class="op">=</span> <span class="va">penguins</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"Gentoo"</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">sex</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">gentoo</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span>, y <span class="op">=</span> <span class="va">sex</span>, side <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span>, <span class="st">"bottom"</span>, <span class="st">"top"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span>, y <span class="op">=</span> <span class="va">sex</span>, side <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_side_mirrored.html">scale_side_mirrored</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span></span>
 <span>    <span class="st">"geom_dots(scale = 0.5)"</span>,</span>
-<span>    <span class="st">'aes(side = ifelse(sex == "male", "bottom", "top"))'</span></span>
+<span>    <span class="st">'aes(side = sex) + scale_side_mirrored()'</span></span>
 <span>  <span class="op">)</span> </span></code></pre></div>
 <p><img src="dotsinterval_files/figure-html/gentoo_raw-1.png" width="648"></p>
+<p>This can also be accomplished by setting side directly and omitting
+<code><a href="../reference/scale_side_mirrored.html">scale_side_mirrored()</a></code>; e.g. via
+<code>aes(side = ifelse(sex == "male", "bottom", "top"))</code>.</p>
 <p>Now we fit a logistic regression predicting sex based on body
 mass:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span> <span class="op">~</span> <span class="va">body_mass_g</span>, data <span class="op">=</span> <span class="va">gentoo</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span><span class="va">m</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
@@ -742,7 +990,7 @@ mass:</p>
 <p>Then we can overlay a fit line as a <code><a href="../reference/stat_lineribbon.html">stat_lineribbon()</a></code>
 (see <code><a href="../articles/lineribbon.html">vignette("lineribbon")</a></code>) on top of the mirrored
 dotplots to create a <em>logit dotplot</em>:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># construct a prediction grid for the fit line</span></span>
 <span><span class="va">prediction_grid</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">gentoo</span>, </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>body_mass_g <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">body_mass_g</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">body_mass_g</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
@@ -758,17 +1006,19 @@ dotplots to create a <em>logit dotplot</em>:</p>
 <span>    p_male <span class="op">=</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_transformed.html" class="external-link">dist_transformed</a></span><span class="op">(</span><span class="va">log_odds</span>, <span class="va">plogis</span>, <span class="va">qlogis</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_dotsinterval.html">geom_dots</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span><span class="op">)</span>, side <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span>, <span class="st">"bottom"</span>, <span class="st">"top"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/geom_dots.html">geom_dots</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span><span class="op">)</span>, side <span class="op">=</span> <span class="va">sex</span><span class="op">)</span>,</span>
 <span>    scale <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>    data <span class="op">=</span> <span class="va">gentoo</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ydist <span class="op">=</span> <span class="va">p_male</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">4</span>, fill <span class="op">=</span> <span class="st">"#08306b"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_side_mirrored.html">scale_side_mirrored</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"logit dotplot: stat_dots() with stat_lineribbon()"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">'aes(side = ifelse(sex == "male", "bottom", "top"))'</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">'aes(side = sex) + scale_side_mirrored()'</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Body mass (g) of Gentoo penguins"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Pr(sex = male)"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -793,7 +1043,7 @@ dotplots to create a <em>logit dotplot</em>:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

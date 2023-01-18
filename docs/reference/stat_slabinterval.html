@@ -28,7 +28,7 @@ See Details.'><meta property="og:image" content="http://mjskay.github.io/ggdist/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -96,6 +96,7 @@ See <strong>Details</strong>.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  slab_type <span class="op">=</span> <span class="st">"pdf"</span>,</span>
 <span>  p_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  density <span class="op">=</span> <span class="st">"unbounded"</span>,</span>
 <span>  adjust <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  trim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  expand <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -115,10 +116,10 @@ See <strong>Details</strong>.</p>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mapping</dt>
-<dd><p>Set of aesthetic mappings created by <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> or
-<code><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply <code>mapping</code> if there is no plot mapping.</p></dd>
+<dd><p>Set of aesthetic mappings created by <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>. If specified and
+<code>inherit.aes = TRUE</code> (the default), it is combined with the default mapping
+at the top level of the plot. You must supply <code>mapping</code> if there is no plot
+mapping.</p></dd>
 
 
 <dt>data</dt>
@@ -148,7 +149,7 @@ you have overlapping geometries.</p></dd>
 
 <dt>...</dt>
 <dd><p>Other arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code>. These are often aesthetics, used to set an aesthetic
-to a fixed value, like <code>colour = "red"</code> or <code>size = 3</code> (see <strong>Aesthetics</strong>, below). They may also be
+to a fixed value, like <code>colour = "red"</code> or <code>linewidth = 3</code> (see <strong>Aesthetics</strong>, below). They may also be
 parameters to the paired geom/stat. When paired with the default geom, <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code>,
 these include:</p><dl><dt><code>normalize</code></dt>
 <dd><p>How to normalize heights of functions input to the <code>thickness</code> aesthetic. One of:</p><ul><li><p><code>"all"</code>: normalize so that the maximum height across all data is <code>1</code>.</p></li>
@@ -180,7 +181,7 @@ if you are using a graphics device that support gradients.</p></li>
 </ul></dd>
 
 <dt><code>interval_size_domain</code></dt>
-<dd><p>A length-2 numeric vector giving the minimum and maximum of the values of the size aesthetic that will be
+<dd><p>A length-2 numeric vector giving the minimum and maximum of the values of the <code>size</code> and <code>linewidth</code> aesthetics that will be
 translated into actual sizes for intervals drawn according to <code>interval_size_range</code> (see the documentation
 for that argument.)</p></dd>
 
@@ -193,7 +194,7 @@ function), and <code>interval_size_range</code> indicates the desired output ran
 the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
 argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
 that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-size of the interval or points separately, you can instead use the <code>interval_size</code> or <code>point_size</code>
+size of the interval or points separately, you can also use the <code>linewidth</code> or <code>point_size</code>
 aesthetics; see <a href="scales.html">scales</a>.</p></dd>
 
 <dt><code>fatten_point</code></dt>
@@ -220,6 +221,17 @@ distribution's support if it is finite, and <code>0.001</code> (<code>0.999</cod
 <code>p_limits</code> is <code>c(NA, NA)</code> on a gamma distribution the effective value of <code>p_limits</code> would be
 <code>c(0, .999)</code> since the gamma distribution is defined on <code>(0, Inf)</code>; whereas on a normal distribution
 it would be equivalent to <code>c(.001, .999)</code> since the normal distribution is defined on <code>(-Inf, Inf)</code>.</p></dd>
+
+
+<dt>density</dt>
+<dd><p>Density estimator for sample data. One of:</p><ul><li><p>A function which takes a numeric vector and returns a list with elements
+<code>x</code> (giving grid points for the density estimator) and <code>y</code> (the
+corresponding densities). <span class="pkg">ggdist</span> provides a family of functions
+following this format, including <code><a href="density_unbounded.html">density_unbounded()</a></code> and
+<code><a href="density_bounded.html">density_bounded()</a></code>. This format is also compatible with <code><a href="https://rdrr.io/r/stats/density.html" class="external-link">stats::density()</a></code>.</p></li>
+<li><p>A string giving the suffix of a function name that starts with <code>"density_"</code>;
+e.g. <code>"bounded"</code> for <code>[density_bounded()]</code>.</p></li>
+</ul></dd>
 
 
 <dt>adjust</dt>
@@ -291,7 +303,7 @@ draw points, intervals, and slabs.</p></li>
 groups. For each group, uses the <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>thickness</code> aesthetics to
 draw points, intervals, and slabs.</p></li>
 </ul><p>For compatibility with the base ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias
-for <code>"vertical"</code> and <code>"y"</code> as an alias for <code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter
+for <code>"vertical"</code> and <code>"y"</code> as an alias for <code>"horizontal"</code> (<span class="pkg">ggdist</span> had an <code>orientation</code> parameter
 before base ggplot did, hence the discrepancy).</p></dd>
 
 
@@ -366,8 +378,8 @@ of those functions.</p></li>
     
 
 <p>The following variables are computed by this stat and made available for
-use in aesthetic specifications (<code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>) using the <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat()</a></code> or <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code>
-functions:</p><ul><li><p><code>x</code> or <code>y</code>: For slabs, the input values to the slab function.
+use in aesthetic specifications (<code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>) using the <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code>
+function or the <code>after_stat</code> argument of <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stage()</a></code>:</p><ul><li><p><code>x</code> or <code>y</code>: For slabs, the input values to the slab function.
 For intervals, the point summary from the interval function. Whether it is <code>x</code> or <code>y</code> depends on <code>orientation</code></p></li>
 <li><p><code>xmin</code> or <code>ymin</code>: For intervals, the lower end of the interval from the interval function.</p></li>
 <li><p><code>xmax</code> or <code>ymax</code>: For intervals, the upper end of the interval from the interval function.</p></li>
@@ -450,13 +462,18 @@ scale to "ramp" to another color. See <code><a href="scale_colour_ramp.html">sca
 <li><p><code>fill_ramp</code>: A secondary scale that modifies the <code>fill</code>
 scale to "ramp" to another color. See <code><a href="scale_colour_ramp.html">scale_fill_ramp()</a></code> for examples.</p></li>
 </ul><p><strong>Line aesthetics</strong></p>
-<ul><li><p><code>size</code>: Width of the outline around the <strong>slab</strong> (if visible). Also determines the width of
-the line used to draw the <strong>interval</strong> and the size of the <strong>point</strong>, but raw
+<ul><li><p><code>linewidth</code>: Width of the line used to draw the <strong>interval</strong> (except with <code><a href="geom_slab.html">geom_slab()</a></code>: then
+it is the width of the <strong>slab</strong>). With composite geometries including an interval and slab,
+use <code>slab_linewidth</code> to set the line width of the <strong>slab</strong> (see below). For <strong>interval</strong>, raw
+<code>linewidth</code> values are transformed according to the <code>interval_size_domain</code> and <code>interval_size_range</code>
+parameters of the <code>geom</code> (see above).</p></li>
+<li><p><code>size</code>: Determines the size of the <strong>point</strong>. If <code>linewidth</code> is not provided, <code>size</code> will
+also determines the width of the line used to draw the <strong>interval</strong> (this allows line width and
+point size to be modified together by setting only <code>size</code> and not <code>linewidth</code>). Raw
 <code>size</code> values are transformed according to the <code>interval_size_domain</code>, <code>interval_size_range</code>,
-and <code>fatten_point</code> parameters of the <code>geom</code> (see above). Use the <code>slab_size</code>,
-<code>interval_size</code>, or <code>point_size</code> aesthetics (below) to set sub-geometry line widths separately
-(note that when size is set directly using the override aesthetics, interval and point
-sizes are not affected by <code>interval_size_domain</code>, <code>interval_size_range</code>, and <code>fatten_point</code>).</p></li>
+and <code>fatten_point</code> parameters of the <code>geom</code> (see above). Use the <code>point_size</code> aesthetic
+(below) to set sub-geometry size directly without applying the effects of
+<code>interval_size_domain</code>, <code>interval_size_range</code>, and <code>fatten_point</code>.</p></li>
 <li><p><code>stroke</code>: Width of the outline around the <strong>point</strong> sub-geometry.</p></li>
 <li><p><code>linetype</code>: Type of line (e.g., <code>"solid"</code>, <code>"dashed"</code>, etc) used to draw the <strong>interval</strong>
 and the outline of the <strong>slab</strong> (if it is visible). Use the <code>slab_linetype</code> or
@@ -465,18 +482,20 @@ and the outline of the <strong>slab</strong> (if it is visible). Use the <code>s
 <ul><li><p><code>slab_fill</code>: Override for <code>fill</code>: the fill color of the slab.</p></li>
 <li><p><code>slab_colour</code>: (or <code>slab_color</code>) Override for <code>colour</code>/<code>color</code>: the outline color of the slab.</p></li>
 <li><p><code>slab_alpha</code>: Override for <code>alpha</code>: the opacity of the slab.</p></li>
-<li><p><code>slab_size</code>: Override for <code>size</code>: the width of the outline of the slab.</p></li>
+<li><p><code>slab_linewidth</code>: Override for <code>linwidth</code>: the width of the outline of the slab.</p></li>
 <li><p><code>slab_linetype</code>: Override for <code>linetype</code>: the line type of the outline of the slab.</p></li>
 </ul><p><strong>Interval-specific color/line override aesthetics</strong></p>
 <ul><li><p><code>interval_colour</code>: (or <code>interval_color</code>) Override for <code>colour</code>/<code>color</code>: the color of the interval.</p></li>
 <li><p><code>interval_alpha</code>: Override for <code>alpha</code>: the opacity of the interval.</p></li>
-<li><p><code>interval_size</code>: Override for <code>size</code>: the line width of the interval.</p></li>
 <li><p><code>interval_linetype</code>: Override for <code>linetype</code>: the line type of the interval.</p></li>
 </ul><p><strong>Point-specific color/line override aesthetics</strong></p>
 <ul><li><p><code>point_fill</code>: Override for <code>fill</code>: the fill color of the point.</p></li>
 <li><p><code>point_colour</code>: (or <code>point_color</code>) Override for <code>colour</code>/<code>color</code>: the outline color of the point.</p></li>
 <li><p><code>point_alpha</code>: Override for <code>alpha</code>: the opacity of the point.</p></li>
 <li><p><code>point_size</code>: Override for <code>size</code>: the size of the point.</p></li>
+</ul><p><strong>Deprecated aesthetics</strong></p>
+<ul><li><p><code>slab_size</code>: Use <code>slab_linewidth</code>.</p></li>
+<li><p><code>interval_size</code>: Use <code>interval_linewidth</code>.</p></li>
 </ul><p><strong>Other aesthetics</strong> (these work as in standard <code>geom</code>s)</p>
 <ul><li><p><code>width</code></p></li>
 <li><p><code>height</code></p></li>
@@ -521,10 +540,10 @@ See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></
 <span class="r-in"><span><span class="co"># a reference (e.g. a prior distribution).</span></span></span>
 <span class="r-in"><span><span class="co"># But you may wish to account for sample size if using these geoms</span></span></span>
 <span class="r-in"><span><span class="co"># for something other than visualizing posteriors; in which case</span></span></span>
-<span class="r-in"><span><span class="co"># you can use stat(f*n):</span></span></span>
+<span class="r-in"><span><span class="co"># you can use after_stat(f*n):</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="stat_eye.html">stat_eye</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>thickness <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">pdf</span><span class="op">*</span><span class="va">n</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="stat_eye.html">stat_eye</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>thickness <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">pdf</span><span class="op">*</span><span class="va">n</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="stat_slabinterval-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -586,7 +605,7 @@ See <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -73,7 +73,41 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="3.2.0" id="ggdist-320">ggdist 3.2.0<a class="anchor" aria-label="anchor" href="#ggdist-320"></a></h2>
+<h2 class="page-header" data-toc-text="3.2.1" id="ggdist-321">ggdist 3.2.1<a class="anchor" aria-label="anchor" href="#ggdist-321"></a></h2>
+<p>New features and enhancements:</p>
+<ul><li>Support for non-numeric distributions in <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> and <code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code>, including <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_categorical.html" class="external-link">dist_categorical()</a></code>, <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_bernoulli.html" class="external-link">dist_bernoulli()</a></code>, and the upcoming <code><a href="https://mc-stan.org/posterior/reference/rvar_factor.html" class="external-link">posterior::rvar_factor()</a></code> type. (<a href="https://github.com/mjskay/ggdist/issues/108" class="external-link">#108</a>)</li>
+<li>Various improvements to dotplot layout in <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>:
+<ul><li>new <code>layout = "hex"</code> allows a hexagonal circle-packing style layout (<a href="https://github.com/mjskay/ggdist/issues/161" class="external-link">#161</a>).</li>
+<li>new mechanism for smoothing dotplots using the <code>smooth</code> parameter, including <code>smooth = "bounded"</code> / <code>smooth = "unbounded"</code> (for “density dotplots”) and <code>smooth = "discrete"</code> / <code>smooth = "bar"</code> (for improved layout of large-n discrete distributions). (<a href="https://github.com/mjskay/ggdist/issues/161" class="external-link">#161</a>)</li>
+<li>a better bin/dot-nudging algorithm using constrained optimization (<a href="https://github.com/mjskay/ggdist/issues/163" class="external-link">#163</a>)</li>
+<li>new <code>overlaps = "keep"</code> option disables bin/dot nudging in <code>"bin"</code>, <code>"hex"</code>, and <code>"weave"</code> layouts. This means <code>layout = "weave"</code> with <code>overlaps = "keep"</code> will yield exact dot positions. (<a href="https://github.com/mjskay/ggdist/issues/161" class="external-link">#161</a>)</li>
+<li>The <code>"weave"</code> layout now works properly with <code>side = "both"</code>
+</li>
+<li>fixed binning artifacts when there is high density on the edges, particularly right edges (<a href="https://github.com/mjskay/ggdist/issues/144" class="external-link">#144</a>)</li>
+<li>use a max <code>binwidth</code> of 1 for discrete distributions (<a href="https://github.com/mjskay/ggdist/issues/159" class="external-link">#159</a>)</li>
+<li>new <code>overflow = "compress"</code> allows layouts to be compressed to fit into the geom bounds if a user-specified <code>binwidth</code> would otherwise cause the dots to exceed the geom bounds. (<a href="https://github.com/mjskay/ggdist/issues/162" class="external-link">#162</a>)</li>
+</ul></li>
+<li>Two new shortcut geoms for <code><a href="../reference/geom_dotsinterval.html">geom_dotsinterval()</a></code>: <code><a href="../reference/geom_swarm.html">geom_swarm()</a></code> and <code><a href="../reference/geom_weave.html">geom_weave()</a></code>. Both can be used to quickly create “beeswarm”-like plots.</li>
+<li>A new “mirrored” scale for the <code>side</code> aesthetic, <code><a href="../reference/scale_side_mirrored.html">scale_side_mirrored()</a></code>, makes it easier to create mirrored slabs and dotplots. (<a href="https://github.com/mjskay/ggdist/issues/142" class="external-link">#142</a>)</li>
+<li>Custom density estimators can now be used with <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> via the <code>density</code> argument, including a new bounded density estimator (<code><a href="../reference/density_bounded.html">density_bounded()</a></code>). (<a href="https://github.com/mjskay/ggdist/issues/113" class="external-link">#113</a>)</li>
+<li>Following the split between <code>size</code> and <code>linewidth</code> aesthetics in <em>ggplot2</em> 3.4, the following aesthetics have been updated (<a href="https://github.com/mjskay/ggdist/issues/138" class="external-link">#138</a>):
+<ul><li>
+<code>interval_size</code> is now <code>linewidth</code>
+</li>
+<li>
+<code>slab_size</code> is now <code>slab_linewidth</code>
+</li>
+<li>in <code><a href="../reference/geom_slab.html">geom_slab()</a></code>, <code><a href="../reference/geom_dots.html">geom_dots()</a></code>, and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code>, <code>size</code> is now <code>linewidth</code>
+</li>
+</ul></li>
+<li>A new <strong>experimental</strong> mini domain-specific language for probability expressions in <em>ggdist</em> <code>stat</code>s: the <code><a href="../reference/Pr_.html">Pr_()</a></code> and <code><a href="../reference/Pr_.html">p_()</a></code> functions can be used to generate <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code> expressions in terms of <em>ggdist</em> computed variables; e.g. <code>aes(thickness = !!Pr_(X &lt;= x))</code> maps the CDF of the distribution onto the <code>thickness</code> aesthetic; <code>aes(thickness = !!p_(x))</code> maps the PDF onto the <code>thickness</code> aesthetic. (<a href="https://github.com/mjskay/ggdist/issues/160" class="external-link">#160</a>)</li>
+<li>Several function families in <em>ggdist</em> now use “currying” (automatic partial function application). These function families partially apply themselves until all non-optional arguments have been supplied: <code><a href="../reference/point_interval.html">point_interval()</a></code>, <code>smooth_...</code>, and <code>density_...</code>. See <code><a href="../reference/automatic-partial-functions.html">help("automatic-partial-functions")</a></code>.</li>
+<li>Performance improvements for <code><a href="../reference/point_interval.html">point_interval()</a></code> on grouped data frames. (<a href="https://github.com/mjskay/ggdist/issues/154" class="external-link">#154</a>)</li>
+</ul><p>Documentation:</p>
+<ul><li>Uses of <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat()</a></code> have been replaced with <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code> to be consistent with the deprecation of <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat()</a></code> in <em>ggplot2</em> 3.4.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="3.2.0" id="ggdist-320">ggdist 3.2.0<small>2022-07-19</small><a class="anchor" aria-label="anchor" href="#ggdist-320"></a></h2>
 <p>New features and enhancements:</p>
 <ul><li>Several computed variables in <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> can now be shared across sub-geometries:
 <ul><li>The <code>.width</code> and <code>level</code> computed variables can now be used in slab / dots sub-geometries. These values correspond to the smallest interval computed in the interval sub-geometry containing that portion of the slab. This gives a more flexible alternative to using <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> to create densities filled according to a set of intervals (this approach which also works on highest-density intervals, which <code><a href="../reference/cut_cdf_qi.html">cut_cdf_qi()</a></code> does not). Examples in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> have been updated to use the new approach, and an example has been added to <code><a href="../articles/dotsinterval.html">vignette("dotsinterval")</a></code> showing how to color dots by intervals.</li>
@@ -119,7 +153,7 @@
 <li>A formerly-internal fudge factor of <code>1.07</code> for dot sizes is now exposed as the default value of the <code>dotsize</code> parameter instead of being applied internally. This fudge factor tends (in my opinion) to make dotplots look a bit better due to the visual distance between circles, but is (I think) better used as an explicit value than an implicit one, hence the change. This may create subtle changes to plots that use the <code>dotsize</code> or <code>stackratio</code> parameters, but allows those parameters to have a more precise geometric interpretation.</li>
 </ul></li>
 </ul><p>Documentation:</p>
-<ul><li>New vignette for the <code><a href="../reference/geom_dotsinterval.html">stat_dotsinterval()</a></code> sub-family: <code><a href="../articles/dotsinterval.html">vignette("dotsinterval")</a></code> (<a href="https://github.com/mjskay/ggdist/issues/120" class="external-link">#120</a>).</li>
+<ul><li>New vignette for the <code><a href="../reference/stat_dotsinterval.html">stat_dotsinterval()</a></code> sub-family: <code><a href="../articles/dotsinterval.html">vignette("dotsinterval")</a></code> (<a href="https://github.com/mjskay/ggdist/issues/120" class="external-link">#120</a>).</li>
 <li>Vastly improved and expanded documentation for the <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> and <code><a href="../reference/geom_slabinterval.html">geom_slabinterval()</a></code> family: each shortcut stat/geom now has its own documentation page that comprehensively lists all parameters, aesthetics, and computed variables, including those pulled in via <code>...</code> from typically-paired geoms. These docs are auto-generated and should be easy to maintain going forward. (<a href="https://github.com/mjskay/ggdist/issues/36" class="external-link">#36</a>)</li>
 <li>The <code><a href="../reference/stat_lineribbon.html">stat_lineribbon()</a></code> and <code><a href="../reference/geom_lineribbon.html">geom_lineribbon()</a></code> family now also has separate documentation pages with a comprehensive listing of aesthetics and parameters (<a href="https://github.com/mjskay/ggdist/issues/107" class="external-link">#107</a>).</li>
 <li>Ridge plot-like example in <code><a href="../articles/slabinterval.html">vignette("slabinterval")</a></code> using the new <code>expand</code> parameter (<a href="https://github.com/mjskay/ggdist/issues/115" class="external-link">#115</a>).</li>
@@ -249,7 +283,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -84,10 +84,11 @@
 <span>  <span class="va">binwidth</span>,</span>
 <span>  heightratio <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  stackratio <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bin"</span>, <span class="st">"weave"</span>, <span class="st">"swarm"</span><span class="op">)</span>,</span>
+<span>  layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bin"</span>, <span class="st">"weave"</span>, <span class="st">"hex"</span>, <span class="st">"swarm"</span><span class="op">)</span>,</span>
 <span>  side <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"top"</span>, <span class="st">"right"</span>, <span class="st">"bottomleft"</span>, <span class="st">"bottom"</span>, <span class="st">"left"</span>, <span class="st">"topleft"</span>,</span>
 <span>    <span class="st">"bottomright"</span>, <span class="st">"both"</span><span class="op">)</span>,</span>
-<span>  orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizontal"</span>, <span class="st">"vertical"</span>, <span class="st">"y"</span>, <span class="st">"x"</span><span class="op">)</span></span>
+<span>  orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizontal"</span>, <span class="st">"vertical"</span>, <span class="st">"y"</span>, <span class="st">"x"</span><span class="op">)</span>,</span>
+<span>  overlaps <span class="op">=</span> <span class="st">"nudge"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -115,16 +116,20 @@ centers</p></dd>
 
 
 <dt>layout</dt>
-<dd><p>The layout method used for the dots:</p><ul><li><p><code>"bin"</code> (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
+<dd><p>The layout method used
+for the dots:</p><ul><li><p><code>"bin"</code> (default): places dots on the off-axis at the midpoint of their bins as in the classic Wilkinson dotplot.
 This maintains the alignment of rows and columns in the dotplot. This layout is slightly different from the
 classic Wilkinson algorithm in that: (1) it nudges bins slightly to avoid overlapping bins and (2) if
 the input data are symmetrical it will return a symmetrical layout.</p></li>
 <li><p><code>"weave"</code>: uses the same basic binning approach of <code>"bin"</code>, but places dots in the off-axis at their actual
-positions (modulo overlaps, which are nudged out of the way). This maintains the alignment of rows but does not
-align dots within columns. Does not work well when <code>side = "both"</code>.</p></li>
+positions (unless <code>overlaps = "nudge"</code>, in which case overlaps may be nudged out of the way). This maintains
+the alignment of rows but does not align dots within columns.</p></li>
+<li><p><code>"hex"</code>: uses the same basic binning approach of <code>"bin"</code>, but alternates placing dots <code>+ binwidth/4</code> or
+<code>- binwidth/4</code> in the off-axis from the bin center. This allows hexagonal packing by setting a <code>stackratio</code>
+less than 1 (something like <code>0.9</code> tends to work).</p></li>
 <li><p><code>"swarm"</code>: uses the <code>"compactswarm"</code> layout from <code><a href="https://rdrr.io/pkg/beeswarm/man/beeswarm.html" class="external-link">beeswarm::beeswarm()</a></code>. Does not maintain alignment of rows or
 columns, but can be more compact and neat looking, especially for sample data (as opposed to quantile
-dotplots of theoretical distributions, which may look better with <code>"bin"</code> or <code>"weave"</code>).</p></li>
+dotplots of theoretical distributions, which may look better with <code>"bin"</code>, <code>"weave"</code>, or <code>"hex"</code>).</p></li>
 </ul></dd>
 
 
@@ -147,6 +152,21 @@ variable and that dots will be stacked up in the <code>x</code> direction.</p></
 </ul><p>For compatibility with the base ggplot naming scheme for <code>orientation</code>,
 <code>"x"</code> can be used as an alias for <code>"vertical"</code> and <code>"y"</code> as an alias for
 <code>"horizontal"</code>.</p></dd>
+
+
+<dt>overlaps</dt>
+<dd><p>How to handle overlapping dots or bins in the <code>"bin"</code>,
+<code>"weave"</code>, and <code>"hex"</code> layouts (dots never overlap in the <code>"swarm"</code> layout).
+For the purposes of this argument, dots are only considered to be overlapping
+if they would be overlapping when <code>dotsize = 1</code> and <code>stackratio = 1</code>; i.e.
+if you set those arguments to other values, overlaps may still occur.
+One of:</p><ul><li><p><code>"keep"</code>: leave overlapping dots as they are. Dots may overlap
+(usually only slightly) in the <code>"bin"</code>, <code>"weave"</code>, and <code>"hex"</code> layouts.</p></li>
+<li><p><code>"nudge"</code>: nudge overlapping dots out of the way. Overlaps are avoided
+using a constrained optimization which minimizes the squared distance of
+dots to their desired positions, subject to the constraint that adjacent
+dots do not overlap.</p></li>
+</ul></dd>
 
 </dl></div>
     <div id="value">
@@ -231,7 +251,7 @@ these algorithms to create dotplots.</p></div>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

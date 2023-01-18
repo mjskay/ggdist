@@ -51,7 +51,10 @@ make_icon(stat_histinterval, data.frame(x = qnorm(ppoints(20))), aes(x = x), bre
 
 
 # dotsinterval family
-make_icon(stat_dotsinterval, quantiles = 20, names = "geom_dotsinterval", x_expansion = 0.1)
+make_icon(stat_dotsinterval, quantiles = 20, names = c("geom_dotsinterval", "stat_dotsinterval"), x_expansion = 0.1)
+make_icon(stat_dots, quantiles = 20, names = c("geom_dots", "stat_dots"), x_expansion = 0.1)
+make_icon(stat_dots, side = "both", layout = "weave", quantiles = 26, names = c("geom_weave"), x_expansion = 0.1)
+make_icon(stat_dots, side = "both", layout = "swarm", quantiles = 28, names = c("geom_swarm"), x_expansion = 0.1)
 
 
 # lineribbon family

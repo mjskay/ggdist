@@ -31,6 +31,9 @@
     <loc>http://mjskay.github.io/ggdist/news/index.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/automatic-partial-functions.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/bin_dots.html</loc>
   </url>
   <url>
@@ -40,7 +43,19 @@
     <loc>http://mjskay.github.io/ggdist/reference/cut_cdf_qi.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/density_auto.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/density_bounded.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/density_unbounded.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/find_dotplot_binwidth.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/geom_dots.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_dotsinterval.html</loc>
@@ -59,6 +74,12 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/geom_slabinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/geom_swarm.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/geom_weave.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/ggdist-deprecated.html</loc>
@@ -91,6 +112,9 @@
     <loc>http://mjskay.github.io/ggdist/reference/position_dodgejust.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/Pr_.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/RankCorr.html</loc>
   </url>
   <url>
@@ -100,13 +124,31 @@
     <loc>http://mjskay.github.io/ggdist/reference/scale_colour_ramp.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggdist/reference/scale_side_mirrored.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggdist/reference/scale_thickness.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/smooth_density.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/smooth_discrete.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/smooth_none.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/stat_ccdfinterval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/stat_cdfinterval.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_dots.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/stat_dotsinterval.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/stat_eye.html</loc>
@@ -146,5 +188,8 @@
   </url>
   <url>
     <loc>http://mjskay.github.io/ggdist/reference/tidy-format-translators.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggdist/reference/weighted_quantile.html</loc>
   </url>
 </urlset>

@@ -24,7 +24,7 @@ and stats/geoms based on it (like eye plots)."><meta property="og:image" content
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -176,6 +176,10 @@ and stats/geoms based on it (like eye plots).</p>
 <span></span>
 <span><span class="fu">scale_slab_size_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">scale_slab_linewidth_continuous</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">scale_slab_linewidth_discrete</span><span class="op">(</span><span class="va">...</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">scale_slab_linetype_discrete</span><span class="op">(</span><span class="va">...</span>, na.value <span class="op">=</span> <span class="st">"blank"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scale_slab_linetype_continuous</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
@@ -252,7 +256,6 @@ related geoms:</p>
 <li><p><code>scale_point_size_* </code>Point size</p></li>
 <li><p><code>scale_interval_color_* </code>Interval line color</p></li>
 <li><p><code>scale_interval_alpha_* </code>Interval alpha level / opacity</p></li>
-<li><p><code>scale_interval_size_* </code>Interval line width</p></li>
 <li><p><code>scale_interval_linetype_* </code>Interval line type</p></li>
 <li><p><code>scale_slab_color_* </code>Slab outline color</p></li>
 <li><p><code>scale_slab_fill_* </code>Slab fill color</p></li>
@@ -260,7 +263,7 @@ related geoms:</p>
 <code>scale_slab_alpha_continuous</code> differ from <code><a href="https://ggplot2.tidyverse.org/reference/scale_alpha.html" class="external-link">scale_alpha_continuous()</a></code> and
 are designed for gradient plots (e.g. <code><a href="stat_gradientinterval.html">stat_gradientinterval()</a></code>) by ensuring that
 densities of 0 get mapped to 0 in the output.</p></li>
-<li><p><code>scale_slab_size_* </code>Slab outline line width</p></li>
+<li><p><code>scale_slab_linewidth_* </code>Slab outline line width</p></li>
 <li><p><code>scale_slab_linetype_* </code>Slab outline line type</p></li>
 <li><p><code>scale_slab_shape_* </code>Slab dot shape (for <code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code>)</p></li>
 </ol><p>See the corresponding scale documentation in ggplot for more information; e.g.
@@ -271,12 +274,16 @@ argument to that scale function. For example, to use color brewer scales with th
 <p>With continuous color scales, you may also need to provide a guide as the default guide does not work properly;
 this is what <code>guide_colorbar2</code> is for:</p>
 <p><code>scale_color_distiller(..., guide = "colorbar2", aesthetics = "point_color")</code></p>
-    </div>
+<p>These scales have been deprecated:</p>
+<ol><li><p><code>scale_interval_size_* </code>Use <code>scale_linewidth_*</code></p></li>
+<li><p><code>scale_slab_size_* </code>Slab <code>scale_size_linewidth_*</code></p></li>
+</ol></div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other ggplot2 scales: <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html" class="external-link">scale_color_continuous()</a></code>, etc.</p>
 <p>Other ggdist scales: 
 <code><a href="scale_colour_ramp.html">scale_colour_ramp</a></code>,
+<code><a href="scale_side_mirrored.html">scale_side_mirrored</a>()</code>,
 <code><a href="scale_thickness.html">scale_thickness</a></code></p></div>
     </div>
     <div id="author">
@@ -303,15 +310,15 @@ this is what <code>guide_colorbar2</code> is for:</p>
 <span class="r-in"><span>    point_size <span class="op">=</span> <span class="fl">6</span>,</span></span>
 <span class="r-in"><span>    stroke <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>    interval_color <span class="op">=</span> <span class="st">"blue"</span>,</span></span>
-<span class="r-in"><span>    <span class="co"># interval sizes are scaled from [1, 6] onto [0.6, 1.4] by default</span></span></span>
+<span class="r-in"><span>    <span class="co"># interval line widths are scaled from [1, 6] onto [0.6, 1.4] by default</span></span></span>
 <span class="r-in"><span>    <span class="co"># see the interval_size_range parameter in help("geom_slabinterval")</span></span></span>
-<span class="r-in"><span>    interval_size <span class="op">=</span> <span class="fl">8</span>,</span></span>
+<span class="r-in"><span>    linewidth <span class="op">=</span> <span class="fl">8</span>,</span></span>
 <span class="r-in"><span>    interval_linetype <span class="op">=</span> <span class="st">"dashed"</span>,</span></span>
 <span class="r-in"><span>    interval_alpha <span class="op">=</span> <span class="fl">.25</span>,</span></span>
 <span class="r-in"><span>    <span class="co"># fill sets the fill color of the slab (here the density)</span></span></span>
 <span class="r-in"><span>    slab_color <span class="op">=</span> <span class="st">"green"</span>,</span></span>
 <span class="r-in"><span>    slab_fill <span class="op">=</span> <span class="st">"purple"</span>,</span></span>
-<span class="r-in"><span>    slab_size <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>    slab_linewidth <span class="op">=</span> <span class="fl">3</span>,</span></span>
 <span class="r-in"><span>    slab_linetype <span class="op">=</span> <span class="st">"dotted"</span>,</span></span>
 <span class="r-in"><span>    slab_alpha <span class="op">=</span> <span class="fl">.5</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
@@ -331,7 +338,7 @@ this is what <code>guide_colorbar2</code> is for:</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

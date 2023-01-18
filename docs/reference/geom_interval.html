@@ -29,7 +29,7 @@ geom_slabinterval(
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -107,10 +107,10 @@ geom_slabinterval(
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mapping</dt>
-<dd><p>Set of aesthetic mappings created by <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> or
-<code><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply <code>mapping</code> if there is no plot mapping.</p></dd>
+<dd><p>Set of aesthetic mappings created by <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>. If specified and
+<code>inherit.aes = TRUE</code> (the default), it is combined with the default mapping
+at the top level of the plot. You must supply <code>mapping</code> if there is no plot
+mapping.</p></dd>
 
 
 <dt>data</dt>
@@ -129,7 +129,9 @@ from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></dd>
 
 <dt>stat</dt>
 <dd><p>The statistical transformation to use on the data for this
-layer, as a string.</p></dd>
+layer, either as a <code>ggproto</code> <code>Geom</code> subclass or as a string naming the
+stat stripped of the <code>stat_</code> prefix (e.g. <code>"count"</code> rather than
+<code>"stat_count"</code>)</p></dd>
 
 
 <dt>position</dt>
@@ -140,7 +142,7 @@ you have overlapping geometries.</p></dd>
 
 <dt>...</dt>
 <dd><p>Other arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code>. These are often aesthetics, used to set an aesthetic
-to a fixed value, like <code>colour = "red"</code> or <code>size = 3</code> (see <strong>Aesthetics</strong>, below). They may also be
+to a fixed value, like <code>colour = "red"</code> or <code>linewidth = 3</code> (see <strong>Aesthetics</strong>, below). They may also be
 parameters to the paired geom/stat.</p></dd>
 
 
@@ -154,7 +156,7 @@ draw points, intervals, and slabs.</p></li>
 groups. For each group, uses the <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>thickness</code> aesthetics to
 draw points, intervals, and slabs.</p></li>
 </ul><p>For compatibility with the base ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias
-for <code>"vertical"</code> and <code>"y"</code> as an alias for <code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter
+for <code>"vertical"</code> and <code>"y"</code> as an alias for <code>"horizontal"</code> (<span class="pkg">ggdist</span> had an <code>orientation</code> parameter
 before base ggplot did, hence the discrepancy).</p></dd>
 
 
@@ -167,12 +169,12 @@ function), and <code>interval_size_range</code> indicates the desired output ran
 the actual sizes used to draw intervals). Most of the time it is not recommended to change the value of this
 argument, as it may result in strange scaling of legends; this argument is a holdover from earlier versions
 that did not have size aesthetics targeting the point and interval separately. If you want to adjust the
-size of the interval or points separately, you can instead use the <code>interval_size</code> or <code>point_size</code>
+size of the interval or points separately, you can also use the <code>linewidth</code> or <code>point_size</code>
 aesthetics; see <a href="scales.html">scales</a>.</p></dd>
 
 
 <dt>interval_size_domain</dt>
-<dd><p>A length-2 numeric vector giving the minimum and maximum of the values of the size aesthetic that will be
+<dd><p>A length-2 numeric vector giving the minimum and maximum of the values of the <code>size</code> and <code>linewidth</code> aesthetics that will be
 translated into actual sizes for intervals drawn according to <code>interval_size_range</code> (see the documentation
 for that argument.)</p></dd>
 
@@ -242,13 +244,18 @@ scale to "ramp" to another color. See <code><a href="scale_colour_ramp.html">sca
 <li><p><code>fill_ramp</code>: A secondary scale that modifies the <code>fill</code>
 scale to "ramp" to another color. See <code><a href="scale_colour_ramp.html">scale_fill_ramp()</a></code> for examples.</p></li>
 </ul><p><strong>Line aesthetics</strong></p>
-<ul><li><p><code>size</code>: Width of the outline around the <strong>slab</strong> (if visible). Also determines the width of
-the line used to draw the <strong>interval</strong> and the size of the <strong>point</strong>, but raw
+<ul><li><p><code>linewidth</code>: Width of the line used to draw the <strong>interval</strong> (except with <code><a href="geom_slab.html">geom_slab()</a></code>: then
+it is the width of the <strong>slab</strong>). With composite geometries including an interval and slab,
+use <code>slab_linewidth</code> to set the line width of the <strong>slab</strong> (see below). For <strong>interval</strong>, raw
+<code>linewidth</code> values are transformed according to the <code>interval_size_domain</code> and <code>interval_size_range</code>
+parameters of the <code>geom</code> (see above).</p></li>
+<li><p><code>size</code>: Determines the size of the <strong>point</strong>. If <code>linewidth</code> is not provided, <code>size</code> will
+also determines the width of the line used to draw the <strong>interval</strong> (this allows line width and
+point size to be modified together by setting only <code>size</code> and not <code>linewidth</code>). Raw
 <code>size</code> values are transformed according to the <code>interval_size_domain</code>, <code>interval_size_range</code>,
-and <code>fatten_point</code> parameters of the <code>geom</code> (see above). Use the <code>slab_size</code>,
-<code>interval_size</code>, or <code>point_size</code> aesthetics (below) to set sub-geometry line widths separately
-(note that when size is set directly using the override aesthetics, interval and point
-sizes are not affected by <code>interval_size_domain</code>, <code>interval_size_range</code>, and <code>fatten_point</code>).</p></li>
+and <code>fatten_point</code> parameters of the <code>geom</code> (see above). Use the <code>point_size</code> aesthetic
+(below) to set sub-geometry size directly without applying the effects of
+<code>interval_size_domain</code>, <code>interval_size_range</code>, and <code>fatten_point</code>.</p></li>
 <li><p><code>stroke</code>: Width of the outline around the <strong>point</strong> sub-geometry.</p></li>
 <li><p><code>linetype</code>: Type of line (e.g., <code>"solid"</code>, <code>"dashed"</code>, etc) used to draw the <strong>interval</strong>
 and the outline of the <strong>slab</strong> (if it is visible). Use the <code>slab_linetype</code> or
@@ -256,8 +263,9 @@ and the outline of the <strong>slab</strong> (if it is visible). Use the <code>s
 </ul><p><strong>Interval-specific color/line override aesthetics</strong></p>
 <ul><li><p><code>interval_colour</code>: (or <code>interval_color</code>) Override for <code>colour</code>/<code>color</code>: the color of the interval.</p></li>
 <li><p><code>interval_alpha</code>: Override for <code>alpha</code>: the opacity of the interval.</p></li>
-<li><p><code>interval_size</code>: Override for <code>size</code>: the line width of the interval.</p></li>
 <li><p><code>interval_linetype</code>: Override for <code>linetype</code>: the line type of the interval.</p></li>
+</ul><p><strong>Deprecated aesthetics</strong></p>
+<ul><li><p><code>interval_size</code>: Use <code>interval_linewidth</code>.</p></li>
 </ul><p><strong>Other aesthetics</strong> (these work as in standard <code>geom</code>s)</p>
 <ul><li><p><code>width</code></p></li>
 <li><p><code>height</code></p></li>
@@ -320,7 +328,7 @@ See <code><a href="geom_slabinterval.html">geom_slabinterval()</a></code> for th
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

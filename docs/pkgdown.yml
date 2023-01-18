@@ -1,12 +1,12 @@
-pandoc: 2.17.1.1
-pkgdown: 2.0.6
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   dotsinterval: dotsinterval.html
   freq-uncertainty-vis: freq-uncertainty-vis.html
   lineribbon: lineribbon.html
   slabinterval: slabinterval.html
-last_built: 2022-07-19T06:14Z
+last_built: 2023-01-18T05:36Z
 urls:
   reference: http://mjskay.github.io/ggdist/reference
   article: http://mjskay.github.io/ggdist/articles

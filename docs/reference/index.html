@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -153,11 +153,16 @@
           <p><code><a href="stat_histinterval.html">stat_histinterval()</a></code> </p>
         </td>
         <td><p>Histogram + interval plot (shortcut stat)</p></td>
-      </tr><tr><td><a href="geom_dotsinterval.html"><img src="icons/geom_dotsinterval.png" width="30" height="30" alt=""></a></td>
+      </tr><tr><td><a href="stat_dotsinterval.html"><img src="icons/stat_dotsinterval.png" width="30" height="30" alt=""></a></td>
         <td>
-          <p><code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code> <code><a href="geom_dotsinterval.html">geom_dots()</a></code> <code><a href="geom_dotsinterval.html">stat_dotsinterval()</a></code> <code><a href="geom_dotsinterval.html">stat_dots()</a></code> </p>
+          <p><code><a href="stat_dotsinterval.html">stat_dotsinterval()</a></code> </p>
         </td>
-        <td><p>Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)</p></td>
+        <td><p>Dots + point + interval plot (shortcut stat)</p></td>
+      </tr><tr><td><a href="stat_dots.html"><img src="icons/stat_dots.png" width="30" height="30" alt=""></a></td>
+        <td>
+          <p><code><a href="stat_dots.html">stat_dots()</a></code> </p>
+        </td>
+        <td><p>Dot plot (shortcut stat)</p></td>
       </tr><tr><td><a href="stat_lineribbon.html"><img src="icons/stat_lineribbon.png" width="30" height="30" alt=""></a></td>
         <td>
           <p><code><a href="stat_lineribbon.html">stat_lineribbon()</a></code> </p>
@@ -194,9 +199,24 @@
         <td><p>Slab (ridge) plot (shortcut geom)</p></td>
       </tr><tr><td><a href="geom_dotsinterval.html"><img src="icons/geom_dotsinterval.png" width="30" height="30" alt=""></a></td>
         <td>
-          <p><code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code> <code><a href="geom_dotsinterval.html">geom_dots()</a></code> <code><a href="geom_dotsinterval.html">stat_dotsinterval()</a></code> <code><a href="geom_dotsinterval.html">stat_dots()</a></code> </p>
+          <p><code><a href="geom_dotsinterval.html">geom_dotsinterval()</a></code> </p>
         </td>
-        <td><p>Automatic dotplots, dots + intervals, and quantile dotplots (ggplot geom)</p></td>
+        <td><p>Automatic dotplot + point + interval meta-geom</p></td>
+      </tr><tr><td><a href="geom_dots.html"><img src="icons/geom_dots.png" width="30" height="30" alt=""></a></td>
+        <td>
+          <p><code><a href="geom_dots.html">geom_dots()</a></code> </p>
+        </td>
+        <td><p>Dot plot (shortcut geom)</p></td>
+      </tr><tr><td><a href="geom_weave.html"><img src="icons/geom_weave.png" width="30" height="30" alt=""></a></td>
+        <td>
+          <p><code><a href="geom_weave.html">geom_weave()</a></code> </p>
+        </td>
+        <td><p>Dot-weave plot (shortcut geom)</p></td>
+      </tr><tr><td><a href="geom_swarm.html"><img src="icons/geom_swarm.png" width="30" height="30" alt=""></a></td>
+        <td>
+          <p><code><a href="geom_swarm.html">geom_swarm()</a></code> </p>
+        </td>
+        <td><p>Beeswarm plot (shortcut geom)</p></td>
       </tr><tr><td><a href="geom_lineribbon.html"><img src="icons/geom_lineribbon.png" width="30" height="30" alt=""></a></td>
         <td>
           <p><code><a href="geom_lineribbon.html">geom_lineribbon()</a></code> </p>
@@ -232,7 +252,7 @@
         </th>
       </tr></tbody><tbody><tr><td></td>
         <td>
-          <p><code><a href="scales.html">scale_point_colour_discrete()</a></code> <code><a href="scales.html">scale_point_color_discrete()</a></code> <code><a href="scales.html">scale_point_colour_continuous()</a></code> <code><a href="scales.html">scale_point_color_continuous()</a></code> <code><a href="scales.html">scale_point_fill_discrete()</a></code> <code><a href="scales.html">scale_point_fill_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_discrete()</a></code> <code><a href="scales.html">scale_point_size_continuous()</a></code> <code><a href="scales.html">scale_point_size_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_discrete()</a></code> <code><a href="scales.html">scale_interval_color_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_continuous()</a></code> <code><a href="scales.html">scale_interval_color_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_discrete()</a></code> <code><a href="scales.html">scale_interval_size_continuous()</a></code> <code><a href="scales.html">scale_interval_size_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_continuous()</a></code> <code><a href="scales.html">scale_slab_colour_discrete()</a></code> <code><a href="scales.html">scale_slab_color_discrete()</a></code> <code><a href="scales.html">scale_slab_colour_continuous()</a></code> <code><a href="scales.html">scale_slab_color_continuous()</a></code> <code><a href="scales.html">scale_slab_fill_discrete()</a></code> <code><a href="scales.html">scale_slab_fill_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_discrete()</a></code> <code><a href="scales.html">scale_slab_size_continuous()</a></code> <code><a href="scales.html">scale_slab_size_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_continuous()</a></code> <code><a href="scales.html">scale_slab_shape_discrete()</a></code> <code><a href="scales.html">scale_slab_shape_continuous()</a></code> <code><a href="scales.html">guide_colourbar2()</a></code> <code><a href="scales.html">guide_colorbar2()</a></code> </p>
+          <p><code><a href="scales.html">scale_point_colour_discrete()</a></code> <code><a href="scales.html">scale_point_color_discrete()</a></code> <code><a href="scales.html">scale_point_colour_continuous()</a></code> <code><a href="scales.html">scale_point_color_continuous()</a></code> <code><a href="scales.html">scale_point_fill_discrete()</a></code> <code><a href="scales.html">scale_point_fill_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_continuous()</a></code> <code><a href="scales.html">scale_point_alpha_discrete()</a></code> <code><a href="scales.html">scale_point_size_continuous()</a></code> <code><a href="scales.html">scale_point_size_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_discrete()</a></code> <code><a href="scales.html">scale_interval_color_discrete()</a></code> <code><a href="scales.html">scale_interval_colour_continuous()</a></code> <code><a href="scales.html">scale_interval_color_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_continuous()</a></code> <code><a href="scales.html">scale_interval_alpha_discrete()</a></code> <code><a href="scales.html">scale_interval_size_continuous()</a></code> <code><a href="scales.html">scale_interval_size_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_discrete()</a></code> <code><a href="scales.html">scale_interval_linetype_continuous()</a></code> <code><a href="scales.html">scale_slab_colour_discrete()</a></code> <code><a href="scales.html">scale_slab_color_discrete()</a></code> <code><a href="scales.html">scale_slab_colour_continuous()</a></code> <code><a href="scales.html">scale_slab_color_continuous()</a></code> <code><a href="scales.html">scale_slab_fill_discrete()</a></code> <code><a href="scales.html">scale_slab_fill_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_continuous()</a></code> <code><a href="scales.html">scale_slab_alpha_discrete()</a></code> <code><a href="scales.html">scale_slab_size_continuous()</a></code> <code><a href="scales.html">scale_slab_size_discrete()</a></code> <code><a href="scales.html">scale_slab_linewidth_continuous()</a></code> <code><a href="scales.html">scale_slab_linewidth_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_discrete()</a></code> <code><a href="scales.html">scale_slab_linetype_continuous()</a></code> <code><a href="scales.html">scale_slab_shape_discrete()</a></code> <code><a href="scales.html">scale_slab_shape_continuous()</a></code> <code><a href="scales.html">guide_colourbar2()</a></code> <code><a href="scales.html">guide_colorbar2()</a></code> </p>
         </td>
         <td><p>Custom ggplot scales for geom_slabinterval (and derivatives)</p></td>
       </tr><tr><td></td>
@@ -250,6 +270,11 @@
           <p><code><a href="scale_thickness.html">scale_thickness_shared()</a></code> <code><a href="scale_thickness.html">scale_thickness_identity()</a></code> <code><a href="scale_thickness.html">thickness()</a></code> </p>
         </td>
         <td><p>Scale for slab thickness</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="scale_side_mirrored.html">scale_side_mirrored()</a></code> </p>
+        </td>
+        <td><p>Side scale for mirrored slabs</p></td>
       </tr></tbody><tbody><tr><th colspan="3">
           <h2 id="ggplot-positions">GGplot positions <a href="#ggplot-positions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Positions for dodging geoms and stats</p>
@@ -282,6 +307,67 @@
           <p><code><a href="bin_dots.html">bin_dots()</a></code> </p>
         </td>
         <td><p>Bin data values using a dotplot algorithm</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="smooth_density.html">smooth_bounded()</a></code> <code><a href="smooth_density.html">smooth_unbounded()</a></code> </p>
+        </td>
+        <td><p>Smooth dot positions in a dotplot using a kernel density estimator ("density dotplots")</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="smooth_discrete.html">smooth_discrete()</a></code> <code><a href="smooth_discrete.html">smooth_bar()</a></code> </p>
+        </td>
+        <td><p>Smooth dot positions in a dotplot of discrete values ("bar dotplots")</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="smooth_none.html">smooth_none()</a></code> </p>
+        </td>
+        <td><p>Apply no smooth to a dotplot</p></td>
+      </tr></tbody><tbody><tr><th colspan="3">
+          <h2 id="density-functions">Density functions <a href="#density-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Density functions used by <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> and by the density smoothers for dotplot layout.</p>
+        </th>
+      </tr></tbody><tbody><tr><td></td>
+        <td>
+          <p><code><a href="density_auto.html">density_auto()</a></code> </p>
+        </td>
+        <td><p>Automatic density estimator</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="density_bounded.html">density_bounded()</a></code> </p>
+        </td>
+        <td><p>Bounded density estimator using the reflection method</p></td>
+      </tr><tr><td></td>
+        <td>
+          <p><code><a href="density_unbounded.html">density_unbounded()</a></code> </p>
+        </td>
+        <td><p>Unbounded density estimator</p></td>
+      </tr></tbody><tbody><tr><th colspan="3">
+          <h2 id="automatic-partial-functions">Automatic partial functions <a href="#automatic-partial-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Overview of automatic partial function application (currying) used by several ggdist function families</p>
+        </th>
+      </tr></tbody><tbody><tr><td></td>
+        <td>
+          <p><code><a href="automatic-partial-functions.html">automatic-partial-functions</a></code> </p>
+        </td>
+        <td><p>Automatic partial function application in ggdist</p></td>
+      </tr></tbody><tbody><tr><th colspan="3">
+          <h2 id="probability-expressions">Probability expressions <a href="#probability-expressions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Experimental mini-domain-specific language for probability expressions in <code><a href="../reference/stat_slabinterval.html">stat_slabinterval()</a></code> aesthetics.</p>
+        </th>
+      </tr></tbody><tbody><tr><td></td>
+        <td>
+          <p><code><a href="Pr_.html">Pr_()</a></code> <code><a href="Pr_.html">p_()</a></code> </p>
+        </td>
+        <td><p>Probability expressions in ggdist aesthetics</p></td>
+      </tr></tbody><tbody><tr><th colspan="3">
+          <h2 id="weighted-quantiles">Weighted quantiles <a href="#weighted-quantiles" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Weighted generalization of <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code> used internally by several algorithms.</p>
+        </th>
+      </tr></tbody><tbody><tr><td></td>
+        <td>
+          <p><code><a href="weighted_quantile.html">weighted_quantile()</a></code> <code><a href="weighted_quantile.html">weighted_quantile_fun()</a></code> </p>
+        </td>
+        <td><p>Weighted sample quantiles</p></td>
       </tr></tbody><tbody><tr><th colspan="3">
           <h2 id="compatibility-with-other-packages">Compatibility with other packages <a href="#compatibility-with-other-packages" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Functions to convert the ggdist naming scheme (for <code><a href="../reference/point_interval.html">point_interval()</a></code>) to and from other packages’ naming schemes.</p>
@@ -322,7 +408,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

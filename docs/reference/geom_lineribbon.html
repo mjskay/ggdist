@@ -24,7 +24,7 @@ designed for use with output from point_interval()."><meta property="og:image" c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggdist</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.1</span>
       </span>
     </div>
 
@@ -97,10 +97,10 @@ designed for use with output from <code><a href="point_interval.html">point_inte
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mapping</dt>
-<dd><p>Set of aesthetic mappings created by <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> or
-<code><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply <code>mapping</code> if there is no plot mapping.</p></dd>
+<dd><p>Set of aesthetic mappings created by <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>. If specified and
+<code>inherit.aes = TRUE</code> (the default), it is combined with the default mapping
+at the top level of the plot. You must supply <code>mapping</code> if there is no plot
+mapping.</p></dd>
 
 
 <dt>data</dt>
@@ -119,17 +119,21 @@ from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></dd>
 
 <dt>stat</dt>
 <dd><p>The statistical transformation to use on the data for this
-layer, as a string.</p></dd>
+layer, either as a <code>ggproto</code> <code>Geom</code> subclass or as a string naming the
+stat stripped of the <code>stat_</code> prefix (e.g. <code>"count"</code> rather than
+<code>"stat_count"</code>)</p></dd>
 
 
 <dt>position</dt>
-<dd><p>Position adjustment, either as a string, or the result of
-a call to a position adjustment function.</p></dd>
+<dd><p>Position adjustment, either as a string naming the adjustment
+(e.g. <code>"jitter"</code> to use <code>position_jitter</code>), or the result of a call to a
+position adjustment function. Use the latter if you need to change the
+settings of the adjustment.</p></dd>
 
 
 <dt>...</dt>
 <dd><p>Other arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code>. These are often aesthetics, used to set an aesthetic
-to a fixed value, like <code>colour = "red"</code> or <code>size = 3</code> (see <strong>Aesthetics</strong>, below). They may also be
+to a fixed value, like <code>colour = "red"</code> or <code>linewidth = 3</code> (see <strong>Aesthetics</strong>, below). They may also be
 parameters to the paired geom/stat.</p></dd>
 
 
@@ -153,7 +157,7 @@ draw points, intervals, and slabs.</p></li>
 groups. For each group, uses the <code>y</code>, <code>ymin</code>, <code>ymax</code>, and <code>thickness</code> aesthetics to
 draw points, intervals, and slabs.</p></li>
 </ul><p>For compatibility with the base ggplot naming scheme for <code>orientation</code>, <code>"x"</code> can be used as an alias
-for <code>"vertical"</code> and <code>"y"</code> as an alias for <code>"horizontal"</code> (tidybayes had an <code>orientation</code> parameter
+for <code>"vertical"</code> and <code>"y"</code> as an alias for <code>"horizontal"</code> (<span class="pkg">ggdist</span> had an <code>orientation</code> parameter
 before base ggplot did, hence the discrepancy).</p></dd>
 
 
@@ -214,7 +218,7 @@ the appearance of their two sub-geometries: the <strong>line</strong> and the <s
 <li><p><code>fill_ramp</code>: A secondary scale that modifies the <code>fill</code>
 scale to "ramp" to another color. See <code><a href="scale_colour_ramp.html">scale_fill_ramp()</a></code> for examples.</p></li>
 </ul><p><strong>Line aesthetics</strong></p>
-<ul><li><p><code>size</code>: Width of <strong>line</strong>.</p></li>
+<ul><li><p><code>linewidth</code>: Width of <strong>line</strong>. In <span class="pkg">ggplot2</span> &lt; 3.4, was called <code>size</code>.</p></li>
 <li><p><code>linetype</code>: Type of <strong>line</strong> (e.g., <code>"solid"</code>, <code>"dashed"</code>, etc)</p></li>
 </ul><p><strong>Other aesthetics</strong> (these work as in standard <code>geom</code>s)</p>
 <ul><li><p><code>group</code></p></li>
@@ -267,7 +271,7 @@ based on.</p></div>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
