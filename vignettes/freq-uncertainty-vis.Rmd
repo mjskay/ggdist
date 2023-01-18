@@ -47,7 +47,7 @@ This vignette shows how to combine the `ggdist` geoms with output from the `broo
 
 *Confidence distributions* are a way of unifying the notion of sampling distributions, bootstrap distributions, and several other concepts in frequentist inference. They are a convenient tool for visualizing uncertainty in a way that generalizes across Bayesian and frequentist frameworks: where in a Bayesian framework we might visualize a *probability* distribution, in the frequentist framework we visualize a *confidence* distribution. This gives us a way to use the same geometries for uncertainty visualization in either framework.
 
-For more on confidence distributions, see: Xie, Min‐ge, and Kesar Singh. [Confidence distribution, the frequentist distribution estimator of a parameter: A review](https://www.stat.rutgers.edu/home/mxie/RCPapers/insr.12000.pdf). _International Statistical Review_ 81.1 (2013): 3-39.
+For more on confidence distributions, see: Xie, Min‐ge, and Kesar Singh. [Confidence distribution, the frequentist distribution estimator of a parameter: A review](https://statweb.rutgers.edu/mxie/RCPapers/insr.12000.pdf). _International Statistical Review_ 81.1 (2013): 3-39.
 
 ## Setup
   

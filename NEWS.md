@@ -1,4 +1,4 @@
-# ggdist 3.2.0.9000
+# ggdist 3.2.1
 
 New features and enhancements:
 
