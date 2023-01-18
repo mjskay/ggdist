@@ -383,8 +383,8 @@ GeomDotsinterval = ggproto("GeomDotsinterval", GeomSlabinterval,
     smooth = glue_doc('Smoother to apply to dot positions.
       One of:
         - A function that takes a numeric vector of dot positions and returns a
-          smoothed version of that vector, such as `smooth_density()`,
-          `smooth_discrete()`, or `smooth_bar()`.
+          smoothed version of that vector, such as `smooth_bounded()`,
+          `smooth_unbounded()`, smooth_discrete()`, or `smooth_bar()`.
         - A string indicating what smoother to use, as the suffix to a function
           name starting with `smooth_`; e.g. `"none"` (the default) applies
           `smooth_none()`, which simply returns the given vector without

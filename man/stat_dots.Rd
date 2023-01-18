@@ -113,8 +113,8 @@ dots do not overlap.
 One of:
 \itemize{
 \item A function that takes a numeric vector of dot positions and returns a
-smoothed version of that vector, such as \code{smooth_density()},
-\code{smooth_discrete()}, or \code{smooth_bar()}.
+smoothed version of that vector, such as \code{smooth_bounded()},
+\code{smooth_unbounded()}, smooth_discrete()\verb{, or }smooth_bar()`.
 \item A string indicating what smoother to use, as the suffix to a function
 name starting with \code{smooth_}; e.g. \code{"none"} (the default) applies
 \code{smooth_none()}, which simply returns the given vector without

@@ -21,8 +21,8 @@
 #' - The [point_interval()] family, such as [median_qi()], [mean_qi()],
 #'   [mode_hdi()], etc.
 #'
-#' - The `smooth_` family, such as [smooth_density()], [smooth_discrete()],
-#'   and [smooth_bar()].
+#' - The `smooth_` family, such as [smooth_bounded()], [smooth_unbounded()],
+#'   [smooth_discrete()], and [smooth_bar()].
 #'
 #' - The `density_` family, such as [density_auto()], [density_bounded()] and
 #'   [density_unbounded()].
@@ -32,10 +32,10 @@
 #' For example, smoothers for [geom_dots()] can be supplied in one of three
 #' ways:
 #'
-#' - as a suffix: `geom_dots(smooth = "density")`
-#' - as a function: `geom_dots(smooth = smooth_density)`
+#' - as a suffix: `geom_dots(smooth = "bounded")`
+#' - as a function: `geom_dots(smooth = smooth_bounded)`
 #' - as a partially-applied function with options:
-#'   `geom_dots(smooth = smooth_density(kernel = "cosine"))`
+#'   `geom_dots(smooth = smooth_bounded(kernel = "cosine"))`
 #'
 #' The `density` argument to [stat_slabinterval()] works similarly with the
 #' `density_` family of functions.

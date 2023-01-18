@@ -5,7 +5,7 @@
 
 
 test_that("smooths on scalars work", {
-  smooths = list(smooth_bounded, smooth_unbounded, smooth_density, smooth_discrete, smooth_bar, smooth_none)
+  smooths = list(smooth_bounded, smooth_unbounded, smooth_discrete, smooth_bar, smooth_none)
   for (smooth in smooths) {
     expect_equal(!!(smooth)(numeric()), numeric())
     expect_equal(!!(smooth)(1.1), 1.1)
@@ -48,10 +48,10 @@ test_that("smooth_discrete works", {
   expect_equal(ld$x, ref_x)
 })
 
-test_that("smooth_density works", {
+test_that("smooth_bounded works", {
   x = 1:10
 
-  ld = layer_data(ggplot() + geom_dots(aes(x), smooth = "density"))
+  ld = layer_data(ggplot() + geom_dots(aes(x), smooth = "bounded"))
   ref_x = c(
     1.40651921403573, 2.23586210370045, 3.10942369477927, 4.03791371488805,
     5.00785366264729, 5.99214633735271, 6.96208628511195, 7.89057630522074,

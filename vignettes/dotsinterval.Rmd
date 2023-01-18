@@ -440,6 +440,35 @@ abc_df %>%
   ggtitle('geom_dots(side = "both", layout = "swarm")')
 ```
 
+The combination of `binwidth = unit(1.5, "mm")` and `overflow = "compress"` (see the 
+section on large samples, below) can be used to set the dot size to a specific size
+while guaranteeing the layout stays within the bounds of the geom. 
+This combination is used by two shortcut geoms, `geom_swarm()` and `geom_weave()`,
+which use the `"swarm"` and `"weave"` layouts respectively. These also use 
+`side = "both"`, and are intended to make it easy to create good-looking beeswarm 
+plots *without* manually tweaking settings:
+
+```{r geom_weave}
+set.seed(1234)
+
+swarm_data = data.frame(
+  y = rnorm(300, c(1,4)),
+  g = c("a","b")
+)
+
+swarm_plot = swarm_data %>%
+  ggplot(aes(x = g, y = y)) +
+  geom_swarm(linewidth = 0) +
+  labs(title = "geom_swarm()")
+
+weave_plot = swarm_data %>%
+  ggplot(aes(x = g, y = y)) +
+  geom_weave(linewidth = 0) +
+  labs(title = "geom_weave()")
+
+swarm_plot + weave_plot
+```
+
 ## Varying `color`, `fill`, `shape`, and `linewidth`
 
 Aesthetics like `color`, `fill`, `shape`, and `linewidth` can be varied over the dots.
@@ -451,17 +480,17 @@ the subgroups do not overlap:
 set.seed(12345)
 
 abcc_df = data.frame(
-  value = rnorm(200, mean = c(1,2,3,4), sd = c(1,2,2,1)),
+  value = rnorm(300, mean = c(1,2,3,4), sd = c(1,2,2,1)),
   abc = c("a", "b", "c", "c"),
   hi = c("h", "h", "h", "i")
 )
 
 abcc_df %>%
   ggplot(aes(y = value, x = abc, fill = hi)) +
-  geom_dots(side = "both", position = "dodge") +
+  geom_weave(position = "dodge", linewidth = 0) +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
-    'geom_dots(side = "both", position = "dodge")',
+    'geom_weave(position = "dodge")',
     'aes(fill = hi)'
   )
 ```
@@ -477,12 +506,10 @@ For example, we can vary `shape` and `color` simultaneously:
 ```{r beeswarm_shape_color}
 abcc_df %>%
   ggplot(aes(y = value, x = abc, shape = abc, color = hi)) +
-  # we'll also increase the `scale` here since we 
-  # have some extra space from the dodging
-  geom_dots(side = "both", position = "dodge", scale = 1.5) +
+  geom_weave(position = "dodge") +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
-    'geom_dots(side = "both", position = "dodge")',
+    'geom_weave(position = "dodge")',
     'aes(shape = abc, fill = hi)'
   )
 ```
@@ -501,12 +528,12 @@ For example:
 
 ```{r beeswarm_shape_color_together}
 abcc_df %>%
-  ggplot(aes(y = value, x = abc, shape = abc, color = hi, group = NA)) +
-  geom_dots() +
+  ggplot(aes(y = value, x = abc, fill = hi, group = NA)) +
+  geom_dots(linewidth = 0) +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
     'geom_dots()',
-    'aes(shape = abc, color = hi, group = NA)'
+    'aes(fill = hi, group = NA)'
   )
 ```
 
@@ -518,12 +545,12 @@ setting `order` to a discrete variable:
 
 ```{r beeswarm_shape_color_together_stacked}
 abcc_df %>%
-  ggplot(aes(y = value, x = abc, shape = abc, color = hi, group = NA, order = hi)) +
-  geom_dots() +
+  ggplot(aes(y = value, x = abc, fill = hi, group = NA, order = hi)) +
+  geom_dots(linewidth = 0) +
   scale_color_brewer(palette = "Dark2") +
   ggtitle(
     'geom_dots()',
-    'aes(shape = abc, color = hi, group = NA, order = hi)'
+    'aes(fill = hi, group = NA, order = hi)'
   )
 ```
 
@@ -544,56 +571,56 @@ abcc_df %>%
   )
 ```
 
-This can be particularly useful with the `color`, `fill`, `color_ramp`, `fill_ramp`, and `alpha`
-aesthetics. For example, encoding distance from 0 on `alpha`:
+## On large samples
 
-```{r beeswarm_shape_color_alpha}
-abcc_df %>%
-  arrange(hi) %>%
-  ggplot(aes(y = value, x = abc, shape = abc, color = abc, alpha = abs(value))) +
-  geom_dots(position = "dodge") +
-  ggtitle(
-    'geom_dots(side = "both", layout = "swarm")',
-    'aes(color = value, alpha = abs(value))'
-  )
-```
+### Setting a minimum dot size
 
-## On large samples: "density" dotplots
+On very large samples, the dots may become smaller than desired. To avoid this, you can set 
+a desired dot size / bin width using the `binwidth` argument. To set a specific bin width,
+pass a 1-element vector; to set a minimum bin width, pass a 2-element vector, where the first
+element is the min and the second the max. The bin width can be in data units (if `numeric`)
+or in plotting units (using `grid::unit()`). 
 
-When applied to large samples where you do not care too much about individual dot positions,
-you may want to apply some smoothing to make the layout more appealing. For example,
-a dotplot on a sample of size 2000 can be quite noisy:
+For example, we could set the minimum dot size
+to `unit(1.5, "mm")`, which is the default size of points in `ggplot2::geom_point()`. We'll
+also set `overflow = "compress"`, which allows dots to overlap if necessary to maintain
+the specified dot size (rather than having the tallest stacks of dots leave the top
+of the screen):
 
-```{r large_sample, fig.width = small_width, fig.height = small_width/2}
+```{r large_sample_min_binwidth, fig.width = small_width, fig.height = small_width/2}
 set.seed(1234)
 x = rnorm(2000)
 
 ggplot() +
-  geom_dots(aes(x)) +
+  geom_dots(aes(x), binwidth = unit(c(1.5, Inf), "mm"), overflow = "compress", alpha = 0.5) +
   labs(
-    title = "geom_dots()",
-    subtitle = "with 2000 dots",
-    x = NULL
-  ) +
-  scale_y_continuous(breaks = NULL)
+    title = 'geom_dots()',
+    subtitle = 'binwidth = unit(c(1.5, Inf), "mm"), overflow = "compress")'
+  )
 ```
+
+### "density" dotplots
+
+The dotplot above on a sample of size 2000 is quite noisy. When applied to large 
+samples where you do not care too much about individual dot positions,
+you may want to apply some smoothing to make the layout more appealing.
 
 `geom_dots()` supports a handful of *smoothers* which can be applied using the
 `smooth = ` parameter. These all correspond to functions that start with `smooth_`,
-like `smooth_density()`, `smooth_discrete()`, and `smooth_bar()`, and can be
-applied either by passing the suffix as a string (e.g. `smooth = "density"`)
+like `smooth_bounded()`, `smooth_unbounded()`, `smooth_discrete()`, and `smooth_bar()`, and can be
+applied either by passing the suffix as a string (e.g. `smooth = "bounded"`)
 or by passing the function itself, to set specific options on it (e.g. 
-`smooth = smooth_density(adjust = 0.5)`). For continuous distributions,
-the default smooth, `smooth_density()`, applies a bounded kernel density estimator
-(see `density_bounded()`) and should work well in most cases:
+`smooth = smooth_bonuded(adjust = 0.5)`). For continuous distributions with
+unbounded support, `smooth_unbounded()` is a good choice; it applies a kernel density estimator
+the assumes infinite bounds (see `density_unbounded()`):
 
 
 ```{r large_sample_smooth, fig.width = small_width, fig.height = small_width/2}
 ggplot() +
-  geom_dots(aes(x), smooth = "density") +
+  geom_dots(aes(x), smooth = "unbounded") +
   labs(
-    title = 'geom_dots(smooth = "density")',
-    subtitle = "with 2000 dots",
+    title = 'geom_dots() with 2000 dots',
+    subtitle = 'smooth = "unbounded"',
     x = NULL
   ) +
   scale_y_continuous(breaks = NULL)
@@ -607,14 +634,37 @@ Density smoothing works particularly well with the `"hex"` layout and `side = "b
 
 ```{r large_sample_smooth_hex, fig.width = small_width, fig.height = small_width/2}
 ggplot() +
-  geom_dots(aes(x), smooth = "density", layout = "hex", stackratio = 0.9, side = "both") +
+  geom_dots(aes(x), smooth = "unbounded", layout = "hex", stackratio = 0.9, side = "both") +
   labs(
-    title = 'geom_dots(smooth = "density", layout = "hex", stackratio = 0.9, side = "both")',
-    subtitle = "with 2000 dots",
+    title = 'geom_dots() with 2000 dots',
+    subtitle = 'smooth = "unbounded", layout = "hex", stackratio = 0.9, side = "both")',
     x = NULL
   ) +
   scale_y_continuous(breaks = NULL)
 ```
+
+On bounded distributions, you should use `smooth_bounded()`, providing 
+the bounds of the distribution. Otherwise, the dotplot will be smoothed incorrectly. 
+For example, on a Beta(0.5, 0.5) distribution, which is bounded between 0 and 1,
+we should use `smooth = smooth_bounded(bounds = c(0, 1))`:
+
+```{r smooth_bounded_versus_unbounded}
+set.seed(1234)
+x = rbeta(2000, 0.5, 0.5)
+
+ggplot(data.frame(x), aes(x)) +
+  geom_dots(aes(y = "bounded"), smooth = smooth_bounded(bounds = c(0, 1))) +
+  geom_dots(aes(y = "unbounded"), smooth = "unbounded") +
+  geom_vline(xintercept = c(0, 1), alpha = 0.25) +
+  scale_x_continuous(breaks = c(0, 0.5, 1)) +
+  labs(
+    title = "geom_dots(smooth = ...) on x ~ Beta(0.5, 0.5)",
+    y = "smooth ="
+  )
+```
+
+Notice how `smooth = "unbounded"` incorrectly smooths data points to be outside the
+range of the data when the data are bounded.
 
 ## On discrete distributions
 

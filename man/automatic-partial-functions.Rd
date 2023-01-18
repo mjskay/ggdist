@@ -15,8 +15,8 @@ Functions supporting automatic partial application include:
 \itemize{
 \item The \code{\link[=point_interval]{point_interval()}} family, such as \code{\link[=median_qi]{median_qi()}}, \code{\link[=mean_qi]{mean_qi()}},
 \code{\link[=mode_hdi]{mode_hdi()}}, etc.
-\item The \code{smooth_} family, such as \code{\link[=smooth_density]{smooth_density()}}, \code{\link[=smooth_discrete]{smooth_discrete()}},
-and \code{\link[=smooth_bar]{smooth_bar()}}.
+\item The \code{smooth_} family, such as \code{\link[=smooth_bounded]{smooth_bounded()}}, \code{\link[=smooth_unbounded]{smooth_unbounded()}},
+\code{\link[=smooth_discrete]{smooth_discrete()}}, and \code{\link[=smooth_bar]{smooth_bar()}}.
 \item The \code{density_} family, such as \code{\link[=density_auto]{density_auto()}}, \code{\link[=density_bounded]{density_bounded()}} and
 \code{\link[=density_unbounded]{density_unbounded()}}.
 }
@@ -26,10 +26,10 @@ functions when using them inside other functions, such as geoms and stats.
 For example, smoothers for \code{\link[=geom_dots]{geom_dots()}} can be supplied in one of three
 ways:
 \itemize{
-\item as a suffix: \code{geom_dots(smooth = "density")}
-\item as a function: \code{geom_dots(smooth = smooth_density)}
+\item as a suffix: \code{geom_dots(smooth = "bounded")}
+\item as a function: \code{geom_dots(smooth = smooth_bounded)}
 \item as a partially-applied function with options:
-\code{geom_dots(smooth = smooth_density(kernel = "cosine"))}
+\code{geom_dots(smooth = smooth_bounded(kernel = "cosine"))}
 }
 
 The \code{density} argument to \code{\link[=stat_slabinterval]{stat_slabinterval()}} works similarly with the

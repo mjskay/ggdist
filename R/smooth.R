@@ -20,30 +20,30 @@
 #'    [density_bounded()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
 #'    e.g. `"bounded"` for `[density_bounded()]`.
-#' @param ... Arguments passed to the density estimator (by default, `density_bounded()`).
+#' @param ... Arguments passed to the density estimator specified by `density`.
 #' @inheritParams density_bounded
 #'
 #' @details
 #' Applies a kernel density estimator (KDE) to `x`, then uses weighted quantiles
 #' of the KDE to generate a new set of `x` values with smoothed values. Plotted
-#' using a dotplot (e.g. `geom_dots(smooth = "density")` or
-#' `geom_dots(smooth = smooth_density(...)`), these values create a variation on
+#' using a dotplot (e.g. `geom_dots(smooth = "bounded")` or
+#' `geom_dots(smooth = smooth_bounded(...)`), these values create a variation on
 #' a "density dotplot" (Zvinca 2018).
 #'
-#' Such plots are recommended only in very
+#' Such plots are recommended **only** in very
 #' large sample sizes where precise positions of individual values are not
 #' particularly meaningful. In small samples, normal dotplots should generally
 #' be used.
 #'
 #' Two variants are supplied by default:
 #'
-#' - `smooth_bounded()`, which uses [density_bounded()]. `smooth_density()` is
-#'   an alias for this. Passes the `bounds` arguments to the estimator.
+#' - `smooth_bounded()`, which uses [density_bounded()].
+#'   Passes the `bounds` arguments to the estimator.
 #' - `smooth_unbounded()`, which uses [density_unbounded()].
 #'
-#' In most cases, the bounded estimator is recommended, as it does a better job
-#' at dotplot smoothing, even for unbounded distributions (hence why
-#' `smooth_density()` is an alias for `smooth_bounded()`).
+#' It is generally recommended to pick the smooth based on the known bounds of
+#' your data, e.g. by using `smooth_bounded()` with the `bounds` parameter if
+#' there are finite bounds, or `smooth_unbounded()` if both bounds are infinite.
 #'
 #' @returns
 #' A numeric vector of `length(x)`, where each entry is a smoothed version of
@@ -70,15 +70,24 @@
 #' # density dotplot is smoother, but does move points (most noticeable
 #' # in areas of low density)
 #' ggplot(data.frame(x), aes(x)) +
-#'   geom_dots(smooth = "density")
+#'   geom_dots(smooth = "unbounded")
 #'
 #' # you can adjust the kernel and bandwidth...
 #' ggplot(data.frame(x), aes(x)) +
-#'   geom_dots(smooth = smooth_density(kernel = "triangular", adjust = 0.5))
+#'   geom_dots(smooth = smooth_unbounded(kernel = "triangular", adjust = 0.5))
 #'
-#' @export
+#' # for bounded data, you should use the bounded smoother
+#' x_beta = rbeta(1000, 0.5, 0.5)
+#'
+#' ggplot(data.frame(x_beta), aes(x_beta)) +
+#'   geom_dots(smooth = smooth_bounded(bounds = c(0, 1)))
+#'
+#' @name smooth_density
+NULL
+
+# currently not exporting smooth_density as people should really be forced to
+# think about if they want a bounded or unbounded smoother
 smooth_density = function(x, density = "bounded", ...) {
-  if (missing(x)) return(partial_self("smooth_density"))
   if (length(x) < 2) return(x)
 
   density = match_function(density, prefix = "density_")
@@ -95,19 +104,20 @@ smooth_density = function(x, density = "bounded", ...) {
 
 #' @rdname smooth_density
 #' @export
-smooth_unbounded = function(x, ...) {
-  if (missing(x)) return(partial_self("smooth_unbounded"))
+smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), ...) {
+  if (missing(x)) return(partial_self("smooth_bounded"))
 
-  smooth_density(x, density = "unbounded", ...)
+  smooth_density(x, density = density, ...)
 }
 
 #' @rdname smooth_density
 #' @export
-smooth_bounded = function(x, bounds = c(NA, NA), ...) {
-  if (missing(x)) return(partial_self("smooth_bounded"))
+smooth_unbounded = function(x, density = "unbounded", ...) {
+  if (missing(x)) return(partial_self("smooth_unbounded"))
 
-  smooth_density(x, density = density_bounded(bounds = bounds), ...)
+  smooth_density(x, density = density, ...)
 }
+
 
 # discrete smooths --------------------------------------------------------
 
@@ -133,7 +143,7 @@ smooth_bounded = function(x, bounds = c(NA, NA), ...) {
 #' to `x`. It automatically sets the bandwidth to be such that the kernel's
 #' width (for each kernel type) is approximately `width` times the [resolution()]
 #' of the data. This means it essentially creates smoothed bins around each
-#' unique value. It calls down to [smooth_density()].
+#' unique value. It calls down to [smooth_unbounded()].
 #'
 #' `smooth_bar()` generates an evenly-spaced grid of values spanning `+/- width/2`
 #' around each unique value in `x`.

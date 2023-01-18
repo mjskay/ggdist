@@ -48,7 +48,7 @@ Supports \link[=automatic-partial-functions]{automatic partial function applicat
 to \code{x}. It automatically sets the bandwidth to be such that the kernel's
 width (for each kernel type) is approximately \code{width} times the \code{\link[=resolution]{resolution()}}
 of the data. This means it essentially creates smoothed bins around each
-unique value. It calls down to \code{\link[=smooth_density]{smooth_density()}}.
+unique value. It calls down to \code{\link[=smooth_unbounded]{smooth_unbounded()}}.
 
 \code{smooth_bar()} generates an evenly-spaced grid of values spanning \verb{+/- width/2}
 around each unique value in \code{x}.

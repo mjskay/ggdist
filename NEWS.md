@@ -8,9 +8,9 @@ New features and enhancements:
 * Various improvements to dotplot layout in `geom_dotsinterval()`:
   * new `layout = "hex"` allows a hexagonal circle-packing style layout (#161).
   * new mechanism for smoothing dotplots using the `smooth` parameter, including 
-    `smooth = "density"` (for "density dotplots") and `smooth = "discrete"`
-    (for improved layout of large-n discrete distributions). See `smooth_density()`
-    and `smooth_discrete()` (#161)
+    `smooth = "bounded"` / `smooth = "unbounded"` (for "density dotplots") and 
+    `smooth = "discrete"` / `smooth = "bar"` (for improved layout of large-n 
+    discrete distributions). (#161)
   * a better bin/dot-nudging algorithm using constrained optimization (#163)
   * new `overlaps = "keep"` option disables bin/dot nudging in `"bin"`, `"hex"`,
     and `"weave"` layouts. This means `layout = "weave"` with `overlaps = "keep"`
@@ -35,7 +35,7 @@ New features and enhancements:
   * `slab_size` is now `slab_linewidth`
   * in `geom_slab()`, `geom_dots()`, and `geom_lineribbon()`, `size` is now `linewidth`
 * A new **experimental** mini domain-specific language for probability expressions
-  in *ggdist* `stat`s: the `Pr()` and `p_()` functions can be used to generate
+  in *ggdist* `stat`s: the `Pr_()` and `p_()` functions can be used to generate
   `after_stat()` expressions in terms of *ggdist* computed variables; e.g.
   `aes(thickness = !!Pr_(X <= x))` maps the CDF of the distribution onto the 
   `thickness` aesthetic; `aes(thickness = !!p_(x))` maps the PDF onto the
