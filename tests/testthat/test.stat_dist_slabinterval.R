@@ -376,7 +376,8 @@ test_that("scale transformation works when no slab is present", {
     .interval = "qi",
     x = 2,
     xmin = qnorm((1 - c(.66, .95))/2, 2, 1),
-    xmax = qnorm((1 + c(.66, .95))/2, 2, 1)
+    xmax = qnorm((1 + c(.66, .95))/2, 2, 1),
+    stringsAsFactors = FALSE
   )
 
   expect_equal(ld[, names(ref)], ref)
