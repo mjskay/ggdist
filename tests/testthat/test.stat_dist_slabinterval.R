@@ -1002,6 +1002,8 @@ test_that("stats work without attaching the ggdist namespace", {
 # multiple dists with unique groups ---------------------------------------
 
 test_that("multiple dists supplied to the same group", {
+  skip_if_no_vdiffr()
+
   p = data.frame(
       y = dist_normal(c(0, 10, 20, 0, 10, 20)),
       x = c(0,0,0,1,1,1)

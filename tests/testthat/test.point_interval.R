@@ -596,6 +596,7 @@ test_that("multivariate distributions work", {
 
 test_that("flattened indices retain index order", {
   skip_if_no_vdiffr()
+  skip_if_not_installed("mvtnorm")  # needed for dist_multivariate_normal()
 
   vdiffr::expect_doppelganger("flattened indices with geom_pointinterval",
     tibble(x = dist_multivariate_normal(list(c(1:10)), list(diag(10)))) %>%

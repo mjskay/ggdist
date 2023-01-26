@@ -53,6 +53,7 @@ Suggests:
     beeswarm (>= 0.4.0),
     posterior,
     pkgdown,
+    mvtnorm,
     palmerpenguins
 License: GPL (>= 3)
 Language: en-US
