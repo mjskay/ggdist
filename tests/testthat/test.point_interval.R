@@ -547,7 +547,7 @@ test_that("non-scalar distributions throw appropriate warnings", {
 })
 
 test_that("multivariate distributions throw appropriate warnings", {
-  skip_if_not_installed("mvtnorm") # needed by distributional::support for dist_mvnorm
+  skip_if_not_installed("mvtnorm")  # needed for dist_multivariate_normal()
 
   x = dist_multivariate_normal(list(0:1), list(diag(2)))
   expect_error(hdi(x), "HDI for multivariate distribution objects is not implemented")
@@ -569,6 +569,7 @@ test_that("point_interval works on NA dists", {
 })
 
 test_that("multivariate distributions work", {
+  skip_if_not_installed("mvtnorm")  # needed for dist_multivariate_normal()
 
   x = c(dist_multivariate_normal(list(1:3), list(diag(3))), dist_normal(0,0.5))
 
