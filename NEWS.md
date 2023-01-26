@@ -1,3 +1,11 @@
+# ggdist 3.2.1.9000
+
+Bug fixes:
+
+* Ensure scale transformations work even when no slab is present; e.g. in
+  `stat_interval()`. (#168)
+
+
 # ggdist 3.2.1
 
 New features and enhancements:

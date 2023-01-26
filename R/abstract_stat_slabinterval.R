@@ -183,7 +183,7 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
           ...
         )
       } else {
-        data.frame()
+        data.frame(.input = numeric())
       }
       i_data = self$compute_interval(d,
         trans = trans,

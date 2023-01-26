@@ -360,6 +360,28 @@ test_that("scale transformation sets appropriate axis limits", {
   expect_equal(limits[[1]], log(2, base = 10))
 })
 
+test_that("scale transformation works when no slab is present", {
+  ld = layer_data(
+    data.frame(x = dist_lognormal(log(100), log(10))) %>%
+      ggplot(aes(xdist = x)) +
+      stat_pointinterval() +
+      scale_x_log10()
+  )
+
+  ref = data.frame(
+    size = c(6, 1),
+    thickness = c(NA_real_, NA_real_),
+    .width = c(.66, .95),
+    .point = "median",
+    .interval = "qi",
+    x = 2,
+    xmin = qnorm((1 - c(.66, .95))/2, 2, 1),
+    xmax = qnorm((1 + c(.66, .95))/2, 2, 1)
+  )
+
+  expect_equal(ld[, names(ref)], ref)
+})
+
 
 # orientation detection ---------------------------------------------------
 
