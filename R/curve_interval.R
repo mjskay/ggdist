@@ -24,7 +24,8 @@
 #' `.data`, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in `.exclude` (by default
 #' `".chain"`, `".iteration"`, `".draw"`, and `".row"`) will be summarized.
-#' This can be list columns.
+#' This can be numeric columns, list columns containing numeric vectors, or
+#' [posterior::rvar()]s.
 #' @param .along Which columns are the input values to the function describing the curve (e.g., the "x"
 #' values). Supports tidyselect syntax, as in [dplyr::select()]. Intervals are calculated jointly with
 #' respect to these variables, conditional on all other grouping variables in the data frame. The default
@@ -32,7 +33,9 @@
 #' for `.along`, which will generate the most conservative intervals. However, if you want to calculate
 #' intervals for some function `y = f(x)` conditional on some other variable(s) (say, conditional on a
 #' factor `g`), you would group by `g`, then use `.along = x` to calculate intervals jointly over `x`
-#' conditional on `g`.
+#' conditional on `g`. To avoid selecting any variables as input values to the function describing the
+#' curve, use `character()`; this will produce conditional intervals only (the result in this case should
+#' be very similar to `median_qi()`).
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
 #' a different probability interval (and value of the corresponding `.width` column).
@@ -248,8 +251,13 @@ halfspace_depth = function(x) {
   map_dfr_(dfs, function(d) {
 
     # draws x y matrix
-    draws = do.call(cbind, d[[col_name]])
-    y_rvar = posterior::rvar(draws)
+    if (posterior::is_rvar(d[[col_name]])) {
+      y_rvar = d[[col_name]]
+      draws = posterior::draws_of(y_rvar)
+    } else {
+      draws = do.call(cbind, d[[col_name]])
+      y_rvar = posterior::rvar(draws)
+    }
 
     if (.interval_internal == "mhd") { #mean halfspace depth
       # draws x depth matrix
@@ -269,15 +277,15 @@ halfspace_depth = function(x) {
 
     # median draw = the one with the maximum depth
     median_draw = which.max(draw_depth)
-    median_y = map_dbl_(d[[col_name]], `[[`, median_draw)
+    median_y = draws[median_draw, ]
 
     # function for determining the intervals given a selected draw depth
     calc_intervals_at_depth_cutoff = function(depth_cutoff) {
       selected_draws = draw_depth >= depth_cutoff
 
-      selected_y = lapply(d[[col_name]], `[`, selected_draws)
-      d[[lower]] = map_dbl_(selected_y, min)
-      d[[upper]] = map_dbl_(selected_y, max)
+      selected_y = draws[selected_draws, , drop = FALSE]
+      d[[lower]] = apply(selected_y, 2, min)
+      d[[upper]] = apply(selected_y, 2, max)
       d[[".actual_width"]] = posterior::Pr(posterior::rvar_all(d[[lower]] <= y_rvar & y_rvar <= d[[upper]]))
 
       d

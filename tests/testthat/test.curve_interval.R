@@ -41,7 +41,9 @@ test_that("curve_interval works with lineribbon", {
   ab_curve_df = bind_rows(
     mutate(curve_df, group = "a"),
     mutate(curve_df, group = "b", .draw = b_draw[.draw])
-  )
+  ) %>%
+    arrange(.draw)
+
   vdiffr::expect_doppelganger("conditional curve_interval with mhd",
     ab_curve_df %>%
       group_by(group) %>%
@@ -114,6 +116,11 @@ test_that("basic cases on single curve work", {
     .interval = "mhd"
   )
 
+  expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
+  expect_equal(curve_interval(group_by(df, x), .width = c(.95, 0, 1)), ref)
+
+  skip_if_not_installed("posterior")
+  df = data.frame(x = 1:3, y = rep(posterior::rvar(ppoints(1000)), 3) + 1:3)
   expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
   expect_equal(curve_interval(group_by(df, x), .width = c(.95, 0, 1)), ref)
 })

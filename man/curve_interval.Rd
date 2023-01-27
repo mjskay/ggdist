@@ -24,7 +24,8 @@ that contains draws to summarize.}
 \code{.data}, represent draws to summarize. If this is empty, then by default all
 columns that are not group columns and which are not in \code{.exclude} (by default
 \code{".chain"}, \code{".iteration"}, \code{".draw"}, and \code{".row"}) will be summarized.
-This can be list columns.}
+This can be numeric columns, list columns containing numeric vectors, or
+\code{\link[posterior:rvar]{posterior::rvar()}}s.}
 
 \item{.along}{Which columns are the input values to the function describing the curve (e.g., the "x"
 values). Supports tidyselect syntax, as in \code{\link[dplyr:select]{dplyr::select()}}. Intervals are calculated jointly with
@@ -33,7 +34,9 @@ respect to these variables, conditional on all other grouping variables in the d
 for \code{.along}, which will generate the most conservative intervals. However, if you want to calculate
 intervals for some function \code{y = f(x)} conditional on some other variable(s) (say, conditional on a
 factor \code{g}), you would group by \code{g}, then use \code{.along = x} to calculate intervals jointly over \code{x}
-conditional on \code{g}.}
+conditional on \code{g}. To avoid selecting any variables as input values to the function describing the
+curve, use \code{character()}; this will produce conditional intervals only (the result in this case should
+be very similar to \code{median_qi()}).}
 
 \item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.
 If multiple probabilities are provided, multiple rows per group are generated, each with
