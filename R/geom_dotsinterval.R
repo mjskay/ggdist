@@ -167,17 +167,12 @@ draw_slabs_dots = function(self, s_data, panel_params, coord,
 ) {
   define_orientation_variables(orientation)
 
-  # remove missing values
-  s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "justification", "scale"), name = "geom_dotsinterval", finite = TRUE)
-  # side is a character vector, thus need finite = FALSE for it
-  s_data = ggplot2::remove_missing(s_data, na.rm, "side", name = "geom_dotsinterval", finite = FALSE)
-  if (nrow(s_data) == 0) return(list())
-
   # slab thickness is fixed to 1 for dotplots
   s_data$thickness = 1
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, orientation, normalize, height, y, ymin, ymax
+    s_data, orientation, normalize, na.rm, name = "geom_dotsinterval"
   ))
+  if (nrow(s_data) == 0) return(list())
 
   # in order for the dots grob to respect the `justification` aesthetic, we
   # need to adjust the y position based on where ymin and ymax are, as ymin/ymax

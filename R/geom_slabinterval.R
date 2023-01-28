@@ -54,7 +54,20 @@ normalize_thickness.data.frame = function(x) {
 #' so we scale things based on the min height to ensure everything
 #' is the same height
 #' @noRd
-rescale_slab_thickness = function(s_data, orientation, normalize, height, y, ymin, ymax) {
+rescale_slab_thickness = function(
+  s_data, orientation, normalize, na.rm,
+  name = "geom_slabinterval"
+) {
+  define_orientation_variables(orientation)
+
+  # remove missing values - thickness NAs are fine here since they just create
+  # breaks in the slab (handled elsewhere in geom_slabinterval), but missing height
+  # means we can't even determine slab dimensions, so need a warning
+  s_data = ggplot2::remove_missing(s_data, na.rm, c(height, "justification", "scale"), name = name, finite = TRUE)
+  # side is a character vector, thus need finite = FALSE for it; x/y can be Inf here
+  s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "side"), name = name)
+  if (nrow(s_data) == 0) return(s_data)
+
   min_height = min(s_data[[height]])
 
   # must do this within groups so that `side` can vary by slab
@@ -100,15 +113,8 @@ draw_slabs = function(self, s_data, panel_params, coord,
 ) {
   define_orientation_variables(orientation)
 
-  # remove missing values - thickness NAs are fine here since they just create
-  # breaks in the slab (handled below), but missing height means we can't
-  # even determine slab dimensions, so need a warning
-  s_data = ggplot2::remove_missing(s_data, na.rm, c(height, "justification", "scale"), name = "geom_slabinterval", finite = TRUE)
-  # side is a character vector, thus need finite = FALSE for it; x/y can be Inf here
-  s_data = ggplot2::remove_missing(s_data, na.rm, c(x, y, "scale"), name = "geom_slabinterval")
-
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, orientation, normalize, height, y, ymin, ymax
+    s_data, orientation, normalize, na.rm, name = "geom_slabinterval"
   ))
 
   # avoid giving fill type warnings multiple times
