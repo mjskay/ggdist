@@ -95,6 +95,7 @@ Collate:
     "pr.R"
     "rd_dotsinterval.R"
     "rd_slabinterval.R"
+    "rd_spike.R"
     "rd_lineribbon.R"
     "scale_colour_ramp.R"
     "scale_thickness.R"

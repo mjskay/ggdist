@@ -1,5 +1,10 @@
 # ggdist 3.2.1.9000
 
+New features and enhancements:
+
+* New geom `geom_spike()`, for adding spike annotations to slabs created with
+  `geom_slabinterval()` or `stat_slabinterval()`. (#58)
+
 Bug fixes:
 
 * Ensure scale transformations work even when no slab is present; e.g. in

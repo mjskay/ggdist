@@ -11,6 +11,8 @@
 #' positioning of the `thickness` aesthetic from [geom_slabinterval()], which
 #' allows you to position spikes and points along a slab.
 #'
+#' @eval rd_layer_params("spike")
+#' @eval rd_spike_aesthetics()
 #' @details
 #' This geometry consists of a "spike" (vertical/horizontal line segment) and a
 #' "point" (at the end of the line segment). It uses the `thickness` aesthetic
@@ -21,13 +23,46 @@
 #' @return A [ggplot2::Geom] representing a spike geometry which can
 #' be added to a [ggplot()] object.
 #' rd_slabinterval_aesthetics(geom_name),
-#' @seealso
-#' See [stat_spike()] for the stat version, intended for
-#' use on sample data or analytical distributions.
 #' @family geom_slabinterval geoms
 #' @examples
+#' library(ggplot2)
+#' library(distributional)
 #'
-#' #TODO
+#' # geom_spike is easiest to use with distributional or
+#' # posterior::rvar objects
+#' df = tibble(
+#'   d = dist_normal(1:2, 1:2), g = c("a", "b")
+#' )
+#'
+#' # annotate the density at the mean of a distribution
+#' df %>% mutate(
+#'   mean = mean(d),
+#'   density(d, list(density_at_mean = mean))
+#' ) %>%
+#'   ggplot(aes(y = g)) +
+#'   stat_slab(aes(xdist = d)) +
+#'   geom_spike(aes(x = mean, thickness = density_at_mean)) +
+#'   # need shared thickness scale so that stat_slab and geom_spike line up
+#'   scale_thickness_shared()
+#'
+#' # annotate the endpoints of intervals of a distribution
+#' # here we'll use an arrow instead of a point by setting size = 0
+#' arrow_spec = arrow(angle = 45, type = "closed", length = unit(4, "pt"))
+#' df %>% mutate(
+#'   median_qi(d, .width = 0.9),
+#'   density(d, list(density_lower = .lower, density_upper = .upper))
+#' ) %>%
+#'   ggplot(aes(y = g)) +
+#'   stat_halfeye(aes(xdist = d), .width = 0.9, color = "gray35") +
+#'   geom_spike(
+#'     aes(x = .lower, thickness = density_lower),
+#'     size = 0, arrow = arrow_spec, color = "blue", linewidth = 0.75
+#'   ) +
+#'   geom_spike(
+#'     aes(x = .upper, thickness = density_upper),
+#'     size = 0, arrow = arrow_spec, color = "red", linewidth = 0.75
+#'   ) +
+#'   scale_thickness_shared()
 #'
 #' @name geom_spike
 NULL
@@ -37,6 +72,7 @@ NULL
 
 draw_slabs_spike = function(self, s_data, panel_params, coord,
   orientation, normalize, na.rm,
+  arrow = NULL,
   ...
 ) {
   define_orientation_variables(orientation)
@@ -57,7 +93,7 @@ draw_slabs_spike = function(self, s_data, panel_params, coord,
   p_data = p_data[!is.na(p_data$size) & p_data$size != 0, ]
 
   list(
-    GeomSegment$draw_panel(s_data, panel_params, coord),
+    GeomSegment$draw_panel(s_data, panel_params, coord, arrow = arrow),
     if (nrow(p_data) > 0) GeomPoint$draw_panel(p_data, panel_params, coord)
   )
 }
@@ -71,11 +107,32 @@ draw_slabs_spike = function(self, s_data, panel_params, coord,
 #' @import ggplot2
 #' @export
 GeomSpike = ggproto("GeomSpike", GeomSlab,
+
+  ## aesthetics --------------------------------------------------------------
+
+  aes_docs = modifyList(GeomSlab$aes_docs, list(
+    "Color aesthetics" = list(
+      colour = '(or `color`) The color of the **spike** and **point** sub-geometries.',
+      fill = 'The fill color of the **point** sub-geometry.',
+      alpha = 'The opacity of the **spike** and **point** sub-geometries.'
+    ),
+    "Line aesthetics" = list(
+      linewidth = 'Width of the line used to draw the **spike** sub-geometry.',
+      size = 'Size of the **point** sub-geometry.',
+      linetype = 'Type of line (e.g., `"solid"`, `"dashed"`, etc) used to draw the **spike**.'
+    )
+  )),
+
   default_key_aes = defaults(aes(
     linewidth = 0.5,
     size = 1.5,
     colour = "black"
   ), GeomSlab$default_key_aes),
+
+  hidden_aes = union(c(
+    "justification",
+    "slab_fill", "slab_colour", "slab_alpha", "slab_linewidth", "slab_linetype", "slab_size"
+  ), GeomSlab$hidden_aes),
 
   override_slab_aesthetics = function(self, s_data) {
     s_data$colour = apply_colour_ramp(s_data[["colour"]], s_data[["colour_ramp"]])
@@ -85,22 +142,49 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
 
   rename_size = FALSE,
 
+
+  ## params ------------------------------------------------------------------
+
+  param_docs = defaults(list(
+    # SLAB PARAMS
+    arrow = '[grid::arrow()] giving the arrow heads to use on the spike, or `NULL` for no arrows.'
+  ), GeomSlab$param_docs),
+
+  default_params = defaults(list(
+    arrow = NULL
+  ), GeomSlab$default_params),
+
   hidden_params = union(c(
     "fill_type"
   ), GeomSlab$hidden_params),
 
+
+  ## other methods -----------------------------------------------------------
+
   draw_key_slab = function(self, data, key_data, params, size) {
-    #TODO: update
-    # can drop all the complicated checks from this key since it's just one geom
     s_key_data = self$override_slab_aesthetics(key_data)
 
-    # what point calls "stroke" is what we call "size", since "size" is determined automatically
-    if (is.na(data$colour) && (!is.na(data$size) || !is.na(data$linetype))) {
-      # because the default colour is NA, if we want to draw a key for size / linetype we need to
-      # reset the colour to something reasonable
-      s_key_data$colour = "black"
+    spike_key = if (any(!is.na(data[c("colour","colour_ramp","alpha","linewidth","linetype")]))) {
+      line_key = if(params$orientation %in% c("y", "horizontal")) {
+        draw_key_vpath
+      } else {
+        draw_key_path
+      }
+      line_key(s_key_data, params, size)
     }
-    draw_key_polygon(s_key_data, params, size)
+
+    point_key = if (
+      !all(is.na(s_key_data$size) | s_key_data$size == 0) && (
+        any(!is.na(data[c("size","stroke","shape","alpha")])) ||
+        # only draw point for `fill` aesthetic if a shape that has a fill colour is used
+        (any(!is.na(data[c("fill","fill_ramp")])) && length(intersect(data$shape, c(21:25))) > 0) ||
+        (any(!is.na(data[c("fill","fill_ramp")])) && length(intersect(data$shape, c(21:25))) > 0)
+      )
+    ) {
+      draw_key_point(s_key_data, params, size)
+    }
+
+    grobTree(spike_key, point_key)
   },
 
   # workaround (#84)

@@ -10,6 +10,7 @@ geom_spike(
   stat = "identity",
   position = "identity",
   ...,
+  arrow = NULL,
   orientation = NA,
   normalize = "all",
   na.rm = FALSE,
@@ -50,6 +51,8 @@ you have overlapping geometries.}
 \item{...}{Other arguments passed to \code{\link[=layer]{layer()}}. These are often aesthetics, used to set an aesthetic
 to a fixed value, like \code{colour = "red"} or \code{linewidth = 3} (see \strong{Aesthetics}, below). They may also be
 parameters to the paired geom/stat.}
+
+\item{arrow}{\code{\link[grid:arrow]{grid::arrow()}} giving the arrow heads to use on the spike, or \code{NULL} for no arrows.}
 
 \item{orientation}{Whether this geom is drawn horizontally or vertically. One of:
 \itemize{
@@ -110,13 +113,108 @@ to determine where the endpoint of the line is, which allows it to be used
 with \code{\link[=geom_slabinterval]{geom_slabinterval()}} geometries for labelling specific values of the
 thickness function.
 }
-\examples{
+\section{Aesthetics}{
 
-#TODO
+The spike \code{geom} has a wide variety of aesthetics that control
+the appearance of its two sub-geometries: the \strong{spike} and the \strong{point}.
 
+\strong{Positional aesthetics}
+
+\itemize{
+\item{\code{x}: x position of the geometry}
+\item{\code{y}: y position of the geometry}
 }
-\seealso{
-See \code{\link[=stat_spike]{stat_spike()}} for the stat version, intended for
-use on sample data or analytical distributions.
+
+\strong{Slab-specific aesthetics}
+
+\itemize{
+\item{\code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
+\code{y} value (if \code{orientation = "vertical"}) of the slab.}
+\item{\code{side}: Which side to place the slab on. \code{"topright"}, \code{"top"}, and \code{"right"} are synonyms
+which cause the slab to be drawn on the top or the right depending on if \code{orientation} is \code{"horizontal"}
+or \code{"vertical"}. \code{"bottomleft"}, \code{"bottom"}, and \code{"left"} are synonyms which cause the slab
+to be drawn on the bottom or the left depending on if \code{orientation} is \code{"horizontal"} or
+\code{"vertical"}. \code{"topleft"} causes the slab to be drawn on the top or the left, and \code{"bottomright"}
+causes the slab to be drawn on the bottom or the right. \code{"both"} draws the slab mirrored on both
+sides (as in a violin plot).}
+\item{\code{scale}: What proportion of the region allocated to this geom to use to draw the slab. If \code{scale = 1},
+slabs that use the maximum range will just touch each other. Default is \code{0.9} to leave some space.}
+}
+
+\strong{Color aesthetics}
+
+\itemize{
+\item{\code{colour}: (or \code{color}) The color of the \strong{spike} and \strong{point} sub-geometries.}
+\item{\code{fill}: The fill color of the \strong{point} sub-geometry.}
+\item{\code{alpha}: The opacity of the \strong{spike} and \strong{point} sub-geometries.}
+\item{\code{colour_ramp}: (or \code{color_ramp}) A secondary scale that modifies the \code{color}
+scale to "ramp" to another color. See \code{\link[=scale_colour_ramp]{scale_colour_ramp()}} for examples.}
+\item{\code{fill_ramp}: A secondary scale that modifies the \code{fill}
+scale to "ramp" to another color. See \code{\link[=scale_fill_ramp]{scale_fill_ramp()}} for examples.}
+}
+
+\strong{Line aesthetics}
+
+\itemize{
+\item{\code{linewidth}: Width of the line used to draw the \strong{spike} sub-geometry.}
+\item{\code{size}: Size of the \strong{point} sub-geometry.}
+\item{\code{stroke}: Width of the outline around the \strong{point} sub-geometry.}
+\item{\code{linetype}: Type of line (e.g., \code{"solid"}, \code{"dashed"}, etc) used to draw the \strong{spike}.}
+}
+
+\strong{Other aesthetics} (these work as in standard \code{geom}s)
+
+\itemize{
+\item{\code{width}}
+\item{\code{height}}
+\item{\code{group}}
+}
+
+See examples of some of these aesthetics in action in \code{vignette("slabinterval")}.
+Learn more about the sub-geom override aesthetics (like \code{interval_color}) in the
+\link[ggdist]{scales} documentation. Learn more about basic ggplot aesthetics in
+\code{vignette("ggplot2-specs")}.
+}
+
+\examples{
+library(ggplot2)
+library(distributional)
+
+# geom_spike is easiest to use with distributional or
+# posterior::rvar objects
+df = tibble(
+  d = dist_normal(1:2, 1:2), g = c("a", "b")
+)
+
+# annotate the density at the mean of a distribution
+df \%>\% mutate(
+  mean = mean(d),
+  density(d, list(density_at_mean = mean))
+) \%>\%
+  ggplot(aes(y = g)) +
+  stat_slab(aes(xdist = d)) +
+  geom_spike(aes(x = mean, thickness = density_at_mean)) +
+  # need shared thickness scale so that stat_slab and geom_spike line up
+  scale_thickness_shared()
+
+# annotate the endpoints of intervals of a distribution
+# here we'll use an arrow instead of a point by setting size = 0
+arrow_spec = arrow(angle = 45, type = "closed", length = unit(4, "pt"))
+df \%>\% mutate(
+  median_qi(d, .width = 0.9),
+  density(d, list(density_lower = .lower, density_upper = .upper))
+) \%>\%
+  ggplot(aes(y = g)) +
+  stat_halfeye(aes(xdist = d), .width = 0.9, color = "gray35") +
+  geom_spike(
+    aes(x = .lower, thickness = density_lower),
+    size = 0, arrow = arrow_spec, color = "blue", linewidth = 0.75
+  ) +
+  geom_spike(
+    aes(x = .upper, thickness = density_upper),
+    size = 0, arrow = arrow_spec, color = "red", linewidth = 0.75
+  ) +
+  scale_thickness_shared()
+
 }
 \concept{geom_slabinterval geoms}
