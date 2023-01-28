@@ -2,8 +2,8 @@
 
 New features and enhancements:
 
-* New geom `geom_spike()`, for adding spike annotations to slabs created with
-  `geom_slabinterval()` or `stat_slabinterval()`. (#58)
+* New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs
+  created with `geom_slabinterval()` or `stat_slabinterval()`. (#58, #124)
 
 Bug fixes:
 

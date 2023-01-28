@@ -331,6 +331,14 @@ df \%>\%
   ) +
   scale_thickness_shared()
 
+# annotate quantiles of a sample
+set.seed(1234)
+data.frame(x = rnorm(1000, 1:2), g = c("a","b")) \%>\%
+  ggplot(aes(x, g)) +
+  stat_slab() +
+  stat_spike(at = function(x) quantile(x, ppoints(10))) +
+  scale_thickness_shared()
+
 }
 \seealso{
 See \code{\link[=geom_spike]{geom_spike()}} for the geom underlying this stat.
