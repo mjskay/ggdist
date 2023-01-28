@@ -11,11 +11,13 @@
 #' intended for annotating [stat_slabinterval()] geometries.
 #'
 #' @details
-#' This stat computes slab values at specified locations on a distribution, as
-#' determined by the `at` aesthetic. `at` may be [numeric], a list of [numeric]s,
-#' or a list of [function]s giving the points on the distribution to evaluate the
-#' density and cumulative distribution functions at. See the **Aesthetics**
-#' section, below.
+#' This stat computes slab values (i.e. PDF and CDF values) at specified locations
+#' on a distribution, as determined by the `at` parameter.
+#' @param at The points at which to evaluate the PDF and CDF of the distribution. One of:
+#'   - [numeric] vector: points to evaluate the PDF and CDF of the distributions at.
+#'   - function or string: function (or name of functions) which,
+#'     when applied on a distribution-like object (e.g. a \pkg{distributional} object or a
+#'     [posterior::rvar]), returns a vector of values to evaluate the distribution functions at.
 #' @inheritParams stat_slab
 #' @inheritParams geom_spike
 #' @eval rd_layer_params("spike", StatSpike, as_dots = TRUE)
@@ -40,7 +42,7 @@
 #' df %>%
 #'   ggplot(aes(y = g, xdist = d)) +
 #'   stat_slab(aes(xdist = d)) +
-#'   stat_spike(aes(at = "Mode")) +
+#'   stat_spike(at = "Mode") +
 #'   # need shared thickness scale so that stat_slab and geom_spike line up
 #'   scale_thickness_shared()
 #'
@@ -51,7 +53,7 @@
 #'   ggplot(aes(y = g, xdist = d)) +
 #'   stat_halfeye(point_interval = mode_hdci) +
 #'   stat_spike(
-#'     aes(at = c(function(x) hdci(x, .width = .66))),
+#'     at = function(x) hdci(x, .width = .66),
 #'     size = 0, arrow = arrow_spec, color = "blue", linewidth = 0.75
 #'   ) +
 #'   scale_thickness_shared()
@@ -66,14 +68,14 @@ NULL
 #' @noRd
 compute_slab_spike = function(
   self, data, scales, trans, input, orientation,
-  slab_type,
+  slab_type, at,
   ...
 ) {
   define_orientation_variables(orientation)
 
   # calculate slab functions
   s_data = ggproto_parent(StatSlab, self)$compute_slab(
-    data, scales, trans, input, orientation,
+    data, scales = scales, trans = trans, input = input, orientation = orientation,
     slab_type = slab_type,
     ...
   )
@@ -82,11 +84,6 @@ compute_slab_spike = function(
   cdf_fun = approx_cdf(dist, s_data$.input, s_data$cdf)
 
   # determine evaluation points
-  at = data$at
-  if (is.list(at)) {
-    stopifnot("Cannot have more than one set of evaluation points per distribution" = length(at) == 1)
-    at = at[[1]]
-  }
   if (!is.numeric(at)) {
     at = match_function(at)
     at = at(dist)
@@ -125,21 +122,9 @@ compute_slab_spike = function(
 #' @import ggplot2
 #' @export
 StatSpike = ggproto("StatSpike", StatSlab,
-  aes_docs = defaults(list(
-    at = glue_doc('The points at which to evaluate the PDF and CDF of the distribution.
-      One of: \\itemize{
-       \\item [numeric] vector: points to evaluate the PDF and CDF of the distributions at.
-       \\item list of [numeric] vectors: points to evaluate the PDF and CDF of the distributions
-         at, where each distribution\'s functions may be evaluated at multiple points.
-       \\item list of functions or [character] vector: functions (or names of functions) which,
-         when applied on a distribution-like object (e.g. a \\pkg{distributional} object or a
-         [posterior::rvar]), return a vector of values to evaluate the distribution functions at.
-      }')
-  ), StatSlab$aes_docs),
-
-  default_aes = defaults(aes(
-    at = "median",
-  ), StatSlab$default_aes),
+  default_params = defaults(list(
+    at = "median"
+  ), StatSlab$default_params),
 
   # workaround (#84)
   compute_slab = function(self, ...) compute_slab_spike(self, ...)

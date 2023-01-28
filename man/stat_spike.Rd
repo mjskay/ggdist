@@ -10,6 +10,7 @@ stat_spike(
   geom = "spike",
   position = "identity",
   ...,
+  at = "median",
   slab_type = "pdf",
   p_limits = c(NA, NA),
   density = "unbounded",
@@ -70,6 +71,14 @@ group so that the maximum height in each group is \code{1}.
 \item \code{"none"}: values are taken as is with no normalization (this should probably
 only be used with functions whose values are in [0,1], such as CDFs).
 }}
+}}
+
+\item{at}{The points at which to evaluate the PDF and CDF of the distribution. One of:
+\itemize{
+\item \link{numeric} vector: points to evaluate the PDF and CDF of the distributions at.
+\item function or string: function (or name of functions) which,
+when applied on a distribution-like object (e.g. a \pkg{distributional} object or a
+\link[posterior:rvar]{posterior::rvar}), returns a vector of values to evaluate the distribution functions at.
 }}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
@@ -158,11 +167,8 @@ on a distribution (numerical or determined as a function of the distribution),
 intended for annotating \code{\link[=stat_slabinterval]{stat_slabinterval()}} geometries.
 }
 \details{
-This stat computes slab values at specified locations on a distribution, as
-determined by the \code{at} aesthetic. \code{at} may be \link{numeric}, a list of \link{numeric}s,
-or a list of \link{function}s giving the points on the distribution to evaluate the
-density and cumulative distribution functions at. See the \strong{Aesthetics}
-section, below.
+This stat computes slab values (i.e. PDF and CDF values) at specified locations
+on a distribution, as determined by the \code{at} parameter.
 
 \strong{To visualize sample data}, such as a data distribution, samples from a
 bootstrap distribution, or a Bayesian posterior, you can supply samples to
@@ -200,15 +206,6 @@ the appearance of its two sub-geometries: the \strong{spike} and the \strong{poi
 These \code{stat}s support the following aesthetics:
 
 \itemize{
-\item{\code{at}: The points at which to evaluate the PDF and CDF of the distribution.
-One of: \itemize{
-\item \link{numeric} vector: points to evaluate the PDF and CDF of the distributions at.
-\item list of \link{numeric} vectors: points to evaluate the PDF and CDF of the distributions
-at, where each distribution's functions may be evaluated at multiple points.
-\item list of functions or \link{character} vector: functions (or names of functions) which,
-when applied on a distribution-like object (e.g. a \pkg{distributional} object or a
-\link[posterior:rvar]{posterior::rvar}), return a vector of values to evaluate the distribution functions at.
-}}
 \item{\code{x}: x position of the geometry (when orientation = \code{"vertical"}); or sample data to be summarized
 (when \code{orientation = "horizontal"} with sample data).}
 \item{\code{y}: y position of the geometry (when orientation = \code{"horizontal"}); or sample data to be summarized
@@ -310,39 +307,27 @@ library(ggplot2)
 library(distributional)
 library(dplyr)
 
-# geom_spike is easiest to use with distributional or
-# posterior::rvar objects
 df = tibble(
-  d = dist_normal(1:2, 1:2), g = c("a", "b")
+  d = c(dist_normal(1), dist_gamma(2,2)), g = c("a", "b")
 )
 
-# annotate the density at the mean of a distribution
-df \%>\% mutate(
-  mean = mean(d),
-  density(d, list(density_at_mean = mean))
-) \%>\%
-  ggplot(aes(y = g)) +
+# annotate the density at the mode of a distribution
+df \%>\%
+  ggplot(aes(y = g, xdist = d)) +
   stat_slab(aes(xdist = d)) +
-  geom_spike(aes(x = mean, thickness = density_at_mean)) +
+  stat_spike(at = "Mode") +
   # need shared thickness scale so that stat_slab and geom_spike line up
   scale_thickness_shared()
 
 # annotate the endpoints of intervals of a distribution
 # here we'll use an arrow instead of a point by setting size = 0
 arrow_spec = arrow(angle = 45, type = "closed", length = unit(4, "pt"))
-df \%>\% mutate(
-  median_qi(d, .width = 0.9),
-  density(d, list(density_lower = .lower, density_upper = .upper))
-) \%>\%
-  ggplot(aes(y = g)) +
-  stat_halfeye(aes(xdist = d), .width = 0.9, color = "gray35") +
-  geom_spike(
-    aes(x = .lower, thickness = density_lower),
+df \%>\%
+  ggplot(aes(y = g, xdist = d)) +
+  stat_halfeye(point_interval = mode_hdci) +
+  stat_spike(
+    at = function(x) hdci(x, .width = .66),
     size = 0, arrow = arrow_spec, color = "blue", linewidth = 0.75
-  ) +
-  geom_spike(
-    aes(x = .upper, thickness = density_upper),
-    size = 0, arrow = arrow_spec, color = "red", linewidth = 0.75
   ) +
   scale_thickness_shared()
 
