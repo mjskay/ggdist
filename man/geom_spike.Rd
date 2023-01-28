@@ -179,6 +179,7 @@ Learn more about the sub-geom override aesthetics (like \code{interval_color}) i
 \examples{
 library(ggplot2)
 library(distributional)
+library(dplyr)
 
 # geom_spike is easiest to use with distributional or
 # posterior::rvar objects

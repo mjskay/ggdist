@@ -27,6 +27,7 @@
 #' @examples
 #' library(ggplot2)
 #' library(distributional)
+#' library(dplyr)
 #'
 #' # geom_spike is easiest to use with distributional or
 #' # posterior::rvar objects
