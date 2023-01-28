@@ -336,6 +336,7 @@ Other slabinterval stats:
 \code{\link{stat_halfeye}()},
 \code{\link{stat_histinterval}()},
 \code{\link{stat_interval}()},
-\code{\link{stat_slab}()}
+\code{\link{stat_slab}()},
+\code{\link{stat_spike}()}
 }
 \concept{slabinterval stats}

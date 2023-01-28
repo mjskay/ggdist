@@ -215,7 +215,7 @@ distr_is_factor_like = function(dist) {
         (inherits(d, "dist_sample") && inherits(distr_get_sample(d), c("character", "factor"))) ||
         is.character(vctrs::field(support(vec_restore(list(d), dist_missing())), "x")[[1]])
     })
-    all(is_factor_like)
+    length(dist) > 0 && all(is_factor_like)
   } else {
     FALSE
   }

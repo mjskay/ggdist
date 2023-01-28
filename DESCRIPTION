@@ -108,6 +108,7 @@ Collate:
     "stat_pointinterval.R"
     "stat_interval.R"
     "stat_lineribbon.R"
+    "stat_spike.R"
     "student_t.R"
     "testthat.R"
     "theme_ggdist.R"

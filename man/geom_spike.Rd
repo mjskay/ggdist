@@ -218,4 +218,10 @@ df \%>\% mutate(
   scale_thickness_shared()
 
 }
-\concept{geom_slabinterval geoms}
+\seealso{
+Other slabinterval geoms: 
+\code{\link{geom_interval}()},
+\code{\link{geom_pointinterval}()},
+\code{\link{geom_slab}()}
+}
+\concept{slabinterval geoms}

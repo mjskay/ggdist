@@ -258,6 +258,7 @@ See \code{\link[=geom_slabinterval]{geom_slabinterval()}} for the geometry this 
 
 Other slabinterval geoms: 
 \code{\link{geom_interval}()},
-\code{\link{geom_slab}()}
+\code{\link{geom_slab}()},
+\code{\link{geom_spike}()}
 }
 \concept{slabinterval geoms}

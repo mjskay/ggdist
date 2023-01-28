@@ -23,7 +23,7 @@
 #' @return A [ggplot2::Geom] representing a spike geometry which can
 #' be added to a [ggplot()] object.
 #' rd_slabinterval_aesthetics(geom_name),
-#' @family geom_slabinterval geoms
+#' @family slabinterval geoms
 #' @examples
 #' library(ggplot2)
 #' library(distributional)

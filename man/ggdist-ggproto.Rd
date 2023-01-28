@@ -3,7 +3,7 @@
 %   R/geom_slabinterval.R, R/geom_dotsinterval.R, R/geom_interval.R,
 %   R/geom_lineribbon.R, R/geom_pointinterval.R, R/geom_slab.R, R/geom_spike.R,
 %   R/geom_swarm.R, R/position_dodgejust.R, R/stat_slabinterval.R,
-%   R/stat_pointinterval.R, R/stat_interval.R
+%   R/stat_pointinterval.R, R/stat_interval.R, R/stat_spike.R
 \docType{data}
 \name{AbstractStatSlabinterval}
 \alias{AbstractStatSlabinterval}
@@ -22,6 +22,7 @@
 \alias{StatSlabinterval}
 \alias{StatPointinterval}
 \alias{StatInterval}
+\alias{StatSpike}
 \title{Base ggproto classes for ggdist}
 \description{
 Base ggproto classes for ggdist

@@ -236,22 +236,12 @@ AbstractStatSlabinterval = ggproto("AbstractStatSlabinterval", AbstractStat,
       ) {
         # fill in relevant data from the slab component
         # this is expensive, so we only do it if we are actually showing the interval
-        pdf_fun = if (distr_is_constant(dist)) {
-          dist_value = distr_quantile(dist)(0.5)
-          function(x) ifelse(x == dist_value, Inf, 0)
-        } else {
-          approxfun(s_data[[x]], s_data$pdf, yleft = 0, yright = 0, ties = max)
-        }
+        pdf_fun = approx_pdf(dist, s_data[[x]], s_data$pdf)
         i_data$pdf = pdf_fun(i_data[[x]])
         i_data$pdf_min = pdf_fun(i_data[[xmin]])
         i_data$pdf_max = pdf_fun(i_data[[xmax]])
 
-        cdf_fun = if (distr_is_constant(dist)) {
-          dist_value = distr_quantile(dist)(0.5)
-          function(x) ifelse(x >= dist_value, 1, 0)
-        } else {
-          approxfun(s_data[[x]], s_data$cdf, yleft = 0, yright = 1, method = "constant", ties = max)
-        }
+        cdf_fun = approx_cdf(dist, s_data[[x]], s_data$cdf)
         i_data$cdf = cdf_fun(i_data[[x]])
         i_data$cdf_min = cdf_fun(i_data[[xmin]])
         i_data$cdf_max = cdf_fun(i_data[[xmax]])
@@ -344,6 +334,33 @@ compute_panel_limits = function(
   limits
 }
 
+#' approximate the pdf of a distribution using evaluations of the density function
+#' @param dist a distribution-like object
+#' @param x values in the support of the distribution
+#' @param f_x densities
+#' @noRd
+approx_pdf = function(dist, x, f_x) {
+  if (distr_is_constant(dist)) {
+    dist_value = distr_quantile(dist)(0.5)
+    function(x) ifelse(x == dist_value, Inf, 0)
+  } else {
+    approxfun(x, f_x, yleft = 0, yright = 0, ties = max)
+  }
+}
+
+#' approximate the cdf of a distribution using evaluations of the CDF
+#' @param dist a distribution-like object
+#' @param x values in the support of the distribution
+#' @param F cumulative probabilities
+#' @noRd
+approx_cdf = function(dist, x, F_x) {
+  if (distr_is_constant(dist)) {
+    dist_value = distr_quantile(dist)(0.5)
+    function(x) ifelse(x >= dist_value, 1, 0)
+  } else {
+    approxfun(x, F_x, yleft = 0, yright = 1, method = "constant", ties = max)
+  }
+}
 
 # helpers -----------------------------------------------------------------
 
