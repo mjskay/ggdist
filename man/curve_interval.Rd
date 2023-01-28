@@ -10,15 +10,19 @@ curve_interval(
   ...,
   .along = NULL,
   .width = 0.5,
-  .interval = c("mhd", "mbd", "bd", "bd-mbd"),
-  .simple_names = TRUE,
   na.rm = FALSE,
-  .exclude = c(".chain", ".iteration", ".draw", ".row")
+  .interval = c("mhd", "mbd", "bd", "bd-mbd")
 )
 }
 \arguments{
-\item{.data}{Data frame (or grouped data frame as returned by \code{\link[=group_by]{group_by()}})
-that contains draws to summarize.}
+\item{.data}{One of:
+\itemize{
+\item A data frame (or grouped data frame as returned by \code{\link[=group_by]{group_by()}})
+that contains draws to summarize.
+\item A \link[posterior:rvar]{posterior::rvar} vector.
+\item A matrix; in which case the first dimension should be draws and the second
+dimension values of the curve.
+}}
 
 \item{...}{Bare column names or expressions that, when evaluated in the context of
 \code{.data}, represent draws to summarize. If this is empty, then by default all
@@ -42,6 +46,13 @@ be very similar to \code{median_qi()}).}
 If multiple probabilities are provided, multiple rows per group are generated, each with
 a different probability interval (and value of the corresponding \code{.width} column).}
 
+\item{na.rm}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+If \code{FALSE} (the default), the presence of \code{NA} values in the columns to be summarized will generally
+result in an error. If \code{TRUE}, \code{NA} values will be removed in the calculation of intervals so long
+as \code{.interval} is \code{"mhd"}; other methods do not currently support \code{na.rm}. Be cautious in applying
+this parameter: in general, it is unclear what a joint interval should be when any of the values
+are missing!}
+
 \item{.interval}{The method used to calculate the intervals. Currently, all methods rank the curves
 using some measure of \emph{data depth}, then create envelopes containing the \code{.width}\% "deepest" curves.
 Available methods are:
@@ -55,18 +66,8 @@ Available methods are:
 
 \item{.simple_names}{When \code{TRUE} and only a single column / vector is to be summarized, use the
 name \code{.lower} for the lower end of the interval and \code{.upper} for the
-upper end. If \code{.data} is a vector and this is \code{TRUE}, this will also set the column name
-of the point summary to \code{.value}. When \code{FALSE} and \code{.data} is a data frame,
-names the lower and upper intervals for each column \code{x} \code{x.lower} and \code{x.upper}.
-When \code{FALSE} and \code{.data} is a vector, uses the naming scheme \code{y}, \code{ymin}
-and \code{ymax} (for use with ggplot).}
-
-\item{na.rm}{logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
-If \code{FALSE} (the default), the presence of \code{NA} values in the columns to be summarized will generally
-result in an error. If \code{TRUE}, \code{NA} values will be removed in the calculation of intervals so long
-as \code{.interval} is \code{"mhd"}; other methods do not currently support \code{na.rm}. Be cautious in applying
-this parameter: in general, it is unclear what a joint interval should be when any of the values
-are missing!}
+upper end. When \code{FALSE} and \code{.data} is a data frame,
+names the lower and upper intervals for each column \code{x} \code{x.lower} and \code{x.upper}.}
 
 \item{.exclude}{A character vector of names of columns to be excluded from summarization
 if no column names are specified to be summarized. Default ignores several meta-data column

@@ -18,8 +18,12 @@
 #' See Mirzargar *et al.* (2014) or Juul *et al.* (2020) for an accessible introduction
 #' to data depth and curve boxplots / functional boxplots.
 #'
-#' @param .data Data frame (or grouped data frame as returned by [group_by()])
-#' that contains draws to summarize.
+#' @param .data One of:
+#'   - A data frame (or grouped data frame as returned by [group_by()])
+#'     that contains draws to summarize.
+#'   - A [posterior::rvar] vector.
+#'   - A matrix; in which case the first dimension should be draws and the second
+#'     dimension values of the curve.
 #' @param ... Bare column names or expressions that, when evaluated in the context of
 #' `.data`, represent draws to summarize. If this is empty, then by default all
 #' columns that are not group columns and which are not in `.exclude` (by default
@@ -49,11 +53,8 @@
 #'     [fda::fbplot()] with `method = "Both"`.
 #' @param .simple_names When `TRUE` and only a single column / vector is to be summarized, use the
 #' name `.lower` for the lower end of the interval and `.upper` for the
-#' upper end. If `.data` is a vector and this is `TRUE`, this will also set the column name
-#' of the point summary to `.value`. When `FALSE` and `.data` is a data frame,
+#' upper end. When `FALSE` and `.data` is a data frame,
 #' names the lower and upper intervals for each column `x` `x.lower` and `x.upper`.
-#' When `FALSE` and `.data` is a vector, uses the naming scheme `y`, `ymin`
-#' and `ymax` (for use with ggplot).
 #' @param .exclude A character vector of names of columns to be excluded from summarization
 #' if no column names are specified to be summarized. Default ignores several meta-data column
 #' names used in \pkg{ggdist} and \pkg{tidybayes}.
@@ -134,9 +135,46 @@
 #' @importFrom rlang quos quos_auto_name eval_tidy quo_get_expr syms enquo
 #' @importFrom tidyselect eval_select
 #' @export
-curve_interval = function(.data, ..., .along = NULL, .width = .5,
-  .interval = c("mhd", "mbd", "bd", "bd-mbd"), .simple_names = TRUE,
-  na.rm = FALSE, .exclude = c(".chain", ".iteration", ".draw", ".row")
+curve_interval = function(
+  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
+  .interval = c("mhd", "mbd", "bd", "bd-mbd")
+) {
+  UseMethod("curve_interval")
+}
+
+#' @export
+curve_interval.matrix = function(
+  .data, .width = .5, na.rm = FALSE,
+  .interval = c("mhd", "mbd", "bd", "bd-mbd")
+) {
+  if (!requireNamespace("posterior", quietly = TRUE)) {
+    stop0('curve_interval() requires the `posterior` package to be installed.') #nocov
+  }
+
+  curve_interval(
+    data.frame(.value = posterior::rvar(.data)), .value,
+    .width = .width, na.rm = na.rm,
+    .interval = .interval
+  )
+}
+
+#' @export
+curve_interval.rvar = function(
+  .data, .width = .5, na.rm = FALSE,
+  .interval = c("mhd", "mbd", "bd", "bd-mbd")
+) {
+  curve_interval(
+    data.frame(.value = .data), .value,
+    .width = .width, na.rm = na.rm,
+    .interval = .interval
+  )
+}
+
+#' @export
+curve_interval.data.frame = function(
+  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
+  .interval = c("mhd", "mbd", "bd", "bd-mbd"),
+  .simple_names = TRUE, .exclude = c(".chain", ".iteration", ".draw", ".row")
 ) {
   if (!requireNamespace("posterior", quietly = TRUE)) {
     stop0('curve_interval() requires the `posterior` package to be installed.') #nocov
@@ -259,7 +297,11 @@ halfspace_depth = function(x) {
       y_rvar = posterior::rvar(draws)
     }
 
-    if (.interval_internal == "mhd") { #mean halfspace depth
+    if (.interval_internal == "mhd" || length(y_rvar) == 1) { #mean halfspace depth
+      # length(y_rvar) == 1 is in this condition because fda methods fail on curves
+      # with only 1 x value, but that's fine because we can just fall back to the
+      # mhd method, which will be equivalent when n = 1
+
       # draws x depth matrix
       pointwise_depths = apply(draws, 2, halfspace_depth)
       # mean depth of each draw
