@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_spike.R
 \name{geom_spike}
 \alias{geom_spike}
-\title{Spike plot (ggplot2 geom)'),}
+\title{Spike plot (ggplot2 geom)}
 \usage{
 geom_spike(
   mapping = NULL,
@@ -219,6 +219,9 @@ df \%>\% mutate(
 
 }
 \seealso{
+See \code{\link[=stat_spike]{stat_spike()}} for the stat version, intended for
+use on sample data or analytical distributions.
+
 Other slabinterval geoms: 
 \code{\link{geom_interval}()},
 \code{\link{geom_pointinterval}()},

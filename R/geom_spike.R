@@ -4,7 +4,7 @@
 ###############################################################################
 
 
-#' Spike plot (ggplot2 geom)'),
+#' Spike plot (ggplot2 geom)
 #'
 #' Geometry for drawing "spikes" (optionally with points on them) on top of
 #' [geom_slabinterval()] geometries: this geometry understands the scaling and
@@ -23,6 +23,9 @@
 #' @return A [ggplot2::Geom] representing a spike geometry which can
 #' be added to a [ggplot()] object.
 #' rd_slabinterval_aesthetics(geom_name),
+#' @seealso
+#' See [stat_spike()] for the stat version, intended for
+#' use on sample data or analytical distributions.
 #' @family slabinterval geoms
 #' @examples
 #' library(ggplot2)

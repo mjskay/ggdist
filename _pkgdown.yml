@@ -49,6 +49,7 @@ reference:
   - stat_cdfinterval
   - stat_gradientinterval
   - stat_histinterval
+  - stat_spike
   - stat_dotsinterval
   - stat_dots
   - stat_lineribbon
@@ -62,6 +63,7 @@ reference:
   - geom_pointinterval
   - geom_interval
   - geom_slab
+  - geom_spike
   - geom_dotsinterval
   - geom_dots
   - geom_weave
