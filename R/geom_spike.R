@@ -41,14 +41,25 @@ draw_slabs_spike = function(self, s_data, panel_params, coord,
 ) {
   define_orientation_variables(orientation)
 
+  # remove missing values - unlike slabinterval, thickness NAs not allowed here
+  s_data = ggplot2::remove_missing(s_data, na.rm, "thickness", name = "geom_spike")
+
   s_data = self$override_slab_aesthetics(rescale_slab_thickness(
-    s_data, orientation, normalize, height, y, ymin, ymax
+    s_data, orientation, normalize, na.rm, name = "geom_spike"
   ))
 
   s_data[[xend]] = s_data[[x]]
   s_data[[y]] = s_data[[ymin]]
   s_data[[yend]] = s_data[[ymax]]
-  list(GeomSegment$draw_panel(s_data, panel_params, coord))
+
+  p_data = s_data
+  p_data[[y]] = s_data[[yend]]
+  p_data = p_data[!is.na(p_data$size) & p_data$size != 0, ]
+
+  list(
+    GeomSegment$draw_panel(s_data, panel_params, coord),
+    if (nrow(p_data) > 0) GeomPoint$draw_panel(p_data, panel_params, coord)
+  )
 }
 
 
@@ -59,11 +70,12 @@ draw_slabs_spike = function(self, s_data, panel_params, coord,
 #' @usage NULL
 #' @import ggplot2
 #' @export
-GeomSpike = ggproto("GeomSpike", GeomSlabinterval,
+GeomSpike = ggproto("GeomSpike", GeomSlab,
   default_key_aes = defaults(aes(
-    size = 0.5,
+    linewidth = 0.5,
+    size = 1.5,
     colour = "black"
-  ), GeomSlabinterval$default_key_aes),
+  ), GeomSlab$default_key_aes),
 
   override_slab_aesthetics = function(self, s_data) {
     s_data$colour = apply_colour_ramp(s_data[["colour"]], s_data[["colour_ramp"]])
@@ -71,21 +83,11 @@ GeomSpike = ggproto("GeomSpike", GeomSlabinterval,
     s_data
   },
 
-  override_point_aesthetics = function(self, p_data) {
-    p_data$fill = p_data[["point_fill"]] %||% p_data[["fill"]]
-    p_data$fill = apply_colour_ramp(s_data[["fill"]], s_data[["fill_ramp"]])
-    ggproto_parent(GeomSlabinterval, self)$override_point_aesthetics(p_data)
-  },
-
-  default_params = defaults(list(
-    show_point = FALSE,
-    show_interval = FALSE
-  ), GeomSlabinterval$default_params),
+  rename_size = FALSE,
 
   hidden_params = union(c(
-    "show_slab", "show_point", "show_interval",
-    "interval_size_domain", "interval_size_range"
-  ), GeomSlabinterval$hidden_params),
+    "fill_type"
+  ), GeomSlab$hidden_params),
 
   draw_key_slab = function(self, data, key_data, params, size) {
     #TODO: update

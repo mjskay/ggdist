@@ -12,8 +12,6 @@ geom_spike(
   ...,
   orientation = NA,
   normalize = "all",
-  fill_type = "segments",
-  fatten_point = 1.8,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -79,30 +77,6 @@ group so that the maximum height in each group is \code{1}.
 \item \code{"none"}: values are taken as is with no normalization (this should probably
 only be used with functions whose values are in [0,1], such as CDFs).
 }}
-
-\item{fill_type}{What type of fill to use when the fill color or alpha varies within a slab. One of:
-\itemize{
-\item \code{"segments"}: breaks up the slab geometry into segments for each unique combination of fill color and
-alpha value. This approach is supported by all graphics devices and works well for sharp cutoff values,
-but can give ugly results if a large number of unique fill colors are being used (as in gradients,
-like in \code{\link[=stat_gradientinterval]{stat_gradientinterval()}}).
-\item \code{"gradient"}: a \code{grid::linearGradient()} is used to create a smooth gradient fill. This works well for
-large numbers of unique fill colors, but requires R >= 4.1 and is not yet supported on all graphics devices.
-As of this writing, the \code{png()} graphics device with \code{type = "cairo"}, the \code{svg()} device, the \code{pdf()}
-device, and the \code{ragg::agg_png()} devices are known to support this option. On R < 4.1, this option
-will fall back to \code{fill_type = "segment"} with a message.
-\item \code{"auto"}: attempts to use \code{fill_type = "gradient"} if support for it can be auto-detected. On R >= 4.2,
-support for gradients can be auto-detected on some graphics devices; if support is not detected, this
-option will fall back to \code{fill_type = "segments"} (in case of a false negative, \code{fill_type = "gradient"}
-can be set explicitly). On R < 4.2, support for gradients cannot be auto-detected, so this will always
-fall back to \code{fill_type = "segments"}, in which case you can set \code{fill_type = "gradient"} explicitly
-if you are using a graphics device that support gradients.
-}}
-
-\item{fatten_point}{A multiplicative factor used to adjust the size of the point relative to the size of the
-thickest interval line. If you wish to specify point sizes directly, you can also use the \code{point_size}
-aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continuous()}} or \code{\link[=scale_point_size_discrete]{scale_point_size_discrete()}}; sizes
-specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If \code{TRUE}, missing
 values are silently removed.}
