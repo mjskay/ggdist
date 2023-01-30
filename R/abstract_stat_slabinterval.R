@@ -344,7 +344,7 @@ approx_pdf = function(dist, x, f_x) {
     dist_value = distr_quantile(dist)(0.5)
     function(x) ifelse(x == dist_value, Inf, 0)
   } else {
-    approxfun(x, f_x, yleft = 0, yright = 0, ties = max)
+    approxfun(x, f_x, yleft = 0, yright = 0, ties = "ordered")
   }
 }
 
