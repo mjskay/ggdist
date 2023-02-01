@@ -35,6 +35,15 @@ globalVariables(c("prior"))
 #' @param ...  Arguments passed to other implementations of `parse_dist`.
 #' @param dist The name of the output column to contain the distribution name
 #' @param args The name of the output column to contain the arguments to the distribution
+#' @param dist_obj The name of the output column to contain a \pkg{distributional} object representing the distribution
+#' @param lb The name of an input column (for `data.frame` and `brms::prior` objects) that contains
+#'   the lower bound of the distribution, which if present will produce a truncated distribution using
+#'   [dist_truncated()]. Ignored if `lb` is `NULL` or if `object[[lb]]` is `NA` for the corresponding
+#'   input row.
+#' @param ub The name of an input column (for `data.frame` and `brms::prior` objects) that contains
+#'   the upper bound of the distribution, which if present will produce a truncated distribution using
+#'   [dist_truncated()]. Ignored if `ub` is `NULL` or if `object[[ub]]` is `NA` for the corresponding
+#'   input row.
 #' @param to_r_names If `TRUE` (the default), certain common aliases for distribution names are
 #'   automatically translated into names that R can recognize (i.e., names which have functions starting
 #'   with `r`, `p`, `q`, and `d` representing random number generators, distribution
@@ -70,8 +79,9 @@ globalVariables(c("prior"))
 #' # which follow the same format as above
 #'
 #' @importFrom tibble tibble
+#' @importFrom distributional dist_wrap dist_truncated
 #' @export
-parse_dist = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+parse_dist = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", to_r_names = TRUE) {
   UseMethod("parse_dist")
 }
 
@@ -86,18 +96,33 @@ parse_dist.default = function(object, ...) {
 
 #' @rdname parse_dist
 #' @export
-parse_dist.data.frame = function(object, dist_col, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+parse_dist.data.frame = function(
+  object, dist_col, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", lb = "lb", ub = "ub", to_r_names = TRUE
+) {
   dists = eval_tidy(enquo(dist_col), object)
   parsed_dists = parse_dist(dists, ..., to_r_names = to_r_names)
 
   object[[dist]] = parsed_dists$.dist
   object[[args]] = parsed_dists$.args
+  object[[dist_obj]] = parsed_dists$.dist_obj
+
+  # add upper/lower bounds using truncation
+  lbs = as.numeric(object[[lb]])
+  ubs = as.numeric(object[[ub]])
+  should_truncate = !is.na(lbs) | !is.na(ubs)
+  lbs = lbs[should_truncate]
+  ubs = ubs[should_truncate]
+  # need to replace NAs with Infs in bounds since NA for brms means no truncation (i.e. Inf)
+  lbs[is.na(lbs)] = -Inf
+  ubs[is.na(ubs)] = Inf
+  object[[dist_obj]][should_truncate] = dist_truncated(object[[dist_obj]][should_truncate], lower = lbs, upper = ubs)
+
   object
 }
 
 #' @rdname parse_dist
 #' @export
-parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
+parse_dist.character = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", to_r_names = TRUE) {
   na_spec = tibble( # for unparseable specs
     dist = NA,
     args = list(NA)
@@ -124,12 +149,13 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", to_
     } else {
       tibble(
         dist = dist_name,
-        args = list(args_list)
+        args = list(args_list),
+        dist_obj = do.call(dist_wrap, c(list(dist = dist_name), args_list))
       )
     }
   })
 
-  names(result) = c(dist, args)
+  names(result) = c(dist, args, dist_obj)
   result
 }
 
