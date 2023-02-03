@@ -4,7 +4,14 @@
 \alias{marginalize_lkjcorr}
 \title{Turn spec for LKJ distribution into spec for marginal LKJ distribution}
 \usage{
-marginalize_lkjcorr(data, K, predicate = NULL, dist = ".dist", args = ".args")
+marginalize_lkjcorr(
+  data,
+  K,
+  predicate = NULL,
+  dist = ".dist",
+  args = ".args",
+  dist_obj = ".dist_obj"
+)
 }
 \arguments{
 \item{data}{A data frame containing a column with distribution names (\code{".dist"} by default)
@@ -22,10 +29,13 @@ If \code{NULL} (the default), all \code{lkjcorr} distributions in \code{data} ar
 \item{dist}{The name of the column containing distribution names. See \code{\link[=parse_dist]{parse_dist()}}.}
 
 \item{args}{The name of the column containing distribution arguments. See \code{\link[=parse_dist]{parse_dist()}}.}
+
+\item{dist_obj}{The name of the column to contain a \pkg{distributional} object representing the
+distribution. See \code{\link[=parse_dist]{parse_dist()}}.}
 }
 \value{
-A data frame of the same size and column names as the input, with the \code{dist} and \code{args}
-columns modified on rows where \code{dist == "lkjcorr"} such that they represent a
+A data frame of the same size and column names as the input, with the \code{dist}, and \code{args},
+and \code{dist_obj} columns modified on rows where \code{dist == "lkjcorr"} such that they represent a
 marginal LKJ correlation distribution with name \code{lkjcorr_marginal} and \code{args} having
 \code{K} equal to the input value of \code{K}.
 }
@@ -37,16 +47,17 @@ Useful for visualizing prior correlations from LKJ distributions.
 }
 \details{
 The LKJ(eta) prior on a correlation matrix induces a marginal prior on each correlation
-in the matrix that depends on both the value of \code{eta} \emph{and} \code{K},the dimension
+in the matrix that depends on both the value of \code{eta} \emph{and} \code{K}, the dimension
 of the \eqn{K \times K}{KxK} correlation matrix. Thus to visualize the marginal prior
 on the correlations, it is necessary to specify the value of \code{K}, which depends
 on what your model specification looks like.
 
 Given a data frame representing parsed distribution specifications (such
 as returned by \code{\link[=parse_dist]{parse_dist()}}), this function updates any rows with \code{.dist == "lkjcorr"}
-so that the first argument to the distribution is equal to the specified dimension
-of the correlation matrix (\code{K}) and changes the distribution name to \code{"lkjcorr_marginal"},
-allowing the distribution to be easily visualized using the \code{\link[=stat_slabinterval]{stat_slabinterval()}}
+so that the first argument to the distribution (stored in \code{.args}) is equal to the specified dimension
+of the correlation matrix (\code{K}), changes the distribution name in \code{.dist} to \code{"lkjcorr_marginal"},
+and assigns a \pkg{distributional} object representing this distribution to \code{.dist_obj}.
+This allows the distribution to be easily visualized using the \code{\link[=stat_slabinterval]{stat_slabinterval()}}
 family of ggplot2 stats.
 }
 \examples{
@@ -59,7 +70,7 @@ library(ggplot2)
 data.frame(prior = "lkjcorr(3)") \%>\%
   parse_dist(prior) \%>\%
   marginalize_lkjcorr(K = 2) \%>\%
-  ggplot(aes(y = prior, dist = .dist, args = .args)) +
+  ggplot(aes(y = prior, xdist = .dist_obj)) +
   stat_halfeye() +
   xlim(-1, 1) +
   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")

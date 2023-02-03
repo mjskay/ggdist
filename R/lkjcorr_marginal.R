@@ -123,16 +123,17 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' Useful for visualizing prior correlations from LKJ distributions.
 #'
 #' The LKJ(eta) prior on a correlation matrix induces a marginal prior on each correlation
-#' in the matrix that depends on both the value of `eta` *and* `K`,the dimension
+#' in the matrix that depends on both the value of `eta` *and* `K`, the dimension
 #' of the \eqn{K \times K}{KxK} correlation matrix. Thus to visualize the marginal prior
 #' on the correlations, it is necessary to specify the value of `K`, which depends
 #' on what your model specification looks like.
 #'
 #' Given a data frame representing parsed distribution specifications (such
 #' as returned by [parse_dist()]), this function updates any rows with `.dist == "lkjcorr"`
-#' so that the first argument to the distribution is equal to the specified dimension
-#' of the correlation matrix (`K`) and changes the distribution name to `"lkjcorr_marginal"`,
-#' allowing the distribution to be easily visualized using the [stat_slabinterval()]
+#' so that the first argument to the distribution (stored in `.args`) is equal to the specified dimension
+#' of the correlation matrix (`K`), changes the distribution name in `.dist` to `"lkjcorr_marginal"`,
+#' and assigns a \pkg{distributional} object representing this distribution to `.dist_obj`.
+#' This allows the distribution to be easily visualized using the [stat_slabinterval()]
 #' family of ggplot2 stats.
 #'
 #' @inheritParams lkjcorr_marginal
@@ -146,9 +147,11 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' If `NULL` (the default), all `lkjcorr` distributions in `data` are modified.
 #' @param dist The name of the column containing distribution names. See [parse_dist()].
 #' @param args The name of the column containing distribution arguments. See [parse_dist()].
+#' @param dist_obj The name of the column to contain a \pkg{distributional} object representing the
+#' distribution. See [parse_dist()].
 #' @return
-#' A data frame of the same size and column names as the input, with the `dist` and `args`
-#' columns modified on rows where `dist == "lkjcorr"` such that they represent a
+#' A data frame of the same size and column names as the input, with the `dist`, and `args`,
+#' and `dist_obj` columns modified on rows where `dist == "lkjcorr"` such that they represent a
 #' marginal LKJ correlation distribution with name `lkjcorr_marginal` and `args` having
 #' `K` equal to the input value of `K`.
 #' @seealso [parse_dist()], [lkjcorr_marginal()]
@@ -162,7 +165,7 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #' data.frame(prior = "lkjcorr(3)") %>%
 #'   parse_dist(prior) %>%
 #'   marginalize_lkjcorr(K = 2) %>%
-#'   ggplot(aes(y = prior, dist = .dist, args = .args)) +
+#'   ggplot(aes(y = prior, xdist = .dist_obj)) +
 #'   stat_halfeye() +
 #'   xlim(-1, 1) +
 #'   xlab("Marginal correlation for LKJ(3) prior on 2x2 correlation matrix")
@@ -176,8 +179,9 @@ lkjcorr_marginal_alpha = function(K, eta) {
 #'   marginalize_lkjcorr(K = 4, coef == "b")
 #'
 #' @importFrom rlang quo_get_expr
+#' @importFrom distributional dist_wrap
 #' @export
-marginalize_lkjcorr = function(data, K, predicate = NULL, dist = ".dist", args = ".args") {
+marginalize_lkjcorr = function(data, K, predicate = NULL, dist = ".dist", args = ".args", dist_obj = ".dist_obj") {
   li = !is.na(data[[dist]]) & data[[dist]] == "lkjcorr"
 
   .predicate = enquo(predicate)
@@ -185,7 +189,14 @@ marginalize_lkjcorr = function(data, K, predicate = NULL, dist = ".dist", args =
     li = li & eval_tidy(.predicate, data)
   }
 
-  data[[args]][li] = lapply(data[[args]][li], function(x) c(list(K), x))
-  data[[dist]][li] = "lkjcorr_marginal"
+  li = which(li)
+  if (length(li) > 0) {
+    data[[args]][li] = lapply(data[[args]][li], function(x) c(list(K), x))
+    data[[dist]][li] = "lkjcorr_marginal"
+    data[[dist_obj]][li] = list_unchop(lapply(data[[args]][li], function(x) {
+      do.call(dist_wrap, c(list(dist = "lkjcorr_marginal", package = "ggdist"), x))
+    }))
+  }
+
   data
 }

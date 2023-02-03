@@ -4,38 +4,63 @@
 ###############################################################################
 
 library(dplyr)
-
+library(distributional)
 
 
 test_that("parse_dist works on vectors", {
-  # using as.data.frame here because comparison of tibbles with
-  # list columns directly doesn't seem to work...
+  dist_env = rlang::current_env()
+  ref = as.data.frame(tibble(
+    .dist = c("norm", "lnorm", "chisq", NA, NA),
+    .args = list(list(0,1), list(2,3), list(4), NA, NA),
+    .dist_obj = c(
+      dist_wrap("norm", 0, 1, package = "stats"),
+      dist_wrap("lnorm", 2, 3, package = "stats"),
+      dist_wrap("chisq", 4, package = "stats"),
+      NA, NA
+    )
+  ))
+
   expect_equal(
-    as.data.frame(parse_dist(c("Normal(0,1)", "log-normal(2,3)", "CHI square(4)", "bad", "bad2(1"))),
-    as.data.frame(tibble(.dist = c("norm", "lnorm", "chisq", NA, NA), .args = list(list(0,1), list(2,3), list(4), NA, NA)))
+    as.data.frame(parse_dist(c("Normal(0,1)", "log-normal(2,3)", "CHI square(4)", "bad", "bad2(1"), package = "stats")),
+    ref
   )
 })
 
 test_that("parse_dist works on data frames", {
-  # using as.data.frame here because comparison of tibbles with
-  # list columns directly doesn't seem to work...
+  dist_env = rlang::current_env()
   dists = factor(c("Normal(0,1)", "log-normal(2,3)", "Student's t(3,0,1)"))
-  expect_equal(
-    parse_dist(data.frame(p = dists), p),
-    as.data.frame(tibble(p = dists, .dist = c("norm", "lnorm", "student_t"), .args = list(list(0,1), list(2,3), list(3,0,1))))
-  )
+  ref = as.data.frame(tibble(
+    p = dists,
+    .dist = c("norm", "lnorm", "student_t"),
+    .args = list(list(0,1), list(2,3), list(3,0,1)),
+    .dist_obj = c(
+      dist_wrap("norm", 0, 1, package = dist_env),
+      dist_wrap("lnorm", 2, 3, package = dist_env),
+      dist_wrap("student_t", 3, 0, 1, package = dist_env)
+    )
+  ))
+
+  expect_equal(parse_dist(data.frame(p = dists), p), ref)
+  expect_equal(parse_dist(data.frame(p = dists), p, package = dist_env), ref)
 })
 
 test_that("parse_dist works on brmsprior objects", {
-  # using as.data.frame here because comparison of tibbles with
-  # list columns directly doesn't seem to work...
+  dist_env = rlang::current_env()
   dists = factor(c("Normal(0,1)", "log-normal(2,3)", "Student's t(3,0,1)"))
+  ref = as.data.frame(tibble(
+    prior = dists,
+    .dist = c("norm", "lnorm", "student_t"),
+    .args = list(list(0,1), list(2,3), list(3,0,1)),
+    .dist_obj = c(
+      dist_wrap("norm", 0, 1, package = dist_env),
+      dist_wrap("lnorm", 2, 3, package = dist_env),
+      dist_wrap("student_t", 3, 0, 1, package = dist_env)
+    )
+  ))
+
   brmsprior = data.frame(prior = dists)
   class(brmsprior) = c("brmsprior", "data.frame")
-  expect_equal(
-    parse_dist(brmsprior),
-    as.data.frame(tibble(prior = dists, .dist = c("norm", "lnorm", "student_t"), .args = list(list(0,1), list(2,3), list(3,0,1))))
-  )
+  expect_equal(parse_dist(brmsprior), ref)
 })
 
 test_that("parse_dist + marginalize_lkjcorr produces correct results", {

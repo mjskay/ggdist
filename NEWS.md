@@ -4,10 +4,12 @@ New features and enhancements:
 
 * New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs
   created with `geom_slabinterval()` or `stat_slabinterval()`. (#58, #124)
-* `parse_dist()` now outputs *distributional* objects in addition to the character
-  plus args-list format, and these objects respect truncation parameters from prior
-  specifications. This makes it easier to visualize standard deviation priors,
-  for example, giving a better solution to #20.
+* `parse_dist()` now outputs *distributional* objects in a `.dist_obj` column in
+  addition to the character plus args-list format, and these objects respect truncation
+  parameters from prior specifications. This makes it easier to  visualize standard
+  deviation priors, for example, giving a better solution to #20.
+* `marginalize_lkjcorr()` adjusts the `.dist_obj` column output by `parse_dist()`
+  in addition to the `.dist` and `.args` columns.
 
 Bug fixes:
 

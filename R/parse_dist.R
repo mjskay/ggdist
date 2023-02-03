@@ -36,6 +36,11 @@ globalVariables(c("prior"))
 #' @param dist The name of the output column to contain the distribution name
 #' @param args The name of the output column to contain the arguments to the distribution
 #' @param dist_obj The name of the output column to contain a \pkg{distributional} object representing the distribution
+#' @param package The package or environment to search for distribution functions in.
+#' Passed to [distributional::dist_wrap()]. One of:
+#'   - `NULL`: use the calling environment
+#'   - a string: use the environment for the package with the given name
+#'   - an [environment]: use the given environment
 #' @param lb The name of an input column (for `data.frame` and `brms::prior` objects) that contains
 #'   the lower bound of the distribution, which if present will produce a truncated distribution using
 #'   [dist_truncated()]. Ignored if `lb` is `NULL` or if `object[[lb]]` is `NA` for the corresponding
@@ -76,12 +81,12 @@ globalVariables(c("prior"))
 #'   parse_dist(prior)
 #'
 #' # parse_dist is particularly useful with the output of brms::prior(),
-#' # which follow the same format as above
+#' # which follows the same format as above
 #'
 #' @importFrom tibble tibble
 #' @importFrom distributional dist_wrap dist_truncated
 #' @export
-parse_dist = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", to_r_names = TRUE) {
+parse_dist = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
   UseMethod("parse_dist")
 }
 
@@ -97,10 +102,12 @@ parse_dist.default = function(object, ...) {
 #' @rdname parse_dist
 #' @export
 parse_dist.data.frame = function(
-  object, dist_col, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", lb = "lb", ub = "ub", to_r_names = TRUE
+  object, dist_col, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, lb = "lb", ub = "ub", to_r_names = TRUE
 ) {
+  package = package %||% parent.frame()
+
   dists = eval_tidy(enquo(dist_col), object)
-  parsed_dists = parse_dist(dists, ..., to_r_names = to_r_names)
+  parsed_dists = parse_dist(dists, ..., package = package, to_r_names = to_r_names)
 
   object[[dist]] = parsed_dists$.dist
   object[[args]] = parsed_dists$.args
@@ -110,19 +117,23 @@ parse_dist.data.frame = function(
   lbs = as.numeric(object[[lb]])
   ubs = as.numeric(object[[ub]])
   should_truncate = !is.na(lbs) | !is.na(ubs)
-  lbs = lbs[should_truncate]
-  ubs = ubs[should_truncate]
-  # need to replace NAs with Infs in bounds since NA for brms means no truncation (i.e. Inf)
-  lbs[is.na(lbs)] = -Inf
-  ubs[is.na(ubs)] = Inf
-  object[[dist_obj]][should_truncate] = dist_truncated(object[[dist_obj]][should_truncate], lower = lbs, upper = ubs)
+  if (length(should_truncate) > 0) {
+    lbs = lbs[should_truncate]
+    ubs = ubs[should_truncate]
+    # need to replace NAs with Infs in bounds since NA for brms means no truncation (i.e. Inf)
+    lbs[is.na(lbs)] = -Inf
+    ubs[is.na(ubs)] = Inf
+    object[[dist_obj]][should_truncate] = dist_truncated(object[[dist_obj]][should_truncate], lower = lbs, upper = ubs)
+  }
 
   object
 }
 
 #' @rdname parse_dist
 #' @export
-parse_dist.character = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", to_r_names = TRUE) {
+parse_dist.character = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
+  package = package %||% parent.frame()
+
   na_spec = tibble( # for unparseable specs
     dist = NA,
     args = list(NA)
@@ -150,7 +161,7 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", dis
       tibble(
         dist = dist_name,
         args = list(args_list),
-        dist_obj = do.call(dist_wrap, c(list(dist = dist_name), args_list))
+        dist_obj = do.call(dist_wrap, c(list(dist = dist_name, package = package), args_list))
       )
     }
   })
@@ -161,14 +172,16 @@ parse_dist.character = function(object, ..., dist = ".dist", args = ".args", dis
 
 #' @rdname parse_dist
 #' @export
-parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
-  parse_dist(as.character(object), ..., dist = dist, args = args, to_r_names = to_r_names)
+parse_dist.factor = function(object, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
+  package = package %||% parent.frame()
+  parse_dist(as.character(object), ..., dist = dist, args = args, dist_obj = dist_obj, package = package, to_r_names = to_r_names)
 }
 
 #' @rdname parse_dist
 #' @export
-parse_dist.brmsprior = function(object, dist_col = prior, ..., dist = ".dist", args = ".args", to_r_names = TRUE) {
-  parse_dist.data.frame(as.data.frame(object), {{ dist_col }}, ..., dist = dist, args = args, to_r_names = to_r_names)
+parse_dist.brmsprior = function(object, dist_col = prior, ..., dist = ".dist", args = ".args", dist_obj = ".dist_obj", package = NULL, to_r_names = TRUE) {
+  package = package %||% parent.frame()
+  parse_dist.data.frame(as.data.frame(object), {{ dist_col }}, ..., dist = dist, args = args, dist_obj = dist_obj, package = package, to_r_names = to_r_names)
 }
 
 

@@ -16,6 +16,7 @@ parse_dist(
   dist = ".dist",
   args = ".args",
   dist_obj = ".dist_obj",
+  package = NULL,
   to_r_names = TRUE
 )
 
@@ -28,6 +29,7 @@ parse_dist(
   dist = ".dist",
   args = ".args",
   dist_obj = ".dist_obj",
+  package = NULL,
   lb = "lb",
   ub = "ub",
   to_r_names = TRUE
@@ -39,10 +41,19 @@ parse_dist(
   dist = ".dist",
   args = ".args",
   dist_obj = ".dist_obj",
+  package = NULL,
   to_r_names = TRUE
 )
 
-\method{parse_dist}{factor}(object, ..., dist = ".dist", args = ".args", to_r_names = TRUE)
+\method{parse_dist}{factor}(
+  object,
+  ...,
+  dist = ".dist",
+  args = ".args",
+  dist_obj = ".dist_obj",
+  package = NULL,
+  to_r_names = TRUE
+)
 
 \method{parse_dist}{brmsprior}(
   object,
@@ -50,6 +61,8 @@ parse_dist(
   ...,
   dist = ".dist",
   args = ".args",
+  dist_obj = ".dist_obj",
+  package = NULL,
   to_r_names = TRUE
 )
 
@@ -66,6 +79,14 @@ containing distribution specifications.}
 \item{args}{The name of the output column to contain the arguments to the distribution}
 
 \item{dist_obj}{The name of the output column to contain a \pkg{distributional} object representing the distribution}
+
+\item{package}{The package or environment to search for distribution functions in.
+Passed to \code{\link[distributional:dist_wrap]{distributional::dist_wrap()}}. One of:
+\itemize{
+\item \code{NULL}: use the calling environment
+\item a string: use the environment for the package with the given name
+\item an \link{environment}: use the given environment
+}}
 
 \item{to_r_names}{If \code{TRUE} (the default), certain common aliases for distribution names are
 automatically translated into names that R can recognize (i.e., names which have functions starting
@@ -131,7 +152,7 @@ data.frame(prior = c("normal(0,1)", "student_t(3,0,1)")) \%>\%
   parse_dist(prior)
 
 # parse_dist is particularly useful with the output of brms::prior(),
-# which follow the same format as above
+# which follows the same format as above
 
 }
 \seealso{

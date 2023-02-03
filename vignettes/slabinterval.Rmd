@@ -519,8 +519,10 @@ A particularly good use of the `xdist`/`ydist` aesthetics is to visualize priors
 ```{r priors_fake, eval=FALSE}
 # NB these priors are made up!
 priors = c(
-  prior(normal(0,1), class = b),
-  prior(lognormal(0,1), class = sigma)
+  prior(normal(1, 0.5), class = b),
+  prior(gamma(2, 2), class = phi),
+  # lb = 0 sets a lower bound of 0, i.e. a half-Normal distribution
+  prior(normal(0, 1), class = sigma, lb = 0)
 )
 priors
 ```
@@ -529,35 +531,40 @@ priors
 # we want to avoid a brms dependency, so we fake it above and
 # just show the output of brms::prior() here
 priors = data.frame(
-  prior = c("normal(0, 1)", "lognormal(0, 1)"),
-  class = c("b", "sigma"), coef = c("", ""),
-  group = c("", ""),
-  resp = c("", ""),
-  dpar = c("", ""),
-  nlpar = c("", ""),
-  bound = c("", "")
+  prior = c("normal(1, 0.5)", "gamma(2, 2)", "normal(0, 1)"),
+  class = c("b", "phi", "sigma"), coef = c("", "", ""),
+  group = c("", "", ""),
+  resp = c("", "", ""),
+  dpar = c("", "", ""),
+  nlpar = c("", "", ""),
+  lb = c(NA, NA, "0"),
+  ub = c(NA, NA, NA)
 )
 priors
 ```
 
-The `parse_dist()` function can make it easier to visualize these: it takes in string specifications like those produced by `brms` --- `"normal(0,1)"` and `"lognormal(0,1)"` above --- and translates them into `.dist` and `.args` columns:
+The `parse_dist()` function can make it easier to visualize these: it takes in string specifications like those produced by `brms` --- `"normal(0,1)"` and `"lognormal(0,1)"` above --- and translates them into `.dist`, `.args`, and `.dist_obj` columns:
 
 ```{r parse_dist}
 priors %>%
   parse_dist(prior)
 ```
 
-Notice that it also automatically translates some common distribution names (e.g. "normal" and "lognormal") into their equivalent R function names (`"norm"` and `"lnorm"`). This makes it easy to use them with the `xdist`/`ydist` aesthetics in ggdist:
+Notice that it also automatically translates some common distribution names (e.g. "normal") into their equivalent R function names (`"norm"`). It also creates a `.dist_obj` vector
+using `distributional::dist_wrap()`. This distribution vector respects truncation bounds set by
+the `lb` and `ub` columns output by `brms::prior()`, as on the half-Normal prior for the `sigma`
+parameter. The `.dist_obj` vector can be assigned to the `xdist` or `ydist` aesthetic in ggdist:
 
 ```{r prior_dist_halfeyeh}
 priors %>%
   parse_dist(prior) %>%
-  ggplot(aes(y = class, xdist = .dist, args = .args)) +
+  ggplot(aes(y = paste(class, "~", format(.dist_obj)), xdist = .dist_obj)) +
   stat_halfeye() +
   labs(
     title = "stat_halfeye()",
     subtitle = "with brms::prior() and ggdist::parse_dist() to visualize priors",
-    x = NULL
+    x = NULL,
+    y = NULL
   )
 ```
 
