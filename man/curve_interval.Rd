@@ -3,6 +3,9 @@
 \encoding{UTF-8}
 \name{curve_interval}
 \alias{curve_interval}
+\alias{curve_interval.matrix}
+\alias{curve_interval.rvar}
+\alias{curve_interval.data.frame}
 \title{Curvewise point and interval summaries for tidy data frames of draws from distributions}
 \usage{
 curve_interval(
@@ -12,6 +15,35 @@ curve_interval(
   .width = 0.5,
   na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
+)
+
+\method{curve_interval}{matrix}(
+  .data,
+  ...,
+  .along = NULL,
+  .width = 0.5,
+  na.rm = FALSE,
+  .interval = c("mhd", "mbd", "bd", "bd-mbd")
+)
+
+\method{curve_interval}{rvar}(
+  .data,
+  ...,
+  .along = NULL,
+  .width = 0.5,
+  na.rm = FALSE,
+  .interval = c("mhd", "mbd", "bd", "bd-mbd")
+)
+
+\method{curve_interval}{data.frame}(
+  .data,
+  ...,
+  .along = NULL,
+  .width = 0.5,
+  na.rm = FALSE,
+  .interval = c("mhd", "mbd", "bd", "bd-mbd"),
+  .simple_names = TRUE,
+  .exclude = c(".chain", ".iteration", ".draw", ".row")
 )
 }
 \arguments{
@@ -40,7 +72,7 @@ intervals for some function \code{y = f(x)} conditional on some other variable(s
 factor \code{g}), you would group by \code{g}, then use \code{.along = x} to calculate intervals jointly over \code{x}
 conditional on \code{g}. To avoid selecting any variables as input values to the function describing the
 curve, use \code{character()}; this will produce conditional intervals only (the result in this case should
-be very similar to \code{median_qi()}).}
+be very similar to \code{median_qi()}). Currently only supported when \code{.data} is a data frame.}
 
 \item{.width}{vector of probabilities to use that determine the widths of the resulting intervals.
 If multiple probabilities are provided, multiple rows per group are generated, each with

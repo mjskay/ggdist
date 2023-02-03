@@ -3,6 +3,8 @@
 # Author: mjskay
 ###############################################################################
 
+globalVariables(".value")
+
 #' Curvewise point and interval summaries for tidy data frames of draws from distributions
 #'
 #' Translates draws from distributions in a grouped data frame into a set of point and
@@ -39,7 +41,7 @@
 #' factor `g`), you would group by `g`, then use `.along = x` to calculate intervals jointly over `x`
 #' conditional on `g`. To avoid selecting any variables as input values to the function describing the
 #' curve, use `character()`; this will produce conditional intervals only (the result in this case should
-#' be very similar to `median_qi()`).
+#' be very similar to `median_qi()`). Currently only supported when `.data` is a data frame.
 #' @param .width vector of probabilities to use that determine the widths of the resulting intervals.
 #' If multiple probabilities are provided, multiple rows per group are generated, each with
 #' a different probability interval (and value of the corresponding `.width` column).
@@ -142,13 +144,17 @@ curve_interval = function(
   UseMethod("curve_interval")
 }
 
+#' @rdname curve_interval
 #' @export
 curve_interval.matrix = function(
-  .data, .width = .5, na.rm = FALSE,
+  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
   if (!requireNamespace("posterior", quietly = TRUE)) {
     stop0('curve_interval() requires the `posterior` package to be installed.') #nocov
+  }
+  if (!is.null(.along)) {
+    stop0('curve_interval(<matrix>) does not support the `.along` argument.')
   }
 
   curve_interval(
@@ -158,11 +164,16 @@ curve_interval.matrix = function(
   )
 }
 
+#' @rdname curve_interval
 #' @export
 curve_interval.rvar = function(
-  .data, .width = .5, na.rm = FALSE,
+  .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
+  if (!is.null(.along)) {
+    stop0('curve_interval(<rvar>) does not support the `.along` argument.')
+  }
+
   curve_interval(
     data.frame(.value = .data), .value,
     .width = .width, na.rm = na.rm,
@@ -170,6 +181,7 @@ curve_interval.rvar = function(
   )
 }
 
+#' @rdname curve_interval
 #' @export
 curve_interval.data.frame = function(
   .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
