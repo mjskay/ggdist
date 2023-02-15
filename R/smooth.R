@@ -107,7 +107,7 @@ smooth_density = function(x, density = "bounded", ...) {
 smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), ...) {
   if (missing(x)) return(partial_self("smooth_bounded"))
 
-  smooth_density(x, density = density, ...)
+  smooth_density(x, density = density, bounds = bounds, ...)
 }
 
 #' @rdname smooth_density

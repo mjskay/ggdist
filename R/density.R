@@ -12,8 +12,10 @@
 #' Supports [automatic partial function application][automatic-partial-functions].
 #'
 #' @inheritParams density_unbounded
-#' @param trim Should the density estimate be trimmed to the bounds of the data?
-#' If `TRUE`, uses [density_bounded()], if `FALSE`, uses [density_unbounded()].
+#' @param trim Should the density estimate be trimmed?
+#' If `TRUE`, uses [density_bounded()], estimating the bounds by default (see the
+#' `bounds` argument to [density_bounded()]). If `FALSE`, uses [density_unbounded()],
+#' setting the bounds at `3 * bandwidth` from the endpoints of the data.
 #' @param ... Additional arguments passed to [density_bounded()] or [density_unbounded()].
 #' @template returns-density
 #' @family density estimators
@@ -84,6 +86,7 @@ density_auto = function(
 #' match one of `"gaussian"`, `"rectangular"`, `"triangular"`, `"epanechnikov"`,
 #' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
 #' @param trim Should the density estimate be trimmed to the bounds of the data?
+#' @param ... Additional arguments (ignored).
 #' @template returns-density
 #' @family density estimators
 #' @examples
@@ -122,7 +125,7 @@ density_auto = function(
 density_unbounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
-  trim = FALSE
+  trim = FALSE, ...
 ) {
   if (missing(x)) return(partial_self("density_unbounded"))
 
@@ -151,11 +154,13 @@ density_unbounded = function(
 #'
 #' @inheritParams density_unbounded
 #' @param bounds length-2 vector of min and max bounds. If a bound is `NA`, then
-#' that bound is replaced with `min(x)` or `max(x)`. Thus, the default,
-#' `c(NA, NA)`, means that the bounds used are `range(x)`.
+#' that bound is estimated from the data using Cooke's (1979) method; i.e.
+#' method 2.3 from Loh (1984).
 #' @param trim ignored; the unbounded density estimator always uses `trim = FALSE`
 #' internally before trimming to `bounds`.
+#' @param ... Additional arguments (ignored).
 #' @template returns-density
+#' @template references-bounds-estimators
 #' @family density estimators
 #' @examples
 #' library(distributional)
@@ -209,32 +214,43 @@ density_unbounded = function(
 density_bounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
-  trim = TRUE, bounds = c(NA, NA)
+  trim = TRUE, bounds = c(NA, NA), ...
 ) {
   if (missing(x)) return(partial_self("density_bounded"))
 
   if (n < 1) stop0("density_bounded() must have an n of at least 1")
 
+  # determine bandwidth
+  bw = get_bandwidth(x, bandwidth) * adjust
+
   # determine bounds
+  if (anyNA(bounds)) {
+    estimated_bounds = is.na(bounds)
+    bounds[estimated_bounds] = estimate_bounds(x)[estimated_bounds]
+  }
+
   min_x = min(x)
   max_x = max(x)
-  if (is.na(bounds[[1]])) bounds[[1]] = min_x
-  if (is.na(bounds[[2]])) bounds[[2]] = max_x
-  left_bounded = is.finite(bounds[[1]])
-  right_bounded = is.finite(bounds[[2]])
-
   if (min_x < bounds[[1]] || max_x > bounds[[2]]) {
     stop0("All `x` must be inside `bounds` in density_bounded()")
   }
+
+  # cap bounds at 3*bw beyond the range (and consider them unbounded beyond
+  # that, since past that the density essentially goes to 0)
+  min_bound = min_x - 3 * bw
+  max_bound = max_x + 3 * bw
+  left_bounded = min_bound <= bounds[[1]]
+  right_bounded = bounds[[2]] <= max_bound
+  if (!left_bounded) bounds[[1]] = min_bound
+  if (!right_bounded) bounds[[2]] = max_bound
 
   # to get final n = requested n, if a bound is supplied, must add n - 1 values
   # beyond that bound, which will be reflected back
   n_unbounded = n + (left_bounded + right_bounded) * (n - 1)
 
   # determine limits of underlying unbounded density estimator
-  bw = get_bandwidth(x, bandwidth) * adjust
-  from = if (left_bounded) bounds[[1]] else min_x - 3 * bw
-  to = if (right_bounded) bounds[[2]] else max_x + 3 * bw
+  from = bounds[[1]]
+  to = bounds[[2]]
   width = to - from
   if (left_bounded) from = from - width
   if (right_bounded) to = to + width
@@ -267,4 +283,75 @@ get_bandwidth = function(x, bandwidth) {
     bandwidth = match_function(bandwidth, prefix = "bw.")(x)
   }
   bandwidth
+}
+
+estimate_bounds_cdf = function(x) {
+  # TODO: currently unused
+
+  # we use the distribution of the order statistic of a sample to estimate
+  # where the first and last order statistics (i.e. the min and max) of this
+  # distribution would be assuming the sample `x` is the distribution, then
+  # we adjust the boundary outwards from min(x) (or max(x)) by the distance
+  # between min(x) (or max(x)) and the nearest estimated order statistic
+  # (scaled by s, the ratio of the range of x and the range between the two
+  # estimated order statistics).
+  # We can use the fact that given a CDF of distribution F_X(x), the
+  # distribution of its first and last order statistics are:
+  #  F_X_1(x) = 1 - (1 - F_X(x))^n
+  #  F_X_n(x) = F_X(x)^n
+  # Re-arranging, we can get the inverse CDFs (quantile functions) of each
+  # in terms of the quantile function of X:
+  #  F_X_1^-1(x) = F_X^-1(1 - (1 - p)^(1/n))
+  #  F_X_n^-1(x) = F_X^-1(p^(1/n))
+  # Then we can use the median of these distributions as our estimates by
+  # calculating them at p = 0.5:
+  #  median(X_1) = F_X^-1(1 - 0.5^(1/n)) = F_X^-1(1 - p_median)
+  #  median(X_n) = F_X^-1(0.5^(1/n)) = F_X^-1(p_median)
+  # Where p_median = 0.5^(1/n)
+  # Then the estimated bounds are:
+  #  2 * min(x) - median(X_1)
+  #  2 * max(x) - median(X_n)
+  p_median = 0.5^(1/length(x))
+  median_x_1_n = quantile(x, c(1 - p_median, p_median), names = FALSE)
+  2 * range(x) - median_x_1_n
+}
+
+estimate_bounds = function(x) {
+  x = sort(x)
+  n = length(x)
+
+  # the sequence in Cooke's method below reaches a point beyond which (due to
+  # floating point round off) it is always zero. This point happens pretty
+  # quickly on large samples (e.g. at 720 for a sample of size 10,000), so we
+  # can save a lot of computation on very large samples by not computing
+  # anything beyond that point (= n_nonzero). The reciprocal of the square root
+  # of this point becomes roughly linear in 1/n at large n. The coefficients
+  # below for estimating n_nonzero come from a linear model of
+  # 1/sqrt(n_nonzero) ~ 1/n
+  n_nonzero = if (n < 200) {
+    n
+  } else {
+    ceiling(1 / (0.03659 + 6.89991 / n)^2)
+  }
+
+  # Method from Cooke (1979) Statistical Inference for Bounds of Random Variables,
+  # re-written so i is 1 to n (instead of 0 to n - 1) and we multiply by X_(i)
+  # instead of X_(n - i) (to avoid having to reverse x):
+  #   i = seq_along(x)
+  #   c(
+  #     2 * x[1] - sum(((1 - (i - 1)/n)^n - (1 - i/n)^n) * x),
+  #     2 * x[n] - sum(((1 - (n - i)/n)^n - (1 - (n + 1 - i)/n)^n) * x)
+  #   )
+  # Then, we re-write that to use logs (to make computation faster and more
+  # stable), to only compute the non-zero coefficients, to use dot products
+  # instead of sum(coef[i] * x[i]), and to take advantage of the fact that
+  # the coefs for x[n] are just the reverse of the coefs for x[1] (so we
+  # don't have to compute them twice):
+  i = seq.int(1, length.out = n_nonzero)
+  rev_i = seq.int(n, by = -1, length.out = n_nonzero)
+  x_1_coefs = exp(log1p((1 - i)/n) * n) - exp(log1p(-i/n) * n)
+  c(
+    2 * x[1] - x_1_coefs %*% x[i],
+    2 * x[n] - x_1_coefs %*% x[rev_i]
+  )
 }

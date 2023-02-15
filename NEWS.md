@@ -2,6 +2,8 @@
 
 New features and enhancements:
 
+* `density_bounded()` now estimates bounds from the data when not provided
+  (i.e. when one of `bounds` is `NA`).
 * New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs
   created with `geom_slabinterval()` or `stat_slabinterval()`. (#58, #124)
 * `parse_dist()` now outputs *distributional* objects in a `.dist_obj` column in
