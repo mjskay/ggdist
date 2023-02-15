@@ -27,20 +27,20 @@
 </defs>
 <g clip-path='url(#cpMzAuODN8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='30.83' y='22.78' width='683.69' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<polygon points='72.22,521.37 92.41,487.45 156.67,453.54 250.72,419.62 355.43,385.70 482.78,351.78 618.90,317.87 621.29,283.95 502.82,250.03 366.47,216.11 226.32,182.20 154.92,148.28 113.32,114.36 75.53,80.44 64.75,46.53 61.91,46.53 61.91,80.44 61.91,114.36 61.91,148.28 61.91,182.20 61.91,216.11 61.91,250.03 61.91,283.95 61.91,317.87 61.91,351.78 61.91,385.70 61.91,419.62 61.91,453.54 61.91,487.45 61.91,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<line x1='61.91' y1='453.24' x2='61.91' y2='140.94' style='stroke-width: 1.28; stroke-linecap: butt;' />
-<line x1='61.91' y1='377.53' x2='61.91' y2='226.82' style='stroke-width: 2.99; stroke-linecap: butt;' />
-<circle cx='61.91' cy='300.15' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
-<circle cx='61.91' cy='300.15' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
+<polygon points='77.82,521.37 88.98,487.45 151.59,453.54 247.36,419.62 354.62,385.70 490.81,351.78 621.29,317.87 598.09,283.95 472.69,250.03 318.65,216.11 200.29,182.20 136.05,148.28 98.35,114.36 66.92,80.44 65.12,46.53 61.91,46.53 61.91,80.44 61.91,114.36 61.91,148.28 61.91,182.20 61.91,216.11 61.91,250.03 61.91,283.95 61.91,317.87 61.91,351.78 61.91,385.70 61.91,419.62 61.91,453.54 61.91,487.45 61.91,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<line x1='61.91' y1='451.52' x2='61.91' y2='152.59' style='stroke-width: 1.28; stroke-linecap: butt;' />
+<line x1='61.91' y1='379.05' x2='61.91' y2='234.79' style='stroke-width: 2.99; stroke-linecap: butt;' />
+<circle cx='61.91' cy='304.98' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
+<circle cx='61.91' cy='304.98' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
 <rect x='30.83' y='22.78' width='683.69' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-<text x='25.90' y='460.85' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='7.82px' lengthAdjust='spacingAndGlyphs'>-2</text>
-<text x='25.90' y='303.90' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='25.90' y='146.95' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>2</text>
-<polyline points='28.09,457.82 30.83,457.82 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='28.09,300.87 30.83,300.87 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='28.09,143.92 30.83,143.92 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='25.90' y='458.94' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='7.82px' lengthAdjust='spacingAndGlyphs'>-2</text>
+<text x='25.90' y='308.70' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='25.90' y='158.46' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>2</text>
+<polyline points='28.09,455.91 30.83,455.91 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='28.09,305.67 30.83,305.67 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='28.09,155.43 30.83,155.43 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='61.91,547.85 61.91,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='217.29,547.85 217.29,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='372.67,547.85 372.67,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />

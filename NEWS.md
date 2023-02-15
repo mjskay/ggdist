@@ -2,6 +2,14 @@
 
 New features and enhancements:
 
+* `stat_slabinterval()` now uses `density_auto()` as its default density
+  estimator, which defaults (when `trim = TRUE`) to a bounded density estimator
+  that also estimates the bounds of the data. This will cause existing charts 
+  using densities to change slightly. This change should be worth it, as it
+  should drastically improve the accuracy of density estimates on bounded data, 
+  and should have little noticeable impact on densities on unbounded data. 
+  Existing code with `trim = FALSE` will not be affected. To switch to the
+  old behavior, pass `density = "unbounded"`.
 * `density_bounded()` now estimates bounds from the data when not provided
   (i.e. when one of `bounds` is `NA`).
 * New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs

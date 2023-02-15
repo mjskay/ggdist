@@ -259,15 +259,24 @@ test_that("expand can take length two vector", {
   expect_equal(min(ld$x), 0)
   expect_equal(max(ld$x), 4)
 
-  ld = layer_data(p + stat_ccdfinterval(expand = c(TRUE, FALSE)))
+  ld = layer_data(p + stat_ccdfinterval(
+    expand = c(TRUE, FALSE),
+    density = density_bounded(find_bounds = "range")
+  ))
   expect_equal(min(ld$x), 0)
   expect_equal(max(ld$x), 3)
 
-  ld = layer_data(p + stat_ccdfinterval(expand = c(FALSE, TRUE)))
+  ld = layer_data(p + stat_ccdfinterval(
+    expand = c(FALSE, TRUE),
+    density = density_bounded(find_bounds = "range")
+  ))
   expect_equal(min(ld$x), 1)
   expect_equal(max(ld$x), 4)
 
-  ld = layer_data(p + stat_ccdfinterval(expand = c(FALSE, FALSE)))
+  ld = layer_data(p + stat_ccdfinterval(
+    expand = c(FALSE, FALSE),
+    density = density_bounded(find_bounds = "range")
+  ))
   expect_equal(min(ld$x), 1)
   expect_equal(max(ld$x), 3)
 })

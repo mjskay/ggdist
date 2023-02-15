@@ -37,8 +37,10 @@ by this value. See \code{\link[stats:density]{stats::density()}}.}
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
-\item{trim}{Should the density estimate be trimmed to the bounds of the data?
-If \code{TRUE}, uses \code{\link[=density_bounded]{density_bounded()}}, if \code{FALSE}, uses \code{\link[=density_unbounded]{density_unbounded()}}.}
+\item{trim}{Should the density estimate be trimmed?
+If \code{TRUE}, uses \code{\link[=density_bounded]{density_bounded()}}, estimating the bounds by default (see the
+\code{bounds} argument to \code{\link[=density_bounded]{density_bounded()}}). If \code{FALSE}, uses \code{\link[=density_unbounded]{density_unbounded()}},
+setting the bounds at \code{3 * bandwidth} from the endpoints of the data.}
 
 \item{...}{Additional arguments passed to \code{\link[=density_bounded]{density_bounded()}} or \code{\link[=density_unbounded]{density_unbounded()}}.}
 }

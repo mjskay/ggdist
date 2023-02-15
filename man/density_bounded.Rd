@@ -12,7 +12,10 @@ density_bounded(
   adjust = 1,
   kernel = "gaussian",
   trim = TRUE,
-  bounds = c(NA, NA)
+  bounds = c(NA, NA),
+  find_bounds = c("cooke", "range"),
+  ...,
+  range_only = FALSE
 )
 }
 \arguments{
@@ -41,8 +44,20 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 internally before trimming to \code{bounds}.}
 
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
-that bound is replaced with \code{min(x)} or \code{max(x)}. Thus, the default,
-\code{c(NA, NA)}, means that the bounds used are \code{range(x)}.}
+that bound is estimated from the data using the method specified by \code{find_bounds}.}
+
+\item{find_bounds}{How to find missing (\code{NA}) \code{bounds}. One of:
+\itemize{
+\item \code{"cooke"}: Use the method from Cooke (1979); i.e. method 2.3 from Loh (1984).
+\item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}).
+}}
+
+\item{...}{Additional arguments (ignored).}
+
+\item{range_only}{If \code{TRUE}, the range of the output of this density estimator
+is computed and is returned in the \verb{$x} element of the result, and \code{c(NA, NA)}
+is returned in \verb{$y}. This gives a faster way to determine the range of the output
+than \code{density_XXX(n = 2)}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
@@ -113,6 +128,13 @@ data.frame(x) \%>\%
   ) +
   scale_thickness_shared() +
   theme_ggdist()
+}
+\references{
+Loh, W. Y. (1984). Estimating an endpoint of a distribution with resampling
+methods. \emph{The Annals of Statistics} 12(4), 1543--1550. \doi{10.1214/aos/1176346811}
+
+Cooke, P. (1979). Statistical inference for bounds of random variables.
+\emph{Biometrika} 66(2), 367--374. \doi{10.1093/biomet/66.2.367}.
 }
 \seealso{
 Other density estimators: 

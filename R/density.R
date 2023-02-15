@@ -168,8 +168,10 @@ density_unbounded = function(
 #'
 #' @inheritParams density_unbounded
 #' @param bounds length-2 vector of min and max bounds. If a bound is `NA`, then
-#' that bound is estimated from the data using Cooke's (1979) method; i.e.
-#' method 2.3 from Loh (1984).
+#' that bound is estimated from the data using the method specified by `find_bounds`.
+#' @param find_bounds How to find missing (`NA`) `bounds`. One of:
+#'  - `"cooke"`: Use the method from Cooke (1979); i.e. method 2.3 from Loh (1984).
+#'  - `"range"`: Use the range of `x` (i.e the `min` or `max`).
 #' @param trim ignored; the unbounded density estimator always uses `trim = FALSE`
 #' internally before trimming to `bounds`.
 #' @template returns-density
@@ -227,7 +229,7 @@ density_unbounded = function(
 density_bounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
-  trim = TRUE, bounds = c(NA, NA),
+  trim = TRUE, bounds = c(NA, NA), find_bounds = c("cooke", "range"),
   ...,
   range_only = FALSE
 ) {
@@ -239,9 +241,13 @@ density_bounded = function(
   bw = get_bandwidth(x, bandwidth) * adjust
 
   # determine bounds
-  if (anyNA(bounds)) {
-    estimated_bounds = is.na(bounds)
-    bounds[estimated_bounds] = estimate_bounds(x)[estimated_bounds]
+  bounds_to_find = is.na(bounds)
+  if (any(bounds_to_find)) {
+    find_bounds = switch(match.arg(find_bounds),
+      cooke = find_bounds_cooke,
+      range = range
+    )
+    bounds[bounds_to_find] = find_bounds(x)[bounds_to_find]
   }
 
   min_x = min(x)
@@ -304,7 +310,7 @@ get_bandwidth = function(x, bandwidth) {
   bandwidth
 }
 
-estimate_bounds_cdf = function(x) {
+find_bounds_cdf = function(x) {
   # TODO: currently unused
 
   # we use the distribution of the order statistic of a sample to estimate
@@ -335,7 +341,7 @@ estimate_bounds_cdf = function(x) {
   2 * range(x) - median_x_1_n
 }
 
-estimate_bounds = function(x) {
+find_bounds_cooke = function(x) {
   x = sort(x)
   n = length(x)
 
