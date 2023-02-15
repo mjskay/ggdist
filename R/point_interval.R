@@ -402,31 +402,61 @@ ul = function(x, .width = .95, na.rm = FALSE) {
 
 #' @export
 #' @rdname point_interval
-hdi = function(x, .width = .95, .prob, na.rm = FALSE, ...) {
+hdi = function(x, .width = .95, .prob, na.rm = FALSE, density = "bounded", ...) {
   .width = .Deprecated_argument_alias(.width, .prob)
-  hdi_(x, .width = .width, na.rm = na.rm)
+  hdi_(x, .width = .width, na.rm = na.rm, density = density)
 }
 hdi_ = function(x, ...) {
   UseMethod("hdi_")
 }
 #' @importFrom stats density
 #' @export
-hdi_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
+hdi_.numeric = function(x, .width = .95, na.rm = FALSE, density = "bounded", ...) {
   if (!na.rm && anyNA(x)) {
     return(matrix(c(NA_real_, NA_real_), ncol = 2))
   }
   if (isTRUE(.width == 1)) {
     return(matrix(range(x), ncol = 2))
   }
+  x = check_na(x, na.rm)
 
-  intervals = HDInterval::hdi(density(x, cut = 0, na.rm = na.rm), credMass = .width, allowSplit = TRUE)
+  intervals = .hdi_numeric(x, .width = .width, density = density)
   if (nrow(intervals) == 1) {
     # the above method tends to be a little conservative on unimodal distributions, so if the
     # result is unimodal, switch to the method below (which will be slightly narrower)
-    intervals = HDInterval::hdi(x, credMass = .width)
+    intervals = matrix(HDInterval::hdi(x, credMass = .width), ncol = 2)
   }
-  matrix(intervals, ncol = 2)
+  intervals
 }
+
+# based on hdr.dist_default from {distributional}
+# https://github.com/mitchelloharawild/distributional/blob/50e29554456d99e9b7671ba6110bebe5961683d2/R/default.R#L137
+.hdi_numeric = function(x, .width = 0.95, n = 4096, density = "bounded", ...) {
+  density = match_function(density, "density_")
+
+  dist_x = quantile(x, ppoints(n, a = 0.5))
+  # Remove duplicate values of dist_x from less continuous distributions
+  dist_x = unique(dist_x)
+  d = density(x, n = n)
+  dist_y = approx(d$x, d$y, dist_x)$y
+  alpha = quantile(dist_y, probs = 1 - .width)
+
+  it = seq_len(length(dist_y) - 1)
+  y_minus_alpha = dist_y - alpha
+  dd = y_minus_alpha[it + 1] * y_minus_alpha[it]
+  index = it[dd <= 0]
+  # unique() removes possible duplicates if sequential dd has same value.
+  y0 = y_minus_alpha[index]
+  y1 = y_minus_alpha[index + 1]
+  x0 = dist_x[index]
+  x1 = dist_x[index + 1]
+  hdr = unique(x1 - (x1 - x0) / (y1 - y0) * y1)
+  # Add boundary values which may exceed the crossing point.
+  hdr = c(dist_x[1][dist_y[1] > alpha], hdr, dist_x[length(dist_x)][dist_y[length(dist_y)] > alpha])
+
+  matrix(hdr, ncol = 2, byrow = TRUE)
+}
+
 #' @export
 hdi_.rvar = function(x, ...) {
   if (length(x) > 1) {
@@ -458,18 +488,19 @@ hdi_.distribution = function(x, .width = .95, ...) {
 #' @rdname point_interval
 #' @importFrom rlang is_integerish
 #' @importFrom stats density
-Mode = function(x, na.rm = FALSE) {
+Mode = function(x, na.rm = FALSE, ...) {
   UseMethod("Mode")
 }
 #' @export
 #' @rdname point_interval
-Mode.default = function(x, na.rm = FALSE) {
+Mode.default = function(x, na.rm = FALSE, density = "bounded", ...) {
   if (na.rm) {
     x = x[!is.na(x)]
   }
   else if (anyNA(x)) {
     return(NA_real_)
   }
+  density = match_function(density, "density_")
 
   if (is_integerish(x)) {
     # for the discrete case, based on https://stackoverflow.com/a/8189441
@@ -477,13 +508,13 @@ Mode.default = function(x, na.rm = FALSE) {
     ux[which.max(tabulate(match(x, ux)))]
   } else {
     # for the continuous case
-    d = density(x, cut = 0)
+    d = density(x)
     d$x[which.max(d$y)]
   }
 }
 #' @export
 #' @rdname point_interval
-Mode.rvar = function(x, na.rm = FALSE) {
+Mode.rvar = function(x, na.rm = FALSE, ...) {
   draws <- posterior::draws_of(x)
   dim <- dim(draws)
   apply(draws, seq_along(dim)[-1], Mode, na.rm = na.rm)
@@ -491,7 +522,7 @@ Mode.rvar = function(x, na.rm = FALSE) {
 #' @importFrom stats optim
 #' @export
 #' @rdname point_interval
-Mode.distribution = function(x, na.rm = FALSE) {
+Mode.distribution = function(x, na.rm = FALSE, ...) {
   find_mode = function(x) {
     if (anyNA(x)) {
       NA_real_

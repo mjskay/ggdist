@@ -12,6 +12,7 @@ density_unbounded(
   adjust = 1,
   kernel = "gaussian",
   trim = FALSE,
+  na.rm = FALSE,
   ...,
   range_only = FALSE
 )
@@ -39,6 +40,8 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
 \item{trim}{Should the density estimate be trimmed to the bounds of the data?}
+
+\item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
 
 \item{...}{Additional arguments (ignored).}
 

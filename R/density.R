@@ -47,11 +47,13 @@ density_auto = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
   trim = FALSE,
+  na.rm = FALSE,
   ...
 ) {
   if (missing(x)) return(partial_self("density_auto"))
 
   x_label = as_label(enexpr(x))
+  x = check_na(x, na.rm)
 
   density = if (trim) density_bounded else density_unbounded
   d = density(
@@ -86,6 +88,7 @@ density_auto = function(
 #' match one of `"gaussian"`, `"rectangular"`, `"triangular"`, `"epanechnikov"`,
 #' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
 #' @param trim Should the density estimate be trimmed to the bounds of the data?
+#' @param na.rm Should missing (`NA`) values in `x` be removed?
 #' @param ... Additional arguments (ignored).
 #' @param range_only If `TRUE`, the range of the output of this density estimator
 #' is computed and is returned in the `$x` element of the result, and `c(NA, NA)`
@@ -130,12 +133,14 @@ density_unbounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
   trim = FALSE,
+  na.rm = FALSE,
   ...,
   range_only = FALSE
 ) {
   if (missing(x)) return(partial_self("density_unbounded"))
 
   x_label = as_label(enexpr(x))
+  x = check_na(x, na.rm)
 
   bw = get_bandwidth(x, bandwidth) * adjust
   cut = if (trim) 0 else 3
@@ -230,12 +235,15 @@ density_bounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
   trim = TRUE, bounds = c(NA, NA), find_bounds = c("cooke", "range"),
+  na.rm = FALSE,
   ...,
   range_only = FALSE
 ) {
   if (missing(x)) return(partial_self("density_bounded"))
 
   if (n < 1) stop0("density_bounded() must have an n of at least 1")
+
+  x = check_na(x, na.rm)
 
   # determine bandwidth
   bw = get_bandwidth(x, bandwidth) * adjust

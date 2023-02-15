@@ -14,6 +14,7 @@ density_bounded(
   trim = TRUE,
   bounds = c(NA, NA),
   find_bounds = c("cooke", "range"),
+  na.rm = FALSE,
   ...,
   range_only = FALSE
 )
@@ -51,6 +52,8 @@ that bound is estimated from the data using the method specified by \code{find_b
 \item \code{"cooke"}: Use the method from Cooke (1979); i.e. method 2.3 from Loh (1984).
 \item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}).
 }}
+
+\item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
 
 \item{...}{Additional arguments (ignored).}
 

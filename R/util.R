@@ -51,6 +51,19 @@ match_function = function(f, prefix = "", env = globalenv()) {
     get(f, mode = "function", envir = getNamespace("ggdist"))
 }
 
+#' Check for NAs and remove them as needed
+#' @noRd
+check_na = function(x, na.rm) {
+  if (anyNA(x)) {
+    if (isTRUE(na.rm)) {
+      x = x[!is.na(x)]
+    } else {
+      stop0("`x` must not contain missing (NA) values")
+    }
+  }
+  x
+}
+
 
 # deprecations and warnings -----------------------------------------------
 

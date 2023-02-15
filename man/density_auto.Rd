@@ -12,6 +12,7 @@ density_auto(
   adjust = 1,
   kernel = "gaussian",
   trim = FALSE,
+  na.rm = FALSE,
   ...
 )
 }
@@ -41,6 +42,8 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 If \code{TRUE}, uses \code{\link[=density_bounded]{density_bounded()}}, estimating the bounds by default (see the
 \code{bounds} argument to \code{\link[=density_bounded]{density_bounded()}}). If \code{FALSE}, uses \code{\link[=density_unbounded]{density_unbounded()}},
 setting the bounds at \code{3 * bandwidth} from the endpoints of the data.}
+
+\item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
 
 \item{...}{Additional arguments passed to \code{\link[=density_bounded]{density_bounded()}} or \code{\link[=density_unbounded]{density_unbounded()}}.}
 }

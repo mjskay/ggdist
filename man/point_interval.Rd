@@ -94,15 +94,15 @@ ll(x, .width = 0.95, na.rm = FALSE)
 
 ul(x, .width = 0.95, na.rm = FALSE)
 
-hdi(x, .width = 0.95, .prob, na.rm = FALSE, ...)
+hdi(x, .width = 0.95, .prob, na.rm = FALSE, density = "bounded", ...)
 
-Mode(x, na.rm = FALSE)
+Mode(x, na.rm = FALSE, ...)
 
-\method{Mode}{default}(x, na.rm = FALSE)
+\method{Mode}{default}(x, na.rm = FALSE, density = "bounded", ...)
 
-\method{Mode}{rvar}(x, na.rm = FALSE)
+\method{Mode}{rvar}(x, na.rm = FALSE, ...)
 
-\method{Mode}{distribution}(x, na.rm = FALSE)
+\method{Mode}{distribution}(x, na.rm = FALSE, ...)
 
 hdci(x, .width = 0.95, na.rm = FALSE)
 
