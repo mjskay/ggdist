@@ -26,9 +26,14 @@ compute_limits_slabinterval = function(
     return(data.frame(.lower = NA, .upper = NA))
   }
 
+  if (distr_is_constant(dist)) {
+    median = distr_quantile(dist)(0.5)
+    return(data.frame(.lower = median, .upper = median))
+  }
+
   if (distr_is_sample(dist)) {
     sample = distr_get_sample(dist)
-    return(compute_limits_sample(sample, trans, trim, adjust))
+    return(compute_limits_sample(sample, trans, trim, adjust, ...))
   }
 
   quantile_fun = distr_quantile(dist)
@@ -62,23 +67,16 @@ compute_limits_slabinterval = function(
 #' @param trans scale transformation
 #' @param trim/adjust see stat_slabinterval
 #' @noRd
-compute_limits_sample = function(x, trans, trim, adjust) {
-  if (trim) {
-    data.frame(
-      .lower = min(x),
-      .upper = max(x)
-    )
-  } else {
-    # when trim is FALSE, limits of data will be expanded by 3 * the bandwidth
-    # bandwidth must be calculated on the transformed scale
-    x = trans$transform(x)
-    bw = stats::bw.nrd0(x)
-    expansion = bw * adjust * 3
-    data.frame(
-      .lower = trans$inverse(min(x) - expansion),
-      .upper = trans$inverse(max(x) + expansion)
-    )
-  }
+compute_limits_sample = function(x, trans, trim, adjust, ..., density = "auto") {
+  density = match_function(density, "density_")
+
+  # determine limits of data based on the density estimator
+  x = trans$transform(x)
+  x_range = range(density(x, n = 2, range_only = TRUE, trim = trim, adjust = adjust)$x)
+  data.frame(
+    .lower = trans$inverse(x_range[[1]]),
+    .upper = trans$inverse(x_range[[2]])
+  )
 }
 
 
@@ -365,11 +363,16 @@ compute_interval_slabinterval = function(
 #'    following this format, including [density_unbounded()] and
 #'    [density_bounded()]. This format is also compatible with [stats::density()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
-#'    e.g. `"bounded"` for `[density_bounded()]`.
+#'    e.g. `"bounded"` for `[density_bounded()]`. Defaults to `"auto"`, i.e.
+#'    [density_auto()], which uses [density_bounded()] if `trim` is `TRUE` and
+#'    [density_unbounded()] if `trim` is `FALSE`.
 #' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator for sample data
 #' is adjusted by multiplying it by this value. See [density()] for more information.
-#' @param trim For sample data, should the density estimate be trimmed to the range of the
-#' input data? Default `TRUE`.
+#' @param trim For sample data, should the density estimate be trimmed? How the estimate is
+#' trimmed depends on the density estimator; see the `density` parameter. In the default
+#' configuration (`density = "auto"`), `trim = TRUE` will use a bounded density estimator
+#' ([density_bounded()]) and estimate the bounds from the data, and `trim = FALSE` will
+#' use an unbounded density estimator ([density_unbounded()]). Default `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be length two to control expansion to the lower and upper limit respectively.
 #' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to

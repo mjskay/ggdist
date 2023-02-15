@@ -87,6 +87,10 @@ density_auto = function(
 #' `"biweight"`, `"cosine"`, or `"optcosine"`. See [stats::density()].
 #' @param trim Should the density estimate be trimmed to the bounds of the data?
 #' @param ... Additional arguments (ignored).
+#' @param range_only If `TRUE`, the range of the output of this density estimator
+#' is computed and is returned in the `$x` element of the result, and `c(NA, NA)`
+#' is returned in `$y`. This gives a faster way to determine the range of the output
+#' than `density_XXX(n = 2)`.
 #' @template returns-density
 #' @family density estimators
 #' @examples
@@ -125,17 +129,27 @@ density_auto = function(
 density_unbounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
-  trim = FALSE, ...
+  trim = FALSE,
+  ...,
+  range_only = FALSE
 ) {
   if (missing(x)) return(partial_self("density_unbounded"))
 
   x_label = as_label(enexpr(x))
 
-  bw = get_bandwidth(x, bandwidth)
+  bw = get_bandwidth(x, bandwidth) * adjust
   cut = if (trim) 0 else 3
+
+  if (isTRUE(range_only)) {
+    return(list(
+      x = c(min(x) - cut * bw, max(x) + cut * bw),
+      y = c(NA_real_, NA_real_)
+    ))
+  }
+
   d = density(
     x, weights = weights,
-    n = n, bw = bw, adjust = adjust, kernel = kernel,
+    n = n, bw = bw, adjust = 1, kernel = kernel,
     cut = cut
   )
 
@@ -158,7 +172,6 @@ density_unbounded = function(
 #' method 2.3 from Loh (1984).
 #' @param trim ignored; the unbounded density estimator always uses `trim = FALSE`
 #' internally before trimming to `bounds`.
-#' @param ... Additional arguments (ignored).
 #' @template returns-density
 #' @template references-bounds-estimators
 #' @family density estimators
@@ -214,7 +227,9 @@ density_unbounded = function(
 density_bounded = function(
   x, weights = NULL,
   n = 512, bandwidth = "nrd0", adjust = 1, kernel = "gaussian",
-  trim = TRUE, bounds = c(NA, NA), ...
+  trim = TRUE, bounds = c(NA, NA),
+  ...,
+  range_only = FALSE
 ) {
   if (missing(x)) return(partial_self("density_bounded"))
 
@@ -243,6 +258,10 @@ density_bounded = function(
   right_bounded = bounds[[2]] <= max_bound
   if (!left_bounded) bounds[[1]] = min_bound
   if (!right_bounded) bounds[[2]] = max_bound
+
+  if (isTRUE(range_only)) {
+    return(list(x = bounds, y = c(NA_real_, NA_real_)))
+  }
 
   # to get final n = requested n, if a bound is supplied, must add n - 1 values
   # beyond that bound, which will be reflected back
