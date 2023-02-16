@@ -528,6 +528,13 @@ Mode.distribution = function(x, na.rm = FALSE, ...) {
       NA_real_
     } else if (distr_is_sample(x)) {
       Mode(distr_get_sample(x), na.rm = na.rm)
+    } else if (distr_is_discrete(x)) {
+      bounds = quantile(x, c(0, 1))[[1]]
+      non_finite_bounds = !is.finite(bounds)
+      bounds[non_finite_bounds] = quantile(x, c(0.001, 0.999)[non_finite_bounds])[[1]]
+      at = seq(bounds[[1]], bounds[[2]])
+      d = density(x, at = at)[[1]]
+      at[which.max(d)]
     } else {
       optim(
         median(x, na.rm = na.rm),

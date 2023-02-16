@@ -540,6 +540,12 @@ test_that("Mode on dist_sample uses the numeric method", {
   expect_equal(Mode(x), Mode(x_values))
 })
 
+test_that("Mode on discrete distributions works", {
+  x = c(dist_poisson(3.5), dist_binomial(10, 0.4))
+
+  expect_equal(Mode(x), c(3, 4))
+})
+
 test_that("non-scalar distributions throw appropriate warnings", {
   x = dist_normal(0:1)
   expect_error(hdi(x), "HDI for non-scalar distribution objects is not implemented")

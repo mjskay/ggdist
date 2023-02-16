@@ -1071,20 +1071,60 @@ besides quantile intervals; for example, highest-density intervals:
 
 ```{r halfeye_qi_vs_hdi, fig.width = med_width, fig.height = small_height}
 qi_plot = data.frame(dist = dist_beta(10, 2)) %>%
-  ggplot(aes(xdist = dist, fill = after_stat(level))) + 
-  stat_halfeye(point_interval = median_qi, .width = c(.5, .8, .95)) + 
+  ggplot(aes(xdist = dist)) + 
+  stat_halfeye(aes(fill = after_stat(level)), point_interval = median_qi, .width = c(.5, .8, .95)) + 
   scale_fill_brewer(na.value = "gray95") +
   labs(subtitle = "stat_halfeye(aes(fill = after_stat(level)), point_interval = median_qi)")
 
 hdi_plot = data.frame(dist = dist_beta(10, 2)) %>%
-  ggplot(aes(xdist = dist, fill = after_stat(level))) + 
-  stat_halfeye(point_interval = mode_hdci, .width = c(.5, .8, .95)) + 
+  ggplot(aes(xdist = dist)) + 
+  stat_halfeye(aes(fill = after_stat(level)), point_interval = mode_hdci, .width = c(.5, .8, .95)) + 
   scale_fill_brewer(na.value = "gray95") +
   labs(subtitle = "stat_halfeye(aes(fill = after_stat(level)), point_interval = mode_hdci)")
 
 qi_plot /
   hdi_plot
 ```
+
+### Annotating slabs with spikes
+
+`geom_spike()` and `stat_spike()` make it straightforward to apply custom "spike"
+annotations to slabs. The easiest way to use spikes is to use `stat_spike()` and
+pass it a numeric position or a function giving numeric position(s) at which
+you wish to place a spike (or a list of these). If passed a function, the function
+will be applied to the *distributional* or `posterior::rvar()` object used
+internally to represent the distribution. 
+
+This means that point estimates (e.g., `mean()`, `median()`, `Mode()`), 
+quantiles (`quantile()`), and interval estimates (`qi()`, `hdci()`, `hdi()`) 
+can be provided to `stat_spike()` directly. This makes it easy to
+modify the previous example to highlight how medians and quantile intervals
+differ from modes and highest-density intervals in terms of their densities:
+
+```{r halfeye_qi_vs_hdi_spikes, fig.width = med_width, fig.height = small_height}
+qi_plot_spikes = data.frame(dist = dist_beta(10, 2)) %>%
+  ggplot(aes(xdist = dist)) + 
+  stat_slab(aes(fill = after_stat(level)), point_interval = median_qi, .width = c(.5, .95)) + 
+  stat_spike(at = c(median, qi)) + 
+  scale_fill_brewer(na.value = "gray95") +
+  scale_thickness_shared() +
+  labs(subtitle = "stat_slab() + stat_spike(at = c(median, qi))")
+
+hdi_plot_spikes = data.frame(dist = dist_beta(10, 2)) %>%
+  ggplot(aes(xdist = dist)) + 
+  stat_slab(aes(fill = after_stat(level)), point_interval = mode_hdci, .width = c(.5, .95)) + 
+  stat_spike(at = c(Mode, hdci)) +
+  scale_fill_brewer(na.value = "gray95") +
+  scale_thickness_shared() +
+  labs(subtitle = "stat_slab() + stat_spike(at = c(Mode, hdci))")
+
+qi_plot_spikes /
+  hdi_plot_spikes
+```
+
+Note the use of `scale_thickness_shared()`, which ensures that the `thickness`
+values for the slabs and the `thickness` values for the spikes (which determine
+their heights) use a shared scale, so they line up correctly.
 
 ### Using color ramps for `fill` and `color` aesthetics
 

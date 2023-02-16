@@ -76,9 +76,13 @@ only be used with functions whose values are in [0,1], such as CDFs).
 \item{at}{The points at which to evaluate the PDF and CDF of the distribution. One of:
 \itemize{
 \item \link{numeric} vector: points to evaluate the PDF and CDF of the distributions at.
-\item function or string: function (or name of functions) which,
+\item function or string: function (or name of a function) which,
 when applied on a distribution-like object (e.g. a \pkg{distributional} object or a
 \link[posterior:rvar]{posterior::rvar}), returns a vector of values to evaluate the distribution functions at.
+\item a \link{list} where each element is any of the above (e.g. a \link{numeric}, function, or
+name of a function): the evaluation points determined by each element of the
+list are concatenated together. This means, e.g., \code{c(0, median, qi)} would add
+a spike at \code{0}, the median, and the endpoints of the \code{qi} of the distribution.
 }}
 
 \item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),

@@ -15,9 +15,13 @@
 #' on a distribution, as determined by the `at` parameter.
 #' @param at The points at which to evaluate the PDF and CDF of the distribution. One of:
 #'   - [numeric] vector: points to evaluate the PDF and CDF of the distributions at.
-#'   - function or string: function (or name of functions) which,
+#'   - function or string: function (or name of a function) which,
 #'     when applied on a distribution-like object (e.g. a \pkg{distributional} object or a
 #'     [posterior::rvar]), returns a vector of values to evaluate the distribution functions at.
+#'   - a [list] where each element is any of the above (e.g. a [numeric], function, or
+#'     name of a function): the evaluation points determined by each element of the
+#'     list are concatenated together. This means, e.g., `c(0, median, qi)` would add
+#'     a spike at `0`, the median, and the endpoints of the `qi` of the distribution.
 #' @inheritParams stat_slab
 #' @inheritParams geom_spike
 #' @eval rd_layer_params("spike", StatSpike, as_dots = TRUE)
@@ -92,10 +96,14 @@ compute_slab_spike = function(
   cdf_fun = approx_cdf(dist, s_data$.input, s_data$cdf)
 
   # determine evaluation points
-  if (!is.numeric(at)) {
-    at = match_function(at)
-    at = at(dist)
-  }
+  if (!is.list(at)) at = list(at)
+  at = lapply(at, function(at_i) {
+    if (!is.numeric(at_i)) {
+      at_fun = match_function(at_i)
+      at_i = at_fun(dist)
+    }
+    at_i
+  })
   # needs to be a vector (e.g. in cases of interval functions
   # like qi() which return matrices)
   at = as.vector(unlist(at, use.names = FALSE))

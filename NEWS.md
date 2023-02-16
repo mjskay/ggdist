@@ -14,7 +14,8 @@ New features and enhancements:
   (i.e. when one of `bounds` is `NA`).
 * Improved `Mode()` and `hdi()` estimators based on bounded density estimator.
 * New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs
-  created with `geom_slabinterval()` or `stat_slabinterval()`. (#58, #124)
+  created with `geom_slabinterval()` or `stat_slabinterval()`. See example
+  in `vignette("slabinterval")`. (#58, #124)
 * `parse_dist()` now outputs *distributional* objects in a `.dist_obj` column in
   addition to the character plus args-list format, and these objects respect truncation
   parameters from prior specifications. This makes it easier to  visualize standard
