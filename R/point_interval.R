@@ -95,6 +95,12 @@ globalVariables(c("y", "ymin", "ymax"))
 #' If `FALSE` (the default), any vectors to be summarized that contain `NA` will result in
 #' point and interval summaries equal to `NA`.
 #' @param x vector to summarize (for interval functions: `qi` and `hdi`)
+#' @param density For [hdi()] and [Mode()], the kernel density estimator to use, either as
+#' a function (e.g. [`density_bounded`], [`density_unbounded`]) or as a string giving the
+#' suffix to a function that starts with `density_` (e.g. `"bounded"` or `"unbounded"`). The
+#' default, `"bounded"`, uses the bounded density estimator of [density_bounded()], which
+#' itself estimates the bounds of the distribution, and tends to work well on both bounded
+#' and unbounded data.
 #' @return A data frame containing point summaries and intervals, with at least one column corresponding
 #' to the point summary, one to the lower end of the interval, one to the upper end of the interval, the
 #' width of the interval (`.width`), the type of point summary (`.point`), and the type of interval (`.interval`).
@@ -431,6 +437,7 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, density = "bounded", ...
 
 # based on hdr.dist_default from {distributional}
 # https://github.com/mitchelloharawild/distributional/blob/50e29554456d99e9b7671ba6110bebe5961683d2/R/default.R#L137
+#' @importFrom stats approx
 .hdi_numeric = function(x, .width = 0.95, n = 4096, density = "bounded", ...) {
   density = match_function(density, "density_")
 

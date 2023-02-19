@@ -177,6 +177,13 @@ names used in \pkg{ggdist} and \pkg{tidybayes}.}
 \item{.prob}{Deprecated. Use \code{.width} instead.}
 
 \item{x}{vector to summarize (for interval functions: \code{qi} and \code{hdi})}
+
+\item{density}{For \code{\link[=hdi]{hdi()}} and \code{\link[=Mode]{Mode()}}, the kernel density estimator to use, either as
+a function (e.g. \code{\link{density_bounded}}, \code{\link{density_unbounded}}) or as a string giving the
+suffix to a function that starts with \code{density_} (e.g. \code{"bounded"} or \code{"unbounded"}). The
+default, \code{"bounded"}, uses the bounded density estimator of \code{\link[=density_bounded]{density_bounded()}}, which
+itself estimates the bounds of the distribution, and tends to work well on both bounded
+and unbounded data.}
 }
 \value{
 A data frame containing point summaries and intervals, with at least one column corresponding
