@@ -232,4 +232,35 @@ test_that("geom_lineribbon without line works", {
 })
 
 
+# missing data in ymin / ymax is removed when draw order is determined --------
 
+test_that("geom_lineribbon with some NA ymin/ymax has correct draw order", {
+  skip_if_no_vdiffr()
+
+  df = tibble(
+    x = 1:6,
+    y = (1:6)^2/2
+  )
+
+  # make intervals on first point NA so that line (but not intervals)
+  # should show up and draw order (95% then 50%) should still be correct
+  df = rbind(
+    mutate(df,
+      lower = c(NA, y[-1] - 6/(6:2)),
+      upper = c(NA, y[-1] + 6/(6:2)),
+      .width = .5
+    ),
+    mutate(df,
+      lower = c(NA, y[-1] - 12/(6:2)),
+      upper = c(NA, y[-1] + 12/(6:2)),
+      .width = .9
+    )
+  )
+
+  vdiffr::expect_doppelganger("geom_lineribbon with NAs in ymin / ymax",
+    df %>%
+      ggplot(aes(x = x, y = y, ymin = lower, ymax = upper)) +
+      geom_lineribbon() +
+      scale_fill_brewer()
+  )
+})

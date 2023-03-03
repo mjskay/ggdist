@@ -210,7 +210,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
       dlply_(grouping_columns, function(d) {
         group_grobs = list(GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes))
         list(
-          width = mean(abs(d[[xmax]] - d[[xmin]])),
+          width = mean(abs(d[[xmax]] - d[[xmin]]), na.rm = TRUE),
           grobs = group_grobs
         )
       })
