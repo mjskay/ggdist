@@ -22,6 +22,10 @@ New features and enhancements:
   deviation priors, for example, giving a better solution to #20.
 * `marginalize_lkjcorr()` adjusts the `.dist_obj` column output by `parse_dist()`
   in addition to the `.dist` and `.args` columns.
+* `geom_lineribbon()` now obeys the `order` aesthetic, allowing you to arbitrarily
+  set the draw order of ribbons (#171). Enabled by this change, `stat_lineribbon()` 
+  now sets `order = after_stat(level)` by default, making its draw order more correct
+  by ensuring all ribbons of the same level are drawn together.
 
 Bug fixes:
 
