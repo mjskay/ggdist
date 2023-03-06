@@ -32,6 +32,8 @@ Bug fixes:
 * Ensure scale transformations work even when no slab is present; e.g. in
   `stat_interval()`. (#168)
 * Ensure `curve_interval()` works with `posterior::rvar`s. (#158)
+* `geom_lineribbon()` draw order is now correct even when some portions of a 
+  ribbon has `NA` widths. (#171)
 
 
 # ggdist 3.2.1
