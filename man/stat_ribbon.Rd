@@ -208,6 +208,12 @@ the following aesthetics are supported by the underlying geom:
 \item{\code{xmax}: Right edge of the ribbon sub-geometry (if \code{orientation = "horizontal"}).}
 \item{\code{ymin}: Lower edge of the ribbon sub-geometry (if \code{orientation = "vertical"}).}
 \item{\code{ymax}: Upper edge of the ribbon sub-geometry (if \code{orientation = "vertical"}).}
+\item{\code{order}: The order in which ribbons are drawn. Ribbons with the smallest mean value of \code{order}
+are drawn first (i.e., will be drawn below ribbons with larger mean values of \code{order}). If
+\code{order} is not supplied to \code{\link[=geom_lineribbon]{geom_lineribbon()}}, \code{-abs(xmax - xmin)} or \code{-abs(ymax - ymax)}
+(depending on \code{orientation}) is used, having the effect of drawing the widest (on average)
+ribbons on the bottom. \code{\link[=stat_lineribbon]{stat_lineribbon()}} uses \code{order = after_stat(level)} by default,
+causing the ribbons generated from the largest \code{.width} to be drawn on the bottom.}
 }
 
 \strong{Color aesthetics}

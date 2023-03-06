@@ -94,7 +94,13 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
       xmin = 'Left edge of the ribbon sub-geometry (if `orientation = "horizontal"`).',
       xmax = 'Right edge of the ribbon sub-geometry (if `orientation = "horizontal"`).',
       ymin = 'Lower edge of the ribbon sub-geometry (if `orientation = "vertical"`).',
-      ymax = 'Upper edge of the ribbon sub-geometry (if `orientation = "vertical"`).'
+      ymax = 'Upper edge of the ribbon sub-geometry (if `orientation = "vertical"`).',
+      order = 'The order in which ribbons are drawn. Ribbons with the smallest mean value of `order`
+        are drawn first (i.e., will be drawn below ribbons with larger mean values of `order`). If
+        `order` is not supplied to [geom_lineribbon()], `-abs(xmax - xmin)` or `-abs(ymax - ymax)`
+        (depending on `orientation`) is used, having the effect of drawing the widest (on average)
+        ribbons on the bottom. [stat_lineribbon()] uses `order = after_stat(level)` by default,
+        causing the ribbons generated from the largest `.width` to be drawn on the bottom.'
     ),
 
     "Color aesthetics" = list(
@@ -117,7 +123,8 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     linetype = 1,
     fill = NULL,
     fill_ramp = NULL,
-    alpha = NA
+    alpha = NA,
+    order = NULL
   ),
 
   default_key_aes = aes(
@@ -136,7 +143,7 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
 
   required_aes = c("x|y"),
 
-  optional_aes = c("ymin", "ymax", "xmin", "xmax", "fill_ramp"),
+  optional_aes = c("ymin", "ymax", "xmin", "xmax", "fill_ramp", "order"),
 
 
   ## params ------------------------------------------------------------------
@@ -205,20 +212,28 @@ GeomLineribbon = ggproto("GeomLineribbon", AbstractGeom,
     if (isTRUE(step)) step = "mid"
     if (!isFALSE(step)) data = ddply_(data, grouping_columns, stepify, x = y, direction = step)
 
+    # determine order we will draw ribbons in (smallest order last)
+    data[["order"]] = if (is.null(data[["order"]])) {
+      # this is a slightly hackish approach to getting the draw order correct for the common
+      # use case of fit lines / curves: when order is not specified explicitly, draw the ribbons
+      # in order from largest mean width to smallest mean width, so that the widest intervals
+      # are on the bottom.
+      -abs(data[[xmax]] - data[[xmin]])
+    } else {
+      xtfrm(data[["order"]])
+    }
+
     # draw all the ribbons
     ribbon_grobs = data %>%
       dlply_(grouping_columns, function(d) {
         group_grobs = list(GeomRibbon$draw_panel(transform(d, linewidth = NA), panel_scales, coord, flipped_aes = flipped_aes))
         list(
-          width = mean(abs(d[[xmax]] - d[[xmin]]), na.rm = TRUE),
+          order = mean(d[["order"]], na.rm = TRUE),
           grobs = group_grobs
         )
       })
 
-    # this is a slightly hackish approach to getting the draw order correct for the common
-    # use case of fit lines / curves: draw the ribbons in order from largest mean width to
-    # smallest mean width, so that the widest intervals are on the bottom.
-    ribbon_grobs = ribbon_grobs[order(-map_dbl_(ribbon_grobs, `[[`, "width"))] %>%
+    ribbon_grobs = ribbon_grobs[order(map_dbl_(ribbon_grobs, `[[`, "order"))] %>%
       lapply(`[[`, i = "grobs") %>%
       unlist(recursive = FALSE) %||%
       list()

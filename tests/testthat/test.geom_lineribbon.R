@@ -5,6 +5,7 @@
 
 library(dplyr)
 library(tidyr)
+library(distributional)
 
 
 
@@ -262,5 +263,30 @@ test_that("geom_lineribbon with some NA ymin/ymax has correct draw order", {
       ggplot(aes(x = x, y = y, ymin = lower, ymax = upper)) +
       geom_lineribbon() +
       scale_fill_brewer()
+  )
+})
+
+
+# ribbon order ------------------------------------------------------------
+
+test_that("stat_lineribbon draw order works", {
+  skip_if_no_vdiffr()
+
+  p = data.frame(
+    x = c(1:10, 1:10),
+    y = c(1:10, 10:1),
+    sd = rep(c(1, 2), each = 10),
+    g = rep(c("a","b"), each = 10)
+  ) %>%
+    ggplot(aes(x = x, ydist = dist_normal(y, sd), fill = g, fill_ramp = after_stat(level)))
+
+  # interleaving levels...
+  vdiffr::expect_doppelganger("default draw order interleaves levels",
+    p + stat_lineribbon()
+  )
+
+  # group over group
+  vdiffr::expect_doppelganger("draw group by group",
+    p + stat_lineribbon(aes(order = after_stat(interaction(level, group))))
   )
 })

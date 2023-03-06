@@ -259,7 +259,7 @@ test_that("NAs and Infs in x work", {
         geom_slab(aes(y = "NA", x = c(NA,2:4,NA), thickness = c(0,1,2,0.5,0.25)), color = "black") +
         geom_slab(aes(y = "Inf", x = c(-Inf,2:4,Inf), thickness = c(0,1,2,0.5,0.25)), color = "black")
     ),
-    "Removed 2 rows containing missing values"
+    "Removed 2 rows\\s+containing\\s+missing\\s+values"
   )
 })
 

@@ -346,6 +346,24 @@ as above) is to use commutative blending modes available in R > 4.2. The
 blending modes, and its documentation includes examples of their use with 
 `stat_lineribbon()`.
 
+In some situations, you may also try controlling the draw order of ribbons directly,
+by adjusting the `order` aesthetic. By default, if the `order` aesthetic is not 
+specified, `geom_lineribbon()` draws ribbons that are widest on average at the
+bottom. `stat_lineribbon()`, by default, is a bit smarter, and sets the `order`
+aesthetic to `after_stat(level)`, using the `level` computed variable to draw 
+ribbons in order of their confidence / probability mass. An alternative might
+be to draw all ribbons from the same group on top of each other, like so:
+
+```{r stat_lineribbon_2groups_group_order, fig.width = tiny_width, fig.height = tiny_height}
+df_2groups %>%
+  ggplot(aes(x = x, y = y, fill = g)) +
+  stat_lineribbon(aes(
+    fill_ramp = after_stat(level),
+    order = after_stat(interaction(level, group))
+  )) +
+  labs(title = "stat_lineribbon(aes(order = after_stat(interaction(level, group))))")
+```
+
 ## Lineribbons on analytical distributions
 
 Lineribbons can also be applied to analytical distributions. This use case often arises with confidence distributions

@@ -8,7 +8,8 @@ StatLineribbon = ggproto("StatLineribbon", StatPointinterval,
   default_aes = defaults(aes(
     datatype = "interval",
     group = after_stat(level),
-    fill = after_stat(level)
+    fill = after_stat(level),
+    order = after_stat(level)
   ), StatPointinterval$default_aes),
 
   default_params = defaults(list(
