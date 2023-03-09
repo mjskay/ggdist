@@ -384,7 +384,9 @@ find_bounds_cooke = function(x) {
   rev_i = seq.int(n, by = -1, length.out = n_nonzero)
   x_1_coefs = exp(log1p((1 - i)/n) * n) - exp(log1p(-i/n) * n)
   c(
-    2 * x[1] - x_1_coefs %*% x[i],
-    2 * x[n] - x_1_coefs %*% x[rev_i]
+    # need min and max here in case floating point error produces bounds
+    # that are just slightly inside range(x)
+    min(2 * x[1] - x_1_coefs %*% x[i], x[1]),
+    max(2 * x[n] - x_1_coefs %*% x[rev_i], x[n])
   )
 }

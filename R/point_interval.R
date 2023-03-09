@@ -425,8 +425,8 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, density = "bounded", ...
 
   intervals = .hdi_numeric(x, .width = .width, density = density)
   if (nrow(intervals) == 1) {
-    # if the result is unimodal, switch to the method below (which will be more accurate)
-    intervals = .hdci_function(ggdist::weighted_quantile_fun(x, type = 5), .width = .width)
+    # if the result is unimodal, switch to hdci (which will be more accurate)
+    intervals = hdci_.numeric(x, .width = .width)
   }
   intervals
 }
