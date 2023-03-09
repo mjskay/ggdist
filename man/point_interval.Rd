@@ -233,15 +233,12 @@ equi-tailed interval) as a 1x2 matrix.
 density interval). \strong{Note:} If the distribution is multimodal, \code{hdi} may return multiple
 intervals for each probability level (these will be spread over rows). You may wish to use
 \code{hdci} (below) instead if you want a single highest-density interval, with the caveat that when
-the distribution is multimodal \code{hdci} is not a highest-density interval. Internally \code{hdi} uses
-\code{\link[HDInterval:hdi]{HDInterval::hdi()}} with \code{allowSplit = TRUE} (when multimodal) and with
-\code{allowSplit = FALSE} (when not multimodal).
+the distribution is multimodal \code{hdci} is not a highest-density interval.
 
-\code{hdci} yields the highest-density \emph{continuous} interval. \strong{Note:} If the distribution
-is multimodal, this may not actually be the highest-density interval (there may be a higher-density
-discontinuous interval). Internally \code{hdci} uses
-\code{\link[HDInterval:hdi]{HDInterval::hdi()}} with \code{allowSplit = FALSE}; see that function for more
-information on multimodality and continuous versus discontinuous intervals.
+\code{hdci} yields the highest-density \emph{continuous} interval, also known as the shortest
+probability interval. \strong{Note:} If the distribution is multimodal, this may not actually
+be the highest-density interval (there may be a higher-density
+discontinuous interval, which can be found using \code{hdi}).
 
 \code{ll} and \code{ul} yield lower limits and upper limits, respectively (where the opposite
 limit is set to either \code{Inf} or \code{-Inf}).

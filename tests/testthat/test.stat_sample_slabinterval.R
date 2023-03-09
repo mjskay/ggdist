@@ -96,25 +96,24 @@ test_that("scale transformation works", {
   skip_if_no_vdiffr()
 
 
-
-  p_log = data.frame(x = qlnorm(ppoints(200), log(10), 2 * log(10))) %>%
+  p_log = data.frame(x = 10^c(-1, -0.55, -0.35, -0.15, -0.05, -0.01, 0.01, 0.05, 0.15, 0.35, 0.55, 1)) %>%
     ggplot(aes(y = "a", x = x)) +
     scale_x_log10(breaks = 10^seq(-5,7, by = 2))
 
   vdiffr::expect_doppelganger("halfeyeh log scale transform",
-    p_log + stat_halfeye(point_interval = mode_hdci, n = 20)
+    p_log + stat_halfeye(point_interval = mode_hdci, n = 20, density = density_unbounded(kernel = "tri"), .width = .5)
   )
 
   vdiffr::expect_doppelganger("ccdfintervalh log scale transform",
-    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 20)
+    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 10, .width = .5)
   )
 
   vdiffr::expect_doppelganger("cdfintervalh log scale transform",
-    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 20)
+    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 10, .width = .5)
   )
 
   vdiffr::expect_doppelganger("histintervalh log scale transform",
-    p_log + stat_histinterval(point_interval = median_qi, n = 20)
+    p_log + stat_histinterval(point_interval = median_qi, n = 10, .width = .5)
   )
 
 })

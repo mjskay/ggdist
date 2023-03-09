@@ -51,15 +51,12 @@ globalVariables(c("y", "ymin", "ymax"))
 #' density interval). **Note:** If the distribution is multimodal, `hdi` may return multiple
 #' intervals for each probability level (these will be spread over rows). You may wish to use
 #' `hdci` (below) instead if you want a single highest-density interval, with the caveat that when
-#' the distribution is multimodal `hdci` is not a highest-density interval. Internally `hdi` uses
-#' [HDInterval::hdi()] with `allowSplit = TRUE` (when multimodal) and with
-#' `allowSplit = FALSE` (when not multimodal).
+#' the distribution is multimodal `hdci` is not a highest-density interval.
 #'
-#' `hdci` yields the highest-density *continuous* interval. **Note:** If the distribution
-#' is multimodal, this may not actually be the highest-density interval (there may be a higher-density
-#' discontinuous interval). Internally `hdci` uses
-#' [HDInterval::hdi()] with `allowSplit = FALSE`; see that function for more
-#' information on multimodality and continuous versus discontinuous intervals.
+#' `hdci` yields the highest-density *continuous* interval, also known as the shortest
+#' probability interval. **Note:** If the distribution is multimodal, this may not actually
+#' be the highest-density interval (there may be a higher-density
+#' discontinuous interval, which can be found using `hdi`).
 #'
 #' `ll` and `ul` yield lower limits and upper limits, respectively (where the opposite
 #' limit is set to either `Inf` or `-Inf`).
@@ -428,9 +425,8 @@ hdi_.numeric = function(x, .width = .95, na.rm = FALSE, density = "bounded", ...
 
   intervals = .hdi_numeric(x, .width = .width, density = density)
   if (nrow(intervals) == 1) {
-    # the above method tends to be a little conservative on unimodal distributions, so if the
-    # result is unimodal, switch to the method below (which will be slightly narrower)
-    intervals = matrix(HDInterval::hdi(x, credMass = .width), ncol = 2)
+    # if the result is unimodal, switch to the method below (which will be more accurate)
+    intervals = .hdci_function(ggdist::weighted_quantile_fun(x, type = 5), .width = .width)
   }
   intervals
 }
@@ -515,7 +511,7 @@ Mode.default = function(x, na.rm = FALSE, density = "bounded", ...) {
     ux[which.max(tabulate(match(x, ux)))]
   } else {
     # for the continuous case
-    d = density(x)
+    d = density(x, n = 2001)
     d$x[which.max(d$y)]
   }
 }
@@ -576,9 +572,22 @@ hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
     return(matrix(range(x), ncol = 2))
   }
 
-  intervals = HDInterval::hdi(x, credMass = .width)
-  matrix(intervals, ncol = 2)
+  .hdci_function(ggdist::weighted_quantile_fun(x, na.rm = na.rm, type = 5), .width = .width)
 }
+
+#' find the hdci using a quantile function
+#' @noRd
+.hdci_function = function(quantile_fun, .width = .95) {
+  p_lower = optimize(
+    function(p) quantile_fun(p + .width) - quantile_fun(p),
+    lower = 0,
+    upper = 1 - .width,
+    tol = sqrt(.Machine$double.eps)
+  )$minimum
+  endpoints = quantile_fun(c(p_lower, p_lower + .width))
+  matrix(endpoints, ncol = 2)
+}
+
 #' @export
 hdci_.rvar = function(x, ...) {
   if (length(x) > 1) {
@@ -602,9 +611,7 @@ hdci_.distribution = function(x, .width = .95, na.rm = FALSE, ...) {
     return(matrix(quantile(x, c(0, 1))[[1]], ncol = 2))
   }
 
-  #TODO: after #114, pass na.rm to quantile here
-  intervals = HDInterval::hdi(function(p) quantile(x, p), credMass = .width)
-  matrix(intervals, ncol = 2)
+  .hdci_function(function(p) quantile(x, p)[[1]], .width = .width)
 }
 
 #' @export

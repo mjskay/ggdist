@@ -249,8 +249,9 @@ test_that("point_interval works on vectors", {
 
 test_that("various point summaries and intervals give correct numbers", {
   expect_equal(
-    median_hdci(c(0:6, 1:5, 2:4, 2), .width = .6),
-    data.frame(y = 3, ymin = 2, ymax = 4, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
+    median_hdci(c(0:6, 1:3 + 0.25, 1:3 + 0.5, 4.5, 5, 2), .width = .625),
+    data.frame(y = 2.75, ymin = 1, ymax = 4, .width = 0.625, .point = "median", .interval = "hdci", stringsAsFactors = FALSE),
+    tolerance = 1e-7
   )
 
   expect_equal(
@@ -259,18 +260,21 @@ test_that("various point summaries and intervals give correct numbers", {
   )
 
   expect_equal(
-    mode_hdi(c(0:6, 1:5, 2:4, 2), .width = .6, .simple_names = TRUE),
-    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
+    mode_hdi(c(0:6, 0:5 + 0.5, 2:4), .width = .5, .simple_names = TRUE),
+    data.frame(.value = 3, .lower = 1.75, .upper = 4.25, .width = 0.5, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE),
+    tolerance = 1e-7
   )
 
   expect_equal(
-    mode_hdci(c(0:6, 1:5, 2:4, 2), .width = .6, .simple_names = TRUE),
-    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
+    mode_hdci(c(0:6, 0:5 + 0.5, 2:4), .width = .5, .simple_names = TRUE),
+    data.frame(.value = 3, .lower = 1.75, .upper = 4.25, .width = 0.5, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE),
+    tolerance = 1e-7
   )
 
   expect_equal(
-    mean_hdci(c(0:6, 1:5, 2:4, 2), .width = .6),
-    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
+    mean_hdci(c(0:6, 0:5 + 0.5, 2:4), .width = .5),
+    data.frame(y = 3, ymin = 1.75, ymax = 4.25, .width = 0.5, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE),
+    tolerance = 1e-7
   )
 
 })
@@ -285,7 +289,7 @@ test_that("attempting to use hdi with multiple multimodal columns simultaneously
 test_that("NAs are handled correctly in point_interval", {
   expect_equal(
     median_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
-    data.frame(y = 3, ymin = 2, ymax = 4, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(y = 3, ymin = 2, ymax = 5, .width = 0.6, .point = "median", .interval = "hdci", stringsAsFactors = FALSE)
   )
 
   expect_equal(
@@ -295,17 +299,17 @@ test_that("NAs are handled correctly in point_interval", {
 
   expect_equal(
     mode_hdi(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = TRUE),
-    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
+    data.frame(.value = 2, .lower = 2, .upper = 5, .width = 0.6, .point = "mode", .interval = "hdi", stringsAsFactors = FALSE)
   )
 
   expect_equal(
     mode_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, .simple_names = TRUE, na.rm = TRUE),
-    data.frame(.value = 2, .lower = 2, .upper = 4, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(.value = 2, .lower = 2, .upper = 5, .width = 0.6, .point = "mode", .interval = "hdci", stringsAsFactors = FALSE)
   )
 
   expect_equal(
     mean_hdci(c(0:6, 1:5, 2:4, 2, NA), .width = .6, na.rm = TRUE),
-    data.frame(y = 2.9375, ymin = 2, ymax = 4, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
+    data.frame(y = 2.9375, ymin = 2, ymax = 5, .width = 0.6, .point = "mean", .interval = "hdci", stringsAsFactors = FALSE)
   )
 
   expect_equal(
@@ -381,11 +385,11 @@ test_that("pointintervals work on rvars", {
   )
   expect_equal(
     mean_hdi(tibble(x), .width = 0.6),
-    tibble(x = c(2.9375,4.9375), .lower = c(2,4), .upper = c(4,6), .width = 0.6, .point = "mean", .interval = "hdi")
+    tibble(x = c(2.9375,4.9375), .lower = c(2,4), .upper = c(5,7), .width = 0.6, .point = "mean", .interval = "hdi")
   )
   expect_equal(
     mode_hdci(tibble(x), .width = 0.6),
-    tibble(x = c(2,4), .lower = c(2,4), .upper = c(4,6), .width = 0.6, .point = "mode", .interval = "hdci")
+    tibble(x = c(2,4), .lower = c(2,4), .upper = c(5,7), .width = 0.6, .point = "mode", .interval = "hdci")
   )
 })
 

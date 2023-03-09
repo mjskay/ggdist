@@ -13,6 +13,7 @@ New features and enhancements:
 * `density_bounded()` now estimates bounds from the data when not provided
   (i.e. when one of `bounds` is `NA`).
 * Improved `Mode()` and `hdi()` estimators based on bounded density estimator.
+* Improved `hdci()` estimator using quantile estimation.
 * New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs
   created with `geom_slabinterval()` or `stat_slabinterval()`. See example
   in `vignette("slabinterval")`. (#58, #124)

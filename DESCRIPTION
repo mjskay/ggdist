@@ -26,7 +26,6 @@ Imports:
     rlang (>= 0.3.0),
     scales,
     grid,
-    HDInterval,
     tibble,
     vctrs,
     withr,
