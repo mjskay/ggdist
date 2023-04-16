@@ -572,6 +572,8 @@ hdci_.numeric = function(x, .width = .95, na.rm = FALSE, ...) {
     return(matrix(range(x), ncol = 2))
   }
 
+  # d = density_bounded(x, na.rm = na.rm, adjust = 0.1)
+  # .hdci_function(ggdist::weighted_quantile_fun(d$x, weights = d$y, type = 5), .width = .width)
   .hdci_function(ggdist::weighted_quantile_fun(x, na.rm = na.rm, type = 5), .width = .width)
 }
 

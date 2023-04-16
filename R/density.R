@@ -162,6 +162,7 @@ density_unbounded = function(
   # need to apply get_expr over match.call() instead of just using match.call()
   # to remove tildes from the call created by partial application
   d$call = as.call(lapply(match.call(), get_expr))
+  d$cdf = weighted_ecdf(x, weights)(d$x)
   d
 }
 
@@ -297,14 +298,14 @@ density_bounded = function(
 
   # reflect tails back into middle, if needed
   mid = seq(1 + left_bounded * (n - 1), length.out = n)
-  x = d$x[mid]
-  y = d$y[mid]
-  if (left_bounded) y = y + d$y[n:1]
-  if (right_bounded) y = y + d$y[seq(length(d$y), by = -1, length.out = n)]
+  d$x = d$x[mid]
+  f = d$y[mid]
+  if (left_bounded) f = f + d$y[n:1]
+  if (right_bounded) f = f + d$y[seq(length(d$y), by = -1, length.out = n)]
 
-  d$x = x
-  d$y = y
+  d$y = f
   d$call = as.call(lapply(match.call(), get_expr))
+  d$cdf = weighted_ecdf(x, weights)(d$x)
   d
 }
 

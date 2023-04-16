@@ -9,6 +9,8 @@
 #'   - `call`: The call used to produce the result, as a quoted expression.
 #'   - `data.name`: The deparsed name of the `x` input argument.
 #'   - `has.na`: Always `FALSE` (for compatibility).
+#'   - `cdf`: Values of the (possibly weighted) empirical cumulative distribution
+#'     function at `x`. See `weighted_ecdf()`.
 #'
 #' This allows existing methods (like `print()` and `plot()`) to work if desired.
 #' This output format (and in particular, the `x` and `y` components) is also

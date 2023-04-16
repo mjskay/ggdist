@@ -239,7 +239,7 @@ compute_slab_sample = function(
     data.frame(
       .input = trans$inverse(d$x),
       pdf = d$y,
-      cdf = cdf_fun(d$x)
+      cdf = d$cdf %||% cdf_fun(d$x)
     )
   }
 

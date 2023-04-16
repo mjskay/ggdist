@@ -58,6 +58,8 @@ An object of class \code{"density"}, mimicking the output format of
 \item \code{call}: The call used to produce the result, as a quoted expression.
 \item \code{data.name}: The deparsed name of the \code{x} input argument.
 \item \code{has.na}: Always \code{FALSE} (for compatibility).
+\item \code{cdf}: Values of the (possibly weighted) empirical cumulative distribution
+function at \code{x}. See \code{weighted_ecdf()}.
 }
 
 This allows existing methods (like \code{print()} and \code{plot()}) to work if desired.
