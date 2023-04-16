@@ -144,6 +144,7 @@ Cooke, P. (1979). Statistical inference for bounds of random variables.
 \seealso{
 Other density estimators: 
 \code{\link{density_auto}()},
+\code{\link{density_histogram}()},
 \code{\link{density_unbounded}()}
 }
 \concept{density estimators}

@@ -310,6 +310,115 @@ density_bounded = function(
 }
 
 
+#' Histogram density estimator
+#'
+#' Histogram density estimator.
+#' Supports [automatic partial function application][automatic-partial-functions].
+#'
+#' @param x numeric vector containing a sample to compute a density estimate for.
+#' @param weights optional numeric vector of weights to apply to `x`.
+#' @param breaks Determines the breakpoints defining bins. Similar to the `breaks`
+#' argument to [graphics::hist()]. One of:
+#'   - A scalar (length-1) numeric giving the number of bins
+#'   - A vector numeric giving the breakpoints between histogram bins
+#'   - A function taking `x` and `weights` and returning either the
+#'     number of bins or a vector of breakpoints
+#'   - A string giving the suffix of a function that starts with
+#'     `"breaks_"`. \pkg{ggdist} provides weighted implementations of the
+#'     `"Sturges"`, `"scott"`, and `"FD"` break-finding algorithms from
+#'     [graphics::hist()].
+#' @param outline_bars Should outlines in between the bars (i.e. density values of
+#' 0) be included?
+#' @param na.rm Should missing (`NA`) values in `x` be removed?
+#' @param ... Additional arguments (ignored).
+#' @param range_only If `TRUE`, the range of the output of this density estimator
+#' is computed and is returned in the `$x` element of the result, and `c(NA, NA)`
+#' is returned in `$y`. This gives a faster way to determine the range of the output
+#' than `density_XXX(n = 2)`.
+#' @template returns-density
+#' @family density estimators
+#' @examples
+#' library(distributional)
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' # For compatibility with existing code, the return type of density_unbounded()
+#' # is the same as stats::density(), ...
+#' set.seed(123)
+#' x = rbeta(5000, 1, 3)
+#' d = density_histogram(x)
+#' d
+#'
+#' # ... thus, while designed for use with the `density` argument of
+#' # stat_slabinterval(), output from density_histogram() can also be used with
+#' # base::plot():
+#' plot(d)
+#'
+#' # here we'll use the same data as above with stat_slab():
+#' data.frame(x) %>%
+#'   ggplot() +
+#'   stat_slab(
+#'     aes(xdist = dist), data = data.frame(dist = dist_beta(1, 3)),
+#'     alpha = 0.25
+#'   ) +
+#'   stat_slab(aes(x), density = "histogram", fill = NA, color = "#d95f02", alpha = 0.5) +
+#'   scale_thickness_shared() +
+#'   theme_ggdist()
+#' @importFrom rlang as_label enexpr get_expr
+#' @export
+density_histogram = function(
+  x, weights = NULL,
+  breaks = "Sturges",
+  outline_bars = FALSE,
+  na.rm = FALSE,
+  ...,
+  range_only = FALSE
+) {
+  if (missing(x)) return(partial_self("density_histogram"))
+
+  x_label = as_label(enexpr(x))
+  x = check_na(x, na.rm)
+
+  # TODO: use weighted_hist
+  h = hist(x, breaks = breaks, plot = FALSE)
+  input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
+  input_2 = h$breaks[-1]                 # second edge of bin
+  input_ = (input_1 + input_2)/2   # center of bin
+
+  cdf_fun = weighted_ecdf(x, weights)
+  cdf_1 = cdf_fun(input_1)
+  cdf_2 = cdf_fun(input_2)
+  cdf_ = cdf_fun(input_)
+
+  if (!outline_bars) {
+    # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
+    # us the bin endpoints --- then just need to repeat the same value of density
+    # for both endpoints of the same bin
+    input = as.vector(rbind(input_1, input_, input_, input_2))
+    pdf = as.vector(rep(h$density, each = 4))
+    cdf = as.vector(rbind(cdf_1, cdf_1, cdf_, cdf_2))
+  } else {
+    # have to return to 0 in between each bar so that bar outlines are drawn
+    input = as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))
+    pdf = as.vector(rbind(0, h$density, h$density, h$density, h$density, 0))
+    cdf = as.vector(rbind(cdf_1, cdf_1, cdf_1, cdf_, cdf_2, cdf_2))
+  }
+
+  structure(list(
+    x = input,
+    y = pdf,
+    bw = if (h$equidist) diff(h$breaks[1:2]) else mean(diff(h$breaks)),
+    n = length(x),
+    # need to apply get_expr over match.call() instead of just using match.call()
+    # to remove tildes from the call created by partial application
+    call = as.call(lapply(match.call(), get_expr)),
+    data.name = x_label,
+    has.na = FALSE,
+    cdf = cdf
+  ), class = "density")
+}
+
+
 # helpers -----------------------------------------------------------------
 
 get_bandwidth = function(x, bandwidth) {
