@@ -44,7 +44,7 @@ test_that("shortcut stat_slabinterval documentation generator works", {
   stat_output = paste0(rd_slabinterval_shortcut_stat(
     "halfeye", geom_name = "slabinterval", chart_type = "half-eye", example_layers = "scale_fill_brewer()"
   ), collapse = "\n")
-  expect_match(stat_output, "`f`: For slabs", fixed = TRUE)
+  expect_match(stat_output, "`f`: (deprecated) For slabs", fixed = TRUE)
   expect_match(stat_output, "stat_halfeye() +\n  scale_fill_brewer()", fixed = TRUE)
 
 })

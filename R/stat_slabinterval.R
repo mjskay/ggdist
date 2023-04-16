@@ -309,8 +309,10 @@ compute_interval_slabinterval = function(
 #' @inheritParams geom_slabinterval
 #' @param geom Use to override the default connection between
 #' [stat_slabinterval()] and [geom_slabinterval()]
-#' @param slab_type The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
-#' cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`).
+#' @param slab_type (deprecated) The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
+#' cumulative distribution function (`"cdf"`), or complementary CDF (`"ccdf"`). Instead of using `slab_type` to
+#' change `f` and then mapping `f` onto an aesthetic, it is now recommended to simply map the corresponding
+#' computed variable (e.g. `pdf`, `cdf`, or  `1 - cdf`) directly onto the desired aesthetic.
 #' @param p_limits Probability limits (as a vector of size 2) used to determine the lower and upper
 #' limits of the slab. E.g., if this is `c(.001, .999)`, then a slab is drawn
 #' for the distribution from the quantile at `p = .001` to the quantile at `p = .999`. If the lower
@@ -319,11 +321,11 @@ compute_interval_slabinterval = function(
 #' `p_limits` is `c(NA, NA)` on a gamma distribution the effective value of `p_limits` would be
 #' `c(0, .999)` since the gamma distribution is defined on `(0, Inf)`; whereas on a normal distribution
 #' it would be equivalent to `c(.001, .999)` since the normal distribution is defined on `(-Inf, Inf)`.
-#' @param outline_bars For sample data (if `slab_type` is `"histogram"`) and for discrete analytical
+#' @param outline_bars For sample data (if `density` is `"histogram"`) and for discrete analytical
 #' distributions (whose slabs are drawn as histograms), determines
 #' if outlines in between the bars are drawn when the `slab_color` aesthetic is used. If `FALSE`
 #' (the default), the outline is drawn only along the tops of the bars; if `TRUE`, outlines in between
-#' bars are also drawn.
+#' bars are also drawn. See [density_histogram()].
 #' @param density Density estimator for sample data. One of:
 #'  - A function which takes a numeric vector and returns a list with elements
 #'    `x` (giving grid points for the density estimator) and `y` (the
@@ -331,11 +333,11 @@ compute_interval_slabinterval = function(
 #'    following this format, including [density_unbounded()] and
 #'    [density_bounded()]. This format is also compatible with [stats::density()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
-#'    e.g. `"bounded"` for `[density_bounded()]`. Defaults to `"auto"`, i.e.
-#'    [density_auto()], which uses [density_bounded()] if `trim` is `TRUE` and
-#'    [density_unbounded()] if `trim` is `FALSE`.
-#' @param adjust If `slab_type` is `"pdf"`, bandwidth for the density estimator for sample data
-#' is adjusted by multiplying it by this value. See [density()] for more information.
+#'    e.g. `"bounded"` for `[density_bounded()]` or `histogram` for [density_histogram()].
+#'    Defaults to `"auto"`, i.e. [density_auto()], which uses [density_bounded()]
+#'    if `trim` is `TRUE` and [density_unbounded()] if `trim` is `FALSE`.
+#' @param adjust Passed to `density`: the bandwidth for the density estimator for sample data
+#' is adjusted by multiplying it by this value. See e.g. [density_auto()] for more information.
 #' @param trim For sample data, should the density estimate be trimmed? How the estimate is
 #' trimmed depends on the density estimator; see the `density` parameter. In the default
 #' configuration (`density = "auto"`), `trim = TRUE` will use a bounded density estimator
@@ -343,8 +345,8 @@ compute_interval_slabinterval = function(
 #' use an unbounded density estimator ([density_unbounded()]). Default `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be length two to control expansion to the lower and upper limit respectively.
-#' @param breaks If `slab_type` is `"histogram"`, the `breaks` parameter that is passed to
-#' [hist()] to determine where to put breaks in the histogram (for sample data).
+#' @param breaks Passed to `density`. If `density` is `"histogram"`, the `breaks` parameter
+#' will determine where to put breaks in the histogram (for sample data). See [density_histogram()].
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits

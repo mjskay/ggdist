@@ -311,8 +311,10 @@ for the PDF at the lower and upper ends of the interval.
 If \code{options("ggdist.experimental.slab_data_in_intervals")} is \code{TRUE}:
 For intervals, the CDF at the point summary; intervals also have \code{cdf_min} and \code{cdf_max}
 for the CDF at the lower and upper ends of the interval.
-\item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-determined by \code{slab_type}.
+\item \code{f}: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by \code{slab_type}. Instead of using \code{slab_type} to change \code{f} and then mapping \code{f} onto an
+aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. \code{pdf}, \code{cdf}, or
+\code{1 - cdf} directly onto the desired aesthetic.
 \item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
 an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
 }

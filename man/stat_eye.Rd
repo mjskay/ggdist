@@ -109,8 +109,10 @@ aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continu
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 }}
 
-\item{slab_type}{The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}).}
+\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
+cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using \code{slab_type} to
+change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the corresponding
+computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
 
 \item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
 limits of the slab. E.g., if this is \code{c(.001, .999)}, then a slab is drawn
@@ -129,13 +131,13 @@ corresponding densities). \pkg{ggdist} provides a family of functions
 following this format, including \code{\link[=density_unbounded]{density_unbounded()}} and
 \code{\link[=density_bounded]{density_bounded()}}. This format is also compatible with \code{\link[stats:density]{stats::density()}}.
 \item A string giving the suffix of a function name that starts with \code{"density_"};
-e.g. \code{"bounded"} for \verb{[density_bounded()]}. Defaults to \code{"auto"}, i.e.
-\code{\link[=density_auto]{density_auto()}}, which uses \code{\link[=density_bounded]{density_bounded()}} if \code{trim} is \code{TRUE} and
-\code{\link[=density_unbounded]{density_unbounded()}} if \code{trim} is \code{FALSE}.
+e.g. \code{"bounded"} for \verb{[density_bounded()]} or \code{histogram} for \code{\link[=density_histogram]{density_histogram()}}.
+Defaults to \code{"auto"}, i.e. \code{\link[=density_auto]{density_auto()}}, which uses \code{\link[=density_bounded]{density_bounded()}}
+if \code{trim} is \code{TRUE} and \code{\link[=density_unbounded]{density_unbounded()}} if \code{trim} is \code{FALSE}.
 }}
 
-\item{adjust}{If \code{slab_type} is \code{"pdf"}, bandwidth for the density estimator for sample data
-is adjusted by multiplying it by this value. See \code{\link[=density]{density()}} for more information.}
+\item{adjust}{Passed to \code{density}: the bandwidth for the density estimator for sample data
+is adjusted by multiplying it by this value. See e.g. \code{\link[=density_auto]{density_auto()}} for more information.}
 
 \item{trim}{For sample data, should the density estimate be trimmed? How the estimate is
 trimmed depends on the density estimator; see the \code{density} parameter. In the default
@@ -146,14 +148,14 @@ use an unbounded density estimator (\code{\link[=density_unbounded]{density_unbo
 \item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
 Can be length two to control expansion to the lower and upper limit respectively.}
 
-\item{breaks}{If \code{slab_type} is \code{"histogram"}, the \code{breaks} parameter that is passed to
-\code{\link[=hist]{hist()}} to determine where to put breaks in the histogram (for sample data).}
+\item{breaks}{Passed to \code{density}. If \code{density} is \code{"histogram"}, the \code{breaks} parameter
+will determine where to put breaks in the histogram (for sample data). See \code{\link[=density_histogram]{density_histogram()}}.}
 
-\item{outline_bars}{For sample data (if \code{slab_type} is \code{"histogram"}) and for discrete analytical
+\item{outline_bars}{For sample data (if \code{density} is \code{"histogram"}) and for discrete analytical
 distributions (whose slabs are drawn as histograms), determines
 if outlines in between the bars are drawn when the \code{slab_color} aesthetic is used. If \code{FALSE}
 (the default), the outline is drawn only along the tops of the bars; if \code{TRUE}, outlines in between
-bars are also drawn.}
+bars are also drawn. See \code{\link[=density_histogram]{density_histogram()}}.}
 
 \item{point_interval}{A function from the \code{\link[=point_interval]{point_interval()}} family (e.g., \code{median_qi},
 \code{mean_qi}, \code{mode_hdi}, etc), or a string giving the name of a function from that family
@@ -271,8 +273,10 @@ for the PDF at the lower and upper ends of the interval.
 If \code{options("ggdist.experimental.slab_data_in_intervals")} is \code{TRUE}:
 For intervals, the CDF at the point summary; intervals also have \code{cdf_min} and \code{cdf_max}
 for the CDF at the lower and upper ends of the interval.
-\item \code{f}: For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
-determined by \code{slab_type}.
+\item \code{f}: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
+determined by \code{slab_type}. Instead of using \code{slab_type} to change \code{f} and then mapping \code{f} onto an
+aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. \code{pdf}, \code{cdf}, or
+\code{1 - cdf} directly onto the desired aesthetic.
 \item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
 an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
 }

@@ -379,8 +379,7 @@ density_histogram = function(
   x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
 
-  # TODO: use weighted_hist
-  h = hist(x, breaks = breaks, plot = FALSE)
+  h = weighted_hist(x, breaks = breaks)
   input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
   input_2 = h$breaks[-1]                 # second edge of bin
   input_ = (input_1 + input_2)/2   # center of bin

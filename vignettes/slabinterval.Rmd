@@ -634,7 +634,7 @@ Like the remaining shortcut stats, these stats also follow these conventions:
 
 ## Histogram + interval plots
 
-In some cases you might prefer histograms to density plots. `stat_histinterval()` provides an alternative to `stat_halfeye()` that uses histograms instead of densities; it is roughly equivalent to `stat_slabinterval(slab_type = "histogram")`:
+In some cases you might prefer histograms to density plots. `stat_histinterval()` provides an alternative to `stat_halfeye()` that uses histograms instead of densities; it is roughly equivalent to `stat_slabinterval(density = "histogram")`:
 
 ```{r stat_histinterval_horizontal, fig.width = med_width, fig.height = small_height}
 p = df %>%
@@ -695,7 +695,7 @@ Another (perhaps sorely underused) technique for visualizing distributions is cu
 
 For all of the examples above, both on sample data and analytical distributions, you can replace `[half]eye` with `[c]cdfinterval` to get a stat that creates a CDF or CCDF bar plot. 
 
-`stat_ccdfinterval()` is roughly equivalent to `stat_slabinterval(slab_type = "ccdf", justification = 0.5, side = "topleft", normalize = "none", expand = TRUE)`
+`stat_ccdfinterval()` is roughly equivalent to `stat_slabinterval(aes(thickness = after_stat(1 - cdf)), justification = 0.5, side = "topleft", normalize = "none", expand = TRUE)`
 
 ### On sample data
 
