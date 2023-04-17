@@ -203,7 +203,7 @@ test_that("incorrect side, orientation are caught", {
 
   expect_error(print(newpage = FALSE,
     p + geom_slabinterval(fill_type = "foo")
-  ), "Unknown fill_type")
+  ), "Unknown `fill_type`")
 
 })
 
