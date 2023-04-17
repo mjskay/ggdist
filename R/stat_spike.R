@@ -112,17 +112,9 @@ compute_slab_spike = function(
   pdf = pdf_fun(at)
   cdf = cdf_fun(at)
 
-  f = switch(slab_type,
-    histogram = ,
-    pdf = pdf,
-    cdf = cdf,
-    ccdf = 1 - cdf,
-    stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
-  )
-
   data.frame(
     .input = at,
-    f = pdf,
+    f = get_slab_function(slab_type, list(pdf = pdf, cdf = cdf)),
     pdf = pdf,
     cdf = cdf,
     n = s_data$n[[1]]

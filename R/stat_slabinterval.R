@@ -160,17 +160,9 @@ compute_slab_slabinterval = function(
     cdf = cdf_fun(input)
   }
 
-  f = switch(slab_type,
-    histogram = ,
-    pdf = pdf,
-    cdf = cdf,
-    ccdf = 1 - cdf,
-    stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
-  )
-
   data.frame(
     .input = input,
-    f = f,
+    f = get_slab_function(slab_type, list(pdf = pdf, cdf = cdf)),
     pdf = pdf,
     cdf = cdf,
     n = if (distr_is_sample(dist)) length(distr_get_sample(dist)) else Inf
@@ -237,14 +229,7 @@ compute_slab_sample = function(
     }
   }
 
-  slab_df[["f"]] = switch(slab_type,
-    histogram = ,
-    pdf = slab_df$pdf,
-    cdf = slab_df$cdf,
-    ccdf = 1 - slab_df$cdf,
-    stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
-  )
-
+  slab_df[["f"]] = get_slab_function(slab_type, slab_df)
   slab_df$n = length(x)
   slab_df
 }
@@ -820,4 +805,21 @@ args_from_aes = function(args = list(), ...) {
   }
 
   c(unnamed_args, named_args)
+}
+
+#' Given the slab_type parameter and a data frame or list containing `pdf` and
+#' `cdf` computed variables, return the value of the slab function (the `f`
+#' computed variable)
+#' @param slab_type string: `"pdf"`, `"cdf"`, `"histogram"`, or `"ccdf"`. If
+#' the `slab_type` is not valid, an appropriate error will be raised.
+#' @param slab_df a list or data frame containing elements `"pdf"` and `"cdf"`.
+#' @noRd
+get_slab_function = function(slab_type, slab_df) {
+  switch(slab_type,
+    histogram = ,
+    pdf = slab_df$pdf,
+    cdf = slab_df$cdf,
+    ccdf = 1 - slab_df$cdf,
+    stop0("Unknown `slab_type`: ", deparse0(slab_type), '. Must be "histogram", "pdf", "cdf", or "ccdf"')
+  )
 }
