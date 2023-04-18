@@ -27,6 +27,15 @@ New features and enhancements:
   set the draw order of ribbons (#171). Enabled by this change, `stat_lineribbon()` 
   now sets `order = after_stat(level)` by default, making its draw order more correct
   by ensuring all ribbons of the same level are drawn together.
+* Some improved error messages using *cli*.
+
+Deprecations:
+
+* The `slab_type` parameter for `stat_slabinterval()` is now deprecated in favor
+  of mapping the corresponding computed variable (`pdf` or `cdf`) onto the desired
+  aesthetic. For `slab_type = "histogram"`, use the `pdf` computed variable 
+  combined with the new `density_histogram()` density estimator (e.g. set
+  `density = "histogram"`). (#165)
 
 Bug fixes:
 

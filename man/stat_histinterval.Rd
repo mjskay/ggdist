@@ -10,15 +10,15 @@ stat_histinterval(
   geom = "slabinterval",
   position = "identity",
   ...,
-  slab_type = "histogram",
+  density = "histogram",
   p_limits = c(NA, NA),
-  density = "auto",
   adjust = 1,
   trim = TRUE,
   expand = FALSE,
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
+  slab_type = NULL,
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
@@ -109,20 +109,6 @@ aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continu
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 }}
 
-\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using \code{slab_type} to
-change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the corresponding
-computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
-
-\item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
-limits of the slab. E.g., if this is \code{c(.001, .999)}, then a slab is drawn
-for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}. If the lower
-(respectively upper) limit is \code{NA}, then the lower (upper) limit will be the minimum (maximum) of the
-distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is not finite. E.g., if
-\code{p_limits} is \code{c(NA, NA)} on a gamma distribution the effective value of \code{p_limits} would be
-\code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
-it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
-
 \item{density}{Density estimator for sample data. One of:
 \itemize{
 \item A function which takes a numeric vector and returns a list with elements
@@ -135,6 +121,15 @@ e.g. \code{"bounded"} for \verb{[density_bounded()]} or \code{histogram} for \co
 Defaults to \code{"auto"}, i.e. \code{\link[=density_auto]{density_auto()}}, which uses \code{\link[=density_bounded]{density_bounded()}}
 if \code{trim} is \code{TRUE} and \code{\link[=density_unbounded]{density_unbounded()}} if \code{trim} is \code{FALSE}.
 }}
+
+\item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
+limits of the slab. E.g., if this is \code{c(.001, .999)}, then a slab is drawn
+for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}. If the lower
+(respectively upper) limit is \code{NA}, then the lower (upper) limit will be the minimum (maximum) of the
+distribution's support if it is finite, and \code{0.001} (\code{0.999}) if it is not finite. E.g., if
+\code{p_limits} is \code{c(NA, NA)} on a gamma distribution the effective value of \code{p_limits} would be
+\code{c(0, .999)} since the gamma distribution is defined on \verb{(0, Inf)}; whereas on a normal distribution
+it would be equivalent to \code{c(.001, .999)} since the normal distribution is defined on \verb{(-Inf, Inf)}.}
 
 \item{adjust}{Passed to \code{density}: the bandwidth for the density estimator for sample data
 is adjusted by multiplying it by this value. See e.g. \code{\link[=density_auto]{density_auto()}} for more information.}
@@ -165,6 +160,11 @@ for the function, followed by the \pkg{ggdist} environment). This function deter
 highest-density interval, \code{hdi}; or highest-density continuous interval, \code{hdci}). Output will
 be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
 See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
+
+\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
+cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using \code{slab_type} to
+change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the corresponding
+computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
 
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
@@ -218,7 +218,7 @@ creating histogram + interval plots.
 Roughly equivalent to:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{stat_slabinterval(
-  slab_type = "histogram"
+  density = "histogram"
 )
 }\if{html}{\out{</div>}}
 }
@@ -273,12 +273,12 @@ for the PDF at the lower and upper ends of the interval.
 If \code{options("ggdist.experimental.slab_data_in_intervals")} is \code{TRUE}:
 For intervals, the CDF at the point summary; intervals also have \code{cdf_min} and \code{cdf_max}
 for the CDF at the lower and upper ends of the interval.
+\item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
+an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
 \item \code{f}: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
 determined by \code{slab_type}. Instead of using \code{slab_type} to change \code{f} and then mapping \code{f} onto an
 aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. \code{pdf}, \code{cdf}, or
-\code{1 - cdf} directly onto the desired aesthetic.
-\item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
-an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
+\code{1 - cdf}) directly onto the desired aesthetic.
 }
 }
 

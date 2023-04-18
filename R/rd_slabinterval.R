@@ -152,12 +152,12 @@ rd_slabinterval_computed_variables = function(stat = StatSlabinterval) {
         For intervals, the CDF at the point summary; intervals also have `cdf_min` and `cdf_max`
         for the CDF at the lower and upper ends of the interval.',
     if (isTRUE(stat$default_params$show_slab)) {'
+      - `n`: For slabs, the number of data points summarized into that slab. If the slab was created from
+        an analytical distribution via the `xdist`, `ydist`, or `dist` aesthetic, `n` will be `Inf`.
       -  `f`: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
         determined by `slab_type`. Instead of using `slab_type` to change `f` and then mapping `f` onto an
         aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. `pdf`, `cdf`, or
-        `1 - cdf` directly onto the desired aesthetic.
-      - `n`: For slabs, the number of data points summarized into that slab. If the slab was created from
-        an analytical distribution via the `xdist`, `ydist`, or `dist` aesthetic, `n` will be `Inf`.
+        `1 - cdf`) directly onto the desired aesthetic.
       '
     }
   )

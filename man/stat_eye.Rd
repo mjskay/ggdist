@@ -10,7 +10,6 @@ stat_eye(
   geom = "slabinterval",
   position = "identity",
   ...,
-  slab_type = "pdf",
   p_limits = c(NA, NA),
   density = "auto",
   adjust = 1,
@@ -19,6 +18,7 @@ stat_eye(
   breaks = "Sturges",
   outline_bars = FALSE,
   point_interval = "median_qi",
+  slab_type = NULL,
   limits = NULL,
   n = 501,
   .width = c(0.66, 0.95),
@@ -109,11 +109,6 @@ aesthetic and \code{\link[=scale_point_size_continuous]{scale_point_size_continu
 specified with that aesthetic will not be adjusted using \code{fatten_point}.}
 }}
 
-\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
-cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using \code{slab_type} to
-change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the corresponding
-computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
-
 \item{p_limits}{Probability limits (as a vector of size 2) used to determine the lower and upper
 limits of the slab. E.g., if this is \code{c(.001, .999)}, then a slab is drawn
 for the distribution from the quantile at \code{p = .001} to the quantile at \code{p = .999}. If the lower
@@ -165,6 +160,11 @@ for the function, followed by the \pkg{ggdist} environment). This function deter
 highest-density interval, \code{hdi}; or highest-density continuous interval, \code{hdci}). Output will
 be converted to the appropriate \code{x}- or \code{y}-based aesthetics depending on the value of \code{orientation}.
 See the \code{\link[=point_interval]{point_interval()}} family of functions for more information.}
+
+\item{slab_type}{(deprecated) The type of slab function to calculate: probability density (or mass) function (\code{"pdf"}),
+cumulative distribution function (\code{"cdf"}), or complementary CDF (\code{"ccdf"}). Instead of using \code{slab_type} to
+change \code{f} and then mapping \code{f} onto an aesthetic, it is now recommended to simply map the corresponding
+computed variable (e.g. \code{pdf}, \code{cdf}, or  \code{1 - cdf}) directly onto the desired aesthetic.}
 
 \item{limits}{Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 computed based on \code{p_limits} as well as the limits defined by the scales of the plot to determine the
@@ -273,12 +273,12 @@ for the PDF at the lower and upper ends of the interval.
 If \code{options("ggdist.experimental.slab_data_in_intervals")} is \code{TRUE}:
 For intervals, the CDF at the point summary; intervals also have \code{cdf_min} and \code{cdf_max}
 for the CDF at the lower and upper ends of the interval.
+\item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
+an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
 \item \code{f}: (deprecated) For slabs, the output values from the slab function (such as the PDF, CDF, or CCDF),
 determined by \code{slab_type}. Instead of using \code{slab_type} to change \code{f} and then mapping \code{f} onto an
 aesthetic, it is now recommended to simply map the corresponding computed variable (e.g. \code{pdf}, \code{cdf}, or
-\code{1 - cdf} directly onto the desired aesthetic.
-\item \code{n}: For slabs, the number of data points summarized into that slab. If the slab was created from
-an analytical distribution via the \code{xdist}, \code{ydist}, or \code{dist} aesthetic, \code{n} will be \code{Inf}.
+\code{1 - cdf}) directly onto the desired aesthetic.
 }
 }
 

@@ -479,7 +479,6 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
   group_by_dist = TRUE,
 
   default_params = defaults(list(
-    slab_type = "pdf",
     p_limits = c(NA, NA),
     density = "auto",
     adjust = 1,
@@ -488,10 +487,18 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     breaks = "Sturges",
     outline_bars = FALSE,
 
-    point_interval = "median_qi"
+    point_interval = "median_qi",
+
+    # deprecated parameters
+    slab_type = NULL   # deprecated, set by default_slab_type (below)
   ), AbstractStatSlabinterval$default_params),
 
   layer_function = "layer_slabinterval",
+
+  # overrides slab_type in setup_params() when slab_type is NULL (the default).
+  # This allows us to detect if the user sets slab_type (which is deprecated)
+  # and throw a warning.
+  default_slab_type = "pdf",
 
   # orientation auto-detection here is different from base AbstractStatSlabinterval
   # (main_is_orthogonal needs to be FALSE)
@@ -551,6 +558,30 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     }
 
     data
+  },
+
+  setup_params = function(self, data, params) {
+    params = ggproto_parent(AbstractStatSlabinterval, self)$setup_params(data, params)
+
+    # override deprecated slab_type with default_slab_type
+    if (is.null(params$slab_type)) {
+      params$slab_type = self$default_slab_type
+    } else {
+      cli_warn(c(
+        'The {.arg slab_type} parameter for {.pkg ggdist} stats is deprecated.',
+        'i' = 'Instead of using {.arg slab_type}, use {.topic after_stat} to
+          map the desired computed variable, e.g. {.code pdf} or {.code cdf}, onto
+          an aesthetic, e.g. {.code aes(thickness = after_stat(pdf))}. Specifically:',
+        '*' = 'To replace {.code slab_type = "pdf"}, map {.code after_stat(pdf)} onto an aesthetic.',
+        '*' = 'To replace {.code slab_type = "cdf"}, map {.code after_stat(cdf)} onto an aesthetic.',
+        '*' = 'To replace {.code slab_type = "ccdf"}, map {.code after_stat(1 - cdf)} onto an aesthetic.',
+        '*' = 'To replace {.code slab_type = "histogram"}, map {.code after_stat(pdf)} onto an aesthetic and
+          pass {.code density = "histogram"} to the stat.',
+        'i' = 'For more information, see the {.emph Computed Variables} section of {.topic stat_slabinterval}.'
+      ))
+    }
+
+    params
   },
 
   compute_panel = function(self, data, scales,
@@ -690,10 +721,11 @@ StatCcdfinterval = ggproto("StatCcdfinterval", StatSlabinterval,
   ), StatSlabinterval$default_aes),
 
   default_params = defaults(list(
-    slab_type = "ccdf",
     normalize = "none",
     expand = TRUE
-  ), StatSlabinterval$default_params)
+  ), StatSlabinterval$default_params),
+
+  default_slab_type = "ccdf"
 )
 #' @eval rd_slabinterval_shortcut_stat("ccdfinterval", "CCDF bar", geom_name = "slabinterval", example_layers = "expand_limits(x = 0)")
 #' @export
@@ -704,9 +736,7 @@ StatCdfinterval = ggproto("StatCdfinterval", StatCcdfinterval,
     thickness = after_stat(thickness(cdf)),
   ), StatCcdfinterval$default_aes),
 
-  default_params = defaults(list(
-    slab_type = "cdf"
-  ), StatCcdfinterval$default_params)
+  default_slab_type = "cdf"
 )
 #' @eval rd_slabinterval_shortcut_stat("cdfinterval", "CDF bar", geom_name = "slabinterval")
 #' @export
@@ -738,8 +768,10 @@ stat_gradientinterval = make_stat(StatGradientinterval, geom = "slabinterval")
 
 StatHistinterval = ggproto("StatHistinterval", StatSlabinterval,
   default_params = defaults(list(
-    slab_type = "histogram"
-  ), StatSlabinterval$default_params)
+    density = "histogram"
+  ), StatSlabinterval$default_params),
+
+  default_slab_type = "histogram"
 )
 #' @eval rd_slabinterval_shortcut_stat("histinterval", "histogram + interval", geom_name = "slabinterval")
 #' @export
