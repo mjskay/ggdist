@@ -212,12 +212,6 @@ test_that("fill_type = 'gradient' works", {
     ggplot(aes(dist = dist, args = args, fill = dist)) +
     scale_slab_alpha_continuous(range = c(0,1))
 
-  write_svg_with_gradient = function(plot, file, title = "") {
-    svglite::svglite(file, width = 10, height = 8, bg = "white", pointsize = 12, standalone = TRUE, always_valid = FALSE)
-    on.exit(grDevices::dev.off())
-    vdiffr:::print_plot(plot, title)
-  }
-
   vdiffr::expect_doppelganger("fill_type = gradient with two groups",
     p + stat_dist_gradientinterval(aes(x = dist), n = 15, p_limits = c(0.01, 0.99), fill_type = "gradient"),
     writer = write_svg_with_gradient

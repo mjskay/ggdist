@@ -54,7 +54,10 @@ Suggests:
     posterior,
     pkgdown,
     mvtnorm,
-    palmerpenguins
+    palmerpenguins,
+    fontquiver,
+    sysfonts,
+    showtext
 License: GPL (>= 3)
 Language: en-US
 BugReports: https://github.com/mjskay/ggdist/issues/new
