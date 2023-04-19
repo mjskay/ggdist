@@ -283,7 +283,7 @@ test_that("scale transformation works", {
   )
 
 
-  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(100))))) %>%
+  p_log_dist = data.frame(x = dist_sample(list(qlnorm(ppoints(200))))) %>%
     ggplot(aes(xdist = x, y = 0))
 
   vdiffr::expect_doppelganger("transformed scale with dist_sample",
@@ -299,7 +299,7 @@ test_that("scale transformation works", {
   )
 
 
-  p_log_samp = data.frame(x = qlnorm(ppoints(100))) %>%
+  p_log_samp = data.frame(x = qlnorm(ppoints(200))) %>%
     ggplot(aes(x = x, y = 0))
 
   vdiffr::expect_doppelganger("transformed scale with sample data on x",
