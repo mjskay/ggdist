@@ -45,9 +45,8 @@ write_svg_with_gradient = function(plot, file, title = "") {
     grDevices::dev.off()
   })
 
-  vdiffr:::print_plot(
-    plot + theme_test(base_family = "Liberation Sans"),
-    title
+  print(
+    plot + ggtitle(title) + theme_test(base_family = "Liberation Sans")
   )
 }
 
