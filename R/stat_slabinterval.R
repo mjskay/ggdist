@@ -209,7 +209,7 @@ compute_slab_sample = function(
   expand = rep_len(expand, 2L)
 
   if (expand[[1]]) {
-    input_below_slab = input[input < min(slab_df$.input)]
+    input_below_slab = input[input < min(slab_df$.input) - .Machine$double.eps]
     if (length(input_below_slab) > 0) {
       slab_df = rbind(data.frame(
         .input = input_below_slab,
@@ -219,7 +219,7 @@ compute_slab_sample = function(
     }
   }
   if (expand[[2]]) {
-    input_above_slab = input[input > max(slab_df$.input)]
+    input_above_slab = input[input > max(slab_df$.input) + .Machine$double.eps]
     if (length(input_above_slab) > 0) {
       slab_df = rbind(slab_df, data.frame(
         .input = input_above_slab,
