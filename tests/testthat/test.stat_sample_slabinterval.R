@@ -163,7 +163,7 @@ test_that("constant distributions work", {
   )
 
   vdiffr::expect_doppelganger("constant dist on ccdf with n = 1",
-    p + stat_ccdfinterval()
+    p + stat_ccdfinterval(n = 15)
   )
 })
 
