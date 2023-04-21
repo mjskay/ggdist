@@ -152,9 +152,8 @@ test_that("constant distributions work", {
 
   # constant dist when n = 1
   p = data.frame(
-    x = c("constant = 1", rep("normal(2,1)", 50)),
-    # sd of 0 will generate constant dist
-    y = qnorm(c(0.5, ppoints(50)), mean = c(1, rep(2, 50)), sd = c(0, rep(1, 50)))
+    x = c("constant = 1", "constant = 2", "constant = 3"),
+    y = c(0,1,2)
   ) %>%
     ggplot(aes(x = x, y = y))
 
@@ -163,7 +162,7 @@ test_that("constant distributions work", {
   )
 
   vdiffr::expect_doppelganger("constant dist on ccdf with n = 1",
-    p + stat_ccdfinterval(n = 15)
+    p + stat_ccdfinterval()
   )
 })
 
