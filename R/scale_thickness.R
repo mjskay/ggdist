@@ -15,14 +15,13 @@
 #' `thickness` is normalized on a per-geom level instead of as a global scale).
 #'
 #' @inheritParams ggplot2::continuous_scale
+#' @inheritDotParams ggplot2::continuous_scale
 #' @param renormalize When mapping values to the `thickness` scale, should those
 #' values be allowed to be renormalized by geoms (e.g. via the `normalize` parameter
 #' to [geom_slabinterval()])? The default is `FALSE`: if `scale_thickness_shared()`
 #' is in use, the geom-specific `normalize` parameter is ignored (this is achieved
 #' by flagging values as already normalized by wrapping them in `thickness()`).
 #' Set this to `TRUE` to allow geoms to also apply their own normalization.
-#' @param ... Arguments passed to the underlying scale or guide functions. E.g. [scale_thickness_identity()]
-#' passes arguments to [continuous_scale()]. See that function for more details.
 #' @param x An object (typically a `numeric()`) to be converted to a `thickness()`
 #' object.
 #' @details
@@ -98,13 +97,17 @@ scale_thickness_shared = function(
   name = waiver(), breaks = waiver(), labels = waiver(),
   limits = function(l) c(min(0, l[[1]]), l[[2]]),
   renormalize = FALSE,
-  guide = "none"
+  oob = scales::oob_keep,
+  guide = "none",
+  ...
 ) {
   sc = continuous_scale(
     "thickness", "thickness_c", identity_pal(),
     name = name, breaks = breaks, labels = labels,
     limits = limits,
+    oob = oob,
     guide = guide,
+    ...,
     super = ScaleThicknessShared
   )
   sc$renormalize = renormalize

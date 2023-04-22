@@ -13,7 +13,9 @@ scale_thickness_shared(
   labels = waiver(),
   limits = function(l) c(min(0, l[[1]]), l[[2]]),
   renormalize = FALSE,
-  guide = "none"
+  oob = scales::oob_keep,
+  guide = "none",
+  ...
 )
 
 scale_thickness_identity(..., guide = "none")
@@ -69,11 +71,70 @@ is in use, the geom-specific \code{normalize} parameter is ignored (this is achi
 by flagging values as already normalized by wrapping them in \code{thickness()}).
 Set this to \code{TRUE} to allow geoms to also apply their own normalization.}
 
+\item{oob}{One of:
+\itemize{
+\item Function that handles limits outside of the scale limits
+(out of bounds). Also accepts rlang \link[rlang:as_function]{lambda}
+function notation.
+\item The default (\code{\link[scales:oob]{scales::censor()}}) replaces out of
+bounds values with \code{NA}.
+\item \code{\link[scales:oob]{scales::squish()}} for squishing out of bounds values into range.
+\item \code{\link[scales:oob]{scales::squish_infinite()}} for squishing infinite values into range.
+}}
+
 \item{guide}{A function used to create a guide or its name. See
 \code{\link[ggplot2:guides]{guides()}} for more information.}
 
-\item{...}{Arguments passed to the underlying scale or guide functions. E.g. \code{\link[=scale_thickness_identity]{scale_thickness_identity()}}
-passes arguments to \code{\link[=continuous_scale]{continuous_scale()}}. See that function for more details.}
+\item{...}{
+  Arguments passed on to \code{\link[ggplot2:continuous_scale]{ggplot2::continuous_scale}}
+  \describe{
+    \item{\code{aesthetics}}{The names of the aesthetics that this scale works with.}
+    \item{\code{scale_name}}{The name of the scale that should be used for error messages
+associated with this scale.}
+    \item{\code{palette}}{A palette function that when called with a numeric vector with
+values between 0 and 1 returns the corresponding output values
+(e.g., \code{\link[scales:area_pal]{scales::area_pal()}}).}
+    \item{\code{minor_breaks}}{One of:
+\itemize{
+\item \code{NULL} for no minor breaks
+\item \code{waiver()} for the default breaks (one minor break between
+each major break)
+\item A numeric vector of positions
+\item A function that given the limits returns a vector of minor breaks. Also
+accepts rlang \link[rlang:as_function]{lambda} function notation.
+}}
+    \item{\code{n.breaks}}{An integer guiding the number of major breaks. The algorithm
+may choose a slightly different number to ensure nice break labels. Will
+only have an effect if \code{breaks = waiver()}. Use \code{NULL} to use the default
+number of breaks given by the transformation.}
+    \item{\code{rescaler}}{A function used to scale the input values to the
+range [0, 1]. This is always \code{\link[scales:rescale]{scales::rescale()}}, except for
+diverging and n colour gradients (i.e., \code{\link[ggplot2:scale_colour_gradient2]{scale_colour_gradient2()}},
+\code{\link[ggplot2:scale_colour_gradientn]{scale_colour_gradientn()}}). The \code{rescaler} is ignored by position
+scales, which always use \code{\link[scales:rescale]{scales::rescale()}}. Also accepts rlang
+\link[rlang:as_function]{lambda} function notation.}
+    \item{\code{expand}}{For position scales, a vector of range expansion constants used to add some
+padding around the data to ensure that they are placed some distance
+away from the axes. Use the convenience function \code{\link[ggplot2:expansion]{expansion()}}
+to generate the values for the \code{expand} argument. The defaults are to
+expand the scale by 5\% on each side for continuous variables, and by
+0.6 units on each side for discrete variables.}
+    \item{\code{na.value}}{Missing values will be replaced with this value.}
+    \item{\code{trans}}{For continuous scales, the name of a transformation object
+or the object itself. Built-in transformations include "asn", "atanh",
+"boxcox", "date", "exp", "hms", "identity", "log", "log10", "log1p", "log2",
+"logit", "modulus", "probability", "probit", "pseudo_log", "reciprocal",
+"reverse", "sqrt" and "time".
+
+A transformation object bundles together a transform, its inverse,
+and methods for generating breaks and labels. Transformation objects
+are defined in the scales package, and are called \verb{<name>_trans} (e.g.,
+\code{\link[scales:boxcox_trans]{scales::boxcox_trans()}}). You can create your own
+transformation with \code{\link[scales:trans_new]{scales::trans_new()}}.}
+    \item{\code{position}}{For position scales, The position of the axis.
+\code{left} or \code{right} for y axes, \code{top} or \code{bottom} for x axes.}
+    \item{\code{super}}{The super class to use for the constructed scale}
+  }}
 
 \item{x}{An object (typically a \code{numeric()}) to be converted to a \code{thickness()}
 object.}
