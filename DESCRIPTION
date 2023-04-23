@@ -75,6 +75,7 @@ Collate:
     "abstract_stat_slabinterval.R"
     "auto_partial.R"
     "binning_methods.R"
+    "bounder.R"
     "curve_interval.R"
     "cut_cdf_qi.R"
     "data.R"

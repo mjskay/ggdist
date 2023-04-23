@@ -39,8 +39,8 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
 \item{trim}{Should the density estimate be trimmed?
-If \code{TRUE}, uses \link{density_bounded(trim = TRUE)}, estimating the bounds by default (see the
-\code{bounds} argument to \code{\link[=density_bounded]{density_bounded()}}). If \code{FALSE}, uses \link{density_unbounded(trim = FALSE)},
+If \code{TRUE}, uses \code{density_bounded(trim = TRUE)}, estimating the bounds by default (see the
+\code{bounds} argument to \code{\link[=density_bounded]{density_bounded()}}). If \code{FALSE}, uses \code{density_unbounded(trim = FALSE)},
 setting the bounds at \code{3 * bandwidth} from the endpoints of the data.}
 
 \item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
