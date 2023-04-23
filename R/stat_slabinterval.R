@@ -87,7 +87,7 @@ compute_limits_sample = function(x, trans, trim, adjust, ..., density = "auto") 
 compute_slab_slabinterval = function(
   self, data, scales, trans, input, orientation,
   slab_type, limits, n,
-  adjust, trim, expand, breaks, outline_bars,
+  adjust, trim, expand, breaks, align, outline_bars,
   ...
 ) {
   dist = data$dist
@@ -117,7 +117,8 @@ compute_slab_slabinterval = function(
     return(compute_slab_sample(
       trans$transform(distr_get_sample(dist)), scales, trans, input,
       slab_type = slab_type, limits = limits, n = n,
-      adjust = adjust, trim = trim, expand = expand, breaks = breaks, outline_bars = outline_bars,
+      adjust = adjust, trim = trim, expand = expand,
+      breaks = breaks, align = align, outline_bars = outline_bars,
       ...
     ))
   } else if (trans$name == "identity") {
@@ -179,7 +180,7 @@ compute_slab_slabinterval = function(
 compute_slab_sample = function(
   x, scales, trans, input,
   slab_type, limits, n,
-  adjust, trim, expand, breaks, outline_bars,
+  adjust, trim, expand, breaks, align, outline_bars,
   density,
   ...
 ) {
@@ -195,7 +196,10 @@ compute_slab_sample = function(
 
   # calculate pdf and cdf
   # TODO: pass weights here
-  d = density(x, n = n, adjust = adjust, trim = trim, breaks = breaks, outline_bars = outline_bars)
+  d = density(
+    x, n = n, adjust = adjust, trim = trim,
+    breaks = breaks, align = align, outline_bars = outline_bars
+  )
   slab_df = data.frame(
     .input = trans$inverse(d$x),
     pdf = d$y,
@@ -331,7 +335,11 @@ compute_interval_slabinterval = function(
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be length two to control expansion to the lower and upper limit respectively.
 #' @param breaks Passed to `density`. If `density` is `"histogram"`, the `breaks` parameter
-#' will determine where to put breaks in the histogram (for sample data). See [density_histogram()].
+#' will determine where to put breaks in the histogram (for sample data). See the [breaks]
+#' functions and the `breaks` parameter to [density_histogram()].
+#' @param align Passed to `density`. If `density` is `"histogram"`, the `align` parameter
+#' will determine how to align breaks in the histogram (for sample data). See the [align]
+#' functions and the `align` parameter to [density_histogram()].
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits
@@ -485,6 +493,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     trim = TRUE,
     expand = FALSE,
     breaks = "Sturges",
+    align = "none",
     outline_bars = FALSE,
 
     point_interval = "median_qi",

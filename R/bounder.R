@@ -58,6 +58,7 @@
 #' @template returns-bounder
 #' @seealso The `bounder` argument to [density_bounded()].
 #' @family bounds estimators
+#' @export
 bounder_cdf = function(x, p = 0.01) {
   if (missing(x)) return(partial_self("bounder_cdf"))
 
@@ -111,6 +112,7 @@ bounder_cdf = function(x, p = 0.01) {
 #' @template returns-bounder
 #' @seealso The `bounder` argument to [density_bounded()].
 #' @family bounds estimators
+#' @export
 bounder_cooke = function(x) {
   if (missing(x)) return(partial_self("bounder_cooke"))
 
@@ -169,6 +171,7 @@ bounder_cooke = function(x) {
 #' @template returns-bounder
 #' @seealso The `bounder` argument to [density_bounded()].
 #' @family bounds estimators
+#' @export
 bounder_range = function(x) {
   range(x)
 }

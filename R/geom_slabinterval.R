@@ -234,7 +234,7 @@ draw_path = function(data, panel_params, coord) {
         lwd = munched_path$linewidth * .pt,
         lty = munched_path$linetype,
         lineend = "butt",
-        linejoin = "round",
+        linejoin = "bevel",
         linemitre = 10
       )
     )

@@ -11,7 +11,13 @@ New features and enhancements:
   Existing code with `trim = FALSE` will not be affected. To switch to the
   old behavior, pass `density = "unbounded"`.
 * `density_bounded()` now estimates bounds from the data when not provided
-  (i.e. when one of `bounds` is `NA`).
+  (i.e. when one of `bounds` is `NA`). See the `bounder_` functions (e.g.
+  `bounder_cdf()`, `bounder_cooke()`) for more on bounds estimation.
+* Histograms are now implemented using `density_histogram()`, a histogram
+  density estimator. Finer-grained control of bin positions is now possible
+  using the `breaks` argument (including the new `breaks_fixed()` for manually-specified
+  bin widths) and the `align` argument (including the new `align_boundary()` and
+  `align_center()` for choosing how to align bin positions to reference points). (#118)
 * Improved `Mode()` and `hdi()` estimators based on bounded density estimator.
 * Improved `hdci()` estimator using quantile estimation.
 * New `geom_spike()` and `stat_spike()` for adding spike annotations to slabs

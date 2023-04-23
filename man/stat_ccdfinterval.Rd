@@ -17,6 +17,7 @@ stat_ccdfinterval(
   adjust = 1,
   trim = TRUE,
   breaks = "Sturges",
+  align = "none",
   outline_bars = FALSE,
   point_interval = "median_qi",
   slab_type = NULL,
@@ -146,7 +147,12 @@ configuration (\code{density = "auto"}), \code{trim = TRUE} will use a bounded d
 use an unbounded density estimator (\code{\link[=density_unbounded]{density_unbounded()}}). Default \code{TRUE}.}
 
 \item{breaks}{Passed to \code{density}. If \code{density} is \code{"histogram"}, the \code{breaks} parameter
-will determine where to put breaks in the histogram (for sample data). See \code{\link[=density_histogram]{density_histogram()}}.}
+will determine where to put breaks in the histogram (for sample data). See the \link{breaks}
+functions and the \code{breaks} parameter to \code{\link[=density_histogram]{density_histogram()}}.}
+
+\item{align}{Passed to \code{density}. If \code{density} is \code{"histogram"}, the \code{align} parameter
+will determine how to align breaks in the histogram (for sample data). See the \link{align}
+functions and the \code{align} parameter to \code{\link[=density_histogram]{density_histogram()}}.}
 
 \item{outline_bars}{For sample data (if \code{density} is \code{"histogram"}) and for discrete analytical
 distributions (whose slabs are drawn as histograms), determines

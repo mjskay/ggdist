@@ -8,6 +8,7 @@ density_histogram(
   x,
   weights = NULL,
   breaks = "Sturges",
+  align = "none",
   outline_bars = FALSE,
   na.rm = FALSE,
   ...,
@@ -30,6 +31,15 @@ number of bins or a vector of breakpoints
 \code{"breaks_"}. \pkg{ggdist} provides weighted implementations of the
 \code{"Sturges"}, \code{"scott"}, and \code{"FD"} break-finding algorithms from
 \code{\link[graphics:hist]{graphics::hist()}}.
+}}
+
+\item{align}{Determines how to align the breakpoints defining the bins. One of:
+\itemize{
+\item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+\item A function taking a sorted vector of \code{breaks} (bin edges) and returning
+an offset to subtract from the breaks.
+\item A string giving the suffix of a function that starts with
+\code{"align_"}. See \code{\link[=align_none]{align_none()}}, \code{\link[=align_boundary]{align_boundary()}}, and \code{\link[=align_center]{align_center()}}.
 }}
 
 \item{outline_bars}{Should outlines in between the bars (i.e. density values of

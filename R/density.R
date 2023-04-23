@@ -354,6 +354,12 @@ density_bounded = function(
 #'     `"breaks_"`. \pkg{ggdist} provides weighted implementations of the
 #'     `"Sturges"`, `"scott"`, and `"FD"` break-finding algorithms from
 #'     [graphics::hist()].
+#' @param align Determines how to align the breakpoints defining the bins. One of:
+#'   - A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+#'   - A function taking a sorted vector of `breaks` (bin edges) and returning
+#'     an offset to subtract from the breaks.
+#'   - A string giving the suffix of a function that starts with
+#'     `"align_"`. See [align_none()], [align_boundary()], and [align_center()].
 #' @param outline_bars Should outlines in between the bars (i.e. density values of
 #' 0) be included?
 #' @param na.rm Should missing (`NA`) values in `x` be removed?
@@ -396,6 +402,7 @@ density_bounded = function(
 density_histogram = function(
   x, weights = NULL,
   breaks = "Sturges",
+  align = "none",
   outline_bars = FALSE,
   na.rm = FALSE,
   ...,
@@ -406,7 +413,7 @@ density_histogram = function(
   x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
 
-  h = weighted_hist(x, breaks = breaks)
+  h = weighted_hist(x, breaks = breaks, align = align)
   input_1 = h$breaks[-length(h$breaks)]  # first edge of bin
   input_2 = h$breaks[-1]                 # second edge of bin
   input_ = (input_1 + input_2)/2   # center of bin
