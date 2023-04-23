@@ -85,18 +85,23 @@
 #' @name smooth_density
 NULL
 
-# currently not exporting smooth_density as people should really be forced to
+# currently not exporting .smooth_density as people should really be forced to
 # think about if they want a bounded or unbounded smoother
-smooth_density = function(x, density = "bounded", ...) {
+.smooth_density = function(x, density = "bounded", trim = FALSE, ...) {
   if (length(x) < 2) return(x)
 
   density = match_function(density, prefix = "density_")
 
-  d = density(x, ...)
+  d = density(x, trim = trim, ...)
   n = length(x)
 
+  # when trim = TRUE, set a = 1 so ppoints goes from 0 to 1 inclusive, which
+  # ensures the first and last point coincide with the first and last point
+  # from the data
+  a = if (trim) 1 else 0.5
+
   # take quantiles from the KDE
-  x_dens = weighted_quantile(d$x, ppoints(n, a = 0.5), d$y, type = 5)
+  x_dens = weighted_quantile(d$x, ppoints(n, a = a), d$y, type = 5)
 
   # match up each smoothed value to a close value from `x` using the order of x
   x_dens[rank(x, ties.method = "first")]
@@ -104,10 +109,10 @@ smooth_density = function(x, density = "bounded", ...) {
 
 #' @rdname smooth_density
 #' @export
-smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), trim = FALSE, ...) {
+smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), trim = TRUE, ...) {
   if (missing(x)) return(partial_self("smooth_bounded"))
 
-  smooth_density(x, density = density, bounds = bounds, trim = trim, ...)
+  .smooth_density(x, density = density, bounds = bounds, trim = trim, ...)
 }
 
 #' @rdname smooth_density
@@ -115,7 +120,7 @@ smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), trim = FAL
 smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
   if (missing(x)) return(partial_self("smooth_unbounded"))
 
-  smooth_density(x, density = density, trim = trim, ...)
+  .smooth_density(x, density = density, trim = trim, ...)
 }
 
 

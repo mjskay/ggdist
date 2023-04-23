@@ -25,7 +25,7 @@ This is the default value for the \code{smooth} argument of \code{geom_dotsinter
 }
 \seealso{
 Other dotplot smooths: 
-\code{\link{smooth_density}()},
+\code{\link{smooth_density}},
 \code{\link{smooth_discrete}()}
 }
 \concept{dotplot smooths}

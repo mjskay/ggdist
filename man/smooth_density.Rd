@@ -6,9 +6,9 @@
 \alias{smooth_unbounded}
 \title{Smooth dot positions in a dotplot using a kernel density estimator ("density dotplots")}
 \usage{
-smooth_bounded(x, density = "bounded", bounds = c(NA, NA), ...)
+smooth_bounded(x, density = "bounded", bounds = c(NA, NA), trim = TRUE, ...)
 
-smooth_unbounded(x, density = "unbounded", ...)
+smooth_unbounded(x, density = "unbounded", trim = FALSE, ...)
 }
 \arguments{
 \item{x}{a numeric vector}
@@ -26,6 +26,8 @@ e.g. \code{"bounded"} for \verb{[density_bounded()]}.
 
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
 that bound is estimated from the data using the method specified by \code{bounder}.}
+
+\item{trim}{Should the density estimate be trimmed to the bounds of the data?}
 
 \item{...}{Arguments passed to the density estimator specified by \code{density}.}
 }
