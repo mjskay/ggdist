@@ -13,7 +13,8 @@ density_bounded(
   kernel = "gaussian",
   trim = TRUE,
   bounds = c(NA, NA),
-  find_bounds = c("cooke", "range"),
+  bounder = "cdf",
+  clusters = 1,
   na.rm = FALSE,
   ...,
   range_only = FALSE
@@ -41,17 +42,32 @@ by this value. See \code{\link[stats:density]{stats::density()}}.}
 match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code{"epanechnikov"},
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
-\item{trim}{ignored; the unbounded density estimator always uses \code{trim = FALSE}
-internally before trimming to \code{bounds}.}
+\item{trim}{Should the density estimate be trimmed to the bounds of the data?}
 
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
-that bound is estimated from the data using the method specified by \code{find_bounds}.}
+that bound is estimated from the data using the method specified by \code{bounder}.}
 
-\item{find_bounds}{How to find missing (\code{NA}) \code{bounds}. One of:
+\item{bounder}{Method to use to find missing (\code{NA}) \code{bounds}. A function that
+takes a numeric vector of values and returns a length-2 vector of the estimated
+lower and upper bound of the distribution. Can also be a string giving the
+suffix of the name of such a function that starts with \code{"bounder_"}. Useful
+values include:
 \itemize{
+\item \code{"cdf"}: Use the CDF of the the minimum and maximum order statistics of the
+sample to estimate the bounds. See \code{\link[=bounder_cdf]{bounder_cdf()}}.
 \item \code{"cooke"}: Use the method from Cooke (1979); i.e. method 2.3 from Loh (1984).
-\item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}).
+See \code{\link[=bounder_cooke]{bounder_cooke()}}.
+\item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}). See \code{\link[=bounder_range]{bounder_range()}}.
 }}
+
+\item{clusters}{(experimental) Positive integer. If \code{clusters > 1}, uses
+an adaptive approach to calculate the density. First, uses the
+adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
+bandwidths, then clusters these bandwidths into \code{clusters} clusters with
+similar bandwidths, then calculates and sums the densities from each cluster.
+You can set this to a very large number (e.g. \code{Inf}) for a fully adaptive
+approach, but this will be very slow; typically something around 5--10 yields
+nearly identical results.}
 
 \item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
 
@@ -64,7 +80,7 @@ than \code{density_XXX(n = 2)}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
-\code{stats:density()}, with the following components:
+\code{\link[=stats:density]{stats:density()}}, with the following components:
 \itemize{
 \item \code{x}: The grid of points at which the density was estimated.
 \item \code{y}: The estimated density values.
@@ -74,10 +90,10 @@ An object of class \code{"density"}, mimicking the output format of
 \item \code{data.name}: The deparsed name of the \code{x} input argument.
 \item \code{has.na}: Always \code{FALSE} (for compatibility).
 \item \code{cdf}: Values of the (possibly weighted) empirical cumulative distribution
-function at \code{x}. See \code{weighted_ecdf()}.
+function at \code{x}. See \code{\link[=weighted_ecdf]{weighted_ecdf()}}.
 }
 
-This allows existing methods (like \code{print()} and \code{plot()}) to work if desired.
+This allows existing methods (like \code{\link[=print]{print()}} and \code{\link[=plot]{plot()}}) to work if desired.
 This output format (and in particular, the \code{x} and \code{y} components) is also
 the format expected by the \code{density} argument of the \code{\link[=stat_slabinterval]{stat_slabinterval()}}
 and the \code{smooth_} family of functions.
@@ -135,11 +151,11 @@ data.frame(x) \%>\%
   theme_ggdist()
 }
 \references{
-Loh, W. Y. (1984). Estimating an endpoint of a distribution with resampling
-methods. \emph{The Annals of Statistics} 12(4), 1543--1550. \doi{10.1214/aos/1176346811}
-
 Cooke, P. (1979). Statistical inference for bounds of random variables.
 \emph{Biometrika} 66(2), 367--374. \doi{10.1093/biomet/66.2.367}.
+
+Loh, W. Y. (1984). Estimating an endpoint of a distribution with resampling
+methods. \emph{The Annals of Statistics} 12(4), 1543--1550. \doi{10.1214/aos/1176346811}
 }
 \seealso{
 Other density estimators: 

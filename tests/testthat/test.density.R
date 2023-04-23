@@ -20,11 +20,14 @@ test_that("density_auto works", {
 })
 
 test_that("density_bounded works", {
-  x = 1:10
+  x = 1:1000
 
   expect_equal(density_bounded(adjust = 0.5)(x), density_bounded(x, adjust = 0.5))
-  # density for Uniform(1, 10) is 1/9, estimator should be close-ish to that
-  expect_true(all(abs(density_bounded(x)$y - 1/9) < .013))
+  # density for Uniform(1, 1000) is 1/999, estimator should be close-ish to that
+  expect_true(all(abs(density_bounded(x)$y - 1/999) < .0001))
+  expect_true(all(abs(density_bounded(x, bounder = "cooke")$y - 1/999) < .0001))
+  expect_true(all(abs(density_bounded(x, bounder = "range")$y - 1/999) < .0001))
+  expect_true(all(abs(density_bounded(x, bounds = c(1,1000))$y - 1/999) < .0001))
 })
 
 test_that("density_unbounded works", {

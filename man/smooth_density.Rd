@@ -25,7 +25,7 @@ e.g. \code{"bounded"} for \verb{[density_bounded()]}.
 }}
 
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
-that bound is estimated from the data using the method specified by \code{find_bounds}.}
+that bound is estimated from the data using the method specified by \code{bounder}.}
 
 \item{...}{Arguments passed to the density estimator specified by \code{density}.}
 }

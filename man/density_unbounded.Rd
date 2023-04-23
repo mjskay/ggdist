@@ -12,6 +12,7 @@ density_unbounded(
   adjust = 1,
   kernel = "gaussian",
   trim = FALSE,
+  clusters = 1,
   na.rm = FALSE,
   ...,
   range_only = FALSE
@@ -41,6 +42,15 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 
 \item{trim}{Should the density estimate be trimmed to the bounds of the data?}
 
+\item{clusters}{(experimental) Positive integer. If \code{clusters > 1}, uses
+an adaptive approach to calculate the density. First, uses the
+adaptive bandwidth algorithm of Abramson (1982) to determine local (pointwise)
+bandwidths, then clusters these bandwidths into \code{clusters} clusters with
+similar bandwidths, then calculates and sums the densities from each cluster.
+You can set this to a very large number (e.g. \code{Inf}) for a fully adaptive
+approach, but this will be very slow; typically something around 5--10 yields
+nearly identical results.}
+
 \item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
 
 \item{...}{Additional arguments (ignored).}
@@ -52,7 +62,7 @@ than \code{density_XXX(n = 2)}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
-\code{stats:density()}, with the following components:
+\code{\link[=stats:density]{stats:density()}}, with the following components:
 \itemize{
 \item \code{x}: The grid of points at which the density was estimated.
 \item \code{y}: The estimated density values.
@@ -62,10 +72,10 @@ An object of class \code{"density"}, mimicking the output format of
 \item \code{data.name}: The deparsed name of the \code{x} input argument.
 \item \code{has.na}: Always \code{FALSE} (for compatibility).
 \item \code{cdf}: Values of the (possibly weighted) empirical cumulative distribution
-function at \code{x}. See \code{weighted_ecdf()}.
+function at \code{x}. See \code{\link[=weighted_ecdf]{weighted_ecdf()}}.
 }
 
-This allows existing methods (like \code{print()} and \code{plot()}) to work if desired.
+This allows existing methods (like \code{\link[=print]{print()}} and \code{\link[=plot]{plot()}}) to work if desired.
 This output format (and in particular, the \code{x} and \code{y} components) is also
 the format expected by the \code{density} argument of the \code{\link[=stat_slabinterval]{stat_slabinterval()}}
 and the \code{smooth_} family of functions.

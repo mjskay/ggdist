@@ -39,8 +39,8 @@ match one of \code{"gaussian"}, \code{"rectangular"}, \code{"triangular"}, \code
 \code{"biweight"}, \code{"cosine"}, or \code{"optcosine"}. See \code{\link[stats:density]{stats::density()}}.}
 
 \item{trim}{Should the density estimate be trimmed?
-If \code{TRUE}, uses \code{\link[=density_bounded]{density_bounded()}}, estimating the bounds by default (see the
-\code{bounds} argument to \code{\link[=density_bounded]{density_bounded()}}). If \code{FALSE}, uses \code{\link[=density_unbounded]{density_unbounded()}},
+If \code{TRUE}, uses \link{density_bounded(trim = TRUE)}, estimating the bounds by default (see the
+\code{bounds} argument to \code{\link[=density_bounded]{density_bounded()}}). If \code{FALSE}, uses \link{density_unbounded(trim = FALSE)},
 setting the bounds at \code{3 * bandwidth} from the endpoints of the data.}
 
 \item{na.rm}{Should missing (\code{NA}) values in \code{x} be removed?}
@@ -49,7 +49,7 @@ setting the bounds at \code{3 * bandwidth} from the endpoints of the data.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
-\code{stats:density()}, with the following components:
+\code{\link[=stats:density]{stats:density()}}, with the following components:
 \itemize{
 \item \code{x}: The grid of points at which the density was estimated.
 \item \code{y}: The estimated density values.
@@ -59,10 +59,10 @@ An object of class \code{"density"}, mimicking the output format of
 \item \code{data.name}: The deparsed name of the \code{x} input argument.
 \item \code{has.na}: Always \code{FALSE} (for compatibility).
 \item \code{cdf}: Values of the (possibly weighted) empirical cumulative distribution
-function at \code{x}. See \code{weighted_ecdf()}.
+function at \code{x}. See \code{\link[=weighted_ecdf]{weighted_ecdf()}}.
 }
 
-This allows existing methods (like \code{print()} and \code{plot()}) to work if desired.
+This allows existing methods (like \code{\link[=print]{print()}} and \code{\link[=plot]{plot()}}) to work if desired.
 This output format (and in particular, the \code{x} and \code{y} components) is also
 the format expected by the \code{density} argument of the \code{\link[=stat_slabinterval]{stat_slabinterval()}}
 and the \code{smooth_} family of functions.

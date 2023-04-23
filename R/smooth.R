@@ -96,7 +96,7 @@ smooth_density = function(x, density = "bounded", ...) {
   n = length(x)
 
   # take quantiles from the KDE
-  x_dens = weighted_quantile(d$x, ppoints(n, a = 0.5), d$y, type = 7)
+  x_dens = weighted_quantile(d$x, ppoints(n, a = 0.5), d$y, type = 5)
 
   # match up each smoothed value to a close value from `x` using the order of x
   x_dens[rank(x, ties.method = "first")]
@@ -104,18 +104,18 @@ smooth_density = function(x, density = "bounded", ...) {
 
 #' @rdname smooth_density
 #' @export
-smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), ...) {
+smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), trim = FALSE, ...) {
   if (missing(x)) return(partial_self("smooth_bounded"))
 
-  smooth_density(x, density = density, bounds = bounds, ...)
+  smooth_density(x, density = density, bounds = bounds, trim = trim, ...)
 }
 
 #' @rdname smooth_density
 #' @export
-smooth_unbounded = function(x, density = "unbounded", ...) {
+smooth_unbounded = function(x, density = "unbounded", trim = FALSE, ...) {
   if (missing(x)) return(partial_self("smooth_unbounded"))
 
-  smooth_density(x, density = density, ...)
+  smooth_density(x, density = density, trim = trim, ...)
 }
 
 
