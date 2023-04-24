@@ -323,7 +323,7 @@ compute_interval_slabinterval = function(
 #'    following this format, including [density_unbounded()] and
 #'    [density_bounded()]. This format is also compatible with [stats::density()].
 #'  - A string giving the suffix of a function name that starts with `"density_"`;
-#'    e.g. `"bounded"` for `[density_bounded()]` or `histogram` for [density_histogram()].
+#'    e.g. `"bounded"` for `[density_bounded()]` or `"histogram"` for [density_histogram()].
 #'    Defaults to `"auto"`, i.e. [density_auto()], which uses [density_bounded()]
 #'    if `trim` is `TRUE` and [density_unbounded()] if `trim` is `FALSE`.
 #' @param adjust Passed to `density`: the bandwidth for the density estimator for sample data

@@ -118,7 +118,7 @@ corresponding densities). \pkg{ggdist} provides a family of functions
 following this format, including \code{\link[=density_unbounded]{density_unbounded()}} and
 \code{\link[=density_bounded]{density_bounded()}}. This format is also compatible with \code{\link[stats:density]{stats::density()}}.
 \item A string giving the suffix of a function name that starts with \code{"density_"};
-e.g. \code{"bounded"} for \verb{[density_bounded()]} or \code{histogram} for \code{\link[=density_histogram]{density_histogram()}}.
+e.g. \code{"bounded"} for \verb{[density_bounded()]} or \code{"histogram"} for \code{\link[=density_histogram]{density_histogram()}}.
 Defaults to \code{"auto"}, i.e. \code{\link[=density_auto]{density_auto()}}, which uses \code{\link[=density_bounded]{density_bounded()}}
 if \code{trim} is \code{TRUE} and \code{\link[=density_unbounded]{density_unbounded()}} if \code{trim} is \code{FALSE}.
 }}
@@ -165,11 +165,12 @@ set the bin width to \code{1}.}
 \item{align}{Determines how to align the breakpoints defining bins. One of:
 \itemize{
 \item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+The offset must be between \code{0} and the bin width.
 \item A function taking a sorted vector of \code{breaks} (bin edges) and returning
-an offset to subtract from the breaks. The offset must be between \code{0} and the
-bin width.
+an offset to subtract from the breaks.
 \item A string giving the suffix of a function that starts with
-\code{"align_"}. See \code{\link[=align_none]{align_none()}}, \code{\link[=align_boundary]{align_boundary()}}, and \code{\link[=align_center]{align_center()}}.
+\code{"align_"} used to determine the alignment, such as \code{\link[=align_none]{align_none()}},
+\code{\link[=align_boundary]{align_boundary()}}, or \code{\link[=align_center]{align_center()}}.
 }
 
 For example, \code{align = "none"} will provide no alignment, \code{align = align_center(at = 0)}

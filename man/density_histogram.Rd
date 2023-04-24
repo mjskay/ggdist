@@ -41,11 +41,12 @@ set the bin width to \code{1}.}
 \item{align}{Determines how to align the breakpoints defining bins. One of:
 \itemize{
 \item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+The offset must be between \code{0} and the bin width.
 \item A function taking a sorted vector of \code{breaks} (bin edges) and returning
-an offset to subtract from the breaks. The offset must be between \code{0} and the
-bin width.
+an offset to subtract from the breaks.
 \item A string giving the suffix of a function that starts with
-\code{"align_"}. See \code{\link[=align_none]{align_none()}}, \code{\link[=align_boundary]{align_boundary()}}, and \code{\link[=align_center]{align_center()}}.
+\code{"align_"} used to determine the alignment, such as \code{\link[=align_none]{align_none()}},
+\code{\link[=align_boundary]{align_boundary()}}, or \code{\link[=align_center]{align_center()}}.
 }
 
 For example, \code{align = "none"} will provide no alignment, \code{align = align_center(at = 0)}

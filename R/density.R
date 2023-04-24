@@ -361,11 +361,12 @@ density_bounded = function(
 #' set the bin width to `1`.
 #' @param align Determines how to align the breakpoints defining bins. One of:
 #'   - A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+#'     The offset must be between `0` and the bin width.
 #'   - A function taking a sorted vector of `breaks` (bin edges) and returning
-#'     an offset to subtract from the breaks. The offset must be between `0` and the
-#'     bin width.
+#'     an offset to subtract from the breaks.
 #'   - A string giving the suffix of a function that starts with
-#'     `"align_"`. See [align_none()], [align_boundary()], and [align_center()].
+#'     `"align_"` used to determine the alignment, such as [align_none()],
+#'     [align_boundary()], or [align_center()].
 #'
 #' For example, `align = "none"` will provide no alignment, `align = align_center(at = 0)`
 #' will center a bin on `0`, and `align = align_boundary(at = 0)` will align a bin
