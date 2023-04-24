@@ -135,20 +135,24 @@ compute_slab_slabinterval = function(
       # at the midpoint of each bin
       lag_cdf_input = c(input_[[1]] - 1, input_[-length(input_)])
       lag_cdf = cdf_fun(lag_cdf_input)
+      # need an epsilon value we can use to create ghost values "just above" and
+      # "just below" the bin edges, so that logical conditions on fills like `x > 1`
+      # work as expected if 1 is a bin edge.
+      eps = 2*.Machine$double.eps
 
       if (!outline_bars) {
         # as.vector(rbind(x, y, z, ...)) interleaves vectors x, y, z, ..., giving
         # us the bin endpoints and midpoints --- then just need to repeat the same
         # value of density for both endpoints of the same bin and to make sure the
         # cdf is a step function that steps at the midpoint of the bin
-        input = as.vector(rbind(input_1, input_, input_, input_2))
-        pdf = rep(pdf, each = 4)
-        cdf = as.vector(rbind(lag_cdf, lag_cdf, cdf, cdf))
+        input = as.vector(rbind(input_1, input_1 + eps, input_, input_, input_2 - eps, input_2))
+        pdf = rep(pdf, each = 6)
+        cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
       } else {
         # have to return to 0 in between each bar so that bar outlines are drawn
-        input = as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))
-        pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, 0))
-        cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf))
+        input = as.vector(rbind(input_1, input_1, input_1 + eps, input_, input_, input_2 - eps, input_2, input_2))
+        pdf = as.vector(rbind(0, pdf, pdf, pdf, pdf, pdf, pdf, 0))
+        cdf = as.vector(rbind(lag_cdf, lag_cdf, lag_cdf, lag_cdf, cdf, cdf, cdf, cdf))
       }
     } else {
       pdf = pdf_fun(input)

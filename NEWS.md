@@ -50,6 +50,7 @@ Bug fixes:
 * Ensure `curve_interval()` works with `posterior::rvar`s. (#158)
 * `geom_lineribbon()` draw order is now correct even when some portions of a 
   ribbon has `NA` widths. (#171)
+* Improve the appearance of logical fill conditions at bin edges on histograms. (#175)
 
 
 # ggdist 3.2.1

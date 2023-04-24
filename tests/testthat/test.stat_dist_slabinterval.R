@@ -799,6 +799,32 @@ test_that("dist_categorical works with explicit integer levels", {
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
 })
 
+test_that("logical conditions at bin edges on histograms work", {
+  p = ggplot() +
+    stat_slab(aes(xdist = dist_poisson(1), fill = after_stat(x > 0.5))) +
+    scale_fill_manual(values = c("red", "blue"))
+
+  ref = data.frame(
+    x = c(-0.5, -0.5, 0, 0, 0.5, 0.5, 0.5, 0.5, 1, 1, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5, 2.5, 2.5, 2.5, 3, 3, 3.5, 3.5, 3.5, 3.5, 4, 4, 4.5, 4.5, 4.5, 4.5, 5, 5, 5.5, 5.5),
+    fill = c(rep("red", 7), rep("blue", 29))
+  )
+  expect_equal(layer_data(p)[,c("x", "fill")], ref)
+
+  # with outline
+  p = ggplot() +
+    stat_slab(
+      aes(xdist = dist_poisson(1), fill = after_stat(x > 0.5)),
+      outline_bars = TRUE, color = "black"
+    ) +
+    scale_fill_manual(values = c("red", "blue"))
+
+  ref = data.frame(
+    x = c(-0.5, -0.5, -0.5, 0, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 1,  1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5, 2.5, 2.5, 2.5, 2.5,  2.5, 3, 3, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 4, 4, 4.5, 4.5, 4.5,  4.5, 4.5, 4.5, 5, 5, 5.5, 5.5, 5.5),
+    fill = c(rep("red", 10), rep("blue", 38))
+  )
+  expect_equal(layer_data(p)[,c("x", "fill")], ref)
+})
+
 
 # grouping order ----------------------------------------------------------
 

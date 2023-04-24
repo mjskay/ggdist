@@ -434,18 +434,23 @@ density_histogram = function(
   cdf_2 = cdf_fun(input_2)
   cdf_ = cdf_fun(input_)
 
+  # need an epsilon value we can use to create ghost values "just above" and
+  # "just below" the bin edges, so that logical conditions on fills like `x > 1`
+  # work as expected if 1 is a bin edge.
+  eps = min(diff(h$breaks)/4, 2*.Machine$double.eps)
+
   if (!outline_bars) {
-    # as.vector(rbind(x, y)) interleaves vectors input_1 and input_2, giving
+    # as.vector(rbind(x, y)) interleaves vectors x and y, giving
     # us the bin endpoints --- then just need to repeat the same value of density
     # for both endpoints of the same bin
-    input = as.vector(rbind(input_1, input_, input_, input_2))
-    pdf = as.vector(rep(h$density, each = 4))
-    cdf = as.vector(rbind(cdf_1, cdf_1, cdf_, cdf_2))
+    input = as.vector(rbind(input_1, input_1 + eps, input_, input_, input_2 - eps, input_2))
+    pdf = rep(h$density, each = 6)
+    cdf = as.vector(rbind(cdf_1, cdf_1, cdf_1, cdf_, cdf_2, cdf_2))
   } else {
     # have to return to 0 in between each bar so that bar outlines are drawn
-    input = as.vector(rbind(input_1, input_1, input_, input_, input_2, input_2))
-    pdf = as.vector(rbind(0, h$density, h$density, h$density, h$density, 0))
-    cdf = as.vector(rbind(cdf_1, cdf_1, cdf_1, cdf_, cdf_2, cdf_2))
+    input = as.vector(rbind(input_1, input_1, input_1 + eps, input_, input_, input_2 - eps, input_2, input_2))
+    pdf = as.vector(rbind(0, h$density, h$density, h$density, h$density, h$density, h$density, 0))
+    cdf = as.vector(rbind(cdf_1, cdf_1, cdf_1, cdf_1, cdf_, cdf_2, cdf_2, cdf_2))
   }
 
   structure(list(

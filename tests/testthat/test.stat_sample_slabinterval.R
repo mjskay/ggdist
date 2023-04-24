@@ -306,3 +306,38 @@ test_that("characters work", {
   attr(interval_ref, "row.names") = c(13L, 14L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 })
+
+test_that("logical conditions at bin edges on histograms work", {
+  p = ggplot() +
+    stat_slab(
+      aes(x = c(1,1,2,2,2,3,3,3,3), fill = after_stat(x > 1.5)),
+      density = "histogram",
+      breaks = breaks_fixed(width = 1),
+      align = "center"
+    ) +
+    scale_fill_manual(values = c("red", "blue"))
+
+  ref = data.frame(
+    x = c(0.5, 0.5, 1, 1, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5, 2.5, 2.5, 2.5,  3, 3, 3.5, 3.5),
+    fill = c(rep("red", 7), rep("blue", 11))
+  )
+  expect_equal(layer_data(p)[,c("x", "fill")], ref)
+
+  # with outline
+  p = ggplot() +
+    stat_slab(
+      aes(x = c(1,1,2,2,2,3,3,3,3), fill = after_stat(x > 1.5)),
+      density = "histogram",
+      breaks = breaks_fixed(width = 1),
+      align = "center",
+      outline_bars = TRUE,
+      color = "black"
+    ) +
+    scale_fill_manual(values = c("red", "blue"))
+
+  ref = data.frame(
+    x = c(0.5, 0.5, 0.5, 1, 1, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5,  2.5, 2.5, 2.5, 2.5, 2.5, 3, 3, 3.5, 3.5, 3.5),
+    fill = c(rep("red", 10), rep("blue", 14))
+  )
+  expect_equal(layer_data(p)[,c("x", "fill")], ref)
+})
