@@ -56,7 +56,7 @@ x = rnorm(200, 1, 2)
 # Let's compare the different break-selection algorithms on this data:
 ggplot(data.frame(x), aes(x)) +
   stat_slab(
-    aes(y = "fixed"),
+    aes(y = "fixed at 0.5"),
     density = "histogram",
     breaks = breaks_fixed(width = 0.5),
     outline_bars = TRUE,

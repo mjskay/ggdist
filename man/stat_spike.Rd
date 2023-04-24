@@ -120,13 +120,37 @@ use an unbounded density estimator (\code{\link[=density_unbounded]{density_unbo
 \item{expand}{For sample data, should the slab be expanded to the limits of the scale? Default \code{FALSE}.
 Can be length two to control expansion to the lower and upper limit respectively.}
 
-\item{breaks}{Passed to \code{density}. If \code{density} is \code{"histogram"}, the \code{breaks} parameter
-will determine where to put breaks in the histogram (for sample data). See the \link{breaks}
-functions and the \code{breaks} parameter to \code{\link[=density_histogram]{density_histogram()}}.}
+\item{breaks}{Determines the breakpoints defining bins. Similar to (but not
+exactly the same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
+\itemize{
+\item A scalar (length-1) numeric giving the number of bins
+\item A vector numeric giving the breakpoints between histogram bins
+\item A function taking \code{x} and \code{weights} and returning either the
+number of bins or a vector of breakpoints
+\item A string giving the suffix of a function that starts with
+\code{"breaks_"}. \pkg{ggdist} provides weighted implementations of the
+\code{"Sturges"}, \code{"Scott"}, and \code{"FD"} break-finding algorithms from
+\code{\link[graphics:hist]{graphics::hist()}}, as well as \code{\link[=breaks_fixed]{breaks_fixed()}} for manually setting
+the bin width. See \link{breaks}.
+}
 
-\item{align}{Passed to \code{density}. If \code{density} is \code{"histogram"}, the \code{align} parameter
-will determine how to align breaks in the histogram (for sample data). See the \link{align}
-functions and the \code{align} parameter to \code{\link[=density_histogram]{density_histogram()}}.}
+For example, \code{breaks = "Sturges"} will use the \code{\link[=breaks_Sturges]{breaks_Sturges()}} algorithm,
+\code{breaks = 9} will create 9 bins, and \code{breaks = breaks_fixed(width = 1)} will
+set the bin width to \code{1}.}
+
+\item{align}{Determines how to align the breakpoints defining bins. One of:
+\itemize{
+\item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
+\item A function taking a sorted vector of \code{breaks} (bin edges) and returning
+an offset to subtract from the breaks. The offset must be between \code{0} and the
+bin width.
+\item A string giving the suffix of a function that starts with
+\code{"align_"}. See \code{\link[=align_none]{align_none()}}, \code{\link[=align_boundary]{align_boundary()}}, and \code{\link[=align_center]{align_center()}}.
+}
+
+For example, \code{align = "none"} will provide no alignment, \code{align = align_center(at = 0)}
+will center a bin on \code{0}, and \code{align = align_boundary(at = 0)} will align a bin
+edge on \code{0}.}
 
 \item{outline_bars}{For sample data (if \code{density} is \code{"histogram"}) and for discrete analytical
 distributions (whose slabs are drawn as histograms), determines

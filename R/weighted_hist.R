@@ -47,6 +47,12 @@ weighted_hist = function(
     if (is.function(align)) {
       align = align(breaks)
     }
+    if (align < 0 || align > bin_width[[1]]) {
+      cli_abort(c(
+        "{.arg align} must be between 0 and the bin width",
+        "i" = "See the {.arg align} argument to {.topic density_histogram}."
+      ))
+    }
 
     breaks = breaks - align
     max_break = breaks[length(breaks)]
@@ -119,7 +125,7 @@ weighted_hist = function(
 #' # Let's compare the different break-selection algorithms on this data:
 #' ggplot(data.frame(x), aes(x)) +
 #'   stat_slab(
-#'     aes(y = "fixed"),
+#'     aes(y = "fixed at 0.5"),
 #'     density = "histogram",
 #'     breaks = breaks_fixed(width = 0.5),
 #'     outline_bars = TRUE,
@@ -267,7 +273,7 @@ breaks_FD = function(x, weights = NULL, digits = 5) {
 #'     color = "black",
 #'   ) +
 #'   stat_slab(
-#'     aes(y = "center"),
+#'     aes(y = "center at 0"),
 #'     density = "histogram",
 #'     breaks = breaks_fixed(width = 1),
 #'     align = align_center(at = 0),   # or align = "center"
@@ -275,7 +281,7 @@ breaks_FD = function(x, weights = NULL, digits = 5) {
 #'     color = "black",
 #'   ) +
 #'   stat_slab(
-#'     aes(y = "boundary"),
+#'     aes(y = "boundary at 0"),
 #'     density = "histogram",
 #'     breaks = breaks_fixed(width = 1),
 #'     align = align_boundary(at = 0), # or align = "boundary"

@@ -63,7 +63,7 @@ ggplot(data.frame(x), aes(x)) +
     color = "black",
   ) +
   stat_slab(
-    aes(y = "center"),
+    aes(y = "center at 0"),
     density = "histogram",
     breaks = breaks_fixed(width = 1),
     align = align_center(at = 0),   # or align = "center"
@@ -71,7 +71,7 @@ ggplot(data.frame(x), aes(x)) +
     color = "black",
   ) +
   stat_slab(
-    aes(y = "boundary"),
+    aes(y = "boundary at 0"),
     density = "histogram",
     breaks = breaks_fixed(width = 1),
     align = align_boundary(at = 0), # or align = "boundary"

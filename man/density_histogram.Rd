@@ -20,8 +20,8 @@ density_histogram(
 
 \item{weights}{optional numeric vector of weights to apply to \code{x}.}
 
-\item{breaks}{Determines the breakpoints defining bins. Similar to the \code{breaks}
-argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
+\item{breaks}{Determines the breakpoints defining bins. Similar to (but not
+exactly the same as) the \code{breaks} argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
 \itemize{
 \item A scalar (length-1) numeric giving the number of bins
 \item A vector numeric giving the breakpoints between histogram bins
@@ -29,18 +29,28 @@ argument to \code{\link[graphics:hist]{graphics::hist()}}. One of:
 number of bins or a vector of breakpoints
 \item A string giving the suffix of a function that starts with
 \code{"breaks_"}. \pkg{ggdist} provides weighted implementations of the
-\code{"Sturges"}, \code{"scott"}, and \code{"FD"} break-finding algorithms from
-\code{\link[graphics:hist]{graphics::hist()}}.
-}}
+\code{"Sturges"}, \code{"Scott"}, and \code{"FD"} break-finding algorithms from
+\code{\link[graphics:hist]{graphics::hist()}}, as well as \code{\link[=breaks_fixed]{breaks_fixed()}} for manually setting
+the bin width. See \link{breaks}.
+}
 
-\item{align}{Determines how to align the breakpoints defining the bins. One of:
+For example, \code{breaks = "Sturges"} will use the \code{\link[=breaks_Sturges]{breaks_Sturges()}} algorithm,
+\code{breaks = 9} will create 9 bins, and \code{breaks = breaks_fixed(width = 1)} will
+set the bin width to \code{1}.}
+
+\item{align}{Determines how to align the breakpoints defining bins. One of:
 \itemize{
 \item A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
 \item A function taking a sorted vector of \code{breaks} (bin edges) and returning
-an offset to subtract from the breaks.
+an offset to subtract from the breaks. The offset must be between \code{0} and the
+bin width.
 \item A string giving the suffix of a function that starts with
 \code{"align_"}. See \code{\link[=align_none]{align_none()}}, \code{\link[=align_boundary]{align_boundary()}}, and \code{\link[=align_center]{align_center()}}.
-}}
+}
+
+For example, \code{align = "none"} will provide no alignment, \code{align = align_center(at = 0)}
+will center a bin on \code{0}, and \code{align = align_boundary(at = 0)} will align a bin
+edge on \code{0}.}
 
 \item{outline_bars}{Should outlines in between the bars (i.e. density values of
 0) be included?}

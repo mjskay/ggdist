@@ -296,6 +296,7 @@ compute_interval_slabinterval = function(
 #' @eval rd_layer_params("slabinterval", stat = StatSlabinterval, as_dots = TRUE)
 #'
 #' @inheritParams geom_slabinterval
+#' @inheritParams density_histogram
 #' @param geom Use to override the default connection between
 #' [stat_slabinterval()] and [geom_slabinterval()]
 #' @param slab_type (deprecated) The type of slab function to calculate: probability density (or mass) function (`"pdf"`),
@@ -334,12 +335,6 @@ compute_interval_slabinterval = function(
 #' use an unbounded density estimator ([density_unbounded()]). Default `TRUE`.
 #' @param expand For sample data, should the slab be expanded to the limits of the scale? Default `FALSE`.
 #' Can be length two to control expansion to the lower and upper limit respectively.
-#' @param breaks Passed to `density`. If `density` is `"histogram"`, the `breaks` parameter
-#' will determine where to put breaks in the histogram (for sample data). See the [breaks]
-#' functions and the `breaks` parameter to [density_histogram()].
-#' @param align Passed to `density`. If `density` is `"histogram"`, the `align` parameter
-#' will determine how to align breaks in the histogram (for sample data). See the [align]
-#' functions and the `align` parameter to [density_histogram()].
 #' @param limits Manually-specified limits for the slab, as a vector of length two. These limits are combined with those
 #' computed based on `p_limits` as well as the limits defined by the scales of the plot to determine the
 #' limits used to draw the slab functions: these limits specify the maximal limits; i.e., if specified, the limits

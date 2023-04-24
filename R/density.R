@@ -344,22 +344,32 @@ density_bounded = function(
 #'
 #' @param x numeric vector containing a sample to compute a density estimate for.
 #' @param weights optional numeric vector of weights to apply to `x`.
-#' @param breaks Determines the breakpoints defining bins. Similar to the `breaks`
-#' argument to [graphics::hist()]. One of:
+#' @param breaks Determines the breakpoints defining bins. Similar to (but not
+#' exactly the same as) the `breaks` argument to [graphics::hist()]. One of:
 #'   - A scalar (length-1) numeric giving the number of bins
 #'   - A vector numeric giving the breakpoints between histogram bins
 #'   - A function taking `x` and `weights` and returning either the
 #'     number of bins or a vector of breakpoints
 #'   - A string giving the suffix of a function that starts with
 #'     `"breaks_"`. \pkg{ggdist} provides weighted implementations of the
-#'     `"Sturges"`, `"scott"`, and `"FD"` break-finding algorithms from
-#'     [graphics::hist()].
-#' @param align Determines how to align the breakpoints defining the bins. One of:
+#'     `"Sturges"`, `"Scott"`, and `"FD"` break-finding algorithms from
+#'     [graphics::hist()], as well as [breaks_fixed()] for manually setting
+#'     the bin width. See [breaks].
+#'
+#' For example, `breaks = "Sturges"` will use the [breaks_Sturges()] algorithm,
+#' `breaks = 9` will create 9 bins, and `breaks = breaks_fixed(width = 1)` will
+#' set the bin width to `1`.
+#' @param align Determines how to align the breakpoints defining bins. One of:
 #'   - A scalar (length-1) numeric giving an offset that is subtracted from the breaks.
 #'   - A function taking a sorted vector of `breaks` (bin edges) and returning
-#'     an offset to subtract from the breaks.
+#'     an offset to subtract from the breaks. The offset must be between `0` and the
+#'     bin width.
 #'   - A string giving the suffix of a function that starts with
 #'     `"align_"`. See [align_none()], [align_boundary()], and [align_center()].
+#'
+#' For example, `align = "none"` will provide no alignment, `align = align_center(at = 0)`
+#' will center a bin on `0`, and `align = align_boundary(at = 0)` will align a bin
+#' edge on `0`.
 #' @param outline_bars Should outlines in between the bars (i.e. density values of
 #' 0) be included?
 #' @param na.rm Should missing (`NA`) values in `x` be removed?
