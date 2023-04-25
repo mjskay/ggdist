@@ -937,7 +937,7 @@ data.frame(
 
 ## Logit dotplots
 
-To demonstrate another useful plot type, the *logit dotplot* (courtesy [Ladislas Nalborczyk](https://www.barelysignificant.com/post/glm/)), we'll fit a 
+To demonstrate another useful plot type, the *logit dotplot* (courtesy [Ladislas Nalborczyk](https://lnalborczyk.github.io/post/glm/)), we'll fit a 
 logistic regression to some data on the sex and body mass of Gentoo penguins.
 
 First, we'll demo varying the `side` aesthetic to create two dotplots that are

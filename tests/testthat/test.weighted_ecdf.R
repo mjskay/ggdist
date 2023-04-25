@@ -10,3 +10,7 @@ test_that("weighted_ecdf works", {
   expect_equal(weighted_ecdf(1)(0:2), c(0, 1, 1))
   expect_equal(weighted_ecdf(c(1, 2, 2, 3), 1:4)(0:4), c(0, 1, 6, 10, 10)/10)
 })
+
+test_that("quantile(<weighted_ecdf>) works", {
+  expect_equal(quantile(weighted_ecdf(c(1, 2, 2, 3), 1:4), ppoints(10)), weighted_quantile(c(1, 2, 2, 3), weights = 1:4, ppoints(10)))
+})

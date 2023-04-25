@@ -6,7 +6,14 @@
 \alias{smooth_unbounded}
 \title{Smooth dot positions in a dotplot using a kernel density estimator ("density dotplots")}
 \usage{
-smooth_bounded(x, density = "bounded", bounds = c(NA, NA), trim = TRUE, ...)
+smooth_bounded(
+  x,
+  density = "bounded",
+  bounds = c(NA, NA),
+  bounder = "cooke",
+  trim = FALSE,
+  ...
+)
 
 smooth_unbounded(x, density = "unbounded", trim = FALSE, ...)
 }
@@ -26,6 +33,19 @@ e.g. \code{"bounded"} for \verb{[density_bounded()]}.
 
 \item{bounds}{length-2 vector of min and max bounds. If a bound is \code{NA}, then
 that bound is estimated from the data using the method specified by \code{bounder}.}
+
+\item{bounder}{Method to use to find missing (\code{NA}) \code{bounds}. A function that
+takes a numeric vector of values and returns a length-2 vector of the estimated
+lower and upper bound of the distribution. Can also be a string giving the
+suffix of the name of such a function that starts with \code{"bounder_"}. Useful
+values include:
+\itemize{
+\item \code{"cdf"}: Use the CDF of the the minimum and maximum order statistics of the
+sample to estimate the bounds. See \code{\link[=bounder_cdf]{bounder_cdf()}}.
+\item \code{"cooke"}: Use the method from Cooke (1979); i.e. method 2.3 from Loh (1984).
+See \code{\link[=bounder_cooke]{bounder_cooke()}}.
+\item \code{"range"}: Use the range of \code{x} (i.e the \code{min} or \code{max}). See \code{\link[=bounder_range]{bounder_range()}}.
+}}
 
 \item{trim}{Should the density estimate be trimmed to the bounds of the data?}
 

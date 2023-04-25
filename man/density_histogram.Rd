@@ -67,7 +67,7 @@ than \code{density_XXX(n = 2)}.}
 }
 \value{
 An object of class \code{"density"}, mimicking the output format of
-\code{\link[=stats:density]{stats:density()}}, with the following components:
+\code{\link[stats:density]{stats::density()}}, with the following components:
 \itemize{
 \item \code{x}: The grid of points at which the density was estimated.
 \item \code{y}: The estimated density values.
@@ -80,10 +80,10 @@ An object of class \code{"density"}, mimicking the output format of
 function at \code{x}. See \code{\link[=weighted_ecdf]{weighted_ecdf()}}.
 }
 
-This allows existing methods (like \code{\link[=print]{print()}} and \code{\link[=plot]{plot()}}) to work if desired.
+This allows existing methods for density objects, like \code{\link[=print]{print()}} and \code{\link[=plot]{plot()}}, to work if desired.
 This output format (and in particular, the \code{x} and \code{y} components) is also
 the format expected by the \code{density} argument of the \code{\link[=stat_slabinterval]{stat_slabinterval()}}
-and the \code{smooth_} family of functions.
+and the \code{\link[=smooth_density]{smooth_}} family of functions.
 }
 \description{
 Histogram density estimator.

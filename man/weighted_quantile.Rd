@@ -102,3 +102,6 @@ fact that, in the unweighted case, \eqn{k = F(x_k) \cdot n} and \eqn{1/n = f(x_k
 Then the quantile function (inverse CDF) is the piece-wise linear function
 defined by the points \eqn{(p_k, x_k)}.
 }
+\seealso{
+\code{\link[=weighted_ecdf]{weighted_ecdf()}}
+}

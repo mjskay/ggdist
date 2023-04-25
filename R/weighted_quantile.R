@@ -78,6 +78,7 @@
 #' a vector of probabilities, which itself returns the corresponding quantile
 #' estimates. It may be useful when `weighted_quantile()` needs to be called
 #' repeatedly for the same sample, re-using some pre-computation.
+#' @seealso [weighted_ecdf()]
 #' @importFrom stats stepfun approxfun
 #' @export
 weighted_quantile = function(x, probs = seq(0, 1, 0.25), weights = NULL, n = NULL, na.rm = FALSE, type = 7) {

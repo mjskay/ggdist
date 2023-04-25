@@ -1,6 +1,6 @@
 #' @returns
 #' An object of class `"density"`, mimicking the output format of
-#' [stats:density()], with the following components:
+#' [stats::density()], with the following components:
 #'
 #'   - `x`: The grid of points at which the density was estimated.
 #'   - `y`: The estimated density values.
@@ -12,7 +12,7 @@
 #'   - `cdf`: Values of the (possibly weighted) empirical cumulative distribution
 #'     function at `x`. See [weighted_ecdf()].
 #'
-#' This allows existing methods (like [print()] and [plot()]) to work if desired.
+#' This allows existing methods for density objects, like [print()] and [plot()], to work if desired.
 #' This output format (and in particular, the `x` and `y` components) is also
 #' the format expected by the `density` argument of the [stat_slabinterval()]
-#' and the `smooth_` family of functions.
+#' and the [`smooth_`][smooth_density] family of functions.
