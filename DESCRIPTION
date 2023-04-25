@@ -36,7 +36,7 @@ Imports:
     quadprog
 Suggests:
     knitr,
-    testthat,
+    testthat (>= 3.0.0),
     vdiffr (>= 1.0.0),
     svglite (>= 2.1.0),
     broom (>= 0.5.6),
@@ -122,3 +122,4 @@ Collate:
     "weighted_quantile.R"
     "deprecated.R"
 Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3

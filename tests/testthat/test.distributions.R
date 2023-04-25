@@ -3,9 +3,9 @@
 # Author: mjskay
 ###############################################################################
 
-library(distributional)
-
-
+suppressPackageStartupMessages({
+  library(distributional)
+})
 
 
 # factor distributions ----------------------------------------------------

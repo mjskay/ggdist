@@ -1012,7 +1012,7 @@ test_that("stats work without attaching the ggdist namespace", {
   skip_if_no_vdiffr()
 
   detach("package:ggdist")
-  on.exit(require(ggdist))
+  on.exit(suppressPackageStartupMessages(require(ggdist)))
 
   vdiffr::expect_doppelganger("simple halfeye",
     data.frame(x = dist_normal(0,1)) %>%

@@ -3,10 +3,11 @@
 # Author: mjskay
 ###############################################################################
 
-library(dplyr)
-library(purrr)
-library(tidyr)
-
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(purrr)
+  library(tidyr)
+})
 
 
 # use a subset of RankCorr so tests are faster
