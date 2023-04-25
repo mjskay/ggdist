@@ -1011,8 +1011,11 @@ test_that("missing rvars work", {
 test_that("stats work without attaching the ggdist namespace", {
   skip_if_no_vdiffr()
 
+  ggdist_pos = which(search() == "package:ggdist")
   detach("package:ggdist")
-  on.exit(suppressPackageStartupMessages(require(ggdist)))
+  on.exit(suppressPackageStartupMessages(
+    attach(getNamespace("ggdist"), ggdist_pos, "package:ggdist")
+  ))
 
   vdiffr::expect_doppelganger("simple halfeye",
     data.frame(x = dist_normal(0,1)) %>%
