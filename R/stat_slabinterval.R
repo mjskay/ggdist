@@ -577,7 +577,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     } else {
       cli_warn(c(
         'The {.arg slab_type} parameter for {.pkg ggdist} stats is deprecated.',
-        'i' = 'Instead of using {.arg slab_type}, use {.topic after_stat} to
+        'i' = 'Instead of using {.arg slab_type}, use {.fun ggplot2::after_stat} to
           map the desired computed variable, e.g. {.code pdf} or {.code cdf}, onto
           an aesthetic, e.g. {.code aes(thickness = after_stat(pdf))}. Specifically:',
         '*' = 'To replace {.code slab_type = "pdf"}, map {.code after_stat(pdf)} onto an aesthetic.',
@@ -585,7 +585,7 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
         '*' = 'To replace {.code slab_type = "ccdf"}, map {.code after_stat(1 - cdf)} onto an aesthetic.',
         '*' = 'To replace {.code slab_type = "histogram"}, map {.code after_stat(pdf)} onto an aesthetic and
           pass {.code density = "histogram"} to the stat.',
-        'i' = 'For more information, see the {.emph Computed Variables} section of {.topic stat_slabinterval}.'
+        'i' = 'For more information, see the {.emph Computed Variables} section of {.fun ggdist::stat_slabinterval}.'
       ))
     }
 

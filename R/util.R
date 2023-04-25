@@ -128,13 +128,6 @@ pmap_ = function(data, fun) {
   lapply(vctrs::vec_chop(data), function(row) do.call(fun, lapply(row, `[[`, 1)))
 }
 
-pmap_dfr_ = function(data, fun) {
-  # this is roughly equivalent to
-  # pmap_dfr(df, function(...) { ... })
-  # but works properly with vctrs (pmap_dfr seems broken on rvars?)
-  bind_rows(pmap_(data, fun))
-}
-
 ddply_ = function(data, groups, fun, ...) {
   bind_rows(dlply_(data, groups, fun, ...))
 }

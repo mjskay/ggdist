@@ -31,17 +31,25 @@ test_that("parse_dist works on data frames", {
   dists = factor(c("Normal(0,1)", "log-normal(2,3)", "Student's t(3,0,1)"))
   ref = as.data.frame(tibble(
     p = dists,
+    lb = c(NA_real_, NA_real_, 0),
+    ub = c(NA_real_, NA_real_, NA_real_),
     .dist = c("norm", "lnorm", "student_t"),
     .args = list(list(0,1), list(2,3), list(3,0,1)),
     .dist_obj = c(
       dist_wrap("norm", 0, 1, package = dist_env),
       dist_wrap("lnorm", 2, 3, package = dist_env),
-      dist_wrap("student_t", 3, 0, 1, package = dist_env)
+      dist_truncated(dist_wrap("student_t", 3, 0, 1, package = dist_env), 0, Inf)
     )
   ))
 
-  expect_equal(parse_dist(data.frame(p = dists), p), ref)
-  expect_equal(parse_dist(data.frame(p = dists), p, package = dist_env), ref)
+  df = data.frame(
+    p = dists,
+    lb = c(NA_real_, NA_real_, 0),
+    ub = c(NA_real_, NA_real_, NA_real_)
+  )
+
+  expect_equal(parse_dist(df, p), ref)
+  expect_equal(parse_dist(df, p, package = dist_env), ref)
 })
 
 test_that("parse_dist works on brmsprior objects", {

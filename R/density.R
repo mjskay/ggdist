@@ -148,6 +148,8 @@ density_unbounded = function(
 ) {
   if (missing(x)) return(partial_self("density_unbounded"))
 
+  if (n < 1) cli_abort("{.fun ggdist::density_unbounded} must have an {.arg n} of at least 1")
+
   x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
   if (isTRUE(range_only) && isTRUE(trim)) {
@@ -261,7 +263,7 @@ density_bounded = function(
 ) {
   if (missing(x)) return(partial_self("density_bounded"))
 
-  if (n < 1) stop0("density_bounded() must have an n of at least 1")
+  if (n < 1) cli_abort("{.fun ggdist::density_bounded} must have an {.arg n} of at least 1")
 
   x = check_na(x, na.rm)
   if (isTRUE(range_only) && isTRUE(trim)) {

@@ -16,7 +16,7 @@ weighted_hist = function(
     paste0("[", x_label, ", ", weights_label, "]")
   }
 
-  if (length(x) < 1) cli_abort("{.topic density_histogram} requires {.code length(x) >= 1}.")
+  if (length(x) < 1) cli_abort("{.fun ggdist::density_histogram} requires {.code length(x) >= 1}.")
 
   weights = weights %||% rep(1, length(x))
 
@@ -52,7 +52,7 @@ weighted_hist = function(
     if (align < 0 || align > bin_width[[1]]) {
       cli_abort(c(
         "{.arg align} must be between 0 and the bin width",
-        "i" = "See the {.arg align} argument to {.topic density_histogram}."
+        "i" = "See the {.arg align} argument to {.fun ggdist::density_histogram}."
       ))
     }
 
@@ -76,7 +76,7 @@ weighted_hist = function(
 
   # check for invalid binning
   if (min(x) < breaks[1] || max(x) > breaks[length(breaks)]) {
-    cli_abort("{.topic density_histogram} {.arg breaks} must cover all values of {.arg x}")
+    cli_abort("The {.arg breaks} argument to {.fun ggdist::density_histogram} must cover all values of {.arg x}")
   }
 
   # bin x values

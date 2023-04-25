@@ -28,6 +28,8 @@ test_that("density_bounded works", {
   expect_true(all(abs(density_bounded(x, bounder = "cooke")$y - 1/999) < .0001))
   expect_true(all(abs(density_bounded(x, bounder = "range")$y - 1/999) < .0001))
   expect_true(all(abs(density_bounded(x, bounds = c(1,1000))$y - 1/999) < .0001))
+
+  expect_error(density_bounded(1:2, n = 0), "`n` of at least 1")
 })
 
 test_that("density_unbounded works", {
@@ -38,4 +40,6 @@ test_that("density_unbounded works", {
   ref = density(x)
   ref$cdf = ecdf(x)(ref$x)
   expect_equal(drop_call(density_unbounded(x)), drop_call(ref))
+
+  expect_error(density_unbounded(1:2, n = 0), "`n` of at least 1")
 })

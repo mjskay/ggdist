@@ -994,7 +994,7 @@ switch_fill_type = function(fill_type, segments, gradient) {
       '{.code fill_type = "gradient"} is not supported in R < 4.1.0.',
       'i' = 'Falling back to {.code fill_type = "segments"}.',
       'i' = 'See the documentation for {.arg fill_type} in
-             {.topic geom_slabinterval} for more information.'
+             {.fun ggdist::geom_slabinterval} for more information.'
     ))
     fill_type = "segments"
   } else if (getRversion() < "4.2.0" && fill_type == "auto") {
@@ -1004,7 +1004,7 @@ switch_fill_type = function(fill_type, segments, gradient) {
       'i' = 'For best results, if you are using a graphics device that
              supports gradients, set {.code fill_type = "gradient"}.',
       'i' = 'See the documentation for {.arg fill_type} in
-             {.topic geom_slabinterval} for more information.'
+             {.fun ggdist::geom_slabinterval} for more information.'
     ))
     fill_type = "segments"
   } else if (fill_type == "auto") {
@@ -1020,10 +1020,10 @@ switch_fill_type = function(fill_type, segments, gradient) {
            {.code fill_type = "gradient"} explicitly. If this causes the gradient to display
            correctly, then this warning is likely a false positive caused by
            the graphics device failing to properly report its support for the
-           {.code "LinearGradient"} pattern via {.topic grDevices::dev.capabilities}.
+           {.code "LinearGradient"} pattern via {.fun grDevices::dev.capabilities}.
            Consider reporting a bug to the author of the graphics device.',
         'i' = 'See the documentation for {.arg fill_type} in
-             {.topic geom_slabinterval} for more information.'
+             {.fun ggdist::geom_slabinterval} for more information.'
       ))
       fill_type = "segments"
     }

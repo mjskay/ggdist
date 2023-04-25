@@ -23,19 +23,14 @@ distr_function.default = function(dist, fun, ...) {
 }
 #' @export
 distr_function.list = function(dist, fun, ...) {
-  if (length(dist) > 1) stop(
-    "lists of distributions should never have length > 1 here.\n",
-    "Please report this bug at https://github.com/mjskay/ggdist/issues"
-  )
+  check_dist_length_1(dist)
+
   distr_function(dist[[1]], fun, ...)
 }
 #' @importFrom stats stepfun
 #' @export
 distr_function.distribution = function(dist, fun, ..., categorical_okay = FALSE) {
-  if (length(dist) > 1) stop(
-    "distributional objects should never have length > 1 here.\n",
-    "Please report this bug at https://github.com/mjskay/ggdist/issues"
-  )
+  check_dist_length_1(dist)
 
   if (fun == "quantile" && categorical_okay && distr_is_factor_like(dist)) {
     # for categorical distributions --- but only when requested --- treat
@@ -54,10 +49,7 @@ distr_function.distribution = function(dist, fun, ..., categorical_okay = FALSE)
 }
 #' @export
 distr_function.rvar = function(dist, fun, ...) {
-  if (length(dist) > 1) stop(
-    "rvars should never have length > 1 here.\n",
-    "Please report this bug at https://github.com/mjskay/ggdist/issues"
-  )
+  check_dist_length_1(dist)
 
   fun = match.fun(fun)
   function(x, ...) unlist(fun(dist[[1]], x, ...))
@@ -134,10 +126,8 @@ distr_point_interval.ordered = function(dist, point_interval, trans, ...) {
 }
 #' @export
 distr_point_interval.list = function(dist, point_interval, trans, ...) {
-  if (length(dist) > 1) stop(
-    "lists of distributions should never have length > 1 here.\n",
-    "Please report this bug at https://github.com/mjskay/ggdist/issues"
-  )
+  check_dist_length_1(dist)
+
   distr_point_interval(dist[[1]], point_interval, trans, ...)
 }
 #' @importFrom distributional dist_transformed
@@ -165,10 +155,8 @@ distr_is_discrete = function(dist) {
     return(is.integer(posterior::draws_of(dist)))
   }
   if (is_distribution(dist) && inherits(vec_data(dist)[[1]], "dist_mixture")) {
-    if (length(dist) > 1) stop(
-      "lists of distributions should never have length > 1 here.\n",
-      "Please report this bug at https://github.com/mjskay/ggdist/issues"
-    )
+    check_dist_length_1(dist)
+
     # special case: discrete mixtures can't be reliably detected by the
     # method below, so we do it by asking if all components of the mixture are discrete
     dists = vec_restore(vec_data(dist)[[1]]$dist, dist_missing())
@@ -189,10 +177,8 @@ distr_is_logical = function(dist) {
     return(is.logical(posterior::draws_of(dist)))
   }
   if (is_distribution(dist) && inherits(vec_data(dist)[[1]], "dist_mixture")) {
-    if (length(dist) > 1) stop(
-      "lists of distributions should never have length > 1 here.\n",
-      "Please report this bug at https://github.com/mjskay/ggdist/issues"
-    )
+    check_dist_length_1(dist)
+
     # special case: logical mixtures can't be reliably detected by the
     # method below, so we do it by asking if all components of the mixture are logical
     dists = vec_restore(vec_data(dist)[[1]]$dist, dist_missing())
@@ -305,10 +291,8 @@ distr_is_constant = function(dist) {
     return(length(unique(x)) == 1)
   }
   if (is_distribution(dist) && inherits(vec_data(dist)[[1]], "dist_mixture")) {
-    if (length(dist) > 1) stop(
-      "lists of distributions should never have length > 1 here.\n",
-      "Please report this bug at https://github.com/mjskay/ggdist/issues"
-    )
+    check_dist_length_1(dist)
+
     # special case: discrete constant distributions can't be reliably detected by the
     # method below, so we do it by asking if all components of the mixture are constant
     # and equal
@@ -433,3 +417,16 @@ transform_pdf = function(f_X, y, trans, g_inverse_at_y = trans$inverse(y), ...) 
   f_X(g_inverse_at_y, ...) * abs(g_inverse_deriv_at_y)
 }
 
+
+# helpers -----------------------------------------------------------------
+
+#' @importFrom cli cli_abort
+check_dist_length_1 = function(dist) {
+  if (length(dist) > 1) cli_abort(c(
+    "Distribution-like objects ({.pkg distributional} objects, {.fun posterior::rvar} objects,
+    or lists of either) should never have length > 1 here.",
+    ">" = "Please report this bug at {.url https://github.com/mjskay/ggdist/issues},
+      along with a {.href [reprex](https://reprex.tidyverse.org/)} and the output of
+      {.code rlang::last_trace()}."
+  ))
+}
