@@ -578,16 +578,16 @@ test_that("rvar_factor works", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
-    pdf = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    thickness = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
+    pdf = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
     cdf = NA_real_,
-    f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    f = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
     n = 6,
     datatype = "slab",
     .width = NA_real_,
     stringsAsFactors = FALSE
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5,2.5,2.5, 3,3, 3.5,3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
@@ -598,7 +598,7 @@ test_that("rvar_factor works", {
   interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
   interval_ref$x = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
-  attr(interval_ref, "row.names") = c(13L, 14L)
+  attr(interval_ref, "row.names") = c(19L, 20L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 
   x_scale = p$plot$scales$get_scales("x")
@@ -615,16 +615,16 @@ test_that("rvar_ordered works and integer dist_sample works", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
-    pdf = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
-    cdf = c(0,0, 3,3,3,3, 5,5,5,5, 6,6)/6,
-    f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    thickness = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
+    pdf = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
+    cdf = c(0,0,0, 3,3,3,3,3,3, 5,5,5,5,5,5, 6,6,6)/6,
+    f = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
     n = 6,
     datatype = "slab",
-    .width = c(NA, .66,.66,.66,.66,.66,.66, .95,.95, NA,NA,NA),
+    .width = c(NA,NA, .66,.66,.66,.66,.66,.66,.66,.66, .95,.95,.95,.95, NA,NA,NA,NA),
     stringsAsFactors = FALSE
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5,2.5,2.5, 3,3, 3.5,3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
@@ -635,7 +635,7 @@ test_that("rvar_ordered works and integer dist_sample works", {
   interval_ref$xmin = ggplot2:::mapped_discrete(c(1, 1))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(2.15, 2.875))
   interval_ref$x = ggplot2:::mapped_discrete(c(1.5, 1.5))
-  attr(interval_ref, "row.names") = c(13L, 14L)
+  attr(interval_ref, "row.names") = c(19L, 20L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 
   x_scale = p$plot$scales$get_scales("x")
@@ -666,16 +666,16 @@ test_that("rvar_ordered works with modified scale limits", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3,3,3,3, 0,0,0,0, 1,1,1,1)/4,
-    pdf = c(3,3,3,3, 0,0,0,0, 1,1,1,1)/4,
-    cdf = c(0,0, 3,3,3,3, 3,3,3,3, 4,4)/4,
-    f = c(3,3,3,3, 0,0,0,0, 1,1,1,1)/4,
+    thickness = c(3,3,3,3,3,3, 0,0,0,0,0,0, 1,1,1,1,1,1)/4,
+    pdf = c(3,3,3,3,3,3, 0,0,0,0,0,0, 1,1,1,1,1,1)/4,
+    cdf = c(0,0,0, 3,3,3,3,3,3, 3,3,3,3,3,3, 4,4,4)/4,
+    f = c(3,3,3,3,3,3, 0,0,0,0,0,0, 1,1,1,1,1,1)/4,
     n = 4,
     datatype = "slab",
-    .width = c(NA, .66,.66,.66,.66, .95,.95,.95,.95, NA,NA,NA),
+    .width = c(NA,NA, .66,.66,.66,.66,.66,.66, .95,.95,.95,.95,.95,.95, NA,NA,NA,NA),
     stringsAsFactors = FALSE
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5,2.5,2.5, 3,3, 3.5,3.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
 })
 
@@ -686,14 +686,14 @@ test_that("dist_bernoulli works", {
   )
 
   slab_ref = data.frame(
-    thickness = c(0.2, 0.2, 0.2, 0.2, 0.8, 0.8, 0.8, 0.8),
-    pdf = c(0.2, 0.2, 0.2, 0.2, 0.8, 0.8, 0.8, 0.8),
-    cdf = c(0, 0, 0.2, 0.2, 0.2, 0.2, 1, 1),
-    f = c(0.2, 0.2, 0.2, 0.2, 0.8, 0.8, 0.8, 0.8),
+    thickness = c(.2,.2,.2,.2,.2,.2, .8,.8,.8,.8,.8,.8),
+    pdf = c(.2,.2,.2,.2,.2,.2, .8,.8,.8,.8,.8,.8),
+    cdf = c(0,0,0, .2,.2,.2,.2,.2,.2, 1,1,1),
+    f = c(.2,.2,.2,.2,.2,.2, .8,.8,.8,.8,.8,.8),
     n = Inf,
     datatype = "slab",
-    .width = c(NA, 0.66, 0.66, 0.66, 0.66, 0.66, 0.66, NA),
-    x = c(-0.5, 0, 0, 0.5, 0.5, 1, 1, 1.5),
+    .width = c(NA,NA, .66,.66,.66,.66,.66,.66,.66,.66, NA,NA),
+    x = c(-.5,-.5, 0,0, .5,.5,.5,.5, 1,1, 1.5,1.5),
     stringsAsFactors = FALSE
   )
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
@@ -706,7 +706,7 @@ test_that("dist_bernoulli works", {
     x = c(1, 1),
     stringsAsFactors = FALSE
   )
-  attr(interval_ref, "row.names") = c(9L, 10L)
+  attr(interval_ref, "row.names") = c(13L, 14L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 
   x_scale = p$plot$scales$get_scales("x")
@@ -721,16 +721,16 @@ test_that("dist_categorical works", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
-    pdf = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    thickness = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
+    pdf = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
     cdf = NA_real_,
-    f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    f = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
     n = Inf,
     datatype = "slab",
     .width = NA_real_,
     stringsAsFactors = FALSE
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5,2.5,2.5, 3,3, 3.5,3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
@@ -741,7 +741,7 @@ test_that("dist_categorical works", {
   interval_ref$xmin = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
   interval_ref$x = ggplot2:::mapped_discrete(c(NA_real_, NA_real_))
-  attr(interval_ref, "row.names") = c(13L, 14L)
+  attr(interval_ref, "row.names") = c(19L, 20L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 
   x_scale = p$plot$scales$get_scales("x")
@@ -765,16 +765,16 @@ test_that("dist_categorical works with modified scale limits", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3,3,3,3, NA,NA,NA,NA, 1,1,1,1)/4,
-    pdf = c(3,3,3,3, NA,NA,NA,NA, 1,1,1,1)/4,
+    thickness = c(3,3,3,3,3,3, NA,NA,NA,NA,NA,NA, 1,1,1,1,1,1)/4,
+    pdf = c(3,3,3,3,3,3, NA,NA,NA,NA,NA,NA, 1,1,1,1,1,1)/4,
     cdf = NA_real_,
-    f = c(3,3,3,3, NA,NA,NA,NA, 1,1,1,1)/4,
+    f = c(3,3,3,3,3,3, NA,NA,NA,NA,NA,NA, 1,1,1,1,1,1)/4,
     n = Inf,
     datatype = "slab",
     .width = NA_real_,
     stringsAsFactors = FALSE
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5,2.5,2.5, 3,3, 3.5,3.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
 
 })
@@ -786,16 +786,16 @@ test_that("dist_categorical works with explicit integer levels", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3,3,3,3, 1,1,1,1)/4,
-    pdf = c(3,3,3,3, 1,1,1,1)/4,
+    thickness = c(3,3,3,3,3,3, 1,1,1,1,1,1)/4,
+    pdf = c(3,3,3,3,3,3, 1,1,1,1,1,1)/4,
     cdf = NA_real_,
-    f = c(3,3,3,3, 1,1,1,1)/4,
+    f = c(3,3,3,3,3,3, 1,1,1,1,1,1)/4,
     n = Inf,
     datatype = "slab",
     .width = NA_real_,
     stringsAsFactors = FALSE
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5))
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
 })
 
@@ -806,7 +806,8 @@ test_that("logical conditions at bin edges on histograms work", {
 
   ref = data.frame(
     x = c(-0.5, -0.5, 0, 0, 0.5, 0.5, 0.5, 0.5, 1, 1, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5, 2.5, 2.5, 2.5, 3, 3, 3.5, 3.5, 3.5, 3.5, 4, 4, 4.5, 4.5, 4.5, 4.5, 5, 5, 5.5, 5.5),
-    fill = c(rep("red", 7), rep("blue", 29))
+    fill = c(rep("red", 7), rep("blue", 29)),
+    stringsAsFactors = FALSE
   )
   expect_equal(layer_data(p)[,c("x", "fill")], ref)
 
@@ -820,7 +821,8 @@ test_that("logical conditions at bin edges on histograms work", {
 
   ref = data.frame(
     x = c(-0.5, -0.5, -0.5, 0, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 1,  1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5, 2.5, 2.5, 2.5, 2.5,  2.5, 3, 3, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 4, 4, 4.5, 4.5, 4.5,  4.5, 4.5, 4.5, 5, 5, 5.5, 5.5, 5.5),
-    fill = c(rep("red", 10), rep("blue", 38))
+    fill = c(rep("red", 10), rep("blue", 38)),
+    stringsAsFactors = FALSE
   )
   expect_equal(layer_data(p)[,c("x", "fill")], ref)
 })

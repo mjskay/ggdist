@@ -27,9 +27,9 @@
 </defs>
 <g clip-path='url(#cpNDAuMTN8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='40.13' y='22.78' width='674.39' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<polygon points='70.79,504.38 103.05,500.86 135.32,486.15 167.59,456.26 199.86,409.86 232.12,346.85 264.39,271.70 296.66,194.72 328.93,130.61 361.19,94.01 393.46,94.01 425.73,130.61 458.00,194.72 490.26,271.70 522.53,346.85 554.80,409.86 587.06,456.26 619.33,486.15 651.60,500.86 683.87,504.38 683.87,521.37 651.60,521.37 619.33,521.37 587.06,521.37 554.80,521.37 522.53,521.37 490.26,521.37 458.00,521.37 425.73,521.37 393.46,521.37 361.19,521.37 328.93,521.37 296.66,521.37 264.39,521.37 232.12,521.37 199.86,521.37 167.59,521.37 135.32,521.37 103.05,521.37 70.79,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<line x1='175.47' y1='521.37' x2='579.18' y2='521.37' style='stroke-width: 1.28; stroke-linecap: butt;' />
-<line x1='279.14' y1='521.37' x2='475.51' y2='521.37' style='stroke-width: 2.99; stroke-linecap: butt;' />
+<polygon points='70.79,507.30 103.05,496.02 135.32,472.83 167.59,437.16 199.86,388.46 232.12,326.82 264.39,253.97 296.66,184.96 328.93,129.15 361.19,94.01 393.46,94.01 425.73,129.15 458.00,184.96 490.26,253.97 522.53,326.82 554.80,388.46 587.06,437.16 619.33,472.83 651.60,496.02 683.87,507.30 683.87,521.37 651.60,521.37 619.33,521.37 587.06,521.37 554.80,521.37 522.53,521.37 490.26,521.37 458.00,521.37 425.73,521.37 393.46,521.37 361.19,521.37 328.93,521.37 296.66,521.37 264.39,521.37 232.12,521.37 199.86,521.37 167.59,521.37 135.32,521.37 103.05,521.37 70.79,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
+<line x1='163.09' y1='521.37' x2='591.56' y2='521.37' style='stroke-width: 1.28; stroke-linecap: butt;' />
+<line x1='273.12' y1='521.37' x2='481.53' y2='521.37' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <circle cx='377.33' cy='521.37' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
 <circle cx='377.33' cy='521.37' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
 <rect x='40.13' y='22.78' width='674.39' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
@@ -45,12 +45,12 @@
 <polyline points='37.39,283.95 40.13,283.95 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='37.39,165.24 40.13,165.24 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='37.39,46.53 40.13,46.53 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='140.40,547.85 140.40,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='125.87,547.85 125.87,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='377.33,547.85 377.33,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='614.25,547.85 614.25,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<text x='140.40' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.1</text>
+<polyline points='628.78,547.85 628.78,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='125.87' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.1</text>
 <text x='377.33' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>1.0</text>
-<text x='614.25' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>10.0</text>
+<text x='628.78' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>10.0</text>
 <text x='377.33' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>x</text>
 <text transform='translate(13.05,283.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>y</text>
 <text x='40.13' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='236.29px' lengthAdjust='spacingAndGlyphs'>transformed scale with sample data on x</text>

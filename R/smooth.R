@@ -109,10 +109,10 @@ NULL
 
 #' @rdname smooth_density
 #' @export
-smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), trim = TRUE, ...) {
+smooth_bounded = function(x, density = "bounded", bounds = c(NA, NA), bounder = "cooke", trim = FALSE, ...) {
   if (missing(x)) return(partial_self("smooth_bounded"))
 
-  .smooth_density(x, density = density, bounds = bounds, trim = trim, ...)
+  .smooth_density(x, density = density, bounds = bounds, bounder = bounder, trim = trim, ...)
 }
 
 #' @rdname smooth_density

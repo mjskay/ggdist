@@ -32,7 +32,7 @@
 <line x1='330.00' y1='521.37' x2='424.65' y2='521.37' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <circle cx='377.33' cy='521.37' r='1.68' style='stroke-width: 1.06; fill: #000000;' />
 <circle cx='377.33' cy='521.37' r='3.22' style='stroke-width: 1.06; fill: #000000;' />
-<polyline points='70.79,517.54 138.91,496.14 207.03,417.53 275.15,254.69 343.27,94.01 411.39,94.01 479.51,254.69 547.63,417.53 615.75,496.14 683.87,517.54 ' style='stroke-width: 2.13; stroke: #E41A1C; stroke-linecap: butt;' />
+<polyline points='70.79,517.54 138.91,496.14 207.03,417.53 275.15,254.69 343.27,94.01 411.39,94.01 479.51,254.69 547.63,417.53 615.75,496.14 683.87,517.54 ' style='stroke-width: 2.13; stroke: #E41A1C; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <rect x='40.13' y='22.78' width='674.39' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

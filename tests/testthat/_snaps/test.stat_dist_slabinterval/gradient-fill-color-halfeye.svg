@@ -36,10 +36,10 @@
 <polygon points='470.32,336.11 501.27,417.53 532.22,456.83 532.22,521.37 501.27,521.37 470.32,521.37 ' style='stroke-width: 12.80; stroke: none; stroke-dasharray: 34.14,34.14; fill: #22486A;' />
 <polygon points='532.22,456.83 563.17,496.14 594.12,506.84 594.12,521.37 563.17,521.37 532.22,521.37 ' style='stroke-width: 12.80; stroke: none; stroke-dasharray: 34.14,34.14; fill: #16314B;' />
 <polygon points='594.12,506.84 625.06,517.54 625.06,521.37 594.12,521.37 ' style='stroke-width: 12.80; stroke: none; stroke-dasharray: 34.14,34.14; fill: #132B43;' />
-<polyline points='67.99,517.54 129.88,496.14 191.78,417.53 253.68,254.69 284.63,174.35 ' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt;' />
-<polyline points='284.63,174.35 315.58,94.01 346.53,94.01 ' style='stroke-width: 2.13; stroke: #F8766D; stroke-dasharray: 5.69,5.69; stroke-linecap: butt;' />
-<polyline points='346.53,94.01 377.47,94.01 408.42,174.35 ' style='stroke-width: 2.13; stroke: #00BFC4; stroke-dasharray: 5.69,5.69; stroke-linecap: butt;' />
-<polyline points='408.42,174.35 439.37,254.69 501.27,417.53 563.17,496.14 625.06,517.54 ' style='stroke-width: 12.80; stroke: #00BFC4; stroke-dasharray: 34.14,34.14; stroke-linecap: butt;' />
+<polyline points='67.99,517.54 129.88,496.14 191.78,417.53 253.68,254.69 284.63,174.35 ' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt; stroke-linejoin: bevel;' />
+<polyline points='284.63,174.35 315.58,94.01 346.53,94.01 ' style='stroke-width: 2.13; stroke: #F8766D; stroke-dasharray: 5.69,5.69; stroke-linecap: butt; stroke-linejoin: bevel;' />
+<polyline points='346.53,94.01 377.47,94.01 408.42,174.35 ' style='stroke-width: 2.13; stroke: #00BFC4; stroke-dasharray: 5.69,5.69; stroke-linecap: butt; stroke-linejoin: bevel;' />
+<polyline points='408.42,174.35 439.37,254.69 501.27,417.53 563.17,496.14 625.06,517.54 ' style='stroke-width: 12.80; stroke: #00BFC4; stroke-dasharray: 34.14,34.14; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <line x1='169.86' y1='521.37' x2='523.19' y2='521.37' style='stroke-width: 1.28; stroke-linecap: butt;' />
 <line x1='260.52' y1='521.37' x2='432.53' y2='521.37' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <circle cx='346.53' cy='521.37' r='1.68' style='stroke-width: 1.06; fill: #000000;' />

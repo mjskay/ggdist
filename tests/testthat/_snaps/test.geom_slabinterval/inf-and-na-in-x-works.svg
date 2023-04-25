@@ -28,9 +28,9 @@
 <g clip-path='url(#cpMzUuMjN8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='35.23' y='22.78' width='679.29' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <polygon points='66.11,133.28 374.88,42.87 683.64,178.48 683.64,223.68 374.88,223.68 66.11,223.68 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polyline points='66.11,133.28 374.88,42.87 683.64,178.48 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='66.11,133.28 374.88,42.87 683.64,178.48 ' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <polygon points='35.23,424.58 66.11,334.17 374.88,243.77 683.64,379.37 714.52,401.97 714.52,424.58 683.64,424.58 374.88,424.58 66.11,424.58 35.23,424.58 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polyline points='35.23,424.58 66.11,334.17 374.88,243.77 683.64,379.37 714.52,401.97 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='35.23,424.58 66.11,334.17 374.88,243.77 683.64,379.37 714.52,401.97 ' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <rect x='35.23' y='22.78' width='679.29' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

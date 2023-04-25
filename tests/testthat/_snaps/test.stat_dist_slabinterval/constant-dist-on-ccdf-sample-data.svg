@@ -28,7 +28,7 @@
 <g clip-path='url(#cpNDMuMDZ8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='43.06' y='22.78' width='671.46' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <polygon points='73.58,70.27 378.79,70.27 378.79,497.63 378.79,497.63 684.00,497.63 684.00,497.63 378.79,497.63 378.79,497.63 378.79,497.63 73.58,497.63 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polyline points='73.58,70.27 378.79,70.27 378.79,497.63 378.79,497.63 684.00,497.63 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt;' />
+<polyline points='73.58,70.27 378.79,70.27 378.79,497.63 378.79,497.63 684.00,497.63 ' style='stroke-width: 2.13; stroke: #0000FF; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <line x1='378.79' y1='283.95' x2='378.79' y2='283.95' style='stroke-width: 2.99; stroke-linecap: butt;' />
 <line x1='378.79' y1='283.95' x2='378.79' y2='283.95' style='stroke-width: 1.28; stroke-linecap: butt;' />
 <circle cx='378.79' cy='283.95' r='3.22' style='stroke-width: 1.06; fill: #000000;' />

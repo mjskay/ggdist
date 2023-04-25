@@ -28,7 +28,7 @@
 <g clip-path='url(#cpMjcuOTB8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='27.90' y='22.78' width='686.62' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <polygon points='215.16,521.37 496.05,426.40 215.16,331.43 215.16,331.43 215.16,426.40 215.16,521.37 ' style='stroke-width: 2.13; stroke: none; fill: #A6A6A6;' />
-<polyline points='215.16,521.37 496.05,426.40 215.16,331.43 ' style='stroke-width: 2.13; stroke: #FF0000; stroke-linecap: butt;' />
+<polyline points='215.16,521.37 496.05,426.40 215.16,331.43 ' style='stroke-width: 2.13; stroke: #FF0000; stroke-linecap: butt; stroke-linejoin: bevel;' />
 <rect x='27.90' y='22.78' width='686.62' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

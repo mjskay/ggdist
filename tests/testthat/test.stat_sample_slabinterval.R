@@ -99,11 +99,11 @@ test_that("scale transformation works", {
   )
 
   vdiffr::expect_doppelganger("ccdfintervalh log scale transform",
-    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 10, .width = .5)
+    p_log + stat_ccdfinterval(point_interval = mean_hdi, n = 15, .width = .5, trim = FALSE)
   )
 
   vdiffr::expect_doppelganger("cdfintervalh log scale transform",
-    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 10, .width = .5)
+    p_log + stat_cdfinterval(point_interval = mean_hdi, n = 15, .width = .5, trim = FALSE)
   )
 
   vdiffr::expect_doppelganger("histintervalh log scale transform",
@@ -147,7 +147,7 @@ test_that("constant distributions work", {
   )
 
   vdiffr::expect_doppelganger("constant dist on ccdf",
-    p + stat_ccdfinterval()
+    p + stat_ccdfinterval(trim = FALSE)
   )
 
   # constant dist when n = 1
@@ -202,7 +202,7 @@ test_that("n is calculated correctly", {
 test_that("NAs are handled correctly", {
   skip_if_no_vdiffr()
 
-  p = data.frame(x = c(1:10, NA)) %>%
+  p = data.frame(x = c(1:5000, NA)) %>%
     ggplot(aes(x = x, y = "a"))
 
   expect_warning(
@@ -283,16 +283,16 @@ test_that("characters work", {
   )
 
   slab_ref = data.frame(
-    thickness = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
-    pdf = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
-    cdf = c(0,0, 3,3,3,3, 5,5,5,5, 6,6)/6,
-    f = c(3,3,3,3, 2,2,2,2, 1,1,1,1)/6,
+    thickness = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
+    pdf = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
+    cdf = c(0,0,0, 3,3,3,3,3,3, 5,5,5,5,5,5, 6,6,6)/6,
+    f = c(3,3,3,3,3,3, 2,2,2,2,2,2, 1,1,1,1,1,1)/6,
     n = 6,
     datatype = "slab",
-    .width = c(NA, .66,.66,.66,.66,.66,.66, .95,.95, NA,NA,NA),
+    .width = c(NA,NA, .66,.66,.66,.66,.66,.66,.66,.66, .95,.95,.95,.95, NA,NA,NA,NA),
     stringsAsFactors = FALSE
   )
-  slab_ref$x = ggplot2:::mapped_discrete(c(.5, 1,1, 1.5,1.5, 2,2, 2.5,2.5, 3,3, 3.5))
+  slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5,2.5,2.5, 3,3, 3.5,3.5))
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "slab", names(slab_ref)], slab_ref)
 
   interval_ref = data.frame(
@@ -303,7 +303,7 @@ test_that("characters work", {
   interval_ref$xmin = ggplot2:::mapped_discrete(c(1, 1))
   interval_ref$xmax = ggplot2:::mapped_discrete(c(2.15, 2.875))
   interval_ref$x = ggplot2:::mapped_discrete(c(1.5, 1.5))
-  attr(interval_ref, "row.names") = c(13L, 14L)
+  attr(interval_ref, "row.names") = c(19L, 20L)
   expect_equal(p$data[[1]][p$data[[1]]$datatype == "interval", names(interval_ref)], interval_ref)
 })
 
@@ -319,7 +319,8 @@ test_that("logical conditions at bin edges on histograms work", {
 
   ref = data.frame(
     x = c(0.5, 0.5, 1, 1, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5, 2.5, 2.5, 2.5,  3, 3, 3.5, 3.5),
-    fill = c(rep("red", 7), rep("blue", 11))
+    fill = c(rep("red", 7), rep("blue", 11)),
+    stringsAsFactors = FALSE
   )
   expect_equal(layer_data(p)[,c("x", "fill")], ref)
 
@@ -337,7 +338,8 @@ test_that("logical conditions at bin edges on histograms work", {
 
   ref = data.frame(
     x = c(0.5, 0.5, 0.5, 1, 1, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2.5,  2.5, 2.5, 2.5, 2.5, 2.5, 3, 3, 3.5, 3.5, 3.5),
-    fill = c(rep("red", 10), rep("blue", 14))
+    fill = c(rep("red", 10), rep("blue", 14)),
+    stringsAsFactors = FALSE
   )
   expect_equal(layer_data(p)[,c("x", "fill")], ref)
 })

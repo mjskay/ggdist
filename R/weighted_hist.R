@@ -16,6 +16,8 @@ weighted_hist = function(
     paste0("[", x_label, ", ", weights_label, "]")
   }
 
+  if (length(x) < 1) cli_abort("{.topic density_histogram} requires {.code length(x) >= 1}.")
+
   weights = weights %||% rep(1, length(x))
 
   # figure out breaks
@@ -54,17 +56,27 @@ weighted_hist = function(
       ))
     }
 
-    breaks = breaks - align
-    max_break = breaks[length(breaks)]
+    # we check for align != 0 even though in theory we could apply a 0 alignment
+    # below and the result would be correct. We do this because then if someone
+    # manually specifies the breaks and no alignment, exactly those breaks are used.
+    if (align != 0) {
+      breaks = breaks - align
+      max_break = breaks[length(breaks)]
 
-    if (max_break < max(x)) {
-      breaks = c(breaks, max_break + bin_width[[1]])
-      bin_width = c(bin_width, bin_width[[1]])
+      if (max_break < max(x)) {
+        breaks = c(breaks, max_break + bin_width[[1]])
+        bin_width = c(bin_width, bin_width[[1]])
+      }
+      if (length(breaks) > 2 && breaks[[2]] <= min(x)) {
+        breaks = breaks[-1]
+        bin_width = bin_width[-1]
+      }
     }
-    if (length(breaks) > 2 && breaks[[2]] <= min(x)) {
-      breaks = breaks[-1]
-      bin_width = bin_width[-1]
-    }
+  }
+
+  # check for invalid binning
+  if (min(x) < breaks[1] || max(x) > breaks[length(breaks)]) {
+    cli_abort("{.topic density_histogram} {.arg breaks} must cover all values of {.arg x}")
   }
 
   # bin x values
@@ -156,7 +168,7 @@ weighted_hist = function(
 #' @name breaks
 #' @export
 breaks_fixed = function(x, weights = NULL, width = 1) {
-  if (missing(x) || missing(weights)) return(partial_self("breaks_fixed"))
+  if (missing(x)) return(partial_self("breaks_fixed"))
 
   if (length(x) == 1) return(c(x - width/2, x + width/2))
 
@@ -170,7 +182,7 @@ breaks_fixed = function(x, weights = NULL, width = 1) {
 #' @rdname breaks
 #' @export
 breaks_Sturges = function(x, weights = NULL) {
-  if (missing(x) || missing(weights)) return(partial_self("breaks_Sturges"))
+  if (missing(x)) return(partial_self("breaks_Sturges"))
 
   weights = weights %||% rep(1, length(x))
   n = max(length(x), sum(weights))
@@ -180,7 +192,7 @@ breaks_Sturges = function(x, weights = NULL) {
 #' @rdname breaks
 #' @export
 breaks_Scott = function(x, weights = NULL) {
-  if (missing(x) || missing(weights)) return(partial_self("breaks_Scott"))
+  if (missing(x)) return(partial_self("breaks_Scott"))
 
   weights = weights %||% rep(1, length(x))
   n = max(length(x), sum(weights))
@@ -195,7 +207,7 @@ breaks_Scott = function(x, weights = NULL) {
 #' @rdname breaks
 #' @export
 breaks_FD = function(x, weights = NULL, digits = 5) {
-  if (missing(x) || missing(weights)) return(partial_self("breaks_FD"))
+  if (missing(x)) return(partial_self("breaks_FD"))
 
   weights = weights %||% rep(1, length(x))
   h = 2 * weighted_iqr(.x <- signif(x, digits = digits), weights)
