@@ -125,7 +125,7 @@ the appearance of its two sub-geometries: the \strong{spike} and the \strong{poi
 \item{\code{y}: y position of the geometry}
 }
 
-\strong{Slab-specific aesthetics}
+\strong{Spike-specific (aka Slab-specific) aesthetics}
 
 \itemize{
 \item{\code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or

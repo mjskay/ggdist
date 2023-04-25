@@ -25,7 +25,12 @@ test_that("weighted_hist is roughly equivalent to hist on non-weighted samples",
 
   # breaks / nclass functions match
   for (breaks in list(c("Sturges", "Sturges"), c("Scott","scott"), c("FD","FD"))) {
-    expect_equal(match.fun(paste0("breaks_", !!breaks[[1]]))(x), match.fun(paste0("nclass.", !!breaks[[2]]))(x))
+    breaks_fun = paste0("breaks_", breaks[[1]])
+    nclass_fun = paste0("nclass.", breaks[[2]])
+    expect_equal((!!breaks_fun)(x), (!!nclass_fun)(x))
+
+    #partial application
+    expect_equal((!!breaks_fun)()(x), (!!breaks_fun)(x))
   }
 
   # explicit breaks match
@@ -45,11 +50,44 @@ test_that("weighted_hist is equivalent to hist on weighted samples", {
 
   # breaks / nclass functions match
   for (breaks in list(c("Sturges", "Sturges"), c("Scott","scott"), c("FD","FD"))) {
-    expect_equal(match.fun(paste0("breaks_", !!breaks[[1]]))(xw, w), match.fun(paste0("nclass.", !!breaks[[2]]))(x))
+    breaks_fun = paste0("breaks_", breaks[[1]])
+    nclass_fun = paste0("nclass.", breaks[[2]])
+    expect_equal((!!breaks_fun)(xw, w), (!!nclass_fun)(x))
   }
 
   # explicit breaks match
   wh = weighted_hist(xw, weights = w, breaks = c(1,3,4,7))
   wh$xname = "x"
   expect_equal(wh, hist(x, breaks = c(1,3,4,7), plot = FALSE))
+})
+
+
+# breaks_fixed ------------------------------------------------------------
+
+test_that("breaks_fixed works on n = 1", {
+  expect_equal(breaks_fixed(2), c(1.5, 2.5))
+})
+
+
+# align functions ---------------------------------------------------------
+
+test_that("align functions work", {
+  x = c(1,2,3,4,5,6)
+  breaks = c(0.25, 2.25, 4.25, 6.25)
+
+  expect_equal(weighted_hist(x, breaks = breaks, align = 0.25), weighted_hist(x, breaks = breaks - 0.25))
+  expect_equal(weighted_hist(x, breaks = breaks, align = align_none()), weighted_hist(x, breaks = breaks))
+  expect_equal(weighted_hist(x, breaks = breaks, align = align_center(at = 2)), weighted_hist(x, breaks = breaks + 0.75))
+  expect_equal(weighted_hist(x, breaks = breaks, align = align_boundary(at = 2)), weighted_hist(x, breaks = breaks - 0.25))
+})
+
+
+# argument preconditions --------------------------------------------------
+
+test_that("align is valid", {
+  expect_error(weighted_hist(1:10, align = -1), "must be between 0 and the bin width")
+})
+
+test_that("breaks are valid", {
+  expect_error(weighted_hist(1:10, breaks = c(1,2)), "must\\s+cover\\s+all\\s+values")
 })

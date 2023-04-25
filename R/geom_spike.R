@@ -114,18 +114,23 @@ GeomSpike = ggproto("GeomSpike", GeomSlab,
 
   ## aesthetics --------------------------------------------------------------
 
-  aes_docs = modifyList(GeomSlab$aes_docs, list(
-    "Color aesthetics" = list(
-      colour = '(or `color`) The color of the **spike** and **point** sub-geometries.',
-      fill = 'The fill color of the **point** sub-geometry.',
-      alpha = 'The opacity of the **spike** and **point** sub-geometries.'
-    ),
-    "Line aesthetics" = list(
-      linewidth = 'Width of the line used to draw the **spike** sub-geometry.',
-      size = 'Size of the **point** sub-geometry.',
-      linetype = 'Type of line (e.g., `"solid"`, `"dashed"`, etc) used to draw the **spike**.'
-    )
-  )),
+  aes_docs = {
+    aes_docs = GeomSlab$aes_docs
+    spike_aes_i = which(names(aes_docs) == "Slab-specific aesthetics")
+    names(aes_docs)[[spike_aes_i]] = "Spike-specific (aka Slab-specific) aesthetics"
+    modifyList(aes_docs, list(
+      "Color aesthetics" = list(
+        colour = '(or `color`) The color of the **spike** and **point** sub-geometries.',
+        fill = 'The fill color of the **point** sub-geometry.',
+        alpha = 'The opacity of the **spike** and **point** sub-geometries.'
+      ),
+      "Line aesthetics" = list(
+        linewidth = 'Width of the line used to draw the **spike** sub-geometry.',
+        size = 'Size of the **point** sub-geometry.',
+        linetype = 'Type of line (e.g., `"solid"`, `"dashed"`, etc) used to draw the **spike**.'
+      )
+    ))
+  },
 
   default_key_aes = defaults(aes(
     linewidth = 0.5,

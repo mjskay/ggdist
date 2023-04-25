@@ -264,7 +264,7 @@ object (e.g. \code{\link[=dist_normal]{dist_normal()}}) or a \code{\link[posteri
 In addition, in their default configuration (paired with \code{\link[=geom_spike]{geom_spike()}})
 the following aesthetics are supported by the underlying geom:
 
-\strong{Slab-specific aesthetics}
+\strong{Spike-specific (aka Slab-specific) aesthetics}
 
 \itemize{
 \item{\code{thickness}: The thickness of the slab at each \code{x} value (if \code{orientation = "horizontal"}) or
