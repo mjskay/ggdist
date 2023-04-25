@@ -473,7 +473,7 @@ density_histogram = function(
 #' Internal function for calculating adaptive densities
 #' Intended as a replacement for stats::density()
 #' @noRd
-#' @importFrom stats nrd0 kmeans
+#' @importFrom stats bw.nrd0 kmeans
 .density_adaptive = function(
   x, weights = NULL,
   n = 512,
