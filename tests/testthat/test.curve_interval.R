@@ -131,7 +131,7 @@ test_that("basic cases on single curve work", {
   expect_equal(curve_interval(y_rvar, .width = c(.95, 0, 1)), select(ref, -x, .value = y))
 
   # matrix
-  expect_equal(curve_interval(draws_of(y_rvar), .width = c(.95, 0, 1)), select(ref, -x, .value = y))
+  expect_equal(curve_interval(posterior::draws_of(y_rvar), .width = c(.95, 0, 1)), select(ref, -x, .value = y))
 })
 
 test_that("basic cases on multiple variables", {
