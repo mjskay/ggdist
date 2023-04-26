@@ -153,9 +153,7 @@ curve_interval.matrix = function(
   if (!requireNamespace("posterior", quietly = TRUE)) {
     stop0('curve_interval() requires the `posterior` package to be installed.') #nocov
   }
-  if (!is.null(.along)) {
-    stop0('curve_interval(<matrix>) does not support the `.along` argument.')
-  }
+  check_along_is_null(.along)
 
   curve_interval(
     data.frame(.value = posterior::rvar(.data)), .value,
@@ -170,9 +168,7 @@ curve_interval.rvar = function(
   .data, ..., .along = NULL, .width = .5, na.rm = FALSE,
   .interval = c("mhd", "mbd", "bd", "bd-mbd")
 ) {
-  if (!is.null(.along)) {
-    stop0('curve_interval(<rvar>) does not support the `.along` argument.')
-  }
+  check_along_is_null(.along)
 
   curve_interval(
     data.frame(.value = .data), .value,
@@ -275,6 +271,22 @@ curve_interval.data.frame = function(
   result[[".interval"]] = .interval
 
   result
+}
+
+
+# helpers -----------------------------------------------------------------
+
+check_along_is_null = function(.along) {
+  if (!is.null(.along)) cli_abort(c(
+    '{.fun ggdist::curve_interval} applied to a matrix or rvar does not support the {.arg .along} argument',
+    'i' = 'Intervals for {.code curve_interval(<rvar>)} and {.code curve_interval(<matrix>)}
+      are calculated jointly for all dimensions of the input.',
+    '>' = 'If you want all dimensions to be joint, simply do not pass anything to {.arg .along}.',
+    '>' = 'If you want only some dimensions to be joint (i.e., some to be conditional), consider
+      using a data frame, and group by the conditional columns and pass the joint columns to
+      {.arg .along}',
+    'i' = 'For more information, see the {.arg .along} argument of {.fun ggdist::curve_interval}.'
+  ))
 }
 
 halfspace_depth = function(x) {
