@@ -256,6 +256,14 @@ test_that("stat_dist_pointinterval, interval, and slab work", {
   )
 })
 
+test_that("empty (0-length) distributions work", {
+  expect_equal(layer_data(ggplot() + stat_halfeye(aes(xdist = NULL))), data.frame())
+  expect_equal(layer_data(ggplot() + stat_halfeye(aes(xdist = list()))), data.frame())
+  expect_equal(layer_data(ggplot() + stat_halfeye(aes(xdist = dist_missing()[-1]))), data.frame())
+
+  skip_if_not_installed("posterior")
+  expect_equal(layer_data(ggplot() + stat_halfeye(aes(xdist = posterior::rvar()))), data.frame())
+})
 
 
 # scale (and density) transformation --------------------------------------
@@ -677,6 +685,19 @@ test_that("rvar_ordered works with modified scale limits", {
   )
   slab_ref$x = ggplot2:::mapped_discrete(c(.5,.5, 1,1, 1.5,1.5,1.5,1.5, 2,2, 2.5,2.5,2.5,2.5, 3,3, 3.5,3.5))
   expect_equal(p$data[[1]][, names(slab_ref)], slab_ref)
+})
+
+test_that("rvar(<logical>) works", {
+  skip_if_not_installed("posterior", "1.3.1.9000")
+
+  p = ggplot_build(
+    ggplot() + stat_slab(aes(xdist = posterior::rvar(c(TRUE,TRUE,TRUE,FALSE))))
+  )
+
+  expect_snapshot_value(
+    as.list(p$data[[1]][, c("thickness","pdf","cdf","n","x","y",".width")]),
+    style = "deparse", cran = TRUE
+  )
 })
 
 test_that("dist_bernoulli works", {

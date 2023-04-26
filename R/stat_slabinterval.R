@@ -630,6 +630,8 @@ StatSlabinterval = ggproto("StatSlabinterval", AbstractStatSlabinterval,
     if (is_distribution(data$dist)) {
       is_logical = map_lgl_(data$dist, distr_is_logical)
       data$dist[is_logical] = data$dist[is_logical] + 0L
+    } else if (inherits(data$dist, "rvar") && distr_is_logical(data$dist)) {
+      data$dist = data$dist + 0L
     }
 
     # handle rvar factors / categorical dists: our modified version of Layer$compute_aesthetics will

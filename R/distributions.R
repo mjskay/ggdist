@@ -108,10 +108,6 @@ distr_point_interval = function(dist, point_interval, trans, ...) {
   UseMethod("distr_point_interval")
 }
 #' @export
-distr_point_interval.NULL = function(dist, point_interval, trans, ...) {
-  data.frame()
-}
-#' @export
 distr_point_interval.numeric = function(dist, point_interval, trans, ...) {
   point_interval(trans$transform(dist), .simple_names = TRUE, ...)
 }
