@@ -116,13 +116,22 @@ test_that("basic cases on single curve work", {
     .interval = "mhd"
   )
 
+  # data frame of draws
   expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
   expect_equal(curve_interval(group_by(df, x), .width = c(.95, 0, 1)), ref)
 
   skip_if_not_installed("posterior")
-  df = data.frame(x = 1:3, y = rep(posterior::rvar(ppoints(1000)), 3) + 1:3)
+  # data frame of rvars
+  y_rvar = rep(posterior::rvar(ppoints(1000)), 3) + 1:3
+  df = data.frame(x = 1:3, y = y_rvar)
   expect_equal(curve_interval(df, .along = x, .width = c(.95, 0, 1)), ref)
   expect_equal(curve_interval(group_by(df, x), .width = c(.95, 0, 1)), ref)
+
+  # rvar
+  expect_equal(curve_interval(y_rvar, .width = c(.95, 0, 1)), select(ref, -x, .value = y))
+
+  # matrix
+  expect_equal(curve_interval(draws_of(y_rvar), .width = c(.95, 0, 1)), select(ref, -x, .value = y))
 })
 
 test_that("basic cases on multiple variables", {

@@ -328,7 +328,7 @@ test_that("logical conditions at bin edges on histograms work", {
   p = ggplot() +
     stat_slab(
       aes(x = c(1,1,2,2,2,3,3,3,3), fill = after_stat(x > 1.5)),
-      density = "histogram",
+      density = density_histogram(),
       breaks = breaks_fixed(width = 1),
       align = "center",
       outline_bars = TRUE,
