@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
 })
 
 
-# factor distributions ----------------------------------------------------
+# wrapped distributions ----------------------------------------------------
 
 test_that("distribution functions work on wrapped distributions", {
   expect_equal(distr_pdf(dist_wrap("norm", 1, 2))(-2:2), dnorm(-2:2, 1, 2))
@@ -83,4 +83,36 @@ test_that("constant distributions are detected correctly", {
   expect_equal(distr_is_constant(posterior::rvar(1)), TRUE)
   expect_equal(distr_is_constant(posterior::rvar(c(3,3,3))), TRUE)
   expect_equal(distr_is_constant(posterior::rvar(c(1,2,3))), FALSE)
+})
+
+
+# factor rvars ----------------------------------------------------
+
+test_that("distribution functions work on factor rvars", {
+  skip_if_not_installed("posterior")
+
+  x_values = c("a","a","b","b","b","c","c","c","c")
+
+  x_ordered = posterior::rvar_ordered(x_values)
+  expect_equal(distr_cdf(x_ordered)(1:3), c(2,5,9)/9)
+  expect_equal(distr_pdf(x_ordered)(1:3), c(2,3,4)/9)
+  expect_equal(distr_quantile(x_ordered)(c(2,5,9)/9), c("a","b","c"))
+
+  x_factor = posterior::rvar_factor(x_values)
+  expect_equal(distr_cdf(x_factor)(1:3), c(NA_real_,NA_real_,NA_real_))
+  expect_equal(distr_pdf(x_factor)(1:3), c(2,3,4)/9)
+  expect_equal(distr_quantile(x_factor)(c(2,5,9)/9), c(NA_real_,NA_real_,NA_real_))
+
+  expect_equal(
+    distr_point_interval(x_ordered, median_qi, trans = scales::identity_trans()),
+    data.frame(
+      .value = 2,
+      .lower = 1,
+      .upper = 3,
+      .width = 0.95,
+      .point = "median",
+      .interval = "qi",
+      stringsAsFactors = FALSE
+    )
+  )
 })

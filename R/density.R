@@ -265,6 +265,7 @@ density_bounded = function(
 
   if (n < 1) cli_abort("{.fun ggdist::density_bounded} must have an {.arg n} of at least 1")
 
+  x_label = as_label(enexpr(x))
   x = check_na(x, na.rm)
   if (isTRUE(range_only) && isTRUE(trim)) {
     return(list(x = range(x), y = c(NA_real_, NA_real_)))
@@ -332,6 +333,7 @@ density_bounded = function(
     d$x = x_trimmed
   }
 
+  d$data.name = x_label
   d$y = f
   d$call = as.call(lapply(match.call(), get_expr))
   d$cdf = weighted_ecdf(x, weights)(d$x)

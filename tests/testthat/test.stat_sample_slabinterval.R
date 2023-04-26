@@ -343,3 +343,16 @@ test_that("logical conditions at bin edges on histograms work", {
   )
   expect_equal(layer_data(p)[,c("x", "fill")], ref)
 })
+
+
+# deprecated params -------------------------------------------------------
+
+test_that("slab_type throws appropriate warnings and errors", {
+  expect_warning(
+    expect_warning(
+      layer_data(ggplot() + stat_slab(aes(1:5), slab_type = "xx")),
+      "slab_type.*is deprecated"
+    ),
+    'Unknown `slab_type`: "xx"'
+  )
+})
