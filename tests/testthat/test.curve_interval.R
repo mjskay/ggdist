@@ -177,8 +177,10 @@ test_that("curve_interval(<rvar>) and curve_interval(<matrix>) do not support al
     curve_interval(matrix(1:4, nrow = 2), .along = "x"),
     'does\\s+not\\s+support\\s+the\\s+[^a-zA-Z]*\\.along[^a-zA-Z]*\\s+argument'
   )
+
+  skip_if_not_installed("posterior")
   expect_error(
-    curve_interval(rvar(), .along = "x"),
+    curve_interval(posterior::rvar(), .along = "x"),
     'does\\s+not\\s+support\\s+the\\s+[^a-zA-Z]*\\.along[^a-zA-Z]*\\s+argument'
   )
 })
