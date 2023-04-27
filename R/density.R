@@ -507,10 +507,19 @@ density_histogram = function(
     bw_group = seq_along(x)
     bws = bw_local
   } else {
-    # use k-means clustering to create bandwidth groups
-    bw_clusters = kmeans(bw_local, quantile(bw_local, ppoints(clusters)))
-    bw_group = bw_clusters$cluster
-    bws = bw_clusters$centers
+    ### TODO: figure out a good method here
+
+    ### one possibility:
+    # # use k-means clustering to create bandwidth groups
+    #bw_clusters = kmeans(bw_local, quantile(bw_local, ppoints(clusters)))
+    #bw_group = bw_clusters$cluster
+    #bws = bw_clusters$centers
+
+    ### simpler, just cut the range of local bandwidths into equal pieces
+    bw_group = as.numeric(factor(cut(bw_local, clusters, labels = FALSE)))
+    bws = tapply(bw_local, bw_group, mean)
+
+    ### another option would be to cut with quantiles to get equal-sized groups
   }
 
   # calculate densities in each cluster
@@ -540,15 +549,14 @@ density_histogram = function(
   ), class = "density")
 }
 
-
 get_local_bandwidth = function(x, bandwidth, kernel, n) {
   # evaluate pilot density at each x value
   d_pilot = density(x, bw = bandwidth, kernel = kernel, n = n)
-  d_pilot = approx(d_pilot$x, d_pilot$y, xout = x)$y
+  d_pilot_times_n = approx(d_pilot$x, d_pilot$y, xout = x)$y * length(x)
 
   # use Abramson's method to calculate local bandwidths
-  mean_bandwidth = exp(mean(log(d_pilot[d_pilot > 0])))
-  sqrt(mean_bandwidth / d_pilot) * bandwidth
+  mean_bandwidth = exp(mean(log(d_pilot_times_n[d_pilot_times_n > 0])))
+  sqrt(mean_bandwidth / d_pilot_times_n) * bandwidth
 }
 
 
