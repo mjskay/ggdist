@@ -85,7 +85,7 @@ test_that("adaptive density estimator works", {
   # red (adaptive) KDE should do better near the mode
   vdiffr::expect_doppelganger("adaptive KDE (red) better matches mode",
     ggplot() +
-      stat_slab(aes(xdist = dist_lognormal(1/2, 1)), fill = NA, color = "gray50") +
+      stat_slab(aes(xdist = distributional::dist_lognormal(1/2, 1)), fill = NA, color = "gray50") +
       stat_slab(aes(x), density = density_bounded(adapt = 1, bandwidth = "dpi", bounds = c(0, Inf)), fill = NA, color = "blue", linetype = "11") +
       stat_slab(aes(x), density = density_bounded(adapt = 100, bandwidth = "dpi", bounds = c(0, Inf)), fill = NA, color = "red", linetype = "11") +
       scale_thickness_shared() +
